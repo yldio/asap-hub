@@ -1,28 +1,20 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
   ListPublicationComplianceOpensearchResponse,
+  PublicationComplianceOpensearchResponse,
   SortPublicationCompliance,
+  TimeRangeOption,
 } from '@asap-hub/model';
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
-import { Suspense } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import React, { Suspense } from 'react';
 import { MemoryRouter, useNavigate } from 'react-router';
-import {
-  DefaultValue,
-  RecoilRoot,
-  SetterOrUpdater,
-  useRecoilState,
-} from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import PublicationCompliance from '../PublicationCompliance';
 import {
-  publicationComplianceState,
+  publicationComplianceQueryKeys,
   useAnalyticsPublicationCompliance,
 } from '../state';
 import { getPublicationCompliance } from '../api';
@@ -56,16 +48,63 @@ mockConsoleError();
 const mockNavigate = jest.fn();
 const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
 
+const publicationComplianceItem: PublicationComplianceOpensearchResponse = {
+  objectID: 'team-123',
+  teamId: 'team-123',
+  teamName: 'Team 123',
+  isTeamInactive: false,
+  overallCompliance: 85,
+  ranking: 'ADEQUATE',
+  datasetsPercentage: 90,
+  datasetsRanking: 'OUTSTANDING',
+  protocolsPercentage: 80,
+  protocolsRanking: 'ADEQUATE',
+  codePercentage: 75,
+  codeRanking: 'NEEDS IMPROVEMENT',
+  labMaterialsPercentage: 95,
+  labMaterialsRanking: 'OUTSTANDING',
+  numberOfPublications: 10,
+  numberOfOutputs: 50,
+  numberOfDatasets: 20,
+  numberOfProtocols: 15,
+  numberOfCode: 10,
+  numberOfLabMaterials: 5,
+  timeRange: 'all',
+};
+
+// Shared ErrorBoundary component for tests
+const createErrorBoundary = (onError: (error: Error) => void) => {
+  class TestErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean }
+  > {
+    state = { hasError: false };
+
+    static getDerivedStateFromError(err: Error) {
+      onError(err);
+      return { hasError: true };
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <div data-testid="error">Error caught</div>;
+      }
+      return this.props.children;
+    }
+  }
+  return TestErrorBoundary;
+};
+
 describe('PublicationCompliance', () => {
   beforeEach(() => {
     mockNavigate.mockClear();
     mockUseNavigate.mockReturnValue(mockNavigate);
   });
 
-  it('renders publication compliance correctly', async () => {
+  const renderPage = (initialEntries: string[] = ['/']) =>
     render(
-      <MemoryRouter>
-        <RecoilRoot>
+      <MemoryRouter initialEntries={initialEntries}>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -73,16 +112,21 @@ describe('PublicationCompliance', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>
+        </QueryClientProvider>
       </MemoryRouter>,
     );
+
+  it('renders publication compliance correctly', async () => {
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Publications')).toBeInTheDocument();
     });
   });
 
-  it('resets publication compliance state to undefined when reset is triggered', async () => {
+  it('caches and clears publication compliance data by query key', () => {
+    // Replaces the recoil setter/reset probe: the writable selectorFamily is
+    // now the query cache, addressed through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -90,167 +134,118 @@ describe('PublicationCompliance', () => {
       tags: [] as string[],
       timeRange: 'all' as const,
     };
-
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
+    const queryClient = createTestQueryClient();
+    const queryKey = publicationComplianceQueryKeys.list(stateOptions);
 
     // Initially undefined
-    expect(capturedValue).toBeUndefined();
+    expect(queryClient.getQueryData(queryKey)).toBeUndefined();
 
-    // set a fake value
-    const fakeData = {
+    const fakeData: ListPublicationComplianceOpensearchResponse = {
       total: 1,
-      items: [
-        {
-          objectID: 'team-123',
-          teamId: 'team-123',
-          teamName: 'Team 123',
-          isTeamInactive: false,
-          overallCompliance: 85,
-          ranking: 'ADEQUATE',
-          datasetsPercentage: 90,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 80,
-          protocolsRanking: 'ADEQUATE',
-          codePercentage: 75,
-          codeRanking: 'NEEDS IMPROVEMENT',
-          labMaterialsPercentage: 95,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 10,
-          numberOfOutputs: 50,
-          numberOfDatasets: 20,
-          numberOfProtocols: 15,
-          numberOfCode: 10,
-          numberOfLabMaterials: 5,
-          timeRange: 'all' as const,
-        },
-      ],
+      items: [publicationComplianceItem],
     };
-    act(() => {
-      setState(fakeData);
-    });
-    await waitFor(() => {
-      expect(capturedValue).toEqual(fakeData);
-    });
+    queryClient.setQueryData(queryKey, fakeData);
+    expect(queryClient.getQueryData(queryKey)).toEqual(fakeData);
 
-    // Reset by setting undefined
-    act(() => {
-      setState(undefined);
-    });
-
-    // After reset, state is undefined again
-    await waitFor(() => {
-      expect(capturedValue).toBeUndefined();
-    });
+    queryClient.removeQueries({ queryKey });
+    expect(queryClient.getQueryData(queryKey)).toBeUndefined();
   });
 
-  it('throws when publicationCompliance is an Error', () => {
-    const recoil = jest.requireActual('recoil');
-    jest
-      .spyOn(recoil, 'useRecoilState')
-      .mockReturnValueOnce([new Error('test error'), jest.fn()]);
+  it('throws to the error boundary when the fetch rejects', async () => {
+    // Replaces the recoil-internals spy test: the observable behavior is a
+    // rejecting fetch cached and thrown to the error boundary.
+    const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
+    const error = new Error('test error');
+    mockGetPublicationCompliance.mockRejectedValueOnce(error);
 
-    expect(() =>
+    let caughtError: Error | null = null;
+    const ErrorBoundary = createErrorBoundary((err) => {
+      caughtError = err;
+    });
+
+    const TestComponent = () => {
       useAnalyticsPublicationCompliance({
         currentPage: 0,
         pageSize: 10,
         sort: 'team_asc',
         tags: [],
         timeRange: 'all',
-      }),
-    ).toThrow('test error');
+      });
+      return <div>Success</div>;
+    };
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <TestComponent />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('test error');
+    });
   });
 
   it('handles undefined timeRange by normalizing to all', async () => {
-    const stateOptions = {
-      currentPage: 0,
-      pageSize: 10,
-      sort: 'team_asc' as const,
-      tags: [] as string[],
-      timeRange: 'all' as const,
-    };
-
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    // Test that timeRange normalization works in pageKey generation
-    const fakeData = {
+    // The hook normalizes `timeRange ?? 'all'` into its cache key — a fetch
+    // issued without a timeRange must be cached under the 'all' key.
+    const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
+    const fakeData: ListPublicationComplianceOpensearchResponse = {
       total: 1,
-      items: [
-        {
-          objectID: 'team-123',
-          teamId: 'team-123',
-          teamName: 'Team 123',
-          isTeamInactive: false,
-          overallCompliance: 85,
-          ranking: 'ADEQUATE',
-          datasetsPercentage: 90,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 80,
-          protocolsRanking: 'ADEQUATE',
-          codePercentage: 75,
-          codeRanking: 'NEEDS IMPROVEMENT',
-          labMaterialsPercentage: 95,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 10,
-          numberOfOutputs: 50,
-          numberOfDatasets: 20,
-          numberOfProtocols: 15,
-          numberOfCode: 10,
-          numberOfLabMaterials: 5,
-          timeRange: 'all' as const,
-        },
-      ],
+      items: [publicationComplianceItem],
     };
-    act(() => {
-      setState(fakeData);
-    });
+    mockGetPublicationCompliance.mockResolvedValueOnce(fakeData);
+
+    const queryClient = createTestQueryClient();
+
+    const TestComponent = () => {
+      const result = useAnalyticsPublicationCompliance({
+        currentPage: 0,
+        pageSize: 10,
+        sort: 'team_asc',
+        tags: [],
+        timeRange: undefined as unknown as TimeRangeOption,
+      });
+      return <div data-testid="success">{result.items.length} teams</div>;
+    };
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <TestComponent />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>,
+    );
+
     await waitFor(() => {
-      expect(capturedValue).toEqual(fakeData);
+      expect(screen.getByTestId('success')).toHaveTextContent('1 teams');
     });
+
+    expect(
+      queryClient.getQueryData(
+        publicationComplianceQueryKeys.list({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          tags: [],
+          timeRange: 'all',
+        }),
+      ),
+    ).toEqual(fakeData);
   });
 
-  it('handles DefaultValue in set function', async () => {
+  it('caches successful data with multiple items', () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -258,176 +253,25 @@ describe('PublicationCompliance', () => {
       tags: [] as string[],
       timeRange: 'all' as const,
     };
+    const queryClient = createTestQueryClient();
+    const queryKey = publicationComplianceQueryKeys.list(stateOptions);
 
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    // Test DefaultValue handling
-    act(() => {
-      setState(
-        new DefaultValue() as unknown as
-          | ListPublicationComplianceOpensearchResponse
-          | Error
-          | undefined,
-      );
-    });
-    await waitFor(() => {
-      expect(capturedValue).toBeUndefined();
-    });
-  });
-
-  it('handles Error in set function', async () => {
-    const stateOptions = {
-      currentPage: 0,
-      pageSize: 10,
-      sort: 'team_asc' as const,
-      tags: [] as string[],
-      timeRange: 'all' as const,
-    };
-
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    // Test Error handling in set function
-    const testError = new Error('API Error');
-    act(() => {
-      setState(testError);
-    });
-    await waitFor(() => {
-      expect(capturedValue).toBe(testError);
-    });
-  });
-
-  it('handles successful data setting with forEach loop', async () => {
-    const stateOptions = {
-      currentPage: 0,
-      pageSize: 10,
-      sort: 'team_asc' as const,
-      tags: [] as string[],
-      timeRange: 'all' as const,
-    };
-
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    // Test successful data setting with multiple items (covers forEach loop)
-    const fakeData = {
+    const fakeData: ListPublicationComplianceOpensearchResponse = {
       total: 2,
       items: [
+        publicationComplianceItem,
         {
-          objectID: 'team-123',
-          teamId: 'team-123',
-          teamName: 'Team 123',
-          isTeamInactive: false,
-          overallCompliance: 85,
-          ranking: 'ADEQUATE',
-          datasetsPercentage: 90,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 80,
-          protocolsRanking: 'ADEQUATE',
-          codePercentage: 75,
-          codeRanking: 'NEEDS IMPROVEMENT',
-          labMaterialsPercentage: 95,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 10,
-          numberOfOutputs: 50,
-          numberOfDatasets: 20,
-          numberOfProtocols: 15,
-          numberOfCode: 10,
-          numberOfLabMaterials: 5,
-          timeRange: 'all' as const,
-        },
-        {
+          ...publicationComplianceItem,
           objectID: 'team-456',
           teamId: 'team-456',
           teamName: 'Team 456',
-          isTeamInactive: false,
           overallCompliance: 92,
           ranking: 'OUTSTANDING',
-          datasetsPercentage: 95,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 88,
-          protocolsRanking: 'OUTSTANDING',
-          codePercentage: 90,
-          codeRanking: 'OUTSTANDING',
-          labMaterialsPercentage: 98,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 15,
-          numberOfOutputs: 75,
-          numberOfDatasets: 25,
-          numberOfProtocols: 20,
-          numberOfCode: 15,
-          numberOfLabMaterials: 15,
-          timeRange: 'all' as const,
         },
       ],
     };
-    act(() => {
-      setState(fakeData);
-    });
-    await waitFor(() => {
-      expect(capturedValue).toEqual(fakeData);
-    });
+    queryClient.setQueryData(queryKey, fakeData);
+    expect(queryClient.getQueryData(queryKey)).toEqual(fakeData);
   });
 
   it('passes sort parameter to API when sorting changes', async () => {
@@ -437,19 +281,7 @@ describe('PublicationCompliance', () => {
       total: 0,
     });
 
-    render(
-      <MemoryRouter>
-        <RecoilRoot>
-          <Suspense fallback="loading">
-            <Auth0Provider user={{}}>
-              <WhenReady>
-                <PublicationCompliance tags={[]} />
-              </WhenReady>
-            </Auth0Provider>
-          </Suspense>
-        </RecoilRoot>
-      </MemoryRouter>,
-    );
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Publications')).toBeInTheDocument();
@@ -471,23 +303,9 @@ describe('PublicationCompliance', () => {
       total: 0,
     });
 
-    render(
-      <MemoryRouter
-        initialEntries={[
-          '/analytics/open-science/publication-compliance?sort=publications_desc',
-        ]}
-      >
-        <RecoilRoot>
-          <Suspense fallback="loading">
-            <Auth0Provider user={{}}>
-              <WhenReady>
-                <PublicationCompliance tags={[]} />
-              </WhenReady>
-            </Auth0Provider>
-          </Suspense>
-        </RecoilRoot>
-      </MemoryRouter>,
-    );
+    renderPage([
+      '/analytics/open-science/publication-compliance?sort=publications_desc',
+    ]);
 
     await waitFor(() => {
       expect(screen.getByText('Publications')).toBeInTheDocument();
@@ -508,19 +326,7 @@ describe('PublicationCompliance', () => {
       total: 0,
     });
 
-    render(
-      <MemoryRouter>
-        <RecoilRoot>
-          <Suspense fallback="loading">
-            <Auth0Provider user={{}}>
-              <WhenReady>
-                <PublicationCompliance tags={[]} />
-              </WhenReady>
-            </Auth0Provider>
-          </Suspense>
-        </RecoilRoot>
-      </MemoryRouter>,
-    );
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Publications')).toBeInTheDocument();
@@ -551,7 +357,9 @@ describe('PublicationCompliance', () => {
     'code_desc',
     'lab_materials_asc',
     'lab_materials_desc',
-  ])('handles sort option %s in state', async (sort) => {
+  ])('handles sort option %s in the query key', (sort) => {
+    // Replaces the recoil per-sort setter probes: each sort produces a
+    // distinct, stable cache entry through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -559,69 +367,18 @@ describe('PublicationCompliance', () => {
       tags: [] as string[],
       timeRange: 'all' as const,
     };
+    const queryClient = createTestQueryClient();
+    const queryKey = publicationComplianceQueryKeys.list(stateOptions);
 
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    const fakeData = {
+    const fakeData: ListPublicationComplianceOpensearchResponse = {
       total: 1,
-      items: [
-        {
-          objectID: 'team-123',
-          teamId: 'team-123',
-          teamName: 'Team 123',
-          isTeamInactive: false,
-          overallCompliance: 85,
-          ranking: 'ADEQUATE',
-          datasetsPercentage: 90,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 80,
-          protocolsRanking: 'ADEQUATE',
-          codePercentage: 75,
-          codeRanking: 'NEEDS IMPROVEMENT',
-          labMaterialsPercentage: 95,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 10,
-          numberOfOutputs: 50,
-          numberOfDatasets: 20,
-          numberOfProtocols: 15,
-          numberOfCode: 10,
-          numberOfLabMaterials: 5,
-          timeRange: 'all' as const,
-        },
-      ],
+      items: [publicationComplianceItem],
     };
-
-    act(() => {
-      setState(fakeData);
-    });
-
-    await waitFor(() => {
-      expect(capturedValue).toEqual(fakeData);
-    });
+    queryClient.setQueryData(queryKey, fakeData);
+    expect(queryClient.getQueryData(queryKey)).toEqual(fakeData);
   });
 
-  it('handles sorting with tags filter', async () => {
+  it('handles sorting with tags filter in the query key', () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -629,65 +386,14 @@ describe('PublicationCompliance', () => {
       tags: ['tag1', 'tag2'] as string[],
       timeRange: 'all' as const,
     };
+    const queryClient = createTestQueryClient();
+    const queryKey = publicationComplianceQueryKeys.list(stateOptions);
 
-    let capturedValue:
-      | ListPublicationComplianceOpensearchResponse
-      | Error
-      | undefined;
-    let setState: SetterOrUpdater<
-      ListPublicationComplianceOpensearchResponse | Error | undefined
-    > = () => {};
-
-    const TestComponent = () => {
-      const [value, setValue] = useRecoilState(
-        publicationComplianceState(stateOptions),
-      );
-      capturedValue = value;
-      setState = setValue;
-      return null;
-    };
-
-    render(
-      <RecoilRoot>
-        <TestComponent />
-      </RecoilRoot>,
-    );
-
-    const fakeData = {
+    const fakeData: ListPublicationComplianceOpensearchResponse = {
       total: 1,
-      items: [
-        {
-          objectID: 'team-123',
-          teamId: 'team-123',
-          teamName: 'Team 123',
-          isTeamInactive: false,
-          overallCompliance: 85,
-          ranking: 'ADEQUATE',
-          datasetsPercentage: 90,
-          datasetsRanking: 'OUTSTANDING',
-          protocolsPercentage: 80,
-          protocolsRanking: 'ADEQUATE',
-          codePercentage: 75,
-          codeRanking: 'NEEDS IMPROVEMENT',
-          labMaterialsPercentage: 95,
-          labMaterialsRanking: 'OUTSTANDING',
-          numberOfPublications: 10,
-          numberOfOutputs: 50,
-          numberOfDatasets: 20,
-          numberOfProtocols: 15,
-          numberOfCode: 10,
-          numberOfLabMaterials: 5,
-          timeRange: 'all' as const,
-        },
-      ],
+      items: [publicationComplianceItem],
     };
-
-    act(() => {
-      setState(fakeData);
-    });
-
-    await waitFor(() => {
-      expect(capturedValue).toEqual(fakeData);
-    });
+    queryClient.setQueryData(queryKey, fakeData);
+    expect(queryClient.getQueryData(queryKey)).toEqual(fakeData);
   });
 });

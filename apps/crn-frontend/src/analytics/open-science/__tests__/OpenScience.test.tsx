@@ -1,11 +1,14 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { analytics } from '@asap-hub/routing';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -74,7 +77,7 @@ const renderPage = async (path: string) => {
   );
 
   const result = render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -82,7 +85,7 @@ const renderPage = async (path: string) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -187,7 +190,7 @@ describe('OpenScience', () => {
     );
 
     const result = render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
@@ -195,7 +198,7 @@ describe('OpenScience', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() =>

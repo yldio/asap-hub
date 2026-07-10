@@ -1,15 +1,11 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   ListPreprintComplianceOpensearchResponse,
   PreprintComplianceOpensearchResponse,
   SortPreprintCompliance,
   TimeRangeOption,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 import { getPreprintCompliance } from '../api';
 import { useAnalyticsOpensearch } from '../../../hooks';
@@ -21,88 +17,29 @@ type PreprintComplianceStateOptionKeyData = Pick<
   PreprintComplianceOptions,
   'currentPage' | 'pageSize' | 'sort' | 'tags'
 > & { timeRange: Extract<TimeRangeOption, 'all' | 'last-year'> };
-const preprintComplianceIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  PreprintComplianceStateOptionKeyData
->({
-  key: 'analyticsPreprintComplianceIndex',
-  default: undefined,
-});
 
-export const preprintComplianceListState = atomFamily<
-  PreprintComplianceOpensearchResponse | undefined,
-  { teamId: string; pageKey: string }
->({
-  key: 'analyticsPreprintComplianceList',
-  default: undefined,
-});
-
-export const preprintComplianceState = selectorFamily<
-  ListPreprintComplianceOpensearchResponse | Error | undefined,
-  PreprintComplianceStateOptionKeyData
->({
-  key: 'preprintCompliance',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(preprintComplianceIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: PreprintComplianceOpensearchResponse[] = [];
-      const pageKey = JSON.stringify({
-        currentPage: options.currentPage,
-        pageSize: options.pageSize,
-        sort: options.sort,
-        tags: options.tags,
-        timeRange: options.timeRange ?? 'all',
-      });
-      for (const id of index.ids) {
-        const team = get(preprintComplianceListState({ teamId: id, pageKey }));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(preprintComplianceIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(preprintComplianceIndexState(options), newTeams);
-      } else {
-        const pageKey = JSON.stringify({
-          currentPage: options.currentPage,
-          pageSize: options.pageSize,
-          sort: options.sort,
-          tags: options.tags,
-          timeRange: options.timeRange ?? 'all',
-        });
-
-        // Set new data - no need to clear since each page gets its own unique key
-        newTeams?.items.forEach((team) =>
-          set(
-            preprintComplianceListState({ teamId: team.objectID, pageKey }),
-            team,
-          ),
-        );
-        const newIndex = {
-          total: newTeams.total,
-          ids: newTeams.items.map((team) => team.objectID),
-        };
-        set(preprintComplianceIndexState(options), newIndex);
-      }
-    },
-});
+export const preprintComplianceQueryKeys = {
+  all: ['analytics-preprint-compliance'] as const,
+  lists: () => [...preprintComplianceQueryKeys.all, 'list'] as const,
+  // The recoil family was keyed by this Pick of the options with timeRange
+  // normalized to 'all' — keep the same key surface so cache identity is
+  // unchanged.
+  list: (options: PreprintComplianceStateOptionKeyData) =>
+    [
+      ...preprintComplianceQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
 export const useAnalyticsPreprintCompliance = (
   options: PreprintComplianceOptions,
-) => {
+): ListPreprintComplianceOpensearchResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<PreprintComplianceOpensearchResponse>(
       'preprint-compliance',
     ).client;
 
-  // Convert options to match the state type
+  // Convert options to match the state key type
   const stateOptions: PreprintComplianceStateOptionKeyData = {
     currentPage: options.currentPage,
     pageSize: options.pageSize,
@@ -114,22 +51,25 @@ export const useAnalyticsPreprintCompliance = (
     >,
   };
 
-  const [preprintCompliance, setPreprintCompliance] = useRecoilState(
-    preprintComplianceState(stateOptions),
-  );
-
-  if (preprintCompliance === undefined) {
-    throw getPreprintCompliance(opensearchClient, options)
-      .then((data) => {
-        setPreprintCompliance(data);
-      })
-      .catch(setPreprintCompliance);
-  }
-  if (preprintCompliance instanceof Error) {
-    throw preprintCompliance;
-  }
-
-  return {
-    ...preprintCompliance,
-  };
+  const { data } = useSuspenseQuery({
+    queryKey: preprintComplianceQueryKeys.list(stateOptions),
+    queryFn: async () => {
+      try {
+        // getPreprintCompliance is typed `| undefined`; a queryFn must never
+        // return undefined — cache `null` (recoil would have re-thrown
+        // forever on undefined; unreachable in practice).
+        return (await getPreprintCompliance(opensearchClient, options)) ?? null;
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setPreprintCompliance)`:
+        // an Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  });
+  return data as ListPreprintComplianceOpensearchResponse;
 };

@@ -1,20 +1,13 @@
-import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
-  UserListItemResponse,
+  ListUserResponse,
   UserPatchRequest,
   UserResponse,
-  ListUserResponse,
 } from '@asap-hub/model';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
 import {
   deleteUserAvatar,
@@ -24,117 +17,59 @@ import {
   postUserAvatar,
 } from './api';
 
-const userIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  GetListOptions
->({
-  key: 'userIndex',
-  default: undefined,
-});
-export const usersState = selectorFamily<
-  ListUserResponse | Error | undefined,
-  GetListOptions
->({
-  key: 'users',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(userIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const users: UserListItemResponse[] = [];
-      for (const id of index.ids) {
-        const user = get(userListState(id));
-        if (user === undefined) return undefined;
-        users.push(user);
-      }
-      return {
-        total: index.total,
-        items: users,
-        algoliaIndexName: index.algoliaIndexName,
-        algoliaQueryId: index.algoliaQueryId,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newUsers) => {
-      if (newUsers === undefined || newUsers instanceof DefaultValue) {
-        reset(userIndexState(options));
-      } else if (newUsers instanceof Error) {
-        set(userIndexState(options), newUsers);
-      } else {
-        newUsers?.items.forEach((user) => set(userListState(user.id), user));
-        set(userIndexState(options), {
-          total: newUsers.total,
-          ids: newUsers.items.map((user) => user.id),
-          algoliaIndexName: newUsers.algoliaIndexName,
-          algoliaQueryId: newUsers.algoliaQueryId,
-        });
-      }
-    },
-});
-
-export const refreshUserState = atomFamily<number, string>({
-  key: 'refreshUser',
-  default: 0,
-});
-const initialUserState = selectorFamily<UserResponse | undefined, string>({
-  key: 'initialUser',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshUserState(id));
-      const authorization = get(authorizationState);
-      return getUser(id, authorization);
-    },
-});
-
-const patchedUserState = atomFamily<UserResponse | undefined, string>({
-  key: 'patchedUser',
-  default: undefined,
-});
-
-const userState = selectorFamily<UserResponse | undefined, string>({
-  key: 'user',
-  get:
-    (id) =>
-    ({ get }) =>
-      get(patchedUserState(id)) ?? get(initialUserState(id)),
-});
-
-const userListState = atomFamily<UserListItemResponse | undefined, string>({
-  key: 'userList',
-  default: undefined,
-});
-
-export const useUsers = (options: GetListOptions) => {
-  const [users, setUsers] = useRecoilState(usersState(options));
-  const algoliaClient = useAlgolia();
-  if (users === undefined) {
-    throw getUsers(algoliaClient.client, options)
-      .then(setUsers)
-      .catch(setUsers);
-  }
-  if (users instanceof Error) {
-    throw users;
-  }
-  return users;
+export const userQueryKeys = {
+  all: ['users'] as const,
+  lists: () => [...userQueryKeys.all, 'list'] as const,
+  list: (options: GetListOptions) =>
+    [...userQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...userQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...userQueryKeys.details(), id] as const,
 };
 
-export const useUserById = (id: string) => useRecoilValue(userState(id));
+export const useUsers = (options: GetListOptions): ListUserResponse => {
+  const algoliaClient = useAlgolia();
+  return useSuspenseQuery({
+    queryKey: userQueryKeys.list(options),
+    queryFn: async (): Promise<ListUserResponse> => {
+      try {
+        return await getUsers(algoliaClient.client, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setUsers)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+};
 
+export const useUserById = (id: string): UserResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: userQueryKeys.detail(id),
+    // getUser resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below.
+    queryFn: async () => (await getUser(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
+
+// The mutation hooks below write the mutation response straight into the
+// detail cache (the recoil patchedUserState overlay) — never refetched,
+// because Contentful has read-after-write lag (see docs §6.1) — and then
+// refresh the Auth0 token + user so the id token picks up the profile change.
 export const usePatchUserById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async (patch: UserPatchRequest) => {
-    setPatchedUser(await patchUser(id, patch, authorization));
+    queryClient.setQueryData(
+      userQueryKeys.detail(id),
+      await patchUser(id, patch, await getAuthorization()),
+    );
     await getTokenSilently({
       redirect_uri: window.location.origin,
       ignoreCache: true,
@@ -152,14 +87,14 @@ export type AvatarMutationOptions = {
 
 export const usePatchUserAvatarById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async (
     avatar: string,
     { refreshToken = true }: AvatarMutationOptions = {},
   ) => {
-    const user = await postUserAvatar(id, { avatar }, authorization);
-    setPatchedUser(user);
+    const user = await postUserAvatar(id, { avatar }, await getAuthorization());
+    queryClient.setQueryData(userQueryKeys.detail(id), user);
     if (refreshToken) {
       await getTokenSilently({
         redirect_uri: window.location.origin,
@@ -173,11 +108,11 @@ export const usePatchUserAvatarById = (id: string) => {
 
 export const useDeleteUserAvatarById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async ({ refreshToken = true }: AvatarMutationOptions = {}) => {
-    const user = await deleteUserAvatar(id, authorization);
-    setPatchedUser(user);
+    const user = await deleteUserAvatar(id, await getAuthorization());
+    queryClient.setQueryData(userQueryKeys.detail(id), user);
     if (refreshToken) {
       await getTokenSilently({
         redirect_uri: window.location.origin,

@@ -1,113 +1,59 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   InterestGroupResponse,
   ListInterestGroupResponse,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { authorizationState } from '../../auth/state';
+import { useAuthorization } from '../../auth/useAuthorization';
 import { getInterestGroup, getInterestGroups } from './api';
 
-const interestGroupIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
->({
-  key: 'interestGroupIndex',
-  default: undefined,
-});
-export const interestGroupsState = selectorFamily<
-  ListInterestGroupResponse | Error | undefined,
-  GetListOptions
->({
-  key: 'interest-groups',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(interestGroupIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const interestGroups: InterestGroupResponse[] = [];
-      for (const id of index.ids) {
-        const group = get(interestGroupListState(id));
-        if (group === undefined) return undefined;
-        interestGroups.push(group);
-      }
-      return { total: index.total, items: interestGroups };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newInterestGroups) => {
-      if (
-        newInterestGroups === undefined ||
-        newInterestGroups instanceof DefaultValue
-      ) {
-        reset(interestGroupIndexState(options));
-      } else if (newInterestGroups instanceof Error) {
-        set(interestGroupIndexState(options), newInterestGroups);
-      } else {
-        newInterestGroups?.items.forEach((group) =>
-          set(interestGroupListState(group.id), group),
-        );
-        set(interestGroupIndexState(options), {
-          total: newInterestGroups.total,
-          ids: newInterestGroups.items.map((group) => group.id),
-        });
-      }
-    },
-});
-
-export const refreshInterestGroupState = atomFamily<number, string>({
-  key: 'refreshInterestGroup',
-  default: 0,
-});
-const fetchInterestGroupState = selectorFamily<
-  InterestGroupResponse | undefined,
-  string
->({
-  key: 'fetchInterestGroup',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshInterestGroupState(id));
-      const authorization = get(authorizationState);
-      return getInterestGroup(id, authorization);
-    },
-});
-export const interestGroupState = atomFamily<
-  InterestGroupResponse | undefined,
-  string
->({
-  key: 'interestGroup',
-  default: fetchInterestGroupState,
-});
-export const interestGroupListState = atomFamily<
-  InterestGroupResponse | undefined,
-  string
->({
-  key: 'interestGroupList',
-  default: interestGroupState,
-});
-
-export const useInterestGroups = (options: GetListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [interestGroups, setInterestGroups] = useRecoilState(
-    interestGroupsState(options),
-  );
-  if (interestGroups === undefined) {
-    throw getInterestGroups(options, authorization)
-      .then(setInterestGroups)
-      .catch(setInterestGroups);
-  }
-  if (interestGroups instanceof Error) {
-    throw interestGroups;
-  }
-  return interestGroups;
+// This module is the shared interest-group entity store: the teams and users
+// interest-group modules write fetched entities into these keys (R10), just
+// like their recoil selectors wrote into interestGroupListState /
+// interestGroupState here.
+export const interestGroupQueryKeys = {
+  all: ['interest-groups'] as const,
+  lists: () => [...interestGroupQueryKeys.all, 'list'] as const,
+  list: (options: GetListOptions) =>
+    [...interestGroupQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...interestGroupQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...interestGroupQueryKeys.details(), id] as const,
 };
 
-export const useInterestGroupById = (id: string) =>
-  useRecoilValue(interestGroupState(id));
+export const useInterestGroups = (
+  options: GetListOptions,
+): ListInterestGroupResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: interestGroupQueryKeys.list(options),
+    queryFn: async (): Promise<ListInterestGroupResponse> => {
+      try {
+        return await getInterestGroups(options, await getAuthorization());
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setInterestGroups)`: an
+        // Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+};
+
+export const useInterestGroupById = (
+  id: string,
+): InterestGroupResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: interestGroupQueryKeys.detail(id),
+    // getInterestGroup resolves undefined on a 404, but a queryFn must not
+    // return undefined — cache null and map it back below.
+    queryFn: async () =>
+      (await getInterestGroup(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};

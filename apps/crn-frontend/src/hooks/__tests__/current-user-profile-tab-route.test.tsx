@@ -3,10 +3,8 @@ import { network } from '@asap-hub/routing';
 import { renderHook, waitFor } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider } from '../../auth/test-utils';
-import { refreshUserState } from '../../network/users/state';
 import { useCurrentUserProfileTabRoute } from '../current-user-profile-tab-route';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
@@ -28,15 +26,9 @@ const wrapper =
     user?: Partial<User>;
   }): React.FC<{ children: React.ReactNode }> =>
   ({ children }: { children: React.ReactNode }) => (
-    <RecoilRoot
-      initializeState={({ set }) => {
-        user?.id && set(refreshUserState(user.id), Math.random());
-      }}
-    >
-      <Auth0Provider user={user}>
-        <MemoryRouter initialEntries={[currentRoute]}>{children}</MemoryRouter>
-      </Auth0Provider>
-    </RecoilRoot>
+    <Auth0Provider user={user}>
+      <MemoryRouter initialEntries={[currentRoute]}>{children}</MemoryRouter>
+    </Auth0Provider>
   );
 it('returns undefined when on different user profile', async () => {
   const userId = 'test123';

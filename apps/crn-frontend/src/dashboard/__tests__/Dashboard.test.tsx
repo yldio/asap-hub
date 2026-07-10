@@ -2,7 +2,6 @@ import { User } from '@asap-hub/auth';
 import {
   createListReminderResponse,
   createListUserResponse,
-  createUserListItemResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { activeUserMembershipStatus } from '@asap-hub/model';
@@ -12,11 +11,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, getUsers, patchUser } from '../../network/users/api';
-import { refreshUserState } from '../../network/users/state';
 import {
   getResearchOutputs,
   getDraftResearchOutputs,
@@ -37,8 +34,6 @@ jest.mock('../../shared-research/api', () => ({
 }));
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
-
-const userResponse = createUserListItemResponse();
 
 beforeEach(() => {
   mockGetUsers.mockResolvedValue(createListUserResponse(2));
@@ -77,19 +72,13 @@ const renderDashboard = async (user: Partial<User>) => {
   const result = render(
     <MemoryRouter>
       <Suspense fallback="loading">
-        <RecoilRoot
-          initializeState={({ set }) => {
-            set(refreshUserState(userResponse.id), Math.random());
-          }}
-        >
-          <QueryClientProvider client={createTestQueryClient()}>
-            <Auth0Provider user={user}>
-              <WhenReady>
-                <Dashboard />
-              </WhenReady>
-            </Auth0Provider>
-          </QueryClientProvider>
-        </RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <Dashboard />
+            </WhenReady>
+          </Auth0Provider>
+        </QueryClientProvider>
       </Suspense>
     </MemoryRouter>,
   );

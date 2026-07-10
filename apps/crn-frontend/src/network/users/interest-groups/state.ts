@@ -1,101 +1,53 @@
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import {
-  InterestGroupResponse,
-  ListInterestGroupResponse,
-} from '@asap-hub/model';
+import { ListInterestGroupResponse } from '@asap-hub/model';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { interestGroupState } from '../../interest-groups/state';
-import { authorizationState } from '../../../auth/state';
+import { useAuthorization } from '../../../auth/useAuthorization';
+import { interestGroupQueryKeys } from '../../interest-groups/state';
 import { getUserInterestGroups } from './api';
 
-const userInterestGroupIndexState = atomFamily<
-  | { ids: ReadonlyArray<string>; total: number }
-  | Error
-  | 'noSuchUser'
-  | undefined,
-  string
->({
-  key: 'userInterestGroupIndex',
-  default: undefined,
-});
-export const userInterestGroupsState = selectorFamily<
-  ListInterestGroupResponse | Error | 'noSuchUser' | undefined,
-  string
->({
-  key: 'userInterestGroups',
-  get:
-    (userId) =>
-    ({ get }) => {
-      const index = get(userInterestGroupIndexState(userId));
-      if (
-        index === undefined ||
-        index === 'noSuchUser' ||
-        index instanceof Error
-      )
-        return index;
-      const interestGroups: InterestGroupResponse[] = [];
-      for (const id of index.ids) {
-        const interestGroup = get(interestGroupState(id));
-        if (interestGroup === undefined) return undefined;
-        interestGroups.push(interestGroup);
-      }
-      return { total: index.total, items: interestGroups };
-    },
-  set:
-    (userId) =>
-    ({ get, set, reset }, newInterestGroups) => {
-      if (
-        newInterestGroups === undefined ||
-        newInterestGroups instanceof DefaultValue
-      ) {
-        const oldInterestGroups = get(userInterestGroupIndexState(userId));
-        if (
-          !(
-            oldInterestGroups === undefined ||
-            oldInterestGroups === 'noSuchUser' ||
-            oldInterestGroups instanceof Error
-          )
-        ) {
-          oldInterestGroups.ids.forEach((id) => reset(interestGroupState(id)));
-        }
-        reset(userInterestGroupIndexState(userId));
-      } else if (
-        newInterestGroups instanceof Error ||
-        newInterestGroups === 'noSuchUser'
-      ) {
-        set(userInterestGroupIndexState(userId), newInterestGroups);
-      } else {
-        newInterestGroups?.items.forEach((interestGroup) =>
-          set(interestGroupState(interestGroup.id), interestGroup),
-        );
-        set(userInterestGroupIndexState(userId), {
-          total: newInterestGroups.total,
-          ids: newInterestGroups.items.map((interestGroup) => interestGroup.id),
-        });
-      }
-    },
-});
+export const userInterestGroupQueryKeys = {
+  all: ['user-interest-groups'] as const,
+  byUser: (userId: string) =>
+    [...userInterestGroupQueryKeys.all, userId] as const,
+};
 
-export const useUserInterestGroupsById = (userId: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [userInterestGroups, setUserInterestGroups] = useRecoilState(
-    userInterestGroupsState(userId),
-  );
-  if (userInterestGroups === undefined) {
-    throw getUserInterestGroups(userId, authorization)
-      .then((newUserGroups) =>
-        setUserInterestGroups(newUserGroups ?? 'noSuchUser'),
-      )
-      .catch(setUserInterestGroups);
-  }
-  if (userInterestGroups instanceof Error) {
-    throw userInterestGroups;
-  }
-  return userInterestGroups;
+export const useUserInterestGroupsById = (
+  userId: string,
+): ListInterestGroupResponse | 'noSuchUser' => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  return useSuspenseQuery({
+    queryKey: userInterestGroupQueryKeys.byUser(userId),
+    queryFn: async (): Promise<ListInterestGroupResponse | 'noSuchUser'> => {
+      try {
+        const interestGroups = await getUserInterestGroups(
+          userId,
+          await getAuthorization(),
+        );
+        if (interestGroups === undefined) {
+          return 'noSuchUser';
+        }
+        // Write-through into the shared interest-group entity store (R10):
+        // the recoil selector fanned the fetched entities into
+        // interest-groups' interestGroupState (the detail atom, unlike the
+        // teams variant), seeding/refreshing the detail cache per group.
+        interestGroups.items.forEach((group) => {
+          queryClient.setQueryData(
+            interestGroupQueryKeys.detail(group.id),
+            group,
+          );
+        });
+        return interestGroups;
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setUserInterestGroups)`:
+        // an Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };

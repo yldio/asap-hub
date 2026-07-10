@@ -1,7 +1,8 @@
 import { createUserResponse } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
@@ -26,13 +27,13 @@ const renderAvatarHook = <T,>(
   refreshUser = jest.fn().mockResolvedValue(undefined),
 ) => {
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }} auth0Overrides={() => ({ refreshUser })}>
           <WhenReady>{children}</WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>
+    </QueryClientProvider>
   );
   const { result } = renderHook(useHook, { wrapper });
   return { result, refreshUser };

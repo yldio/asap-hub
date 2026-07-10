@@ -9,7 +9,6 @@ import {
   createTestQueryClient,
 } from '@asap-hub/frontend-utils';
 import { FetchResearchOutputsFilter } from '@asap-hub/model';
-import { RecoilRoot } from 'recoil';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -19,7 +18,6 @@ import { getResearchOutputs } from '../../../shared-research/api';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getUser } from '../api';
-import { refreshUserState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -71,28 +69,22 @@ const renderOutputs = async (
     : { pathname };
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(userId), Math.random());
-      }}
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[initialEntry]}>
-                <Routes>
-                  <Route
-                    path={network({}).users({}).user({ userId }).outputs({}).$}
-                    element={<Outputs userId={userId} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[initialEntry]}>
+              <Routes>
+                <Route
+                  path={network({}).users({}).user({ userId }).outputs({}).$}
+                  element={<Outputs userId={userId} />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

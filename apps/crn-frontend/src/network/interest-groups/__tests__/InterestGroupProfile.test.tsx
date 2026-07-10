@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -13,7 +12,6 @@ import { network } from '@asap-hub/routing';
 
 import InterestGroupProfile from '../InterestGroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshInterestGroupState } from '../state';
 import { getInterestGroup } from '../api';
 import { getEvents } from '../../../events/api';
 
@@ -38,38 +36,30 @@ const renderGroupProfile = async (
   );
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(interestGroupResponse.id), Math.random())
-      }
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({})
-                    .interestGroups({})
-                    .interestGroup({ interestGroupId }).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={`${network.template}${
-                      network({}).interestGroups.template
-                    }${
-                      network({}).interestGroups({}).interestGroup.template
-                    }/*`}
-                    element={<InterestGroupProfile currentTime={new Date()} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({})
+                  .interestGroups({})
+                  .interestGroup({ interestGroupId }).$,
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={`${network.template}${
+                    network({}).interestGroups.template
+                  }${network({}).interestGroups({}).interestGroup.template}/*`}
+                  element={<InterestGroupProfile currentTime={new Date()} />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -208,38 +198,30 @@ it('renders the not-found page when the interest group is not found', async () =
   mockGetInterestGroup.mockResolvedValueOnce(undefined);
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(nonExistentId), Math.random())
-      }
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({})
-                    .interestGroups({})
-                    .interestGroup({ interestGroupId: nonExistentId }).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={`${network.template}${
-                      network({}).interestGroups.template
-                    }${
-                      network({}).interestGroups({}).interestGroup.template
-                    }/*`}
-                    element={<InterestGroupProfile currentTime={new Date()} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({})
+                  .interestGroups({})
+                  .interestGroup({ interestGroupId: nonExistentId }).$,
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={`${network.template}${
+                    network({}).interestGroups.template
+                  }${network({}).interestGroups({}).interestGroup.template}/*`}
+                  element={<InterestGroupProfile currentTime={new Date()} />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {

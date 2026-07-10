@@ -1,4 +1,3 @@
-import { RecoilRoot } from 'recoil';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { useFlags } from '@asap-hub/react-context';
@@ -31,21 +30,19 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
   return <NotFoundPage />;
 };
 
-const ContentWithRecoil: React.FC<ContentProps> = (props) => {
-  // The QueryClient lives and dies with this component, exactly like the
-  // RecoilRoot next to it: unmounting the content page discards the cache.
+const ContentWithProviders: React.FC<ContentProps> = (props) => {
+  // The QueryClient lives and dies with this component: unmounting the content
+  // page discards the cache (the same lifetime the old RecoilRoot had).
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );
   const { isEnabled } = useFlags();
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <Content {...props} />
-        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
-      </QueryClientProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <Content {...props} />
+      {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
+    </QueryClientProvider>
   );
 };
 
-export default ContentWithRecoil;
+export default ContentWithProviders;

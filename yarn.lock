@@ -1023,7 +1023,6 @@ __metadata:
     react-hook-form: "npm:7.53.2"
     react-router: "npm:7.13.0"
     react-test-renderer: "npm:18.3.1"
-    recoil: "npm:0.7.7"
     stream: "npm:stream-browserify@3.0.0"
     typescript: "npm:4.9.5"
     use-debounce: "npm:8.0.4"

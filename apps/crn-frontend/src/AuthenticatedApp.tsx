@@ -25,7 +25,6 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 
@@ -289,24 +288,22 @@ const AuthenticatedApp: FC<{
     </Onboardable>
   );
 };
-const AuthenticatedAppWithRecoil: FC<
+const AuthenticatedAppWithProviders: FC<
   Record<string, React.Dispatch<React.SetStateAction<boolean>> | never>
 > = ({ setIsOnboardable }) => {
-  // The QueryClient lives and dies with this component, exactly like the
-  // RecoilRoot next to it: on logout the AuthenticatedApp unmounts and the
-  // whole cache is discarded (same semantics recoil has today).
+  // The QueryClient lives and dies with this component: on logout the
+  // AuthenticatedApp unmounts and the whole cache is discarded (the same
+  // logout cache-wipe semantics the old RecoilRoot provided).
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );
   const { isEnabled } = useFlags();
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
-        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
-      </QueryClientProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+      {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
+    </QueryClientProvider>
   );
 };
 
-export default AuthenticatedAppWithRecoil;
+export default AuthenticatedAppWithProviders;

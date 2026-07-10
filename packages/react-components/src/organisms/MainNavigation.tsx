@@ -20,7 +20,7 @@ import {
 import { NavigationLink } from '../atoms';
 import RailTooltip from '../atoms/RailTooltip';
 import { charcoal, silver, steel } from '../colors';
-import { crossQuery } from '../layout';
+import { crossQuery, menuTransitionMs } from '../layout';
 import {
   networkIcon,
   discoverIcon,
@@ -31,7 +31,6 @@ import {
   calendarIcon,
   ProjectIcon,
   collapseMenuIcon,
-  expandMenuIcon,
 } from '../icons';
 
 const listStyles = css({
@@ -122,9 +121,18 @@ const toggleIconStyles = css({
   width: rem(lineHeight),
   height: rem(lineHeight),
   paddingRight: rem(16),
+  svg: {
+    transition: `transform ${menuTransitionMs}ms ease`,
+  },
 });
 const collapsedToggleIconStyles = css({
   paddingRight: 0,
+});
+// The expand icon is the collapse icon rotated 180 degrees.
+const rotatedToggleIconStyles = css({
+  svg: {
+    transform: 'rotate(180deg)',
+  },
 });
 // Suppresses the browser's native <title> tooltip so only the styled one shows.
 const toggleIconNoTitleStyles = css({
@@ -281,15 +289,16 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
             aria-label={collapsed ? 'Expand' : 'Collapse Menu'}
             aria-expanded={!collapsed}
           >
-            <RailTooltip label="Expand Menu" enabled={railSettled}>
+            <RailTooltip label="Expand" enabled={railSettled}>
               <span
                 css={[
                   toggleIconStyles,
                   labelsHidden && collapsedToggleIconStyles,
+                  collapsed && rotatedToggleIconStyles,
                   toggleIconNoTitleStyles,
                 ]}
               >
-                {collapsed ? expandMenuIcon : collapseMenuIcon}
+                {collapseMenuIcon}
               </span>
               {!labelsHidden && (
                 <span css={[labelStyles, fadeInLabel && labelFadeInStyles]}>

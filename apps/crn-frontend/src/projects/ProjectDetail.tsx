@@ -168,7 +168,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
-  const isDiscoveryProject = config.projectType === 'Discovery Project';
+  const isTeamBased = config.getIsTeamBased(projectDetail);
 
   const hasSupplementGrant =
     'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
@@ -247,7 +247,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             <Route
               path="create-output/:outputDocumentType"
               element={
-                isProjectOutputsEnabled && teamId && isDiscoveryProject ? (
+                isProjectOutputsEnabled && teamId && isTeamBased ? (
                   <Frame title="Share Output">
                     <ProjectOutput teamId={teamId} />
                   </Frame>
@@ -259,7 +259,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             <Route
               path="duplicate/:id"
               element={
-                isProjectOutputsEnabled && isDiscoveryProject ? (
+                isProjectOutputsEnabled && isTeamBased ? (
                   <Frame title="Duplicate Output">
                     <DuplicateOutput />
                   </Frame>
@@ -339,9 +339,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                               <ProjectWorkspace
                                 id={projectId}
                                 isProjectMember={isMember}
-                                isTeamBased={config.getIsTeamBased(
-                                  projectDetail,
-                                )}
+                                isTeamBased={isTeamBased}
                                 manuscripts={projectDetail.manuscripts ?? []}
                                 collaborationManuscripts={
                                   projectDetail.collaborationManuscripts ?? []

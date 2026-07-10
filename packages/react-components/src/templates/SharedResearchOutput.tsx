@@ -101,16 +101,18 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   const permissions = useContext(ResearchOutputPermissionsContext);
 
+  const isGrantDocument = ['Grant Document', 'Presentation'].includes(
+    props.documentType,
+  );
+
   const visibleActions = getVisibleResearchOutputActions(permissions, {
     published,
     isInReview,
     hasRelatedManuscript: !!relatedManuscriptVersion,
     isWorkingGroupOutput: !!(props.workingGroups && props.workingGroups[0]?.id),
+    isGrantDocument,
   });
 
-  const isGrantDocument = ['Grant Document', 'Presentation'].includes(
-    props.documentType,
-  );
   const tags = [
     ...props.methods,
     ...props.organisms,

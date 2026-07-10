@@ -5,14 +5,12 @@ import {
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { teamCollaborationPerformance } from '@asap-hub/fixtures';
 
 import { getTeamCollaboration, getTeamCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
 
 jest.mock('../api');
@@ -88,38 +86,24 @@ const data: ListTeamCollaborationResponse = {
 
 const renderPage = async () => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          analyticsTeamCollaborationState({
-            currentPage: 0,
-            pageSize: 10,
-            timeRange: '30d',
-            tags: [],
-            sort: 'team_asc',
-          }),
-        );
-      }}
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={['/analytics']}>
-                <TeamCollaboration
-                  type="within-team"
-                  tags={[]}
-                  sort="team_asc"
-                  sortingDirection={teamCollaborationInitialSortingDirection}
-                  setSortingDirection={mockSetSortingDirection}
-                  setSort={mockSetSort}
-                />
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <TeamCollaboration
+                type="within-team"
+                tags={[]}
+                sort="team_asc"
+                sortingDirection={teamCollaborationInitialSortingDirection}
+                setSortingDirection={mockSetSortingDirection}
+                setSort={mockSetSort}
+              />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

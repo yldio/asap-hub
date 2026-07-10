@@ -1,3 +1,4 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
@@ -14,12 +15,7 @@ import {
   UserCollaborationResponse,
   TeamCollaborationResponse,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import { makePerformanceQuery } from '../utils/state';
@@ -32,185 +28,86 @@ import {
   PreliminaryDataSharingSearchOptions,
 } from './api';
 
-const analyticsUserCollaborationIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
->({
-  key: 'analyticsUserCollaborationIndex',
-  default: undefined,
-});
+export const userCollaborationQueryKeys = {
+  all: ['analytics-user-collaboration'] as const,
+  lists: () => [...userCollaborationQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>) =>
+    [
+      ...userCollaborationQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
-export const analyticsUserCollaborationListState = atomFamily<
-  UserCollaborationResponse | undefined,
-  string
->({
-  key: 'analyticsUserCollaborationList',
-  default: undefined,
-});
+export const teamCollaborationQueryKeys = {
+  all: ['analytics-team-collaboration'] as const,
+  lists: () => [...teamCollaborationQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>) =>
+    [
+      ...teamCollaborationQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
-export const analyticsUserCollaborationState = selectorFamily<
-  ListUserCollaborationResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
->({
-  key: 'userCollaboration',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsUserCollaborationIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const users: UserCollaborationResponse[] = [];
-      for (const id of index.ids) {
-        const user = get(analyticsUserCollaborationListState(id));
-        if (user === undefined) return undefined;
-        users.push(user);
-      }
-      return { total: index.total, items: users };
-    },
-  set:
-    (options) =>
-    ({ get: _get, set, reset }, newUserCollaboration) => {
-      if (
-        newUserCollaboration === undefined ||
-        newUserCollaboration instanceof DefaultValue
-      ) {
-        reset(analyticsUserCollaborationIndexState(options));
-      } else if (newUserCollaboration instanceof Error) {
-        set(
-          analyticsUserCollaborationIndexState(options),
-          newUserCollaboration,
-        );
-      } else {
-        newUserCollaboration?.items.forEach((userCollaboration) =>
-          set(
-            analyticsUserCollaborationListState(
-              userCollaboration.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
-            ),
-            userCollaboration,
-          ),
-        );
-        set(analyticsUserCollaborationIndexState(options), {
-          total: newUserCollaboration.total,
-          ids: newUserCollaboration.items.map(
-            (userCollaboration) =>
-              userCollaboration.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
+export const prelimDataSharingQueryKeys = {
+  all: ['analytics-preliminary-data-sharing'] as const,
+  lists: () => [...prelimDataSharingQueryKeys.all, 'list'] as const,
+  list: (options: PreliminaryDataSharingSearchOptions) =>
+    [
+      ...prelimDataSharingQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
-) => {
+): ListUserCollaborationResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<UserCollaborationResponse>(
       'user-collaboration',
     ).client;
 
-  const [userCollaboration, setUserCollaboration] = useRecoilState(
-    analyticsUserCollaborationState(options),
-  );
-
-  if (userCollaboration === undefined) {
-    throw getUserCollaboration(opensearchClient, options)
-      .then(setUserCollaboration)
-      .catch(setUserCollaboration);
-  }
-  if (userCollaboration instanceof Error) {
-    throw userCollaboration;
-  }
-
-  return { ...userCollaboration };
+  return useSuspenseQuery({
+    queryKey: userCollaborationQueryKeys.list(options),
+    queryFn: async (): Promise<ListUserCollaborationResponse> => {
+      try {
+        return await getUserCollaboration(opensearchClient, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setUserCollaboration)`:
+        // an Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };
-
-export const analyticsTeamCollaborationIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
->({
-  key: 'analyticsTeamCollaborationIndex',
-  default: undefined,
-});
-
-export const analyticsTeamCollaborationListState = atomFamily<
-  TeamCollaborationResponse | undefined,
-  string
->({
-  key: 'analyticsTeamCollaborationList',
-  default: undefined,
-});
-
-export const analyticsTeamCollaborationState = selectorFamily<
-  ListTeamCollaborationResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
->({
-  key: 'teamCollaboration',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsTeamCollaborationIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: TeamCollaborationResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsTeamCollaborationListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get: _get, set, reset }, newTeamCollaboration) => {
-      if (
-        newTeamCollaboration === undefined ||
-        newTeamCollaboration instanceof DefaultValue
-      ) {
-        reset(analyticsTeamCollaborationIndexState(options));
-      } else if (newTeamCollaboration instanceof Error) {
-        set(
-          analyticsTeamCollaborationIndexState(options),
-          newTeamCollaboration,
-        );
-      } else {
-        newTeamCollaboration?.items.forEach((teamCollaboration) =>
-          set(
-            analyticsTeamCollaborationListState(
-              teamCollaboration.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
-            ),
-            teamCollaboration,
-          ),
-        );
-        set(analyticsTeamCollaborationIndexState(options), {
-          total: newTeamCollaboration.total,
-          ids: newTeamCollaboration.items.map(
-            (teamCollaboration) =>
-              teamCollaboration.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
 
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
-) => {
+): ListTeamCollaborationResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<TeamCollaborationResponse>(
       'team-collaboration',
     ).client;
 
-  const [teamCollaboration, setTeamCollaboration] = useRecoilState(
-    analyticsTeamCollaborationState(options),
-  );
-
-  if (teamCollaboration === undefined) {
-    throw getTeamCollaboration(opensearchClient, options)
-      .then(setTeamCollaboration)
-      .catch(setTeamCollaboration);
-  }
-  if (teamCollaboration instanceof Error) {
-    throw teamCollaboration;
-  }
-  return { ...teamCollaboration };
+  return useSuspenseQuery({
+    queryKey: teamCollaborationQueryKeys.list(options),
+    queryFn: async (): Promise<ListTeamCollaborationResponse> => {
+      try {
+        return await getTeamCollaboration(opensearchClient, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setTeamCollaboration)` —
+        // see useAnalyticsUserCollaboration above.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };
 
 const teamCollaborationPerformanceQuery =
@@ -241,14 +138,6 @@ export const useUserCollaborationPerformance =
 export const useUserCollaborationPerformanceValue =
   userCollaborationPerformanceQuery.useValueHook;
 
-const analyticsPreliminaryDataSharingState = atomFamily<
-  ListPreliminaryDataSharingResponse | Error | undefined,
-  PreliminaryDataSharingSearchOptions
->({
-  key: 'analyticsPreliminaryDataSharing',
-  default: undefined,
-});
-
 export const useAnalyticsSharingPrelimFindings = (
   options: Omit<
     AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
@@ -262,31 +151,38 @@ export const useAnalyticsSharingPrelimFindings = (
       'preliminary-data-sharing',
     ).client;
 
-  const [preliminaryDataSharing, setPreliminaryDataSharing] = useRecoilState(
-    analyticsPreliminaryDataSharingState({
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    }),
-  );
+  // The recoil atomFamily was keyed by this Pick of the options — keep the
+  // same key surface so cache identity is unchanged.
+  const stateOptions: PreliminaryDataSharingSearchOptions = {
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    tags: options.tags,
+    timeRange: options.timeRange,
+    sort: options.sort,
+  };
 
-  if (preliminaryDataSharing === undefined) {
-    throw getPreliminaryDataSharing(opensearchClient, {
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    })
-      .then(setPreliminaryDataSharing)
-      .catch(setPreliminaryDataSharing);
-  }
-
-  if (preliminaryDataSharing instanceof Error) {
-    throw preliminaryDataSharing;
-  }
+  const { data } = useSuspenseQuery({
+    queryKey: prelimDataSharingQueryKeys.list(stateOptions),
+    queryFn: async () => {
+      try {
+        // getPreliminaryDataSharing is typed `| undefined`; a queryFn must
+        // never return undefined — cache `null` (recoil would have re-thrown
+        // forever on undefined; unreachable in practice).
+        return (
+          (await getPreliminaryDataSharing(opensearchClient, stateOptions)) ??
+          null
+        );
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setPreliminaryDataSharing)`
+        // — see useAnalyticsUserCollaboration above.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  });
+  const preliminaryDataSharing = data as ListPreliminaryDataSharingResponse;
 
   const transformedItems: SharingPrelimFindingsResponse[] =
     preliminaryDataSharing.items.map((item) => ({

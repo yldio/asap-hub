@@ -3,10 +3,10 @@ import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { useFlags } from '@asap-hub/react-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import ReactQueryDevtoolsProduction from '../ReactQueryDevtoolsProduction';
 import { useState } from 'react';
 
 import { usePageByPageId } from './state';
+import ReactQueryDevtoolsProduction from '../ReactQueryDevtoolsProduction';
 
 interface ContentProps {
   pageId: string;

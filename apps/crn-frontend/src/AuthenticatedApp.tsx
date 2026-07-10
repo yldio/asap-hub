@@ -27,10 +27,11 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
+
+import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 
 import CheckOnboarded from './auth/CheckOnboarded';
 import { auth0State } from './auth/state';

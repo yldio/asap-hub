@@ -10,13 +10,13 @@ import {
 } from '@asap-hub/react-context';
 import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';
 import NotificationMessages from './NotificationMessages';
+import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 
 const loadOnboardedApp = () =>
   import(/* webpackChunkName: "onboarded-app" */ './OnboardedApp');

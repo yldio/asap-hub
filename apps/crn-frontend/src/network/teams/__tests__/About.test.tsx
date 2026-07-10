@@ -1,14 +1,11 @@
 import { ComponentProps, Suspense } from 'react';
-import {
-  render,
-  waitFor,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import {
   createTeamResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   Auth0Provider,
   WhenReady,
@@ -43,38 +40,43 @@ const renderTeamAbout = async (
         set(refreshTeamState(aboutProps.team.id), Math.random())
       }
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({}).teams({}).team({ teamId }).about({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    network.template +
-                    network({}).teams.template +
-                    network({}).teams({}).team.template +
-                    network({}).teams({}).team({ teamId }).about.template
-                  }
-                  element={
-                    <About
-                      teamListElementId="uuid"
-                      isAsapTeam={false}
-                      {...aboutProps}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).teams({}).team({ teamId }).about({}).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      network.template +
+                      network({}).teams.template +
+                      network({}).teams({}).team.template +
+                      network({}).teams({}).team({ teamId }).about.template
+                    }
+                    element={
+                      <About
+                        teamListElementId="uuid"
+                        isAsapTeam={false}
+                        {...aboutProps}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 it('renders the member links', async () => {

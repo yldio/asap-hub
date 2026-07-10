@@ -1,7 +1,8 @@
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { Suspense } from 'react';
@@ -66,13 +67,13 @@ const onboardableUser: UserResponse = {
 
 it('is undefined when there is no logged in user', async () => {
   const { container } = render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Onboardable>
           {(onboardable) => `onboardable: ${onboardable}`}
         </Onboardable>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   expect(container.textContent).toMatchInlineSnapshot(
     `"onboardable: undefined"`,
@@ -80,7 +81,7 @@ it('is undefined when there is no logged in user', async () => {
 });
 
 const renderOnboardable = (onboarded: boolean) => (
-  <RecoilRoot>
+  <QueryClientProvider client={createTestQueryClient()}>
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
         <WhenReady>
@@ -99,7 +100,7 @@ const renderOnboardable = (onboarded: boolean) => (
         </WhenReady>
       </Auth0Provider>
     </Suspense>
-  </RecoilRoot>
+  </QueryClientProvider>
 );
 
 it('is undefined when the logged in user is already onboarded', async () => {

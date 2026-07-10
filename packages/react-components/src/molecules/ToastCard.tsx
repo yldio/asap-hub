@@ -34,7 +34,7 @@ const iconStyles = css({
   display: 'inline-block',
   width: rem(24),
   height: rem(24),
-  paddingRight: rem(12),
+  paddingRight: rem(8),
 });
 
 const mutedIconStyles = css({

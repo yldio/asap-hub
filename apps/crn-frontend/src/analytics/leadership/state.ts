@@ -1,3 +1,4 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
@@ -6,12 +7,7 @@ import {
   SortLeadershipAndMembership,
   SortOSChampion,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import {
   AnalyticsSearchOptions,
@@ -37,120 +33,25 @@ type OSStateOptionKeyData = Pick<
   'currentPage' | 'pageSize' | 'sort' | 'tags' | 'timeRange'
 >;
 
-const analyticsLeadershipIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  StateOptionKeyData
->({
-  key: 'analyticsLeadershipIndex',
-  default: undefined,
-});
+export const leadershipQueryKeys = {
+  all: ['analytics-leadership'] as const,
+  lists: () => [...leadershipQueryKeys.all, 'list'] as const,
+  // The recoil family was keyed by this Pick of the options (no timeRange) —
+  // keep the same key surface so cache identity is unchanged.
+  list: (options: StateOptionKeyData) =>
+    [...leadershipQueryKeys.lists(), normalizeListOptions(options)] as const,
+};
 
-export const analyticsLeadershipListState = atomFamily<
-  AnalyticsTeamLeadershipResponse | undefined,
-  string
->({
-  key: 'analyticsLeadershipList',
-  default: undefined,
-});
+export const osChampionQueryKeys = {
+  all: ['analytics-os-champion'] as const,
+  lists: () => [...osChampionQueryKeys.all, 'list'] as const,
+  list: (options: OSStateOptionKeyData) =>
+    [...osChampionQueryKeys.lists(), normalizeListOptions(options)] as const,
+};
 
-export const analyticsLeadershipState = selectorFamily<
-  ListAnalyticsTeamLeadershipResponse | Error | undefined,
-  StateOptionKeyData
->({
-  key: 'analyticsTeamsLeadership',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsLeadershipIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: AnalyticsTeamLeadershipResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsLeadershipListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(analyticsLeadershipIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(analyticsLeadershipIndexState(options), newTeams);
-      } else {
-        newTeams?.items.forEach((team) =>
-          set(
-            analyticsLeadershipListState(team.id + JSON.stringify(options)),
-            team,
-          ),
-        );
-        set(analyticsLeadershipIndexState(options), {
-          total: newTeams.total,
-          ids: [
-            ...new Set(
-              newTeams.items.map((team) => team.id + JSON.stringify(options)),
-            ),
-          ] as string[],
-        });
-      }
-    },
-});
-
-const analyticsOSChampionIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  OSStateOptionKeyData
->({
-  key: 'analyticsOSChampionIndex',
-  default: undefined,
-});
-
-export const analyticsOSChampionListState = atomFamily<
-  OSChampionOpensearchResponse | undefined,
-  string
->({
-  key: 'analyticsOSChampionList',
-  default: undefined,
-});
-
-export const analyticsOSChampionState = selectorFamily<
-  ListOSChampionOpensearchResponse | Error | undefined,
-  OSStateOptionKeyData
->({
-  key: 'osChampion',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsOSChampionIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: OSChampionOpensearchResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsOSChampionListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(analyticsOSChampionIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(analyticsOSChampionIndexState(options), newTeams);
-      } else {
-        newTeams?.items.forEach((team) =>
-          set(analyticsOSChampionListState(team.objectID), team),
-        );
-        set(analyticsOSChampionIndexState(options), {
-          total: newTeams.total,
-          ids: newTeams.items.map((team) => team.objectID),
-        });
-      }
-    },
-});
-
-export const useAnalyticsLeadership = (options: Options) => {
+export const useAnalyticsLeadership = (
+  options: Options,
+): ListAnalyticsTeamLeadershipResponse => {
   const opensearchIndex: OpensearchIndex =
     options.metric === 'interest-group' ? 'ig-leadership' : 'wg-leadership';
   const opensearchClient =
@@ -158,42 +59,64 @@ export const useAnalyticsLeadership = (options: Options) => {
       opensearchIndex,
     ).client;
 
-  const [leadership, setLeadership] = useRecoilState(
-    analyticsLeadershipState(options),
-  );
-  if (leadership === undefined) {
-    throw getAnalyticsLeadership(
-      opensearchClient,
-      options as AnalyticsSearchOptionsWithSort,
-    )
-      .then(setLeadership)
-      .catch(setLeadership);
-  }
-  if (leadership instanceof Error) {
-    throw leadership;
-  }
-  return {
-    ...leadership,
-  };
+  const { currentPage, pageSize, sort, tags, metric } = options;
+  return useSuspenseQuery({
+    queryKey: leadershipQueryKeys.list({
+      currentPage,
+      pageSize,
+      sort,
+      tags,
+      metric,
+    }),
+    queryFn: async () => {
+      try {
+        return (
+          (await getAnalyticsLeadership(
+            opensearchClient,
+            options as AnalyticsSearchOptionsWithSort,
+          )) ?? null
+        );
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setLeadership)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data as ListAnalyticsTeamLeadershipResponse;
 };
 
-export const useAnalyticsOSChampion = (options: OSOptions) => {
+export const useAnalyticsOSChampion = (
+  options: OSOptions,
+): ListOSChampionOpensearchResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion').client;
 
-  const [osChampion, setOSChampion] = useRecoilState(
-    analyticsOSChampionState(options),
-  );
-  if (osChampion === undefined) {
-    throw getAnalyticsOSChampion(opensearchClient, options)
-      .then(setOSChampion)
-      .catch(setOSChampion);
-  }
-  if (osChampion instanceof Error) {
-    throw osChampion;
-  }
-
-  return {
-    ...osChampion,
-  };
+  const { currentPage, pageSize, sort, tags, timeRange } = options;
+  return useSuspenseQuery({
+    queryKey: osChampionQueryKeys.list({
+      currentPage,
+      pageSize,
+      sort,
+      tags,
+      timeRange,
+    }),
+    queryFn: async () => {
+      try {
+        return (
+          (await getAnalyticsOSChampion(opensearchClient, options)) ?? null
+        );
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setOSChampion)` — see
+        // useAnalyticsLeadership above.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data as ListOSChampionOpensearchResponse;
 };

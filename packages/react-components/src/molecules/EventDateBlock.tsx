@@ -6,6 +6,7 @@ import { rem } from '../pixels';
 
 const containerStyles = css({
   flexShrink: 0,
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   width: rem(96),
@@ -23,7 +24,7 @@ const containerStyles = css({
 
 const monthStyles = css({
   display: 'block',
-  padding: `${rem(4)} 0`,
+  padding: `${rem(8)} 0`,
 
   backgroundColor: mint.rgb,
   color: charcoal.rgb,

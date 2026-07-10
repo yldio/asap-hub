@@ -16,9 +16,11 @@ const wrapperStyles = css({
   position: 'relative',
   display: 'flex',
   flex: 1,
+  margin: rem(-16),
+  padding: rem(16),
 });
 
-const gap = 16;
+const gap = 0;
 const triangle = 5;
 
 const bubbleStyles = css({

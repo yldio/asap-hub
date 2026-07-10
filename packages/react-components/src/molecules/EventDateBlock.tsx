@@ -6,7 +6,10 @@ import { rem } from '../pixels';
 
 const containerStyles = css({
   flexShrink: 0,
-  width: rem(72),
+  display: 'flex',
+  flexDirection: 'column',
+  width: rem(96),
+  height: rem(96),
   overflow: 'hidden',
 
   textAlign: 'center',
@@ -31,8 +34,10 @@ const monthStyles = css({
 });
 
 const dayStyles = css({
-  display: 'block',
-  padding: `${rem(8)} 0`,
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 
   color: charcoal.rgb,
 

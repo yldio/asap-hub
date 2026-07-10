@@ -19,8 +19,8 @@ const dateBlockContainerStyle = css({
 
 const thumbnailStyles = css({
   display: 'block',
-  width: rem(72),
-  height: rem(72),
+  width: rem(96),
+  height: rem(96),
   objectFit: 'cover',
 
   borderStyle: 'solid',

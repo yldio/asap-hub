@@ -5,7 +5,7 @@ import { ComponentProps } from 'react';
 
 import { EventDateBlock, EventTime, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';
-import { neutral900 } from '../colors';
+import { neutral900, steel } from '../colors';
 import { largeDesktopScreen, rem } from '../pixels';
 
 const TITLE_LIMIT = 55;
@@ -15,6 +15,18 @@ const dateBlockContainerStyle = css({
   [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
     display: 'none',
   },
+});
+
+const thumbnailStyles = css({
+  display: 'block',
+  width: rem(72),
+  height: rem(72),
+  objectFit: 'cover',
+
+  borderStyle: 'solid',
+  borderWidth: 1,
+  borderColor: steel.rgb,
+  borderRadius: rem(8),
 });
 
 const contentStyles = css({
@@ -42,7 +54,7 @@ const cardStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<BasicEvent, 'id' | 'title' | 'status'> & {
+  Pick<BasicEvent, 'id' | 'title' | 'status' | 'thumbnail'> & {
     eventOwner: React.ReactNode;
     tags: string[];
     titleLimit?: number | null;
@@ -53,6 +65,7 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
 const EventInfo: React.FC<EventInfoProps> = ({
   id,
   title,
+  thumbnail,
   eventOwner,
   status,
   titleLimit = TITLE_LIMIT,
@@ -74,7 +87,15 @@ const EventInfo: React.FC<EventInfoProps> = ({
   return (
     <div css={cardStyles}>
       <div css={dateBlockContainerStyle}>
-        <EventDateBlock startDate={props.startDate} />
+        {thumbnail ? (
+          <img
+            alt={`Thumbnail for "${title}"`}
+            src={thumbnail}
+            css={thumbnailStyles}
+          />
+        ) : (
+          <EventDateBlock startDate={props.startDate} />
+        )}
       </div>
       <div css={contentStyles}>
         {link ? (

@@ -37,10 +37,32 @@ it('does not truncate long event titles when limit is null', () => {
 });
 
 it('renders the date block for the start date', () => {
-  render(<EventInfo {...props} startDate="2021-05-28T10:00:00Z" />);
+  render(
+    <EventInfo
+      {...props}
+      startDate="2021-05-28T10:00:00Z"
+      thumbnail={undefined}
+    />,
+  );
 
   expect(screen.getByText('MAY')).toBeVisible();
   expect(screen.getByText('28')).toBeVisible();
+});
+
+it('renders the thumbnail in place of the date block when provided', () => {
+  render(
+    <EventInfo
+      {...props}
+      startDate="2021-05-28T10:00:00Z"
+      thumbnail="https://example.com/thumbnail.png"
+    />,
+  );
+
+  expect(screen.getByAltText(/thumbnail/i)).toHaveAttribute(
+    'src',
+    'https://example.com/thumbnail.png',
+  );
+  expect(screen.queryByText('MAY')).not.toBeInTheDocument();
 });
 
 it('strikes through the title of a cancelled event', () => {

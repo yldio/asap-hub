@@ -1,5 +1,7 @@
 import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { createListReminderResponse, gp2 } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
@@ -32,14 +34,19 @@ const renderDashboard = async ({
 }) => {
   render(
     <Suspense fallback="loading">
+      {/* RecoilRoot kept for the still-recoil events/outputs/users hooks that
+          Dashboard renders; QueryClientProvider inside covers dashboard's own
+          migrated news/stats/reminders reads. */}
       <RecoilRoot>
-        <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
-          <WhenReady>
-            <MemoryRouter>
-              <Dashboard />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
+        <QueryClientProvider client={createTestQueryClient()}>
+          <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
+            <WhenReady>
+              <MemoryRouter>
+                <Dashboard />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </QueryClientProvider>
       </RecoilRoot>
     </Suspense>,
   );

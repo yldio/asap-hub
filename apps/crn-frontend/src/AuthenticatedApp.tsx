@@ -27,7 +27,7 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
@@ -313,9 +313,7 @@ const AuthenticatedAppWithRecoil: FC<
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
-        {isEnabled('QUERY_DEVTOOLS') && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
+        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
       </QueryClientProvider>
     </RecoilRoot>
   );

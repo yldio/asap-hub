@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-context';
 import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
@@ -102,9 +102,7 @@ const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => {
         <NotificationMessages>
           <AuthenticatedApp />
         </NotificationMessages>
-        {isEnabled('QUERY_DEVTOOLS') && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
+        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
       </QueryClientProvider>
     </RecoilRoot>
   );

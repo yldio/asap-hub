@@ -3,7 +3,7 @@ import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { useFlags } from '@asap-hub/react-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ReactQueryDevtoolsProduction from '../ReactQueryDevtoolsProduction';
 import { useState } from 'react';
 
 import { usePageByPageId } from './state';
@@ -40,9 +40,7 @@ const ContentWithRecoil: React.FC<ContentProps> = (props) => {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <Content {...props} />
-        {isEnabled('QUERY_DEVTOOLS') && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
+        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
       </QueryClientProvider>
     </RecoilRoot>
   );

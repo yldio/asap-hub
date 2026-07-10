@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { formatDateToTimezone } from '../date';
-import { charcoal, mint, steel } from '../colors';
+import { charcoal, mint, paper, steel } from '../colors';
 import { rem } from '../pixels';
 
 const containerStyles = css({
@@ -11,6 +11,7 @@ const containerStyles = css({
 
   textAlign: 'center',
 
+  backgroundColor: paper.rgb,
   borderStyle: 'solid',
   borderWidth: 1,
   borderColor: steel.rgb,

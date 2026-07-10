@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import type {
@@ -97,7 +98,7 @@ const renderResourceProjectDetail = async (projectId: string) => {
   const path = `${projects.template}/resource/${projectId}/about`;
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -112,7 +113,7 @@ const renderResourceProjectDetail = async (projectId: string) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {
@@ -162,7 +163,7 @@ describe('ResourceProjectDetail', () => {
     const path = `${projects.template}/resource/resource-1/milestones`;
 
     render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
@@ -177,7 +178,7 @@ describe('ResourceProjectDetail', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {

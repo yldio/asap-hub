@@ -1,6 +1,7 @@
 import { ComponentProps, Suspense, useEffect } from 'react';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
+import type { ProjectDetail } from '@asap-hub/model';
 import {
   act,
   fireEvent,
@@ -10,14 +11,13 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot, useRecoilValue } from 'recoil';
 import { projects } from '@asap-hub/routing';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 import { createComplianceReport, getManuscript } from '../../network/teams/api';
 import ProjectComplianceReport from '../ProjectComplianceReport';
-import { refreshProjectState } from '../state';
+import { projectQueryKeys } from '../state';
 
 const mockSetFormType = jest.fn();
 jest.mock('../../network/teams/useManuscriptToast', () => ({
@@ -45,15 +45,6 @@ const LocationCapture = () => {
   return null;
 };
 
-let lastRefreshProjectStateValue: number | undefined;
-const RefreshProjectStateObserver = () => {
-  const value = useRecoilValue(refreshProjectState(projectId));
-  useEffect(() => {
-    lastRefreshProjectStateValue = value;
-  }, [value]);
-  return null;
-};
-
 jest.mock('../../network/teams/api', () => ({
   createComplianceReport: jest
     .fn()
@@ -63,7 +54,6 @@ jest.mock('../../network/teams/api', () => ({
 
 beforeEach(() => {
   currentLocation = null;
-  lastRefreshProjectStateValue = undefined;
   mockSetFormType.mockReset();
   jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
   (createComplianceReport as jest.Mock).mockClear();
@@ -135,55 +125,55 @@ const renderPage = async (
   }).$;
   const workspacePath = workspaceRoutes.$;
 
+  const queryClient = createTestQueryClient();
+  // Seed the project detail cache so the success flow's invalidation of the
+  // project (the recoil refreshProjectState counter bump) can be observed.
+  queryClient.setQueryData(projectQueryKeys.detail(projectId), {
+    id: projectId,
+  } as ProjectDetail);
+
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshProjectState(projectId), Math.random());
-      }}
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  {
-                    pathname: createCompliancePath,
-                    state: state ?? { fromButton: true },
-                  },
-                ]}
-              >
-                <LocationCapture />
-                <RefreshProjectStateObserver />
-                <Routes>
-                  <Route
-                    path={`${workspacePath}/create-compliance-report/:manuscriptId`}
-                    element={
-                      <ManuscriptToastProvider>
-                        <ProjectComplianceReport
-                          projectId={projectId}
-                          projectType={projectType}
-                        />
-                      </ManuscriptToastProvider>
-                    }
-                  />
-                  <Route
-                    path={`${workspacePath}/*`}
-                    element={<div>Workspace</div>}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                {
+                  pathname: createCompliancePath,
+                  state: state ?? { fromButton: true },
+                },
+              ]}
+            >
+              <LocationCapture />
+              <Routes>
+                <Route
+                  path={`${workspacePath}/create-compliance-report/:manuscriptId`}
+                  element={
+                    <ManuscriptToastProvider>
+                      <ProjectComplianceReport
+                        projectId={projectId}
+                        projectType={projectType}
+                      />
+                    </ManuscriptToastProvider>
+                  }
+                />
+                <Route
+                  path={`${workspacePath}/*`}
+                  element={<div>Workspace</div>}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     { timeout: 30_000 },
   );
-  return result;
+  return { ...result, queryClient };
 };
 
 it('renders the compliance report form page for the manuscript', async () => {
@@ -232,8 +222,7 @@ it('redirects back to the trainee project workspace path', async () => {
 
 it('on form success sets compliance-report toast, refreshes project state, and navigates to workspace', async () => {
   const user = userEvent.setup();
-  await renderPage();
-  const initialRefreshValue = lastRefreshProjectStateValue;
+  const { queryClient } = await renderPage();
 
   await user.type(
     screen.getByRole('textbox', { name: /url/i }),
@@ -280,8 +269,13 @@ it('on form success sets compliance-report toast, refreshes project state, and n
     );
   });
 
+  // the recoil refreshProjectState counter bump became an invalidation of
+  // the project detail query
   await waitFor(() => {
-    expect(lastRefreshProjectStateValue).toBe((initialRefreshValue ?? 0) + 1);
+    expect(
+      queryClient.getQueryState(projectQueryKeys.detail(projectId))
+        ?.isInvalidated,
+    ).toBe(true);
   });
 
   await waitFor(() => {

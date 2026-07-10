@@ -8,7 +8,6 @@ import {
   Frame,
 } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import userEvent from '@testing-library/user-event';
@@ -111,65 +110,64 @@ const renderPage = async ({
     mockGetDraftResearchOutputs.mockRejectedValue(draftResearchOutputsError);
   }
   const result = render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider
-            user={{
-              projects: [
-                {
-                  id: projectId,
-                  title: 'Project Alpha',
-                  projectType: 'Discovery Project',
-                  status: 'Active',
-                },
-              ],
-            }}
-          >
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]}>
-                <Routes>
-                  <Route
-                    path="/projects/discovery/:projectId/outputs?"
-                    element={
-                      <Frame title="Project Outputs">
-                        <ProjectOutputs
-                          projectId={projectId}
-                          projectTitle={projectTitle}
-                          teamId={projectTeamId}
-                          userAssociationMember={userAssociationMember}
-                          hasOutputs={hasOutputs}
-                        />
-                      </Frame>
-                    }
-                  />
-                  <Route
-                    path="/projects/discovery/:projectId/draft-outputs?"
-                    element={
-                      <Frame title="Project Draft Outputs">
-                        <ProjectOutputs
-                          projectId={projectId}
-                          projectTitle={projectTitle}
-                          teamId={projectTeamId}
-                          draftOutputs
-                          userAssociationMember={userAssociationMember}
-                          hasOutputs={hasOutputs}
-                        />
-                      </Frame>
-                    }
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider
+          user={{
+            projects: [
+              {
+                id: projectId,
+                title: 'Project Alpha',
+                projectType: 'Discovery Project',
+                status: 'Active',
+              },
+            ],
+          }}
+        >
+          <WhenReady>
+            <MemoryRouter initialEntries={[path]}>
+              <Routes>
+                <Route
+                  path="/projects/discovery/:projectId/outputs?"
+                  element={
+                    <Frame title="Project Outputs">
+                      <ProjectOutputs
+                        projectId={projectId}
+                        projectTitle={projectTitle}
+                        teamId={projectTeamId}
+                        userAssociationMember={userAssociationMember}
+                        hasOutputs={hasOutputs}
+                      />
+                    </Frame>
+                  }
+                />
+                <Route
+                  path="/projects/discovery/:projectId/draft-outputs?"
+                  element={
+                    <Frame title="Project Draft Outputs">
+                      <ProjectOutputs
+                        projectId={projectId}
+                        projectTitle={projectTitle}
+                        teamId={projectTeamId}
+                        draftOutputs
+                        userAssociationMember={userAssociationMember}
+                        hasOutputs={hasOutputs}
+                      />
+                    </Frame>
+                  }
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   if (waitForLoad) {
-    await waitFor(() =>
-      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    await waitFor(
+      () => expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+      { timeout: 30_000 },
     );
   }
 

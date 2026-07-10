@@ -7,6 +7,7 @@ export { default as AlphabeticalSortingIcon } from './alphabetical-sorting';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as analyticsIcon } from './analytics';
 export { default as article } from './article';
+export { default as asapEventIcon } from './asap-event';
 export { default as asapLogo } from './asap-logo';
 export { default as averageIcon } from './average';
 export { default as belowAverageIcon } from './below-average';

@@ -176,7 +176,6 @@ export type EventAttendanceSinceLastEvent = {
 };
 
 type EventAttendanceProps = {
-  attendancePercentage: number;
   teamsAttended: number;
   teamsTotal: number;
   // absent for the first event in a recurring series (nothing to compare to).
@@ -187,7 +186,6 @@ type EventAttendanceProps = {
 };
 
 const EventAttendance: React.FC<EventAttendanceProps> = ({
-  attendancePercentage,
   teamsAttended,
   teamsTotal,
   sinceLastEvent,
@@ -198,6 +196,8 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
   const [expanded, setExpanded] = useState(false);
   const showFooter = !expanded && teams.length > defaultVisibleTeams;
   const visibleTeams = expanded ? teams : teams.slice(0, defaultVisibleTeams);
+  const attendancePercentage =
+    teamsTotal > 0 ? Math.round((teamsAttended / teamsTotal) * 100) : 0;
 
   return (
     <Card padding={false}>

@@ -60,7 +60,6 @@ const teams = [
 
 export const Increase: Story = {
   args: {
-    attendancePercentage: 83,
     teamsAttended: 5,
     teamsTotal: 6,
     sinceLastEvent: {
@@ -85,7 +84,6 @@ export const Decrease: Story = {
 
 export const NoComparison: Story = {
   args: {
-    attendancePercentage: 83,
     teamsAttended: 5,
     teamsTotal: 6,
     teams,
@@ -102,7 +100,6 @@ const manyTeams = Array.from({ length: 14 }, (_, index) => ({
 
 export const ManyTeams: Story = {
   args: {
-    attendancePercentage: 79,
     teamsAttended: 11,
     teamsTotal: 14,
     sinceLastEvent: {

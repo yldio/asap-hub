@@ -22,7 +22,6 @@ const teams: EventAttendanceTeam[] = [
 ];
 
 const props = {
-  attendancePercentage: 72,
   teamsAttended: 18,
   teamsTotal: 25,
   sinceLastEvent: {
@@ -52,6 +51,20 @@ describe('EventAttendance', () => {
     expect(getByText('Since last event')).toBeVisible();
     expect(getByText('10%')).toBeVisible();
     expect(getByText('from 15 of 25 teams')).toBeVisible();
+  });
+
+  it('derives the attendance percentage from the team counts', () => {
+    const { getByText } = renderCard({ teamsAttended: 3, teamsTotal: 4 });
+    expect(getByText('75%')).toBeVisible();
+  });
+
+  it('shows 0% when there are no teams to account for', () => {
+    const { getByText } = renderCard({
+      teamsAttended: 0,
+      teamsTotal: 0,
+      teams: [],
+    });
+    expect(getByText('0%')).toBeVisible();
   });
 
   it('renders the team-type icon for each team', () => {

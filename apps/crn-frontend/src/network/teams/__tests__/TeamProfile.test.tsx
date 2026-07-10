@@ -23,7 +23,6 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
@@ -36,11 +35,7 @@ import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/a
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import {
-  manuscriptsState,
-  refreshTeamState,
-  useManuscriptById,
-} from '../state';
+import { useManuscriptById } from '../state';
 import TeamProfile from '../TeamProfile';
 
 jest.mock('../../../shared-api/impact', () => ({
@@ -187,31 +182,15 @@ const renderPage = async (
   );
 
   const { container } = render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshTeamState(teamResponse.id), Math.random());
-        reset(
-          manuscriptsState({
-            currentPage: 0,
-            pageSize: 10,
-            requestedAPCCoverage: 'all',
-            completedStatus: 'show',
-            searchQuery: '',
-            selectedStatuses: [],
-          }),
-        );
-      }}
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <RouterProvider router={router} />
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <RouterProvider router={router} />
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

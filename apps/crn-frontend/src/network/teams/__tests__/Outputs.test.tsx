@@ -9,7 +9,6 @@ import {
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { RecoilRoot } from 'recoil';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
   createCsvFileStream,
@@ -61,44 +60,40 @@ const renderOutputs = async (
   draftOutputs = false,
 ) => {
   const result = render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  {
-                    pathname: network({})
-                      .teams({})
-                      .team({ teamId: team.id })
-                      .outputs({}).$,
-                  },
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={
-                      network({})
-                        .teams({})
-                        .team({ teamId: team.id })
-                        .outputs({}).$
-                    }
-                    element={
-                      <Outputs
-                        userAssociationMember={userAssociationMember}
-                        draftOutputs={draftOutputs}
-                        team={team}
-                      />
-                    }
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                {
+                  pathname: network({})
+                    .teams({})
+                    .team({ teamId: team.id })
+                    .outputs({}).$,
+                },
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={
+                    network({}).teams({}).team({ teamId: team.id }).outputs({})
+                      .$
+                  }
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      draftOutputs={draftOutputs}
+                      team={team}
+                    />
+                  }
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

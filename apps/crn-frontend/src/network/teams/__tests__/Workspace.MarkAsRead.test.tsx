@@ -2,12 +2,13 @@ import {
   createTeamManuscriptResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { network } from '@asap-hub/routing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getManuscript, markDiscussionAsRead } from '../api';
@@ -36,7 +37,7 @@ const renderWithWrapper = (
   user = {},
 ): ReturnType<typeof render> =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -60,7 +61,7 @@ const renderWithWrapper = (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 const mockSetFormType = jest.fn();

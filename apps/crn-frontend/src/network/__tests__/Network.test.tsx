@@ -21,7 +21,6 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import Network from '../Network';
@@ -101,21 +100,19 @@ mockGetWorkingGroup.mockResolvedValue(createWorkingGroupResponse());
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const { container } = render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-                <Routes>
-                  <Route path={`${network.template}/*`} element={<Network />} />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+              <Routes>
+                <Route path={`${network.template}/*`} element={<Network />} />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(

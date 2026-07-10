@@ -1,5 +1,5 @@
 import { getOverrides } from '@asap-hub/flags';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
   DiscussionRequest,
@@ -14,25 +14,14 @@ import {
   ManuscriptResponse,
   ManuscriptWorkspaceTab,
   ManuscriptWorkspaceUrlResponse,
-  PartialManuscriptResponse,
   ResearchOutputResponse,
-  TeamListItemResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { useCallback, useState } from 'react';
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilCallback,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
-import { authorizationState } from '../../auth/state';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';
@@ -60,162 +49,14 @@ import {
   getAlgoliaTeams,
 } from './api';
 
-const teamIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetTeamsListOptions
->({
-  key: 'teamIndex',
-  default: undefined,
-});
-export const teamsState = selectorFamily<
-  ListTeamResponse | Error | undefined,
-  GetTeamsListOptions
->({
-  key: 'teams',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(teamIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: TeamListItemResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(teamListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(teamIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(teamIndexState(options), newTeams);
-      } else {
-        newTeams?.items.forEach((team) => set(teamListState(team.id), team));
-        set(teamIndexState(options), {
-          total: newTeams.total,
-          ids: newTeams.items.map((team) => team.id),
-        });
-      }
-    },
-});
-export const refreshTeamState = atomFamily<number, string>({
-  key: 'refreshTeam',
-  default: 0,
-});
-const initialTeamState = selectorFamily<TeamResponse | undefined, string>({
-  key: 'initialTeam',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshTeamState(id));
-      const authorization = get(authorizationState);
-      return getTeam(id, authorization);
-    },
-});
-
-export const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
-  key: 'patchedTeam',
-  default: undefined,
-});
-
-export const teamState = selectorFamily<TeamResponse | undefined, string>({
-  key: 'team',
-  get:
-    (id) =>
-    ({ get }) =>
-      get(patchedTeamState(id)) ?? get(initialTeamState(id)),
-  set:
-    (id: string) =>
-    ({ set, reset }, newValue: TeamResponse | DefaultValue | undefined) => {
-      if (newValue === undefined || newValue instanceof DefaultValue) {
-        reset(patchedTeamState(id) ?? initialTeamState(id));
-      } else {
-        set(patchedTeamState(id) ?? initialTeamState(id), (prev) => {
-          if (prev) {
-            return { ...prev, ...newValue };
-          }
-          return newValue;
-        });
-      }
-    },
-});
-
-export const teamListState = atomFamily<
-  TeamListItemResponse | undefined,
-  string
->({
-  key: 'teamList',
-  default: undefined,
-});
-
-export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
-  const algoliaClient = useAlgolia();
-  const [teams, setTeams] = useRecoilState(teamsState(options));
-  if (teams === undefined) {
-    throw getAlgoliaTeams(algoliaClient.client, options)
-      .then(setTeams)
-      .catch(setTeams);
-  }
-  if (teams instanceof Error) {
-    throw teams;
-  }
-  return teams;
+export const teamQueryKeys = {
+  all: ['teams'] as const,
+  lists: () => [...teamQueryKeys.all, 'list'] as const,
+  list: (options: GetTeamsListOptions) =>
+    [...teamQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...teamQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...teamQueryKeys.details(), id] as const,
 };
-
-export const useTeamById = (id: string) => useRecoilValue(teamState(id));
-export const usePatchTeamById = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
-  return async (patch: TeamPatchRequest) => {
-    setPatchedTeam(await patchTeam(id, patch, authorization));
-  };
-};
-
-export const refreshManuscriptIndex = atom<number>({
-  key: 'refreshManuscriptIndex',
-  default: 0,
-});
-
-export const refreshManuscriptState = atomFamily<number, string>({
-  key: 'refreshManuscript',
-  default: 0,
-});
-
-const fetchManuscriptState = selectorFamily<
-  ManuscriptResponse | undefined,
-  string
->({
-  key: 'fetchManuscript',
-  get:
-    (id) =>
-    ({ get }) => {
-      get(refreshManuscriptState(id));
-      const authorization = get(authorizationState);
-      return getManuscript(id, authorization);
-    },
-});
-
-export const manuscriptState = atomFamily<
-  ManuscriptResponse | undefined,
-  string
->({
-  key: 'manuscript',
-  default: fetchManuscriptState,
-});
-
-export const useInvalidateManuscriptIndex = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
-
-  return useCallback(() => {
-    setRefresh(refresh + 1);
-  }, [refresh, setRefresh]);
-};
-
-export const useManuscriptById = (id: string) =>
-  useRecoilState(manuscriptState(id));
 
 type ManuscriptWorkspaceUrlParams = {
   manuscriptId: string;
@@ -223,97 +64,204 @@ type ManuscriptWorkspaceUrlParams = {
   projectWorkspaceEnabled?: boolean;
 };
 
-const fetchManuscriptWorkspaceUrlState = selectorFamily<
-  ManuscriptWorkspaceUrlResponse | undefined,
-  ManuscriptWorkspaceUrlParams
->({
-  key: 'fetchManuscriptWorkspaceUrl',
-  get:
-    ({ manuscriptId, tab, projectWorkspaceEnabled }) =>
-    async ({ get }) => {
-      const authorization = get(authorizationState);
-      return getManuscriptWorkspaceUrl(
-        manuscriptId,
-        authorization,
-        tab,
-        projectWorkspaceEnabled,
+export const manuscriptQueryKeys = {
+  all: ['manuscripts'] as const,
+  lists: () => [...manuscriptQueryKeys.all, 'list'] as const,
+  list: (options: ManuscriptsOptions) =>
+    [...manuscriptQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...manuscriptQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...manuscriptQueryKeys.details(), id] as const,
+  batch: (ids: ReadonlyArray<string>) =>
+    [...manuscriptQueryKeys.all, 'batch', ids] as const,
+  workspaceUrl: (params: ManuscriptWorkspaceUrlParams) =>
+    [
+      ...manuscriptQueryKeys.all,
+      'workspace-url',
+      normalizeListOptions(params),
+    ] as const,
+};
+
+export const discussionQueryKeys = {
+  all: ['discussions'] as const,
+  detail: (id: string) => [...discussionQueryKeys.all, id] as const,
+};
+
+export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
+  const algoliaClient = useAlgolia();
+  return useSuspenseQuery({
+    queryKey: teamQueryKeys.list(options),
+    queryFn: async (): Promise<ListTeamResponse> => {
+      try {
+        return await getAlgoliaTeams(algoliaClient.client, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setTeams)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+};
+
+export const useTeamById = (id: string): TeamResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: teamQueryKeys.detail(id),
+    // getTeam resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below.
+    queryFn: async () => (await getTeam(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
+
+// The PATCH response is written straight into the detail cache (the recoil
+// patchedTeamState overlay) — never refetched, because Contentful has
+// read-after-write lag (see docs §6.1).
+export const usePatchTeamById = (id: string) => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  return async (patch: TeamPatchRequest) => {
+    queryClient.setQueryData(
+      teamQueryKeys.detail(id),
+      await patchTeam(id, patch, await getAuthorization()),
+    );
+  };
+};
+
+// Replaces the refreshTeamState counter bumps in TeamManuscript /
+// TeamComplianceReport: the bump invalidated the team-detail fetch selector,
+// so the team (and its embedded manuscripts) re-fetch (R5).
+export const useInvalidateTeamById = (id: string) => {
+  const queryClient = useQueryClient();
+  return useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    queryClient.invalidateQueries({ queryKey: teamQueryKeys.detail(id) });
+  }, [queryClient, id]);
+};
+
+export const useManuscriptById = (
+  id: string,
+): [
+  ManuscriptResponse | undefined,
+  Dispatch<SetStateAction<ManuscriptResponse | undefined>>,
+] => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const { data } = useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.detail(id),
+    // getManuscript resolves undefined on a 404, but a queryFn must not
+    // return undefined — cache null and map it back below.
+    queryFn: async () =>
+      (await getManuscript(id, await getAuthorization())) ?? null,
+  });
+  const setManuscript = useCallback<
+    Dispatch<SetStateAction<ManuscriptResponse | undefined>>
+  >(
+    (action) => {
+      queryClient.setQueryData<ManuscriptResponse | null>(
+        manuscriptQueryKeys.detail(id),
+        (cached) => {
+          const next =
+            typeof action === 'function' ? action(cached ?? undefined) : action;
+          // setQueryData treats an undefined updater result as "no update";
+          // cache null instead so writes of undefined still land (mirrors the
+          // recoil setter, which stored the value as-is).
+          return next ?? null;
+        },
       );
     },
-});
-
-const manuscriptWorkspaceUrlState = atomFamily<
-  ManuscriptWorkspaceUrlResponse | undefined,
-  ManuscriptWorkspaceUrlParams
->({
-  key: 'manuscriptWorkspaceUrl',
-  default: fetchManuscriptWorkspaceUrlState,
-});
+    [queryClient, id],
+  );
+  return [data ?? undefined, setManuscript];
+};
 
 export const useManuscriptWorkspaceUrl = (
   manuscriptId: string,
   tab?: ManuscriptWorkspaceTab,
   projectWorkspaceEnabled?: boolean,
-) =>
-  useRecoilValue(
-    manuscriptWorkspaceUrlState({
+): ManuscriptWorkspaceUrlResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.workspaceUrl({
       manuscriptId,
       tab,
       projectWorkspaceEnabled,
     }),
-  );
-
-const batchManuscriptsResolvedState = atomFamily<boolean, string>({
-  key: 'batchManuscriptsResolved',
-  default: false,
-});
-
-export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
-  const authorization = useRecoilValue(authorizationState);
-  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
-  const key = deduplicatedIds.join(',');
-  const [resolved, setResolved] = useRecoilState(
-    batchManuscriptsResolvedState(key),
-  );
-
-  const hydrateManuscripts = useRecoilCallback(
-    ({ set }) =>
-      async (manuscriptIds: ReadonlyArray<string>) => {
-        const manuscripts = await getManuscriptsByIds(
-          manuscriptIds,
-          authorization,
-        );
-        manuscripts.forEach((manuscript) => {
-          set(manuscriptState(manuscript.id), manuscript);
-        });
-        setResolved(true);
-      },
-    [authorization, setResolved],
-  );
-
-  if (!deduplicatedIds.length || resolved) {
-    return;
-  }
-
-  throw hydrateManuscripts(deduplicatedIds);
+    // getManuscriptWorkspaceUrl resolves undefined on a 404 — cache null and
+    // map it back below (a queryFn must not return undefined).
+    queryFn: async () =>
+      (await getManuscriptWorkspaceUrl(
+        manuscriptId,
+        await getAuthorization(),
+        tab,
+        projectWorkspaceEnabled,
+      )) ?? null,
+  });
+  return data ?? undefined;
 };
 
-export const useSetManuscriptItem = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
-  return useRecoilCallback(({ set }) => (manuscript: ManuscriptResponse) => {
-    setRefresh(refresh + 1);
-    set(manuscriptState(manuscript.id), manuscript);
+// Batch hydration (R7): one suspense query per deduplicated id set makes the
+// single getManuscriptsByIds call and fans the results into the manuscript
+// detail keys, so the per-card useManuscriptById reads hit the cache without
+// fetching — exactly like the recoil resolved-flag + thrown-promise pattern.
+// The empty-ids short-circuit lives inside the queryFn (no API call is made,
+// but the site now suspends for a microtask where it used to return
+// synchronously).
+export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
+  useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.batch(deduplicatedIds),
+    queryFn: async () => {
+      if (!deduplicatedIds.length) {
+        return 0;
+      }
+      const manuscripts = await getManuscriptsByIds(
+        deduplicatedIds,
+        await getAuthorization(),
+      );
+      manuscripts.forEach((manuscript) => {
+        queryClient.setQueryData(
+          manuscriptQueryKeys.detail(manuscript.id),
+          manuscript,
+        );
+      });
+      return manuscripts.length;
+    },
   });
 };
 
+// Writes a mutation response into the manuscript detail cache — never
+// refetched, because Contentful has read-after-write lag (see docs §6.1).
+// The recoil version also bumped refreshManuscriptIndex, but no selector ever
+// read that counter (the manuscripts list re-syncs via useManuscripts's
+// refresh updater instead), so the dead bump is not ported.
+export const useSetManuscriptItem = () => {
+  const queryClient = useQueryClient();
+  return useCallback(
+    (manuscript: ManuscriptResponse) => {
+      queryClient.setQueryData(
+        manuscriptQueryKeys.detail(manuscript.id),
+        manuscript,
+      );
+    },
+    [queryClient],
+  );
+};
+
 export const usePostManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
     const manuscript = await createManuscript(
       { ...payload, notificationList },
-      authorization,
+      await getAuthorization(),
     );
     setManuscriptItem(manuscript);
     return manuscript;
@@ -321,7 +269,7 @@ export const usePostManuscript = () => {
 };
 
 export const useResubmitManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
     const notificationList = getOverrides()
@@ -329,7 +277,7 @@ export const useResubmitManuscript = () => {
     const manuscript = await resubmitManuscript(
       id,
       { ...payload, notificationList },
-      authorization,
+      await getAuthorization(),
     );
     setManuscriptItem(manuscript);
     return manuscript;
@@ -337,9 +285,8 @@ export const useResubmitManuscript = () => {
 };
 
 export const usePutManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
-  const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
 
   return async (id: string, payload: ManuscriptPutRequest) => {
     const notificationList = getOverrides()
@@ -347,23 +294,22 @@ export const usePutManuscript = () => {
     const manuscript = await updateManuscript(
       id,
       { ...payload, notificationList },
-      authorization,
+      await getAuthorization(),
     );
     setManuscriptItem(manuscript);
-    invalidateManuscriptIndex();
     return manuscript;
   };
 };
 
 export const usePostComplianceReport = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   return async (payload: ComplianceReportPostRequest) => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
     const complianceReport = await createComplianceReport(
       { ...payload, notificationList },
-      authorization,
+      await getAuthorization(),
     );
     return complianceReport;
   };
@@ -376,9 +322,9 @@ export const useIsComplianceReviewer = (): boolean => {
 
 // Uses S3 presigned URL to upload file
 export const useUploadManuscriptFileViaPresignedUrl = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
 
-  return (
+  return async (
     file: File,
     fileType: ManuscriptFileType,
     handleError: (errorMessage: string) => void,
@@ -386,38 +332,39 @@ export const useUploadManuscriptFileViaPresignedUrl = () => {
     uploadManuscriptFileViaPresignedUrl(
       file,
       fileType,
-      authorization,
+      await getAuthorization(),
       handleError,
     );
 };
 
 export const useDownloadFullComplianceDataset = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
 
-  return () => downloadFullComplianceDataset(authorization);
+  return async () => downloadFullComplianceDataset(await getAuthorization());
 };
 
-export const discussionState = atomFamily<
-  DiscussionResponse | undefined,
-  string
->({
-  key: 'discussion',
-  default: undefined,
-});
-
-export const useSetDiscussion = () =>
-  useRecoilCallback(({ set }) => (discussion: DiscussionResponse) => {
-    set(discussionState(discussion.id), discussion);
-  });
+export const useSetDiscussion = () => {
+  const queryClient = useQueryClient();
+  return useCallback(
+    (discussion: DiscussionResponse) => {
+      queryClient.setQueryData(
+        discussionQueryKeys.detail(discussion.id),
+        discussion,
+      );
+    },
+    [queryClient],
+  );
+};
 
 export const useReplyToDiscussion = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setDiscussion = useSetDiscussion();
   const setManuscriptItem = useSetManuscriptItem();
 
   return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
+    const authorization = await getAuthorization();
 
     try {
       const discussion = await updateDiscussion(
@@ -432,6 +379,8 @@ export const useReplyToDiscussion = () => {
       );
       if (updatedManuscript) setManuscriptItem(updatedManuscript);
     } catch (error) {
+      // 403-triggered manuscript re-fetch before re-throwing (error-path
+      // cache sync), preserved verbatim.
       if (
         error instanceof BackendError &&
         (error as BackendError).response?.statusCode === 403
@@ -448,17 +397,17 @@ export const useReplyToDiscussion = () => {
 };
 
 export const useMarkDiscussionAsRead = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setDiscussion = useSetDiscussion();
   const setManuscriptItem = useSetManuscriptItem();
-  const getManuscriptById = useRecoilCallback(
-    ({ snapshot }) =>
-      (manuscriptId: string) =>
-        snapshot.getLoadable(manuscriptState(manuscriptId)).getValue(),
-  );
+  const queryClient = useQueryClient();
 
   return async (manuscriptId: string, discussionId: string) => {
-    const manuscript = getManuscriptById(manuscriptId);
+    // Optimistic update from the cached manuscript (the recoil version's
+    // synchronous snapshot Loadable read) before awaiting the API.
+    const manuscript = queryClient.getQueryData<ManuscriptResponse | null>(
+      manuscriptQueryKeys.detail(manuscriptId),
+    );
 
     if (manuscript) {
       const discussions = manuscript.discussions.map((discussion) => {
@@ -471,116 +420,73 @@ export const useMarkDiscussionAsRead = () => {
       setManuscriptItem({ ...manuscript, discussions });
     }
 
-    const discussion = await markDiscussionAsRead(discussionId, authorization);
+    const discussion = await markDiscussionAsRead(
+      discussionId,
+      await getAuthorization(),
+    );
     setDiscussion(discussion);
   };
 };
-
-export const manuscriptListState = atomFamily<
-  PartialManuscriptResponse | undefined,
-  string
->({
-  key: 'manuscriptList',
-  default: undefined,
-});
-
-const manuscriptIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ManuscriptsOptions
->({
-  key: 'manuscriptIndex',
-  default: undefined,
-});
-
-export const manuscriptsState = selectorFamily<
-  ListPartialManuscriptResponse | Error | undefined,
-  ManuscriptsOptions
->({
-  key: 'manuscripts',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(manuscriptIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const manuscripts: PartialManuscriptResponse[] = [];
-      for (const id of index.ids) {
-        const manuscript = get(manuscriptListState(id));
-        if (manuscript === undefined) return undefined;
-        manuscripts.push(manuscript);
-      }
-      return { total: index.total, items: manuscripts };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newManuscripts) => {
-      if (
-        newManuscripts === undefined ||
-        newManuscripts instanceof DefaultValue
-      ) {
-        reset(manuscriptIndexState(options));
-      } else if (newManuscripts instanceof Error) {
-        set(manuscriptIndexState(options), newManuscripts);
-      } else {
-        newManuscripts?.items.forEach((manuscript) =>
-          set(manuscriptListState(manuscript.id), manuscript),
-        );
-        set(manuscriptIndexState(options), {
-          total: newManuscripts.total,
-          ids: newManuscripts.items.map((team) => team.id),
-        });
-      }
-    },
-});
 
 export const useManuscripts = (
   options: ManuscriptsOptions,
 ): ListPartialManuscriptResponse & {
   refresh: (manuscript: ManuscriptDataObject) => void;
 } => {
-  const [manuscripts, setManuscripts] = useRecoilState(
-    manuscriptsState(options),
-  );
-
   const algoliaClient = useAlgolia();
+  const queryClient = useQueryClient();
 
+  const manuscripts = useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.list(options),
+    queryFn: async (): Promise<ListPartialManuscriptResponse> => {
+      try {
+        return await getManuscripts(algoliaClient.client, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setManuscripts)`: an
+        // Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+
+  // Surgical write-through after a manuscript mutation: merges the selected
+  // fields into the item inside every cached manuscript list (the recoil
+  // version wrote the shared manuscriptListState entity, which all list
+  // joins read). Never a refetch — Algolia has indexing lag after mutations.
   const refreshManuscripts = useCallback(
     (updatedManuscriptItem: ManuscriptDataObject) => {
-      setManuscripts((previousManuscripts) => {
-        /* istanbul ignore next */
-        if (!previousManuscripts || previousManuscripts instanceof Error)
-          return undefined;
-
-        return {
-          ...previousManuscripts,
-          items: previousManuscripts.items.map((previousManuscriptItem) =>
-            previousManuscriptItem.id === updatedManuscriptItem.id
-              ? {
-                  ...previousManuscriptItem,
-                  status: updatedManuscriptItem.status,
-                  assignedUsers: updatedManuscriptItem.assignedUsers,
-                  apcAmountPaid: updatedManuscriptItem.apcAmountPaid,
-                  apcAmountRequested: updatedManuscriptItem.apcAmountRequested,
-                  apcCoverageRequestStatus:
-                    updatedManuscriptItem.apcCoverageRequestStatus,
-                  apcRequested: updatedManuscriptItem.apcRequested,
-                  declinedReason: updatedManuscriptItem.declinedReason,
-                }
-              : previousManuscriptItem,
-          ),
-        };
-      });
+      queryClient.setQueriesData<ListPartialManuscriptResponse>(
+        { queryKey: manuscriptQueryKeys.lists() },
+        (previousManuscripts) =>
+          previousManuscripts && {
+            ...previousManuscripts,
+            items: previousManuscripts.items.map((previousManuscriptItem) =>
+              previousManuscriptItem.id === updatedManuscriptItem.id
+                ? {
+                    ...previousManuscriptItem,
+                    status: updatedManuscriptItem.status,
+                    assignedUsers: updatedManuscriptItem.assignedUsers,
+                    apcAmountPaid: updatedManuscriptItem.apcAmountPaid,
+                    apcAmountRequested:
+                      updatedManuscriptItem.apcAmountRequested,
+                    apcCoverageRequestStatus:
+                      updatedManuscriptItem.apcCoverageRequestStatus,
+                    apcRequested: updatedManuscriptItem.apcRequested,
+                    declinedReason: updatedManuscriptItem.declinedReason,
+                  }
+                : previousManuscriptItem,
+            ),
+          },
+      );
     },
-    [setManuscripts],
+    [queryClient],
   );
 
-  if (manuscripts === undefined) {
-    throw getManuscripts(algoliaClient.client, options)
-      .then(setManuscripts)
-      .catch(setManuscripts);
-  }
-  if (manuscripts instanceof Error) {
-    throw manuscripts;
-  }
   return { ...manuscripts, refresh: refreshManuscripts };
 };
 
@@ -604,7 +510,7 @@ export const useLatestManuscriptVersionByManuscriptId = () => {
 };
 
 export const useCreateDiscussion = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
 
   return async (
@@ -615,6 +521,7 @@ export const useCreateDiscussion = () => {
   ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
+    const authorization = await getAuthorization();
 
     try {
       const discussion = await createDiscussion(
@@ -634,6 +541,8 @@ export const useCreateDiscussion = () => {
       if (updatedManuscript) setManuscriptItem(updatedManuscript);
       return discussion.id;
     } catch (error) {
+      // 403-triggered manuscript re-fetch before re-throwing (error-path
+      // cache sync), preserved verbatim.
       if (
         error instanceof BackendError &&
         (error as BackendError).response?.statusCode === 403
@@ -652,7 +561,7 @@ export const useCreateDiscussion = () => {
 export const usePresignedUrl = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
 
   const fetchPresignedUrl = async (filename: string, contentType: string) => {
     setLoading(true);
@@ -660,7 +569,7 @@ export const usePresignedUrl = () => {
     try {
       const { presignedUrl: uploadUrl } = await getPresignedUrl(
         filename,
-        authorization,
+        await getAuthorization(),
         contentType,
       );
       return uploadUrl;
@@ -676,13 +585,13 @@ export const usePresignedUrl = () => {
 };
 
 export const usePostPreprintResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
 
   return async (manuscriptId: string): Promise<ResearchOutputResponse> => {
     const preprintResearchOutput = await createPreprintResearchOutput(
       manuscriptId,
-      authorization,
+      await getAuthorization(),
     );
     setResearchOutputItem(preprintResearchOutput);
     return preprintResearchOutput;

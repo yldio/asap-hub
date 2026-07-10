@@ -11,11 +11,9 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { network } from '@asap-hub/routing';
 
 import About from '../About';
-import { refreshTeamState } from '../state';
 import { getTeamInterestGroups } from '../interest-groups/api';
 
 jest.mock('../api');
@@ -35,43 +33,37 @@ const renderTeamAbout = async (
   >,
 ) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(aboutProps.team.id), Math.random())
-      }
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({}).teams({}).team({ teamId }).about({}).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={
-                      network.template +
-                      network({}).teams.template +
-                      network({}).teams({}).team.template +
-                      network({}).teams({}).team({ teamId }).about.template
-                    }
-                    element={
-                      <About
-                        teamListElementId="uuid"
-                        isAsapTeam={false}
-                        {...aboutProps}
-                      />
-                    }
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({}).teams({}).team({ teamId }).about({}).$,
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={
+                    network.template +
+                    network({}).teams.template +
+                    network({}).teams({}).team.template +
+                    network({}).teams({}).team({ teamId }).about.template
+                  }
+                  element={
+                    <About
+                      teamListElementId="uuid"
+                      isAsapTeam={false}
+                      {...aboutProps}
+                    />
+                  }
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

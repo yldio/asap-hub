@@ -3,7 +3,7 @@ import type { Auth0, Auth0User, User } from '@asap-hub/auth';
 import type { UserResponse } from '@asap-hub/model';
 import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 // Recoil-free since Phase 5 of the recoil → react-query migration. The fixture
 // provides the Auth0 context directly (async-initialised, exactly like the
@@ -143,6 +143,17 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   auth0Overrides,
 }) => {
   const [auth0, setAuth0] = useState<Auth0>();
+
+  // Re-init whenever the (stringified) user changes so onboarding flows that
+  // swap the user mid-test are reflected, but ignore the identity churn of an
+  // inline `auth0Overrides` callback (read the latest via a ref). Keeping
+  // `auth0Overrides` in the dependency array would re-run this effect every
+  // render and flap the context between loading and ready, unmounting
+  // `WhenReady`'s children mid-test.
+  const auth0OverridesRef = useRef(auth0Overrides);
+  auth0OverridesRef.current = auth0Overrides;
+  const userKey = JSON.stringify(user ?? null);
+
   useEffect(() => {
     let cancelled = false;
     const initAuth0 = async () => {
@@ -152,7 +163,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
         redirect_uri: 'http://localhost',
       });
       if (!cancelled) {
-        setAuth0(createAuth0(auth0Client, user, auth0Overrides));
+        setAuth0(createAuth0(auth0Client, user, auth0OverridesRef.current));
       }
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -160,9 +171,9 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
 
     return () => {
       cancelled = true;
-      setAuth0(undefined);
     };
-  }, [user, auth0Overrides]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userKey]);
 
   return (
     <Auth0ContextCRN.Provider

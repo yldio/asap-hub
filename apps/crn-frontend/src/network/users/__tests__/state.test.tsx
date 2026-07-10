@@ -50,7 +50,7 @@ describe('usePatchUserAvatarById', () => {
     const { result, refreshUser } = renderAvatarHook(() =>
       usePatchUserAvatarById(id),
     );
-    await waitFor(() => expect(result.current).toBeDefined());
+    await waitFor(() => expect(typeof result.current).toBe('function'));
 
     await act(() => result.current('data:image/jpeg;base64,abc'));
 
@@ -66,7 +66,7 @@ describe('usePatchUserAvatarById', () => {
     const { result, refreshUser } = renderAvatarHook(() =>
       usePatchUserAvatarById(id),
     );
-    await waitFor(() => expect(result.current).toBeDefined());
+    await waitFor(() => expect(typeof result.current).toBe('function'));
 
     await act(() =>
       result.current('data:image/jpeg;base64,abc', { refreshToken: false }),
@@ -82,7 +82,7 @@ describe('useDeleteUserAvatarById', () => {
     const { result, refreshUser } = renderAvatarHook(() =>
       useDeleteUserAvatarById(id),
     );
-    await waitFor(() => expect(result.current).toBeDefined());
+    await waitFor(() => expect(typeof result.current).toBe('function'));
 
     await act(() => result.current());
 
@@ -94,7 +94,7 @@ describe('useDeleteUserAvatarById', () => {
     const { result, refreshUser } = renderAvatarHook(() =>
       useDeleteUserAvatarById(id),
     );
-    await waitFor(() => expect(result.current).toBeDefined());
+    await waitFor(() => expect(typeof result.current).toBe('function'));
 
     await act(() => result.current({ refreshToken: false }));
 

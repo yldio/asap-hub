@@ -28,9 +28,10 @@ const monthStyles = css({
   backgroundColor: mint.rgb,
   color: charcoal.rgb,
 
-  fontSize: rem(14),
+  fontSize: rem(17),
   fontWeight: 'bold',
-  letterSpacing: rem(1),
+  lineHeight: rem(24),
+  letterSpacing: rem(0.1),
 });
 
 const dayStyles = css({

@@ -117,8 +117,10 @@ it('renders a list of research outputs', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { container } = await renderOutputs('');
-  expect(container.textContent).toContain('Test Output 0');
+  const { findByText, container } = await renderOutputs('');
+  // findByText: SearchFrame's suspense fallback is a textless skeleton, so the
+  // /loading/i render-wait can resolve before the list content commits
+  expect(await findByText('Test Output 0')).toBeVisible();
   expect(container.textContent).toContain('Test Output 1');
 });
 
@@ -264,8 +266,10 @@ it('uses team pointOfContact for contact email', async () => {
     ],
   };
 
-  const { getByRole } = await renderOutputs('', new Set(), team);
-  expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+  const { findByRole } = await renderOutputs('', new Set(), team);
+  // findByRole: SearchFrame's suspense fallback is a textless skeleton, so the
+  // /loading/i render-wait can resolve before the list content commits
+  expect(await findByRole('link', { name: /contact the PM/i })).toHaveAttribute(
     'href',
     'mailto:project@example.com',
   );

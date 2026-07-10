@@ -278,7 +278,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
             ]}
             onClick={onToggleCollapse}
             disabled={!userOnboarded}
-            aria-label={collapsed ? 'Expand Menu' : 'Collapse Menu'}
+            aria-label={collapsed ? 'Expand' : 'Collapse Menu'}
             aria-expanded={!collapsed}
           >
             <RailTooltip label="Expand Menu" enabled={railSettled}>

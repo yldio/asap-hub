@@ -215,7 +215,7 @@ describe('the collapsible menu', () => {
       await findByRole('button', { name: 'Collapse Menu', hidden: true }),
     );
     expect(
-      getByRole('button', { name: 'Expand Menu', hidden: true }),
+      getByRole('button', { name: 'Expand', hidden: true }),
     ).toBeInTheDocument();
     expect(
       queryByRole('button', { name: 'Collapse Menu', hidden: true }),
@@ -231,7 +231,7 @@ describe('the collapsible menu', () => {
     fireEvent.mouseLeave(firstItem);
 
     await userEvent.click(
-      getByRole('button', { name: 'Expand Menu', hidden: true }),
+      getByRole('button', { name: 'Expand', hidden: true }),
     );
     expect(
       getByRole('button', { name: 'Collapse Menu', hidden: true }),
@@ -256,7 +256,7 @@ describe('the collapsible menu', () => {
     );
     expect(
       await findByRoleRemounted('button', {
-        name: 'Expand Menu',
+        name: 'Expand',
         hidden: true,
       }),
     ).toBeInTheDocument();

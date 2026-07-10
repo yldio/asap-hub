@@ -150,7 +150,7 @@ describe('the collapse toggle', () => {
         />
       </MemoryRouter>,
     );
-    const button = getByRole('button', { name: 'Expand Menu', hidden: true });
+    const button = getByRole('button', { name: 'Expand', hidden: true });
     expect(button).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(button);
     expect(onToggleCollapse).toHaveBeenCalledTimes(1);
@@ -192,9 +192,9 @@ describe('the collapse toggle', () => {
         />
       </MemoryRouter>,
     );
-    expect(
-      getByRole('button', { name: 'Expand Menu', hidden: true }),
-    ).toHaveStyle(`color: ${charcoal.rgb}`);
+    expect(getByRole('button', { name: 'Expand', hidden: true })).toHaveStyle(
+      `color: ${charcoal.rgb}`,
+    );
   });
 
   it('keeps the toggle left-aligned in both states so the icon never shifts', () => {
@@ -217,9 +217,9 @@ describe('the collapse toggle', () => {
       </MemoryRouter>,
     );
     // Same alignment collapsed — the icon column position never changes.
-    expect(
-      getByRole('button', { name: 'Expand Menu', hidden: true }),
-    ).toHaveStyle('justify-content: flex-start');
+    expect(getByRole('button', { name: 'Expand', hidden: true })).toHaveStyle(
+      'justify-content: flex-start',
+    );
   });
 
   it('shows a tooltip on the collapsed toggle when hovered', () => {
@@ -232,10 +232,10 @@ describe('the collapse toggle', () => {
         />
       </MemoryRouter>,
     );
-    const toggle = getByRole('button', { name: 'Expand Menu', hidden: true });
+    const toggle = getByRole('button', { name: 'Expand', hidden: true });
     expect(queryByRole('tooltip')).not.toBeInTheDocument();
     fireEvent.mouseEnter(toggle.querySelector('span')!);
-    expect(getByRole('tooltip')).toHaveTextContent('Expand Menu');
+    expect(getByRole('tooltip')).toHaveTextContent('Expand');
   });
 });
 

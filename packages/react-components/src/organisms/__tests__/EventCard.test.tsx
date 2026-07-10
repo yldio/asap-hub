@@ -167,10 +167,7 @@ describe('past events', () => {
       'href',
       '/events/event-0#event-presentation',
     );
-    expect(screen.getByText('Meeting Materials').closest('a')).toHaveAttribute(
-      'href',
-      '/events/event-0#event-additional-materials',
-    );
+    expect(screen.queryByText('Meeting Materials')).not.toBeInTheDocument();
     expect(screen.getByText('Notes')).toBeVisible();
     expect(screen.getByText('Notes').closest('a')).toBeNull();
     expect(screen.getByText('Recording').closest('a')).toBeNull();
@@ -202,10 +199,7 @@ describe('past events', () => {
       'href',
       '/events/event-0#event-presentation',
     );
-    expect(screen.getByText('Meeting Materials').closest('a')).toHaveAttribute(
-      'href',
-      '/events/event-0#event-additional-materials',
-    );
+    expect(screen.queryByText('Meeting Materials')).not.toBeInTheDocument();
   });
 
   it('lists every material greyed out and non-clickable when none are available', () => {

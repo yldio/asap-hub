@@ -40,13 +40,19 @@ const buttonStyle = css({
   },
 });
 
-const eventMaterialLabels: Record<(typeof eventMaterialTypes)[number], string> =
-  {
-    notes: 'Notes',
-    videoRecording: 'Recording',
-    presentation: 'Presentation',
-    meetingMaterials: 'Meeting Materials',
-  };
+const displayedMaterialTypes = [
+  'notes',
+  'videoRecording',
+  'presentation',
+] as const;
+const eventMaterialLabels: Record<
+  (typeof displayedMaterialTypes)[number],
+  string
+> = {
+  notes: 'Notes',
+  videoRecording: 'Recording',
+  presentation: 'Presentation',
+};
 
 const materialListStyles = css({
   display: 'flex',
@@ -138,17 +144,14 @@ const EventCard: React.FC<EventCardProps> = ({
         const value = props[key];
         return Array.isArray(value) ? value.length > 0 : Boolean(value);
       };
-      const displayedMaterials = eventMaterialTypes.filter(
-        (key) => key !== 'meetingMaterials' || isMaterialAvailable(key),
-      );
       const eventHref = events({}).event({ eventId: props.id }).$;
       return {
         type: 'attachment',
         accent: 'neutral200',
-        mutedIcon: !displayedMaterials.some(isMaterialAvailable),
+        mutedIcon: !displayedMaterialTypes.some(isMaterialAvailable),
         toastContent: (
           <span css={materialListStyles}>
-            {displayedMaterials.map((key, index) => {
+            {displayedMaterialTypes.map((key, index) => {
               const available = isMaterialAvailable(key);
               return (
                 <Fragment key={key}>

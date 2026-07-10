@@ -4,13 +4,13 @@ import { render } from '@testing-library/react';
 import SharedResearchOutputButtons from '../SharedResearchOutputButtons';
 
 const defaultActions = {
-  canEdit: false,
-  canDuplicate: false,
-  canRequestReview: false,
-  canAddVersion: false,
-  canImportManuscriptVersion: false,
-  canSwitchToDraft: false,
-  canPublish: false,
+  showEdit: false,
+  showDuplicate: false,
+  showRequestReview: false,
+  showAddVersion: false,
+  showImportManuscriptVersion: false,
+  showSwitchToDraft: false,
+  showPublish: false,
 };
 const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   id: 'ro1',
@@ -26,15 +26,16 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   },
 };
 
-it.each([
-  ['canEdit', 'link', /edit/i],
-  ['canDuplicate', 'link', /duplicate/i],
-  ['canRequestReview', 'button', /ready for pm review/i],
-  ['canImportManuscriptVersion', 'button', /import manuscript version/i],
-  ['canAddVersion', 'link', /add version/i],
-  ['canSwitchToDraft', 'button', /switch to draft/i],
-  ['canPublish', 'button', /publish/i],
-] as const)('renders %s when %s is true', (action, role, name) => {
+it.each`
+  title                          | action                           | role        | name
+  ${'Edit'}                      | ${'showEdit'}                    | ${'link'}   | ${/edit/i}
+  ${'Duplicate'}                 | ${'showDuplicate'}               | ${'link'}   | ${/duplicate/i}
+  ${'Ready for PM Review'}       | ${'showRequestReview'}           | ${'button'} | ${/ready for pm review/i}
+  ${'Import Manuscript Version'} | ${'showImportManuscriptVersion'} | ${'button'} | ${/import manuscript version/i}
+  ${'Add Version'}               | ${'showAddVersion'}              | ${'link'}   | ${/add version/i}
+  ${'Switch to Draft'}           | ${'showSwitchToDraft'}           | ${'button'} | ${/switch to draft/i}
+  ${'Publish'}                   | ${'showPublish'}                 | ${'button'} | ${/publish/i}
+`('renders $title when $action is true', ({ action, role, name }) => {
   const { getByRole, queryByRole, rerender } = render(
     <SharedResearchOutputButtons
       {...props}
@@ -52,4 +53,12 @@ it.each([
   );
 
   expect(getByRole(role, { name })).toBeInTheDocument();
+});
+
+it('renders nothing when no actions are available', () => {
+  const { container } = render(
+    <SharedResearchOutputButtons {...props} actions={{ ...defaultActions }} />,
+  );
+
+  expect(container.firstChild).toBeNull();
 });

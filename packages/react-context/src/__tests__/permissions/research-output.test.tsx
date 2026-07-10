@@ -38,7 +38,7 @@ describe('getVisibleResearchOutputActions', () => {
   const permissions = {
     canEditResearchOutput: false,
     canDuplicateResearchOutput: false,
-    canRequestReview: false,
+    showRequestReview: false,
     canVersionResearchOutput: false,
     canPublishResearchOutput: false,
   };
@@ -48,10 +48,37 @@ describe('getVisibleResearchOutputActions', () => {
     isInReview: false,
     hasRelatedManuscript: false,
     isWorkingGroupOutput: false,
+    isGrantDocument: false,
   };
 
-  describe('canEdit action', () => {
-    it('sets canEdit to true if output is not in review and user has edit permission', () => {
+  it('sets all actions to false if output is a grant document', () => {
+    expect(
+      getVisibleResearchOutputActions(
+        {
+          ...permissions,
+          canEditResearchOutput: true,
+          canPublishResearchOutput: false,
+        },
+        {
+          ...state,
+          isGrantDocument: true,
+        },
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        showEdit: false,
+        showDuplicate: false,
+        showRequestReview: false,
+        showAddVersion: false,
+        showImportManuscriptVersion: false,
+        showSwitchToDraft: false,
+        showPublish: false,
+      }),
+    );
+  });
+
+  describe('showEdit action', () => {
+    it('sets showEdit to true if output is not in review and user has edit permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -66,11 +93,11 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canEdit: true,
+          showEdit: true,
         }),
       );
     });
-    it('sets canEdit to true if output is in review and user has publish permission', () => {
+    it('sets showEdit to true if output is in review and user has publish permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -85,12 +112,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canEdit: true,
+          showEdit: true,
         }),
       );
     });
 
-    it('sets canEdit to false if output is in review and user does not have publish permission', () => {
+    it('sets showEdit to false if output is in review and user does not have publish permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -105,14 +132,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canEdit: false,
+          showEdit: false,
         }),
       );
     });
   });
 
-  describe('canDuplicate action', () => {
-    it('sets canDuplicate to true if output is working group output and user has duplicate permission', () => {
+  describe('showDuplicate action', () => {
+    it('sets showDuplicate to true if output is working group output and user has duplicate permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -126,12 +153,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canDuplicate: true,
+          showDuplicate: true,
         }),
       );
     });
 
-    it('sets canDuplicate to true if output is team based but not linked to a manuscript and user has duplicate permission', () => {
+    it('sets showDuplicate to true if output is team based but not linked to a manuscript and user has duplicate permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -146,12 +173,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canDuplicate: true,
+          showDuplicate: true,
         }),
       );
     });
 
-    it('sets canDuplicate to false if user does not have duplicate permission', () => {
+    it('sets showDuplicate to false if user does not have duplicate permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -166,14 +193,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canDuplicate: false,
+          showDuplicate: false,
         }),
       );
     });
   });
 
-  describe('canRequestReview action', () => {
-    it('sets canRequestReview to false if user does not have permission', () => {
+  describe('showRequestReview action', () => {
+    it('sets showRequestReview to false if user does not have permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -188,12 +215,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canRequestReview: false,
+          showRequestReview: false,
         }),
       );
     });
 
-    it('sets canRequestReview to false if output is published', () => {
+    it('sets showRequestReview to false if output is published', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -208,12 +235,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canRequestReview: false,
+          showRequestReview: false,
         }),
       );
     });
 
-    it('sets canRequestReview to false if output is already in review', () => {
+    it('sets showRequestReview to false if output is already in review', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -228,12 +255,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canRequestReview: false,
+          showRequestReview: false,
         }),
       );
     });
 
-    it('sets canRequestReview to true if all conditions are met', () => {
+    it('sets showRequestReview to true if all conditions are met', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -248,14 +275,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canRequestReview: true,
+          showRequestReview: true,
         }),
       );
     });
   });
 
-  describe('canAddVersion action', () => {
-    it('sets canAddVersion to false if user does not have canVersion permission', () => {
+  describe('showAddVersion action', () => {
+    it('sets showAddVersion to false if user does not have canVersion permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -270,12 +297,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canAddVersion: false,
+          showAddVersion: false,
         }),
       );
     });
 
-    it('sets canAddVersion to false if output is not published', () => {
+    it('sets showAddVersion to false if output is not published', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -290,12 +317,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canAddVersion: false,
+          showAddVersion: false,
         }),
       );
     });
 
-    it('sets canAddVersion to false if output is linked to a manuscript', () => {
+    it('sets showAddVersion to false if output is linked to a manuscript', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -310,12 +337,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canAddVersion: false,
+          showAddVersion: false,
         }),
       );
     });
 
-    it('sets canAddVersion to true if all conditions are met', () => {
+    it('sets showAddVersion to true if all conditions are met', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -330,14 +357,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canAddVersion: true,
+          showAddVersion: true,
         }),
       );
     });
   });
 
-  describe('canImportManuscriptVersion action', () => {
-    it('sets canImportManuscriptVersion to false if user does not have canVersion permission', () => {
+  describe('showImportManuscriptVersion action', () => {
+    it('sets showImportManuscriptVersion to false if user does not have canVersion permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -352,12 +379,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canImportManuscriptVersion: false,
+          showImportManuscriptVersion: false,
         }),
       );
     });
 
-    it('sets canImportManuscriptVersion to false if output is not published', () => {
+    it('sets showImportManuscriptVersion to false if output is not published', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -372,12 +399,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canImportManuscriptVersion: false,
+          showImportManuscriptVersion: false,
         }),
       );
     });
 
-    it('sets canImportManuscriptVersion to false if output is not linked to a manuscript', () => {
+    it('sets showImportManuscriptVersion to false if output is not linked to a manuscript', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -392,12 +419,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canImportManuscriptVersion: false,
+          showImportManuscriptVersion: false,
         }),
       );
     });
 
-    it('sets canImportManuscriptVersion to true if all conditions are met', () => {
+    it('sets showImportManuscriptVersion to true if all conditions are met', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -412,14 +439,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canImportManuscriptVersion: true,
+          showImportManuscriptVersion: true,
         }),
       );
     });
   });
 
-  describe('canSwitchToDraft action', () => {
-    it('sets canSwitchToDraft to false if user does not have publish permission', () => {
+  describe('showSwitchToDraft action', () => {
+    it('sets showSwitchToDraft to false if user does not have publish permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -434,12 +461,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canSwitchToDraft: false,
+          showSwitchToDraft: false,
         }),
       );
     });
 
-    it('sets canSwitchToDraft to false if output is published', () => {
+    it('sets showSwitchToDraft to false if output is published', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -454,12 +481,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canSwitchToDraft: false,
+          showSwitchToDraft: false,
         }),
       );
     });
 
-    it('sets canSwitchToDraft to false if output is not in review', () => {
+    it('sets showSwitchToDraft to false if output is not in review', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -474,12 +501,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canSwitchToDraft: false,
+          showSwitchToDraft: false,
         }),
       );
     });
 
-    it('sets canSwitchToDraft to true when all conditions are met', () => {
+    it('sets showSwitchToDraft to true when all conditions are met', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -494,14 +521,14 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canSwitchToDraft: true,
+          showSwitchToDraft: true,
         }),
       );
     });
   });
 
-  describe('canPublish action', () => {
-    it('sets canPublish to false if user does not have publish permission', () => {
+  describe('showPublish action', () => {
+    it('sets showPublish to false if user does not have publish permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -515,12 +542,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canPublish: false,
+          showPublish: false,
         }),
       );
     });
 
-    it('sets canPublish to false if output is already published', () => {
+    it('sets showPublish to false if output is already published', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -534,12 +561,12 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canPublish: false,
+          showPublish: false,
         }),
       );
     });
 
-    it('sets canPublish to true if output is not published and user has publish permission', () => {
+    it('sets showPublish to true if output is not published and user has publish permission', () => {
       expect(
         getVisibleResearchOutputActions(
           {
@@ -553,7 +580,7 @@ describe('getVisibleResearchOutputActions', () => {
         ),
       ).toEqual(
         expect.objectContaining({
-          canPublish: true,
+          showPublish: true,
         }),
       );
     });

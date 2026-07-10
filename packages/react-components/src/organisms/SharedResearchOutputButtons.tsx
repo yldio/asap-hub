@@ -76,92 +76,105 @@ const SharedResearchOutputButtons: React.FC<
   isInReview,
   checkForNewerManuscriptVersion,
   actions,
-}) => (
-  <div css={buttonsContainer}>
-    {actions.canEdit && (
-      <div css={leftButtons}>
-        <Link
-          noMargin
-          href={
-            sharedResearch({})
-              .researchOutput({ researchOutputId: id })
-              .editResearchOutput({}).$
-          }
-          buttonStyle
-          small
-          primary
-        >
-          {editIcon} Edit
-        </Link>
-      </div>
-    )}
-    {actions.canDuplicate && (
-      <div css={leftButtons}>
-        <Link noMargin href={duplicateLink} buttonStyle small primary>
-          {duplicateIcon} Duplicate
-        </Link>
-      </div>
-    )}
-    {actions.canRequestReview && (
-      <div css={reviewButton}>
-        <Button
-          noMargin
-          small
-          primary
-          onClick={() => setDisplayReviewModal(!displayReviewModal)}
-        >
-          {actionIcon} Ready for PM Review
-        </Button>
-      </div>
-    )}
-    {actions.canImportManuscriptVersion && (
-      <div css={leftButtons}>
-        <Button noMargin small primary onClick={checkForNewerManuscriptVersion}>
-          <VersionIcon /> Import Manuscript Version
-        </Button>
-      </div>
-    )}
-    {actions.canAddVersion && (
-      <div css={leftButtons}>
-        <Link
-          noMargin
-          href={
-            sharedResearch({})
-              .researchOutput({ researchOutputId: id })
-              .versionResearchOutput({}).$
-          }
-          buttonStyle
-          small
-          primary
-        >
-          <VersionIcon /> Add Version
-        </Link>
-      </div>
-    )}
-    {actions.canSwitchToDraft && (
-      <div css={reviewButton}>
-        <Button
-          noMargin
-          small
-          onClick={() => setDisplayReviewModal(!displayReviewModal)}
-        >
-          Switch to Draft
-        </Button>
-      </div>
-    )}
-    {actions.canPublish && (
-      <div css={isInReview ? leftButtons : reviewButton}>
-        <Button
-          noMargin
-          primary
-          small
-          onClick={() => setDisplayPublishModal(!displayPublishModal)}
-        >
-          Publish
-        </Button>
-      </div>
-    )}
-  </div>
-);
+}) => {
+  const hasVisibleActions = Object.values(actions).some(Boolean);
+
+  if (!hasVisibleActions) {
+    return null;
+  }
+
+  return (
+    <div css={buttonsContainer}>
+      {actions.showEdit && (
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              sharedResearch({})
+                .researchOutput({ researchOutputId: id })
+                .editResearchOutput({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            {editIcon} Edit
+          </Link>
+        </div>
+      )}
+      {actions.showDuplicate && (
+        <div css={leftButtons}>
+          <Link noMargin href={duplicateLink} buttonStyle small primary>
+            {duplicateIcon} Duplicate
+          </Link>
+        </div>
+      )}
+      {actions.showRequestReview && (
+        <div css={reviewButton}>
+          <Button
+            noMargin
+            small
+            primary
+            onClick={() => setDisplayReviewModal(!displayReviewModal)}
+          >
+            {actionIcon} Ready for PM Review
+          </Button>
+        </div>
+      )}
+      {actions.showImportManuscriptVersion && (
+        <div css={leftButtons}>
+          <Button
+            noMargin
+            small
+            primary
+            onClick={checkForNewerManuscriptVersion}
+          >
+            <VersionIcon /> Import Manuscript Version
+          </Button>
+        </div>
+      )}
+      {actions.showAddVersion && (
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              sharedResearch({})
+                .researchOutput({ researchOutputId: id })
+                .versionResearchOutput({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            <VersionIcon /> Add Version
+          </Link>
+        </div>
+      )}
+      {actions.showSwitchToDraft && (
+        <div css={reviewButton}>
+          <Button
+            noMargin
+            small
+            onClick={() => setDisplayReviewModal(!displayReviewModal)}
+          >
+            Switch to Draft
+          </Button>
+        </div>
+      )}
+      {actions.showPublish && (
+        <div css={isInReview ? leftButtons : reviewButton}>
+          <Button
+            noMargin
+            primary
+            small
+            onClick={() => setDisplayPublishModal(!displayPublishModal)}
+          >
+            Publish
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default SharedResearchOutputButtons;

@@ -1,9 +1,11 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
+import { neutral200 } from '../../colors';
 
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
@@ -125,6 +127,35 @@ describe('past events', () => {
     );
     expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
+  });
+
+  it('greys out the card of a past cancelled event', () => {
+    const { unmount } = render(
+      <EventCard
+        {...props}
+        status="Cancelled"
+        startDate={subDays(new Date(), 2).toISOString()}
+        endDate={subDays(new Date(), 1).toISOString()}
+      />,
+    );
+    expect(
+      findParentWithStyle(screen.getByRole('heading'), 'backgroundColor')
+        ?.backgroundColor,
+    ).toBe(neutral200.rgb);
+    unmount();
+
+    render(
+      <EventCard
+        {...props}
+        status="Cancelled"
+        startDate={addDays(new Date(), 1).toISOString()}
+        endDate={addDays(new Date(), 2).toISOString()}
+      />,
+    );
+    expect(
+      findParentWithStyle(screen.getByRole('heading'), 'backgroundColor')
+        ?.backgroundColor,
+    ).not.toBe(neutral200.rgb);
   });
   it('lists every material greyed out and non-clickable while they are still pending', () => {
     render(

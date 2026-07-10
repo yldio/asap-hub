@@ -82,6 +82,7 @@ export { default as infoInfoIcon } from './info-info';
 export { default as informationInverseIcon } from './information-inverse';
 export { default as informationIcon } from './information';
 export { default as InterestGroupsIcon } from './interest-groups';
+export { default as invalidTickIcon } from './invalid-tick-icon';
 export { default as LabIcon } from './lab';
 export { default as labMaterial } from './lab-material';
 export { default as lastPageIcon } from './last-page';

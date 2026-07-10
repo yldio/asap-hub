@@ -1,13 +1,12 @@
 import { authTestUtils } from '@asap-hub/react-components';
 import { cleanup, render, waitFor } from '@testing-library/react';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router';
-import { RecoilRoot, useRecoilValue } from 'recoil';
 import nock from 'nock';
 
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import AuthenticatedApp from '../AuthenticatedApp';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -77,23 +76,31 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-it('syncs the auth state to recoil', async () => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
+const AuthorizationProbe = () => {
+  const getAuthorization = useAuthorization();
+  const [authorization, setAuthorization] = useState('');
+  useEffect(() => {
+    // Swallow the "not ready" rejection thrown while auth0 is still loading;
+    // the effect re-runs with a ready accessor once loading flips to false.
+    getAuthorization()
+      .then(setAuthorization)
+      .catch(() => {});
+  }, [getAuthorization]);
+  return <>{authorization}</>;
+};
+
+it('exposes the auth token to the app tree via useAuthorization', async () => {
+  MockDashboard.mockImplementation(() => <AuthorizationProbe />);
   const { findByText } = render(
-    <RecoilRoot>
-      <authTestUtils.UserAuth0Provider>
-        <authTestUtils.UserLoggedIn user={{}}>
-          <StaticRouter location="/">
-            <Suspense fallback="loading">
-              <AuthenticatedApp />
-            </Suspense>
-          </StaticRouter>
-        </authTestUtils.UserLoggedIn>
-      </authTestUtils.UserAuth0Provider>
-    </RecoilRoot>,
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <StaticRouter location="/">
+          <Suspense fallback="loading">
+            <AuthenticatedApp />
+          </Suspense>
+        </StaticRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
   const tokenElement = await findByText(
     /Bearer token/i,
@@ -103,24 +110,17 @@ it('syncs the auth state to recoil', async () => {
   expect(tokenElement).toBeVisible();
 });
 it("should call setIsOnboardable if it's set", async () => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
-
   const setIsOnboardable = jest.fn();
   render(
-    <RecoilRoot>
-      <authTestUtils.UserAuth0Provider>
-        <authTestUtils.UserLoggedIn user={{}}>
-          <StaticRouter location="/">
-            <Suspense fallback="loading">
-              <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
-            </Suspense>
-          </StaticRouter>
-        </authTestUtils.UserLoggedIn>
-      </authTestUtils.UserAuth0Provider>
-    </RecoilRoot>,
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <StaticRouter location="/">
+          <Suspense fallback="loading">
+            <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+          </Suspense>
+        </StaticRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(
     () => {
@@ -132,17 +132,15 @@ it("should call setIsOnboardable if it's set", async () => {
 
 it('renders the Analytics route when user has Staff role', async () => {
   const { findAllByText } = render(
-    <RecoilRoot>
-      <authTestUtils.UserAuth0Provider>
-        <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <Suspense fallback="loading">
-              <AuthenticatedApp />
-            </Suspense>
-          </MemoryRouter>
-        </authTestUtils.UserLoggedIn>
-      </authTestUtils.UserAuth0Provider>
-    </RecoilRoot>,
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <MemoryRouter initialEntries={['/analytics']}>
+          <Suspense fallback="loading">
+            <AuthenticatedApp />
+          </Suspense>
+        </MemoryRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
 
   const analyticsElements = await findAllByText('Analytics');
@@ -151,17 +149,15 @@ it('renders the Analytics route when user has Staff role', async () => {
 
 it('renders the application layout correctly', async () => {
   const { getByText, findAllByText, getByTestId } = render(
-    <RecoilRoot>
-      <authTestUtils.UserAuth0Provider>
-        <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter>
-            <Suspense fallback="loading">
-              <AuthenticatedApp />
-            </Suspense>
-          </MemoryRouter>
-        </authTestUtils.UserLoggedIn>
-      </authTestUtils.UserAuth0Provider>
-    </RecoilRoot>,
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <MemoryRouter>
+          <Suspense fallback="loading">
+            <AuthenticatedApp />
+          </Suspense>
+        </MemoryRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
   const menu = getByText('Menu');
   expect(menu).toBeInTheDocument();
@@ -197,17 +193,15 @@ it('renders the application layout correctly', async () => {
 
 it('shows Projects in navigation', async () => {
   const { getByText, findAllByText } = render(
-    <RecoilRoot>
-      <authTestUtils.UserAuth0Provider>
-        <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter>
-            <Suspense fallback="loading">
-              <AuthenticatedApp />
-            </Suspense>
-          </MemoryRouter>
-        </authTestUtils.UserLoggedIn>
-      </authTestUtils.UserAuth0Provider>
-    </RecoilRoot>,
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <MemoryRouter>
+          <Suspense fallback="loading">
+            <AuthenticatedApp />
+          </Suspense>
+        </MemoryRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
 
   const menu = getByText('Menu');
@@ -250,17 +244,15 @@ describe('User projects in navigation', () => {
     (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
 
     const { getByText } = render(
-      <RecoilRoot>
-        <authTestUtils.UserAuth0Provider>
-          <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
-              <Suspense fallback="loading">
-                <AuthenticatedApp />
-              </Suspense>
-            </MemoryRouter>
-          </authTestUtils.UserLoggedIn>
-        </authTestUtils.UserAuth0Provider>
-      </RecoilRoot>,
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
 
     const menu = getByText('Menu');
@@ -278,17 +270,15 @@ describe('User projects in navigation', () => {
     (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
 
     const { getByText } = render(
-      <RecoilRoot>
-        <authTestUtils.UserAuth0Provider>
-          <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
-              <Suspense fallback="loading">
-                <AuthenticatedApp />
-              </Suspense>
-            </MemoryRouter>
-          </authTestUtils.UserLoggedIn>
-        </authTestUtils.UserAuth0Provider>
-      </RecoilRoot>,
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
 
     const menu = getByText('Menu');
@@ -307,17 +297,15 @@ describe('User projects in navigation', () => {
     (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
 
     const { getByText } = render(
-      <RecoilRoot>
-        <authTestUtils.UserAuth0Provider>
-          <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
-              <Suspense fallback="loading">
-                <AuthenticatedApp />
-              </Suspense>
-            </MemoryRouter>
-          </authTestUtils.UserLoggedIn>
-        </authTestUtils.UserAuth0Provider>
-      </RecoilRoot>,
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
 
     const menu = getByText('Menu');
@@ -336,17 +324,15 @@ describe('User projects in navigation', () => {
     (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
 
     const { getByText } = render(
-      <RecoilRoot>
-        <authTestUtils.UserAuth0Provider>
-          <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
-              <Suspense fallback="loading">
-                <AuthenticatedApp />
-              </Suspense>
-            </MemoryRouter>
-          </authTestUtils.UserLoggedIn>
-        </authTestUtils.UserAuth0Provider>
-      </RecoilRoot>,
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
 
     const menu = getByText('Menu');
@@ -368,17 +354,15 @@ describe('User projects in navigation', () => {
     });
 
     const { getByText, queryByText } = render(
-      <RecoilRoot>
-        <authTestUtils.UserAuth0Provider>
-          <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
-              <Suspense fallback="loading">
-                <AuthenticatedApp />
-              </Suspense>
-            </MemoryRouter>
-          </authTestUtils.UserLoggedIn>
-        </authTestUtils.UserAuth0Provider>
-      </RecoilRoot>,
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
 
     const menu = getByText('Menu');

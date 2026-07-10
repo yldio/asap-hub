@@ -2,7 +2,6 @@ import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { Link } from '@asap-hub/react-components';
 import userEvent from '@testing-library/user-event';
-import { RecoilRoot } from 'recoil';
 
 import Auth0Provider from '../AuthProvider';
 import CheckAuth from '../CheckAuth';
@@ -24,18 +23,16 @@ jest.mock('@auth0/auth0-spa-js', () => ({
 
 it('Checks auth0 is still logged in when changing pages', async () => {
   const { getByRole, findByText } = render(
-    <RecoilRoot>
-      <MemoryRouter>
-        <Auth0Provider>
-          <CheckAuth>
-            {({ isAuthenticated }) => (
-              <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>
-            )}
-          </CheckAuth>
-          <Link href="/2">Another Page</Link>
-        </Auth0Provider>
-      </MemoryRouter>
-    </RecoilRoot>,
+    <MemoryRouter>
+      <Auth0Provider>
+        <CheckAuth>
+          {({ isAuthenticated }) => (
+            <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>
+          )}
+        </CheckAuth>
+        <Link href="/2">Another Page</Link>
+      </Auth0Provider>
+    </MemoryRouter>,
   );
 
   expect(await findByText(/Authenticated: true/i)).toBeVisible();

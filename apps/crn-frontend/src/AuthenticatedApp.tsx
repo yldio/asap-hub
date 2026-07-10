@@ -8,11 +8,7 @@ import {
   LoadingContentHeader,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import {
-  useAuth0CRN,
-  useCurrentUserCRN,
-  useFlags,
-} from '@asap-hub/react-context';
+import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -29,12 +25,11 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
+import { RecoilRoot } from 'recoil';
 
 import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 
 import CheckOnboarded from './auth/CheckOnboarded';
-import { auth0State } from './auth/state';
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
 import { ProjectsBanner } from './components/ProjectsBanner';
@@ -79,15 +74,6 @@ const ComplianceRedirect = lazy(loadCompliance);
 const AuthenticatedApp: FC<{
   setIsOnboardable?: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setIsOnboardable }) => {
-  const auth0 = useAuth0CRN();
-  const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
-  const resetAuth0 = useResetRecoilState(auth0State);
-
-  useEffect(() => {
-    setAuth0(auth0);
-    return () => resetAuth0();
-  }, [auth0, setAuth0, resetAuth0]);
-
   useEffect(() => {
     // order by the likelyhood of user navigating there
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -111,7 +97,10 @@ const AuthenticatedApp: FC<{
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
   const canViewAnalytics = user?.role === 'Staff';
-  if (!user || !recoilAuth0) {
+  // `user` is derived from the auth0 context (null until auth0 finishes
+  // loading and a user is present), so this guard also covers the pre-ready
+  // state the recoil `auth0State` sync used to gate on.
+  if (!user) {
     return <Loading />;
   }
 

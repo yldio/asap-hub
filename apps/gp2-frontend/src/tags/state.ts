@@ -1,105 +1,42 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
 import { getTagSearchResults, TagSearchOptions } from './api';
 import { useAlgolia } from '../hooks/algolia';
 
-const tagSearchResultsIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  TagSearchOptions
->({ key: 'tagSearchResultsIndex', default: undefined });
-
-export const tagSearchResultsState = selectorFamily<
-  gp2.ListEntityResponse | Error | undefined,
-  TagSearchOptions
->({
-  key: 'tagSearchResults',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(
-        tagSearchResultsIndexState({
-          ...options,
-        }),
-      );
-      if (index === undefined || index instanceof Error) return index;
-      const results: gp2.EntityResponse[] = [];
-      for (const id of index.ids) {
-        const resultItem = get(tagSearchResultsItemState(id));
-        if (resultItem === undefined) return undefined;
-        results.push(resultItem);
-      }
-
-      return {
-        total: index.total,
-        items: results,
-        algoliaIndexName: index.algoliaIndexName,
-        algoliaQueryId: index.algoliaQueryId,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, results) => {
-      const indexStateOptions = { ...options };
-      if (results === undefined || results instanceof DefaultValue) {
-        const oldResults = get(tagSearchResultsIndexState(indexStateOptions));
-        if (!(oldResults instanceof Error)) {
-          oldResults?.ids.forEach((id) => reset(tagSearchResultsItemState(id)));
-        }
-        reset(tagSearchResultsIndexState(indexStateOptions));
-      } else if (results instanceof Error) {
-        set(tagSearchResultsIndexState(indexStateOptions), results);
-      } else {
-        results.items.forEach((resultItem) =>
-          set(tagSearchResultsItemState(resultItem.id), resultItem),
-        );
-        set(tagSearchResultsIndexState(indexStateOptions), {
-          total: results.total,
-          ids: results.items.map(({ id }) => id),
-          algoliaIndexName: results.algoliaIndexName,
-          algoliaQueryId: results.algoliaQueryId,
-        });
-      }
-    },
-});
+// Distinct root from shared/state.ts's `tagsQueryKeys` (['tags']) — this is
+// the tag *search* namespace and must not collide with the shared tags cache.
+export const tagSearchQueryKeys = {
+  all: ['tag-search'] as const,
+  lists: () => [...tagSearchQueryKeys.all, 'list'] as const,
+  list: (options: TagSearchOptions) =>
+    [...tagSearchQueryKeys.lists(), normalizeListOptions(options)] as const,
+};
 
 export const useTagSearchResults = (options: TagSearchOptions) => {
-  const [results, setResults] = useRecoilState(tagSearchResultsState(options));
   const { client } = useAlgolia();
-  if (results === undefined) {
-    throw getTagSearchResults(client, options)
-      .then(
-        (data): gp2.ListEntityResponse => ({
+  return useSuspenseQuery({
+    queryKey: tagSearchQueryKeys.list(options),
+    queryFn: async (): Promise<gp2.ListEntityResponse> => {
+      try {
+        const data = await getTagSearchResults(client, options);
+        return {
           total: data.nbHits ?? 0,
           items: data.hits,
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,
-        }),
-      )
-      .then(setResults)
-      .catch(setResults);
-  }
-  if (results instanceof Error) {
-    throw results;
-  }
-  return results;
+        };
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setResults)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed (stored, so the page kept
+        // rendering). Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };
-
-const tagSearchResultsItemState = atomFamily<
-  gp2.EntityResponse | undefined,
-  string
->({
-  key: 'tagSearchResultsItem',
-  default: undefined,
-});

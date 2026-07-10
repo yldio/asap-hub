@@ -1,8 +1,9 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
   createAlgoliaResponse,
@@ -26,8 +27,8 @@ const mockGetTagSearchResults = getTagSearchResults as jest.MockedFunction<
 >;
 const renderPage = async () => {
   render(
-    <Suspense fallback="loading">
-      <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/tags?tag=test']}>
@@ -37,8 +38,8 @@ const renderPage = async () => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -73,6 +74,6 @@ describe('Routes', () => {
 
     await renderPage();
     expect(mockGetTagSearchResults).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 });

@@ -1,8 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 import { useEffect, useState } from 'react';
-import { RecoilRoot, useRecoilValue } from 'recoil';
 
-import { auth0State } from '../state';
 import { Auth0Provider, WhenReady } from '../test-utils';
 import { useAuthorization } from '../useAuthorization';
 
@@ -16,12 +14,7 @@ const AuthorizationProbe: React.FC = () => {
   return <span data-testid="probe">{authorization}</span>;
 };
 
-const Auth0StateProbe: React.FC = () => {
-  const auth0 = useRecoilValue(auth0State);
-  return <span data-testid="atom">{auth0 ? 'seeded' : 'unset'}</span>;
-};
-
-it('provides a ready Auth0 context without any RecoilRoot (migrated tests)', async () => {
+it('provides a ready Auth0 context without any RecoilRoot', async () => {
   const { getByText, getByTestId } = render(
     <Auth0Provider user={{}}>
       <WhenReady>
@@ -37,16 +30,15 @@ it('provides a ready Auth0 context without any RecoilRoot (migrated tests)', asy
   );
 });
 
-it("seeds auth0State into the test's own RecoilRoot (un-migrated tests)", async () => {
-  const { getByTestId } = render(
-    <RecoilRoot>
-      <Auth0Provider user={{}}>
-        <WhenReady>
-          <Auth0StateProbe />
-        </WhenReady>
-      </Auth0Provider>
-    </RecoilRoot>,
+it('gates children behind WhenReady until the Auth0 context finishes loading', async () => {
+  const { getByText, queryByText } = render(
+    <Auth0Provider user={{}}>
+      <WhenReady>
+        <p>ready</p>
+      </WhenReady>
+    </Auth0Provider>,
   );
 
-  await waitFor(() => expect(getByTestId('atom')).toHaveTextContent('seeded'));
+  expect(getByText('Auth0 loading...')).toBeVisible();
+  await waitFor(() => expect(queryByText('ready')).toBeVisible());
 });

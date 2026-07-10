@@ -3,25 +3,14 @@ import type { Auth0, Auth0User, User } from '@asap-hub/auth';
 import type { UserResponse } from '@asap-hub/model';
 import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useContext, useEffect } from 'react';
-import {
-  RecoilRoot,
-  useRecoilRefresher_UNSTABLE as useRecoilRefresher,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { auth0State } from './state';
+import { useContext, useEffect, useState } from 'react';
 
-// TRANSITIONAL (until Phase 5 of the recoil → react-query migration):
-// this fixture still seeds the recoil `auth0State` atom because every
-// un-migrated module reads the token through the `authorizationState`
-// selector. Migrated modules' tests, however, must not import recoil, so
-// `Auth0Provider` and `WhenReady` wrap their recoil-consuming internals in
-// `<RecoilRoot override={false}>`: a no-op passthrough when the test provides
-// its own RecoilRoot (all pre-migration suites), and a self-contained store
-// when it doesn't (migrated suites render without RecoilRoot). The Auth0
-// context itself is always provided, which is what `useAuthorization()` and
-// react-query hooks consume. Recoil is torn out of this file in Phase 5.
+// Recoil-free since Phase 5 of the recoil → react-query migration. The fixture
+// provides the Auth0 context directly (async-initialised, exactly like the
+// production `AuthProvider`): `useAuthorization()` and react-query hooks read
+// the token through that context, so no recoil store is needed. The exported
+// API (`Auth0Provider`, `WhenReady`) is unchanged — its ~83 importers keep
+// working without edits.
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -148,13 +137,12 @@ type Auth0ProviderProps = {
   ) => Partial<Auth0>;
 };
 
-const RecoilAuth0Provider: React.FC<Auth0ProviderProps> = ({
+export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   user,
   children,
   auth0Overrides,
 }) => {
-  const [auth0, setAuth0] = useRecoilState(auth0State);
-  const resetAuth0 = useRecoilRefresher(auth0State);
+  const [auth0, setAuth0] = useState<Auth0>();
   useEffect(() => {
     let cancelled = false;
     const initAuth0 = async () => {
@@ -172,9 +160,9 @@ const RecoilAuth0Provider: React.FC<Auth0ProviderProps> = ({
 
     return () => {
       cancelled = true;
-      resetAuth0();
+      setAuth0(undefined);
     };
-  }, [user, setAuth0, resetAuth0, auth0Overrides]);
+  }, [user, auth0Overrides]);
 
   return (
     <Auth0ContextCRN.Provider
@@ -185,31 +173,9 @@ const RecoilAuth0Provider: React.FC<Auth0ProviderProps> = ({
   );
 };
 
-export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
-  user,
-  children,
-  auth0Overrides,
-}) => (
-  <RecoilRoot override={false}>
-    <RecoilAuth0Provider user={user} auth0Overrides={auth0Overrides}>
-      {children}
-    </RecoilAuth0Provider>
-  </RecoilRoot>
-);
-
-const RecoilWhenReady: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const contextAuth0 = useContext(Auth0ContextCRN);
-  const loading =
-    (useRecoilValue(auth0State)?.loading ?? true) || contextAuth0.loading;
-  return loading ? <p>Auth0 loading...</p> : <>{children}</>;
-};
-
 export const WhenReady: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => (
-  <RecoilRoot override={false}>
-    <RecoilWhenReady>{children}</RecoilWhenReady>
-  </RecoilRoot>
-);
+}) => {
+  const { loading } = useContext(Auth0ContextCRN);
+  return loading ? <p>Auth0 loading...</p> : <>{children}</>;
+};

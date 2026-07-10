@@ -1,3 +1,4 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
   EngagementResponse,
@@ -6,106 +7,58 @@ import {
   MeetingRepAttendanceDataObject,
   SortEngagement,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks';
 import { makePerformanceQuery } from '../utils/state';
 import {
-  EngagementListOptions,
   getEngagement,
   getEngagementPerformance,
   getMeetingRepAttendance,
   MeetingRepAttendanceOptions,
 } from './api';
 
-const analyticsEngagementIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  EngagementListOptions
->({
-  key: 'analyticsEngagementIndex',
-  default: undefined,
-});
+export const engagementQueryKeys = {
+  all: ['analytics-engagement'] as const,
+  lists: () => [...engagementQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortEngagement>) =>
+    [...engagementQueryKeys.lists(), normalizeListOptions(options)] as const,
+};
 
-export const analyticsEngagementListState = atomFamily<
-  EngagementResponse | undefined,
-  string
->({
-  key: 'analyticsEngagementList',
-  default: undefined,
-});
-
-export const analyticsEngagementState = selectorFamily<
-  ListEngagementResponse | Error | undefined,
-  EngagementListOptions
->({
-  key: 'engagement',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsEngagementIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: EngagementResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsEngagementListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newEngagement) => {
-      if (
-        newEngagement === undefined ||
-        newEngagement instanceof DefaultValue
-      ) {
-        reset(analyticsEngagementIndexState(options));
-      } else if (newEngagement instanceof Error) {
-        set(analyticsEngagementIndexState(options), newEngagement);
-      } else {
-        newEngagement?.items.forEach((engagement) =>
-          set(
-            analyticsEngagementListState(
-              engagement.id + JSON.stringify(options),
-            ),
-            engagement,
-          ),
-        );
-        set(analyticsEngagementIndexState(options), {
-          total: newEngagement.total,
-          ids: newEngagement.items.map(
-            (engagement) => engagement.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
+export const meetingRepAttendanceQueryKeys = {
+  all: ['analytics-meeting-rep-attendance'] as const,
+  lists: () => [...meetingRepAttendanceQueryKeys.all, 'list'] as const,
+  list: (options: MeetingRepAttendanceOptions) =>
+    [
+      ...meetingRepAttendanceQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
 export const useAnalyticsEngagement = (
   options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
-) => {
+): ListEngagementResponse => {
   const opensearchClient = useAnalyticsOpensearch<EngagementResponse>(
     'presenter-representation',
   ).client;
-  const [engagement, setEngagement] = useRecoilState(
-    analyticsEngagementState(options),
-  );
 
-  if (engagement === undefined) {
-    throw getEngagement(opensearchClient, options)
-      .then(setEngagement)
-      .catch(setEngagement);
-  }
-  if (engagement instanceof Error) {
-    throw engagement;
-  }
-  return engagement;
+  return useSuspenseQuery({
+    queryKey: engagementQueryKeys.list(options),
+    queryFn: async (): Promise<ListEngagementResponse> => {
+      try {
+        return await getEngagement(opensearchClient, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setEngagement)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };
 
 const engagementPerformanceQuery = makePerformanceQuery<EngagementPerformance>(
@@ -121,45 +74,42 @@ export const useEngagementPerformance =
 export const useEngagementPerformanceValue =
   engagementPerformanceQuery.useValueHook;
 
-const analyticsMeetingRepAttendanceState = atomFamily<
-  ListMeetingRepAttendanceResponse | Error | undefined,
-  MeetingRepAttendanceOptions
->({
-  key: 'analyticsMeetingRepAttendance',
-  default: undefined,
-});
-
 export const useAnalyticsMeetingRepAttendance = (
   options: MeetingRepAttendanceOptions,
 ): ListMeetingRepAttendanceResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<MeetingRepAttendanceDataObject>('attendance').client;
 
-  const [meetingRepAttendance, setMeetingRepAttendance] = useRecoilState(
-    analyticsMeetingRepAttendanceState({
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    }),
-  );
+  // The recoil atomFamily was keyed by this Pick of the options — keep the
+  // same key surface so cache identity is unchanged.
+  const stateOptions: MeetingRepAttendanceOptions = {
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    tags: options.tags,
+    timeRange: options.timeRange,
+    sort: options.sort,
+  };
 
-  if (meetingRepAttendance === undefined) {
-    throw getMeetingRepAttendance(opensearchClient, {
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    })
-      .then(setMeetingRepAttendance)
-      .catch(setMeetingRepAttendance);
-  }
-
-  if (meetingRepAttendance instanceof Error) {
-    throw meetingRepAttendance;
-  }
-
-  return meetingRepAttendance;
+  const { data } = useSuspenseQuery({
+    queryKey: meetingRepAttendanceQueryKeys.list(stateOptions),
+    queryFn: async () => {
+      try {
+        // getMeetingRepAttendance is typed `| undefined`; a queryFn must
+        // never return undefined — cache `null` (recoil would have re-thrown
+        // forever on undefined; unreachable in practice).
+        return (
+          (await getMeetingRepAttendance(opensearchClient, stateOptions)) ??
+          null
+        );
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setMeetingRepAttendance)`
+        // — see useAnalyticsEngagement above.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  });
+  return data as ListMeetingRepAttendanceResponse;
 };

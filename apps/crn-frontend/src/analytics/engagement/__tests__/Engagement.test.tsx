@@ -23,7 +23,6 @@ import { fireEvent } from '@testing-library/dom';
 import React, { Suspense } from 'react';
 import * as ReactRouter from 'react-router';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { OpensearchClient } from '../../utils/opensearch';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -38,7 +37,6 @@ import {
 } from '../api';
 import Engagement from '../Engagement';
 import {
-  analyticsEngagementState,
   useAnalyticsEngagement,
   useAnalyticsMeetingRepAttendance,
 } from '../state';
@@ -190,36 +188,22 @@ beforeEach(() => {
 
 const renderPage = async (path: string) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          analyticsEngagementState({
-            currentPage: 0,
-            pageSize: 10,
-            tags: [],
-            timeRange: 'all',
-            sort: 'team_asc',
-          }),
-        );
-      }}
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]}>
-                <Routes>
-                  <Route
-                    path="/analytics/engagement/:metric"
-                    element={<Engagement />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[path]}>
+              <Routes>
+                <Route
+                  path="/analytics/engagement/:metric"
+                  element={<Engagement />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -329,11 +313,11 @@ describe('Engagement', () => {
     };
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <TestErrorBoundary>
           <Suspense fallback="loading">{children}</Suspense>
         </TestErrorBoundary>
-      </RecoilRoot>
+      </QueryClientProvider>
     );
 
     renderHook(
@@ -469,11 +453,11 @@ describe('Attendance', () => {
     };
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <TestErrorBoundary>
           <Suspense fallback="loading">{children}</Suspense>
         </TestErrorBoundary>
-      </RecoilRoot>
+      </QueryClientProvider>
     );
 
     renderHook(

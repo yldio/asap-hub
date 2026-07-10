@@ -1,22 +1,16 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent } from '@testing-library/dom';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE } from '../../hooks';
 import { createNewsListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getAlgoliaNews } from '../api';
 import NewsPage from '../Routes';
-import { newsState } from '../state';
 
 jest.mock('../api');
 
@@ -28,20 +22,10 @@ const pageSize = 10;
 beforeEach(jest.resetAllMocks);
 
 mockConsoleError();
-const renderPage = async (searchQuery = '') => {
+const renderPage = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          newsState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    // fresh query client per render replaces the recoil list-cache reset
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -53,10 +37,12 @@ const renderPage = async (searchQuery = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 
 it('renders the page title', async () => {
@@ -104,7 +90,7 @@ it('renders error message when when the request it not a 2XX', async () => {
 
   await renderPage();
   expect(mockGetNews).toHaveBeenCalled();
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
 });
 
 it('can perform a search', async () => {

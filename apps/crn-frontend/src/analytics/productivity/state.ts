@@ -1,3 +1,4 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
@@ -8,12 +9,7 @@ import {
   UserProductivityPerformance,
   UserProductivityResponse,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import { makePerformanceQuery } from '../utils/state';
@@ -24,92 +20,51 @@ import {
   getUserProductivityPerformance,
 } from './api';
 
-const analyticsUserProductivityIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortUserProductivity>
->({
-  key: 'analyticsUserProductivityIndex',
-  default: undefined,
-});
+export const userProductivityQueryKeys = {
+  all: ['analytics-user-productivity'] as const,
+  lists: () => [...userProductivityQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>) =>
+    [
+      ...userProductivityQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
-export const analyticsUserProductivityListState = atomFamily<
-  UserProductivityResponse | undefined,
-  string
->({
-  key: 'analyticsUserProductivityList',
-  default: undefined,
-});
-
-export const analyticsUserProductivityState = selectorFamily<
-  ListUserProductivityResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortUserProductivity>
->({
-  key: 'userProductivity',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsUserProductivityIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const users: UserProductivityResponse[] = [];
-      for (const id of index.ids) {
-        const user = get(analyticsUserProductivityListState(id));
-        if (user === undefined) return undefined;
-        users.push(user);
-      }
-      return { total: index.total, items: users };
-    },
-  set:
-    (options) =>
-    ({ get: _get, set, reset }, newUserProductivity) => {
-      if (
-        newUserProductivity === undefined ||
-        newUserProductivity instanceof DefaultValue
-      ) {
-        reset(analyticsUserProductivityIndexState(options));
-      } else if (newUserProductivity instanceof Error) {
-        set(analyticsUserProductivityIndexState(options), newUserProductivity);
-      } else {
-        newUserProductivity?.items.forEach((userProductivity) =>
-          set(
-            analyticsUserProductivityListState(
-              userProductivity.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
-            ),
-            userProductivity,
-          ),
-        );
-        set(analyticsUserProductivityIndexState(options), {
-          total: newUserProductivity.total,
-          ids: newUserProductivity.items.map(
-            (userProductivity) => userProductivity.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
+export const teamProductivityQueryKeys = {
+  all: ['analytics-team-productivity'] as const,
+  lists: () => [...teamProductivityQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>) =>
+    [
+      ...teamProductivityQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
 export const useAnalyticsUserProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
-) => {
+): ListUserProductivityResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<UserProductivityResponse>(
       'user-productivity',
     ).client;
 
-  const [userProductivity, setUserProductivity] = useRecoilState(
-    analyticsUserProductivityState(options),
-  );
-
-  if (userProductivity === undefined) {
-    throw getUserProductivity(opensearchClient, options)
-      .then(setUserProductivity)
-      .catch(setUserProductivity);
-  }
-
-  if (userProductivity instanceof Error) {
-    throw userProductivity;
-  }
-
-  return { ...userProductivity };
+  return useSuspenseQuery({
+    queryKey: userProductivityQueryKeys.list(options),
+    queryFn: async (): Promise<ListUserProductivityResponse> => {
+      try {
+        return await getUserProductivity(opensearchClient, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setUserProductivity)`: an
+        // Error rejection was cached and re-thrown to the error boundary,
+        // while a non-Error rejection was swallowed. Map non-Errors to an
+        // empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };
 
 const userProductivityPerformanceQuery =
@@ -140,89 +95,27 @@ export const useTeamProductivityPerformance =
 export const useTeamProductivityPerformanceValue =
   teamProductivityPerformanceQuery.useValueHook;
 
-const analyticsTeamProductivityIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>
->({
-  key: 'analyticsTeamProductivityIndex',
-  default: undefined,
-});
-
-export const analyticsTeamProductivityListState = atomFamily<
-  TeamProductivityResponse | undefined,
-  string
->({
-  key: 'analyticsTeamProductivityList',
-  default: undefined,
-});
-
-export const analyticsTeamProductivityState = selectorFamily<
-  ListTeamProductivityResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>
->({
-  key: 'teamProductivity',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsTeamProductivityIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: TeamProductivityResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsTeamProductivityListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get: _get, set, reset }, newTeamProductivity) => {
-      if (
-        newTeamProductivity === undefined ||
-        newTeamProductivity instanceof DefaultValue
-      ) {
-        reset(analyticsTeamProductivityIndexState(options));
-      } else if (newTeamProductivity instanceof Error) {
-        set(analyticsTeamProductivityIndexState(options), newTeamProductivity);
-      } else {
-        newTeamProductivity?.items.forEach((teamProductivity) =>
-          set(
-            analyticsTeamProductivityListState(
-              teamProductivity.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
-            ),
-            teamProductivity,
-          ),
-        );
-        set(analyticsTeamProductivityIndexState(options), {
-          total: newTeamProductivity.total,
-          ids: newTeamProductivity.items.map(
-            (teamProductivity) => teamProductivity.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
-
 export const useAnalyticsTeamProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
-) => {
+): ListTeamProductivityResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<TeamProductivityResponse>(
       'team-productivity',
     ).client;
 
-  const [teamProductivity, setTeamProductivity] = useRecoilState(
-    analyticsTeamProductivityState(options),
-  );
-
-  if (teamProductivity === undefined) {
-    throw getTeamProductivity(opensearchClient, options)
-      .then(setTeamProductivity)
-      .catch(setTeamProductivity);
-  }
-
-  if (teamProductivity instanceof Error) {
-    throw teamProductivity;
-  }
-  return { ...teamProductivity };
+  return useSuspenseQuery({
+    queryKey: teamProductivityQueryKeys.list(options),
+    queryFn: async (): Promise<ListTeamProductivityResponse> => {
+      try {
+        return await getTeamProductivity(opensearchClient, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setTeamProductivity)` —
+        // see useAnalyticsUserProductivity above.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };

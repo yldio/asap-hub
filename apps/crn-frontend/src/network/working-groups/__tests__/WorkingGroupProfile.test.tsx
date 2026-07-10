@@ -10,7 +10,6 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -25,7 +24,6 @@ import {
   getResearchOutputs,
 } from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
-import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -101,21 +99,15 @@ const renderWorkingGroupProfile = async (
   );
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshWorkingGroupState(workingGroupResponse.id), Math.random())
-      }
-    >
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <RouterProvider router={router} />
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <RouterProvider router={router} />
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

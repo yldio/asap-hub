@@ -264,7 +264,7 @@ describe('Productivity', () => {
       expect(mockGetTeamProductivityPerformance).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when user response is not a 2XX', async () => {
@@ -278,7 +278,7 @@ describe('Productivity', () => {
       expect(mockGetUserProductivity).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when the user performance response is not a 2XX', async () => {
@@ -294,7 +294,7 @@ describe('Productivity', () => {
       expect(mockGetUserProductivityPerformance).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 });
 
@@ -337,7 +337,7 @@ describe('Leadership & Membership', () => {
       expect(mockGetAnalyticsOSChampion).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 });
 
@@ -369,7 +369,7 @@ describe('Collaboration', () => {
       expect(mockGetUserCollaboration).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when the team response is not a 2XX', async () => {
@@ -387,7 +387,7 @@ describe('Collaboration', () => {
       expect(mockGetTeamCollaboration).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 });
 

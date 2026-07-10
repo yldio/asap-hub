@@ -26,8 +26,8 @@ const REQUIRED_MILESTONES_COLUMNS = [
   'Milestone Status',
 ];
 
-type GrantBucket = 'original' | 'supplement';
-const GRANT_TYPES: GrantBucket[] = ['original', 'supplement'];
+const GRANT_TYPES = ['original', 'supplement'] as const;
+type GrantBucket = (typeof GRANT_TYPES)[number];
 
 type MilestoneImport = {
   description: string;

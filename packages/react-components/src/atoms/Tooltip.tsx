@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
-import { themes } from '../theme';
+import { paper, space } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 
 const triangleHeight = 5;
@@ -33,7 +33,7 @@ const tooltipStyles = css({
     position: 'absolute',
     borderLeft: `${triangleHeight}px solid transparent`,
     borderRight: `${triangleHeight}px solid transparent`,
-    borderTop: `${triangleHeight}px solid #000`,
+    borderTop: `${triangleHeight}px solid ${space.rgb}`,
     bottom: 0,
     right: '50%',
     marginRight: `-${triangleHeight / 2}px`,
@@ -44,7 +44,8 @@ const tooltipStyles = css({
   },
 });
 const bubbleStyles = css({
-  ...themes.dark,
+  backgroundColor: space.rgb,
+  color: paper.rgb,
   display: 'block',
 
   padding: `${rem(9)} ${rem(12)}`,

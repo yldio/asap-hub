@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-import { charcoal, paper } from '../colors';
+import { paper, space } from '../colors';
 import { rem } from '../pixels';
 import { Portal } from '../utils/portal';
 
@@ -27,7 +27,7 @@ const bubbleStyles = css({
   zIndex: 100,
   pointerEvents: 'none',
 
-  backgroundColor: charcoal.rgb,
+  backgroundColor: space.rgb,
   color: paper.rgb,
   borderRadius: rem(4),
   padding: `${rem(6)} ${rem(12)}`,
@@ -42,7 +42,7 @@ const bubbleStyles = css({
     transform: 'translateY(-50%)',
     borderTop: `${rem(triangle)} solid transparent`,
     borderBottom: `${rem(triangle)} solid transparent`,
-    borderRight: `${rem(triangle)} solid ${charcoal.rgb}`,
+    borderRight: `${rem(triangle)} solid ${space.rgb}`,
   },
 });
 

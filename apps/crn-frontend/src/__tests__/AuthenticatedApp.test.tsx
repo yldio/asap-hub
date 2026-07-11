@@ -375,3 +375,21 @@ describe('User projects in navigation', () => {
     expect(queryByText('MY PROJECTS')).not.toBeInTheDocument();
   });
 });
+
+it('shows the loading indicator while the current user is not yet ready', async () => {
+  (useCurrentUserCRN as jest.Mock).mockReturnValue(null);
+
+  const { findByText } = render(
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
+        <StaticRouter location="/">
+          <Suspense fallback="loading">
+            <AuthenticatedApp />
+          </Suspense>
+        </StaticRouter>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
+  );
+
+  expect(await findByText(/Loading\.\.\./i)).toBeInTheDocument();
+});

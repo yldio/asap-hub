@@ -36,9 +36,8 @@ export const useUsers = (options: UserListOptions): gp2.ListUserResponse => {
           algoliaQueryId: data.queryID,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setUsers)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -60,12 +59,8 @@ export const useUserById = (id: string): gp2.UserResponse | undefined => {
 };
 
 // The mutation hooks below write the mutation response straight into the
-// detail cache — never refetched (§6.1: patched-overlay writes are
-// setQueryData only) — and then refresh the Auth0 token + user so the id
-// token picks up the profile change. The recoil version wrote the response
-// into a `patchedUserState` overlay that nothing ever read (freshness came
-// from the Auth0 user refresh alone); landing the write in the live detail
-// cache is the sanctioned behavior change for this unit.
+// detail cache — never refetched — and then refresh the Auth0 token + user
+// so the id token picks up the profile change.
 export const usePatchUserById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0GP2();
   const getAuthorization = useAuthorization();

@@ -37,9 +37,8 @@ export const useOutputs = (
           algoliaIndexName: data.index,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setOutputs)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -68,9 +67,8 @@ export const useCreateOutput = () => {
   const queryClient = useQueryClient();
   return async (payload: gp2.OutputPostRequest) => {
     const output = await createOutput(payload, await getAuthorization());
-    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook bumped a
-    // `refreshOutputsState` counter that nothing ever read, so creating an
-    // output refreshed no list. Wire up the invalidation the code intended.
+    // Deliberate change from the legacy behavior, which refreshed no list on
+    // create: invalidate so new outputs show up.
     await queryClient.invalidateQueries({
       queryKey: outputQueryKeys.lists(),
     });
@@ -83,13 +81,12 @@ export const useUpdateOutput = (id: string) => {
   const queryClient = useQueryClient();
   return async (payload: gp2.OutputPutRequest) => {
     const output = await updateOutput(id, payload, await getAuthorization());
-    // R3 patched-overlay: write the mutation response straight into the detail
-    // cache (never refetched — §6.1). updateOutput may resolve undefined; cache
-    // null so the queryFn contract holds and useOutputById maps it back.
+    // Write the mutation response straight into the detail cache (never
+    // refetched). updateOutput may resolve undefined; cache null so the
+    // queryFn contract holds and useOutputById maps it back.
     queryClient.setQueryData(outputQueryKeys.detail(id), output ?? null);
-    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook also bumped the
-    // vestigial `refreshOutputsState` counter (never read). Invalidate the
-    // lists so an updated output shows through where the counter intended to.
+    // Deliberate change from the legacy behavior, which refreshed no list on
+    // update: invalidate so the updated output shows through.
     await queryClient.invalidateQueries({
       queryKey: outputQueryKeys.lists(),
     });

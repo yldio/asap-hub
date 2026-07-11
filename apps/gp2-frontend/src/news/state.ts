@@ -26,10 +26,8 @@ export const useNews = (options: NewsListOptions) => {
           algoliaIndexName: data.index,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setNews)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed (stored, so the page kept
-        // rendering). Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list so the page keeps rendering.
         if (error instanceof Error) {
           throw error;
         }

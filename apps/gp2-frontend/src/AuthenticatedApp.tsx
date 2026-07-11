@@ -50,9 +50,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     }
   }, [showWelcomeBackBanner, addNotification, welcomeBackMessage]);
 
-  // `user` is derived from the auth0 context (null until auth0 finishes
-  // loading and a user is present), so this guard also covers the pre-ready
-  // state the recoil `auth0State` sync used to gate on.
+  // `user` is null until auth0 finishes loading, so this guard also covers
+  // the pre-ready state.
   if (!user) {
     return <Loading />;
   }
@@ -77,9 +76,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 };
 
 const AuthenticatedAppWithProviders: FC<Record<string, never>> = () => {
-  // The QueryClient lives and dies with this component: on logout the
-  // AuthenticatedApp unmounts and the whole cache is discarded (the same
-  // logout cache-wipe semantics the old RecoilRoot provided).
+  // The QueryClient lives and dies with this component: logout unmounts
+  // AuthenticatedApp and discards the whole cache.
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );

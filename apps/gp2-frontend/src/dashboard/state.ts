@@ -4,9 +4,8 @@ import { useAuthorization } from '../auth/useAuthorization';
 import { getDashboardStats, getNews, getReminders } from './api';
 
 // The dashboard owns its own namespace: its `news` key is DISTINCT from the
-// news module's `newsQueryKeys` — the recoil `'news'` key collision between
-// dashboard/state.ts and news/state.ts was a bug (different fetchers: REST
-// `getNews` here vs Algolia `getAlgoliaNews` there), not shared caching.
+// news module's `newsQueryKeys` — different fetchers (REST `getNews` here vs
+// Algolia `getAlgoliaNews` there), so the caches must not be shared.
 export const dashboardQueryKeys = {
   all: ['dashboard'] as const,
   news: () => [...dashboardQueryKeys.all, 'news'] as const,

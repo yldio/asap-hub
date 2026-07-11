@@ -1,16 +1,15 @@
 import type { DefaultOptions } from '@tanstack/react-query';
 
-// These defaults preserve Recoil's fetching behavior during the migration from Recoil to TanStack:
-// atoms cached forever (until a refresh counter bumped or the RecoilRoot unmounted), never
-// retried, and never refetched in the background. Once Recoil is fully removed, revisit these
-// to take advantage of TanStack Query's cache invalidation and smart refetching capabilities.
+// Conservative defaults: cache forever with explicit invalidation, never
+// retry, and never refetch in the background. Revisit these to take advantage
+// of TanStack Query's cache invalidation and smart refetching capabilities.
 export const queryClientDefaultOptions: DefaultOptions = {
   queries: {
-    // recoil never went stale; invalidation is explicit
+    // data never goes stale; invalidation is explicit
     staleTime: Infinity,
-    // caches lived for the RecoilRoot lifetime
+    // caches live for the QueryClient's lifetime
     gcTime: Infinity,
-    // errors were cached as values and re-thrown to error boundaries, never retried
+    // errors are re-thrown to error boundaries, never retried
     retry: false,
     // no refetch on window focus
     refetchOnWindowFocus: false,

@@ -16,7 +16,6 @@ jest.mock('../../hooks/search');
 
 const renderList = async (props: EventListProps) => {
   render(
-    // fresh query client per render replaces the recoil list-cache reset
     <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>

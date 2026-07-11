@@ -36,9 +36,8 @@ export const useProjects = (
           algoliaIndexName: data.index,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setProjects)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -69,14 +68,11 @@ export const usePutProjectResources = (id: string) => {
       payload,
       await getAuthorization(),
     );
-    // R3 patched-overlay: the recoil hook set the mutation response straight
-    // into `projectState(id)` (the detail atom the read hook returns) — write
-    // it into the detail cache, never refetch (§6.1).
+    // Write the mutation response straight into the detail cache, never
+    // refetch.
     queryClient.setQueryData(projectQueryKeys.detail(project.id), project);
-    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook also bumped a
-    // vestigial `refreshProjectsState` counter (never read anywhere).
-    // Invalidate the lists so the resource change shows through where the
-    // counter intended to.
+    // Deliberate change from the legacy behavior, which refreshed no list:
+    // invalidate so the resource change shows through.
     await queryClient.invalidateQueries({
       queryKey: projectQueryKeys.lists(),
     });

@@ -57,19 +57,15 @@ export const usePutWorkingGroupResources = (id: string) => {
       payload,
       await getAuthorization(),
     );
-    // R3 patched-overlay: the recoil hook set the mutation response straight
-    // into `workingGroupState(id)` (the detail atom the read hook returns) —
-    // write it into the detail cache, never refetch (§6.1).
+    // Write the mutation response straight into the detail cache, never
+    // refetch.
     queryClient.setQueryData(
       workingGroupQueryKeys.detail(workingGroup.id),
       workingGroup,
     );
-    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): both recoil refresh counters
-    // were broken — `refreshWorkingGroupNetworkState` was bumped here but the
-    // network selector never read it, and `refreshWorkingGroupsState` was read
-    // by the list selector but never bumped anywhere. Wire up the invalidation
-    // the code clearly intended: a resource change now refreshes the network
-    // view and the working-groups list.
+    // Deliberate change from the legacy behavior, which refreshed neither: a
+    // resource change now refreshes the network view and the working-groups
+    // list.
     await queryClient.invalidateQueries({
       queryKey: workingGroupQueryKeys.network(),
     });

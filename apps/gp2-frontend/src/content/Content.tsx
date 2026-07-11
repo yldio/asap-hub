@@ -11,8 +11,7 @@ interface ContentProps {
   pageId: string;
 }
 const Content: React.FC<ContentProps> = ({ pageId }) => {
-  // Same branching as the recoil Loadable: loading → Loading, value →
-  // ContentPage, error or missing page → NotFoundPage.
+  // loading → Loading, value → ContentPage, error or missing → NotFoundPage
   const { isPending, data: page } = usePageByPageId(pageId);
 
   if (isPending) {
@@ -31,8 +30,8 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
 };
 
 const ContentWithProviders: React.FC<ContentProps> = (props) => {
-  // The QueryClient lives and dies with this component: unmounting the content
-  // page discards the cache (the same lifetime the old RecoilRoot had).
+  // The QueryClient lives and dies with this component: unmounting the
+  // content page discards the cache.
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );

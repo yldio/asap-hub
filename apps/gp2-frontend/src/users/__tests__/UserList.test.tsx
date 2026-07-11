@@ -56,7 +56,6 @@ const renderUserList = async ({
   }));
 
   render(
-    // fresh query client per render replaces the recoil list-cache reset
     <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>

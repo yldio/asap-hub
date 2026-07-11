@@ -57,8 +57,8 @@ jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
 }));
 
-// Don't mock ../../../hooks at all - let it use the real implementations
-// which are connected to Recoil state and will respond to user interactions
+// Don't mock ../../../hooks at all - the real implementations respond to
+// user interactions
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream

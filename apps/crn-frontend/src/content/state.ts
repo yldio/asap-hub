@@ -8,9 +8,8 @@ export const pageQueryKeys = {
   detail: (path: string) => [...pageQueryKeys.details(), path] as const,
 };
 
-// Non-suspending read (R6): the recoil version was a Loadable and
-// content/Content.tsx branches on the loading state manually — plain useQuery
-// preserves that loading model.
+// Non-suspending read: content/Content.tsx branches on the loading state
+// manually.
 export const usePageByPageId = (pageId: string) =>
   useQuery({
     queryKey: pageQueryKeys.detail(pageId),

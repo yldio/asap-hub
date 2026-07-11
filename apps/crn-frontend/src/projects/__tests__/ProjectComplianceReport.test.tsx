@@ -127,7 +127,7 @@ const renderPage = async (
 
   const queryClient = createTestQueryClient();
   // Seed the project detail cache so the success flow's invalidation of the
-  // project (the recoil refreshProjectState counter bump) can be observed.
+  // project can be observed.
   queryClient.setQueryData(projectQueryKeys.detail(projectId), {
     id: projectId,
   } as ProjectDetail);
@@ -269,8 +269,7 @@ it('on form success sets compliance-report toast, refreshes project state, and n
     );
   });
 
-  // the recoil refreshProjectState counter bump became an invalidation of
-  // the project detail query
+  // success invalidates the project detail query
   await waitFor(() => {
     expect(
       queryClient.getQueryState(projectQueryKeys.detail(projectId))

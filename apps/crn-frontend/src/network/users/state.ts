@@ -34,9 +34,8 @@ export const useUsers = (options: GetListOptions): ListUserResponse => {
       try {
         return await getUsers(algoliaClient.client, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setUsers)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -58,9 +57,9 @@ export const useUserById = (id: string): UserResponse | undefined => {
 };
 
 // The mutation hooks below write the mutation response straight into the
-// detail cache (the recoil patchedUserState overlay) — never refetched,
-// because Contentful has read-after-write lag (see docs §6.1) — and then
-// refresh the Auth0 token + user so the id token picks up the profile change.
+// detail cache — never refetched, because Contentful has read-after-write
+// lag — and then refresh the Auth0 token + user so the id token picks up
+// the profile change.
 export const usePatchUserById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
   const getAuthorization = useAuthorization();

@@ -60,7 +60,6 @@ beforeEach(() => {
 
 const renderTagsPage = async (query = '') => {
   render(
-    // fresh query client per render replaces the recoil refresh-token bump
     <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>

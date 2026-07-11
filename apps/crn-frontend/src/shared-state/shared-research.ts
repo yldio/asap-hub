@@ -163,8 +163,7 @@ export const useResearchThemes = (
   types?: ReadonlyArray<ResearchThemeType>,
 ): ResearchThemeResponse[] => {
   const getAuthorization = useAuthorization();
-  // The recoil selectorFamily was keyed by the comma-joined types; keep that
-  // (including its quirk that an empty array means "all types").
+  // Keyed by the comma-joined types; an empty array means "all types".
   const typesKey = types ? types.join(',') : '';
   return useSuspenseQuery({
     queryKey: researchThemeQueryKeys.byTypes(typesKey),

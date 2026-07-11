@@ -72,10 +72,8 @@ export const useAnalyticsUserCollaboration = (
       try {
         return await getUserCollaboration(opensearchClient, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setUserCollaboration)`:
-        // an Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -99,8 +97,6 @@ export const useAnalyticsTeamCollaboration = (
       try {
         return await getTeamCollaboration(opensearchClient, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setTeamCollaboration)` —
-        // see useAnalyticsUserCollaboration above.
         if (error instanceof Error) {
           throw error;
         }
@@ -151,8 +147,7 @@ export const useAnalyticsSharingPrelimFindings = (
       'preliminary-data-sharing',
     ).client;
 
-  // The recoil atomFamily was keyed by this Pick of the options — keep the
-  // same key surface so cache identity is unchanged.
+  // Cache identity depends on exactly these option fields.
   const stateOptions: PreliminaryDataSharingSearchOptions = {
     currentPage: options.currentPage,
     pageSize: options.pageSize,
@@ -165,16 +160,12 @@ export const useAnalyticsSharingPrelimFindings = (
     queryKey: prelimDataSharingQueryKeys.list(stateOptions),
     queryFn: async () => {
       try {
-        // getPreliminaryDataSharing is typed `| undefined`; a queryFn must
-        // never return undefined — cache `null` (recoil would have re-thrown
-        // forever on undefined; unreachable in practice).
+        // a queryFn must never return undefined — cache `null` instead
         return (
           (await getPreliminaryDataSharing(opensearchClient, stateOptions)) ??
           null
         );
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setPreliminaryDataSharing)`
-        // — see useAnalyticsUserCollaboration above.
         if (error instanceof Error) {
           throw error;
         }

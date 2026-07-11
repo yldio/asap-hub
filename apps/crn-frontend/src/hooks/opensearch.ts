@@ -54,11 +54,9 @@ export const opensearchQueryKeys = {
   authorization: () => [...opensearchQueryKeys.all, 'authorization'] as const,
 };
 
-// The recoil authorizationState selector suspended consumers until the token
-// resolved, then returned the Bearer string synchronously — analytics hooks
-// construct OpensearchClients with the resolved string during render. Preserve
-// that contract with a suspense query on the token, cached for the
-// QueryClient's lifetime exactly like the recoil selector's cache was.
+// Analytics hooks construct OpensearchClients with the resolved Bearer string
+// during render, so suspend on the token and cache it for the QueryClient's
+// lifetime.
 const useSuspenseAuthorization = (): string => {
   const getAuthorization = useAuthorization();
   return useSuspenseQuery({

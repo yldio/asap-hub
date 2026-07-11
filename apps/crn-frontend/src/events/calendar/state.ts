@@ -12,9 +12,8 @@ export const calendarQueryKeys = {
   all: ['calendars'] as const,
 };
 
-// Non-suspending warm-up (was useRecoilValueLoadable(calendarsState) — R6):
-// kicks the fetch off without suspending the caller; useCalendars below picks
-// the cached result up from the same key.
+// Non-suspending warm-up: kicks the fetch off without suspending the caller;
+// useCalendars below picks the cached result up from the same key.
 export const usePrefetchCalendars =
   (): UseQueryResult<ListCalendarResponse> => {
     const getAuthorization = useAuthorization();

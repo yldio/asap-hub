@@ -73,10 +73,8 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
           algoliaIndexName: data.index,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setResearchOutputs)`: an
-        // Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -88,9 +86,8 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
 
 // Write-through used after research-output mutations (here and from
 // network/teams/state.ts): the mutation response is written straight into the
-// detail cache — never refetched, because Contentful has read-after-write lag
-// (see docs §6.1) — while the Algolia-backed lists are invalidated, exactly
-// like the recoil version's refreshResearchOutputIndex bump + entity write.
+// detail cache — never refetched, because Contentful has read-after-write
+// lag — while the Algolia-backed lists are invalidated.
 export const useSetResearchOutputItem = () => {
   const queryClient = useQueryClient();
   return useCallback(

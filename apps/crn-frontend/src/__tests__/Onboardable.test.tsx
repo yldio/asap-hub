@@ -14,7 +14,7 @@ import { getUser } from '../network/users/api';
 jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
-// Suppress act() warnings from Recoil state updates
+// Suppress act() warnings from async state updates
 // eslint-disable-next-line no-console
 const originalError = console.error;
 beforeAll(() => {

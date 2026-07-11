@@ -117,8 +117,6 @@ describe('PreprintCompliance', () => {
   });
 
   it('caches and clears preprint compliance data by query key', async () => {
-    // Replaces the recoil setter/reset probe: the writable selectorFamily is
-    // now the query cache, addressed through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -209,8 +207,6 @@ describe('PreprintCompliance', () => {
   });
 
   it.each(sortOptions)('handles sort option %s in the query key', (sort) => {
-    // Replaces the recoil per-sort setter probes: each sort produces a
-    // distinct, stable cache entry through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,

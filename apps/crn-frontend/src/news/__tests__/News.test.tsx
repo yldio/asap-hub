@@ -24,7 +24,6 @@ const mockGetNewsById = getNewsById as jest.MockedFunction<typeof getNewsById>;
 
 const renderPage = async () => {
   const result = render(
-    // fresh query client per render replaces the recoil refresh-counter bump
     <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>

@@ -49,9 +49,8 @@ export const useAnalyticsEngagement = (
       try {
         return await getEngagement(opensearchClient, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setEngagement)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -80,8 +79,7 @@ export const useAnalyticsMeetingRepAttendance = (
   const opensearchClient =
     useAnalyticsOpensearch<MeetingRepAttendanceDataObject>('attendance').client;
 
-  // The recoil atomFamily was keyed by this Pick of the options — keep the
-  // same key surface so cache identity is unchanged.
+  // Cache identity depends on exactly these option fields.
   const stateOptions: MeetingRepAttendanceOptions = {
     currentPage: options.currentPage,
     pageSize: options.pageSize,
@@ -94,16 +92,12 @@ export const useAnalyticsMeetingRepAttendance = (
     queryKey: meetingRepAttendanceQueryKeys.list(stateOptions),
     queryFn: async () => {
       try {
-        // getMeetingRepAttendance is typed `| undefined`; a queryFn must
-        // never return undefined — cache `null` (recoil would have re-thrown
-        // forever on undefined; unreachable in practice).
+        // a queryFn must never return undefined — cache `null` instead
         return (
           (await getMeetingRepAttendance(opensearchClient, stateOptions)) ??
           null
         );
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setMeetingRepAttendance)`
-        // — see useAnalyticsEngagement above.
         if (error instanceof Error) {
           throw error;
         }

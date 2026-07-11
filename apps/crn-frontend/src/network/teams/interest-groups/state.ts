@@ -27,10 +27,8 @@ export const useTeamInterestGroupsById = (
         if (interestGroups === undefined) {
           return 'noSuchTeam';
         }
-        // Write-through into the shared interest-group entity store (R10):
-        // the recoil selector fanned the fetched entities into
-        // interest-groups' interestGroupListState, updating any cached
-        // interest-group list that contains them.
+        // Write-through into the shared interest-group entity store,
+        // updating any cached interest-group list that contains them.
         const byId = new Map(
           interestGroups.items.map((group) => [group.id, group]),
         );
@@ -44,10 +42,8 @@ export const useTeamInterestGroupsById = (
         );
         return interestGroups;
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setTeamInterestGroups)`:
-        // an Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }

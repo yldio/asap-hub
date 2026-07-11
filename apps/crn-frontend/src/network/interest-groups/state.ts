@@ -9,9 +9,7 @@ import { useAuthorization } from '../../auth/useAuthorization';
 import { getInterestGroup, getInterestGroups } from './api';
 
 // This module is the shared interest-group entity store: the teams and users
-// interest-group modules write fetched entities into these keys (R10), just
-// like their recoil selectors wrote into interestGroupListState /
-// interestGroupState here.
+// interest-group modules write fetched entities into these keys.
 export const interestGroupQueryKeys = {
   all: ['interest-groups'] as const,
   lists: () => [...interestGroupQueryKeys.all, 'list'] as const,
@@ -31,10 +29,8 @@ export const useInterestGroups = (
       try {
         return await getInterestGroups(options, await getAuthorization());
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setInterestGroups)`: an
-        // Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }

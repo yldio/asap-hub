@@ -105,8 +105,6 @@ const renderPage = async ({
   const path = queryString ? `${basePath}?${queryString}` : basePath;
 
   if (draftResearchOutputsError) {
-    // Previously seeded into the recoil cache; with react-query the same
-    // error state is produced by making the draft fetch reject.
     mockGetDraftResearchOutputs.mockRejectedValue(draftResearchOutputsError);
   }
   const result = render(

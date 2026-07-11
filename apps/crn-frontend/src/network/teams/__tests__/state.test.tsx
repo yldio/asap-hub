@@ -571,7 +571,7 @@ describe('useManuscripts', () => {
       expect(result.current.items[0]?.status).toBe('Addendum Required'),
     );
     // the write-through reaches every cached manuscript list, not just the
-    // rendered one (the recoil version wrote the shared list-item entity)
+    // rendered one
     expect(
       queryClient.getQueryData<{ items: { status: string }[] }>(
         manuscriptQueryKeys.list(otherOptions),

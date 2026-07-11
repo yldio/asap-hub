@@ -21,9 +21,7 @@ type PreprintComplianceStateOptionKeyData = Pick<
 export const preprintComplianceQueryKeys = {
   all: ['analytics-preprint-compliance'] as const,
   lists: () => [...preprintComplianceQueryKeys.all, 'list'] as const,
-  // The recoil family was keyed by this Pick of the options with timeRange
-  // normalized to 'all' — keep the same key surface so cache identity is
-  // unchanged.
+  // Cache identity uses these option fields, timeRange normalized to 'all'.
   list: (options: PreprintComplianceStateOptionKeyData) =>
     [
       ...preprintComplianceQueryKeys.lists(),
@@ -55,15 +53,11 @@ export const useAnalyticsPreprintCompliance = (
     queryKey: preprintComplianceQueryKeys.list(stateOptions),
     queryFn: async () => {
       try {
-        // getPreprintCompliance is typed `| undefined`; a queryFn must never
-        // return undefined — cache `null` (recoil would have re-thrown
-        // forever on undefined; unreachable in practice).
+        // a queryFn must never return undefined — cache `null` instead
         return (await getPreprintCompliance(opensearchClient, options)) ?? null;
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setPreprintCompliance)`:
-        // an Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }

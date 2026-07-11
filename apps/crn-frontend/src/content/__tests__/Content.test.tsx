@@ -19,9 +19,8 @@ const mockGetPageByPath = getPageByPath as jest.MockedFunction<
 
 const renderPage = async (pageId: string = 'privacy-notice') => {
   const result = render(
-    // Content mounts its own RecoilRoot + QueryClientProvider (public
-    // content pages render outside AuthenticatedApp), so no outer providers
-    // are needed here.
+    // Content mounts its own QueryClientProvider (public content pages
+    // render outside AuthenticatedApp), so no outer providers are needed.
     <Suspense fallback="loading">
       <Auth0Provider user={{}}>
         <WhenReady>

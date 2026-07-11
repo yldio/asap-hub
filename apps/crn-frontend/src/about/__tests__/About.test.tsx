@@ -27,7 +27,6 @@ const props: DiscoverResponse = {
 
 const renderPage = async (user: Partial<User>) => {
   render(
-    // fresh query client per render replaces the recoil refresh-counter bump
     <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>

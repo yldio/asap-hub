@@ -14,7 +14,7 @@ const AuthorizationProbe: React.FC = () => {
   return <span data-testid="probe">{authorization}</span>;
 };
 
-it('provides a ready Auth0 context without any RecoilRoot', async () => {
+it('provides a ready Auth0 context', async () => {
   const { getByText, getByTestId } = render(
     <Auth0Provider user={{}}>
       <WhenReady>

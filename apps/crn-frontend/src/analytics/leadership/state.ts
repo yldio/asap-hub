@@ -36,8 +36,7 @@ type OSStateOptionKeyData = Pick<
 export const leadershipQueryKeys = {
   all: ['analytics-leadership'] as const,
   lists: () => [...leadershipQueryKeys.all, 'list'] as const,
-  // The recoil family was keyed by this Pick of the options (no timeRange) —
-  // keep the same key surface so cache identity is unchanged.
+  // Cache identity deliberately excludes timeRange.
   list: (options: StateOptionKeyData) =>
     [...leadershipQueryKeys.lists(), normalizeListOptions(options)] as const,
 };
@@ -77,9 +76,8 @@ export const useAnalyticsLeadership = (
           )) ?? null
         );
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setLeadership)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -110,8 +108,6 @@ export const useAnalyticsOSChampion = (
           (await getAnalyticsOSChampion(opensearchClient, options)) ?? null
         );
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setOSChampion)` — see
-        // useAnalyticsLeadership above.
         if (error instanceof Error) {
           throw error;
         }

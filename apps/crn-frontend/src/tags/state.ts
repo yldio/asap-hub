@@ -30,7 +30,7 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   return useSuspenseQuery({
     queryKey: tagQueryKeys.search({ ...options, entityTypes }),
     queryFn: async (): Promise<TagSearchResult> => {
-      // Preserved from the recoil hook: an empty search never hits Algolia.
+      // an empty search never hits Algolia
       if (options.searchQuery === '' && options.tags.length === 0) {
         return EMPTY_ALGOLIA_RESPONSE;
       }
@@ -43,10 +43,8 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
           algoliaIndexName: data.index,
         };
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setTagSearch)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed (stored as `undefined`, so the
-        // page kept rendering). Map non-Errors to the empty response.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become the empty response so the page keeps rendering.
         if (error instanceof Error) {
           throw error;
         }

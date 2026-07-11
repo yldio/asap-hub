@@ -22,10 +22,8 @@ export const articleQueryKeys = {
     [...articleQueryKeys.all, 'milestone', milestoneId] as const,
 };
 
-// Cross-cache write into projects/state's milestone lists after a mutation:
-// the recoil version wrote projectMilestonesListItemState(milestoneId), the
-// entity every cached milestone list joined over, to keep articleCount/status
-// in sync (R10 write-through — never a refetch).
+// Cross-cache write into projects/state's milestone lists after a mutation,
+// keeping articleCount/status in sync — never a refetch.
 const updateCachedMilestone = (
   queryClient: QueryClient,
   milestoneId: string,

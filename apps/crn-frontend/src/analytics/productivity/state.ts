@@ -54,10 +54,8 @@ export const useAnalyticsUserProductivity = (
       try {
         return await getUserProductivity(opensearchClient, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setUserProductivity)`: an
-        // Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -109,8 +107,6 @@ export const useAnalyticsTeamProductivity = (
       try {
         return await getTeamProductivity(opensearchClient, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setTeamProductivity)` —
-        // see useAnalyticsUserProductivity above.
         if (error instanceof Error) {
           throw error;
         }

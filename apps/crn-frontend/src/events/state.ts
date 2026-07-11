@@ -46,7 +46,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
 
   useDeepCompareEffect(() => {
     // prefetchQuery is a no-op when the key is already cached (staleTime
-    // Infinity), mirroring the recoil effect's `if (events === undefined)`.
+    // Infinity).
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     queryClient.prefetchQuery({
       queryKey: eventQueryKeys.list(options),
@@ -57,7 +57,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
 
 export const useEvents = (
   options: GetEventListOptions,
-  // Kept for signature compatibility with the recoil hook; it was never used.
+  // Kept for signature compatibility; never used.
   _user?: User | null,
 ): ListEventResponse => {
   const { client } = useAlgolia();
@@ -67,9 +67,8 @@ export const useEvents = (
       try {
         return await getEvents(client, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setEvents)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }

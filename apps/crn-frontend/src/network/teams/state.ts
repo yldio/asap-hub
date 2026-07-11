@@ -94,9 +94,8 @@ export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
       try {
         return await getAlgoliaTeams(algoliaClient.client, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setTeams)`: an Error
-        // rejection was cached and re-thrown to the error boundary, while a
-        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -117,9 +116,8 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   return data ?? undefined;
 };
 
-// The PATCH response is written straight into the detail cache (the recoil
-// patchedTeamState overlay) — never refetched, because Contentful has
-// read-after-write lag (see docs §6.1).
+// The PATCH response is written straight into the detail cache — never
+// refetched, because Contentful has read-after-write lag.
 export const usePatchTeamById = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
@@ -167,8 +165,7 @@ export const useManuscriptById = (
           const next =
             typeof action === 'function' ? action(cached ?? undefined) : action;
           // setQueryData treats an undefined updater result as "no update";
-          // cache null instead so writes of undefined still land (mirrors the
-          // recoil setter, which stored the value as-is).
+          // cache null instead so writes of undefined still land.
           return next ?? null;
         },
       );
@@ -203,13 +200,11 @@ export const useManuscriptWorkspaceUrl = (
   return data ?? undefined;
 };
 
-// Batch hydration (R7): one suspense query per deduplicated id set makes the
+// Batch hydration: one suspense query per deduplicated id set makes the
 // single getManuscriptsByIds call and fans the results into the manuscript
 // detail keys, so the per-card useManuscriptById reads hit the cache without
-// fetching — exactly like the recoil resolved-flag + thrown-promise pattern.
-// The empty-ids short-circuit lives inside the queryFn (no API call is made,
-// but the site now suspends for a microtask where it used to return
-// synchronously).
+// fetching. The empty-ids short-circuit lives inside the queryFn (no API
+// call is made, but the site suspends for a microtask).
 export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
@@ -236,10 +231,8 @@ export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
 };
 
 // Writes a mutation response into the manuscript detail cache — never
-// refetched, because Contentful has read-after-write lag (see docs §6.1).
-// The recoil version also bumped refreshManuscriptIndex, but no selector ever
-// read that counter (the manuscripts list re-syncs via useManuscripts's
-// refresh updater instead), so the dead bump is not ported.
+// refetched, because Contentful has read-after-write lag. The manuscripts
+// list re-syncs via useManuscripts's refresh updater instead.
 export const useSetManuscriptItem = () => {
   const queryClient = useQueryClient();
   return useCallback(
@@ -403,8 +396,7 @@ export const useMarkDiscussionAsRead = () => {
   const queryClient = useQueryClient();
 
   return async (manuscriptId: string, discussionId: string) => {
-    // Optimistic update from the cached manuscript (the recoil version's
-    // synchronous snapshot Loadable read) before awaiting the API.
+    // Optimistic update from the cached manuscript before awaiting the API.
     const manuscript = queryClient.getQueryData<ManuscriptResponse | null>(
       manuscriptQueryKeys.detail(manuscriptId),
     );
@@ -442,10 +434,8 @@ export const useManuscripts = (
       try {
         return await getManuscripts(algoliaClient.client, options);
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setManuscripts)`: an
-        // Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }
@@ -455,9 +445,8 @@ export const useManuscripts = (
   }).data;
 
   // Surgical write-through after a manuscript mutation: merges the selected
-  // fields into the item inside every cached manuscript list (the recoil
-  // version wrote the shared manuscriptListState entity, which all list
-  // joins read). Never a refetch — Algolia has indexing lag after mutations.
+  // fields into the item inside every cached manuscript list. Never a
+  // refetch — Algolia has indexing lag after mutations.
   const refreshManuscripts = useCallback(
     (updatedManuscriptItem: ManuscriptDataObject) => {
       queryClient.setQueriesData<ListPartialManuscriptResponse>(

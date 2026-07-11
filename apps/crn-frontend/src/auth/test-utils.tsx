@@ -5,12 +5,9 @@ import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { useContext, useEffect, useRef, useState } from 'react';
 
-// Recoil-free since Phase 5 of the recoil → react-query migration. The fixture
-// provides the Auth0 context directly (async-initialised, exactly like the
-// production `AuthProvider`): `useAuthorization()` and react-query hooks read
-// the token through that context, so no recoil store is needed. The exported
-// API (`Auth0Provider`, `WhenReady`) is unchanged — its ~83 importers keep
-// working without edits.
+// The fixture provides the Auth0 context directly (async-initialised, exactly
+// like the production `AuthProvider`): `useAuthorization()` and react-query
+// hooks read the token through that context.
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);

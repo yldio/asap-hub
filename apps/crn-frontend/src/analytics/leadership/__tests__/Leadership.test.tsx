@@ -621,9 +621,6 @@ describe('error handling', () => {
   });
 
   it('handles errors when the fetch rejects', async () => {
-    // Previously seeded an Error into the recoil selector; with react-query
-    // the equivalent observable behavior is a rejecting fetch cached and
-    // thrown to the error boundary.
     const error = new Error('Test error');
     jest.spyOn(wgLeadershipClient, 'search').mockRejectedValueOnce(error);
     jest.spyOn(console, 'error').mockImplementation(() => {});

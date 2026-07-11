@@ -21,9 +21,7 @@ type PublicationComplianceStateOptionKeyData = Pick<
 export const publicationComplianceQueryKeys = {
   all: ['analytics-publication-compliance'] as const,
   lists: () => [...publicationComplianceQueryKeys.all, 'list'] as const,
-  // The recoil family was keyed by this Pick of the options with timeRange
-  // normalized to 'all' — keep the same key surface so cache identity is
-  // unchanged.
+  // Cache identity uses these option fields, timeRange normalized to 'all'.
   list: (options: PublicationComplianceStateOptionKeyData) =>
     [
       ...publicationComplianceQueryKeys.lists(),
@@ -55,17 +53,13 @@ export const useAnalyticsPublicationCompliance = (
     queryKey: publicationComplianceQueryKeys.list(stateOptions),
     queryFn: async () => {
       try {
-        // getPublicationCompliance is typed `| undefined`; a queryFn must
-        // never return undefined — cache `null` (recoil would have re-thrown
-        // forever on undefined; unreachable in practice).
+        // a queryFn must never return undefined — cache `null` instead
         return (
           (await getPublicationCompliance(opensearchClient, options)) ?? null
         );
       } catch (error) {
-        // Preserved from the recoil hook's `.catch(setPublicationCompliance)`:
-        // an Error rejection was cached and re-thrown to the error boundary,
-        // while a non-Error rejection was swallowed. Map non-Errors to an
-        // empty list.
+        // Errors re-throw to the error boundary; non-Error rejections
+        // become an empty list.
         if (error instanceof Error) {
           throw error;
         }

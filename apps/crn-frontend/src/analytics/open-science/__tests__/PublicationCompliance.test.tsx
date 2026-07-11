@@ -125,8 +125,6 @@ describe('PublicationCompliance', () => {
   });
 
   it('caches and clears publication compliance data by query key', () => {
-    // Replaces the recoil setter/reset probe: the writable selectorFamily is
-    // now the query cache, addressed through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -152,8 +150,6 @@ describe('PublicationCompliance', () => {
   });
 
   it('throws to the error boundary when the fetch rejects', async () => {
-    // Replaces the recoil-internals spy test: the observable behavior is a
-    // rejecting fetch cached and thrown to the error boundary.
     const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
     const error = new Error('test error');
     mockGetPublicationCompliance.mockRejectedValueOnce(error);
@@ -358,8 +354,6 @@ describe('PublicationCompliance', () => {
     'lab_materials_asc',
     'lab_materials_desc',
   ])('handles sort option %s in the query key', (sort) => {
-    // Replaces the recoil per-sort setter probes: each sort produces a
-    // distinct, stable cache entry through the key factory.
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,

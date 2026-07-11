@@ -1,17 +1,30 @@
 import { createUserResponse } from '@asap-hub/fixtures';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { ReactNode, Suspense } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { Component, ReactNode, Suspense } from 'react';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
-import { deleteUserAvatar, postUserAvatar } from '../api';
-import { useDeleteUserAvatarById, usePatchUserAvatarById } from '../state';
+import { deleteUserAvatar, getUser, getUsers, postUserAvatar } from '../api';
+import {
+  useDeleteUserAvatarById,
+  usePatchUserAvatarById,
+  userQueryKeys,
+  useUserById,
+  useUsers,
+} from '../state';
 
 jest.mock('../api');
+
+jest.mock('../../../hooks/algolia', () => ({
+  useAlgolia: jest.fn(() => ({ client: {} })),
+}));
+
+const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
 const mockDeleteUserAvatar = deleteUserAvatar as jest.MockedFunction<
   typeof deleteUserAvatar
@@ -39,10 +52,15 @@ const renderAvatarHook = <T,>(
   return { result, refreshUser };
 };
 
+const { useAlgolia } = jest.requireMock('../../../hooks/algolia') as {
+  useAlgolia: jest.Mock;
+};
+
 beforeEach(() => {
   jest.resetAllMocks();
   mockDeleteUserAvatar.mockResolvedValue({ ...createUserResponse(), id });
   mockPostUserAvatar.mockResolvedValue({ ...createUserResponse(), id });
+  (useAlgolia as jest.Mock).mockReturnValue({ client: {} });
 });
 
 describe('usePatchUserAvatarById', () => {
@@ -74,6 +92,104 @@ describe('usePatchUserAvatarById', () => {
 
     expect(mockPostUserAvatar).toHaveBeenCalled();
     expect(refreshUser).not.toHaveBeenCalled();
+  });
+});
+
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? 'errored' : this.props.children;
+  }
+}
+
+const createWrapper =
+  (queryClient: QueryClient) =>
+  ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id }}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>
+  );
+
+const listOptions = {
+  searchQuery: '',
+  currentPage: 0,
+  pageSize: 10,
+  filters: new Set<string>(),
+} as unknown as Parameters<typeof useUsers>[0];
+
+describe('useUserById', () => {
+  it('maps a 404 (undefined) to undefined and caches null', async () => {
+    mockGetUser.mockResolvedValue(undefined);
+
+    const queryClient = createTestQueryClient();
+    const { result } = renderHook(() => useUserById('missing'), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(
+        queryClient.getQueryData(userQueryKeys.detail('missing')),
+      ).toBeNull(),
+    );
+    expect(result.current).toBeUndefined();
+  });
+});
+
+describe('useUsers', () => {
+  it('maps a non-Error rejection to an empty list', async () => {
+    mockGetUsers.mockRejectedValue('nope');
+
+    const { result } = renderHook(() => useUsers(listOptions), {
+      wrapper: createWrapper(createTestQueryClient()),
+    });
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ total: 0, items: [] }),
+    );
+  });
+
+  it('re-throws Error rejections to the error boundary', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    mockGetUsers.mockRejectedValue(new Error('boom'));
+
+    const Probe = () => {
+      useUsers(listOptions);
+      return <>rendered</>;
+    };
+    const { getByText } = render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{ id }}>
+              <WhenReady>
+                <Probe />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
+    consoleErrorSpy.mockRestore();
   });
 });
 

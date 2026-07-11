@@ -6,7 +6,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import {
   createTestQueryClient,
   loadInstitutionOptions,
@@ -37,28 +36,26 @@ jest.mock('../../shared/api');
 
 const renderUserDetail = async (id: string) => {
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
-              >
-                <Routes>
-                  <Route
-                    path={`${gp2Routing.users.template}${
-                      gp2Routing.users({}).user.template
-                    }/*`}
-                    element={<UserDetail currentTime={new Date()} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
+            >
+              <Routes>
+                <Route
+                  path={`${gp2Routing.users.template}${
+                    gp2Routing.users({}).user.template
+                  }/*`}
+                  element={<UserDetail currentTime={new Date()} />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(

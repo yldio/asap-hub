@@ -7,7 +7,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { OutputFormPage } from '@asap-hub/gp2-components';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -55,36 +54,34 @@ const renderShareOutput = async (
   output: gp2Model.OutputBaseResponse = gp2Fixtures.createOutputResponse(),
 ) => {
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]} initialIndex={1}>
-                <Routes>
-                  <Route
-                    path={
-                      gp2Routing.outputs.template +
-                      gp2Routing.outputs({}).output.template +
-                      gp2Routing.outputs({}).output({ outputId: 'output-id' })
-                        .edit.template
-                    }
-                    element={
-                      <NotificationMessages>
-                        <OutputFormPage>
-                          <ShareOutput output={output} />
-                        </OutputFormPage>
-                      </NotificationMessages>
-                    }
-                  />
-                  <Route path="*" element={<div>Redirect target</div>} />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[path]} initialIndex={1}>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.outputs.template +
+                    gp2Routing.outputs({}).output.template +
+                    gp2Routing.outputs({}).output({ outputId: 'output-id' })
+                      .edit.template
+                  }
+                  element={
+                    <NotificationMessages>
+                      <OutputFormPage>
+                        <ShareOutput output={output} />
+                      </OutputFormPage>
+                    </NotificationMessages>
+                  }
+                />
+                <Route path="*" element={<div>Redirect target</div>} />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(

@@ -3,8 +3,7 @@ import { UsersPageList } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2, useFlags } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
 import { useProjects } from '../projects/state';
@@ -41,7 +40,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
 
   const filtersHref = users({}).filters({}).$;
   const onFiltersClick = () => changeLocation(filtersHref);
-  const autorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const { items: tags } = useTags();
   const exportUsers = () =>
     usersResponseToStream(
@@ -49,7 +48,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
         columns: userFields,
         header: true,
       }),
-      (paginationParams) =>
+      async (paginationParams) =>
         getUsers(
           {
             ...paginationParams,
@@ -59,7 +58,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
             },
             search: searchQuery,
           },
-          autorization,
+          await getAuthorization(),
         ),
       userToCSV,
     );

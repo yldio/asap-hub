@@ -5,7 +5,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import { getAlgoliaUsers } from '../../users/api';
@@ -33,22 +32,17 @@ const renderDashboard = async ({
   user?: Partial<gp2Auth.User>;
 }) => {
   render(
-    <Suspense fallback="loading">
-      {/* RecoilRoot kept for the still-recoil events/outputs/users hooks that
-          Dashboard renders; QueryClientProvider inside covers dashboard's own
-          migrated news/stats/reminders reads. */}
-      <RecoilRoot>
-        <QueryClientProvider client={createTestQueryClient()}>
-          <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
-            <WhenReady>
-              <MemoryRouter>
-                <Dashboard />
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </QueryClientProvider>
-      </RecoilRoot>
-    </Suspense>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
+          <WhenReady>
+            <MemoryRouter>
+              <Dashboard />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

@@ -1,38 +1,23 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE, useSearch } from '../../hooks';
+import { useSearch } from '../../hooks';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getEvents } from '../api';
 import EventDirectory from '../EventDirectory';
 import { EventListProps } from '../EventsList';
-import { eventsState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../hooks/search');
 
-const renderList = async (props: EventListProps, searchQuery = '') => {
+const renderList = async (props: EventListProps) => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          eventsState({
-            after: new Date().toDateString(),
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    // fresh query client per render replaces the recoil list-cache reset
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -42,9 +27,11 @@ const renderList = async (props: EventListProps, searchQuery = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 beforeEach(() => {
   jest.resetAllMocks();

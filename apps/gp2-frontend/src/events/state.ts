@@ -1,155 +1,63 @@
 import {
   getEventListOptions,
-  GetEventListOptions,
-  GetListOptions,
+  normalizeListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { useMemo, useRef } from 'react';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { usePaginationParams } from '../hooks/pagination';
 import { EventListOptions, getEvent, getEvents } from './api';
 
-// Promise cache to prevent throwing new promises on every render (Suspense requirement)
-const pendingEventPromises = new Map<string, Promise<void>>();
-
 const MINUTE_MS = 60000;
 
-// Helper to create a stable key from options
-const serializeOptions = (options: EventListOptions): string =>
-  JSON.stringify({
-    currentPage: options.currentPage,
-    pageSize: options.pageSize,
-    searchQuery: options.searchQuery,
-    filters: options.filters ? Array.from(options.filters).sort() : [],
-    before: options.before,
-    after: options.after,
-    constraint: options.constraint,
-    eventType: options.eventType,
-  });
-
-const eventIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliIndexName?: string;
-    }
-  | Error
-  | undefined,
-  GetListOptions
->({
-  key: 'eventIndex',
-  default: undefined,
-});
-
-export const eventsState = selectorFamily<
-  gp2.ListEventResponse | Error | undefined,
-  GetEventListOptions<gp2.EventConstraint>
->({
-  key: 'eventsState',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(eventIndexState({ ...options }));
-      if (index === undefined || index instanceof Error) return index;
-      const events: gp2.EventResponse[] = [];
-      for (const id of index.ids) {
-        const event = get(eventState(id));
-        if (event === undefined) return undefined;
-        events.push(event);
-      }
-      return {
-        total: index.total,
-        items: events,
-        algoliaIndexName: index.algoliIndexName,
-        algoliaQueryId: index.algoliaQueryId,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, events) => {
-      const indexStateOptions = { ...options };
-      if (events === undefined || events instanceof DefaultValue) {
-        const oldEvents = get(eventIndexState(indexStateOptions));
-        if (!(oldEvents instanceof Error)) {
-          oldEvents?.ids.forEach((id) => reset(eventState(id)));
-        }
-        reset(eventIndexState(indexStateOptions));
-      } else if (events instanceof Error) {
-        set(eventIndexState(indexStateOptions), events);
-      } else {
-        events.items.forEach((event) => set(eventState(event.id), event));
-        set(eventIndexState(indexStateOptions), {
-          total: events.total,
-          ids: events.items.map(({ id }) => id),
-          algoliaQueryId: events.algoliaQueryId,
-          algoliIndexName: events.algoliaIndexName,
-        });
-      }
-    },
-});
-
-const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
-  key: 'fetchEvent',
-  get:
-    (id) =>
-    async ({ get }) => {
-      const authorization = get(authorizationState);
-      return getEvent(id, authorization);
-    },
-});
-
-const eventState = atomFamily<gp2.EventResponse | undefined, string>({
-  key: 'event',
-  default: fetchEventState,
-});
-
-export const useEvents = (options: EventListOptions) => {
-  const [events, setEvents] = useRecoilState(eventsState(options));
-  const { client } = useAlgolia();
-  const optionsKey = serializeOptions(options);
-
-  if (events === undefined) {
-    let pendingPromise = pendingEventPromises.get(optionsKey);
-
-    if (!pendingPromise) {
-      pendingPromise = getEvents(client, options)
-        .then(
-          (data): gp2.ListEventResponse => ({
-            total: data.nbHits ?? 0,
-            items: data.hits,
-            algoliaQueryId: data.queryID,
-            algoliaIndexName: data.index,
-          }),
-        )
-        .then(setEvents)
-        .catch(setEvents)
-        .finally(() => {
-          pendingEventPromises.delete(optionsKey);
-        });
-
-      pendingEventPromises.set(optionsKey, pendingPromise);
-    }
-
-    throw pendingPromise;
-  }
-
-  if (events instanceof Error) {
-    throw events;
-  }
-
-  return events;
+export const eventQueryKeys = {
+  all: ['events'] as const,
+  lists: () => [...eventQueryKeys.all, 'list'] as const,
+  list: (options: EventListOptions) =>
+    [...eventQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...eventQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...eventQueryKeys.details(), id] as const,
 };
 
-export const useEventById = (id: string) => useRecoilValue(eventState(id));
+export const useEvents = (options: EventListOptions): gp2.ListEventResponse => {
+  const { client } = useAlgolia();
+  return useSuspenseQuery({
+    queryKey: eventQueryKeys.list(options),
+    queryFn: async (): Promise<gp2.ListEventResponse> => {
+      try {
+        const data = await getEvents(client, options);
+        return {
+          total: data.nbHits ?? 0,
+          items: data.hits,
+          algoliaQueryId: data.queryID,
+          algoliaIndexName: data.index,
+        };
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setEvents)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+};
+
+export const useEventById = (id: string): gp2.EventResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: eventQueryKeys.detail(id),
+    // getEvent resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below.
+    queryFn: async () => (await getEvent(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
 
 export const useUpcomingAndPastEvents = (
   currentTime: Date,

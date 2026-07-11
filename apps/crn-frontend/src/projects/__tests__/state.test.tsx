@@ -7,8 +7,8 @@ import type {
   ProjectResponse,
 } from '@asap-hub/model';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { ReactNode, Suspense } from 'react';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { Component, ReactNode, Suspense } from 'react';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import type { MilestonesListOptions, ProjectListOptions } from '../api';
@@ -20,6 +20,7 @@ import {
   useInvalidateProjectById,
   useInvalidateProjectMilestonesIndex,
   usePatchProjectById,
+  useProjectArticlesSuggestions,
   useProjectById,
   useProjectMilestones,
   useProjects,
@@ -28,6 +29,14 @@ import {
 jest.mock('../../hooks/algolia', () => ({
   useAlgolia: jest.fn(),
 }));
+
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+}));
+
+const { getResearchOutputs: mockGetResearchOutputs } = jest.requireMock(
+  '../../shared-research/api',
+) as jest.Mocked<typeof import('../../shared-research/api')>;
 
 jest.mock('../api', () => ({
   getProjects: jest.fn(),
@@ -143,6 +152,39 @@ const renderStateHook = <T,>(hook: () => T, queryClient?: QueryClient) => {
   return { ...utils, queryClient: client };
 };
 
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? 'errored' : this.props.children;
+  }
+}
+
+const renderWithBoundary = (ProbeContent: () => JSX.Element) =>
+  render(
+    <QueryClientProvider client={createTestQueryClient()}>
+      <ErrorBoundary>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <ProbeContent />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </ErrorBoundary>
+    </QueryClientProvider>,
+  );
+
 beforeEach(() => {
   jest.clearAllMocks();
   (useAlgolia as jest.Mock).mockReturnValue({
@@ -195,6 +237,22 @@ describe('useProjects', () => {
     await waitFor(() => {
       expect(result.current).toEqual({ total: 0, items: [] });
     });
+  });
+
+  it('re-throws Error rejections to the error boundary', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    mockGetProjects.mockRejectedValue(new Error('boom'));
+
+    const Probe = () => {
+      useProjects(defaultOptions);
+      return <>rendered</>;
+    };
+    const { getByText } = renderWithBoundary(Probe);
+
+    await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
+    consoleErrorSpy.mockRestore();
   });
 });
 
@@ -380,6 +438,22 @@ describe('useProjectMilestones', () => {
       expect(result.current).toEqual({ total: 0, items: [] });
     });
   });
+
+  it('re-throws Error rejections to the error boundary', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    mockGetProjectMilestones.mockRejectedValue(new Error('boom'));
+
+    const Probe = () => {
+      useProjectMilestones(milestonesOptions);
+      return <>rendered</>;
+    };
+    const { getByText } = renderWithBoundary(Probe);
+
+    await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
+    consoleErrorSpy.mockRestore();
+  });
 });
 
 describe('useInvalidateProjectMilestonesIndex', () => {
@@ -478,5 +552,43 @@ describe('useExportProjectMilestones', () => {
       exportOptions,
       mockAuthorization,
     );
+  });
+});
+
+describe('useProjectArticlesSuggestions', () => {
+  it('searches research outputs and maps hits to suggestion options', async () => {
+    mockGetResearchOutputs.mockResolvedValueOnce({
+      hits: [
+        {
+          id: 'ro-1',
+          title: 'Article One',
+          documentType: 'Article',
+          type: 'Preprint',
+        },
+      ],
+    } as never);
+
+    const { result } = renderStateHook(() =>
+      useProjectArticlesSuggestions('team-1'),
+    );
+    await waitFor(() => expect(typeof result.current).toBe('function'));
+
+    const suggestions = await result.current('query');
+
+    expect(mockGetResearchOutputs).toHaveBeenCalledWith(mockAlgoliaClient, {
+      searchQuery: 'query',
+      currentPage: null,
+      pageSize: 5,
+      documentType: ['Article'],
+      teamId: 'team-1',
+    });
+    expect(suggestions).toEqual([
+      {
+        label: 'Article One',
+        value: 'ro-1',
+        documentType: 'Article',
+        type: 'Preprint',
+      },
+    ]);
   });
 });

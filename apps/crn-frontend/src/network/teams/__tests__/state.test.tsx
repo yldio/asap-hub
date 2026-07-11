@@ -6,8 +6,8 @@ import {
   TeamType,
 } from '@asap-hub/model';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { ReactNode, Suspense } from 'react';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { Component, ReactNode, Suspense } from 'react';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getPresignedUrl } from '../../../shared-api/files';
@@ -79,6 +79,24 @@ const renderStateHook = <T,>(hook: () => T) => {
   const utils = renderHook(hook, { wrapper: createWrapper(queryClient) });
   return { ...utils, queryClient };
 };
+
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? 'errored' : this.props.children;
+  }
+}
 
 const teamId = 'team-id-0';
 const teamMock = {
@@ -559,6 +577,44 @@ describe('useManuscripts', () => {
         manuscriptQueryKeys.list(otherOptions),
       )?.items[0]?.status,
     ).toBe('Addendum Required');
+  });
+
+  it('maps a non-Error rejection to an empty list', async () => {
+    (getManuscripts as jest.Mock).mockRejectedValue('nope');
+
+    const { result } = renderStateHook(() => useManuscripts(listOptions));
+
+    await waitFor(() =>
+      expect(result.current).toMatchObject({ total: 0, items: [] }),
+    );
+  });
+
+  it('re-throws Error rejections to the error boundary', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    (getManuscripts as jest.Mock).mockRejectedValue(new Error('boom'));
+
+    const Probe = () => {
+      useManuscripts(listOptions);
+      return <>rendered</>;
+    };
+    const { getByText } = render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{ id: 'user-id' }}>
+              <WhenReady>
+                <Probe />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
+    consoleErrorSpy.mockRestore();
   });
 });
 

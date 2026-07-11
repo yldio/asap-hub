@@ -98,7 +98,10 @@ describe('useAnalyticsPublicationCompliance', () => {
     });
 
     const { result } = renderStateHook(() =>
-      useAnalyticsPublicationCompliance({ ...options, timeRange: undefined }),
+      useAnalyticsPublicationCompliance({
+        ...options,
+        timeRange: undefined,
+      } as unknown as Parameters<typeof useAnalyticsPublicationCompliance>[0]),
     );
 
     await waitFor(() =>

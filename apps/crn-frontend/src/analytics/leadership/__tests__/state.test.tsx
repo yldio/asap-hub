@@ -108,7 +108,11 @@ describe('useAnalyticsOSChampion', () => {
   it('maps a non-Error rejection to an empty list', async () => {
     (getAnalyticsOSChampion as jest.Mock).mockRejectedValue('nope');
 
-    const { result } = renderStateHook(() => useAnalyticsOSChampion(options));
+    const { result } = renderStateHook(() =>
+      useAnalyticsOSChampion(
+        options as Parameters<typeof useAnalyticsOSChampion>[0],
+      ),
+    );
 
     await waitFor(() =>
       expect(result.current).toEqual({ total: 0, items: [] }),
@@ -118,7 +122,11 @@ describe('useAnalyticsOSChampion', () => {
   it('maps an undefined result to null via the ?? null branch', async () => {
     (getAnalyticsOSChampion as jest.Mock).mockResolvedValue(undefined);
 
-    const { result } = renderStateHook(() => useAnalyticsOSChampion(options));
+    const { result } = renderStateHook(() =>
+      useAnalyticsOSChampion(
+        options as Parameters<typeof useAnalyticsOSChampion>[0],
+      ),
+    );
 
     await waitFor(() => expect(getAnalyticsOSChampion).toHaveBeenCalled());
     expect(result.current).toBeNull();

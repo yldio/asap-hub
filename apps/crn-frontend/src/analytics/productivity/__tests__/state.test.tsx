@@ -89,7 +89,9 @@ describe('useAnalyticsTeamProductivity', () => {
     (getTeamProductivity as jest.Mock).mockRejectedValue('nope');
 
     const { result } = renderStateHook(() =>
-      useAnalyticsTeamProductivity(options),
+      useAnalyticsTeamProductivity(
+        options as Parameters<typeof useAnalyticsTeamProductivity>[0],
+      ),
     );
 
     await waitFor(() =>

@@ -94,7 +94,9 @@ describe('useAnalyticsTeamCollaboration', () => {
     (getTeamCollaboration as jest.Mock).mockRejectedValue('nope');
 
     const { result } = renderStateHook(() =>
-      useAnalyticsTeamCollaboration(options),
+      useAnalyticsTeamCollaboration(
+        options as Parameters<typeof useAnalyticsTeamCollaboration>[0],
+      ),
     );
 
     await waitFor(() =>
@@ -108,7 +110,9 @@ describe('useAnalyticsSharingPrelimFindings', () => {
     (getPreliminaryDataSharing as jest.Mock).mockRejectedValue('nope');
 
     const { result } = renderStateHook(() =>
-      useAnalyticsSharingPrelimFindings(options),
+      useAnalyticsSharingPrelimFindings(
+        options as Parameters<typeof useAnalyticsSharingPrelimFindings>[0],
+      ),
     );
 
     await waitFor(() =>

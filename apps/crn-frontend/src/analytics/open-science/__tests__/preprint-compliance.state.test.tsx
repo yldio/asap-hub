@@ -98,7 +98,10 @@ describe('useAnalyticsPreprintCompliance', () => {
     });
 
     const { result } = renderStateHook(() =>
-      useAnalyticsPreprintCompliance({ ...options, timeRange: undefined }),
+      useAnalyticsPreprintCompliance({
+        ...options,
+        timeRange: undefined,
+      } as unknown as Parameters<typeof useAnalyticsPreprintCompliance>[0]),
     );
 
     await waitFor(() =>

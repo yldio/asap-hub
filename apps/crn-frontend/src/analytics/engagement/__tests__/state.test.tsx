@@ -87,7 +87,9 @@ describe('useAnalyticsMeetingRepAttendance', () => {
     (getMeetingRepAttendance as jest.Mock).mockRejectedValue('nope');
 
     const { result } = renderStateHook(() =>
-      useAnalyticsMeetingRepAttendance(options),
+      useAnalyticsMeetingRepAttendance(
+        options as Parameters<typeof useAnalyticsMeetingRepAttendance>[0],
+      ),
     );
 
     await waitFor(() =>
@@ -99,7 +101,9 @@ describe('useAnalyticsMeetingRepAttendance', () => {
     (getMeetingRepAttendance as jest.Mock).mockResolvedValue(undefined);
 
     const { result } = renderStateHook(() =>
-      useAnalyticsMeetingRepAttendance(options),
+      useAnalyticsMeetingRepAttendance(
+        options as Parameters<typeof useAnalyticsMeetingRepAttendance>[0],
+      ),
     );
 
     await waitFor(() => expect(getMeetingRepAttendance).toHaveBeenCalled());

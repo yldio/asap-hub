@@ -6,7 +6,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 
@@ -22,26 +21,24 @@ mockConsoleError();
 
 const renderBackground = async (id: string) => {
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{ onboarded: false, id }}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[gp2Routing.onboarding({}).background({}).$]}
-              >
-                <Routes>
-                  <Route
-                    path={`${gp2Routing.onboarding({}).background.template}/*`}
-                    element={<Background />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ onboarded: false, id }}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[gp2Routing.onboarding({}).background({}).$]}
+            >
+              <Routes>
+                <Route
+                  path={`${gp2Routing.onboarding({}).background.template}/*`}
+                  element={<Background />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(

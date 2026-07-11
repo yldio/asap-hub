@@ -12,7 +12,6 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import {
   createTestQueryClient,
   loadInstitutionOptions,
@@ -53,31 +52,29 @@ const renderPreview = async (
   ) => Partial<Auth0<gp2.User>>,
 ) => {
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <ToastContext.Provider value={mockToast}>
-            <Auth0Provider
-              user={{ onboarded: false, id }}
-              auth0Overrides={auth0Overrides}
-            >
-              <WhenReady>
-                <MemoryRouter
-                  initialEntries={[gp2Routing.onboarding({}).preview({}).$]}
-                >
-                  <Routes>
-                    <Route
-                      path={`${gp2Routing.onboarding({}).preview.template}/*`}
-                      element={<Preview />}
-                    />
-                  </Routes>
-                </MemoryRouter>
-              </WhenReady>
-            </Auth0Provider>
-          </ToastContext.Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <ToastContext.Provider value={mockToast}>
+          <Auth0Provider
+            user={{ onboarded: false, id }}
+            auth0Overrides={auth0Overrides}
+          >
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[gp2Routing.onboarding({}).preview({}).$]}
+              >
+                <Routes>
+                  <Route
+                    path={`${gp2Routing.onboarding({}).preview.template}/*`}
+                    element={<Preview />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </ToastContext.Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(

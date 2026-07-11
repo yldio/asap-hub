@@ -1,9 +1,7 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router';
 import { RecoilRoot, useRecoilValue } from 'recoil';
@@ -30,20 +28,26 @@ beforeEach(() => {
 const renderAuthenticatedApp = async () => {
   const id = '42';
   render(
+    // RecoilRoot kept for the authorizationState probe below (auth/state
+    // leaves in 2.13); QueryClientProvider covers the migrated users hooks.
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{ id }}>
-          <WhenReady>
-            <StaticRouter location="/">
-              <OnboardedApp />
-            </StaticRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id }}>
+            <WhenReady>
+              <StaticRouter location="/">
+                <OnboardedApp />
+              </StaticRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 it('displays the onboarded page', async () => {
   const user = gp2Fixtures.createUserResponse();

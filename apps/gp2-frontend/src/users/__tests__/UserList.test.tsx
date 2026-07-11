@@ -1,19 +1,13 @@
 import { ClientSearchResponse } from '@asap-hub/algolia';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE } from '../../hooks';
 import { useSearch } from '../../hooks/search';
 import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getAlgoliaUsers } from '../api';
-import { usersState } from '../state';
 import UserList from '../UserList';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -62,18 +56,8 @@ const renderUserList = async ({
   }));
 
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          usersState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    // fresh query client per render replaces the recoil list-cache reset
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -90,9 +74,11 @@ const renderUserList = async ({
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
   return { mockUpdateFilter };
 };
 beforeEach(jest.resetAllMocks);

@@ -11,6 +11,7 @@ import {
   getUserCollaboration,
 } from '../api';
 import {
+  prelimDataSharingQueryKeys,
   useAnalyticsSharingPrelimFindings,
   useAnalyticsTeamCollaboration,
   useAnalyticsUserCollaboration,
@@ -118,6 +119,46 @@ describe('useAnalyticsSharingPrelimFindings', () => {
     await waitFor(() =>
       expect(result.current).toEqual({ total: 0, items: [] }),
     );
+  });
+
+  it('caches null when the fetcher resolves undefined', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    (getPreliminaryDataSharing as jest.Mock).mockResolvedValue(undefined);
+
+    const queryClient = createTestQueryClient();
+    const key = prelimDataSharingQueryKeys.list({
+      currentPage: options.currentPage,
+      pageSize: options.pageSize,
+      tags: options.tags,
+      timeRange: options.timeRange,
+      sort: options.sort,
+    } as Parameters<typeof prelimDataSharingQueryKeys.list>[0]);
+
+    const Probe = () => {
+      useAnalyticsSharingPrelimFindings(
+        options as Parameters<typeof useAnalyticsSharingPrelimFindings>[0],
+      );
+      return <>rendered</>;
+    };
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{ id: 'user-id' }}>
+              <WhenReady>
+                <Probe />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>,
+    );
+
+    // null is cached before the null-mapping render throws to the boundary
+    await waitFor(() => expect(queryClient.getQueryData(key)).toBeNull());
+    consoleErrorSpy.mockRestore();
   });
 });
 

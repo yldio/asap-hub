@@ -15,6 +15,7 @@ import { researchOutputQueryKeys } from '../../../shared-research/state';
 import {
   createDiscussion,
   createPreprintResearchOutput,
+  getAlgoliaTeams,
   getManuscript,
   getManuscripts,
   getManuscriptsByIds,
@@ -38,12 +39,14 @@ import {
   usePresignedUrl,
   useReplyToDiscussion,
   useTeamById,
+  useTeams,
   useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
 
 jest.mock('../api', () => ({
   createDiscussion: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
+  getAlgoliaTeams: jest.fn(),
   getManuscript: jest.fn(),
   getManuscripts: jest.fn(),
   getManuscriptsByIds: jest.fn(),
@@ -779,6 +782,25 @@ describe('usePostPreprintResearchOutput', () => {
     expect(createPreprintResearchOutput).toHaveBeenCalledWith(
       mockManuscriptId,
       mockAuthorization,
+    );
+  });
+});
+
+describe('useTeams', () => {
+  const teamsOptions = {
+    searchQuery: '',
+    filters: new Set<string>(),
+    currentPage: 0,
+    pageSize: 10,
+  };
+
+  it('maps a non-Error rejection to an empty list', async () => {
+    (getAlgoliaTeams as jest.Mock).mockRejectedValue('string rejection');
+
+    const { result } = renderStateHook(() => useTeams(teamsOptions));
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ total: 0, items: [] }),
     );
   });
 });

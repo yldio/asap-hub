@@ -6,7 +6,10 @@ import { Component, ReactNode, Suspense } from 'react';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
 import { getEngagement, getMeetingRepAttendance } from '../api';
-import { useAnalyticsEngagement, useAnalyticsMeetingRepAttendance } from '../state';
+import {
+  useAnalyticsEngagement,
+  useAnalyticsMeetingRepAttendance,
+} from '../state';
 
 jest.mock('../api');
 jest.mock('../../../hooks/opensearch', () => ({

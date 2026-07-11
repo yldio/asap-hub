@@ -16,10 +16,12 @@ jest.mock('../../../hooks/algolia', () => ({
   useAlgolia: jest.fn(() => ({ client: {} })),
 }));
 
-const mockGetWorkingGroup =
-  getWorkingGroup as jest.MockedFunction<typeof getWorkingGroup>;
-const mockGetWorkingGroups =
-  getWorkingGroups as jest.MockedFunction<typeof getWorkingGroups>;
+const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
+  typeof getWorkingGroup
+>;
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
 
 const listOptions = {
   searchQuery: '',

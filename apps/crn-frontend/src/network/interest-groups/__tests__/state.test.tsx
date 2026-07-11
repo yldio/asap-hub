@@ -13,10 +13,12 @@ import {
 
 jest.mock('../api');
 
-const mockGetInterestGroups =
-  getInterestGroups as jest.MockedFunction<typeof getInterestGroups>;
-const mockGetInterestGroup =
-  getInterestGroup as jest.MockedFunction<typeof getInterestGroup>;
+const mockGetInterestGroups = getInterestGroups as jest.MockedFunction<
+  typeof getInterestGroups
+>;
+const mockGetInterestGroup = getInterestGroup as jest.MockedFunction<
+  typeof getInterestGroup
+>;
 
 const listOptions = {
   searchQuery: '',
@@ -116,7 +118,9 @@ describe('useInterestGroupById', () => {
     await waitFor(() => expect(mockGetInterestGroup).toHaveBeenCalled());
     await waitFor(() =>
       expect(
-        queryClient.getQueryData(interestGroupQueryKeys.detail('missing-group')),
+        queryClient.getQueryData(
+          interestGroupQueryKeys.detail('missing-group'),
+        ),
       ).toBeNull(),
     );
     expect(result.current).toBeUndefined();

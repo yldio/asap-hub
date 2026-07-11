@@ -11,8 +11,9 @@ import { useUserInterestGroupsById } from '../state';
 
 jest.mock('../api');
 
-const mockGetUserInterestGroups =
-  getUserInterestGroups as jest.MockedFunction<typeof getUserInterestGroups>;
+const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
+  typeof getUserInterestGroups
+>;
 
 const mockAuthorization = 'Bearer access_token';
 const userId = 'user-id-0';
@@ -47,7 +48,10 @@ const createWrapper =
     </QueryClientProvider>
   );
 
-const renderStateHook = <T,>(hook: () => T, queryClient = createTestQueryClient()) => {
+const renderStateHook = <T,>(
+  hook: () => T,
+  queryClient = createTestQueryClient(),
+) => {
   const utils = renderHook(hook, { wrapper: createWrapper(queryClient) });
   return { ...utils, queryClient };
 };

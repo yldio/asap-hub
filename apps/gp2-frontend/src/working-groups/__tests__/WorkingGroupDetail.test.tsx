@@ -353,10 +353,12 @@ describe('WorkingGroupDetail', () => {
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
-      expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
-        workingGroup.id,
-        [...workingGroup.resources!, { title, type }],
-        expect.anything(),
+      await waitFor(() =>
+        expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
+          workingGroup.id,
+          [...workingGroup.resources!, { title, type }],
+          expect.anything(),
+        ),
       );
       await waitFor(() =>
         expect(
@@ -406,10 +408,12 @@ describe('WorkingGroupDetail', () => {
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
-      expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
-        workingGroup.id,
-        [resources[0], { ...resources[1], title }, resources[2]],
-        expect.anything(),
+      await waitFor(() =>
+        expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
+          workingGroup.id,
+          [resources[0], { ...resources[1], title }, resources[2]],
+          expect.anything(),
+        ),
       );
       await waitFor(
         () =>

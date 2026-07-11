@@ -1,14 +1,11 @@
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { gp2 } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../../projects/api';
 import { getContributingCohorts, getTags } from '../../shared/api';
@@ -34,7 +31,7 @@ const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const renderOutputDetail = async () => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -56,10 +53,13 @@ const renderOutputDetail = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 describe('OutputDetail', () => {

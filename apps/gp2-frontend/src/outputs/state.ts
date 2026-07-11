@@ -1,14 +1,8 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import {
   createOutput,
@@ -18,176 +12,87 @@ import {
   updateOutput,
 } from './api';
 
-// Promise cache to prevent throwing new promises on every render (Suspense requirement)
-const pendingOutputPromises = new Map<string, Promise<void>>();
-
-// Helper to create a stable key from options
-const serializeOutputOptions = (options: OutputListOptions): string =>
-  JSON.stringify({
-    currentPage: options.currentPage,
-    pageSize: options.pageSize,
-    searchQuery: options.searchQuery,
-    filters: options.filters ? Array.from(options.filters).sort() : [],
-    workingGroupId: options.workingGroupId,
-    projectId: options.projectId,
-    authorId: options.authorId,
-  });
-
-const outputIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  OutputListOptions
->({
-  key: 'outputIndex',
-  default: undefined,
-});
-export const outputsState = selectorFamily<
-  gp2.ListOutputResponse | Error | undefined,
-  OutputListOptions
->({
-  key: 'outputs',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(
-        outputIndexState({
-          ...options,
-        }),
-      );
-      if (index === undefined || index instanceof Error) return index;
-      const outputs: gp2.OutputResponse[] = [];
-      for (const id of index.ids) {
-        const output = get(outputState(id));
-        if (output === undefined) return undefined;
-        outputs.push(output);
-      }
-      return {
-        total: index.total,
-        items: outputs,
-        algoliaQueryId: index.algoliaQueryId,
-        algoliaIndexName: index.algoliaIndexName,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, outputs) => {
-      const indexStateOptions = { ...options };
-      if (outputs === undefined || outputs instanceof DefaultValue) {
-        const oldOutputs = get(outputIndexState(indexStateOptions));
-        if (!(oldOutputs instanceof Error)) {
-          oldOutputs?.ids?.forEach((id) => reset(outputState(id)));
-        }
-        reset(outputIndexState(indexStateOptions));
-      } else if (outputs instanceof Error) {
-        set(outputIndexState(indexStateOptions), outputs);
-      } else {
-        outputs.items.forEach((output) => set(outputState(output.id), output));
-        set(outputIndexState(indexStateOptions), {
-          total: outputs.total,
-          ids: outputs.items.map(({ id }) => id),
-          algoliaIndexName: outputs.algoliaIndexName,
-          algoliaQueryId: outputs.algoliaQueryId,
-        });
-      }
-    },
-});
-
-const fetchOutputState = selectorFamily<gp2.OutputResponse | undefined, string>(
-  {
-    key: 'fetchOutput',
-    get:
-      (id) =>
-      async ({ get }) => {
-        const authorization = get(authorizationState);
-        return getOutput(id, authorization);
-      },
-  },
-);
-export const outputState = atomFamily<gp2.OutputResponse | undefined, string>({
-  key: 'output',
-  default: fetchOutputState,
-});
-const refreshOutputsState = atom<number>({
-  key: 'refreshOutputsState',
-  default: 0,
-});
-
-const patchedOutputState = atomFamily<gp2.OutputResponse | undefined, string>({
-  key: 'patchedOutput',
-  default: undefined,
-});
-
-const OutputState = selectorFamily<gp2.OutputResponse | undefined, string>({
-  key: 'output',
-  get:
-    (id) =>
-    ({ get }) =>
-      get(patchedOutputState(id)) ?? get(fetchOutputState(id)),
-});
-
-export const useOutputs = (options: OutputListOptions) => {
-  const [outputs, setOutputs] = useRecoilState(outputsState(options));
-  const { client } = useAlgolia();
-  const optionsKey = serializeOutputOptions(options);
-
-  if (outputs === undefined) {
-    let pendingPromise = pendingOutputPromises.get(optionsKey);
-
-    if (!pendingPromise) {
-      pendingPromise = getOutputs(client, options)
-        .then(
-          (data): gp2.ListOutputResponse => ({
-            total: data.nbHits ?? 0,
-            items: data.hits,
-            algoliaQueryId: data.queryID,
-            algoliaIndexName: data.index,
-          }),
-        )
-        .then(setOutputs)
-        .catch(setOutputs)
-        .finally(() => {
-          pendingOutputPromises.delete(optionsKey);
-        });
-
-      pendingOutputPromises.set(optionsKey, pendingPromise);
-    }
-
-    throw pendingPromise;
-  }
-
-  if (outputs instanceof Error) {
-    throw outputs;
-  }
-
-  return outputs;
+export const outputQueryKeys = {
+  all: ['outputs'] as const,
+  lists: () => [...outputQueryKeys.all, 'list'] as const,
+  list: (options: OutputListOptions) =>
+    [...outputQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...outputQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...outputQueryKeys.details(), id] as const,
 };
 
-export const useOutputById = (id: string) => useRecoilValue(OutputState(id));
+export const useOutputs = (
+  options: OutputListOptions,
+): gp2.ListOutputResponse => {
+  const { client } = useAlgolia();
+  return useSuspenseQuery({
+    queryKey: outputQueryKeys.list(options),
+    queryFn: async (): Promise<gp2.ListOutputResponse> => {
+      try {
+        const data = await getOutputs(client, options);
+        return {
+          total: data.nbHits ?? 0,
+          items: data.hits,
+          algoliaQueryId: data.queryID,
+          algoliaIndexName: data.index,
+        };
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setOutputs)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
+};
+
+export const useOutputById = (id: string): gp2.OutputResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: outputQueryKeys.detail(id),
+    // getOutput resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below. This detail cache is also
+    // the patched-overlay target for useUpdateOutput (§6.1), so its value is
+    // never refetched over a fresh mutation write.
+    queryFn: async () =>
+      (await getOutput(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
 
 export const useCreateOutput = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshOutputsState);
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async (payload: gp2.OutputPostRequest) => {
-    const output = await createOutput(payload, authorization);
-    setRefresh(refresh + 1);
+    const output = await createOutput(payload, await getAuthorization());
+    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook bumped a
+    // `refreshOutputsState` counter that nothing ever read, so creating an
+    // output refreshed no list. Wire up the invalidation the code intended.
+    await queryClient.invalidateQueries({
+      queryKey: outputQueryKeys.lists(),
+    });
     return output;
   };
 };
 
 export const useUpdateOutput = (id: string) => {
-  const [refresh, setRefresh] = useRecoilState(refreshOutputsState);
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedOutput = useSetRecoilState(patchedOutputState(id));
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async (payload: gp2.OutputPutRequest) => {
-    const output = await updateOutput(id, payload, authorization);
-    setRefresh(refresh + 1);
-    setPatchedOutput(output);
+    const output = await updateOutput(id, payload, await getAuthorization());
+    // R3 patched-overlay: write the mutation response straight into the detail
+    // cache (never refetched — §6.1). updateOutput may resolve undefined; cache
+    // null so the queryFn contract holds and useOutputById maps it back.
+    queryClient.setQueryData(outputQueryKeys.detail(id), output ?? null);
+    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook also bumped the
+    // vestigial `refreshOutputsState` counter (never read). Invalidate the
+    // lists so an updated output shows through where the counter intended to.
+    await queryClient.invalidateQueries({
+      queryKey: outputQueryKeys.lists(),
+    });
     return output;
   };
 };

@@ -16,6 +16,7 @@ import {
   createDiscussion,
   createPreprintResearchOutput,
   getAlgoliaTeams,
+  GetTeamsListOptions,
   getManuscript,
   getManuscripts,
   getManuscriptsByIds,
@@ -787,9 +788,9 @@ describe('usePostPreprintResearchOutput', () => {
 });
 
 describe('useTeams', () => {
-  const teamsOptions = {
+  const teamsOptions: GetTeamsListOptions = {
     searchQuery: '',
-    filters: new Set<string>(),
+    teamType: 'all',
     currentPage: 0,
     pageSize: 10,
   };

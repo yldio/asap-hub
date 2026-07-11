@@ -4,8 +4,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router';
-import { RecoilRoot, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Dashboard from '../dashboard/Dashboard';
 import OnboardedApp from '../OnboardedApp';
@@ -20,29 +18,22 @@ const MockDashboard = Dashboard as jest.MockedFunction<typeof Dashboard>;
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 beforeEach(jest.resetAllMocks);
 beforeEach(() => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
+  MockDashboard.mockImplementation(() => null);
 });
 const renderAuthenticatedApp = async () => {
   const id = '42';
   render(
-    // RecoilRoot kept for the authorizationState probe below (auth/state
-    // leaves in 2.13); QueryClientProvider covers the migrated users hooks.
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{ id }}>
-            <WhenReady>
-              <StaticRouter location="/">
-                <OnboardedApp />
-              </StaticRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id }}>
+          <WhenReady>
+            <StaticRouter location="/">
+              <OnboardedApp />
+            </StaticRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

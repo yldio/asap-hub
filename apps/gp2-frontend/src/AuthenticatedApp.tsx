@@ -1,9 +1,6 @@
-import { Auth0, gp2 as gp2Auth } from '@asap-hub/auth';
-
 import { BasicLayout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import {
-  useAuth0GP2,
   useCurrentUserGP2,
   useFlags,
   useNotificationContext,
@@ -12,8 +9,6 @@ import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
-import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
-import { auth0State } from './auth/state';
 import Frame from './Frame';
 import NotificationMessages from './NotificationMessages';
 import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
@@ -27,16 +22,6 @@ const OnboardedApp = lazy(loadOnboardedApp);
 const Onboarding = lazy(loadOnboarding);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
-  const auth0 = useAuth0GP2();
-  const [recoilAuth0, setAuth0] = useRecoilState<
-    Auth0<gp2Auth.User> | undefined
-  >(auth0State);
-  const resetAuth0 = useResetRecoilState(auth0State);
-
-  useEffect(() => {
-    setAuth0(auth0);
-    return () => resetAuth0();
-  }, [auth0, setAuth0, resetAuth0]);
   const user = useCurrentUserGP2();
 
   useEffect(() => {
@@ -65,7 +50,10 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     }
   }, [showWelcomeBackBanner, addNotification, welcomeBackMessage]);
 
-  if (!user || !recoilAuth0) {
+  // `user` is derived from the auth0 context (null until auth0 finishes
+  // loading and a user is present), so this guard also covers the pre-ready
+  // state the recoil `auth0State` sync used to gate on.
+  if (!user) {
     return <Loading />;
   }
 
@@ -88,24 +76,22 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   );
 };
 
-const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => {
-  // The QueryClient lives and dies with this component, exactly like the
-  // RecoilRoot next to it: on logout the AuthenticatedApp unmounts and the
-  // whole cache is discarded (same semantics recoil has today).
+const AuthenticatedAppWithProviders: FC<Record<string, never>> = () => {
+  // The QueryClient lives and dies with this component: on logout the
+  // AuthenticatedApp unmounts and the whole cache is discarded (the same
+  // logout cache-wipe semantics the old RecoilRoot provided).
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );
   const { isEnabled } = useFlags();
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <NotificationMessages>
-          <AuthenticatedApp />
-        </NotificationMessages>
-        {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
-      </QueryClientProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <NotificationMessages>
+        <AuthenticatedApp />
+      </NotificationMessages>
+      {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
+    </QueryClientProvider>
   );
 };
 
-export default AuthenticatedAppWithRecoil;
+export default AuthenticatedAppWithProviders;

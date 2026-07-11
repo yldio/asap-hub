@@ -1,14 +1,8 @@
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilCallback,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import {
   getProject,
@@ -17,130 +11,74 @@ import {
   putProjectResources,
 } from './api';
 
-const projectIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  ProjectListOptions
->({ key: 'projectIndex', default: undefined });
+export const projectQueryKeys = {
+  all: ['projects'] as const,
+  lists: () => [...projectQueryKeys.all, 'list'] as const,
+  list: (options: ProjectListOptions) =>
+    [...projectQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...projectQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...projectQueryKeys.details(), id] as const,
+};
 
-export const projectsState = selectorFamily<
-  gp2.ListProjectResponse | Error | undefined,
-  ProjectListOptions
->({
-  key: 'projects',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(
-        projectIndexState({
-          ...options,
-        }),
-      );
-      if (index === undefined || index instanceof Error) return index;
-      const projects: gp2.ProjectResponse[] = [];
-      for (const id of index.ids) {
-        const project = get(projectState(id));
-        if (project === undefined) return undefined;
-        projects.push(project);
-      }
-      return {
-        total: index.total,
-        items: projects,
-        algoliaQueryId: index.algoliaQueryId,
-        algoliaIndexName: index.algoliaIndexName,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, projects) => {
-      const indexStateOptions = { ...options };
-      if (projects === undefined || projects instanceof DefaultValue) {
-        const oldProjects = get(projectIndexState(indexStateOptions));
-        if (!(oldProjects instanceof Error)) {
-          oldProjects?.ids.forEach((id) => reset(projectState(id)));
-        }
-        reset(projectIndexState(indexStateOptions));
-      } else if (projects instanceof Error) {
-        set(projectIndexState(indexStateOptions), projects);
-      } else {
-        projects.items.forEach((project) =>
-          set(projectState(project.id), project),
-        );
-        set(projectIndexState(indexStateOptions), {
-          total: projects.total,
-          ids: projects.items.map(({ id }) => id),
-          algoliaIndexName: projects.algoliaIndexName,
-          algoliaQueryId: projects.algoliaQueryId,
-        });
-      }
-    },
-});
-
-const refreshProjectsState = atom<number>({
-  key: 'refreshProjects',
-  default: 0,
-});
-
-export const useProjects = (options: ProjectListOptions) => {
-  const [projects, setProjects] = useRecoilState(projectsState(options));
+export const useProjects = (
+  options: ProjectListOptions,
+): gp2.ListProjectResponse => {
   const { client } = useAlgolia();
-  if (projects === undefined) {
-    throw getProjects(client, options)
-      .then(
-        (data): gp2.ListProjectResponse => ({
+  return useSuspenseQuery({
+    queryKey: projectQueryKeys.list(options),
+    queryFn: async (): Promise<gp2.ListProjectResponse> => {
+      try {
+        const data = await getProjects(client, options);
+        return {
           total: data.nbHits ?? 0,
           items: data.hits,
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,
-        }),
-      )
-      .then(setProjects)
-      .catch(setProjects);
-  }
-  if (projects instanceof Error) {
-    throw projects;
-  }
-  return projects;
-};
-const fetchProjectState = selectorFamily<
-  gp2.ProjectResponse | undefined,
-  string
->({
-  key: 'fetchProject',
-  get:
-    (id) =>
-    async ({ get }) => {
-      const authorization = get(authorizationState);
-      return getProject(id, authorization);
+        };
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setProjects)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
     },
-});
+  }).data;
+};
 
-const projectState = atomFamily<gp2.ProjectResponse | undefined, string>({
-  key: 'project',
-  default: fetchProjectState,
-});
-
-export const useProjectById = (id: string) => useRecoilValue(projectState(id));
+export const useProjectById = (id: string): gp2.ProjectResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: projectQueryKeys.detail(id),
+    // getProject resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below.
+    queryFn: async () =>
+      (await getProject(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
 
 export const usePutProjectResources = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setProjectItem = useSetProjectItem();
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async (payload: gp2.ProjectResourcesPutRequest) => {
-    const project = await putProjectResources(id, payload, authorization);
-    setProjectItem(project);
+    const project = await putProjectResources(
+      id,
+      payload,
+      await getAuthorization(),
+    );
+    // R3 patched-overlay: the recoil hook set the mutation response straight
+    // into `projectState(id)` (the detail atom the read hook returns) — write
+    // it into the detail cache, never refetch (§6.1).
+    queryClient.setQueryData(projectQueryKeys.detail(project.id), project);
+    // SANCTIONED BEHAVIOR CHANGE (§6.1 / R5): the recoil hook also bumped a
+    // vestigial `refreshProjectsState` counter (never read anywhere).
+    // Invalidate the lists so the resource change shows through where the
+    // counter intended to.
+    await queryClient.invalidateQueries({
+      queryKey: projectQueryKeys.lists(),
+    });
   };
-};
-
-const useSetProjectItem = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshProjectsState);
-  return useRecoilCallback(({ set }) => (project: gp2.ProjectResponse) => {
-    setRefresh(refresh + 1);
-    set(projectState(project.id), project);
-  });
 };

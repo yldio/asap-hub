@@ -4,6 +4,7 @@ import { useAuth0GP2 } from '@asap-hub/react-context';
 import {
   matchQuery,
   QueryClient,
+  useMutation,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
@@ -110,13 +111,17 @@ export const usePatchUserById = (id: string) => {
   const auth0 = useAuth0GP2();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (patch: gp2.UserPatchRequest) =>
+      patchUser(id, patch, await getAuthorization()),
+    onSuccess: async (user) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      await refreshAuth0Session(auth0);
+      refetchAllButOverlays(queryClient, id);
+    },
+  });
   return async (patch: gp2.UserPatchRequest) => {
-    queryClient.setQueryData(
-      userQueryKeys.detail(id),
-      await patchUser(id, patch, await getAuthorization()),
-    );
-    await refreshAuth0Session(auth0);
-    refetchAllButOverlays(queryClient, id);
+    await mutateAsync(patch);
   };
 };
 
@@ -124,12 +129,16 @@ export const usePostUserAvatarById = (id: string) => {
   const auth0 = useAuth0GP2();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (avatar: string) =>
+      postUserAvatar(id, { avatar }, await getAuthorization()),
+    onSuccess: async (user) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      await refreshAuth0Session(auth0);
+      refetchAllButOverlays(queryClient, id);
+    },
+  });
   return async (avatar: string) => {
-    queryClient.setQueryData(
-      userQueryKeys.detail(id),
-      await postUserAvatar(id, { avatar }, await getAuthorization()),
-    );
-    await refreshAuth0Session(auth0);
-    refetchAllButOverlays(queryClient, id);
+    await mutateAsync(avatar);
   };
 };

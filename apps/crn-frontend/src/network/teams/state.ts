@@ -18,7 +18,11 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { Dispatch, SetStateAction, useCallback } from 'react';
 import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
@@ -236,63 +240,89 @@ export const useSetManuscriptItem = () => {
 export const usePostManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
-  return async (payload: ManuscriptPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-    const manuscript = await createManuscript(
-      { ...payload, notificationList },
-      await getAuthorization(),
-    );
-    setManuscriptItem(manuscript);
-    return manuscript;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: ManuscriptPostRequest) => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      return createManuscript(
+        { ...payload, notificationList },
+        await getAuthorization(),
+      );
+    },
+    onSuccess: (manuscript) => {
+      setManuscriptItem(manuscript);
+    },
+  });
+  return mutateAsync;
 };
 
 export const useResubmitManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
-  return async (id: string, payload: ManuscriptPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-    const manuscript = await resubmitManuscript(
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
       id,
-      { ...payload, notificationList },
-      await getAuthorization(),
-    );
-    setManuscriptItem(manuscript);
-    return manuscript;
-  };
+      payload,
+    }: {
+      id: string;
+      payload: ManuscriptPostRequest;
+    }) => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      return resubmitManuscript(
+        id,
+        { ...payload, notificationList },
+        await getAuthorization(),
+      );
+    },
+    onSuccess: (manuscript) => {
+      setManuscriptItem(manuscript);
+    },
+  });
+  return (id: string, payload: ManuscriptPostRequest) =>
+    mutateAsync({ id, payload });
 };
 
 export const usePutManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
-
-  return async (id: string, payload: ManuscriptPutRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-    const manuscript = await updateManuscript(
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
       id,
-      { ...payload, notificationList },
-      await getAuthorization(),
-    );
-    setManuscriptItem(manuscript);
-    return manuscript;
-  };
+      payload,
+    }: {
+      id: string;
+      payload: ManuscriptPutRequest;
+    }) => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      return updateManuscript(
+        id,
+        { ...payload, notificationList },
+        await getAuthorization(),
+      );
+    },
+    onSuccess: (manuscript) => {
+      setManuscriptItem(manuscript);
+    },
+  });
+  return (id: string, payload: ManuscriptPutRequest) =>
+    mutateAsync({ id, payload });
 };
 
 export const usePostComplianceReport = () => {
   const getAuthorization = useAuthorization();
-  return async (payload: ComplianceReportPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-
-    const complianceReport = await createComplianceReport(
-      { ...payload, notificationList },
-      await getAuthorization(),
-    );
-    return complianceReport;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: ComplianceReportPostRequest) => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      return createComplianceReport(
+        { ...payload, notificationList },
+        await getAuthorization(),
+      );
+    },
+  });
+  return mutateAsync;
 };
 
 export const useIsComplianceReviewer = (): boolean => {
@@ -303,18 +333,28 @@ export const useIsComplianceReviewer = (): boolean => {
 // Uses S3 presigned URL to upload file
 export const useUploadManuscriptFileViaPresignedUrl = () => {
   const getAuthorization = useAuthorization();
-
-  return async (
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
+      file,
+      fileType,
+      handleError,
+    }: {
+      file: File;
+      fileType: ManuscriptFileType;
+      handleError: (errorMessage: string) => void;
+    }) =>
+      uploadManuscriptFileViaPresignedUrl(
+        file,
+        fileType,
+        await getAuthorization(),
+        handleError,
+      ),
+  });
+  return (
     file: File,
     fileType: ManuscriptFileType,
     handleError: (errorMessage: string) => void,
-  ) =>
-    uploadManuscriptFileViaPresignedUrl(
-      file,
-      fileType,
-      await getAuthorization(),
-      handleError,
-    );
+  ) => mutateAsync({ file, fileType, handleError });
 };
 
 export const useDownloadFullComplianceDataset = () => {
@@ -341,39 +381,51 @@ export const useReplyToDiscussion = () => {
   const setDiscussion = useSetDiscussion();
   const setManuscriptItem = useSetManuscriptItem();
 
-  return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-    const authorization = await getAuthorization();
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
+      manuscriptId,
+      id,
+      patch,
+    }: {
+      manuscriptId: string;
+      id: string;
+      patch: DiscussionRequest;
+    }) => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      const authorization = await getAuthorization();
 
-    try {
-      const discussion = await updateDiscussion(
-        id,
-        { ...patch, notificationList },
-        authorization,
-      );
-      setDiscussion(discussion);
-      const updatedManuscript = await getManuscript(
-        manuscriptId,
-        authorization,
-      );
-      if (updatedManuscript) setManuscriptItem(updatedManuscript);
-    } catch (error) {
-      // 403-triggered manuscript re-fetch before re-throwing (error-path
-      // cache sync), preserved verbatim.
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
+      try {
+        const discussion = await updateDiscussion(
+          id,
+          { ...patch, notificationList },
+          authorization,
+        );
+        setDiscussion(discussion);
         const updatedManuscript = await getManuscript(
           manuscriptId,
           authorization,
         );
         if (updatedManuscript) setManuscriptItem(updatedManuscript);
+      } catch (error) {
+        // 403-triggered manuscript re-fetch before re-throwing (error-path
+        // cache sync), preserved verbatim.
+        if (
+          error instanceof BackendError &&
+          (error as BackendError).response?.statusCode === 403
+        ) {
+          const updatedManuscript = await getManuscript(
+            manuscriptId,
+            authorization,
+          );
+          if (updatedManuscript) setManuscriptItem(updatedManuscript);
+        }
+        throw error;
       }
-      throw error;
-    }
-  };
+    },
+  });
+  return (manuscriptId: string, id: string, patch: DiscussionRequest) =>
+    mutateAsync({ manuscriptId, id, patch });
 };
 
 export const useMarkDiscussionAsRead = () => {
@@ -382,28 +434,42 @@ export const useMarkDiscussionAsRead = () => {
   const setManuscriptItem = useSetManuscriptItem();
   const queryClient = useQueryClient();
 
-  return async (manuscriptId: string, discussionId: string) => {
-    // Optimistic update from the cached manuscript before awaiting the API.
-    const manuscript = queryClient.getQueryData<ManuscriptResponse | null>(
-      manuscriptQueryKeys.detail(manuscriptId),
-    );
-
-    if (manuscript) {
-      const discussions = manuscript.discussions.map((discussion) => {
-        if (discussion.id === discussionId) {
-          return { ...discussion, read: true };
-        }
-        return discussion;
-      });
-
-      setManuscriptItem({ ...manuscript, discussions });
-    }
-
-    const discussion = await markDiscussionAsRead(
+  const { mutateAsync } = useMutation({
+    onMutate: ({
+      manuscriptId,
       discussionId,
-      await getAuthorization(),
-    );
-    setDiscussion(discussion);
+    }: {
+      manuscriptId: string;
+      discussionId: string;
+    }) => {
+      // Optimistic update from the cached manuscript before awaiting the API.
+      const manuscript = queryClient.getQueryData<ManuscriptResponse | null>(
+        manuscriptQueryKeys.detail(manuscriptId),
+      );
+
+      if (manuscript) {
+        const discussions = manuscript.discussions.map((discussion) => {
+          if (discussion.id === discussionId) {
+            return { ...discussion, read: true };
+          }
+          return discussion;
+        });
+
+        setManuscriptItem({ ...manuscript, discussions });
+      }
+    },
+    mutationFn: async ({
+      discussionId,
+    }: {
+      manuscriptId: string;
+      discussionId: string;
+    }) => markDiscussionAsRead(discussionId, await getAuthorization()),
+    onSuccess: (discussion) => {
+      setDiscussion(discussion);
+    },
+  });
+  return async (manuscriptId: string, discussionId: string) => {
+    await mutateAsync({ manuscriptId, discussionId });
   };
 };
 
@@ -489,61 +555,75 @@ export const useCreateDiscussion = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
 
-  return async (
-    manuscriptId: string,
-    title: string,
-    text: string,
-    files?: ManuscriptFileResponse[],
-  ): Promise<string | undefined> => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-    const authorization = await getAuthorization();
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
+      manuscriptId,
+      title,
+      text,
+      files,
+    }: {
+      manuscriptId: string;
+      title: string;
+      text: string;
+      files?: ManuscriptFileResponse[];
+    }): Promise<string | undefined> => {
+      const notificationList = getOverrides()
+        .COMPLIANCE_NOTIFICATION_LIST as string;
+      const authorization = await getAuthorization();
 
-    try {
-      const discussion = await createDiscussion(
-        {
-          manuscriptId,
-          title,
-          text,
-          files,
-          notificationList,
-        },
-        authorization,
-      );
-      const updatedManuscript = await getManuscript(
-        manuscriptId,
-        authorization,
-      );
-      if (updatedManuscript) setManuscriptItem(updatedManuscript);
-      return discussion.id;
-    } catch (error) {
-      // 403-triggered manuscript re-fetch before re-throwing (error-path
-      // cache sync), preserved verbatim.
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
+      try {
+        const discussion = await createDiscussion(
+          {
+            manuscriptId,
+            title,
+            text,
+            files,
+            notificationList,
+          },
+          authorization,
+        );
         const updatedManuscript = await getManuscript(
           manuscriptId,
           authorization,
         );
         if (updatedManuscript) setManuscriptItem(updatedManuscript);
+        return discussion.id;
+      } catch (error) {
+        // 403-triggered manuscript re-fetch before re-throwing (error-path
+        // cache sync), preserved verbatim.
+        if (
+          error instanceof BackendError &&
+          (error as BackendError).response?.statusCode === 403
+        ) {
+          const updatedManuscript = await getManuscript(
+            manuscriptId,
+            authorization,
+          );
+          if (updatedManuscript) setManuscriptItem(updatedManuscript);
+        }
+        throw error;
       }
-      throw error;
-    }
-  };
+    },
+  });
+  return (
+    manuscriptId: string,
+    title: string,
+    text: string,
+    files?: ManuscriptFileResponse[],
+  ): Promise<string | undefined> =>
+    mutateAsync({ manuscriptId, title, text, files });
 };
 
 export const usePostPreprintResearchOutput = () => {
   const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
 
-  return async (manuscriptId: string): Promise<ResearchOutputResponse> => {
-    const preprintResearchOutput = await createPreprintResearchOutput(
-      manuscriptId,
-      await getAuthorization(),
-    );
-    setResearchOutputItem(preprintResearchOutput);
-    return preprintResearchOutput;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (manuscriptId: string): Promise<ResearchOutputResponse> =>
+      createPreprintResearchOutput(manuscriptId, await getAuthorization()),
+    onSuccess: (preprintResearchOutput) => {
+      setResearchOutputItem(preprintResearchOutput);
+    },
+  });
+  return mutateAsync;
 };

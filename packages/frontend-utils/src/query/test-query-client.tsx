@@ -1,5 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
+import { QueryClient } from '@tanstack/react-query';
 
 // Test defaults mirror the app defaults (see query-client-config.ts):
 // staleTime/gcTime Infinity so caches seeded via setQueryData cannot go stale
@@ -12,17 +11,3 @@ export const createTestQueryClient = (): QueryClient =>
       mutations: { retry: false },
     },
   });
-
-export type TestQueryClientWrapperProps = {
-  children: ReactNode;
-  client?: QueryClient;
-};
-
-export const TestQueryClientWrapper = ({
-  children,
-  client,
-}: TestQueryClientWrapperProps): JSX.Element => (
-  <QueryClientProvider client={client ?? createTestQueryClient()}>
-    {children}
-  </QueryClientProvider>
-);

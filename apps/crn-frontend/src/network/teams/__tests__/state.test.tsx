@@ -10,7 +10,6 @@ import { act, render, renderHook, waitFor } from '@testing-library/react';
 import { Component, ReactNode, Suspense } from 'react';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getPresignedUrl } from '../../../shared-api/files';
 import { researchOutputQueryKeys } from '../../../shared-research/state';
 import {
   createDiscussion,
@@ -35,7 +34,6 @@ import {
   useManuscripts,
   useMarkDiscussionAsRead,
   usePostPreprintResearchOutput,
-  usePresignedUrl,
   useReplyToDiscussion,
   useTeamById,
   useTeams,
@@ -54,8 +52,6 @@ jest.mock('../api', () => ({
   updateDiscussion: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
-
-jest.mock('../../../shared-api/files');
 
 jest.mock('../../../hooks/algolia', () => ({
   useAlgolia: jest.fn(() => ({ client: {} })),
@@ -652,51 +648,6 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
 
     expect(uploadManuscriptFileViaPresignedUrl).toHaveBeenCalled();
     expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
-  });
-});
-
-describe('usePresignedUrl', () => {
-  const mockUploadUrl = 'https://presigned-url.com/file.pdf';
-  const mockGetPresignedUrl = getPresignedUrl as jest.Mock;
-
-  it('fetches the presigned URL successfully and updates loading state', async () => {
-    mockGetPresignedUrl.mockResolvedValueOnce({ presignedUrl: mockUploadUrl });
-
-    const { result } = renderStateHook(() => usePresignedUrl());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    let url: string | undefined;
-    await act(async () => {
-      url = await result.current.fetchPresignedUrl(
-        'file.pdf',
-        'application/pdf',
-      );
-    });
-
-    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
-      'file.pdf',
-      mockAuthorization,
-      'application/pdf',
-    );
-    expect(url).toBe(mockUploadUrl);
-    expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBeNull();
-  });
-
-  it('sets error state on failure and throws error', async () => {
-    mockGetPresignedUrl.mockRejectedValueOnce(new Error('Oops'));
-
-    const { result } = renderStateHook(() => usePresignedUrl());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await expect(
-        result.current.fetchPresignedUrl('file.pdf', 'application/pdf'),
-      ).rejects.toThrow('Oops');
-    });
-
-    expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBe('Failed to generate pre-signed URL');
   });
 });
 

@@ -19,10 +19,9 @@ import {
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback } from 'react';
 import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
-import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import {
   createComplianceReport,
@@ -533,32 +532,6 @@ export const useCreateDiscussion = () => {
       throw error;
     }
   };
-};
-
-export const usePresignedUrl = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const getAuthorization = useAuthorization();
-
-  const fetchPresignedUrl = async (filename: string, contentType: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { presignedUrl: uploadUrl } = await getPresignedUrl(
-        filename,
-        await getAuthorization(),
-        contentType,
-      );
-      return uploadUrl;
-    } catch (err) {
-      setError('Failed to generate pre-signed URL');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { fetchPresignedUrl, loading, error };
 };
 
 export const usePostPreprintResearchOutput = () => {

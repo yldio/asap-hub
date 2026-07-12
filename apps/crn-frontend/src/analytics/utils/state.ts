@@ -10,7 +10,6 @@ import { OpensearchClient, OpensearchIndex } from './opensearch';
  *
  * Each of the five performance endpoints (team/user collaboration,
  * engagement, team/user productivity) gets one instantiation providing:
- * - `keys`: a query-key factory namespaced by `scope`.
  * - `useSuspenseHook(getFn, opensearchIndex)`: the suspending fetch hook.
  * - `useValueHook`: a non-suspending, non-fetching read of the same cache
  *   entry — it only surfaces whatever the suspense sibling has populated.
@@ -55,5 +54,5 @@ export const makePerformanceQuery = <T>(scope: string) => {
     return data ?? undefined;
   };
 
-  return { keys, useSuspenseHook, useValueHook };
+  return { useSuspenseHook, useValueHook };
 };

@@ -5,10 +5,18 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  matchQuery,
+  QueryClient,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
+import { projectQueryKeys } from '../../projects/state';
+import { researchOutputQueryKeys } from '../../shared-research/state';
+import { discussionQueryKeys, manuscriptQueryKeys } from '../teams/state';
 import {
   deleteUserAvatar,
   getUser,
@@ -56,6 +64,23 @@ export const useUserById = (id: string): UserResponse | undefined => {
   return data ?? undefined;
 };
 
+// A profile change can show up anywhere (names, roles, avatars embedded in
+// other records), so refetch every cache except the ones holding mutation
+// overlays, which must never be refetched (§6.1).
+const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
+  const overlayKeys = [
+    userQueryKeys.detail(userId),
+    manuscriptQueryKeys.details(),
+    projectQueryKeys.details(),
+    discussionQueryKeys.all,
+    researchOutputQueryKeys.details(),
+  ];
+  void queryClient.invalidateQueries({
+    predicate: (query) =>
+      !overlayKeys.some((queryKey) => matchQuery({ queryKey }, query)),
+  });
+};
+
 // The mutation hooks below write the mutation response straight into the
 // detail cache — never refetched, because Contentful has read-after-write
 // lag — and then refresh the Auth0 token + user so the id token picks up
@@ -75,6 +100,7 @@ export const usePatchUserById = (id: string) => {
     });
 
     await refreshUser();
+    refetchAllButOverlays(queryClient, id);
   };
 };
 
@@ -101,6 +127,7 @@ export const usePatchUserAvatarById = (id: string) => {
       });
 
       await refreshUser();
+      refetchAllButOverlays(queryClient, id);
     }
   };
 };
@@ -119,6 +146,7 @@ export const useDeleteUserAvatarById = (id: string) => {
       });
 
       await refreshUser();
+      refetchAllButOverlays(queryClient, id);
     }
   };
 };

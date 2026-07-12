@@ -8,6 +8,8 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
+import { projectQueryKeys } from '../../../projects/state';
+import { manuscriptQueryKeys } from '../../teams/state';
 import { deleteUserAvatar, getUser, getUsers, postUserAvatar } from '../api';
 import {
   useDeleteUserAvatarById,
@@ -39,8 +41,9 @@ const renderAvatarHook = <T,>(
   useHook: () => T,
   refreshUser = jest.fn().mockResolvedValue(undefined),
 ) => {
+  const queryClient = createTestQueryClient();
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }} auth0Overrides={() => ({ refreshUser })}>
           <WhenReady>{children}</WhenReady>
@@ -49,7 +52,7 @@ const renderAvatarHook = <T,>(
     </QueryClientProvider>
   );
   const { result } = renderHook(useHook, { wrapper });
-  return { result, refreshUser };
+  return { result, refreshUser, queryClient };
 };
 
 const { useAlgolia } = jest.requireMock('../../../hooks/algolia') as {
@@ -92,6 +95,33 @@ describe('usePatchUserAvatarById', () => {
 
     expect(mockPostUserAvatar).toHaveBeenCalled();
     expect(refreshUser).not.toHaveBeenCalled();
+  });
+
+  it('invalidates other caches after the user refresh but keeps overlay caches fresh', async () => {
+    const { result, queryClient } = renderAvatarHook(() =>
+      usePatchUserAvatarById(id),
+    );
+    await waitFor(() => expect(typeof result.current).toBe('function'));
+
+    queryClient.setQueryData(userQueryKeys.list(listOptions), {
+      total: 0,
+      items: [],
+    });
+    queryClient.setQueryData(userQueryKeys.detail('someone-else'), null);
+    queryClient.setQueryData(manuscriptQueryKeys.detail('m-1'), {
+      id: 'm-1',
+    });
+    queryClient.setQueryData(projectQueryKeys.detail('p-1'), { id: 'p-1' });
+
+    await act(() => result.current('data:image/jpeg;base64,abc'));
+
+    const isInvalidated = (queryKey: readonly unknown[]) =>
+      queryClient.getQueryState(queryKey)?.isInvalidated;
+    expect(isInvalidated(userQueryKeys.list(listOptions))).toBe(true);
+    expect(isInvalidated(userQueryKeys.detail('someone-else'))).toBe(true);
+    expect(isInvalidated(userQueryKeys.detail(id))).toBe(false);
+    expect(isInvalidated(manuscriptQueryKeys.detail('m-1'))).toBe(false);
+    expect(isInvalidated(projectQueryKeys.detail('p-1'))).toBe(false);
   });
 });
 

@@ -1,10 +1,18 @@
 import { gp2 } from '@asap-hub/model';
 import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import { useAuth0GP2 } from '@asap-hub/react-context';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  matchQuery,
+  QueryClient,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
+import { outputQueryKeys } from '../outputs/state';
+import { projectQueryKeys } from '../projects/state';
+import { workingGroupQueryKeys } from '../working-groups/state';
 import {
   getAlgoliaUsers,
   getUser,
@@ -58,6 +66,22 @@ export const useUserById = (id: string): gp2.UserResponse | undefined => {
   return data ?? undefined;
 };
 
+// A profile change can show up anywhere (names, roles, avatars embedded in
+// other records), so refetch every cache except the ones holding mutation
+// overlays, which must never be refetched (§6.1).
+const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
+  const overlayKeys = [
+    userQueryKeys.detail(userId),
+    outputQueryKeys.details(),
+    projectQueryKeys.details(),
+    workingGroupQueryKeys.details(),
+  ];
+  void queryClient.invalidateQueries({
+    predicate: (query) =>
+      !overlayKeys.some((queryKey) => matchQuery({ queryKey }, query)),
+  });
+};
+
 // The mutation hooks below write the mutation response straight into the
 // detail cache — never refetched — and then refresh the Auth0 token + user
 // so the id token picks up the profile change.
@@ -76,6 +100,7 @@ export const usePatchUserById = (id: string) => {
     });
 
     await refreshUser();
+    refetchAllButOverlays(queryClient, id);
   };
 };
 
@@ -94,5 +119,6 @@ export const usePostUserAvatarById = (id: string) => {
     });
 
     await refreshUser();
+    refetchAllButOverlays(queryClient, id);
   };
 };

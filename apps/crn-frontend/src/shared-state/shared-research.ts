@@ -15,7 +15,7 @@ import {
   ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import {
@@ -190,30 +190,35 @@ export const useResourceTypes = (): ResourceTypeResponse[] => {
 export const usePostResearchOutput = () => {
   const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createResearchOutput(
-      payload,
-      await getAuthorization(),
-    );
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: ResearchOutputPostRequest) =>
+      createResearchOutput(payload, await getAuthorization()),
+    onSuccess: (researchOutput) => {
+      setResearchOutputItem(researchOutput);
+    },
+  });
+  return mutateAsync;
 };
 
 export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
   const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
   const invalidateResearchOutputIndex = useInvalidateResearchOutputIndex();
-  return async (id: string, payload: ResearchOutputPutRequest) => {
-    const researchOutput = await updateTeamResearchOutput(
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
       id,
       payload,
-      await getAuthorization(),
-    );
-    setResearchOutputItem(researchOutput);
-    if (shouldInvalidate) {
-      invalidateResearchOutputIndex();
-    }
-    return researchOutput;
-  };
+    }: {
+      id: string;
+      payload: ResearchOutputPutRequest;
+    }) => updateTeamResearchOutput(id, payload, await getAuthorization()),
+    onSuccess: (researchOutput) => {
+      setResearchOutputItem(researchOutput);
+      if (shouldInvalidate) {
+        invalidateResearchOutputIndex();
+      }
+    },
+  });
+  return (id: string, payload: ResearchOutputPutRequest) =>
+    mutateAsync({ id, payload });
 };

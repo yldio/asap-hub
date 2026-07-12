@@ -1,6 +1,10 @@
 import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
@@ -65,33 +69,39 @@ export const useOutputById = (id: string): gp2.OutputResponse | undefined => {
 export const useCreateOutput = () => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
-  return async (payload: gp2.OutputPostRequest) => {
-    const output = await createOutput(payload, await getAuthorization());
-    // Mark lists stale without refetching now: search indexing lags the
-    // mutation, so an immediate refetch would cache pre-mutation results.
-    void queryClient.invalidateQueries({
-      queryKey: outputQueryKeys.lists(),
-      refetchType: 'none',
-    });
-    return output;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: gp2.OutputPostRequest) =>
+      createOutput(payload, await getAuthorization()),
+    onSuccess: () => {
+      // Mark lists stale without refetching now: search indexing lags the
+      // mutation, so an immediate refetch would cache pre-mutation results.
+      void queryClient.invalidateQueries({
+        queryKey: outputQueryKeys.lists(),
+        refetchType: 'none',
+      });
+    },
+  });
+  return mutateAsync;
 };
 
 export const useUpdateOutput = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
-  return async (payload: gp2.OutputPutRequest) => {
-    const output = await updateOutput(id, payload, await getAuthorization());
-    // Write the mutation response straight into the detail cache (never
-    // refetched). updateOutput may resolve undefined; cache null so the
-    // queryFn contract holds and useOutputById maps it back.
-    queryClient.setQueryData(outputQueryKeys.detail(id), output ?? null);
-    // Mark lists stale without refetching now: search indexing lags the
-    // mutation, so an immediate refetch would cache pre-mutation results.
-    void queryClient.invalidateQueries({
-      queryKey: outputQueryKeys.lists(),
-      refetchType: 'none',
-    });
-    return output;
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: gp2.OutputPutRequest) =>
+      updateOutput(id, payload, await getAuthorization()),
+    onSuccess: (output) => {
+      // Write the mutation response straight into the detail cache (never
+      // refetched). updateOutput may resolve undefined; cache null so the
+      // queryFn contract holds and useOutputById maps it back.
+      queryClient.setQueryData(outputQueryKeys.detail(id), output ?? null);
+      // Mark lists stale without refetching now: search indexing lags the
+      // mutation, so an immediate refetch would cache pre-mutation results.
+      void queryClient.invalidateQueries({
+        queryKey: outputQueryKeys.lists(),
+        refetchType: 'none',
+      });
+    },
+  });
+  return mutateAsync;
 };

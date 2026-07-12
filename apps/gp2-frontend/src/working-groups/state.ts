@@ -1,5 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import {
@@ -51,28 +55,30 @@ export const useWorkingGroupsState = (): gp2.ListWorkingGroupResponse => {
 export const usePutWorkingGroupResources = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: gp2.WorkingGroupResourcesPutRequest) =>
+      putWorkingGroupResources(id, payload, await getAuthorization()),
+    onSuccess: (workingGroup) => {
+      // Write the mutation response straight into the detail cache, never
+      // refetch.
+      queryClient.setQueryData(
+        workingGroupQueryKeys.detail(workingGroup.id),
+        workingGroup,
+      );
+      // Mark the network view and lists stale without refetching now: search
+      // indexing lags the mutation, so an immediate refetch would cache
+      // pre-mutation results.
+      void queryClient.invalidateQueries({
+        queryKey: workingGroupQueryKeys.network(),
+        refetchType: 'none',
+      });
+      void queryClient.invalidateQueries({
+        queryKey: workingGroupQueryKeys.lists(),
+        refetchType: 'none',
+      });
+    },
+  });
   return async (payload: gp2.WorkingGroupResourcesPutRequest) => {
-    const workingGroup = await putWorkingGroupResources(
-      id,
-      payload,
-      await getAuthorization(),
-    );
-    // Write the mutation response straight into the detail cache, never
-    // refetch.
-    queryClient.setQueryData(
-      workingGroupQueryKeys.detail(workingGroup.id),
-      workingGroup,
-    );
-    // Mark the network view and lists stale without refetching now: search
-    // indexing lags the mutation, so an immediate refetch would cache
-    // pre-mutation results.
-    void queryClient.invalidateQueries({
-      queryKey: workingGroupQueryKeys.network(),
-      refetchType: 'none',
-    });
-    void queryClient.invalidateQueries({
-      queryKey: workingGroupQueryKeys.lists(),
-      refetchType: 'none',
-    });
+    await mutateAsync(payload);
   };
 };

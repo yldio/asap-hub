@@ -1,6 +1,10 @@
 import { normalizeListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
@@ -62,20 +66,22 @@ export const useProjectById = (id: string): gp2.ProjectResponse | undefined => {
 export const usePutProjectResources = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: gp2.ProjectResourcesPutRequest) =>
+      putProjectResources(id, payload, await getAuthorization()),
+    onSuccess: (project) => {
+      // Write the mutation response straight into the detail cache, never
+      // refetch.
+      queryClient.setQueryData(projectQueryKeys.detail(project.id), project);
+      // Mark lists stale without refetching now: search indexing lags the
+      // mutation, so an immediate refetch would cache pre-mutation results.
+      void queryClient.invalidateQueries({
+        queryKey: projectQueryKeys.lists(),
+        refetchType: 'none',
+      });
+    },
+  });
   return async (payload: gp2.ProjectResourcesPutRequest) => {
-    const project = await putProjectResources(
-      id,
-      payload,
-      await getAuthorization(),
-    );
-    // Write the mutation response straight into the detail cache, never
-    // refetch.
-    queryClient.setQueryData(projectQueryKeys.detail(project.id), project);
-    // Mark lists stale without refetching now: search indexing lags the
-    // mutation, so an immediate refetch would cache pre-mutation results.
-    void queryClient.invalidateQueries({
-      queryKey: projectQueryKeys.lists(),
-      refetchType: 'none',
-    });
+    await mutateAsync(payload);
   };
 };

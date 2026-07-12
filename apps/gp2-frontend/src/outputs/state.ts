@@ -67,10 +67,11 @@ export const useCreateOutput = () => {
   const queryClient = useQueryClient();
   return async (payload: gp2.OutputPostRequest) => {
     const output = await createOutput(payload, await getAuthorization());
-    // Deliberate change from the legacy behavior, which refreshed no list on
-    // create: invalidate so new outputs show up.
-    await queryClient.invalidateQueries({
+    // Mark lists stale without refetching now: search indexing lags the
+    // mutation, so an immediate refetch would cache pre-mutation results.
+    void queryClient.invalidateQueries({
       queryKey: outputQueryKeys.lists(),
+      refetchType: 'none',
     });
     return output;
   };
@@ -85,10 +86,11 @@ export const useUpdateOutput = (id: string) => {
     // refetched). updateOutput may resolve undefined; cache null so the
     // queryFn contract holds and useOutputById maps it back.
     queryClient.setQueryData(outputQueryKeys.detail(id), output ?? null);
-    // Deliberate change from the legacy behavior, which refreshed no list on
-    // update: invalidate so the updated output shows through.
-    await queryClient.invalidateQueries({
+    // Mark lists stale without refetching now: search indexing lags the
+    // mutation, so an immediate refetch would cache pre-mutation results.
+    void queryClient.invalidateQueries({
       queryKey: outputQueryKeys.lists(),
+      refetchType: 'none',
     });
     return output;
   };

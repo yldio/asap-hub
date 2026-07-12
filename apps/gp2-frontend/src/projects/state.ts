@@ -71,10 +71,11 @@ export const usePutProjectResources = (id: string) => {
     // Write the mutation response straight into the detail cache, never
     // refetch.
     queryClient.setQueryData(projectQueryKeys.detail(project.id), project);
-    // Deliberate change from the legacy behavior, which refreshed no list:
-    // invalidate so the resource change shows through.
-    await queryClient.invalidateQueries({
+    // Mark lists stale without refetching now: search indexing lags the
+    // mutation, so an immediate refetch would cache pre-mutation results.
+    void queryClient.invalidateQueries({
       queryKey: projectQueryKeys.lists(),
+      refetchType: 'none',
     });
   };
 };

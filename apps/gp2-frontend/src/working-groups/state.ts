@@ -63,14 +63,16 @@ export const usePutWorkingGroupResources = (id: string) => {
       workingGroupQueryKeys.detail(workingGroup.id),
       workingGroup,
     );
-    // Deliberate change from the legacy behavior, which refreshed neither: a
-    // resource change now refreshes the network view and the working-groups
-    // list.
-    await queryClient.invalidateQueries({
+    // Mark the network view and lists stale without refetching now: search
+    // indexing lags the mutation, so an immediate refetch would cache
+    // pre-mutation results.
+    void queryClient.invalidateQueries({
       queryKey: workingGroupQueryKeys.network(),
+      refetchType: 'none',
     });
-    await queryClient.invalidateQueries({
+    void queryClient.invalidateQueries({
       queryKey: workingGroupQueryKeys.lists(),
+      refetchType: 'none',
     });
   };
 };

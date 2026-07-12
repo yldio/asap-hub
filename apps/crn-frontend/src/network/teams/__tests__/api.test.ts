@@ -24,7 +24,6 @@ import {
   ManuscriptPutRequest,
   RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
-  TeamResponse,
 } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
@@ -51,7 +50,6 @@ import {
   getTeams,
   GetTeamsListOptions,
   markDiscussionAsRead,
-  patchTeam,
   resubmitManuscript,
   updateDiscussion,
   updateManuscript,
@@ -315,52 +313,6 @@ describe('getTeam', () => {
   });
 });
 
-describe('patchTeam', () => {
-  const patch = {
-    tools: [
-      {
-        url: 'https://example.com/tool',
-        name: 'Example Tool',
-        description: 'Example Tool',
-      },
-    ],
-  };
-  it('makes an authorized PATCH request for the team id', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .patch('/teams/42')
-      .reply(200, {});
-
-    await patchTeam('42', patch, 'Bearer x');
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('passes the patch object in the body', async () => {
-    nock(API_BASE_URL).patch('/teams/42', patch).reply(200, {});
-
-    await patchTeam('42', patch, '');
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns a successfully updated team', async () => {
-    const updated: Partial<TeamResponse> = {
-      projectTitle: 'Team Project',
-      tools: patch.tools,
-    };
-    nock(API_BASE_URL).patch('/teams/42', patch).reply(200, updated);
-
-    expect(await patchTeam('42', patch, '')).toEqual(updated);
-  });
-
-  it('errors for an error status', async () => {
-    nock(API_BASE_URL).patch('/teams/42', patch).reply(500, {});
-
-    await expect(
-      patchTeam('42', patch, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to update team with id 42. Expected status 2xx. Received status 500."`,
-    );
-  });
-});
 describe('Team Research Output', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],

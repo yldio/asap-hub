@@ -39,7 +39,6 @@ import { useProjectById, usePatchProjectById } from '../../../projects/state';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
-  patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),
   getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),

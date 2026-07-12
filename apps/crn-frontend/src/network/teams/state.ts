@@ -15,7 +15,6 @@ import {
   ManuscriptWorkspaceTab,
   ManuscriptWorkspaceUrlResponse,
   ResearchOutputResponse,
-  TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
@@ -40,7 +39,6 @@ import {
   getTeam,
   ManuscriptsOptions,
   markDiscussionAsRead,
-  patchTeam,
   resubmitManuscript,
   updateDiscussion,
   updateManuscript,
@@ -114,19 +112,6 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
     queryFn: async () => (await getTeam(id, await getAuthorization())) ?? null,
   });
   return data ?? undefined;
-};
-
-// The PATCH response is written straight into the detail cache — never
-// refetched, because Contentful has read-after-write lag.
-export const usePatchTeamById = (id: string) => {
-  const getAuthorization = useAuthorization();
-  const queryClient = useQueryClient();
-  return async (patch: TeamPatchRequest) => {
-    queryClient.setQueryData(
-      teamQueryKeys.detail(id),
-      await patchTeam(id, patch, await getAuthorization()),
-    );
-  };
 };
 
 // Replaces the refreshTeamState counter bumps in TeamManuscript /

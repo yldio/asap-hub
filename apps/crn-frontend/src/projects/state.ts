@@ -98,14 +98,29 @@ export const usePatchProjectById = (id: string) => {
   };
 };
 
-// Replaces the refreshProjectState counter bumps in ProjectManuscript /
-// ProjectComplianceReport: the bump invalidated the project-detail fetch
-// selector, so the project (and its embedded manuscripts) re-fetch (R5).
+// Refetches the project detail (and its embedded manuscripts) after a
+// manuscript / compliance-report submission. The tools field can carry a
+// patched overlay that the API would clobber with read-after-write-stale data,
+// so it is preserved across the refetch (see §6.1).
 export const useInvalidateProjectById = (id: string) => {
   const queryClient = useQueryClient();
   return useCallback(() => {
+    const overlaidTools = queryClient.getQueryData<ProjectDetail>(
+      projectQueryKeys.detail(id),
+    )?.tools;
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    queryClient.invalidateQueries({ queryKey: projectQueryKeys.detail(id) });
+    queryClient
+      .invalidateQueries({ queryKey: projectQueryKeys.detail(id) })
+      .then(() => {
+        if (!overlaidTools) {
+          return;
+        }
+        queryClient.setQueryData<ProjectDetail>(
+          projectQueryKeys.detail(id),
+          (current) =>
+            current ? { ...current, tools: overlaidTools } : current,
+        );
+      });
   }, [queryClient, id]);
 };
 

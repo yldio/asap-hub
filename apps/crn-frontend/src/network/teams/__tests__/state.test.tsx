@@ -22,7 +22,6 @@ import {
   getManuscriptsByIds,
   getTeam,
   markDiscussionAsRead,
-  patchTeam,
   updateDiscussion,
   uploadManuscriptFileViaPresignedUrl,
 } from '../api';
@@ -35,7 +34,6 @@ import {
   useManuscriptById,
   useManuscripts,
   useMarkDiscussionAsRead,
-  usePatchTeamById,
   usePostPreprintResearchOutput,
   usePresignedUrl,
   useReplyToDiscussion,
@@ -53,7 +51,6 @@ jest.mock('../api', () => ({
   getManuscriptsByIds: jest.fn(),
   getTeam: jest.fn().mockResolvedValue(undefined),
   markDiscussionAsRead: jest.fn(),
-  patchTeam: jest.fn(),
   updateDiscussion: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
@@ -174,37 +171,6 @@ describe('useTeamById', () => {
 
     await waitFor(() => expect(result.current).toEqual(teamMock));
     expect(getTeam).not.toHaveBeenCalled();
-  });
-});
-
-describe('usePatchTeamById', () => {
-  it('calls patchTeam and writes the response into the team detail cache', async () => {
-    const updatedTeam = {
-      ...teamMock,
-      tools: [{ name: 'Slack', url: 'https://slack.com' }],
-    };
-    const patch = { tools: [{ name: 'Slack', url: 'https://slack.com' }] };
-    (patchTeam as jest.Mock).mockResolvedValueOnce(updatedTeam);
-
-    const queryClient = createTestQueryClient();
-    queryClient.setQueryData(teamQueryKeys.detail(teamId), teamMock);
-
-    const { result } = renderHook(
-      () => ({
-        patchFn: usePatchTeamById(teamId),
-        team: useTeamById(teamId),
-      }),
-      { wrapper: createWrapper(queryClient) },
-    );
-
-    await waitFor(() => expect(result.current.team).toEqual(teamMock));
-
-    await act(async () => {
-      await result.current.patchFn(patch);
-    });
-
-    expect(patchTeam).toHaveBeenCalledWith(teamId, patch, mockAuthorization);
-    await waitFor(() => expect(result.current.team).toEqual(updatedTeam));
   });
 });
 

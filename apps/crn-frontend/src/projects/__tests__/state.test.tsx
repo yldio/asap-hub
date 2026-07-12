@@ -386,6 +386,38 @@ describe('useInvalidateProjectById', () => {
         ?.isInvalidated,
     ).toBe(true);
   });
+
+  it('keeps patched tools when the refetch returns stale data', async () => {
+    const patchedTools = [{ name: 'Slack', url: 'https://slack.com' }];
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(projectQueryKeys.detail('project-1'), {
+      ...detailProject,
+      tools: patchedTools,
+    });
+    mockGetProject.mockResolvedValueOnce({
+      ...detailProject,
+      title: 'Refetched Project',
+      tools: [],
+    });
+
+    const { result } = renderStateHook(
+      () => ({
+        invalidate: useInvalidateProjectById('project-1'),
+        project: useProjectById('project-1'),
+      }),
+      queryClient,
+    );
+
+    await waitFor(() => expect(result.current.invalidate).toBeTruthy());
+    act(() => {
+      result.current.invalidate();
+    });
+
+    await waitFor(() =>
+      expect(result.current.project?.title).toBe('Refetched Project'),
+    );
+    expect(result.current.project?.tools).toEqual(patchedTools);
+  });
 });
 
 describe('useProjectMilestones', () => {

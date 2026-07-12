@@ -203,8 +203,8 @@ export const useManuscriptWorkspaceUrl = (
 // Batch hydration: one suspense query per deduplicated id set makes the
 // single getManuscriptsByIds call and fans the results into the manuscript
 // detail keys, so the per-card useManuscriptById reads hit the cache without
-// fetching. The empty-ids short-circuit lives inside the queryFn (no API
-// call is made, but the site suspends for a microtask).
+// fetching. With no ids the query is seeded with initialData so it resolves
+// immediately without suspending or hitting the API.
 export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
@@ -227,6 +227,9 @@ export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
       });
       return manuscripts.length;
     },
+    // With no ids there is nothing to fetch: seed a result so the query is
+    // already resolved and the call site never suspends.
+    ...(deduplicatedIds.length ? {} : { initialData: 0 }),
   });
 };
 

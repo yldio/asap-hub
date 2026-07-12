@@ -490,13 +490,16 @@ describe('useMarkDiscussionAsRead', () => {
 });
 
 describe('useBatchManuscriptsByIds', () => {
-  it('makes no API call when ids are empty', async () => {
+  it('seeds the empty-ids result without fetching, so the query is never pending', async () => {
     const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
 
     await waitFor(() =>
       expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
     );
     expect(getManuscriptsByIds).not.toHaveBeenCalled();
+    expect(
+      queryClient.getQueryState(manuscriptQueryKeys.batch([]))?.fetchStatus,
+    ).toBe('idle');
   });
 
   it('deduplicates, sorts and hydrates the manuscript detail caches', async () => {

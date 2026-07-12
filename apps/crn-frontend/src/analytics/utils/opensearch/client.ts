@@ -78,11 +78,19 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
 
 export class OpensearchClient<T> {
   private index: OpensearchIndex;
-  private authorization: string;
+  private getAuthorization: () => Promise<string>;
 
-  constructor(index: OpensearchIndex, authorization: string) {
+  // The token is resolved per request so long-lived clients never send an
+  // expired token; a plain string is still accepted for convenience.
+  constructor(
+    index: OpensearchIndex,
+    authorization: string | (() => Promise<string>),
+  ) {
     this.index = index;
-    this.authorization = authorization;
+    this.getAuthorization =
+      typeof authorization === 'string'
+        ? () => Promise.resolve(authorization)
+        : authorization;
   }
 
   async request<S>(query: object): Promise<S> {
@@ -90,7 +98,7 @@ export class OpensearchClient<T> {
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        authorization: this.authorization,
+        authorization: await this.getAuthorization(),
         'content-type': 'application/json',
         ...createSentryHeaders(),
       },

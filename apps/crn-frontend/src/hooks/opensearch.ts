@@ -16,7 +16,6 @@ import {
   EngagementResponse,
   EngagementPerformance,
 } from '@asap-hub/model';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -49,24 +48,8 @@ import {
 } from '../analytics/utils/opensearch';
 import { useAuthorization } from '../auth/useAuthorization';
 
-export const opensearchQueryKeys = {
-  all: ['opensearch'] as const,
-  authorization: () => [...opensearchQueryKeys.all, 'authorization'] as const,
-};
-
-// Analytics hooks construct OpensearchClients with the resolved Bearer string
-// during render, so suspend on the token and cache it for the QueryClient's
-// lifetime.
-const useSuspenseAuthorization = (): string => {
-  const getAuthorization = useAuthorization();
-  return useSuspenseQuery({
-    queryKey: opensearchQueryKeys.authorization(),
-    queryFn: () => getAuthorization(),
-  }).data;
-};
-
 export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
-  const authorization = useSuspenseAuthorization();
+  const authorization = useAuthorization();
   const client = new OpensearchClient<T>(index, authorization);
   return {
     client,
@@ -77,7 +60,7 @@ export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
  * Façade to all metrics stored in OpenSearch.
  */
 export const useOpensearchMetrics = () => {
-  const authorization = useSuspenseAuthorization();
+  const authorization = useAuthorization();
 
   return {
     getPublicationCompliance(

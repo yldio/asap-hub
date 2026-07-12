@@ -1,7 +1,7 @@
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, renderHook, screen, waitFor } from '@testing-library/react';
-import { Component, ReactNode, Suspense } from 'react';
+import { renderHook, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { OpensearchClient } from '../../analytics/utils/opensearch';
@@ -11,22 +11,6 @@ import * as leadershipApi from '../../analytics/leadership/api';
 import * as engagementApi from '../../analytics/engagement/api';
 import * as collaborationApi from '../../analytics/collaboration/api';
 import * as productivityApi from '../../analytics/productivity/api';
-
-class ErrorBoundary extends Component<
-  { children: ReactNode },
-  { error: Error | null }
-> {
-  state: { error: Error | null } = { error: null };
-  static getDerivedStateFromError(error: Error) {
-    return { error };
-  }
-  render() {
-    if (this.state.error) {
-      return <div data-testid="error">{this.state.error.message}</div>;
-    }
-    return this.props.children;
-  }
-}
 
 jest.mock('../../analytics/utils/opensearch');
 jest.mock('../../analytics/open-science/api');
@@ -55,29 +39,47 @@ describe('useOpensearchMetrics', () => {
     mockOpensearchClient.mockReset();
   });
 
-  it('throws when user is not provided', async () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    const TestComponent = () => {
-      useOpensearchMetrics();
-      return <div>Success</div>;
-    };
-
-    render(
+  it('passes clients an authorization accessor that rejects when Auth0 is not ready', async () => {
+    const noAuthWrapper = ({ children }: { children: ReactNode }) => (
       <QueryClientProvider client={createTestQueryClient()}>
-        <ErrorBoundary>
-          <Suspense fallback={<div>Loading...</div>}>
-            <TestComponent />
-          </Suspense>
-        </ErrorBoundary>
-      </QueryClientProvider>,
+        {children}
+      </QueryClientProvider>
     );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('error')).toHaveTextContent(
-        'Auth0 is not ready; cannot get an authorization token yet',
-      );
+    const { result } = renderHook(() => useOpensearchMetrics(), {
+      wrapper: noAuthWrapper,
     });
+
+    await result.current.getPublicationCompliance({
+      tags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      sort: 'team_asc',
+    });
+
+    const getAuthorization = mockOpensearchClient.mock
+      .calls[0]?.[1] as () => Promise<string>;
+    await expect(getAuthorization()).rejects.toThrow(
+      'Auth0 is not ready; cannot get an authorization token yet',
+    );
+  });
+
+  it('passes clients an authorization accessor that resolves the current token per call', async () => {
+    const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
+
+    await waitFor(() => expect(result.current).toBeTruthy());
+    await result.current.getPublicationCompliance({
+      tags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      sort: 'team_asc',
+    });
+
+    const getAuthorization = mockOpensearchClient.mock
+      .calls[0]?.[1] as () => Promise<string>;
+    await expect(getAuthorization()).resolves.toMatch(/^Bearer /);
+    await expect(getAuthorization()).resolves.toMatch(/^Bearer /);
   });
 
   it('returns all metric functions', async () => {
@@ -150,7 +152,7 @@ describe('useOpensearchMetrics', () => {
       // Verify OpensearchClient was created with correct index
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'publication-compliance',
-        expect.any(String), // authorization token
+        expect.any(Function), // authorization accessor
       );
 
       // Verify the API method was called with client and params
@@ -188,7 +190,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'preprint-compliance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetPreprintCompliance).toHaveBeenCalledWith(
@@ -235,7 +237,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'os-champion',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetAnalyticsOSChampion).toHaveBeenCalledWith(
@@ -281,7 +283,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'attendance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetMeetingRepAttendance).toHaveBeenCalledWith(
@@ -318,7 +320,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'attendance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
@@ -361,7 +363,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'preliminary-data-sharing',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetPreliminaryDataSharing).toHaveBeenCalledWith(
@@ -417,7 +419,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-productivity',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetUserProductivity).toHaveBeenCalledWith(
@@ -450,7 +452,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-productivity',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'extended');
@@ -504,7 +506,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-productivity-performance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetUserProductivityPerformance).toHaveBeenCalledWith(
@@ -553,7 +555,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-productivity',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTeamProductivity).toHaveBeenCalledWith(
@@ -590,7 +592,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-productivity',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
@@ -660,7 +662,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-productivity-performance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTeamProductivityPerformance).toHaveBeenCalledWith(
@@ -698,7 +700,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-collaboration',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetUserCollaboration).toHaveBeenCalledWith(
@@ -731,7 +733,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-collaboration',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'extended');
@@ -760,7 +762,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'user-collaboration-performance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetUserCollaborationPerformance).toHaveBeenCalledWith(
@@ -798,7 +800,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-collaboration',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTeamCollaboration).toHaveBeenCalledWith(
@@ -831,7 +833,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-collaboration',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
@@ -860,7 +862,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'team-collaboration-performance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTeamCollaborationPerformance).toHaveBeenCalledWith(
@@ -897,7 +899,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'presenter-representation',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetEngagement).toHaveBeenCalledWith(
@@ -928,7 +930,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'presenter-representation',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
@@ -989,7 +991,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'presenter-representation-performance',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetEngagementPerformance).toHaveBeenCalledWith(
@@ -1057,7 +1059,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'wg-leadership',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetAnalyticsLeadership).toHaveBeenCalledWith(
@@ -1092,7 +1094,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'wg-leadership',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
@@ -1128,7 +1130,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'ig-leadership',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetAnalyticsLeadership).toHaveBeenCalledWith(
@@ -1163,7 +1165,7 @@ describe('useOpensearchMetrics', () => {
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'ig-leadership',
-        expect.any(String),
+        expect.any(Function),
       );
 
       expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');

@@ -809,6 +809,55 @@ describe('OpensearchClient', () => {
       );
     });
   });
+
+  describe('authorization', () => {
+    it('sends the constructor string as the authorization header', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({}) });
+
+      await client.search({
+        searchTags: [],
+        timeRange: 'all',
+        searchScope: 'flat',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization: 'Bearer fake-token',
+          }),
+        }),
+      );
+    });
+
+    it('resolves an accessor per request so a rotated token is picked up', async () => {
+      const getAuthorization = jest
+        .fn()
+        .mockResolvedValueOnce('Bearer first-token')
+        .mockResolvedValueOnce('Bearer second-token');
+      const accessorClient = new OpensearchClient<MockData>(
+        TARGET_TEST_INDEX,
+        getAuthorization,
+      );
+      mockFetch.mockResolvedValue({ ok: true, json: async () => ({}) });
+
+      await accessorClient.search({
+        searchTags: [],
+        timeRange: 'all',
+        searchScope: 'flat',
+      });
+      await accessorClient.search({
+        searchTags: [],
+        timeRange: 'all',
+        searchScope: 'flat',
+      });
+
+      expect(getAuthorization).toHaveBeenCalledTimes(2);
+      expect(
+        mockFetch.mock.calls.map(([, init]) => init.headers.authorization),
+      ).toEqual(['Bearer first-token', 'Bearer second-token']);
+    });
+  });
 });
 
 describe('unsupportedTagQueryBuilder', () => {

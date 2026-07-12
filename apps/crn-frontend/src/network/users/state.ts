@@ -8,6 +8,7 @@ import { useAuth0CRN } from '@asap-hub/react-context';
 import {
   matchQuery,
   QueryClient,
+  useMutation,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
@@ -110,13 +111,17 @@ export const usePatchUserById = (id: string) => {
   const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (patch: UserPatchRequest) =>
+      patchUser(id, patch, await getAuthorization()),
+    onSuccess: async (user) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      await refreshAuth0Session(auth0);
+      refetchAllButOverlays(queryClient, id);
+    },
+  });
   return async (patch: UserPatchRequest) => {
-    queryClient.setQueryData(
-      userQueryKeys.detail(id),
-      await patchUser(id, patch, await getAuthorization()),
-    );
-    await refreshAuth0Session(auth0);
-    refetchAllButOverlays(queryClient, id);
+    await mutateAsync(patch);
   };
 };
 
@@ -130,16 +135,22 @@ export const usePatchUserAvatarById = (id: string) => {
   const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({ avatar }: { avatar: string; refreshToken: boolean }) =>
+      postUserAvatar(id, { avatar }, await getAuthorization()),
+    onSuccess: async (user, { refreshToken }) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      if (refreshToken) {
+        await refreshAuth0Session(auth0);
+        refetchAllButOverlays(queryClient, id);
+      }
+    },
+  });
   return async (
     avatar: string,
     { refreshToken = true }: AvatarMutationOptions = {},
   ) => {
-    const user = await postUserAvatar(id, { avatar }, await getAuthorization());
-    queryClient.setQueryData(userQueryKeys.detail(id), user);
-    if (refreshToken) {
-      await refreshAuth0Session(auth0);
-      refetchAllButOverlays(queryClient, id);
-    }
+    await mutateAsync({ avatar, refreshToken });
   };
 };
 
@@ -147,12 +158,18 @@ export const useDeleteUserAvatarById = (id: string) => {
   const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (_variables: { refreshToken: boolean }) =>
+      deleteUserAvatar(id, await getAuthorization()),
+    onSuccess: async (user, { refreshToken }) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      if (refreshToken) {
+        await refreshAuth0Session(auth0);
+        refetchAllButOverlays(queryClient, id);
+      }
+    },
+  });
   return async ({ refreshToken = true }: AvatarMutationOptions = {}) => {
-    const user = await deleteUserAvatar(id, await getAuthorization());
-    queryClient.setQueryData(userQueryKeys.detail(id), user);
-    if (refreshToken) {
-      await refreshAuth0Session(auth0);
-      refetchAllButOverlays(queryClient, id);
-    }
+    await mutateAsync({ refreshToken });
   };
 };

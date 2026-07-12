@@ -81,12 +81,33 @@ const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
   });
 };
 
+// Refreshes the Auth0 token + user so the id token picks up the profile
+// change. Best-effort: the profile is already saved, so a failed refresh
+// (e.g. silent auth cannot skip consent on localhost) must not fail the form.
+const refreshAuth0Session = async ({
+  getTokenSilently,
+  refreshUser,
+}: Pick<
+  ReturnType<typeof useAuth0CRN>,
+  'getTokenSilently' | 'refreshUser'
+>) => {
+  try {
+    await getTokenSilently({
+      redirect_uri: window.location.origin,
+      ignoreCache: true,
+    });
+    await refreshUser();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('auth0 session refresh after profile update failed', error);
+  }
+};
+
 // The mutation hooks below write the mutation response straight into the
 // detail cache — never refetched, because Contentful has read-after-write
-// lag — and then refresh the Auth0 token + user so the id token picks up
-// the profile change.
+// lag.
 export const usePatchUserById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0CRN();
+  const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
   return async (patch: UserPatchRequest) => {
@@ -94,12 +115,7 @@ export const usePatchUserById = (id: string) => {
       userQueryKeys.detail(id),
       await patchUser(id, patch, await getAuthorization()),
     );
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-
-    await refreshUser();
+    await refreshAuth0Session(auth0);
     refetchAllButOverlays(queryClient, id);
   };
 };
@@ -111,7 +127,7 @@ export type AvatarMutationOptions = {
 };
 
 export const usePatchUserAvatarById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0CRN();
+  const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
   return async (
@@ -121,31 +137,21 @@ export const usePatchUserAvatarById = (id: string) => {
     const user = await postUserAvatar(id, { avatar }, await getAuthorization());
     queryClient.setQueryData(userQueryKeys.detail(id), user);
     if (refreshToken) {
-      await getTokenSilently({
-        redirect_uri: window.location.origin,
-        ignoreCache: true,
-      });
-
-      await refreshUser();
+      await refreshAuth0Session(auth0);
       refetchAllButOverlays(queryClient, id);
     }
   };
 };
 
 export const useDeleteUserAvatarById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0CRN();
+  const auth0 = useAuth0CRN();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
   return async ({ refreshToken = true }: AvatarMutationOptions = {}) => {
     const user = await deleteUserAvatar(id, await getAuthorization());
     queryClient.setQueryData(userQueryKeys.detail(id), user);
     if (refreshToken) {
-      await getTokenSilently({
-        redirect_uri: window.location.origin,
-        ignoreCache: true,
-      });
-
-      await refreshUser();
+      await refreshAuth0Session(auth0);
       refetchAllButOverlays(queryClient, id);
     }
   };

@@ -82,11 +82,32 @@ const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
   });
 };
 
+// Refreshes the Auth0 token + user so the id token picks up the profile
+// change. Best-effort: the profile is already saved, so a failed refresh
+// (e.g. silent auth cannot skip consent on localhost) must not fail the form.
+const refreshAuth0Session = async ({
+  getTokenSilently,
+  refreshUser,
+}: Pick<
+  ReturnType<typeof useAuth0GP2>,
+  'getTokenSilently' | 'refreshUser'
+>) => {
+  try {
+    await getTokenSilently({
+      redirect_uri: window.location.origin,
+      ignoreCache: true,
+    });
+    await refreshUser();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('auth0 session refresh after profile update failed', error);
+  }
+};
+
 // The mutation hooks below write the mutation response straight into the
-// detail cache — never refetched — and then refresh the Auth0 token + user
-// so the id token picks up the profile change.
+// detail cache — never refetched.
 export const usePatchUserById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0GP2();
+  const auth0 = useAuth0GP2();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
   return async (patch: gp2.UserPatchRequest) => {
@@ -94,18 +115,13 @@ export const usePatchUserById = (id: string) => {
       userQueryKeys.detail(id),
       await patchUser(id, patch, await getAuthorization()),
     );
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-
-    await refreshUser();
+    await refreshAuth0Session(auth0);
     refetchAllButOverlays(queryClient, id);
   };
 };
 
 export const usePostUserAvatarById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0GP2();
+  const auth0 = useAuth0GP2();
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
   return async (avatar: string) => {
@@ -113,12 +129,7 @@ export const usePostUserAvatarById = (id: string) => {
       userQueryKeys.detail(id),
       await postUserAvatar(id, { avatar }, await getAuthorization()),
     );
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-
-    await refreshUser();
+    await refreshAuth0Session(auth0);
     refetchAllButOverlays(queryClient, id);
   };
 };

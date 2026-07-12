@@ -67,6 +67,38 @@ beforeEach(() => {
 });
 
 describe('usePatchUserAvatarById', () => {
+  it('resolves and keeps the saved user cached when the auth0 session refresh fails', async () => {
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const getTokenSilently = jest.fn((options?: { ignoreCache?: boolean }) =>
+      options?.ignoreCache
+        ? Promise.reject(new Error('Consent required'))
+        : Promise.resolve('token'),
+    );
+    const queryClient = createTestQueryClient();
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        <Suspense fallback="loading">
+          <Auth0Provider
+            user={{ id }}
+            auth0Overrides={() => ({ getTokenSilently })}
+          >
+            <WhenReady>{children}</WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
+    );
+    const { result } = renderHook(() => usePatchUserAvatarById(id), {
+      wrapper,
+    });
+    await waitFor(() => expect(typeof result.current).toBe('function'));
+
+    await act(() => result.current('data:image/jpeg;base64,abc'));
+
+    expect(queryClient.getQueryData(userQueryKeys.detail(id))).toBeDefined();
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
   it('refreshes the Auth0 user by default', async () => {
     const { result, refreshUser } = renderAvatarHook(() =>
       usePatchUserAvatarById(id),

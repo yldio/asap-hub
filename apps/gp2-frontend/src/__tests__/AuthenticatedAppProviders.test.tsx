@@ -12,7 +12,9 @@ jest.mock('../users/api');
 // wrapper must commit its QueryClient before the child suspends, or every
 // suspense retry gets a fresh empty cache and refetches forever.
 jest.mock('../OnboardedApp', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
   const { useCurrentUserGP2 } = require('@asap-hub/react-context');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
   const { useUserById } = require('../users/state');
   return () => {
     const user = useCurrentUserGP2();

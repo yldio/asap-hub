@@ -4,7 +4,11 @@ import type {
   Milestone,
   MilestoneStatus,
 } from '@asap-hub/model';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useAuthorization } from '../auth/useAuthorization';
 import {
@@ -100,13 +104,21 @@ export const useUpdateMilestoneArticles = (): ((
 ) => Promise<void>) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
-  return useCallback(
-    async (milestoneId, articles) => {
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
+      milestoneId,
+      articles,
+    }: {
+      milestoneId: string;
+      articles: ReadonlyArray<ArticleItem>;
+    }) => {
       await putMilestoneArticles(
         milestoneId,
         articles.map((a) => a.id),
         await getAuthorization(),
       );
+    },
+    onSuccess: (_data, { milestoneId, articles }) => {
       queryClient.setQueryData(
         articleQueryKeys.milestone(milestoneId),
         articles,
@@ -117,8 +129,10 @@ export const useUpdateMilestoneArticles = (): ((
         articleCount: articles.length,
       }));
     },
-    [queryClient, getAuthorization],
-  );
+  });
+  return async (milestoneId, articles) => {
+    await mutateAsync({ milestoneId, articles });
+  };
 };
 
 export const useUpdateMilestone = (): ((
@@ -127,8 +141,17 @@ export const useUpdateMilestone = (): ((
 ) => Promise<void>) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
-  return useCallback(
-    async (milestoneId, update) => {
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
+      milestoneId,
+      update,
+    }: {
+      milestoneId: string;
+      update: {
+        status?: MilestoneStatus;
+        articles?: ReadonlyArray<ArticleItem>;
+      };
+    }) => {
       const articleIds = update.articles?.map((a) => a.id);
       await patchMilestone(
         milestoneId,
@@ -138,7 +161,8 @@ export const useUpdateMilestone = (): ((
         },
         await getAuthorization(),
       );
-
+    },
+    onSuccess: (_data, { milestoneId, update }) => {
       if (update.articles !== undefined) {
         queryClient.setQueryData(
           articleQueryKeys.milestone(milestoneId),
@@ -154,6 +178,8 @@ export const useUpdateMilestone = (): ((
         }),
       }));
     },
-    [queryClient, getAuthorization],
-  );
+  });
+  return async (milestoneId, update) => {
+    await mutateAsync({ milestoneId, update });
+  };
 };

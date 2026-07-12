@@ -9,7 +9,11 @@ import {
   ProjectTool,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
@@ -87,14 +91,20 @@ export const useProjectById = (id: string): ProjectDetail | undefined => {
 export const usePatchProjectById = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (patch: { tools: ProjectTool[] }) =>
+      patchProject(id, patch, await getAuthorization()),
+    onSuccess: (updated, patch) => {
+      // Always use patch.tools for the UI since the API may return stale data
+      // due to Contentful's read-after-write delay.
+      queryClient.setQueryData(projectQueryKeys.detail(id), {
+        ...updated,
+        tools: patch.tools,
+      });
+    },
+  });
   return async (patch: { tools: ProjectTool[] }) => {
-    const updated = await patchProject(id, patch, await getAuthorization());
-    // Always use patch.tools for the UI since the API may return stale data
-    // due to Contentful's read-after-write delay.
-    queryClient.setQueryData(projectQueryKeys.detail(id), {
-      ...updated,
-      tools: patch.tools,
-    });
+    await mutateAsync(patch);
   };
 };
 
@@ -196,16 +206,24 @@ export const useCreateProjectMilestone = (projectId: string) => {
   const getAuthorization = useAuthorization();
   const invalidateProjectMilestonesIndex =
     useInvalidateProjectMilestonesIndex();
-  return async (data: MilestoneCreateRequest) => {
-    const authorization = await getAuthorization();
-    const result = await createProjectMilestone(projectId, data, authorization);
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data: MilestoneCreateRequest) => {
+      const authorization = await getAuthorization();
+      const result = await createProjectMilestone(
+        projectId,
+        data,
+        authorization,
+      );
 
-    // TODO: align with product/design on how to handle cases where sync does not
-    // complete within the polling window.
-    await waitForMilestonesSync(projectId, authorization);
+      // TODO: align with product/design on how to handle cases where sync does
+      // not complete within the polling window.
+      await waitForMilestonesSync(projectId, authorization);
 
-    invalidateProjectMilestonesIndex();
-
-    return result.id;
-  };
+      return result.id;
+    },
+    onSuccess: () => {
+      invalidateProjectMilestonesIndex();
+    },
+  });
+  return mutateAsync;
 };

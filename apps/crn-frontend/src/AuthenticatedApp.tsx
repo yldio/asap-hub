@@ -298,7 +298,12 @@ const AuthenticatedAppWithProviders: FC<
   const { isEnabled } = useFlags();
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+      {/* the boundary must sit inside the provider: a suspension escaping
+          above it would keep this component from committing, recreating the
+          QueryClient (and refetching) on every retry */}
+      <Suspense fallback={<Loading />}>
+        <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+      </Suspense>
       {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
     </QueryClientProvider>
   );

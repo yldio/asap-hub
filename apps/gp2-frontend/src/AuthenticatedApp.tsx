@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/react-context';
 import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { FC, lazy, useEffect, useState } from 'react';
+import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 import Frame from './Frame';
 import NotificationMessages from './NotificationMessages';
@@ -84,9 +84,14 @@ const AuthenticatedAppWithProviders: FC<Record<string, never>> = () => {
   const { isEnabled } = useFlags();
   return (
     <QueryClientProvider client={queryClient}>
-      <NotificationMessages>
-        <AuthenticatedApp />
-      </NotificationMessages>
+      {/* the boundary must sit inside the provider: a suspension escaping
+          above it would keep this component from committing, recreating the
+          QueryClient (and refetching) on every retry */}
+      <Suspense fallback={<Loading />}>
+        <NotificationMessages>
+          <AuthenticatedApp />
+        </NotificationMessages>
+      </Suspense>
       {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
     </QueryClientProvider>
   );

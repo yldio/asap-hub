@@ -16,7 +16,7 @@ const TAGS_COPY =
 const expandableContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(12),
+  gap: rem(24),
 });
 
 const expandableDescriptionStyles = css({

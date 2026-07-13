@@ -459,12 +459,13 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node24',
       bundle: true,
-      // Lower than gp2: crn has ~50 handlers and parallel esbuild workers
-      // intermittently OOM the esbuild service ("The service was stopped")
-      // on the CI runner 4 was still flaky, so throttle further; the esbuild
-      //  native process is not bound by
-      // NODE_OPTIONS --max-old-space-size.
-      concurrency: 2,
+      // Lower than gp2: crn has ~50 handlers (more on production, which adds
+      // the isProd-gated compliance handlers) and parallel esbuild workers
+      // OOM the esbuild service ("The service was stopped") on the CI runner;
+      // the esbuild native process is not bound by NODE_OPTIONS
+      // --max-old-space-size. 4 and then 2 still failed on production, so
+      // build serially until the packaging job gets more memory.
+      concurrency: 1,
     },
     'serverless-offline-ssm': {
       stages: ['local'],

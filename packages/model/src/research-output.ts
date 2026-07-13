@@ -532,41 +532,119 @@ export const RESEARCH_OUTPUT_FLOW_IDS = {
 export type ResearchOutputFlowId =
   (typeof RESEARCH_OUTPUT_FLOW_IDS)[keyof typeof RESEARCH_OUTPUT_FLOW_IDS];
 
-export const FLOW_REGISTRY = {
+export type ResearchOutputFlowDescriptor = {
+  entity: 'team' | 'working-group';
+  action: 'create' | 'edit' | 'add-version' | 'duplicate';
+  origin: 'manual' | 'manuscript';
+  startsPublished: boolean;
+};
+
+export const FLOW_DEFINITIONS = {
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_MANUAL]: {
-    supportsDrafts: true,
+    entity: 'team',
+    action: 'create',
+    origin: 'manual',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT]: {
-    supportsDrafts: false,
-  },
-  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION]: {
-    supportsDrafts: false,
+    entity: 'team',
+    action: 'create',
+    origin: 'manuscript',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_DRAFT]: {
-    supportsDrafts: true,
+    entity: 'team',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_PUBLISHED]: {
-    supportsDrafts: false,
+    entity: 'team',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION]: {
+    entity: 'team',
+    action: 'add-version',
+    origin: 'manual',
+    startsPublished: true,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION_FROM_MANUSCRIPT]: {
-    supportsDrafts: false,
+    entity: 'team',
+    action: 'add-version',
+    origin: 'manuscript',
+    startsPublished: true,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE]: {
-    supportsDrafts: true,
+    entity: 'team',
+    action: 'duplicate',
+    origin: 'manual',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE]: {
-    supportsDrafts: true,
+    entity: 'working-group',
+    action: 'create',
+    origin: 'manual',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_DRAFT]: {
-    supportsDrafts: true,
+    entity: 'working-group',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: false,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_PUBLISHED]: {
-    supportsDrafts: false,
+    entity: 'working-group',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: true,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_ADD_VERSION]: {
-    supportsDrafts: false,
+    entity: 'working-group',
+    action: 'add-version',
+    origin: 'manual',
+    startsPublished: true,
   },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE]: {
-    supportsDrafts: true,
+    entity: 'working-group',
+    action: 'duplicate',
+    origin: 'manual',
+    startsPublished: false,
   },
+} as const satisfies Record<ResearchOutputFlowId, ResearchOutputFlowDescriptor>;
+
+const supportsDrafts = (flow: ResearchOutputFlowDescriptor): boolean =>
+  flow.origin !== 'manuscript' &&
+  flow.action !== 'add-version' &&
+  !flow.startsPublished;
+
+const requiresAddVersionConfirm = (
+  flow: ResearchOutputFlowDescriptor,
+): boolean => flow.action === 'add-version';
+
+const requiresPublishConfirm = (flow: ResearchOutputFlowDescriptor): boolean =>
+  !flow.startsPublished;
+
+const requiresDescriptionConfirm = (
+  flow: ResearchOutputFlowDescriptor,
+): boolean => flow.action === 'duplicate';
+
+export type ResearchOutputFlowBehavior = {
+  supportsDrafts: boolean;
+  requiresAddVersionConfirm: boolean;
+  requiresPublishConfirm: boolean;
+  requiresSameDescriptionConfirm: boolean;
+};
+
+export const getResearchOutputFlowBehavior = (
+  flowId: ResearchOutputFlowId,
+): ResearchOutputFlowBehavior => {
+  const flow = FLOW_DEFINITIONS[flowId];
+  return {
+    supportsDrafts: supportsDrafts(flow),
+    requiresAddVersionConfirm: requiresAddVersionConfirm(flow),
+    requiresPublishConfirm: requiresPublishConfirm(flow),
+    requiresSameDescriptionConfirm: requiresDescriptionConfirm(flow),
+  };
 };

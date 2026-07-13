@@ -1,15 +1,18 @@
-import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router';
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  resolveResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
 import { getDefaultProps } from '../../test-utils/research-output-form';
@@ -47,10 +50,10 @@ describe('form buttons', () => {
       published = false,
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
-      descriptionUnchangedWarning = false,
       researchOutputData = undefined,
       versionAction = undefined,
       isImportedFromManuscript = false,
+      flowId = 'team-create-manual',
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -61,20 +64,23 @@ describe('form buttons', () => {
         typeof ResearchOutputForm
       >['versionAction'];
       researchTags?: ResearchTagResponse[];
-      descriptionUnchangedWarning?: ComponentProps<
-        typeof ResearchOutputForm
-      >['descriptionUnchangedWarning'];
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
       >['researchOutputData'];
       isImportedFromManuscript?: ComponentProps<
         typeof ResearchOutputForm
       >['isImportedFromManuscript'];
+      flowId?: ComponentProps<typeof ResearchOutputForm>['flowId'];
     } = {
       documentType: 'Article',
       researchTags: [],
     },
   ) => {
+    const permissions = {
+      canEditResearchOutput,
+      canPublishResearchOutput,
+      canShareResearchOutput: true,
+    };
     render(
       <InnerToastContext.Provider value={jest.fn()}>
         <MemoryRouter>
@@ -82,7 +88,6 @@ describe('form buttons', () => {
             {...getDefaultProps()}
             versionAction={versionAction}
             researchOutputData={researchOutputData}
-            descriptionUnchangedWarning={descriptionUnchangedWarning}
             selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
             documentType={documentType}
             typeOptions={Array.from(
@@ -95,11 +100,12 @@ describe('form buttons', () => {
             researchTags={researchTags}
             published={published}
             isImportedFromManuscript={isImportedFromManuscript}
-            permissions={{
-              canEditResearchOutput,
-              canPublishResearchOutput,
-              canShareResearchOutput: true,
-            }}
+            flowId={flowId}
+            availableActions={resolveResearchOutputAvailableActions({
+              flowId,
+              permissions,
+            })}
+            permissions={permissions}
           />
         </MemoryRouter>
       </InnerToastContext.Provider>,
@@ -138,6 +144,7 @@ describe('form buttons', () => {
       canEditResearchOutput: true,
       canPublishResearchOutput: true,
       published: true,
+      flowId: 'team-edit-published',
     });
 
     expect(
@@ -158,6 +165,7 @@ describe('form buttons', () => {
       isImportedFromManuscript: true,
       canPublishResearchOutput: true,
       published: true,
+      flowId: 'team-edit-published',
     });
 
     expect(
@@ -181,6 +189,7 @@ describe('form buttons', () => {
       isImportedFromManuscript: true,
       canPublishResearchOutput: true,
       published: false,
+      flowId: 'team-create-imported-from-manuscript',
     });
 
     expect(
@@ -231,6 +240,7 @@ describe('form buttons', () => {
           }),
       );
       await setupForm({
+        flowId: 'team-edit-published',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         published: true,
@@ -268,188 +278,6 @@ describe('form buttons', () => {
       expect(await screen.findByRole('progressbar')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
       reportValidity.mockRestore();
-    });
-  });
-
-  describe('descriptionUnchangedWarning', () => {
-    it('Shows correct button for draft save warning', async () => {
-      await setupForm({
-        descriptionUnchangedWarning: true,
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        published: false,
-        researchOutputData: createResearchOutputResponse(),
-      });
-      await userEvent.click(
-        screen.getByRole('button', { name: /Save Draft/i }),
-      );
-      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      expect(screen.getByText(/Keep and save/i)).toBeVisible();
-    });
-    it('Shows correct button for publish save warning', async () => {
-      await setupForm({
-        descriptionUnchangedWarning: true,
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        researchOutputData: createResearchOutputResponse(),
-        published: false,
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      expect(screen.getByText(/Keep and publish/i)).toBeVisible();
-    });
-    it('is cancelable', async () => {
-      await setupForm({
-        descriptionUnchangedWarning: true,
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        researchOutputData: createResearchOutputResponse(),
-        published: false,
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      await userEvent.click(
-        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
-      );
-      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
-    });
-
-    it('Will be dismissed if there are errors on the form', async () => {
-      await setupForm({
-        descriptionUnchangedWarning: true,
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
-        published: false,
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      await userEvent.click(
-        screen.getByRole('button', { name: /Keep and publish/i }),
-      );
-      await waitFor(() => {
-        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
-      });
-    });
-    it('Will not reappear once dismissed', async () => {
-      await setupForm({
-        descriptionUnchangedWarning: true,
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
-        published: false,
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      await userEvent.click(
-        screen.getByRole('button', { name: /Keep and publish/i }),
-      );
-      await waitFor(() => {
-        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
-    });
-  });
-
-  describe('Create Version Warning', () => {
-    it('Shows warning', async () => {
-      await setupForm({
-        versionAction: 'create',
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        researchOutputData: createResearchOutputResponse(),
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(
-        screen.getByText(/Publish new version for the whole hub?/i),
-      ).toBeVisible();
-      expect(
-        screen.getByRole('button', { name: /Publish new version/i }),
-      ).toBeVisible();
-    });
-
-    it('is cancelable', async () => {
-      await setupForm({
-        versionAction: 'create',
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        researchOutputData: createResearchOutputResponse(),
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(
-        screen.getByText(/Publish new version for the whole hub?/i),
-      ).toBeVisible();
-      await userEvent.click(
-        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
-      );
-      expect(
-        screen.queryByText(/Publish new version for the whole hub?/i),
-      ).toBeNull();
-    });
-
-    it('Will be dismissed if there are errors on the form', async () => {
-      await setupForm({
-        versionAction: 'create',
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(
-        screen.getByText(/Publish new version for the whole hub?/i),
-      ).toBeVisible();
-      await userEvent.click(
-        screen.getByRole('button', { name: /Publish new version/i }),
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByText(/Publish new version for the whole hub?/i),
-        ).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
-      });
-    });
-    it('Will not reappear once dismissed', async () => {
-      await setupForm({
-        versionAction: 'create',
-        canEditResearchOutput: true,
-        canPublishResearchOutput: true,
-
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(
-        screen.getByText(/Publish new version for the whole hub?/i),
-      ).toBeVisible();
-      await userEvent.click(
-        screen.getByRole('button', { name: /Publish new version/i }),
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByText(/Publish new version for the whole hub?/i),
-        ).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
-      });
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-      expect(
-        screen.queryByText(/Publish new version for the whole hub?/i),
-      ).toBeNull();
     });
   });
 

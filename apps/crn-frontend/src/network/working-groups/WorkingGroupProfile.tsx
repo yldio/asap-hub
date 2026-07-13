@@ -50,7 +50,7 @@ const DuplicateOutput: FC = () => {
           title: `Copy of ${output.title}`,
         }}
         workingGroupId={output.workingGroups[0].id}
-        descriptionUnchangedWarning
+        isDuplicate
       />
     );
   }

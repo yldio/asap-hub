@@ -18,7 +18,49 @@ on:
         type: boolean
         description: Destroy dedicated GP2 enironment
 jobs:
+  # Removed before crn-sls-remove: the async stack's event source mappings
+  # reference queues owned by the asap-hub stack.
+  crn-async-sls-remove:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Remove sls for crn async
+        uses: ./.github/actions/sls-remove
+        with:
+          app: crn-server
+          auth0-audience: ${{ steps.setup.outputs.crn-auth0-audience }}
+          auth0-client-id: ${{ steps.setup.outputs.crn-auth0-client-id }}
+          auth0-shared-secret: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-acm-certificate-arn: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          config-file: serverless-async.ts
+          environment-name: Branch
+          hostname: ${{ steps.setup.outputs.crn-hostname }}
+          sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+          sentry-dsn-public-api: ${{ steps.setup.outputs.crn-sentry-dsn-public-api }}
+          sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
+          ses-region: ${{ steps.setup.outputs.crn-ses-region }}
+          skip-files-cleanup: 'true'
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage}}
+
   crn-sls-remove:
+    needs: [crn-async-sls-remove]
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
@@ -275,6 +317,7 @@ jobs:
     needs:
       [
         crn-algolia-index,
+        crn-async-sls-remove,
         crn-contentful-remove,
         crn-sls-remove,
         gp2-algolia-index,

@@ -50,6 +50,14 @@ inputs:
   sls-stage:
     description: 'Serverless Stage'
     required: false
+  config-file:
+    description: 'Serverless config file to remove'
+    required: false
+    default: 'serverless.ts'
+  skip-files-cleanup:
+    description: 'Skip emptying the files bucket (for stacks that own no buckets)'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -71,7 +79,7 @@ runs:
       shell: bash
       run: yarn build:typecheck
     - name: Clean S3 Files Bucket
-      if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
+      if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' && inputs.skip-files-cleanup != 'true' }}
       shell: bash
       run: |
         # Function to clean S3 bucket
@@ -124,11 +132,11 @@ runs:
       run: |
         # Disable the 'exit immediately' flag which is set by default
         set +e
-        INFO=$(yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls info 2>&1)
+        INFO=$(yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls info --config ${{ inputs.config-file }} 2>&1)
         echo $INFO
         # Skip if the stack does not exist
         if [[ $INFO != *"does not exist"* ]]; then
-          yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
+          yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --config ${{ inputs.config-file }} --verbose
         fi
       env:
         ACTIVE_CAMPAIGN_ACCOUNT: 'n-a'

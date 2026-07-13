@@ -107,7 +107,7 @@ export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
       firstVersionRRID: versions[0]?.rrid,
       firstVersionAccession: versions[0]?.accessionNumber,
       firstVersionLink: versions[0]?.link,
-      firstVersionDOI: versions[0]?.doi ?? 'NA',
+      firstVersionDOI: versions[0]?.doi,
     };
   }
 
@@ -117,7 +117,7 @@ export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
     firstVersionRRID: '',
     firstVersionAccession: '',
     firstVersionLink: '',
-    firstVersionDOI: 'NA',
+    firstVersionDOI: '',
   };
 };
 

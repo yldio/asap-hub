@@ -52,7 +52,7 @@ const getFirstVersionData = (
       rrid = '',
       accession = '',
       link = '',
-      doi = 'NA',
+      doi = '',
     } = versions[0];
     return {
       firstVersionTitle: title,
@@ -70,7 +70,7 @@ const getFirstVersionData = (
     firstVersionRrid: '',
     firstVersionAccession: '',
     firstVersionLink: '',
-    firstVersionDOI: 'NA',
+    firstVersionDOI: '',
   };
 };
 

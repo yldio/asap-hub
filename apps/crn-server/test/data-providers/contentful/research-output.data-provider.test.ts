@@ -2261,6 +2261,7 @@ describe('mapOutputVersions ', () => {
         type: undefined,
         rrid: '',
         accession: '',
+        doi: '',
       },
     ]);
   });

@@ -372,7 +372,7 @@ export const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
       addedDate: output?.addedDate || '',
       rrid: output?.rrid || '',
       accession: output?.accession || '',
-      doi: output?.doi || undefined,
+      doi: output?.doi || '',
     }));
 
 const mapRelatedResearch = (

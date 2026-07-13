@@ -1,5 +1,6 @@
+import { ReactNode, useState } from 'react';
 import { StaticRouter } from 'react-router';
-import { MainNavigation } from '@asap-hub/react-components';
+import { MainNavigation, steel } from '@asap-hub/react-components';
 import {
   about,
   discover,
@@ -8,7 +9,7 @@ import {
   sharedResearch,
 } from '@asap-hub/routing';
 
-import { select } from './knobs';
+import { boolean, select } from './knobs';
 import { NoPaddingDecorator } from './layout';
 
 export default {
@@ -17,8 +18,32 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => {
-  const path = select(
+// Match the real sidebar rail widths instead of stretching the full canvas.
+const collapsedRailWidth = 72;
+const expandedRailWidth = 268;
+
+const RailFrame = ({
+  collapsed,
+  children,
+}: {
+  collapsed: boolean;
+  children: ReactNode;
+}) => (
+  <div
+    style={{
+      width: collapsed ? collapsedRailWidth : expandedRailWidth,
+      borderRight: `1px solid ${steel.rgb}`,
+      minHeight: '100vh',
+      boxSizing: 'border-box',
+      transition: 'width 250ms ease',
+    }}
+  >
+    {children}
+  </div>
+);
+
+const useActiveSection = () =>
+  select(
     'Active Section',
     {
       Network: network({}).$,
@@ -30,11 +55,48 @@ export const Normal = () => {
     },
     'network',
   );
+
+export const Normal = () => {
+  const path = useActiveSection();
+  const canViewAnalytics = boolean('Can view analytics', true);
+  const collapsible = boolean('Collapsible', true);
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <StaticRouter key={path} location={path}>
-      <MainNavigation userOnboarded={true} />
+      <RailFrame collapsed={collapsed}>
+        <MainNavigation
+          userOnboarded={true}
+          canViewAnalytics={canViewAnalytics}
+          collapsed={collapsed}
+          onToggleCollapse={
+            collapsible ? () => setCollapsed((prev) => !prev) : undefined
+          }
+        />
+      </RailFrame>
     </StaticRouter>
   );
 };
 
-export const Disabled = () => <MainNavigation userOnboarded={false} />;
+// Icon-only rail: hover an item to see its tooltip; use the toggle to expand.
+export const Collapsed = () => {
+  const path = useActiveSection();
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <StaticRouter key={path} location={path}>
+      <RailFrame collapsed={collapsed}>
+        <MainNavigation
+          userOnboarded={true}
+          canViewAnalytics={boolean('Can view analytics', true)}
+          collapsed={collapsed}
+          onToggleCollapse={() => setCollapsed((prev) => !prev)}
+        />
+      </RailFrame>
+    </StaticRouter>
+  );
+};
+
+export const Disabled = () => (
+  <RailFrame collapsed={false}>
+    <MainNavigation userOnboarded={false} />
+  </RailFrame>
+);

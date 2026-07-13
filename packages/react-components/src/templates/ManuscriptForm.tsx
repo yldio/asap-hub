@@ -25,6 +25,7 @@ import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import {
   ComponentProps,
+  FormEvent,
   useCallback,
   useState,
   lazy,
@@ -402,6 +403,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   projectMemberIds,
 }: ManuscriptFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
+  // Read by validators at call time. formState.isSubmitting cannot be used for
+  // this: validators run inside handleSubmit before the re-render that would
+  // update its value in their closures, so untouched required fields (e.g. Labs
+  // on the submit journey) would pass validation on the first submit attempt.
+  const hasAttemptedSubmitRef = useRef(false);
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
@@ -561,12 +567,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     handleSubmit,
     control,
     getValues,
+    getFieldState,
     watch,
     setValue,
     setError,
     clearErrors,
     resetField,
-    formState: { touchedFields, isSubmitting: formIsSubmitting },
     trigger,
   } = methods;
 
@@ -643,18 +649,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       );
       const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
 
-      // Instead of full form reset, selectively update fields
+      // Instead of full form reset, selectively update fields so values the
+      // user already entered (teams, labs, authors...) are preserved
       Object.entries(fieldDefaultValueMap).forEach(([field, value]) => {
         setValue(`versions.0.${field}` as AllowedVersionFields, value, {
           shouldValidate: false,
         });
       });
-
-      // Keep important values that shouldn't be reset
-      setValue('versions.0.teams', selectedTeams, { shouldValidate: false });
-      setValue('versions.0.labs', selectedLabs, { shouldValidate: false });
     },
-    [setValue, selectedTeams, selectedLabs],
+    [setValue],
   );
 
   const validateLabPiTeams = async (labs: MultiSelectOptionsType[]) => {
@@ -663,18 +666,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     const teamFormIds = teams.map((team) => team.value);
 
     labsWithValidationIssues.clear();
-    const hasTouchedLabs = touchedFields?.versions?.[0]?.labs;
+    const hasTouchedLabs = getFieldState('versions.0.labs').isTouched;
 
     // --- Required field check ---
     // If no labs are selected and either the user has touched the field
-    // or the form is currently submitting, show a "required" error
-    if ((!labs || labs.length === 0) && (hasTouchedLabs || formIsSubmitting)) {
+    // or a submit has been attempted, show a "required" error
+    if (
+      (!labs || labs.length === 0) &&
+      (hasTouchedLabs || hasAttemptedSubmitRef.current)
+    ) {
       await trigger('versions.0.teams');
       return 'Please add at least one lab.';
     }
 
-    // If the user hasn't touched the field and the form isn't submitting, skip further validation
-    if (!hasTouchedLabs && !formIsSubmitting) {
+    // If the user hasn't touched the field and no submit has been attempted, skip further validation
+    if (!hasTouchedLabs && !hasAttemptedSubmitRef.current) {
       return true;
     }
 
@@ -749,22 +755,24 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     firstAuthorsWithoutTeamAdded.clear();
 
-    const hasTouchedFirstAuthors = touchedFields?.versions?.[0]?.firstAuthors;
+    const hasTouchedFirstAuthors = getFieldState(
+      'versions.0.firstAuthors',
+    ).isTouched;
 
     // --- Required field check ---
     // If no first authors are selected and either the user has touched the field
-    // or the form is currently submitting, show a "required" error
+    // or a submit has been attempted, show a "required" error
 
     if (
       selectedFirstAuthors.length === 0 &&
-      (hasTouchedFirstAuthors || formIsSubmitting)
+      (hasTouchedFirstAuthors || hasAttemptedSubmitRef.current)
     ) {
       await trigger('versions.0.teams');
       return 'Please add at least one author.';
     }
 
-    // If the user hasn't touched the field and the form isn't submitting, skip further validation
-    if (!hasTouchedFirstAuthors && !formIsSubmitting) {
+    // If the user hasn't touched the field and no submit has been attempted, skip further validation
+    if (!hasTouchedFirstAuthors && !hasAttemptedSubmitRef.current) {
       return true;
     }
 
@@ -1131,12 +1139,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     onInvalid?.();
   };
 
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    hasAttemptedSubmitRef.current = true;
+    void handleSubmit(handleSubmitConfirmation, handleInvalid)(event);
+  };
+
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit(handleSubmitConfirmation, handleInvalid)}
-      noValidate
-    >
+    <form ref={formRef} onSubmit={handleFormSubmit} noValidate>
       <Suspense fallback={<div>Loading modals...</div>}>
         <ManuscriptFormModals
           isSubmitting={isSubmitting}
@@ -2036,7 +2045,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 rules={{
                   validate: validateLabPiTeams,
                 }}
-                render={({ field: { value }, fieldState: { error } }) => (
+                render={({
+                  field: { value, onBlur },
+                  fieldState: { error },
+                }) => (
                   <LabeledMultiSelect
                     title="Labs"
                     description={
@@ -2055,11 +2067,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           shouldValidate: true,
                           shouldTouch: true,
                         });
-                        setTimeout(async () => {
-                          await trigger('versions.0.labs');
-                        }, 0);
                       }) as MultiSelectOnChange<MultiSelectOptionsType>
                     }
+                    onBlur={onBlur}
                     values={value}
                     noOptionsMessage={({
                       inputValue,

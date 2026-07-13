@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline3, Link } from '../atoms';
-import { charcoal, paper, steel, tin } from '../colors';
+import { charcoal, fern, paper, steel, tin, warning500 } from '../colors';
 import {
   DiscoveryTeamIcon,
   ExportIcon,
@@ -18,6 +18,12 @@ import { EventAttendanceMetric } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 
 const defaultVisibleTeams = 10;
+
+// Attendance below this threshold colours the progress amber, otherwise green.
+// (A lower "red" tier may be added once design confirms it.)
+const attendanceAmberThreshold = 60;
+const getAttendanceColor = (percentage: number): string =>
+  percentage < attendanceAmberThreshold ? warning500.rgb : fern.rgb;
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -230,6 +236,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
             label="Attendance"
             value={attendancePercentage}
             caption={`${teamsAttended} of ${teamsTotal} teams`}
+            color={getAttendanceColor(attendancePercentage)}
           />
           {sinceLastEvent && (
             <EventAttendanceMetric

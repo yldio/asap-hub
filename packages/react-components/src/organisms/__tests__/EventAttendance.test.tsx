@@ -2,7 +2,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
 
+import { fern, warning500 } from '../../colors';
 import EventAttendance, { EventAttendanceTeam } from '../EventAttendance';
+
+const progressArcStroke = (wheel: Element | undefined) =>
+  wheel?.querySelectorAll('circle')[1]?.getAttribute('stroke');
 
 const teams: EventAttendanceTeam[] = [
   {
@@ -65,6 +69,25 @@ describe('EventAttendance', () => {
       teams: [],
     });
     expect(getByText('0%')).toBeVisible();
+  });
+
+  it('colours the progress amber below 60% and green otherwise', () => {
+    const { getAllByRole, rerender } = renderCard({
+      teamsAttended: 1,
+      teamsTotal: 4,
+    });
+    expect(
+      progressArcStroke(getAllByRole('progressbar', { hidden: true })[0]),
+    ).toBe(warning500.rgb);
+
+    rerender(
+      <StaticRouter location="/">
+        <EventAttendance {...props} teamsAttended={3} teamsTotal={4} />
+      </StaticRouter>,
+    );
+    expect(
+      progressArcStroke(getAllByRole('progressbar', { hidden: true })[0]),
+    ).toBe(fern.rgb);
   });
 
   it('renders the team-type icon for each team', () => {

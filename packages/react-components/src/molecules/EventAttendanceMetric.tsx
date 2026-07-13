@@ -71,7 +71,10 @@ type BaseProps = {
 };
 
 type EventAttendanceMetricProps = BaseProps &
-  ({ variant: 'progress' } | { variant: 'delta'; direction: 'up' | 'down' });
+  (
+    | { variant: 'progress'; color?: string }
+    | { variant: 'delta'; direction: 'up' | 'down' }
+  );
 
 const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
   const { label, value, caption } = props;
@@ -97,7 +100,7 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
     <div css={containerStyles}>
       <div css={progressRowStyles}>
         <span css={wheelStyles}>
-          <ProgressWheel percentage={value} />
+          <ProgressWheel percentage={value} color={props.color} />
         </span>
         <div>
           <p css={labelStyles}>{label}</p>
@@ -106,7 +109,7 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
         </div>
       </div>
       <div css={barStyles}>
-        <ProgressBar percentage={value} />
+        <ProgressBar percentage={value} color={props.color} />
       </div>
     </div>
   );

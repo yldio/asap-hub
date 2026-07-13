@@ -82,15 +82,15 @@ const EventDetailPage = <
       </PageInfoContainer>
       <PageConstraints as="main">
         <div css={cardsStyles}>
+          {(props.description || props.tags.length > 0) && (
+            <Card>
+              <EventAbout {...props} variant="expandable" />
+            </Card>
+          )}
           {(children || displayJoinEvent) && (
             <Card>
               {children}
               {displayJoinEvent && <JoinEvent {...props} />}
-            </Card>
-          )}
-          {(props.description || props.tags.length > 0) && (
-            <Card>
-              <EventAbout {...props} variant="expandable" />
             </Card>
           )}
           {relatedResearch && relatedResearch.length > 0 && (

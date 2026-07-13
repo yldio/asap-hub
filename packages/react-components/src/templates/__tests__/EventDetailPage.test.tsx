@@ -103,6 +103,19 @@ it('renders the description without the always-on collapse toggle', () => {
   ).not.toBeInTheDocument();
 });
 
+it('shows the about section before the speakers and join section', () => {
+  const { container } = renderPage(
+    <EventDetailPage {...props} description="My Desc">
+      <div>My Speakers</div>
+    </EventDetailPage>,
+  );
+  const text = container.textContent ?? '';
+  expect(text.indexOf('About this event')).toBeGreaterThan(-1);
+  expect(text.indexOf('About this event')).toBeLessThan(
+    text.indexOf('My Speakers'),
+  );
+});
+
 it('omits the about section without description and tags', () => {
   renderPage(<EventDetailPage {...props} description="" tags={[]} />);
   expect(screen.queryByText('About this event')).not.toBeInTheDocument();

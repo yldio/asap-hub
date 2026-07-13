@@ -14,6 +14,7 @@ let overrides: Flags = {
   PROJECT_WORKSPACE: false,
   PROJECT_OUTPUTS: false,
   STAGING_MODE: false,
+  NEW_EVENT_PAGE: false,
 };
 
 const envDefaults: Record<string, boolean> = {

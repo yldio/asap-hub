@@ -8,7 +8,7 @@ import {
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
-import { disable, reset } from '@asap-hub/flags';
+import { disable, enable } from '@asap-hub/flags';
 
 import {
   Auth0Provider,
@@ -160,9 +160,8 @@ it('renders continue the event conversation when group with slack provided', asy
 });
 
 describe('the NEW_EVENT_PAGE flag', () => {
-  afterEach(reset);
-
   it('shows the redesigned page with the event status banner when enabled', async () => {
+    enable('NEW_EVENT_PAGE');
     mockGetEvent.mockResolvedValue({
       ...createEventResponse(),
       id,

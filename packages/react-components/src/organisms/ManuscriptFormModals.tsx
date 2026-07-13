@@ -108,8 +108,8 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
                   gap: rem(8),
                 })}
               >
-                Submit Manuscript
                 {isSubmitting && <Spinner color="currentColor" />}
+                Submit Manuscript
               </Button>
             </div>
           </div>

@@ -101,7 +101,7 @@ const EventDetailPage = <
           </Card>
           {(props.description || props.tags.length > 0) && (
             <Card>
-              <EventAbout {...props} initiallyExpanded={false} />
+              <EventAbout {...props} variant="expandable" />
             </Card>
           )}
           {relatedResearch && relatedResearch.length > 0 && (

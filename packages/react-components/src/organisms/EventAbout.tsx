@@ -6,37 +6,40 @@ import {
 
 import { Divider, Headline2, Paragraph } from '../atoms';
 import { RichText, TagList } from '..';
-import { Collapsible } from '../molecules';
+import { Collapsible, ExpandableText } from '../molecules';
 import { rem } from '../pixels';
 
 type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
   tags: string[];
-  initiallyExpanded?: boolean;
+  variant?: 'collapsible' | 'expandable';
 };
 
 const EventAbout: React.FC<EventAboutProps> = ({
   tags,
   description,
   endDate,
-  initiallyExpanded,
+  variant = 'collapsible',
 }) => {
   const descriptionComponent = description ? (
     <div>
       <Headline2 styleAsHeading={4}>About this event</Headline2>
-      <Collapsible
-        initiallyExpanded={
-          initiallyExpanded ??
-          isBefore(
+      {variant === 'expandable' ? (
+        <ExpandableText variant="arrow">
+          <RichText text={description} toc={false} />
+        </ExpandableText>
+      ) : (
+        <Collapsible
+          initiallyExpanded={isBefore(
             new Date(),
             addHours(
               parseISO(endDate),
               EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
             ),
-          )
-        }
-      >
-        <RichText text={description} toc={false} />
-      </Collapsible>
+          )}
+        >
+          <RichText text={description} toc={false} />
+        </Collapsible>
+      )}
     </div>
   ) : null;
 

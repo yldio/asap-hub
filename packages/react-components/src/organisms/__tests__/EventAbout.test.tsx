@@ -35,6 +35,25 @@ it('collapses the event description after the event', () => {
   expect(queryByText(/About/i)).not.toBeInTheDocument();
 });
 
+it('always shows the collapse toggle with the default variant', () => {
+  const { getByRole } = render(
+    <EventAbout {...props} description={'<p>description</p>'} />,
+  );
+  expect(getByRole('button', { name: /(show|hide) more/i })).toBeVisible();
+});
+
+it('hides the show more toggle with the expandable variant while the text fits', () => {
+  const { getByText, queryByRole } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={'<p>description</p>'}
+    />,
+  );
+  expect(getByText('description')).toBeVisible();
+  expect(queryByRole('button')).not.toBeInTheDocument();
+});
+
 it('renders the event tags', () => {
   const { getByText } = render(<EventAbout {...props} tags={['Tag A']} />);
   expect(getByText(/tags/i)).toBeVisible();

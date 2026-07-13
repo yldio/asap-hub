@@ -8,6 +8,7 @@ import {
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
+import { disable, reset } from '@asap-hub/flags';
 
 import {
   Auth0Provider,
@@ -71,9 +72,9 @@ it('renders tags', async () => {
       { id: '2', name: 'Tag 2' },
     ],
   });
-  const { findByText } = render(<Event />, { wrapper });
-  expect(await findByText('Tag 1')).toBeVisible();
-  expect(await findByText('Tag 2')).toBeVisible();
+  const { findAllByText } = render(<Event />, { wrapper });
+  expect((await findAllByText('Tag 1'))[0]).toBeVisible();
+  expect((await findAllByText('Tag 2'))[0]).toBeVisible();
 });
 
 it('renders the speakers list', async () => {
@@ -156,4 +157,33 @@ it('renders continue the event conversation when group with slack provided', asy
   const { findByTitle } = render(<Event />, { wrapper });
 
   expect(await findByTitle(/slack/i)).toBeInTheDocument();
+});
+
+describe('the NEW_EVENT_PAGE flag', () => {
+  afterEach(reset);
+
+  it('shows the redesigned page with the event status banner when enabled', async () => {
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      status: 'Cancelled',
+    });
+    const { findByText } = render(<Event />, { wrapper });
+    expect(await findByText('The event has been cancelled.')).toBeVisible();
+  });
+
+  it('keeps the current page without the banner when disabled', async () => {
+    disable('NEW_EVENT_PAGE');
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      status: 'Cancelled',
+      title: 'My Event',
+    });
+    const { findByText, queryByText } = render(<Event />, { wrapper });
+    expect(await findByText('My Event')).toBeVisible();
+    expect(
+      queryByText('The event has been cancelled.'),
+    ).not.toBeInTheDocument();
+  });
 });

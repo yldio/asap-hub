@@ -2,12 +2,11 @@
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { EventResponse, gp2 } from '@asap-hub/model';
-import formatDistance from 'date-fns/formatDistance';
 
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { BackLink, CtaCard } from '../molecules';
 import { Card, Link, Paragraph } from '../atoms';
-import { rem, tabletScreen } from '../pixels';
+import { rem } from '../pixels';
 import {
   EventCard,
   EventMaterials,
@@ -27,12 +26,6 @@ const cardsStyles = css({
   rowGap: rem(33),
   marginBottom: rem(24),
 });
-const updatedParagraphStyles = css({
-  display: 'flex',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    justifyContent: 'end',
-  },
-});
 
 type EventDetailPageProps<
   T extends
@@ -45,7 +38,7 @@ type EventDetailPageProps<
     ComponentProps<typeof RelatedResearchCard>,
     'getSourceIcon' | 'tableTitles'
   > &
-  Pick<EventResponse, 'lastModifiedDate' | 'calendar' | 'relatedTutorials'> & {
+  Pick<EventResponse, 'calendar' | 'relatedTutorials'> & {
     readonly relatedResearch?: T;
     readonly backHref?: string;
     readonly displayCalendar: boolean;
@@ -65,7 +58,6 @@ const EventDetailPage = <
 >({
   hasFinished,
   backHref,
-  lastModifiedDate,
   calendar,
   eventConversation,
   displayCalendar,
@@ -80,6 +72,7 @@ const EventDetailPage = <
   ...props
 }: EventDetailPageProps<T>) => {
   useScrollToHash();
+  const displayJoinEvent = !props.hideMeetingLink && !hasFinished;
 
   return (
     <article>
@@ -89,16 +82,12 @@ const EventDetailPage = <
       </PageInfoContainer>
       <PageConstraints as="main">
         <div css={cardsStyles}>
-          <Card>
-            {children}
-            {!props.hideMeetingLink && <JoinEvent {...props} />}
-            <Paragraph accent="lead" styles={updatedParagraphStyles}>
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
-          </Card>
+          {(children || displayJoinEvent) && (
+            <Card>
+              {children}
+              {displayJoinEvent && <JoinEvent {...props} />}
+            </Card>
+          )}
           {(props.description || props.tags.length > 0) && (
             <Card>
               <EventAbout {...props} variant="expandable" />

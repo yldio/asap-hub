@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { addDays, addMinutes, formatISO, subDays, subYears } from 'date-fns';
+import { addDays, addMinutes, subDays } from 'date-fns';
 import {
   createCalendarResponse,
   createEventResponse,
@@ -66,14 +66,18 @@ it('renders the live banner with the meeting link while the event is happening',
   );
 });
 
-it('renders the last updated date', () => {
+it('does not render the last updated date', () => {
+  renderPage(<EventDetailPage {...props} />);
+  expect(screen.queryByText(/last updated/i)).not.toBeInTheDocument();
+});
+
+it('omits the speakers and join card when there is nothing to show', () => {
   renderPage(
-    <EventDetailPage
-      {...props}
-      lastModifiedDate={formatISO(subYears(new Date(), 2))}
-    />,
+    <EventDetailPage {...props} hasFinished>
+      {false}
+    </EventDetailPage>,
   );
-  expect(screen.getByText(/update/i)).toHaveTextContent(/2 year/i);
+  expect(screen.queryByText(/join this event/i)).not.toBeInTheDocument();
 });
 
 it('renders the about section with description and tags', () => {

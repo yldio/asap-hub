@@ -85,6 +85,17 @@ it('renders the about section with description and tags', () => {
   expect(screen.getAllByText('My Tag').length).toBeGreaterThan(0);
 });
 
+it('collapses the description initially, even for upcoming events', () => {
+  renderPage(
+    <EventDetailPage
+      {...props}
+      description="My Desc"
+      endDate={addDays(new Date(), 1).toISOString()}
+    />,
+  );
+  expect(screen.getByRole('button', { name: /show more/i })).toBeVisible();
+});
+
 it('omits the about section without description and tags', () => {
   renderPage(<EventDetailPage {...props} description="" tags={[]} />);
   expect(screen.queryByText('About this event')).not.toBeInTheDocument();

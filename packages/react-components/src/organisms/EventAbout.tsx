@@ -11,21 +11,29 @@ import { rem } from '../pixels';
 
 type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
   tags: string[];
+  initiallyExpanded?: boolean;
 };
 
 const EventAbout: React.FC<EventAboutProps> = ({
   tags,
   description,
   endDate,
+  initiallyExpanded,
 }) => {
   const descriptionComponent = description ? (
     <div>
       <Headline2 styleAsHeading={4}>About this event</Headline2>
       <Collapsible
-        initiallyExpanded={isBefore(
-          new Date(),
-          addHours(parseISO(endDate), EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT),
-        )}
+        initiallyExpanded={
+          initiallyExpanded ??
+          isBefore(
+            new Date(),
+            addHours(
+              parseISO(endDate),
+              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+            ),
+          )
+        }
       >
         <RichText text={description} toc={false} />
       </Collapsible>

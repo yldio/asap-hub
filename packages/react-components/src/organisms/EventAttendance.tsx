@@ -81,6 +81,12 @@ const tableStyles = css({
   'tbody tr:last-child': {
     borderBottom: 'none',
   },
+  // on mobile the Attendance column (header + icons) centers.
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    'th:last-child, td:last-child': {
+      textAlign: 'center',
+    },
+  },
 });
 
 const headerCellStyles = css({
@@ -91,16 +97,6 @@ const headerCellStyles = css({
   lineHeight: rem(24),
   letterSpacing: rem(0.1),
 });
-
-const attendanceHeaderCellStyles = css([
-  headerCellStyles,
-  {
-    // on mobile the Attendance header centers to match the centered icons.
-    [`@media (max-width: ${tabletScreen.min}px)`]: {
-      textAlign: 'center',
-    },
-  },
-]);
 
 const cellStyles = css({
   // 16px top + 16px bottom → 32px (16 + 16) between rows around the separator,
@@ -129,10 +125,6 @@ const statusCellStyles = css([
     // icon-only cell: collapse the line box so the icon centers via the cell's
     // middle vertical-align instead of sitting on the text baseline.
     lineHeight: 0,
-    // on mobile the icon is centered horizontally within its column.
-    [`@media (max-width: ${tabletScreen.min}px)`]: {
-      textAlign: 'center',
-    },
     '& svg': {
       display: 'block',
       width: rem(24),
@@ -271,7 +263,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
                 <th css={headerCellStyles} scope="col">
                   Teams
                 </th>
-                <th css={attendanceHeaderCellStyles} scope="col">
+                <th css={headerCellStyles} scope="col">
                   Attendance
                 </th>
               </tr>

@@ -24,6 +24,19 @@ echo "Deleting stack 'gp2-hub-$PR'"
 aws-vault exec $AWS_VAULT_PROFILE -- aws cloudformation delete-stack --stack-name=gp2-hub-$PR --region=us-east-1
 echo "Deleted"
 
+echo "Removing CRN Async Stack..."
+CRN_ASYNC_SLS_BUCKET=$(aws-vault exec $AWS_VAULT_PROFILE -- aws cloudformation describe-stack-resource --stack-name=asap-hub-async-$PR --logical-resource-id=ServerlessDeploymentBucket | jq .StackResourceDetail.PhysicalResourceId -r)
+if [ -z "$CRN_ASYNC_SLS_BUCKET" ]
+then
+    echo "No Serverless bucket found"
+else
+    echo "Removing Serverless bucket '$CRN_ASYNC_SLS_BUCKET'"
+    aws-vault exec $AWS_VAULT_PROFILE -- aws s3 rm s3://$CRN_ASYNC_SLS_BUCKET --recursive
+fi
+echo "Deleting stack 'asap-hub-async-$PR'"
+aws-vault exec $AWS_VAULT_PROFILE -- aws cloudformation delete-stack --stack-name=asap-hub-async-$PR --region=us-east-1
+echo "Deleted"
+
 echo "Removing buckets for CRN Stack..."
 aws-vault exec $AWS_VAULT_PROFILE -- aws s3 rm s3://asap-hub-$PR-messages-static --recursive
 aws-vault exec $AWS_VAULT_PROFILE -- aws s3 rm s3://asap-hub-$PR-frontend --recursive

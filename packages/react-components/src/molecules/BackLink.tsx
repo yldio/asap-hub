@@ -16,11 +16,16 @@ const containerStyles = css({
   padding: `${rem(30)} 0 `,
 });
 
+const noPaddingStyles = css({
+  padding: 0,
+});
+
 interface BackLinkProps {
   readonly href: string;
+  readonly noPadding?: boolean;
 }
-const BackLink: React.FC<BackLinkProps> = ({ href }) => (
-  <div css={containerStyles}>
+const BackLink: React.FC<BackLinkProps> = ({ href, noPadding = false }) => (
+  <div css={[containerStyles, noPadding && noPaddingStyles]}>
     <Link
       href={href}
       onClick={(event) => {

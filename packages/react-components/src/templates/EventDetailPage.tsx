@@ -18,13 +18,29 @@ import {
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 import { useScrollToHash } from '../routing';
+import { paper, steel } from '../colors';
 import PageConstraints from './PageConstraints';
-import PageInfoContainer from './PageInfoContainer';
 
 const cardsStyles = css({
   display: 'grid',
   rowGap: rem(33),
   marginBottom: rem(24),
+});
+
+const heroBandStyles = css({
+  background: paper.rgb,
+  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+});
+
+const heroContentStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: rem(12),
+  paddingBottom: rem(40),
+});
+
+const backLinkContainerStyles = css({
+  marginBottom: rem(56),
 });
 
 type EventDetailPageProps<
@@ -76,10 +92,20 @@ const EventDetailPage = <
 
   return (
     <article>
-      <PageInfoContainer>
-        {backHref && <BackLink href={backHref} />}
-        <EventCard {...props} titleLimit={null} />
-      </PageInfoContainer>
+      <PageConstraints
+        unconstrainedStyles={heroBandStyles}
+        noPaddingTop
+        noPaddingBottom
+      >
+        <div css={heroContentStyles}>
+          {backHref && (
+            <div css={backLinkContainerStyles}>
+              <BackLink href={backHref} noPadding />
+            </div>
+          )}
+          <EventCard {...props} titleLimit={null} />
+        </div>
+      </PageConstraints>
       <PageConstraints as="main">
         <div css={cardsStyles}>
           {(props.description || props.tags.length > 0) && (

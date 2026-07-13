@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { addHours, isBefore, parseISO } from 'date-fns';
 import {
   BasicEvent,
@@ -8,6 +9,33 @@ import { Divider, Headline2, Paragraph } from '../atoms';
 import { RichText, TagList } from '..';
 import { Collapsible, ExpandableText } from '../molecules';
 import { rem } from '../pixels';
+
+const TAGS_COPY =
+  'Explore keywords related to skills, techniques, resources, and tools.';
+
+const expandableContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(12),
+});
+
+const expandableDescriptionStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(24),
+});
+
+const expandableTextSpacingStyles = css({
+  'p:first-of-type': {
+    marginTop: 0,
+  },
+  'p:last-of-type': {
+    marginBottom: 0,
+  },
+  '& > div > div:nth-of-type(2)': {
+    marginTop: rem(22),
+  },
+});
 
 type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
   tags: string[];
@@ -20,26 +48,50 @@ const EventAbout: React.FC<EventAboutProps> = ({
   endDate,
   variant = 'collapsible',
 }) => {
+  if (variant === 'expandable') {
+    return (
+      <div css={expandableContainerStyles}>
+        {description ? (
+          <div css={expandableDescriptionStyles}>
+            <Headline2 noMargin styleAsHeading={4}>
+              About this event
+            </Headline2>
+            <div css={expandableTextSpacingStyles}>
+              <ExpandableText variant="arrow">
+                <RichText text={description} toc={false} />
+              </ExpandableText>
+            </div>
+          </div>
+        ) : null}
+        {description && tags.length ? <Divider /> : null}
+        {tags.length ? (
+          <div>
+            <Headline2 noMargin styleAsHeading={4}>
+              Tags
+            </Headline2>
+            <div css={{ marginTop: rem(24), marginBottom: rem(32) }}>
+              <Paragraph noMargin accent="lead">
+                {TAGS_COPY}
+              </Paragraph>
+            </div>
+            <TagList tags={tags} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   const descriptionComponent = description ? (
     <div>
       <Headline2 styleAsHeading={4}>About this event</Headline2>
-      {variant === 'expandable' ? (
-        <ExpandableText variant="arrow">
-          <RichText text={description} toc={false} />
-        </ExpandableText>
-      ) : (
-        <Collapsible
-          initiallyExpanded={isBefore(
-            new Date(),
-            addHours(
-              parseISO(endDate),
-              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-            ),
-          )}
-        >
-          <RichText text={description} toc={false} />
-        </Collapsible>
-      )}
+      <Collapsible
+        initiallyExpanded={isBefore(
+          new Date(),
+          addHours(parseISO(endDate), EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT),
+        )}
+      >
+        <RichText text={description} toc={false} />
+      </Collapsible>
     </div>
   ) : null;
 
@@ -53,7 +105,7 @@ const EventAbout: React.FC<EventAboutProps> = ({
         }}
       >
         <Paragraph noMargin accent="lead">
-          Explore keywords related to skills, techniques, resources, and tools.
+          {TAGS_COPY}
         </Paragraph>
       </div>
       <TagList tags={tags} />

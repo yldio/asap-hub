@@ -16,6 +16,8 @@ export const getDefaultProps = (): ComponentProps<
   researchTags: [],
   documentType: 'Article',
   selectedTeams: [],
+  flowId: 'team-create-manual',
+  availableActions: { canSaveDraft: true },
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
   permissions: {
     canEditResearchOutput: true,

@@ -1,7 +1,10 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router';
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  resolveResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
@@ -45,10 +48,10 @@ describe('form buttons', () => {
       published = false,
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
-      descriptionUnchangedWarning = false,
       researchOutputData = undefined,
       versionAction = undefined,
       isImportedFromManuscript = false,
+      flowId = 'team-create-manual',
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -59,20 +62,23 @@ describe('form buttons', () => {
         typeof ResearchOutputForm
       >['versionAction'];
       researchTags?: ResearchTagResponse[];
-      descriptionUnchangedWarning?: ComponentProps<
-        typeof ResearchOutputForm
-      >['descriptionUnchangedWarning'];
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
       >['researchOutputData'];
       isImportedFromManuscript?: ComponentProps<
         typeof ResearchOutputForm
       >['isImportedFromManuscript'];
+      flowId?: ComponentProps<typeof ResearchOutputForm>['flowId'];
     } = {
       documentType: 'Article',
       researchTags: [],
     },
   ) => {
+    const permissions = {
+      canEditResearchOutput,
+      canPublishResearchOutput,
+      canShareResearchOutput: true,
+    };
     render(
       <InnerToastContext.Provider value={jest.fn()}>
         <MemoryRouter>
@@ -80,7 +86,6 @@ describe('form buttons', () => {
             {...getDefaultProps()}
             versionAction={versionAction}
             researchOutputData={researchOutputData}
-            descriptionUnchangedWarning={descriptionUnchangedWarning}
             selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
             documentType={documentType}
             typeOptions={Array.from(
@@ -92,11 +97,12 @@ describe('form buttons', () => {
             researchTags={researchTags}
             published={published}
             isImportedFromManuscript={isImportedFromManuscript}
-            permissions={{
-              canEditResearchOutput,
-              canPublishResearchOutput,
-              canShareResearchOutput: true,
-            }}
+            flowId={flowId}
+            availableActions={resolveResearchOutputAvailableActions({
+              flowId,
+              permissions,
+            })}
+            permissions={permissions}
           />
         </MemoryRouter>
       </InnerToastContext.Provider>,
@@ -135,6 +141,7 @@ describe('form buttons', () => {
       canEditResearchOutput: true,
       canPublishResearchOutput: true,
       published: true,
+      flowId: 'team-edit-published',
     });
 
     expect(
@@ -155,6 +162,7 @@ describe('form buttons', () => {
       isImportedFromManuscript: true,
       canPublishResearchOutput: true,
       published: true,
+      flowId: 'team-edit-published',
     });
 
     expect(
@@ -178,6 +186,7 @@ describe('form buttons', () => {
       isImportedFromManuscript: true,
       canPublishResearchOutput: true,
       published: false,
+      flowId: 'team-create-imported-from-manuscript',
     });
 
     expect(
@@ -215,10 +224,10 @@ describe('form buttons', () => {
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
-  describe('descriptionUnchangedWarning', () => {
+  describe('same description warning (duplicate flow)', () => {
     it('Shows correct button for draft save warning', async () => {
       await setupForm({
-        descriptionUnchangedWarning: true,
+        flowId: 'team-duplicate',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         published: false,
@@ -232,7 +241,7 @@ describe('form buttons', () => {
     });
     it('Shows correct button for publish save warning', async () => {
       await setupForm({
-        descriptionUnchangedWarning: true,
+        flowId: 'team-duplicate',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -244,7 +253,7 @@ describe('form buttons', () => {
     });
     it('is cancelable', async () => {
       await setupForm({
-        descriptionUnchangedWarning: true,
+        flowId: 'team-duplicate',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -260,7 +269,7 @@ describe('form buttons', () => {
 
     it('Will be dismissed if there are errors on the form', async () => {
       await setupForm({
-        descriptionUnchangedWarning: true,
+        flowId: 'team-duplicate',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
 
@@ -282,7 +291,7 @@ describe('form buttons', () => {
     });
     it('Will not reappear once dismissed', async () => {
       await setupForm({
-        descriptionUnchangedWarning: true,
+        flowId: 'team-duplicate',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
 
@@ -309,7 +318,7 @@ describe('form buttons', () => {
   describe('Create Version Warning', () => {
     it('Shows warning', async () => {
       await setupForm({
-        versionAction: 'create',
+        flowId: 'team-add-version',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -325,7 +334,7 @@ describe('form buttons', () => {
 
     it('is cancelable', async () => {
       await setupForm({
-        versionAction: 'create',
+        flowId: 'team-add-version',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -344,7 +353,7 @@ describe('form buttons', () => {
 
     it('Will be dismissed if there are errors on the form', async () => {
       await setupForm({
-        versionAction: 'create',
+        flowId: 'team-add-version',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: {
@@ -368,7 +377,7 @@ describe('form buttons', () => {
     });
     it('Will not reappear once dismissed', async () => {
       await setupForm({
-        versionAction: 'create',
+        flowId: 'team-add-version',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
 

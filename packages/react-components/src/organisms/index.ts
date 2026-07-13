@@ -88,6 +88,7 @@ export { default as RepresentationOfPresentersTable } from './RepresentationOfPr
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
 export { default as ResearchOutputPublishingCard } from './ResearchOutputPublishingCard';
+export { default as ResearchOutputConfirmModal } from './ResearchOutputConfirmModal';
 export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as ResearchOutputRelatedEventsCard } from './ResearchOutputRelatedEventsCard';
 export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRelatedResearchCard';
@@ -146,3 +147,7 @@ export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
 export type { Association } from './SharedOutputDropdown';
 export type { TeamCollaborationMetric } from './TeamCollaborationTable';
 export type { UserCollaborationMetric } from './UserCollaborationTable';
+export type {
+  ResearchOutputConfirmModalType,
+  SeenModalType,
+} from './ResearchOutputConfirmModal';

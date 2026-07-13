@@ -28,13 +28,7 @@ import {
   sharedResearch,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, {
-  ComponentProps,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   mapManuscriptVersionToResearchOutput,
@@ -76,16 +70,12 @@ type ProjectOutputProps = {
   latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
   isDuplicate?: boolean;
-} & Pick<
-  ComponentProps<typeof ResearchOutputForm>,
-  'descriptionUnchangedWarning'
->;
+};
 
 const ProjectOutput: React.FC<ProjectOutputProps> = ({
   teamId,
   researchOutputData,
   latestManuscriptVersion,
-  descriptionUnchangedWarning,
   versionAction: versionActionProp,
   isDuplicate = false,
 }) => {
@@ -194,7 +184,9 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
     published,
     isImportedFromManuscript,
     isDuplicate,
-    hasResearchOutputId: !!researchOutputData?.id,
+    // updatedOutput covers outputs that gain an id at runtime, e.g. the
+    // auto-created preprint that turns the import flow into add-version
+    hasResearchOutputId: !!(updatedOutput?.id || researchOutputData?.id),
   });
   const availableActions = resolveResearchOutputAvailableActions({
     flowId,
@@ -416,7 +408,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
               )}
               published={published}
               permissions={permissions}
-              descriptionUnchangedWarning={descriptionUnchangedWarning}
               isImportedFromManuscript={isImportedFromManuscript}
               onSave={(output) =>
                 updatedOutput?.id
@@ -454,7 +445,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
                       published: false,
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
-              behaviorMode="flow"
               flowId={flowId}
               availableActions={availableActions}
             />

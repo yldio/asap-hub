@@ -464,6 +464,20 @@ describe('useBatchManuscriptsByIds', () => {
     ).toBe('idle');
   });
 
+  it('skips the API even when the empty-ids query is explicitly refetched', async () => {
+    const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
+    await waitFor(() =>
+      expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
+    );
+
+    await act(() =>
+      queryClient.refetchQueries({ queryKey: manuscriptQueryKeys.batch([]) }),
+    );
+
+    expect(getManuscriptsByIds).not.toHaveBeenCalled();
+    expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0);
+  });
+
   it('deduplicates, sorts and hydrates the manuscript detail caches', async () => {
     const manuscript1 = { id: 'm-1', title: 'One' };
     const manuscript2 = { id: 'm-2', title: 'Two' };

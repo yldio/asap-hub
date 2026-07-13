@@ -21,6 +21,7 @@ export { default as DiscoverGuides } from './DiscoverGuides';
 export { default as DiscoverPage } from './DiscoverPage';
 export { default as DiscoverPageBody } from './DiscoverPageBody';
 export { default as DiscoverPageHeader } from './DiscoverPageHeader';
+export { default as EventDetailPage } from './EventDetailPage';
 export { default as EventPage } from './EventPage';
 export { default as EventsCalendar } from './EventsCalendar';
 export { default as EventsList } from './EventsList';

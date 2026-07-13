@@ -89,6 +89,14 @@ inputs:
   aws-os-password:
     description: 'AWS OS Password'
     required: true
+  config-file:
+    description: 'Serverless config file to deploy'
+    required: false
+    default: 'serverless.ts'
+  package-suffix:
+    description: 'Suffix appended to the package directory and artifact name'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -109,8 +117,8 @@ runs:
         environment-name: ${{ inputs.environment-name }}
     - uses: actions/download-artifact@v4
       with:
-        name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}
-        path: '${{ inputs.app }}-sls-package'
+        name: ${{ inputs.app }}${{ inputs.package-suffix }}-sls-package-${{ inputs.environment-name }}
+        path: '${{ inputs.app }}${{ inputs.package-suffix }}-sls-package'
     # Serverless v3 bundles the EOL aws-sdk v2, whose S3 client stalls on
     # Node 24 (RequestTimeout, "idle connections will be closed") when
     # uploading deploy artifacts. The deployed Lambda runtime is still
@@ -131,7 +139,7 @@ runs:
       run: |
         export PATH="/tmp/node20/bin:$PATH"
         node --version
-        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
+        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --config ${{ inputs.config-file }} --package $PWD/${{ inputs.app }}${{ inputs.package-suffix }}-sls-package
       env:
         ACTIVE_CAMPAIGN_ACCOUNT: ${{ inputs.active-campaign-account }}
         ACTIVE_CAMPAIGN_TOKEN: ${{ inputs.active-campaign-token }}

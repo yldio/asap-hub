@@ -1,9 +1,7 @@
 import { AWS } from '@serverless/typescript';
-import { iamRoleStatements } from './serverless/iam';
+import { apiIamRoleStatements } from './serverless/iam';
 import { apiFunctions } from './serverless/functions-api';
-import { asyncFunctions } from './serverless/functions-async';
 import { apiResources, conditions } from './serverless/resources-api';
-import { asyncExtensions, asyncResources } from './serverless/resources-async';
 import {
   apiUrl,
   appUrl,
@@ -74,7 +72,7 @@ const serverlessConfig: AWS = {
     environment: providerEnvironment,
     iam: {
       role: {
-        statements: iamRoleStatements,
+        statements: apiIamRoleStatements,
       },
     },
   },
@@ -114,13 +112,7 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node24',
       bundle: true,
-      // Lower than gp2: crn has ~50 handlers (more on production, which adds
-      // the isProd-gated compliance handlers) and parallel esbuild workers
-      // OOM the esbuild service ("The service was stopped") on the CI runner;
-      // the esbuild native process is not bound by NODE_OPTIONS
-      // --max-old-space-size. 4 and then 2 still failed on production, so
-      // build serially until the packaging job gets more memory.
-      concurrency: 1,
+      concurrency: 4,
     },
     'serverless-offline-ssm': {
       stages: ['local'],
@@ -138,17 +130,10 @@ const serverlessConfig: AWS = {
     apiGateway5xxTopic:
       '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
   },
-  functions: {
-    ...apiFunctions,
-    ...asyncFunctions,
-  },
+  functions: apiFunctions,
   resources: {
     Conditions: conditions,
-    Resources: {
-      ...apiResources,
-      ...asyncResources,
-    },
-    extensions: asyncExtensions,
+    Resources: apiResources,
   },
 };
 

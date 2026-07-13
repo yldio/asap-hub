@@ -95,6 +95,24 @@ export const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 export const service = 'asap-hub';
+export const asyncService = 'asap-hub-async';
+
+// The queues live in the original asap-hub stack; the async service reaches
+// them by constructed ARN/URL so the stacks stay deploy-order independent.
+export const queueArn = (queueName: string) => ({
+  'Fn::Join': [
+    ':',
+    [
+      'arn:aws:sqs',
+      region,
+      { Ref: 'AWS::AccountId' },
+      `${service}-${stage}-${queueName}`,
+    ],
+  ],
+});
+export const queueUrl = (queueName: string) => ({
+  'Fn::Sub': `https://sqs.\${AWS::Region}.amazonaws.com/\${AWS::AccountId}/${service}-${stage}-${queueName}`,
+});
 
 export const opensearchDomainName = isProd
   ? `${service}-${stage}-search`

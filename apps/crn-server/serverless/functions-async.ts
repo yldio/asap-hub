@@ -9,6 +9,8 @@ import {
   isProd,
   opensearchMasterPassword,
   opensearchMasterUser,
+  queueArn,
+  queueUrl,
   sentryDsnHandlers,
   sesRegion,
 } from './shared';
@@ -125,7 +127,7 @@ export const asyncFunctions: AWS['functions'] = {
       },
     ],
     environment: {
-      QUEUE_URL: { Ref: 'InviteUserQueue' },
+      QUEUE_URL: queueUrl('invite-user-queue'),
       SENTRY_DSN: sentryDsnHandlers,
     },
   },
@@ -135,7 +137,7 @@ export const asyncFunctions: AWS['functions'] = {
     events: [
       {
         sqs: {
-          arn: { 'Fn::GetAtt': ['InviteUserQueue', 'Arn'] },
+          arn: queueArn('invite-user-queue'),
           batchSize: 1,
         },
       },
@@ -358,9 +360,7 @@ export const asyncFunctions: AWS['functions'] = {
     events: [
       {
         sqs: {
-          arn: {
-            'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
-          },
+          arn: queueArn('google-calendar-event-queue'),
           batchSize: 1,
           maximumConcurrency: 2,
         },
@@ -754,7 +754,7 @@ export const asyncFunctions: AWS['functions'] = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        COMPLIANCE_DOC_SYNC_QUEUE_URL: { Ref: 'ComplianceDocSyncQueue' },
+        COMPLIANCE_DOC_SYNC_QUEUE_URL: queueUrl('compliance-doc-sync-queue'),
       },
     },
     complianceSpreadsheetSyncHandler: {
@@ -765,9 +765,7 @@ export const asyncFunctions: AWS['functions'] = {
       events: [
         {
           sqs: {
-            arn: {
-              'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
-            },
+            arn: queueArn('compliance-doc-sync-queue'),
             batchSize: 5,
           },
         },
@@ -786,9 +784,7 @@ export const asyncFunctions: AWS['functions'] = {
     events: [
       {
         sqs: {
-          arn: {
-            'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
-          },
+          arn: queueArn('contentful-poller-queue'),
           batchSize: 1,
           maximumConcurrency: 2,
         },

@@ -13,15 +13,12 @@ import {
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  resolveResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, {
-  ComponentProps,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { resolveResearchOutputFlowId } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
@@ -45,15 +42,13 @@ type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
   versionAction?: 'create' | 'edit';
-} & Pick<
-  ComponentProps<typeof ResearchOutputForm>,
-  'descriptionUnchangedWarning'
->;
+  isDuplicate?: boolean;
+};
 const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
-  descriptionUnchangedWarning,
   versionAction,
+  isDuplicate = false,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -111,7 +106,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     versionAction,
     published,
     hasResearchOutputId: !!researchOutputData?.id,
-    isDuplicate: !!descriptionUnchangedWarning,
+    isDuplicate,
+  });
+  const availableActions = resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
   });
 
   const researchSuggestions = researchTags
@@ -201,7 +200,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             authorsRequired
             published={published}
             permissions={permissions}
-            descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
               researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
@@ -234,6 +232,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
             flowId={flowId}
+            availableActions={availableActions}
           />
         </InnerToastContext.Provider>
       </Frame>

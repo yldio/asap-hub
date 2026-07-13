@@ -1,4 +1,7 @@
-import { FLOW_REGISTRY, ResearchOutputFlowId } from '@asap-hub/model';
+import {
+  getResearchOutputFlowBehavior,
+  ResearchOutputFlowId,
+} from '@asap-hub/model';
 import { createContext, useContext } from 'react';
 
 export type ResearchOutputPermissions = {
@@ -44,9 +47,9 @@ export const resolveResearchOutputAvailableActions = ({
   flowId: ResearchOutputFlowId;
   permissions: ResearchOutputPermissions;
 }): ResearchOutputAvailableActions => {
-  const flow = FLOW_REGISTRY[flowId];
+  const { supportsDrafts } = getResearchOutputFlowBehavior(flowId);
   return {
-    canSaveDraft: flow.supportsDrafts && !!permissions.canShareResearchOutput,
+    canSaveDraft: supportsDrafts && !!permissions.canShareResearchOutput,
   };
 };
 

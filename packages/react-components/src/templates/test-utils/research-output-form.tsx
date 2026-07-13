@@ -1,8 +1,12 @@
+import { InnerToastContext } from '@asap-hub/react-context';
+import { MemoryRouter } from 'react-router';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { render } from '@testing-library/react';
 import ResearchOutputForm from '../ResearchOutputForm';
 
 export const getDefaultProps = (): ComponentProps<
@@ -16,6 +20,8 @@ export const getDefaultProps = (): ComponentProps<
   researchTags: [],
   documentType: 'Article',
   selectedTeams: [],
+  flowId: 'team-create-manual',
+  availableActions: { canSaveDraft: true },
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
   permissions: {
     canEditResearchOutput: true,
@@ -92,3 +98,25 @@ export const initialResearchOutputData = {
   link: 'http://example.com',
   type: 'Code' as const,
 };
+
+export const renderForm = (
+  propOverride: Partial<ComponentProps<typeof ResearchOutputForm>> = {},
+) =>
+  render(
+    <InnerToastContext.Provider value={jest.fn()}>
+      <MemoryRouter>
+        <ResearchOutputForm {...getDefaultProps()} {...propOverride} />
+      </MemoryRouter>
+    </InnerToastContext.Provider>,
+  );
+
+export const renderPrefilledForm = (
+  propOverride: Partial<ComponentProps<typeof ResearchOutputForm>> = {},
+) =>
+  renderForm({
+    researchOutputData: initialResearchOutputData,
+    documentType: 'Bioinformatics',
+    typeOptions: Array.from(researchOutputDocumentTypeToType.Bioinformatics),
+    selectedTeams: [{ value: 'TEAMID', label: 'Example Team' }],
+    ...propOverride,
+  });

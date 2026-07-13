@@ -35,19 +35,17 @@ const Event: React.FC = () => {
     if (isEnabled('NEW_EVENT_PAGE')) {
       return (
         <Frame title={event.title}>
-          <PageConstraints>
-            <EventDetailPage
-              {...eventMapper(event)}
-              hasFinished={hasFinished}
-              backHref={backHref}
-              onRefresh={refreshEvent}
-              getIconForDocumentType={getIconForDocumentType}
-              displayCalendar={displayCalendar}
-              eventConversation={<EventConversation {...event} />}
-            >
-              {!!event.speakers.length && <SpeakerList {...event} />}
-            </EventDetailPage>
-          </PageConstraints>
+          <EventDetailPage
+            {...eventMapper(event)}
+            hasFinished={hasFinished}
+            backHref={backHref}
+            onRefresh={refreshEvent}
+            getIconForDocumentType={getIconForDocumentType}
+            displayCalendar={displayCalendar}
+            eventConversation={<EventConversation {...event} />}
+          >
+            {!!event.speakers.length && <SpeakerList {...event} />}
+          </EventDetailPage>
         </Frame>
       );
     }

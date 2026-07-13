@@ -19,6 +19,8 @@ import {
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 import { useScrollToHash } from '../routing';
+import PageConstraints from './PageConstraints';
+import PageInfoContainer from './PageInfoContainer';
 
 const cardsStyles = css({
   display: 'grid',
@@ -80,11 +82,13 @@ const EventDetailPage = <
   useScrollToHash();
 
   return (
-    <div>
-      {backHref && <BackLink href={backHref} />}
-      <>
+    <article>
+      <PageInfoContainer>
+        {backHref && <BackLink href={backHref} />}
+        <EventCard {...props} titleLimit={null} />
+      </PageInfoContainer>
+      <PageConstraints as="main">
         <div css={cardsStyles}>
-          <EventCard {...props} titleLimit={null} />
           <Card>
             {children}
             {!props.hideMeetingLink && <JoinEvent {...props} />}
@@ -151,8 +155,8 @@ const EventDetailPage = <
             .
           </Paragraph>
         )}
-      </>
-    </div>
+      </PageConstraints>
+    </article>
   );
 };
 

@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 import { Link } from '../atoms';
 import { neutral900 } from '../colors';
 import {
+  asapEventIcon,
   InterestGroupsIcon,
   InactiveBadgeIcon,
   WorkingGroupsIcon,
@@ -71,9 +72,7 @@ const EventOwner: React.FC<
       </Link>
     ) : (
       <>
-        <span css={iconStyles}>
-          <InterestGroupsIcon />
-        </span>
+        <span css={iconStyles}>{asapEventIcon}</span>
         ASAP Event
       </>
     )}

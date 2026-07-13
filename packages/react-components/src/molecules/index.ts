@@ -18,6 +18,7 @@ export { default as CtaContactSection } from './CtaContactSection';
 export { default as DropdownButton } from './DropdownButton';
 export { default as EditUserAvatar } from './EditUserAvatar';
 export { default as ErrorCard } from './ErrorCard';
+export { default as EventDateBlock } from './EventDateBlock';
 export { default as EventInfo } from './EventInfo';
 export { default as EventMaterialComingSoon } from './EventMaterialComingSoon';
 export { default as EventMaterialsUnavailable } from './EventMaterialsUnavailable';

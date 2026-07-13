@@ -20,6 +20,16 @@ const cardsStyles = css({
   rowGap: rem(36),
 });
 
+export const eventMaterialSectionIds: Record<
+  (typeof eventMaterialTypes)[number],
+  string
+> = {
+  notes: 'event-notes',
+  videoRecording: 'event-video-recording',
+  presentation: 'event-presentation',
+  meetingMaterials: 'event-additional-materials',
+};
+
 type EventMaterialsProps = Pick<
   EventResponse,
   'endDate' | 'notes' | 'videoRecording' | 'presentation' | 'meetingMaterials'
@@ -43,34 +53,42 @@ const EventMaterials: React.FC<EventMaterialsProps> = ({
 
   return (
     <div css={cardsStyles}>
-      {notes === null ? (
-        <EventMaterialUnavailable materialType="Notes" />
-      ) : !notes ? (
-        <EventMaterialComingSoon materialType="Notes" />
-      ) : (
-        <RichTextCard collapsible text={notes} title="Notes" />
-      )}
-      {videoRecording === null ? (
-        <EventMaterialUnavailable materialType="Video recording" />
-      ) : !videoRecording ? (
-        <EventMaterialComingSoon materialType="Video recording" />
-      ) : (
-        <RichTextCard text={videoRecording} title="Video recording" />
-      )}
-      {presentation === null ? (
-        <EventMaterialUnavailable materialType="Presentation" />
-      ) : !presentation ? (
-        <EventMaterialComingSoon materialType="Presentation" />
-      ) : (
-        <RichTextCard text={presentation} title="Presentation" />
-      )}
-      {meetingMaterials === null ? (
-        <EventMaterialUnavailable materialType="Additional meeting materials" />
-      ) : meetingMaterials?.length === 0 ? (
-        <EventMaterialComingSoon materialType="Additional meeting materials" />
-      ) : (
-        <AdditionalMaterials meetingMaterials={meetingMaterials} />
-      )}
+      <div id={eventMaterialSectionIds.notes}>
+        {notes === null ? (
+          <EventMaterialUnavailable materialType="Notes" />
+        ) : !notes ? (
+          <EventMaterialComingSoon materialType="Notes" />
+        ) : (
+          <RichTextCard collapsible text={notes} title="Notes" />
+        )}
+      </div>
+      <div id={eventMaterialSectionIds.videoRecording}>
+        {videoRecording === null ? (
+          <EventMaterialUnavailable materialType="Video recording" />
+        ) : !videoRecording ? (
+          <EventMaterialComingSoon materialType="Video recording" />
+        ) : (
+          <RichTextCard text={videoRecording} title="Video recording" />
+        )}
+      </div>
+      <div id={eventMaterialSectionIds.presentation}>
+        {presentation === null ? (
+          <EventMaterialUnavailable materialType="Presentation" />
+        ) : !presentation ? (
+          <EventMaterialComingSoon materialType="Presentation" />
+        ) : (
+          <RichTextCard text={presentation} title="Presentation" />
+        )}
+      </div>
+      <div id={eventMaterialSectionIds.meetingMaterials}>
+        {meetingMaterials === null ? (
+          <EventMaterialUnavailable materialType="Additional meeting materials" />
+        ) : meetingMaterials?.length === 0 ? (
+          <EventMaterialComingSoon materialType="Additional meeting materials" />
+        ) : (
+          <AdditionalMaterials meetingMaterials={meetingMaterials} />
+        )}
+      </div>
     </div>
   );
 };

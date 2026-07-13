@@ -1,10 +1,20 @@
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { rem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
-import { lead, silver, apricot, clay, info500, info100 } from '../colors';
-import { WarningIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
+import {
+  lead,
+  silver,
+  apricot,
+  clay,
+  info500,
+  info100,
+  mint,
+  pine,
+  tin,
+} from '../colors';
+import { WarningIcon, infoInfoIcon, liveIcon, paperClipIcon } from '../icons';
 import { borderRadius, paddingStyles } from '../card';
 
 const toastStyles = css({
@@ -12,6 +22,7 @@ const toastStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: `${rem(15)} ${rem(24)}`,
+  borderRadius: `${borderRadius - 1}px ${borderRadius - 1}px 0px 0px`,
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
@@ -23,7 +34,13 @@ const iconStyles = css({
   display: 'inline-block',
   width: rem(24),
   height: rem(24),
-  paddingRight: rem(12),
+  paddingRight: rem(8),
+});
+
+const mutedIconStyles = css({
+  'svg path[stroke]': {
+    stroke: tin.rgb,
+  },
 });
 
 const alertStyles = css({
@@ -36,7 +53,12 @@ const infoStyles = css({
   backgroundColor: info100.rgb,
   color: info500.rgb,
   fill: info500.rgb,
-  borderRadius: `${borderRadius - 1}px ${borderRadius - 1}px 0px 0px`,
+});
+
+const liveStyles = css({
+  backgroundColor: mint.rgb,
+  color: pine.rgb,
+  fill: pine.rgb,
 });
 
 const leadStyles = css({
@@ -57,17 +79,17 @@ const toastContentStyles = css({
 type Type = 'alert' | 'attachment' | 'live' | 'info';
 
 const iconMap: Record<Type, ReactNode> = {
-  alert: errorIcon,
+  alert: <WarningIcon color={clay.rgb} />,
   attachment: paperClipIcon,
-  live: clockIcon,
-  info: <WarningIcon color={info500.rgb} />,
+  live: liveIcon,
+  info: infoInfoIcon,
 };
 
 const accentMap = {
   alert: alertStyles,
   info: infoStyles,
   attachment: leadStyles,
-  live: leadStyles,
+  live: liveStyles,
 };
 
 interface ToastCardProps {
@@ -75,19 +97,25 @@ interface ToastCardProps {
   readonly toastContent?: ReactNode;
   readonly toastAction?: ReactNode;
   readonly type?: Type;
+  readonly accent?: ComponentProps<typeof Card>['accent'];
+  readonly mutedIcon?: boolean;
 }
 const ToastCard: React.FC<ToastCardProps> = ({
   children,
   toastContent,
   toastAction,
   type = 'alert',
+  accent,
+  mutedIcon = false,
 }) => (
-  <Card padding={false}>
+  <Card padding={false} accent={accent}>
     {toastContent && (
       <>
         <span css={[toastStyles, accentMap[type]]}>
           <span css={toastContentStyles}>
-            <span css={[iconStyles]}>{iconMap[type]}</span>
+            <span css={[iconStyles, mutedIcon && mutedIconStyles]}>
+              {iconMap[type]}
+            </span>
             {toastContent}
           </span>
           {toastAction}

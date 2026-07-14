@@ -6,6 +6,7 @@ import {
   resultsToStream,
   caseInsensitive,
   createCsvFileStream,
+  emptyToNA,
   EXCEL_CELL_CHARACTER_LIMIT,
   htmlToCsvText,
 } from '..';
@@ -66,6 +67,20 @@ describe('htmlToCsvText', () => {
   });
   it('Removes HTML from RTF fields', () => {
     expect(htmlToCsvText('<a>example</a> <p>123</p>')).toBe('example 123');
+  });
+});
+
+describe('emptyToNA', () => {
+  it('replaces undefined and empty-string values with NA', () => {
+    expect(
+      emptyToNA({ a: undefined, b: '', c: 'value', d: false, e: true }),
+    ).toStrictEqual({
+      a: 'NA',
+      b: 'NA',
+      c: 'value',
+      d: false,
+      e: true,
+    });
   });
 });
 

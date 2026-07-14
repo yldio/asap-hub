@@ -126,6 +126,7 @@ export const getResearchOutputDataObject =
         link: 'https://version1.com',
         rrid: 'RRID',
         accession: 'Accession',
+        doi: 'Version DOI',
       },
     ],
   });
@@ -526,6 +527,7 @@ export const getContentfulResearchOutputGraphqlResponse =
           link: 'https://version1.com',
           rrid: 'RRID',
           accession: 'Accession',
+          doi: 'Version DOI',
         },
       ],
     },

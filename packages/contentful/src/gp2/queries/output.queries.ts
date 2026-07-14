@@ -151,6 +151,7 @@ export const outputsContentQueryFragment = gql`
         link
         rrid
         accessionNumber
+        doi
       }
     }
   }

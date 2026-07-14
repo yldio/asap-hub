@@ -48,6 +48,7 @@ describe('outputToCSV', () => {
           addedDate: 'added date',
           documentType: 'Article',
           accessionNumber: 'version accession',
+          doi: 'version doi',
         },
       ],
     };
@@ -75,6 +76,7 @@ describe('outputToCSV', () => {
       firstVersionRRID: 'version rrid',
       firstVersionTitle: 'version title',
       firstVersionType: 'Blog',
+      firstVersionDOI: 'version doi',
       publishDate: '2020-10-08T16:35:54Z',
       relatedEvents: 'event title',
       relatedResearch: 'output title',
@@ -135,6 +137,31 @@ describe('outputToCSV', () => {
       Cohort,
       GP2"
     `);
+  });
+
+  it('exports NA for first version fields when there are no versions', () => {
+    const outputResponse: gp2Model.OutputResponse = {
+      ...gp2Fixtures.createOutputResponse(),
+      versions: [],
+    };
+    const { firstVersionDOI, firstVersionRRID } = outputToCSV(outputResponse);
+    expect(firstVersionDOI).toBe('NA');
+    expect(firstVersionRRID).toBe('NA');
+  });
+
+  it('exports NA for firstVersionDOI when the first version has no DOI', () => {
+    const outputResponse: gp2Model.OutputResponse = {
+      ...gp2Fixtures.createOutputResponse(),
+      versions: [
+        {
+          title: 'version title',
+          id: 'version id',
+          documentType: 'Article',
+          addedDate: 'added date',
+        },
+      ],
+    };
+    expect(outputToCSV(outputResponse).firstVersionDOI).toBe('NA');
   });
 
   it('formats the date', () => {

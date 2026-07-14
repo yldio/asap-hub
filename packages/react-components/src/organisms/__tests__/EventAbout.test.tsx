@@ -54,6 +54,31 @@ it('hides the show more toggle with the expandable variant while the text fits',
   expect(queryByRole('button')).not.toBeInTheDocument();
 });
 
+it('omits the description and divider with the expandable variant when there is none', () => {
+  const { queryByText, getByText } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={undefined}
+      tags={['Tag A']}
+    />,
+  );
+  expect(queryByText(/About/i)).not.toBeInTheDocument();
+  expect(getByText('Tag A')).toBeVisible();
+});
+
+it('separates the description and tags with a divider in the expandable variant', () => {
+  const { container } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={'<p>description</p>'}
+      tags={['Tag A']}
+    />,
+  );
+  expect(container.querySelector('hr')).toBeInTheDocument();
+});
+
 it('renders the event tags', () => {
   const { getByText } = render(<EventAbout {...props} tags={['Tag A']} />);
   expect(getByText(/tags/i)).toBeVisible();

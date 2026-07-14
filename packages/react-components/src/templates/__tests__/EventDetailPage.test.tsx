@@ -71,6 +71,19 @@ it('does not render the last updated date', () => {
   expect(screen.queryByText(/last updated/i)).not.toBeInTheDocument();
 });
 
+it('falls back to the event dates when hasFinished is not provided', () => {
+  renderPage(
+    <EventDetailPage
+      {...props}
+      hasFinished={undefined}
+      startDate={subDays(new Date(), 2).toISOString()}
+      endDate={subDays(new Date(), 1).toISOString()}
+    />,
+  );
+  expect(screen.queryByText(/join this event/i)).not.toBeInTheDocument();
+  expect(screen.queryByText('Contact tech support')).not.toBeInTheDocument();
+});
+
 it('omits the speakers and join card when there is nothing to show', () => {
   renderPage(
     <EventDetailPage {...props} hasFinished>

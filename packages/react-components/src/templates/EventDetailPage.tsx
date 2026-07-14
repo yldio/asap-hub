@@ -18,6 +18,8 @@ import {
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 import { useScrollToHash } from '../routing';
+import { useDateHasPassed } from '../date';
+import { considerEndedAfter } from '../utils';
 import { paper, steel } from '../colors';
 import PageConstraints from './PageConstraints';
 
@@ -88,7 +90,9 @@ const EventDetailPage = <
   ...props
 }: EventDetailPageProps<T>) => {
   useScrollToHash();
-  const displayJoinEvent = !props.hideMeetingLink && !hasFinished;
+  const hasEnded = useDateHasPassed(considerEndedAfter(props.endDate));
+  const finished = hasFinished ?? hasEnded;
+  const displayJoinEvent = !props.hideMeetingLink && !finished;
 
   return (
     <article>
@@ -145,7 +149,7 @@ const EventDetailPage = <
             />
           )}
 
-          {!hasFinished && (
+          {!finished && (
             <CtaCard
               href={createMailTo(TECH_SUPPORT_EMAIL)}
               buttonText="Contact tech support"
@@ -156,7 +160,7 @@ const EventDetailPage = <
             </CtaCard>
           )}
         </div>
-        {!hasFinished && (
+        {!finished && (
           <Paragraph noMargin accent="lead">
             Having issues? Set up your calendar manually with these instructions
             for{' '}

@@ -37,7 +37,7 @@ type EventPageProps<
     | gp2.OutputResponse['relatedOutputs'],
 > = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
-  ComponentProps<typeof EventAbout> &
+  Omit<ComponentProps<typeof EventAbout>, 'variant'> &
   Pick<
     ComponentProps<typeof RelatedResearchCard>,
     'getSourceIcon' | 'tableTitles'

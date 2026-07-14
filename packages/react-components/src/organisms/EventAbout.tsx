@@ -13,13 +13,7 @@ import { rem } from '../pixels';
 const TAGS_COPY =
   'Explore keywords related to skills, techniques, resources, and tools.';
 
-const expandableContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(24),
-});
-
-const expandableDescriptionStyles = css({
+const expandableColumnStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(24),
@@ -47,9 +41,9 @@ const EventAbout: React.FC<EventAboutProps> = ({
 }) => {
   if (variant === 'expandable') {
     return (
-      <div css={expandableContainerStyles}>
+      <div css={expandableColumnStyles}>
         {description ? (
-          <div css={expandableDescriptionStyles}>
+          <div css={expandableColumnStyles}>
             <Headline2 noMargin styleAsHeading={4}>
               About this event
             </Headline2>

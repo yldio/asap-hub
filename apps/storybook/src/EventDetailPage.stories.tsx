@@ -37,21 +37,25 @@ const pageProps = (
   getIconForDocumentType: () => getIconForDocumentType('Article'),
 });
 
-export const Normal = () => (
-  <EventDetailPage
-    {...pageProps(
-      {},
-      {
-        numberOfSpeakers: number('Number of speakers', 4),
-        numberOfUnknownSpeakers: number('Number of unknown speakers', 2),
-        numberOfExternalSpeakers: number('Number of external speakers', 0),
-        isEventInThePast: boolean('Has the event passed', false),
-      },
-    )}
-    hideMeetingLink={boolean('Hide Meeting Link', false)}
-    displayCalendar={boolean('display calendar', true)}
-  />
-);
+export const Normal = () => {
+  const isEventInThePast = boolean('Has the event passed', false);
+  return (
+    <EventDetailPage
+      {...pageProps(
+        {},
+        {
+          numberOfSpeakers: number('Number of speakers', 4),
+          numberOfUnknownSpeakers: number('Number of unknown speakers', 2),
+          numberOfExternalSpeakers: number('Number of external speakers', 0),
+          isEventInThePast,
+        },
+      )}
+      hasFinished={isEventInThePast}
+      hideMeetingLink={boolean('Hide Meeting Link', false)}
+      displayCalendar={boolean('display calendar', true)}
+    />
+  );
+};
 
 export const Live = () => (
   <EventDetailPage

@@ -472,6 +472,46 @@ describe('OutputForm', () => {
         expect(defaultProps.shareOutput).toHaveBeenCalled();
       });
     });
+
+    it('shows a loader on the Save button while an edited output is saving', async () => {
+      const user = userEvent.setup();
+      const { addNotification } = setup();
+      const output = {
+        ...defaultProps,
+        ...requiredProps,
+        ...gp2Fixtures.createOutputResponse(),
+        shareOutput: () =>
+          new Promise<gp2.OutputResponse | void>(() => {
+            /* never resolves, to hold the loading state */
+          }),
+        publishDate: '2020-03-04',
+        tags: [{ id: 'tag-1', name: 'Tag' }],
+        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+        documentType: 'Dataset' as gp2.OutputDocumentType,
+      };
+      render(<OutputForm {...output} />, {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
+          </NotificationContext.Provider>
+        ),
+      });
+
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+      void user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /cancel/i })).toBeDisabled();
+    });
   });
 
   describe('Versioning', () => {

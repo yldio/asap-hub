@@ -22,11 +22,13 @@ let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 describe('form buttons', () => {
   const id = '42';
   const saveFn = jest.fn();
+  const saveDraftFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
 
@@ -87,6 +89,7 @@ describe('form buttons', () => {
               researchOutputDocumentTypeToType[documentType],
             )}
             onSave={saveFn}
+            onSaveDraft={saveDraftFn}
             getLabSuggestions={getLabSuggestions}
             getAuthorSuggestions={getAuthorSuggestions}
             researchTags={researchTags}
@@ -215,6 +218,59 @@ describe('form buttons', () => {
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
+
+  describe('save loader', () => {
+    it('shows a loader on the Save button while a published output is saving', async () => {
+      const reportValidity = jest
+        .spyOn(HTMLFormElement.prototype, 'reportValidity')
+        .mockReturnValue(true);
+      saveFn.mockImplementation(
+        () =>
+          new Promise(() => {
+            /* never resolves, to hold the loading state */
+          }),
+      );
+      await setupForm({
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        published: true,
+        researchOutputData: createResearchOutputResponse(),
+      });
+
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+      void userEvent.click(screen.getByRole('button', { name: /Save/i }));
+
+      expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
+      reportValidity.mockRestore();
+    });
+
+    it('shows a loader on the Save Draft button while a draft is saving', async () => {
+      const reportValidity = jest
+        .spyOn(HTMLFormElement.prototype, 'reportValidity')
+        .mockReturnValue(true);
+      saveDraftFn.mockImplementation(
+        () =>
+          new Promise(() => {
+            /* never resolves, to hold the loading state */
+          }),
+      );
+      await setupForm({
+        canEditResearchOutput: true,
+        canPublishResearchOutput: false,
+        published: false,
+        researchOutputData: createResearchOutputResponse(),
+      });
+
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+      void userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+
+      expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
+      reportValidity.mockRestore();
+    });
+  });
+
   describe('descriptionUnchangedWarning', () => {
     it('Shows correct button for draft save warning', async () => {
       await setupForm({

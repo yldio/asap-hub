@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useId, useRef, useState } from 'react';
-import { Button, Label, Paragraph, Spinner, Tag } from '../atoms';
+import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
@@ -150,17 +150,14 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                 primary
                 small
                 enabled={!!enabled && canUploadFile}
+                loading={isSubmitting}
                 noMargin
                 id={id}
                 aria-describedby={description ? descriptionId : undefined}
                 preventDefault={false}
                 onClick={() => canUploadFile && fileInputRef.current?.click()}
               >
-                {isSubmitting ? (
-                  <Spinner color="currentColor" css={{ marginRight: rem(8) }} />
-                ) : (
-                  <div css={iconStyles}>{plusIcon}</div>
-                )}
+                {!isSubmitting && <div css={iconStyles}>{plusIcon}</div>}
                 {buttonText}
               </Button>
             </div>

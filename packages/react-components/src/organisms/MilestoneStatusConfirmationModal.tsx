@@ -94,12 +94,6 @@ const errorMessageStyles = css({
   color: error500.rgb,
 });
 
-const confirmButtonContentStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
 export type MilestoneStatusConfirmationStatus = 'Complete' | 'Terminated';
 
 type MilestoneStatusConfirmationModalProps = {
@@ -220,6 +214,7 @@ const MilestoneStatusConfirmationModal: React.FC<
               primary
               noMargin
               enabled={!isConfirmDisabled}
+              loading={isSaving}
               onClick={async () => {
                 if (isConfirmDisabled) return;
                 setIsSaving(true);
@@ -231,12 +226,7 @@ const MilestoneStatusConfirmationModal: React.FC<
                 }
               }}
             >
-              <span css={confirmButtonContentStyles}>
-                {isSaving && (
-                  <Spinner size={16} thickness={2} color="currentColor" arc />
-                )}
-                Confirm and Notify
-              </span>
+              Confirm and Notify
             </Button>
           </div>
         </div>

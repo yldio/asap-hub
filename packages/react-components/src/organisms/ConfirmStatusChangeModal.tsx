@@ -110,6 +110,7 @@ const ConfirmStatusChangeModal: React.FC<ConfirmStatusChangeModalProps> = ({
             <Button
               primary
               enabled={!isRequestInProgress}
+              loading={isRequestInProgress}
               onClick={handleConfirm}
             >
               {confirmButtonText}

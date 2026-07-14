@@ -7,7 +7,7 @@ import {
   getButtonChildren,
   getButtonStyles,
 } from '../button';
-import { lead, neutral500 } from '../colors';
+import { neutral500 } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import { noop } from '../utils';
 import { getLinkColors, styles as linkStyles } from './Link';
@@ -108,9 +108,9 @@ const Button: React.FC<ButtonProps> = ({
     {loading ? (
       <span css={buttonLoadingContentStyles}>
         <Spinner
-          size={16}
+          size={small ? 18 : 24}
           thickness={2}
-          color={lead.rgb}
+          color="currentColor"
           trackColor={neutral500.rgb}
         />
         {getButtonChildren(children)}

@@ -12,7 +12,6 @@ import {
   MultiSelectOptionsType,
   paper,
   Pill,
-  Spinner,
 } from '..';
 import { mobileScreen, rem } from '../pixels';
 
@@ -260,15 +259,8 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                 : onImportManuscript
             }
             primary
-            overrideStyles={
-              isImportingManuscript
-                ? css({
-                    gap: rem(8),
-                  })
-                : undefined
-            }
+            loading={isImportingManuscript}
           >
-            {isImportingManuscript && <Spinner color="currentColor" />}
             {manuscriptOutputSelection === 'manually' ? 'Create' : 'Import'}
           </Button>
         </div>

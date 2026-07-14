@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
-import { Button, crossIcon, Headline3, Modal, Paragraph, Spinner } from '..';
+import { Button, crossIcon, Headline3, Modal, Paragraph } from '..';
 import { mobileScreen, rem } from '../pixels';
 
 type modal = 'submit' | 'cancel' | null;
@@ -102,13 +102,10 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
               <Button
                 primary
                 enabled={!isSubmitting}
+                loading={isSubmitting}
                 preventDefault
                 onClick={handleSubmit}
-                overrideStyles={css({
-                  gap: rem(8),
-                })}
               >
-                {isSubmitting && <Spinner color="currentColor" />}
                 Submit Manuscript
               </Button>
             </div>

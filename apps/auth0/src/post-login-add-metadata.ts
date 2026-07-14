@@ -203,7 +203,7 @@ export const onExecutePostLogin = async (
       `requesting metadata from ${apiUrl}/webhook/users/${event.user.user_id}`,
     );
     const response = await fetchUserMetadata(apiUrl, event);
-    if (isUserMetadataResponse(response) && response.alumniSinceDate) {
+    if (response.alumniSinceDate) {
       return api.access.deny('alumni-user-access-denied');
     }
     const user = extractUser(response);

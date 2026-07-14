@@ -176,6 +176,19 @@ it('renders the event materials once the event has ended', () => {
   expect(screen.getByText('My Presentation')).toBeVisible();
 });
 
+it('renders additional meeting materials once the event has ended', () => {
+  renderPage(
+    <EventDetailPage
+      {...props}
+      endDate={subDays(new Date(), 100).toISOString()}
+      meetingMaterials={[
+        { title: 'Extra Material', url: 'http://example.com' },
+      ]}
+    />,
+  );
+  expect(screen.getByText('Extra Material')).toBeVisible();
+});
+
 it('renders calendar list when displayCalendar is true', () => {
   renderPage(
     <EventDetailPage

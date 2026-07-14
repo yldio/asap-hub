@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { EventResponse, gp2 } from '@asap-hub/model';
+import { EventResponse } from '@asap-hub/model';
 
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { BackLink, CtaCard } from '../molecules';
@@ -45,11 +45,7 @@ const backLinkContainerStyles = css({
   marginBottom: rem(56),
 });
 
-type EventDetailPageProps<
-  T extends
-    | EventResponse['relatedResearch']
-    | gp2.OutputResponse['relatedOutputs'],
-> = ComponentProps<typeof EventCard> &
+type EventDetailPageProps = ComponentProps<typeof EventCard> &
   ComponentProps<typeof JoinEvent> &
   Omit<ComponentProps<typeof EventAbout>, 'variant'> &
   Pick<
@@ -57,23 +53,17 @@ type EventDetailPageProps<
     'getSourceIcon' | 'tableTitles'
   > &
   Pick<EventResponse, 'calendar' | 'relatedTutorials'> & {
-    readonly relatedResearch?: T;
+    readonly relatedResearch?: EventResponse['relatedResearch'];
     readonly backHref?: string;
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
-    readonly titleOutputs?: string;
-    readonly descriptionOutput?: string;
     readonly getIconForDocumentType: (
-      documentType: T[number]['documentType'],
+      documentType: EventResponse['relatedResearch'][number]['documentType'],
     ) => EmotionJSX.Element;
     readonly hasFinished?: boolean;
     readonly children?: ReactNode;
   };
-const EventDetailPage = <
-  T extends
-    | EventResponse['relatedResearch']
-    | gp2.OutputResponse['relatedOutputs'],
->({
+const EventDetailPage = ({
   hasFinished,
   backHref,
   calendar,
@@ -82,13 +72,11 @@ const EventDetailPage = <
   children,
   relatedTutorials,
   relatedResearch,
-  titleOutputs,
-  descriptionOutput,
   getIconForDocumentType,
   getSourceIcon,
   tableTitles,
   ...props
-}: EventDetailPageProps<T>) => {
+}: EventDetailPageProps) => {
   useScrollToHash();
   const hasEnded = useDateHasPassed(considerEndedAfter(props.endDate));
   const finished = hasFinished ?? hasEnded;
@@ -125,8 +113,7 @@ const EventDetailPage = <
           )}
           {relatedResearch && relatedResearch.length > 0 && (
             <RelatedResearchCard
-              title={titleOutputs}
-              description={descriptionOutput || 'Find all related research.'}
+              description="Find all related research."
               relatedResearch={relatedResearch}
               getIconForDocumentType={getIconForDocumentType}
               getSourceIcon={getSourceIcon}

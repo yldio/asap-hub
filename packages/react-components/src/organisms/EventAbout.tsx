@@ -32,9 +32,6 @@ const expandableTextSpacingStyles = css({
   'p:last-of-type': {
     marginBottom: 0,
   },
-  '& > div > div:nth-of-type(2)': {
-    marginTop: rem(22),
-  },
 });
 
 type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
@@ -57,7 +54,7 @@ const EventAbout: React.FC<EventAboutProps> = ({
               About this event
             </Headline2>
             <div css={expandableTextSpacingStyles}>
-              <ExpandableText variant="arrow">
+              <ExpandableText variant="arrow" toggleMarginTop={22}>
                 <RichText text={description} toc={false} />
               </ExpandableText>
             </div>

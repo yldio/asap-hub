@@ -24,6 +24,7 @@ const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
 beforeEach(() => {
+  disable('NEW_EVENT_PAGE');
   mockGetEvent.mockClear();
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
@@ -72,9 +73,9 @@ it('renders tags', async () => {
       { id: '2', name: 'Tag 2' },
     ],
   });
-  const { findAllByText } = render(<Event />, { wrapper });
-  expect((await findAllByText('Tag 1'))[0]).toBeVisible();
-  expect((await findAllByText('Tag 2'))[0]).toBeVisible();
+  const { findByText } = render(<Event />, { wrapper });
+  expect(await findByText('Tag 1')).toBeVisible();
+  expect(await findByText('Tag 2')).toBeVisible();
 });
 
 it('renders the speakers list', async () => {

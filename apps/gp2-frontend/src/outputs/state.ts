@@ -1,4 +1,4 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -16,14 +16,7 @@ import {
   updateOutput,
 } from './api';
 
-export const outputQueryKeys = {
-  all: ['outputs'] as const,
-  lists: () => [...outputQueryKeys.all, 'list'] as const,
-  list: (options: OutputListOptions) =>
-    [...outputQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...outputQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...outputQueryKeys.details(), id] as const,
-};
+export const outputQueryKeys = createQueryKeys<OutputListOptions>('outputs');
 
 export const useOutputs = (
   options: OutputListOptions,

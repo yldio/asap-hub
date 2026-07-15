@@ -1,4 +1,4 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -15,14 +15,7 @@ import {
   putProjectResources,
 } from './api';
 
-export const projectQueryKeys = {
-  all: ['projects'] as const,
-  lists: () => [...projectQueryKeys.all, 'list'] as const,
-  list: (options: ProjectListOptions) =>
-    [...projectQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...projectQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...projectQueryKeys.details(), id] as const,
-};
+export const projectQueryKeys = createQueryKeys<ProjectListOptions>('projects');
 
 export const useProjects = (
   options: ProjectListOptions,

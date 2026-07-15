@@ -1,3 +1,4 @@
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -14,11 +15,8 @@ import {
 } from './api';
 
 export const workingGroupQueryKeys = {
-  all: ['working-groups'] as const,
-  lists: () => [...workingGroupQueryKeys.all, 'list'] as const,
-  details: () => [...workingGroupQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...workingGroupQueryKeys.details(), id] as const,
-  network: () => [...workingGroupQueryKeys.all, 'network'] as const,
+  ...createQueryKeys<GetListOptions>('working-groups'),
+  network: () => ['working-groups', 'network'] as const,
 };
 
 export const useWorkingGroupNetworkState =

@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys } from '@asap-hub/frontend-utils';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import {
   matchQuery,
@@ -22,14 +22,7 @@ import {
   UserListOptions,
 } from './api';
 
-export const userQueryKeys = {
-  all: ['users'] as const,
-  lists: () => [...userQueryKeys.all, 'list'] as const,
-  list: (options: UserListOptions) =>
-    [...userQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...userQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...userQueryKeys.details(), id] as const,
-};
+export const userQueryKeys = createQueryKeys<UserListOptions>('users');
 
 export const useUsers = (options: UserListOptions): gp2.ListUserResponse => {
   const { client } = useAlgolia();

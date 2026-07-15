@@ -1,7 +1,4 @@
-import {
-  getEventListOptions,
-  normalizeListOptions,
-} from '@asap-hub/frontend-utils';
+import { createQueryKeys, getEventListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { useMemo, useRef } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -13,14 +10,7 @@ import { EventListOptions, getEvent, getEvents } from './api';
 
 const MINUTE_MS = 60000;
 
-export const eventQueryKeys = {
-  all: ['events'] as const,
-  lists: () => [...eventQueryKeys.all, 'list'] as const,
-  list: (options: EventListOptions) =>
-    [...eventQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...eventQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...eventQueryKeys.details(), id] as const,
-};
+export const eventQueryKeys = createQueryKeys<EventListOptions>('events');
 
 export const useEvents = (options: EventListOptions): gp2.ListEventResponse => {
   const { client } = useAlgolia();

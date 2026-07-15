@@ -1,3 +1,4 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
@@ -96,6 +97,7 @@ export const algoliaIndex = process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 export const service = 'asap-hub';
 export const asyncService = 'asap-hub-async';
+export const indexersService = 'asap-hub-indexers';
 
 // The queues live in the original asap-hub stack; the async service reaches
 // them by constructed ARN/URL so the stacks stay deploy-order independent.
@@ -142,6 +144,22 @@ export const offlineSSM =
     : {};
 
 export const eventBusSourceContentful = 'asap.contentful';
+
+export const contentfulEventBridge = (
+  detailTypes: WebhookDetailType[],
+  retryPolicy?: { maximumRetryAttempts: number },
+) => [
+  {
+    eventBridge: {
+      eventBus: 'asap-events-${self:provider.stage}',
+      pattern: {
+        source: [eventBusSourceContentful],
+        'detail-type': detailTypes,
+      },
+      ...(retryPolicy ? { retryPolicy } : {}),
+    },
+  },
+];
 
 export const providerEnvironment = {
   ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,

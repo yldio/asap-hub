@@ -1,16 +1,11 @@
 import { gp2 } from '@asap-hub/model';
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createListQueryKeys } from '@asap-hub/frontend-utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { getAlgoliaNews, NewsListOptions } from './api';
 import { useAlgolia } from '../hooks/algolia';
 
-export const newsQueryKeys = {
-  all: ['news'] as const,
-  lists: () => [...newsQueryKeys.all, 'list'] as const,
-  list: (options: NewsListOptions) =>
-    [...newsQueryKeys.lists(), normalizeListOptions(options)] as const,
-};
+export const newsQueryKeys = createListQueryKeys<NewsListOptions>('news');
 
 export const useNews = (options: NewsListOptions) => {
   const { client } = useAlgolia();

@@ -1,7 +1,4 @@
-import {
-  createQueryKeys,
-  normalizeListOptions,
-} from '@asap-hub/frontend-utils';
+import { createListQueryKeys, createQueryKeys } from '@asap-hub/frontend-utils';
 import {
   FetchProjectMilestonesExportOptions,
   ListProjectMilestonesResponse,
@@ -36,15 +33,8 @@ import {
 
 export const projectQueryKeys = createQueryKeys<ProjectListOptions>('projects');
 
-export const projectMilestoneQueryKeys = {
-  all: ['project-milestones'] as const,
-  lists: () => [...projectMilestoneQueryKeys.all, 'list'] as const,
-  list: (options: MilestonesListOptions) =>
-    [
-      ...projectMilestoneQueryKeys.lists(),
-      normalizeListOptions(options),
-    ] as const,
-};
+export const projectMilestoneQueryKeys =
+  createListQueryKeys<MilestonesListOptions>('project-milestones');
 
 export const useProjects = (
   options: ProjectListOptions,

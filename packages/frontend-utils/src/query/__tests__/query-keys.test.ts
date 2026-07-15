@@ -1,5 +1,5 @@
 import { GetListOptions, normalizeListOptions } from '../../index';
-import { createQueryKeys } from '../query-keys';
+import { createListQueryKeys, createQueryKeys } from '../query-keys';
 
 // The hand-written factory that createQueryKeys replaces, kept here to prove
 // the generated keys serialize identically.
@@ -35,5 +35,19 @@ describe('createQueryKeys', () => {
       'list',
       normalizeListOptions(options),
     ]);
+  });
+
+  describe('createListQueryKeys', () => {
+    const listKeys = createListQueryKeys<GetListOptions>('news');
+
+    it('serializes identically to the hand-written factory', () => {
+      expect(listKeys.all).toEqual(legacyKeys.all);
+      expect(listKeys.lists()).toEqual(legacyKeys.lists());
+      expect(listKeys.list(options)).toEqual(legacyKeys.list(options));
+    });
+
+    it('only exposes the list shapes', () => {
+      expect(Object.keys(listKeys)).toEqual(['all', 'lists', 'list']);
+    });
   });
 });

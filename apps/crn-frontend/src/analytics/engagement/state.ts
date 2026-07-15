@@ -1,4 +1,8 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
   EngagementResponse,
@@ -45,18 +49,11 @@ export const useAnalyticsEngagement = (
 
   return useSuspenseQuery({
     queryKey: engagementQueryKeys.list(options),
-    queryFn: async (): Promise<ListEngagementResponse> => {
-      try {
-        return await getEngagement(opensearchClient, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListEngagementResponse> =>
+      withEmptyListFallback(() => getEngagement(opensearchClient, options), {
+        total: 0,
+        items: [],
+      }),
   }).data;
 };
 
@@ -90,20 +87,14 @@ export const useAnalyticsMeetingRepAttendance = (
 
   const { data } = useSuspenseQuery({
     queryKey: meetingRepAttendanceQueryKeys.list(stateOptions),
-    queryFn: async () => {
-      try {
-        // a queryFn must never return undefined — cache `null` instead
-        return (
-          (await getMeetingRepAttendance(opensearchClient, stateOptions)) ??
-          null
-        );
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getMeetingRepAttendance(opensearchClient, stateOptions),
+          ),
+        { total: 0, items: [] },
+      ),
   });
   return data as ListMeetingRepAttendanceResponse;
 };

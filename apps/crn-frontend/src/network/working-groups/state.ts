@@ -1,4 +1,9 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
@@ -18,10 +23,10 @@ export const useWorkingGroupById = (
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: workingGroupQueryKeys.detail(id),
-    // getWorkingGroup resolves undefined on a 404, but a queryFn must not
-    // return undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getWorkingGroup(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getWorkingGroup(id, await getAuthorization()),
+      ),
   });
   return data ?? undefined;
 };
@@ -32,17 +37,10 @@ export const useWorkingGroups = (
   const algoliaClient = useAlgolia();
   return useSuspenseQuery({
     queryKey: workingGroupQueryKeys.list(options),
-    queryFn: async (): Promise<WorkingGroupListResponse> => {
-      try {
-        return await getWorkingGroups(algoliaClient.client, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<WorkingGroupListResponse> =>
+      withEmptyListFallback(
+        () => getWorkingGroups(algoliaClient.client, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };

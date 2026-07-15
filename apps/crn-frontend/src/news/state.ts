@@ -1,4 +1,8 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+} from '@asap-hub/frontend-utils';
 import { NewsResponse } from '@asap-hub/model';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
@@ -19,10 +23,8 @@ export const useNewsById = (id: string): NewsResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: newsQueryKeys.detail(id),
-    // getNewsById resolves `undefined` on 404, but a queryFn must not return
-    // undefined — cache `null` and map it back for the consumer.
-    queryFn: async () =>
-      (await getNewsById(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getNewsById(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

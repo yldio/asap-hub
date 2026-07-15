@@ -1,5 +1,10 @@
 import { User } from '@asap-hub/auth';
-import { createQueryKeys, GetEventListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetEventListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -14,9 +19,8 @@ export const useEventById = (id: string): EventResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: eventQueryKeys.detail(id),
-    // getEvent resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () => (await getEvent(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getEvent(id, await getAuthorization())),
   });
   return data ?? undefined;
 };
@@ -53,17 +57,10 @@ export const useEvents = (
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: eventQueryKeys.list(options),
-    queryFn: async (): Promise<ListEventResponse> => {
-      try {
-        return await getEvents(client, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListEventResponse> =>
+      withEmptyListFallback(() => getEvents(client, options), {
+        total: 0,
+        items: [],
+      }),
   }).data;
 };

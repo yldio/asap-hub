@@ -1,4 +1,8 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListPublicationComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
@@ -51,21 +55,14 @@ export const useAnalyticsPublicationCompliance = (
 
   const { data } = useSuspenseQuery({
     queryKey: publicationComplianceQueryKeys.list(stateOptions),
-    queryFn: async () => {
-      try {
-        // a queryFn must never return undefined — cache `null` instead
-        return (
-          (await getPublicationCompliance(opensearchClient, options)) ?? null
-        );
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getPublicationCompliance(opensearchClient, options),
+          ),
+        { total: 0, items: [] },
+      ),
   });
   return data as ListPublicationComplianceOpensearchResponse;
 };

@@ -1,4 +1,9 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListUserResponse,
   UserPatchRequest,
@@ -32,18 +37,11 @@ export const useUsers = (options: GetListOptions): ListUserResponse => {
   const algoliaClient = useAlgolia();
   return useSuspenseQuery({
     queryKey: userQueryKeys.list(options),
-    queryFn: async (): Promise<ListUserResponse> => {
-      try {
-        return await getUsers(algoliaClient.client, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListUserResponse> =>
+      withEmptyListFallback(() => getUsers(algoliaClient.client, options), {
+        total: 0,
+        items: [],
+      }),
   }).data;
 };
 
@@ -51,9 +49,8 @@ export const useUserById = (id: string): UserResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: userQueryKeys.detail(id),
-    // getUser resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () => (await getUser(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getUser(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

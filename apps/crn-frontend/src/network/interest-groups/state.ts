@@ -1,4 +1,9 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   InterestGroupResponse,
   ListInterestGroupResponse,
@@ -19,18 +24,11 @@ export const useInterestGroups = (
   const getAuthorization = useAuthorization();
   return useSuspenseQuery({
     queryKey: interestGroupQueryKeys.list(options),
-    queryFn: async (): Promise<ListInterestGroupResponse> => {
-      try {
-        return await getInterestGroups(options, await getAuthorization());
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListInterestGroupResponse> =>
+      withEmptyListFallback(
+        async () => getInterestGroups(options, await getAuthorization()),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -40,10 +38,10 @@ export const useInterestGroupById = (
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: interestGroupQueryKeys.detail(id),
-    // getInterestGroup resolves undefined on a 404, but a queryFn must not
-    // return undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getInterestGroup(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getInterestGroup(id, await getAuthorization()),
+      ),
   });
   return data ?? undefined;
 };

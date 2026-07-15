@@ -3,6 +3,8 @@ import {
   BackendError,
   createQueryKeys,
   normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
@@ -78,18 +80,11 @@ export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
   const algoliaClient = useAlgolia();
   return useSuspenseQuery({
     queryKey: teamQueryKeys.list(options),
-    queryFn: async (): Promise<ListTeamResponse> => {
-      try {
-        return await getAlgoliaTeams(algoliaClient.client, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListTeamResponse> =>
+      withEmptyListFallback(
+        () => getAlgoliaTeams(algoliaClient.client, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -97,9 +92,8 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: teamQueryKeys.detail(id),
-    // getTeam resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () => (await getTeam(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getTeam(id, await getAuthorization())),
   });
   return data ?? undefined;
 };
@@ -125,10 +119,8 @@ export const useManuscriptById = (
   const queryClient = useQueryClient();
   const { data } = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.detail(id),
-    // getManuscript resolves undefined on a 404, but a queryFn must not
-    // return undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getManuscript(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getManuscript(id, await getAuthorization())),
   });
   const setManuscript = useCallback<
     Dispatch<SetStateAction<ManuscriptResponse | undefined>>
@@ -162,15 +154,15 @@ export const useManuscriptWorkspaceUrl = (
       tab,
       projectWorkspaceEnabled,
     }),
-    // getManuscriptWorkspaceUrl resolves undefined on a 404 — cache null and
-    // map it back below (a queryFn must not return undefined).
-    queryFn: async () =>
-      (await getManuscriptWorkspaceUrl(
-        manuscriptId,
-        await getAuthorization(),
-        tab,
-        projectWorkspaceEnabled,
-      )) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getManuscriptWorkspaceUrl(
+          manuscriptId,
+          await getAuthorization(),
+          tab,
+          projectWorkspaceEnabled,
+        ),
+      ),
   });
   return data ?? undefined;
 };
@@ -470,18 +462,11 @@ export const useManuscripts = (
 
   const manuscripts = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.list(options),
-    queryFn: async (): Promise<ListPartialManuscriptResponse> => {
-      try {
-        return await getManuscripts(algoliaClient.client, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListPartialManuscriptResponse> =>
+      withEmptyListFallback(
+        () => getManuscripts(algoliaClient.client, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 
   // Surgical write-through after a manuscript mutation: merges the selected

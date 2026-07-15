@@ -1,5 +1,9 @@
 import { expandUserRoles } from '@asap-hub/auth';
-import { createQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -35,10 +39,10 @@ export const useResearchOutputById = (
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: researchOutputQueryKeys.detail(id),
-    // getResearchOutput resolves undefined on a 404, but a queryFn must not
-    // return undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getResearchOutput(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getResearchOutput(id, await getAuthorization()),
+      ),
   });
   return data ?? undefined;
 };
@@ -48,30 +52,22 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const getAuthorization = useAuthorization();
   return useSuspenseQuery({
     queryKey: researchOutputQueryKeys.list(options),
-    queryFn: async (): Promise<ListResearchOutputResponse> => {
-      try {
-        if (options.draftsOnly) {
-          return await getDraftResearchOutputs(
-            options,
-            await getAuthorization(),
-          );
-        }
-        const data = await getResearchOutputs(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListResearchOutputResponse> =>
+      withEmptyListFallback(
+        async () => {
+          if (options.draftsOnly) {
+            return getDraftResearchOutputs(options, await getAuthorization());
+          }
+          const data = await getResearchOutputs(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 

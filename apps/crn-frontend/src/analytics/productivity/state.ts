@@ -1,4 +1,7 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
@@ -50,18 +53,11 @@ export const useAnalyticsUserProductivity = (
 
   return useSuspenseQuery({
     queryKey: userProductivityQueryKeys.list(options),
-    queryFn: async (): Promise<ListUserProductivityResponse> => {
-      try {
-        return await getUserProductivity(opensearchClient, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListUserProductivityResponse> =>
+      withEmptyListFallback(
+        () => getUserProductivity(opensearchClient, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -103,15 +99,10 @@ export const useAnalyticsTeamProductivity = (
 
   return useSuspenseQuery({
     queryKey: teamProductivityQueryKeys.list(options),
-    queryFn: async (): Promise<ListTeamProductivityResponse> => {
-      try {
-        return await getTeamProductivity(opensearchClient, options);
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListTeamProductivityResponse> =>
+      withEmptyListFallback(
+        () => getTeamProductivity(opensearchClient, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };

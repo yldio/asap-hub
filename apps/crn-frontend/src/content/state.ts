@@ -1,3 +1,4 @@
+import { nullOnUndefined } from '@asap-hub/frontend-utils';
 import { useQuery } from '@tanstack/react-query';
 
 import { getPageByPath } from './api';
@@ -13,7 +14,5 @@ export const pageQueryKeys = {
 export const usePageByPageId = (pageId: string) =>
   useQuery({
     queryKey: pageQueryKeys.detail(pageId),
-    // getPageByPath resolves `undefined` on 404, but a queryFn must not
-    // return undefined — cache `null`; the consumer only checks truthiness.
-    queryFn: async () => (await getPageByPath(pageId)) ?? null,
+    queryFn: () => nullOnUndefined(() => getPageByPath(pageId)),
   });

@@ -1,3 +1,4 @@
+import { withEmptyListFallback } from '@asap-hub/frontend-utils';
 import { ListInterestGroupResponse } from '@asap-hub/model';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -18,37 +19,32 @@ export const useTeamInterestGroupsById = (
   const queryClient = useQueryClient();
   return useSuspenseQuery({
     queryKey: teamInterestGroupQueryKeys.byTeam(teamId),
-    queryFn: async (): Promise<ListInterestGroupResponse | 'noSuchTeam'> => {
-      try {
-        const interestGroups = await getTeamInterestGroups(
-          teamId,
-          await getAuthorization(),
-        );
-        if (interestGroups === undefined) {
-          return 'noSuchTeam';
-        }
-        // Write-through into the shared interest-group entity store,
-        // updating any cached interest-group list that contains them.
-        const byId = new Map(
-          interestGroups.items.map((group) => [group.id, group]),
-        );
-        queryClient.setQueriesData<ListInterestGroupResponse>(
-          { queryKey: interestGroupQueryKeys.lists() },
-          (cached) =>
-            cached && {
-              ...cached,
-              items: cached.items.map((item) => byId.get(item.id) ?? item),
-            },
-        );
-        return interestGroups;
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListInterestGroupResponse | 'noSuchTeam'> =>
+      withEmptyListFallback<ListInterestGroupResponse | 'noSuchTeam'>(
+        async () => {
+          const interestGroups = await getTeamInterestGroups(
+            teamId,
+            await getAuthorization(),
+          );
+          if (interestGroups === undefined) {
+            return 'noSuchTeam';
+          }
+          // Write-through into the shared interest-group entity store,
+          // updating any cached interest-group list that contains them.
+          const byId = new Map(
+            interestGroups.items.map((group) => [group.id, group]),
+          );
+          queryClient.setQueriesData<ListInterestGroupResponse>(
+            { queryKey: interestGroupQueryKeys.lists() },
+            (cached) =>
+              cached && {
+                ...cached,
+                items: cached.items.map((item) => byId.get(item.id) ?? item),
+              },
+          );
+          return interestGroups;
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };

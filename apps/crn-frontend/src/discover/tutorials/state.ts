@@ -1,4 +1,8 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+} from '@asap-hub/frontend-utils';
 import { TutorialsResponse } from '@asap-hub/model';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
@@ -19,10 +23,10 @@ export const useTutorialById = (id: string): TutorialsResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: tutorialQueryKeys.detail(id),
-    // getTutorialById resolves `undefined` on 404, but a queryFn must not
-    // return undefined — cache `null` and map it back for the consumer.
-    queryFn: async () =>
-      (await getTutorialById(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getTutorialById(id, await getAuthorization()),
+      ),
   });
   return data ?? undefined;
 };

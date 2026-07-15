@@ -1,4 +1,8 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
@@ -68,18 +72,11 @@ export const useAnalyticsUserCollaboration = (
 
   return useSuspenseQuery({
     queryKey: userCollaborationQueryKeys.list(options),
-    queryFn: async (): Promise<ListUserCollaborationResponse> => {
-      try {
-        return await getUserCollaboration(opensearchClient, options);
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListUserCollaborationResponse> =>
+      withEmptyListFallback(
+        () => getUserCollaboration(opensearchClient, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -93,16 +90,11 @@ export const useAnalyticsTeamCollaboration = (
 
   return useSuspenseQuery({
     queryKey: teamCollaborationQueryKeys.list(options),
-    queryFn: async (): Promise<ListTeamCollaborationResponse> => {
-      try {
-        return await getTeamCollaboration(opensearchClient, options);
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListTeamCollaborationResponse> =>
+      withEmptyListFallback(
+        () => getTeamCollaboration(opensearchClient, options),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -158,20 +150,14 @@ export const useAnalyticsSharingPrelimFindings = (
 
   const { data } = useSuspenseQuery({
     queryKey: prelimDataSharingQueryKeys.list(stateOptions),
-    queryFn: async () => {
-      try {
-        // a queryFn must never return undefined — cache `null` instead
-        return (
-          (await getPreliminaryDataSharing(opensearchClient, stateOptions)) ??
-          null
-        );
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getPreliminaryDataSharing(opensearchClient, stateOptions),
+          ),
+        { total: 0, items: [] },
+      ),
   });
   const preliminaryDataSharing = data as ListPreliminaryDataSharingResponse;
 

@@ -1,4 +1,8 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   ListPreprintComplianceOpensearchResponse,
   PreprintComplianceOpensearchResponse,
@@ -51,19 +55,14 @@ export const useAnalyticsPreprintCompliance = (
 
   const { data } = useSuspenseQuery({
     queryKey: preprintComplianceQueryKeys.list(stateOptions),
-    queryFn: async () => {
-      try {
-        // a queryFn must never return undefined — cache `null` instead
-        return (await getPreprintCompliance(opensearchClient, options)) ?? null;
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getPreprintCompliance(opensearchClient, options),
+          ),
+        { total: 0, items: [] },
+      ),
   });
   return data as ListPreprintComplianceOpensearchResponse;
 };

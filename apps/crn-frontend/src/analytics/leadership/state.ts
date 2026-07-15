@@ -1,4 +1,8 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
@@ -67,23 +71,17 @@ export const useAnalyticsLeadership = (
       tags,
       metric,
     }),
-    queryFn: async () => {
-      try {
-        return (
-          (await getAnalyticsLeadership(
-            opensearchClient,
-            options as AnalyticsSearchOptionsWithSort,
-          )) ?? null
-        );
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getAnalyticsLeadership(
+              opensearchClient,
+              options as AnalyticsSearchOptionsWithSort,
+            ),
+          ),
+        { total: 0, items: [] },
+      ),
   }).data as ListAnalyticsTeamLeadershipResponse;
 };
 
@@ -102,17 +100,13 @@ export const useAnalyticsOSChampion = (
       tags,
       timeRange,
     }),
-    queryFn: async () => {
-      try {
-        return (
-          (await getAnalyticsOSChampion(opensearchClient, options)) ?? null
-        );
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getAnalyticsOSChampion(opensearchClient, options),
+          ),
+        { total: 0, items: [] },
+      ),
   }).data as ListOSChampionOpensearchResponse;
 };

@@ -1,3 +1,4 @@
+import { withEmptyListFallback } from '@asap-hub/frontend-utils';
 import { ListInterestGroupResponse } from '@asap-hub/model';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -18,32 +19,27 @@ export const useUserInterestGroupsById = (
   const queryClient = useQueryClient();
   return useSuspenseQuery({
     queryKey: userInterestGroupQueryKeys.byUser(userId),
-    queryFn: async (): Promise<ListInterestGroupResponse | 'noSuchUser'> => {
-      try {
-        const interestGroups = await getUserInterestGroups(
-          userId,
-          await getAuthorization(),
-        );
-        if (interestGroups === undefined) {
-          return 'noSuchUser';
-        }
-        // Write-through into the shared interest-group entity store,
-        // seeding/refreshing the detail cache per group.
-        interestGroups.items.forEach((group) => {
-          queryClient.setQueryData(
-            interestGroupQueryKeys.detail(group.id),
-            group,
+    queryFn: (): Promise<ListInterestGroupResponse | 'noSuchUser'> =>
+      withEmptyListFallback<ListInterestGroupResponse | 'noSuchUser'>(
+        async () => {
+          const interestGroups = await getUserInterestGroups(
+            userId,
+            await getAuthorization(),
           );
-        });
-        return interestGroups;
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+          if (interestGroups === undefined) {
+            return 'noSuchUser';
+          }
+          // Write-through into the shared interest-group entity store,
+          // seeding/refreshing the detail cache per group.
+          interestGroups.items.forEach((group) => {
+            queryClient.setQueryData(
+              interestGroupQueryKeys.detail(group.id),
+              group,
+            );
+          });
+          return interestGroups;
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };

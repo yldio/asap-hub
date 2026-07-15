@@ -2,7 +2,10 @@ import {
   CRNTagSearchEntities,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { ListResponse, TagSearchResponse } from '@asap-hub/model';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
@@ -34,7 +37,7 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
       if (options.searchQuery === '' && options.tags.length === 0) {
         return EMPTY_ALGOLIA_RESPONSE;
       }
-      try {
+      return withEmptyListFallback(async () => {
         const data = await getTagSearch(client, entityTypes, options);
         return {
           total: data.nbHits ?? 0,
@@ -42,14 +45,7 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,
         };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become the empty response so the page keeps rendering.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return EMPTY_ALGOLIA_RESPONSE;
-      }
+      }, EMPTY_ALGOLIA_RESPONSE);
     },
   }).data;
 };

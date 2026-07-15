@@ -1,4 +1,7 @@
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  normalizeListOptions,
+  nullOnUndefined,
+} from '@asap-hub/frontend-utils';
 import { skipToken, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { AnalyticsPerformanceOptions } from './analytics-options';
 
@@ -31,12 +34,10 @@ export const makePerformanceQuery = <T>(scope: string) => {
     const usePerformance = (options: AnalyticsPerformanceOptions): T => {
       const opensearchClient = useAnalyticsOpensearch<T>(opensearchIndex);
 
-      // a queryFn must never return undefined — cache `null` and surface
-      // `data` as `T`
       return useSuspenseQuery({
         queryKey: keys.detail(options),
-        queryFn: async () =>
-          (await get(opensearchClient.client, options)) ?? null,
+        queryFn: () =>
+          nullOnUndefined(() => get(opensearchClient.client, options)),
       }).data as T;
     };
     return usePerformance;

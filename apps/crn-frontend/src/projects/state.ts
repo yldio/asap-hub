@@ -1,4 +1,9 @@
-import { createListQueryKeys, createQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createListQueryKeys,
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import {
   FetchProjectMilestonesExportOptions,
   ListProjectMilestonesResponse,
@@ -42,18 +47,11 @@ export const useProjects = (
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: projectQueryKeys.list(options),
-    queryFn: async (): Promise<ListProjectResponse> => {
-      try {
-        return toListProjectResponse(await getProjects(client, options));
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListProjectResponse> =>
+      withEmptyListFallback(
+        async () => toListProjectResponse(await getProjects(client, options)),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -64,10 +62,8 @@ export const useProjectById = (id: string): ProjectDetail | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: projectQueryKeys.detail(id),
-    // getProject resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getProject(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getProject(id, await getAuthorization())),
   });
   return data ?? undefined;
 };
@@ -126,18 +122,11 @@ export const useProjectMilestones = (
   const getAuthorization = useAuthorization();
   return useSuspenseQuery({
     queryKey: projectMilestoneQueryKeys.list(options),
-    queryFn: async (): Promise<ListProjectMilestonesResponse> => {
-      try {
-        return await getProjectMilestones(options, await getAuthorization());
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<ListProjectMilestonesResponse> =>
+      withEmptyListFallback(
+        async () => getProjectMilestones(options, await getAuthorization()),
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 

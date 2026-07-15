@@ -10,6 +10,90 @@ import {
   stage,
 } from './shared';
 
+const staticSiteBucket = (
+  bucketName: string,
+  extraProperties: Record<string, unknown> = {},
+) => ({
+  Type: 'AWS::S3::Bucket',
+  DeletionPolicy: 'Delete',
+  Properties: {
+    BucketName: bucketName,
+    OwnershipControls: {
+      Rules: [
+        {
+          ObjectOwnership: 'BucketOwnerPreferred',
+        },
+      ],
+    },
+    PublicAccessBlockConfiguration: {
+      BlockPublicPolicy: false,
+      BlockPublicAcls: false,
+      IgnorePublicAcls: false,
+      RestrictPublicBuckets: false,
+    },
+    CorsConfiguration: {
+      CorsRules: [
+        {
+          AllowedMethods: ['GET', 'HEAD'],
+          AllowedHeaders: ['*'],
+          AllowedOrigins: ['*'],
+          MaxAge: 3000,
+        },
+      ],
+    },
+    ...extraProperties,
+  },
+});
+
+const publicReadBucketPolicy = (
+  bucketLogicalId: string,
+  bucketName: string,
+) => ({
+  Type: 'AWS::S3::BucketPolicy',
+  Properties: {
+    Bucket: bucketName,
+    PolicyDocument: {
+      Statement: [
+        {
+          Action: ['s3:GetObject'],
+          Effect: 'Allow',
+          Principal: '*',
+          Resource: {
+            'Fn::Join': [
+              '',
+              [{ 'Fn::GetAtt': [bucketLogicalId, 'Arn'] }, '/*'],
+            ],
+          },
+        },
+        {
+          Action: ['s3:ListBucket'],
+          Effect: 'Allow',
+          Principal: '*',
+          Resource: { 'Fn::GetAtt': [bucketLogicalId, 'Arn'] },
+        },
+      ],
+    },
+  },
+});
+
+const retainedBackupBucket = (bucketName: string) => ({
+  Type: 'AWS::S3::Bucket',
+  Condition: 'IsDevOrProd',
+  DeletionPolicy: 'Retain',
+  Properties: {
+    BucketName: bucketName,
+    LifecycleConfiguration: {
+      Rules: [
+        {
+          Id: 'delete-after-3-months',
+          Status: 'Enabled',
+          ExpirationInDays: 90,
+        },
+      ],
+    },
+  },
+});
+
 export const conditions = {
   IsDev: {
     'Fn::Equals': ['${self:provider.stage}', 'dev'],
@@ -159,271 +243,45 @@ export const apiResources = {
       },
     },
   },
-  FrontendBucket: {
-    Type: 'AWS::S3::Bucket',
-    DeletionPolicy: 'Delete',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-frontend',
-      OwnershipControls: {
-        Rules: [
-          {
-            ObjectOwnership: 'BucketOwnerPreferred',
-          },
-        ],
-      },
-      PublicAccessBlockConfiguration: {
-        BlockPublicPolicy: false,
-        BlockPublicAcls: false,
-        IgnorePublicAcls: false,
-        RestrictPublicBuckets: false,
-      },
-      CorsConfiguration: {
-        CorsRules: [
-          {
-            AllowedMethods: ['GET', 'HEAD'],
-            AllowedHeaders: ['*'],
-            AllowedOrigins: ['*'],
-            MaxAge: 3000,
-          },
-        ],
-      },
-    },
-  },
-  AuthFrontendBucket: {
-    Type: 'AWS::S3::Bucket',
-    DeletionPolicy: 'Delete',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-auth-frontend',
-      OwnershipControls: {
-        Rules: [
-          {
-            ObjectOwnership: 'BucketOwnerPreferred',
-          },
-        ],
-      },
-      PublicAccessBlockConfiguration: {
-        BlockPublicPolicy: false,
-        BlockPublicAcls: false,
-        IgnorePublicAcls: false,
-        RestrictPublicBuckets: false,
-      },
-      CorsConfiguration: {
-        CorsRules: [
-          {
-            AllowedMethods: ['GET', 'HEAD'],
-            AllowedHeaders: ['*'],
-            AllowedOrigins: ['*'],
-            MaxAge: 3000,
-          },
-        ],
-      },
-    },
-  },
-  StorybookBucket: {
-    Type: 'AWS::S3::Bucket',
-    DeletionPolicy: 'Delete',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-storybook',
-      OwnershipControls: {
-        Rules: [
-          {
-            ObjectOwnership: 'BucketOwnerPreferred',
-          },
-        ],
-      },
-      PublicAccessBlockConfiguration: {
-        BlockPublicPolicy: false,
-        BlockPublicAcls: false,
-        IgnorePublicAcls: false,
-        RestrictPublicBuckets: false,
-      },
-      CorsConfiguration: {
-        CorsRules: [
-          {
-            AllowedMethods: ['GET', 'HEAD'],
-            AllowedHeaders: ['*'],
-            AllowedOrigins: ['*'],
-            MaxAge: 3000,
-          },
-        ],
-      },
+  FrontendBucket: staticSiteBucket(
+    '${self:service}-${self:provider.stage}-frontend',
+  ),
+  AuthFrontendBucket: staticSiteBucket(
+    '${self:service}-${self:provider.stage}-auth-frontend',
+  ),
+  StorybookBucket: staticSiteBucket(
+    '${self:service}-${self:provider.stage}-storybook',
+    {
       WebsiteConfiguration: {
         IndexDocument: 'index.html',
       },
     },
-  },
-  MessagesStaticBucket: {
-    Type: 'AWS::S3::Bucket',
-    DeletionPolicy: 'Delete',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-messages-static',
-      OwnershipControls: {
-        Rules: [
-          {
-            ObjectOwnership: 'BucketOwnerPreferred',
-          },
-        ],
-      },
-      PublicAccessBlockConfiguration: {
-        BlockPublicPolicy: false,
-        BlockPublicAcls: false,
-        IgnorePublicAcls: false,
-        RestrictPublicBuckets: false,
-      },
-      CorsConfiguration: {
-        CorsRules: [
-          {
-            AllowedMethods: ['GET', 'HEAD'],
-            AllowedHeaders: ['*'],
-            AllowedOrigins: ['*'],
-            MaxAge: 3000,
-          },
-        ],
-      },
-    },
-  },
-  BucketPolicyFrontend: {
-    Type: 'AWS::S3::BucketPolicy',
-    Properties: {
-      Bucket: '${self:service}-${self:provider.stage}-frontend',
-      PolicyDocument: {
-        Statement: [
-          {
-            Action: ['s3:GetObject'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: {
-              'Fn::Join': [
-                '',
-                [{ 'Fn::GetAtt': ['FrontendBucket', 'Arn'] }, '/*'],
-              ],
-            },
-          },
-          {
-            Action: ['s3:ListBucket'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: { 'Fn::GetAtt': ['FrontendBucket', 'Arn'] },
-          },
-        ],
-      },
-    },
-  },
-  BucketPolicyAuthFrontend: {
-    Type: 'AWS::S3::BucketPolicy',
-    Properties: {
-      Bucket: '${self:service}-${self:provider.stage}-auth-frontend',
-      PolicyDocument: {
-        Statement: [
-          {
-            Action: ['s3:GetObject'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: {
-              'Fn::Join': [
-                '',
-                [{ 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] }, '/*'],
-              ],
-            },
-          },
-          {
-            Action: ['s3:ListBucket'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: { 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] },
-          },
-        ],
-      },
-    },
-  },
-  BucketPolicyStorybook: {
-    Type: 'AWS::S3::BucketPolicy',
-    Properties: {
-      Bucket: '${self:service}-${self:provider.stage}-storybook',
-      PolicyDocument: {
-        Statement: [
-          {
-            Action: ['s3:GetObject'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: {
-              'Fn::Join': [
-                '',
-                [{ 'Fn::GetAtt': ['StorybookBucket', 'Arn'] }, '/*'],
-              ],
-            },
-          },
-          {
-            Action: ['s3:ListBucket'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: { 'Fn::GetAtt': ['StorybookBucket', 'Arn'] },
-          },
-        ],
-      },
-    },
-  },
-  BucketPolicyMessagesStatic: {
-    Type: 'AWS::S3::BucketPolicy',
-    Properties: {
-      Bucket: '${self:service}-${self:provider.stage}-messages-static',
-      PolicyDocument: {
-        Statement: [
-          {
-            Action: ['s3:GetObject'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: {
-              'Fn::Join': [
-                '',
-                [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
-              ],
-            },
-          },
-          {
-            Action: ['s3:ListBucket'],
-            Effect: 'Allow',
-            Principal: '*',
-            Resource: { 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] },
-          },
-        ],
-      },
-    },
-  },
-  DataBackupBucket: {
-    Type: 'AWS::S3::Bucket',
-    Condition: 'IsDevOrProd',
-    DeletionPolicy: 'Retain',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-data-backup',
-      LifecycleConfiguration: {
-        Rules: [
-          {
-            Id: 'delete-after-3-months',
-            Status: 'Enabled',
-            ExpirationInDays: 90,
-          },
-        ],
-      },
-    },
-  },
-  ContentfulBackupBucket: {
-    Type: 'AWS::S3::Bucket',
-    Condition: 'IsDevOrProd',
-    DeletionPolicy: 'Retain',
-    Properties: {
-      BucketName: '${self:service}-${self:provider.stage}-contentful-backup',
-      LifecycleConfiguration: {
-        Rules: [
-          {
-            Id: 'delete-after-3-months',
-            Status: 'Enabled',
-            ExpirationInDays: 90,
-          },
-        ],
-      },
-    },
-  },
+  ),
+  MessagesStaticBucket: staticSiteBucket(
+    '${self:service}-${self:provider.stage}-messages-static',
+  ),
+  BucketPolicyFrontend: publicReadBucketPolicy(
+    'FrontendBucket',
+    '${self:service}-${self:provider.stage}-frontend',
+  ),
+  BucketPolicyAuthFrontend: publicReadBucketPolicy(
+    'AuthFrontendBucket',
+    '${self:service}-${self:provider.stage}-auth-frontend',
+  ),
+  BucketPolicyStorybook: publicReadBucketPolicy(
+    'StorybookBucket',
+    '${self:service}-${self:provider.stage}-storybook',
+  ),
+  BucketPolicyMessagesStatic: publicReadBucketPolicy(
+    'MessagesStaticBucket',
+    '${self:service}-${self:provider.stage}-messages-static',
+  ),
+  DataBackupBucket: retainedBackupBucket(
+    '${self:service}-${self:provider.stage}-data-backup',
+  ),
+  ContentfulBackupBucket: retainedBackupBucket(
+    '${self:service}-${self:provider.stage}-contentful-backup',
+  ),
   CloudFrontOriginAccessIdentityFrontend: {
     Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
     Properties: {

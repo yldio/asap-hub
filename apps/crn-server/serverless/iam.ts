@@ -7,17 +7,91 @@ import {
   stage,
 } from './shared';
 
+const opensearchHttpActions = [
+  'es:ESHttpGet',
+  'es:ESHttpPost',
+  'es:ESHttpPut',
+  'es:ESHttpDelete',
+  'es:ESHttpHead',
+  'es:ESHttpPatch',
+];
+
+const describeOpensearchDomainStatement = {
+  Effect: 'Allow',
+  Action: ['es:DescribeDomain', 'es:DescribeDomains'],
+  Resource: {
+    'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}`,
+  },
+};
+
+const listDomainNamesStatement = {
+  Effect: 'Allow',
+  Action: ['es:ListDomainNames'],
+  Resource: '*',
+};
+
+const invokeOpensearchSearchHandlerStatement = {
+  Effect: 'Allow',
+  Action: ['lambda:InvokeFunction'],
+  Resource: {
+    'Fn::Sub':
+      'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
+  },
+};
+
+const googleApiSecretsStatement = {
+  Effect: 'Allow',
+  Action: 'secretsmanager:*',
+  Resource: {
+    'Fn::Join': [
+      ':',
+      [
+        'arn:aws:secretsmanager',
+        { Ref: 'AWS::Region' },
+        { Ref: 'AWS::AccountId' },
+        'secret',
+        `google-api-credentials-${envAlias}*`,
+      ],
+    ],
+  },
+};
+
+const sesSendTemplatedEmailStatement = {
+  Effect: 'Allow',
+  Action: 'ses:SendTemplatedEmail',
+  Resource: ['*'],
+  Condition: {
+    StringLike: {
+      'ses:FromAddress': '*@asap.science',
+    },
+  },
+};
+
+const sqsActions = [
+  'sqs:SendMessage',
+  'sqs:ReceiveMessage',
+  'sqs:DeleteMessage',
+  'sqs:GetQueueAttributes',
+];
+
+const localSqsQueueAccess = (logicalId: string) => ({
+  Effect: 'Allow',
+  Action: sqsActions,
+  Resource: {
+    'Fn::GetAtt': [logicalId, 'Arn'],
+  },
+});
+
+const crossStackSqsQueueAccess = (queueName: string) => ({
+  Effect: 'Allow',
+  Action: sqsActions,
+  Resource: queueArn(queueName),
+});
+
 export const apiIamRoleStatements = [
   {
     Effect: 'Allow',
-    Action: [
-      'es:ESHttpGet',
-      'es:ESHttpPost',
-      'es:ESHttpPut',
-      'es:ESHttpDelete',
-      'es:ESHttpHead',
-      'es:ESHttpPatch',
-    ],
+    Action: opensearchHttpActions,
     Resource: {
       'Fn::Sub':
         'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.opensearchDomainName}/*',
@@ -31,11 +105,7 @@ export const apiIamRoleStatements = [
         'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.opensearchDomainName}',
     },
   },
-  {
-    Effect: 'Allow',
-    Action: ['es:ListDomainNames'],
-    Resource: '*',
-  },
+  listDomainNamesStatement,
   {
     Effect: 'Allow',
     Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
@@ -57,12 +127,7 @@ export const apiIamRoleStatements = [
   {
     Effect: 'Allow',
     Action: [
-      'es:ESHttpGet',
-      'es:ESHttpPost',
-      'es:ESHttpPut',
-      'es:ESHttpDelete',
-      'es:ESHttpHead',
-      'es:ESHttpPatch',
+      ...opensearchHttpActions,
       'es:DescribeDomain',
       'es:DescribeDomains',
       'es:ListDomainNames',
@@ -71,26 +136,9 @@ export const apiIamRoleStatements = [
       'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
     },
   },
-  {
-    Effect: 'Allow',
-    Action: ['es:DescribeDomain', 'es:DescribeDomains'],
-    Resource: {
-      'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}`,
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: ['es:ListDomainNames'],
-    Resource: '*',
-  },
-  {
-    Effect: 'Allow',
-    Action: ['lambda:InvokeFunction'],
-    Resource: {
-      'Fn::Sub':
-        'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
-    },
-  },
+  describeOpensearchDomainStatement,
+  listDomainNamesStatement,
+  invokeOpensearchSearchHandlerStatement,
   {
     Effect: 'Allow',
     Action: 's3:GetObject',
@@ -124,32 +172,8 @@ export const apiIamRoleStatements = [
       ],
     },
   },
-  {
-    Effect: 'Allow',
-    Action: 'secretsmanager:*',
-    Resource: {
-      'Fn::Join': [
-        ':',
-        [
-          'arn:aws:secretsmanager',
-          { Ref: 'AWS::Region' },
-          { Ref: 'AWS::AccountId' },
-          'secret',
-          `google-api-credentials-${envAlias}*`,
-        ],
-      ],
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: 'ses:SendTemplatedEmail',
-    Resource: ['*'],
-    Condition: {
-      StringLike: {
-        'ses:FromAddress': '*@asap.science',
-      },
-    },
-  },
+  googleApiSecretsStatement,
+  sesSendTemplatedEmailStatement,
   {
     Effect: 'Allow',
     Action: 'events:*',
@@ -170,90 +194,22 @@ export const apiIamRoleStatements = [
     Action: ['cloudfront:CreateInvalidation'],
     Resource: ['*'],
   },
-  {
-    Effect: 'Allow',
-    Action: [
-      'sqs:SendMessage',
-      'sqs:ReceiveMessage',
-      'sqs:DeleteMessage',
-      'sqs:GetQueueAttributes',
-    ],
-    Resource: {
-      'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: [
-      'sqs:SendMessage',
-      'sqs:ReceiveMessage',
-      'sqs:DeleteMessage',
-      'sqs:GetQueueAttributes',
-    ],
-    Resource: {
-      'Fn::GetAtt': ['InviteUserQueue', 'Arn'],
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: [
-      'sqs:SendMessage',
-      'sqs:ReceiveMessage',
-      'sqs:DeleteMessage',
-      'sqs:GetQueueAttributes',
-    ],
-    Resource: {
-      'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
-    },
-  },
+  localSqsQueueAccess('ContentfulPollerQueue'),
+  localSqsQueueAccess('InviteUserQueue'),
+  localSqsQueueAccess('GoogleCalendarEventQueue'),
 ];
-
-const sqsQueueAccess = (queueName: string) => ({
-  Effect: 'Allow',
-  Action: [
-    'sqs:SendMessage',
-    'sqs:ReceiveMessage',
-    'sqs:DeleteMessage',
-    'sqs:GetQueueAttributes',
-  ],
-  Resource: queueArn(queueName),
-});
 
 export const asyncIamRoleStatements = [
   {
     Effect: 'Allow',
-    Action: [
-      'es:ESHttpGet',
-      'es:ESHttpPost',
-      'es:ESHttpPut',
-      'es:ESHttpDelete',
-      'es:ESHttpHead',
-      'es:ESHttpPatch',
-    ],
+    Action: opensearchHttpActions,
     Resource: {
       'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
     },
   },
-  {
-    Effect: 'Allow',
-    Action: ['es:DescribeDomain', 'es:DescribeDomains'],
-    Resource: {
-      'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}`,
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: ['es:ListDomainNames'],
-    Resource: '*',
-  },
-  {
-    Effect: 'Allow',
-    Action: ['lambda:InvokeFunction'],
-    Resource: {
-      'Fn::Sub':
-        'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
-    },
-  },
+  describeOpensearchDomainStatement,
+  listDomainNamesStatement,
+  invokeOpensearchSearchHandlerStatement,
   {
     Effect: 'Allow',
     Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
@@ -268,32 +224,8 @@ export const asyncIamRoleStatements = [
         : 'arn:aws:s3:::asap-hub-dev-data-backup/*',
     ],
   },
-  {
-    Effect: 'Allow',
-    Action: 'secretsmanager:*',
-    Resource: {
-      'Fn::Join': [
-        ':',
-        [
-          'arn:aws:secretsmanager',
-          { Ref: 'AWS::Region' },
-          { Ref: 'AWS::AccountId' },
-          'secret',
-          `google-api-credentials-${envAlias}*`,
-        ],
-      ],
-    },
-  },
-  {
-    Effect: 'Allow',
-    Action: 'ses:SendTemplatedEmail',
-    Resource: ['*'],
-    Condition: {
-      StringLike: {
-        'ses:FromAddress': '*@asap.science',
-      },
-    },
-  },
+  googleApiSecretsStatement,
+  sesSendTemplatedEmailStatement,
   {
     Effect: 'Allow',
     Action: 'events:*',
@@ -309,8 +241,8 @@ export const asyncIamRoleStatements = [
       ],
     },
   },
-  sqsQueueAccess('contentful-poller-queue'),
-  sqsQueueAccess('invite-user-queue'),
-  sqsQueueAccess('google-calendar-event-queue'),
-  ...(isProd ? [sqsQueueAccess('compliance-doc-sync-queue')] : []),
+  crossStackSqsQueueAccess('contentful-poller-queue'),
+  crossStackSqsQueueAccess('invite-user-queue'),
+  crossStackSqsQueueAccess('google-calendar-event-queue'),
+  ...(isProd ? [crossStackSqsQueueAccess('compliance-doc-sync-queue')] : []),
 ];

@@ -1,4 +1,3 @@
-import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import {
   activeCampaignAccount,
@@ -15,26 +14,58 @@ import {
   sesRegion,
 } from './shared';
 
+const contentfulEventBridge = (
+  detailTypes: string[],
+  retryPolicy?: { maximumRetryAttempts: number },
+) => [
+  {
+    eventBridge: {
+      eventBus: 'asap-events-${self:provider.stage}',
+      pattern: {
+        source: [eventBusSourceContentful],
+        'detail-type': detailTypes,
+      },
+      ...(retryPolicy ? { retryPolicy } : {}),
+    },
+  },
+];
+
+const algoliaIndexEnvironment = {
+  ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+  ALGOLIA_INDEX: `${algoliaIndex}`,
+  SENTRY_DSN: sentryDsnHandlers,
+};
+
+const algoliaIndexer = (handler: string, detailTypes: string[]) => ({
+  handler,
+  events: contentfulEventBridge(detailTypes),
+  environment: algoliaIndexEnvironment,
+});
+
+const googleCalendarEnvironment = {
+  GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+  GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+  SENTRY_DSN: sentryDsnHandlers,
+  LOG_LEVEL: 'warn',
+};
+
+const activeCampaignEnvironment = {
+  ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+  ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
+  SENTRY_DSN: sentryDsnHandlers,
+};
+
+const opensearchIndexerEnvironment = {
+  SENTRY_DSN: sentryDsnHandlers,
+  OPENSEARCH_USERNAME: opensearchMasterUser,
+  OPENSEARCH_PASSWORD: opensearchMasterPassword,
+};
+
 export const asyncFunctions: AWS['functions'] = {
   gcalSubscribeCalendarContentful: {
     handler: './src/handlers/calendar/gcal-subscribe-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['CalendarsPublished'] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-      GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-      SENTRY_DSN: sentryDsnHandlers,
-      LOG_LEVEL: 'warn',
-    },
+    events: contentfulEventBridge(['CalendarsPublished']),
+    environment: googleCalendarEnvironment,
   },
   gcalUnsubscribeCalendarsContentful: {
     handler: './src/handlers/calendar/gcal-unsubscribe-handler.handler',
@@ -44,88 +75,33 @@ export const asyncFunctions: AWS['functions'] = {
         schedule: 'cron(0 1 * * ? *)',
       },
     ],
-    environment: {
-      GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-      GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-      SENTRY_DSN: sentryDsnHandlers,
-      LOG_LEVEL: 'warn',
-    },
+    environment: googleCalendarEnvironment,
   },
   syncActiveCampaignContact: {
     handler: './src/handlers/user/sync-active-campaign-contact.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
-      ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
+    events: contentfulEventBridge(['UsersPublished']),
+    environment: activeCampaignEnvironment,
   },
   syncActiveCampaignTeamMemberStatus: {
     handler:
       './src/handlers/teams/sync-active-campaign-team-member-status.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['TeamsPublished'] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
-      ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
+    events: contentfulEventBridge(['TeamsPublished']),
+    environment: activeCampaignEnvironment,
   },
   syncUserOrcidContentful: {
     handler: './src/handlers/user/sync-orcid-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
-          },
-          retryPolicy: {
-            maximumRetryAttempts: 2,
-          },
-        },
-      },
-    ],
+    events: contentfulEventBridge(['UsersPublished'], {
+      maximumRetryAttempts: 2,
+    }),
     environment: {
       SENTRY_DSN: sentryDsnHandlers,
     },
   },
   inviteEventForwarder: {
     handler: 'src/handlers/user/forward-invite-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
-          },
-          retryPolicy: {
-            maximumRetryAttempts: 2,
-          },
-        },
-      },
-    ],
+    events: contentfulEventBridge(['UsersPublished'], {
+      maximumRetryAttempts: 2,
+    }),
     environment: {
       QUEUE_URL: queueUrl('invite-user-queue'),
       SENTRY_DSN: sentryDsnHandlers,
@@ -150,209 +126,47 @@ export const asyncFunctions: AWS['functions'] = {
       SENTRY_DSN: sentryDsnHandlers,
     },
   },
-  algoliaIndexResearchOutput: {
-    handler:
-      './src/handlers/research-output/algolia-index-research-output-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ResearchOutputsPublished',
-              'ResearchOutputsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
+  algoliaIndexResearchOutput: algoliaIndexer(
+    './src/handlers/research-output/algolia-index-research-output-handler.handler',
+    ['ResearchOutputsPublished', 'ResearchOutputsUnpublished'],
+  ),
+  algoliaIndexUser: algoliaIndexer(
+    './src/handlers/user/algolia-index-user-handler.handler',
+    [
+      'UsersPublished',
+      'UsersUnpublished',
+      'TeamMembershipPublished',
+      'TeamMembershipUnpublished',
     ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexUser: {
-    handler: './src/handlers/user/algolia-index-user-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'UsersPublished',
-              'UsersUnpublished',
-              'TeamMembershipPublished',
-              'TeamMembershipUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexExternalAuthor: {
-    handler:
-      './src/handlers/external-author/algolia-index-external-author-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ExternalAuthorsPublished',
-              'ExternalAuthorsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexEvents: {
-    handler: './src/handlers/event/algolia-index-event-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'EventsPublished',
-              'EventsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexUserEvents: {
-    handler: './src/handlers/event/algolia-index-user-events-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'UsersPublished',
-              'UsersUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexExternalUserEvents: {
-    handler:
-      './src/handlers/event/algolia-index-external-author-events-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ExternalAuthorsPublished',
-              'ExternalAuthorsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexTeamEvents: {
-    handler: './src/handlers/event/algolia-index-team-events-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'TeamsPublished',
-              'TeamsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexGroupEvents: {
-    handler: './src/handlers/event/algolia-index-group-events-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'InterestGroupsPublished',
-              'InterestGroupsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexLabUsers: {
-    handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'LabsPublished',
-              'LabsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
+  ),
+  algoliaIndexExternalAuthor: algoliaIndexer(
+    './src/handlers/external-author/algolia-index-external-author-handler.handler',
+    ['ExternalAuthorsPublished', 'ExternalAuthorsUnpublished'],
+  ),
+  algoliaIndexEvents: algoliaIndexer(
+    './src/handlers/event/algolia-index-event-handler.handler',
+    ['EventsPublished', 'EventsUnpublished'],
+  ),
+  algoliaIndexUserEvents: algoliaIndexer(
+    './src/handlers/event/algolia-index-user-events-handler.handler',
+    ['UsersPublished', 'UsersUnpublished'],
+  ),
+  algoliaIndexExternalUserEvents: algoliaIndexer(
+    './src/handlers/event/algolia-index-external-author-events-handler.handler',
+    ['ExternalAuthorsPublished', 'ExternalAuthorsUnpublished'],
+  ),
+  algoliaIndexTeamEvents: algoliaIndexer(
+    './src/handlers/event/algolia-index-team-events-handler.handler',
+    ['TeamsPublished', 'TeamsUnpublished'],
+  ),
+  algoliaIndexGroupEvents: algoliaIndexer(
+    './src/handlers/event/algolia-index-group-events-handler.handler',
+    ['InterestGroupsPublished', 'InterestGroupsUnpublished'],
+  ),
+  algoliaIndexLabUsers: algoliaIndexer(
+    './src/handlers/lab/algolia-index-lab-users-handler.handler',
+    ['LabsPublished', 'LabsUnpublished'],
+  ),
   gcalEventsUpdatedContentfulProcess: {
     timeout: 300,
     handler:
@@ -372,346 +186,69 @@ export const asyncFunctions: AWS['functions'] = {
       LOG_LEVEL: 'warn',
     },
   },
-  algoliaIndexTeams: {
-    handler: './src/handlers/teams/algolia-index-team-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'TeamsPublished',
-              'TeamsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexTeamResearchOutputs: {
-    handler:
-      './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'TeamsPublished',
-              'TeamsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexTeamUsers: {
-    handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'TeamsPublished',
-              'TeamsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexProjectTeam: {
-    handler:
-      './src/handlers/project/algolia-index-project-team-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['ProjectsPublished', 'ProjectsUnpublished'],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexNews: {
-    handler: './src/handlers/news/algolia-index-news-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['NewsPublished', 'NewsUnpublished'],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexProjects: {
-    handler: './src/handlers/project/algolia-index-project-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ProjectsPublished',
-              'ProjectsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexTeamProjects: {
-    handler:
-      './src/handlers/project/algolia-index-team-projects-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'TeamsPublished',
-              'TeamsUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexUserProjects: {
-    handler:
-      './src/handlers/project/algolia-index-user-projects-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'UsersPublished',
-              'UsersUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexProjectMembership: {
-    handler:
-      './src/handlers/project/algolia-index-project-membership-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ProjectMembershipPublished',
-              'ProjectMembershipUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexTutorials: {
-    handler: './src/handlers/tutorials/algolia-index-tutorials-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['TutorialsPublished', 'TutorialsUnpublished'],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexWorkingGroups: {
-    handler:
-      './src/handlers/working-group/algolia-index-working-group-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'WorkingGroupsPublished',
-              'WorkingGroupsUnpublished',
-            ],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexInterestGroups: {
-    handler:
-      './src/handlers/interest-group/algolia-index-interest-group-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'InterestGroupsPublished',
-              'InterestGroupsUnpublished',
-            ],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexManuscripts: {
-    handler:
-      './src/handlers/manuscript/algolia-index-manuscript-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexManuscriptVersions: {
-    handler:
-      './src/handlers/manuscript-version/algolia-index-manuscript-versions-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'ManuscriptVersionsPublished',
-              'ManuscriptVersionsUnpublished',
-            ],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
-  algoliaIndexManuscriptVersionsManuscripts: {
-    handler:
-      './src/handlers/manuscript/algolia-index-manuscript-versions-manuscripts-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
-          },
-        },
-      },
-    ],
-    environment: {
-      ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-      ALGOLIA_INDEX: `${algoliaIndex}`,
-      SENTRY_DSN: sentryDsnHandlers,
-    },
-  },
+  algoliaIndexTeams: algoliaIndexer(
+    './src/handlers/teams/algolia-index-team-handler.handler',
+    ['TeamsPublished', 'TeamsUnpublished'],
+  ),
+  algoliaIndexTeamResearchOutputs: algoliaIndexer(
+    './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
+    ['TeamsPublished', 'TeamsUnpublished'],
+  ),
+  algoliaIndexTeamUsers: algoliaIndexer(
+    './src/handlers/teams/algolia-index-team-users-handler.handler',
+    ['TeamsPublished', 'TeamsUnpublished'],
+  ),
+  algoliaIndexProjectTeam: algoliaIndexer(
+    './src/handlers/project/algolia-index-project-team-handler.handler',
+    ['ProjectsPublished', 'ProjectsUnpublished'],
+  ),
+  algoliaIndexNews: algoliaIndexer(
+    './src/handlers/news/algolia-index-news-handler.handler',
+    ['NewsPublished', 'NewsUnpublished'],
+  ),
+  algoliaIndexProjects: algoliaIndexer(
+    './src/handlers/project/algolia-index-project-handler.handler',
+    ['ProjectsPublished', 'ProjectsUnpublished'],
+  ),
+  algoliaIndexTeamProjects: algoliaIndexer(
+    './src/handlers/project/algolia-index-team-projects-handler.handler',
+    ['TeamsPublished', 'TeamsUnpublished'],
+  ),
+  algoliaIndexUserProjects: algoliaIndexer(
+    './src/handlers/project/algolia-index-user-projects-handler.handler',
+    ['UsersPublished', 'UsersUnpublished'],
+  ),
+  algoliaIndexProjectMembership: algoliaIndexer(
+    './src/handlers/project/algolia-index-project-membership-handler.handler',
+    ['ProjectMembershipPublished', 'ProjectMembershipUnpublished'],
+  ),
+  algoliaIndexTutorials: algoliaIndexer(
+    './src/handlers/tutorials/algolia-index-tutorials-handler.handler',
+    ['TutorialsPublished', 'TutorialsUnpublished'],
+  ),
+  algoliaIndexWorkingGroups: algoliaIndexer(
+    './src/handlers/working-group/algolia-index-working-group-handler.handler',
+    ['WorkingGroupsPublished', 'WorkingGroupsUnpublished'],
+  ),
+  algoliaIndexInterestGroups: algoliaIndexer(
+    './src/handlers/interest-group/algolia-index-interest-group-handler.handler',
+    ['InterestGroupsPublished', 'InterestGroupsUnpublished'],
+  ),
+  algoliaIndexManuscripts: algoliaIndexer(
+    './src/handlers/manuscript/algolia-index-manuscript-handler.handler',
+    ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+  ),
+  algoliaIndexManuscriptVersions: algoliaIndexer(
+    './src/handlers/manuscript-version/algolia-index-manuscript-versions-handler.handler',
+    ['ManuscriptVersionsPublished', 'ManuscriptVersionsUnpublished'],
+  ),
+  algoliaIndexManuscriptVersionsManuscripts: algoliaIndexer(
+    './src/handlers/manuscript/algolia-index-manuscript-versions-manuscripts-handler.handler',
+    ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+  ),
   updateContentfulWorkingGroupDeliverables: {
     handler: './src/handlers/working-group/update-deliverables-handler.handler',
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'WorkingGroupsPublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
+    events: contentfulEventBridge(['WorkingGroupsPublished']),
     environment: {
       SENTRY_DSN: sentryDsnHandlers,
     },
@@ -720,38 +257,28 @@ export const asyncFunctions: AWS['functions'] = {
     complianceSpreadsheetEntryHandler: {
       handler:
         './src/handlers/compliance-sheet/compliance-entry-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceContentful],
-              'detail-type': [
-                'ManuscriptVersionsPublished',
-                'ManuscriptsPublished',
-                'ProjectsPublished',
-                'ComplianceReportsPublished',
-                'UsersPublished',
-                'TeamsPublished',
-                'LabsPublished',
-                'ExternalAuthorsPublished',
-                'ImpactPublished',
-                'CategoryPublished',
-                'ManuscriptVersionsUnpublished',
-                'ManuscriptsUnpublished',
-                'UsersUnpublished',
-                'TeamsUnpublished',
-                'ProjectsUnpublished',
-                'ComplianceReportsUnpublished',
-                'LabsUnpublished',
-                'ExternalAuthorsUnpublished',
-                'CategoryUnpublished',
-                'ImpactUnpublished',
-              ],
-            },
-          },
-        },
-      ],
+      events: contentfulEventBridge([
+        'ManuscriptVersionsPublished',
+        'ManuscriptsPublished',
+        'ProjectsPublished',
+        'ComplianceReportsPublished',
+        'UsersPublished',
+        'TeamsPublished',
+        'LabsPublished',
+        'ExternalAuthorsPublished',
+        'ImpactPublished',
+        'CategoryPublished',
+        'ManuscriptVersionsUnpublished',
+        'ManuscriptsUnpublished',
+        'UsersUnpublished',
+        'TeamsUnpublished',
+        'ProjectsUnpublished',
+        'ComplianceReportsUnpublished',
+        'LabsUnpublished',
+        'ExternalAuthorsUnpublished',
+        'CategoryUnpublished',
+        'ImpactUnpublished',
+      ]),
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
         COMPLIANCE_DOC_SYNC_QUEUE_URL: queueUrl('compliance-doc-sync-queue'),
@@ -812,53 +339,25 @@ export const asyncFunctions: AWS['functions'] = {
     handler: './src/handlers/aim/opensearch-index-aim-handler.handler',
     timeout: 120,
     memorySize: 512,
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'AimsPublished',
-              'AimsUnpublished',
-              'ProjectsPublished',
-              'ProjectsUnpublished',
-              'SupplementGrantPublished',
-              'SupplementGrantUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      SENTRY_DSN: sentryDsnHandlers,
-      OPENSEARCH_USERNAME: opensearchMasterUser,
-      OPENSEARCH_PASSWORD: opensearchMasterPassword,
-    },
+    events: contentfulEventBridge([
+      'AimsPublished',
+      'AimsUnpublished',
+      'ProjectsPublished',
+      'ProjectsUnpublished',
+      'SupplementGrantPublished',
+      'SupplementGrantUnpublished',
+    ]),
+    environment: opensearchIndexerEnvironment,
   },
   opensearchIndexMilestones: {
     handler:
       './src/handlers/milestone/opensearch-index-milestone-handler.handler',
     timeout: 120,
     memorySize: 512,
-    events: [
-      {
-        eventBridge: {
-          eventBus: 'asap-events-${self:provider.stage}',
-          pattern: {
-            source: [eventBusSourceContentful],
-            'detail-type': [
-              'MilestonesPublished',
-              'MilestonesUnpublished',
-            ] satisfies WebhookDetailType[],
-          },
-        },
-      },
-    ],
-    environment: {
-      SENTRY_DSN: sentryDsnHandlers,
-      OPENSEARCH_USERNAME: opensearchMasterUser,
-      OPENSEARCH_PASSWORD: opensearchMasterPassword,
-    },
+    events: contentfulEventBridge([
+      'MilestonesPublished',
+      'MilestonesUnpublished',
+    ]),
+    environment: opensearchIndexerEnvironment,
   },
 };

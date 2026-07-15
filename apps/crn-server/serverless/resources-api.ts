@@ -1,5 +1,7 @@
 import {
   awsAcmCertificateArn,
+  eventBusLogicalId,
+  eventBusName,
   hostname,
   isProd,
   opensearchDomain,
@@ -114,6 +116,17 @@ export const conditions = {
 };
 
 export const apiResources = {
+  // The Contentful event bus is owned by this (first-deployed) stack. The
+  // async and indexers stacks reference it by ARN, so only this stack
+  // creates it. The logical id matches the one serverless auto-generated
+  // when this stack still owned the eventBridge functions, so on existing
+  // dev/prod stacks this is an in-place mapping rather than a recreate.
+  [eventBusLogicalId]: {
+    Type: 'AWS::Events::EventBus',
+    Properties: {
+      Name: eventBusName,
+    },
+  },
   HttpApiDomain: {
     Type: 'AWS::ApiGatewayV2::DomainName',
     Properties: {

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
-import { charcoal, fern, paper, steel, tin, warning500 } from '../colors';
+import { charcoal, fern, steel, tin, warning500 } from '../colors';
 import {
   DiscoveryTeamIcon,
   ExportIcon,
@@ -16,7 +16,7 @@ import {
   validTickIcon,
 } from '../icons';
 import { EventAttendanceMetric } from '../molecules';
-import { rem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 
 const defaultVisibleTeams = 10;
 
@@ -47,14 +47,15 @@ const actionsStyles = css({
 });
 
 const iconButtonStyles = css({
-  display: 'inline-flex',
+  flexGrow: 0,
+  width: rem(40),
+  height: rem(40),
   alignItems: 'center',
-  justifyContent: 'center',
-  padding: rem(9),
-  backgroundColor: paper.rgb,
-  border: `1px solid ${tin.rgb}`,
-  borderRadius: rem(4),
-  cursor: 'pointer',
+  borderColor: tin.rgb,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexGrow: 0,
+    minWidth: rem(40),
+  },
 });
 
 const metricsStyles = css({
@@ -237,22 +238,24 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
         <div css={headerStyles}>
           <Headline3 noMargin>Attendance</Headline3>
           <div css={actionsStyles}>
-            <button
-              type="button"
-              css={iconButtonStyles}
-              onClick={onExport}
+            <Button
+              small
+              noMargin
               aria-label="Download attendance"
+              onClick={onExport}
+              overrideStyles={iconButtonStyles}
             >
               {ExportIcon}
-            </button>
-            <button
-              type="button"
-              css={iconButtonStyles}
-              onClick={onEdit}
+            </Button>
+            <Button
+              small
+              noMargin
               aria-label="Edit attendance"
+              onClick={onEdit}
+              overrideStyles={iconButtonStyles}
             >
               <PencilIcon />
-            </button>
+            </Button>
           </div>
         </div>
 

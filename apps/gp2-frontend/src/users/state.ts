@@ -1,5 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { createQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import {
   matchQuery,
@@ -28,24 +32,19 @@ export const useUsers = (options: UserListOptions): gp2.ListUserResponse => {
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: userQueryKeys.list(options),
-    queryFn: async (): Promise<gp2.ListUserResponse> => {
-      try {
-        const data = await getAlgoliaUsers(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaIndexName: data.index,
-          algoliaQueryId: data.queryID,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<gp2.ListUserResponse> =>
+      withEmptyListFallback<gp2.ListUserResponse>(
+        async () => {
+          const data = await getAlgoliaUsers(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaIndexName: data.index,
+            algoliaQueryId: data.queryID,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -53,9 +52,8 @@ export const useUserById = (id: string): gp2.UserResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: userQueryKeys.detail(id),
-    // getUser resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () => (await getUser(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getUser(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

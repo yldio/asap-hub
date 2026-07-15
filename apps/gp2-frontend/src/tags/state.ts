@@ -1,5 +1,8 @@
 import { gp2 } from '@asap-hub/model';
-import { createListQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createListQueryKeys,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { getTagSearchResults, TagSearchOptions } from './api';
@@ -14,23 +17,18 @@ export const useTagSearchResults = (options: TagSearchOptions) => {
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: tagSearchQueryKeys.list(options),
-    queryFn: async (): Promise<gp2.ListEntityResponse> => {
-      try {
-        const data = await getTagSearchResults(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list so the page keeps rendering.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<gp2.ListEntityResponse> =>
+      withEmptyListFallback<gp2.ListEntityResponse>(
+        async () => {
+          const data = await getTagSearchResults(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };

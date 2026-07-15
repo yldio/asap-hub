@@ -1,4 +1,8 @@
-import { createQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -23,24 +27,19 @@ export const useProjects = (
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: projectQueryKeys.list(options),
-    queryFn: async (): Promise<gp2.ListProjectResponse> => {
-      try {
-        const data = await getProjects(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<gp2.ListProjectResponse> =>
+      withEmptyListFallback<gp2.ListProjectResponse>(
+        async () => {
+          const data = await getProjects(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -48,10 +47,8 @@ export const useProjectById = (id: string): gp2.ProjectResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: projectQueryKeys.detail(id),
-    // getProject resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getProject(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getProject(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

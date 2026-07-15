@@ -1,4 +1,8 @@
-import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  GetListOptions,
+  nullOnUndefined,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -34,10 +38,10 @@ export const useWorkingGroupById = (
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: workingGroupQueryKeys.detail(id),
-    // getWorkingGroup resolves undefined on a 404, but a queryFn must not
-    // return undefined — cache null and map it back below.
-    queryFn: async () =>
-      (await getWorkingGroup(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () =>
+        getWorkingGroup(id, await getAuthorization()),
+      ),
   });
   return data ?? undefined;
 };

@@ -1,4 +1,8 @@
-import { createQueryKeys } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   useMutation,
@@ -24,24 +28,19 @@ export const useOutputs = (
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: outputQueryKeys.list(options),
-    queryFn: async (): Promise<gp2.ListOutputResponse> => {
-      try {
-        const data = await getOutputs(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<gp2.ListOutputResponse> =>
+      withEmptyListFallback<gp2.ListOutputResponse>(
+        async () => {
+          const data = await getOutputs(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -49,12 +48,11 @@ export const useOutputById = (id: string): gp2.OutputResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: outputQueryKeys.detail(id),
-    // getOutput resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below. This detail cache is also
-    // the patched-overlay target for useUpdateOutput (§6.1), so its value is
-    // never refetched over a fresh mutation write.
-    queryFn: async () =>
-      (await getOutput(id, await getAuthorization())) ?? null,
+    // This detail cache is also the patched-overlay target for
+    // useUpdateOutput (§6.1), so its value is never refetched over a fresh
+    // mutation write.
+    queryFn: () =>
+      nullOnUndefined(async () => getOutput(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

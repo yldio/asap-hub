@@ -1,4 +1,9 @@
-import { createQueryKeys, getEventListOptions } from '@asap-hub/frontend-utils';
+import {
+  createQueryKeys,
+  getEventListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { useMemo, useRef } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -16,24 +21,19 @@ export const useEvents = (options: EventListOptions): gp2.ListEventResponse => {
   const { client } = useAlgolia();
   return useSuspenseQuery({
     queryKey: eventQueryKeys.list(options),
-    queryFn: async (): Promise<gp2.ListEventResponse> => {
-      try {
-        const data = await getEvents(client, options);
-        return {
-          total: data.nbHits ?? 0,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        };
-      } catch (error) {
-        // Errors re-throw to the error boundary; non-Error rejections
-        // become an empty list.
-        if (error instanceof Error) {
-          throw error;
-        }
-        return { total: 0, items: [] };
-      }
-    },
+    queryFn: (): Promise<gp2.ListEventResponse> =>
+      withEmptyListFallback<gp2.ListEventResponse>(
+        async () => {
+          const data = await getEvents(client, options);
+          return {
+            total: data.nbHits ?? 0,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          };
+        },
+        { total: 0, items: [] },
+      ),
   }).data;
 };
 
@@ -41,9 +41,8 @@ export const useEventById = (id: string): gp2.EventResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: eventQueryKeys.detail(id),
-    // getEvent resolves undefined on a 404, but a queryFn must not return
-    // undefined — cache null and map it back below.
-    queryFn: async () => (await getEvent(id, await getAuthorization())) ?? null,
+    queryFn: () =>
+      nullOnUndefined(async () => getEvent(id, await getAuthorization())),
   });
   return data ?? undefined;
 };

@@ -217,7 +217,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               <Paragraph noMargin accent="lead">
                 Add the teams that took part, then mark who attended.
               </Paragraph>
-              <Button primary noMargin onClick={onAddAttendance}>
+              <Button primary small noMargin onClick={onAddAttendance}>
                 {plusIcon} Add Attendance
               </Button>
             </>

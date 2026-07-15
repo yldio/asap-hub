@@ -1,5 +1,9 @@
 import { getOverrides } from '@asap-hub/flags';
-import { BackendError, normalizeListOptions } from '@asap-hub/frontend-utils';
+import {
+  BackendError,
+  createQueryKeys,
+  normalizeListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
   DiscussionRequest,
@@ -50,14 +54,7 @@ import {
   getAlgoliaTeams,
 } from './api';
 
-export const teamQueryKeys = {
-  all: ['teams'] as const,
-  lists: () => [...teamQueryKeys.all, 'list'] as const,
-  list: (options: GetTeamsListOptions) =>
-    [...teamQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...teamQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...teamQueryKeys.details(), id] as const,
-};
+export const teamQueryKeys = createQueryKeys<GetTeamsListOptions>('teams');
 
 type ManuscriptWorkspaceUrlParams = {
   manuscriptId: string;
@@ -66,20 +63,10 @@ type ManuscriptWorkspaceUrlParams = {
 };
 
 export const manuscriptQueryKeys = {
-  all: ['manuscripts'] as const,
-  lists: () => [...manuscriptQueryKeys.all, 'list'] as const,
-  list: (options: ManuscriptsOptions) =>
-    [...manuscriptQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...manuscriptQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...manuscriptQueryKeys.details(), id] as const,
-  batch: (ids: ReadonlyArray<string>) =>
-    [...manuscriptQueryKeys.all, 'batch', ids] as const,
+  ...createQueryKeys<ManuscriptsOptions>('manuscripts'),
+  batch: (ids: ReadonlyArray<string>) => ['manuscripts', 'batch', ids] as const,
   workspaceUrl: (params: ManuscriptWorkspaceUrlParams) =>
-    [
-      ...manuscriptQueryKeys.all,
-      'workspace-url',
-      normalizeListOptions(params),
-    ] as const,
+    ['manuscripts', 'workspace-url', normalizeListOptions(params)] as const,
 };
 
 export const discussionQueryKeys = {

@@ -1,18 +1,11 @@
-import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import { NewsResponse } from '@asap-hub/model';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { getNews, getNewsById } from './api';
 
-export const newsQueryKeys = {
-  all: ['news'] as const,
-  lists: () => [...newsQueryKeys.all, 'list'] as const,
-  list: (options: GetListOptions) =>
-    [...newsQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...newsQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...newsQueryKeys.details(), id] as const,
-};
+export const newsQueryKeys = createQueryKeys<GetListOptions>('news');
 
 export const useNews = (options: GetListOptions) => {
   const getAuthorization = useAuthorization();

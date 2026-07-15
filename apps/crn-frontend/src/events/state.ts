@@ -1,8 +1,5 @@
 import { User } from '@asap-hub/auth';
-import {
-  GetEventListOptions,
-  normalizeListOptions,
-} from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetEventListOptions } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -11,14 +8,7 @@ import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
 
-export const eventQueryKeys = {
-  all: ['events'] as const,
-  lists: () => [...eventQueryKeys.all, 'list'] as const,
-  list: (options: GetEventListOptions) =>
-    [...eventQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...eventQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...eventQueryKeys.details(), id] as const,
-};
+export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
 
 export const useEventById = (id: string): EventResponse | undefined => {
   const getAuthorization = useAuthorization();

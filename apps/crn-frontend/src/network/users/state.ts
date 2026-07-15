@@ -1,4 +1,4 @@
-import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListUserResponse,
   UserPatchRequest,
@@ -26,14 +26,7 @@ import {
   postUserAvatar,
 } from './api';
 
-export const userQueryKeys = {
-  all: ['users'] as const,
-  lists: () => [...userQueryKeys.all, 'list'] as const,
-  list: (options: GetListOptions) =>
-    [...userQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...userQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...userQueryKeys.details(), id] as const,
-};
+export const userQueryKeys = createQueryKeys<GetListOptions>('users');
 
 export const useUsers = (options: GetListOptions): ListUserResponse => {
   const algoliaClient = useAlgolia();

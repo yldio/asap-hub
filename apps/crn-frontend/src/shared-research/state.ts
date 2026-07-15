@@ -1,5 +1,5 @@
 import { expandUserRoles } from '@asap-hub/auth';
-import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys } from '@asap-hub/frontend-utils';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -26,17 +26,8 @@ import {
   ResearchOutputListOptions,
 } from './api';
 
-export const researchOutputQueryKeys = {
-  all: ['research-outputs'] as const,
-  lists: () => [...researchOutputQueryKeys.all, 'list'] as const,
-  list: (options: ResearchOutputListOptions) =>
-    [
-      ...researchOutputQueryKeys.lists(),
-      normalizeListOptions(options),
-    ] as const,
-  details: () => [...researchOutputQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...researchOutputQueryKeys.details(), id] as const,
-};
+export const researchOutputQueryKeys =
+  createQueryKeys<ResearchOutputListOptions>('research-outputs');
 
 export const useResearchOutputById = (
   id: string,

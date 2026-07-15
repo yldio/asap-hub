@@ -1,4 +1,4 @@
-import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   InterestGroupResponse,
   ListInterestGroupResponse,
@@ -10,14 +10,8 @@ import { getInterestGroup, getInterestGroups } from './api';
 
 // This module is the shared interest-group entity store: the teams and users
 // interest-group modules write fetched entities into these keys.
-export const interestGroupQueryKeys = {
-  all: ['interest-groups'] as const,
-  lists: () => [...interestGroupQueryKeys.all, 'list'] as const,
-  list: (options: GetListOptions) =>
-    [...interestGroupQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...interestGroupQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...interestGroupQueryKeys.details(), id] as const,
-};
+export const interestGroupQueryKeys =
+  createQueryKeys<GetListOptions>('interest-groups');
 
 export const useInterestGroups = (
   options: GetListOptions,

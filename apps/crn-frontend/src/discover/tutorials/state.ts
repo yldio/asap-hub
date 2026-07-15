@@ -1,18 +1,11 @@
-import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import { TutorialsResponse } from '@asap-hub/model';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { useAuthorization } from '../../auth/useAuthorization';
 import { getTutorialById, getTutorials } from './api';
 
-export const tutorialQueryKeys = {
-  all: ['tutorials'] as const,
-  lists: () => [...tutorialQueryKeys.all, 'list'] as const,
-  list: (options: GetListOptions) =>
-    [...tutorialQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...tutorialQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...tutorialQueryKeys.details(), id] as const,
-};
+export const tutorialQueryKeys = createQueryKeys<GetListOptions>('tutorials');
 
 export const useTutorials = (options: GetListOptions) => {
   const getAuthorization = useAuthorization();

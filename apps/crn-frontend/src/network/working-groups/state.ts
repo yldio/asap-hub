@@ -1,4 +1,4 @@
-import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { createQueryKeys, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
@@ -9,14 +9,8 @@ import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
 import { getWorkingGroup, getWorkingGroups } from './api';
 
-export const workingGroupQueryKeys = {
-  all: ['working-groups'] as const,
-  lists: () => [...workingGroupQueryKeys.all, 'list'] as const,
-  list: (options: GetListOptions) =>
-    [...workingGroupQueryKeys.lists(), normalizeListOptions(options)] as const,
-  details: () => [...workingGroupQueryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...workingGroupQueryKeys.details(), id] as const,
-};
+export const workingGroupQueryKeys =
+  createQueryKeys<GetListOptions>('working-groups');
 
 export const useWorkingGroupById = (
   id: string,

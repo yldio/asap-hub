@@ -145,13 +145,40 @@ export const offlineSSM =
 
 export const eventBusSourceContentful = 'asap.contentful';
 
+const upperFirst = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
+
+// The event bus is created once by the asap-hub (API) stack and referenced
+// by every stack. Consumers reference it by ARN rather than by bare name so
+// that serverless does NOT try to create its own AWS::Events::EventBus in
+// each stack (a bare name string makes serverless emit the bus resource,
+// which collides across stacks that share the bus).
+export const eventBusName = `asap-events-${stage}`;
+// A literal ARN string (not an Fn::Join object): serverless only treats the
+// bus as pre-existing — and thus skips creating its own — when eventBus is a
+// string starting with "arn"; an object trips the config-schema validator
+// ("unsupported object format"). ${aws:accountId} is resolved by serverless
+// at build time.
+export const eventBusArn = `arn:aws:events:${region}:\${aws:accountId}:event-bus/${eventBusName}`;
+
+// CloudFormation logical id for the bus. This mirrors the id serverless
+// itself generates for an auto-created event bus
+// (naming.getEventBridgeEventBusLogicalId): normalizeName replaces "-" with
+// "Dash" and upper-cases the first letter. We reuse that exact id so the
+// bus the asap-hub stack now declares explicitly maps onto the resource
+// serverless previously auto-created in that same stack — an in-place
+// update, not a delete-and-recreate.
+export const eventBusLogicalId = `${upperFirst(
+  eventBusName.replace(/-/g, 'Dash'),
+)}EventBridgeEventBus`;
+
 export const contentfulEventBridge = (
   detailTypes: WebhookDetailType[],
   retryPolicy?: { maximumRetryAttempts: number },
 ) => [
   {
     eventBridge: {
-      eventBus: 'asap-events-${self:provider.stage}',
+      eventBus: eventBusArn,
       pattern: {
         source: [eventBusSourceContentful],
         'detail-type': detailTypes,

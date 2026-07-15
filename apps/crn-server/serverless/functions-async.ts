@@ -1,3 +1,4 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import {
   activeCampaignAccount,
@@ -15,7 +16,7 @@ import {
 } from './shared';
 
 const contentfulEventBridge = (
-  detailTypes: string[],
+  detailTypes: WebhookDetailType[],
   retryPolicy?: { maximumRetryAttempts: number },
 ) => [
   {
@@ -36,7 +37,7 @@ const algoliaIndexEnvironment = {
   SENTRY_DSN: sentryDsnHandlers,
 };
 
-const algoliaIndexer = (handler: string, detailTypes: string[]) => ({
+const algoliaIndexer = (handler: string, detailTypes: WebhookDetailType[]) => ({
   handler,
   events: contentfulEventBridge(detailTypes),
   environment: algoliaIndexEnvironment,

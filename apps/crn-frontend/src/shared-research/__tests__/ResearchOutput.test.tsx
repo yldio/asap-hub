@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
 import * as flags from '@asap-hub/flags';
 import {
@@ -104,7 +104,26 @@ const researchOutputRoute = sharedResearch({}).researchOutput({
   researchOutputId: id,
 });
 
-const renderComponent = async (path: string, user = defaultUser) => {
+// Simulates a banner handed over while ResearchOutput is already mounted,
+// e.g. the publish modal on the view page or the nested edit/version forms.
+const TriggerBannerNavigation = () => {
+  const navigate = useNavigate();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        navigate(researchOutputRoute.$, { state: { banner: 'published' } })
+      }
+    >
+      trigger banner navigation
+    </button>
+  );
+};
+
+const renderComponent = async (
+  path: string | { pathname: string; state?: unknown },
+  user = defaultUser,
+) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
@@ -115,6 +134,7 @@ const renderComponent = async (path: string, user = defaultUser) => {
         <WhenReady>
           <Suspense fallback="Loading...">
             <MemoryRouter initialEntries={[path]}>
+              <TriggerBannerNavigation />
               <Routes>
                 <Route path="/prev" element={<div>Previous Page</div>} />
                 <Route
@@ -592,5 +612,48 @@ describe('a research output linked to a manuscript', () => {
     await waitFor(() => {
       expect(getByText('No new manuscript versions available')).toBeVisible();
     });
+  });
+});
+
+describe('success banner', () => {
+  it('shows the published banner when arriving with banner navigation state', async () => {
+    await renderComponent({
+      pathname: researchOutputRoute.$,
+      state: { banner: 'published' },
+    });
+
+    expect(await screen.findByText(/published successfully/i)).toBeVisible();
+  });
+
+  it('shows the draft created banner when arriving with banner navigation state', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      id,
+      published: false,
+    });
+    await renderComponent({
+      pathname: researchOutputRoute.$,
+      state: { banner: 'draftCreated' },
+    });
+
+    expect(await screen.findByText(/created successfully/i)).toBeVisible();
+  });
+
+  it('shows no banner without navigation state', async () => {
+    await renderComponent(researchOutputRoute.$);
+
+    expect(screen.queryByText(/published successfully/i)).toBeNull();
+  });
+
+  it('shows the banner when it arrives while the page is already mounted', async () => {
+    await renderComponent(researchOutputRoute.$);
+    expect(screen.queryByText(/published successfully/i)).toBeNull();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'trigger banner navigation' }),
+    );
+
+    expect(await screen.findByText(/published successfully/i)).toBeVisible();
   });
 });

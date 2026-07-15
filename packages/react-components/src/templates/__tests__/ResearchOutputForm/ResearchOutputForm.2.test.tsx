@@ -24,12 +24,20 @@ import { mockActErrorsInConsole } from '../../../test-utils';
 jest.setTimeout(60000);
 
 // Helper to capture location in tests
-let currentLocation: { pathname: string; search: string } | null = null;
+let currentLocation: {
+  pathname: string;
+  search: string;
+  state: unknown;
+} | null = null;
 let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
+    currentLocation = {
+      pathname: location.pathname,
+      search: location.search,
+      state: location.state,
+    };
   }, [location]);
   return null;
 };
@@ -197,9 +205,8 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
     await waitFor(() => {
       expect(currentLocation).not.toBeNull();
-      expect(currentLocation?.pathname).toEqual(
-        `/shared-research/${id}/publishedNow`,
-      );
+      expect(currentLocation?.pathname).toEqual(`/shared-research/${id}`);
+      expect(currentLocation?.state).toEqual({ banner: 'published' });
     });
   });
 
@@ -220,6 +227,28 @@ describe('on submit', () => {
       expect(currentLocation).not.toBeNull();
       expect(currentLocation?.pathname).toEqual(`/shared-research/${id}`);
     });
+  });
+
+  it('saves as draft, not publish, when confirming the same description warning', async () => {
+    await setupForm({
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        descriptionMD: 'example description',
+      },
+      propOverride: {
+        flowId: 'team-duplicate',
+        availableActions: { canSaveDraft: true },
+      },
+    });
+    await userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+    expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+    await userEvent.click(
+      screen.getByRole('button', { name: /Keep and save/i }),
+    );
+    await waitFor(() => {
+      expect(saveDraftFn).toHaveBeenCalled();
+    });
+    expect(saveFn).not.toHaveBeenCalled();
   });
 
   it('will show you confirmation dialog and allow you to cancel it', async () => {

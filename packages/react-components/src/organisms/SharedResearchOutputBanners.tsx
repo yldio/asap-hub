@@ -4,13 +4,18 @@ import { css } from '@emotion/react';
 import Toast from './Toast';
 import { rem } from '../pixels';
 
+export type ResearchOutputBanner = 'published' | 'draftCreated';
+
+export type ResearchOutputBannerLocationState = {
+  banner?: ResearchOutputBanner;
+};
+
 export interface SharedResearchOutputBannersProps {
   association: string;
   documentType: string;
   published: boolean;
   statusChangedBy: ResearchOutputResponse['statusChangedBy'];
-  publishedNow: boolean;
-  draftCreated?: boolean;
+  banner?: ResearchOutputBanner;
   reviewToggled: boolean;
   associationName: string;
   isInReview: boolean;
@@ -28,15 +33,13 @@ const SharedResearchOutputBanners: React.FC<
   association,
   documentType,
   published,
-  publishedNow,
+  banner,
   statusChangedBy,
-  draftCreated,
   reviewToggled,
   associationName,
   isInReview,
 }) => {
-  const [publishedNowBanner, setPublishedNowBanner] = useState(publishedNow);
-  const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
+  const [flashBanner, setFlashBanner] = useState(banner);
   const [reviewBannerState, setReviewBannerState] = useState(
     reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
   );
@@ -45,16 +48,13 @@ const SharedResearchOutputBanners: React.FC<
     setReviewBannerState(
       reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
     );
-    setPublishedNowBanner(publishedNow);
-  }, [reviewToggled, isInReview, publishedNow]);
+    setFlashBanner(banner);
+  }, [reviewToggled, isInReview, banner]);
 
   return (
     <div css={toastContainer}>
-      {draftCreatedBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setDraftCreatedBanner(false)}
-        >
+      {flashBanner === 'draftCreated' && (
+        <Toast accent="successLarge" onClose={() => setFlashBanner(undefined)}>
           {`Draft ${
             association === 'working group' ? 'Working Group' : 'Team'
           } ${documentType} created successfully.`}
@@ -75,11 +75,8 @@ const SharedResearchOutputBanners: React.FC<
           {`${statusChangedBy.firstName} ${statusChangedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
-      {publishedNowBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setPublishedNowBanner(false)}
-        >
+      {flashBanner === 'published' && (
+        <Toast accent="successLarge" onClose={() => setFlashBanner(undefined)}>
           {`${
             association === 'working group' ? 'Working Group' : 'Team'
           } ${documentType} published successfully.`}

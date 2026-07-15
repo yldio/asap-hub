@@ -41,11 +41,19 @@ jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-api/impact');
 
-let currentLocation: { pathname: string; search: string } | null = null;
+let currentLocation: {
+  pathname: string;
+  search: string;
+  state: unknown;
+} | null = null;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
+    currentLocation = {
+      pathname: location.pathname,
+      search: location.search,
+      state: location.state,
+    };
   }, [location]);
   return null;
 };
@@ -409,8 +417,9 @@ it('can submit a form when form data is valid', async () => {
   await waitFor(
     () => {
       expect(currentLocation?.pathname).toBe(
-        '/shared-research/research-output-id/publishedNow',
+        '/shared-research/research-output-id',
       );
+      expect(currentLocation?.state).toEqual({ banner: 'published' });
     },
     { interval: 50 },
   );
@@ -689,9 +698,10 @@ it.each([
     await waitFor(
       () => {
         expect(currentLocation?.pathname).toBe(
-          buttonName === 'Publish'
-            ? '/shared-research/research-output-id/publishedNow'
-            : '/shared-research/research-output-id',
+          '/shared-research/research-output-id',
+        );
+        expect(currentLocation?.state).toEqual(
+          buttonName === 'Publish' ? { banner: 'published' } : null,
         );
       },
       { interval: 50 },

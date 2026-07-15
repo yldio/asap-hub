@@ -25,11 +25,13 @@ let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 describe('form buttons', () => {
   const id = '42';
   const saveFn = jest.fn();
+  const saveDraftFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
 
@@ -92,6 +94,7 @@ describe('form buttons', () => {
               researchOutputDocumentTypeToType[documentType],
             )}
             onSave={saveFn}
+            onSaveDraft={saveDraftFn}
             getLabSuggestions={getLabSuggestions}
             getAuthorSuggestions={getAuthorSuggestions}
             researchTags={researchTags}

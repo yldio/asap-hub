@@ -31,8 +31,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   environments: [],
   organisms: [],
   backHref: '#',
-  publishedNow: false,
-  draftCreated: false,
+  banner: undefined,
   onRequestReview: jest.fn(() => Promise.resolve()),
   onPublish: jest.fn(() => Promise.resolve()),
   checkForNewVersion: jest.fn(() => Promise.resolve(false)),
@@ -425,7 +424,7 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        publishedNow={true}
+        banner="published"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -441,7 +440,7 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        draftCreated={true}
+        banner="draftCreated"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -458,7 +457,7 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        draftCreated={true}
+        banner="draftCreated"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -477,7 +476,7 @@ describe('a draft output', () => {
         <SharedResearchOutput
           {...props}
           published={false}
-          draftCreated={true}
+          banner="draftCreated"
           teams={[
             { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
           ]}
@@ -499,7 +498,7 @@ describe('a draft output', () => {
         <SharedResearchOutput
           {...props}
           published={false}
-          draftCreated={true}
+          banner="draftCreated"
           teams={[
             { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
           ]}
@@ -593,7 +592,7 @@ describe('a newly published output', () => {
         workingGroups={undefined}
         documentType="Article"
         published={true}
-        publishedNow
+        banner="published"
       />,
     );
     const toast = getByText('Team Article published successfully.');
@@ -613,7 +612,7 @@ describe('a newly published output', () => {
           workingGroups={undefined}
           documentType={researchOutputDocumentType}
           published={true}
-          publishedNow
+          banner="published"
         />,
       );
       expect(
@@ -638,7 +637,7 @@ describe('a newly published output', () => {
           ]}
           documentType={researchOutputDocumentType}
           published={true}
-          publishedNow
+          banner="published"
         />,
       );
       expect(

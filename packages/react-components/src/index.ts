@@ -52,6 +52,10 @@ export {
 } from './atoms';
 export type { MultiSelectOptionsType, MultiSelectProps } from './atoms';
 export type { ManuscriptVersionOption } from './templates';
+export type {
+  ResearchOutputBanner,
+  ResearchOutputBannerLocationState,
+} from './organisms';
 export * from './colors';
 export { borderWidth } from './form';
 export * from './hooks';

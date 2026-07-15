@@ -10,8 +10,7 @@ const defaultProps: SharedResearchOutputBannersProps = {
   documentType: 'Article',
   published: false,
   statusChangedBy: undefined,
-  publishedNow: false,
-  draftCreated: false,
+  banner: undefined,
   reviewToggled: false,
   associationName: 'Association Name',
   isInReview: false,
@@ -19,7 +18,7 @@ const defaultProps: SharedResearchOutputBannersProps = {
 
 it('should render draft created banner', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners {...defaultProps} draftCreated={true} />,
+    <SharedResearchOutputBanners {...defaultProps} banner="draftCreated" />,
   );
 
   const bannerText = 'Draft Working Group Article created successfully.';
@@ -43,7 +42,7 @@ test.each`
     const { queryByText, getByText, getByRole } = render(
       <SharedResearchOutputBanners
         {...defaultProps}
-        draftCreated={true}
+        banner="draftCreated"
         association={association}
       />,
     );
@@ -129,7 +128,11 @@ it('should render review requested banner with association name', async () => {
 
 it('should render published now banner', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners {...defaultProps} published publishedNow />,
+    <SharedResearchOutputBanners
+      {...defaultProps}
+      published
+      banner="published"
+    />,
   );
 
   const bannerText = 'Working Group Article published successfully.';

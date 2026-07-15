@@ -2,7 +2,6 @@ import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useNavigationWarning } from '../navigation';
 
@@ -24,7 +23,6 @@ type FormProps<T> = {
   toastType?: 'inner' | 'base';
   children: (state: {
     isSaving: boolean;
-    setRedirectOnSave: (url: string) => void;
     getWrappedOnSave: (
       onSaveFunction: () => Promise<T | void>,
     ) => () => Promise<T | void>;
@@ -42,21 +40,8 @@ const Form = <T extends void | Record<string, unknown>>({
   const toast = useContext(
     toastType === 'inner' ? InnerToastContext : ToastContext,
   );
-  const navigate = useNavigate();
-
-  const redirectOnSaveRef = useRef<string>();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>('initial');
-
-  const handleSetRedirectOnSave = (url: string) => {
-    redirectOnSaveRef.current = url;
-  };
-
-  useEffect(() => {
-    if (status === 'hasSaved' && redirectOnSaveRef.current) {
-      void navigate(redirectOnSaveRef.current);
-    }
-  }, [status, navigate]);
 
   useEffect(() => {
     if (serverErrors.length && formRef.current) {
@@ -118,7 +103,6 @@ const Form = <T extends void | Record<string, unknown>>({
         onCancel,
         isSaving: status === 'isSaving',
         getWrappedOnSave,
-        setRedirectOnSave: handleSetRedirectOnSave,
       })}
     </form>
   );

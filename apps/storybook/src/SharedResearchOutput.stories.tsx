@@ -90,7 +90,15 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     }),
   ),
   published: boolean('Published', true),
-  publishedNow: boolean('Is Published Now', false),
+  banner: select<ComponentProps<typeof SharedResearchOutput>['banner']>(
+    'Banner',
+    {
+      None: undefined,
+      Published: 'published',
+      'Draft created': 'draftCreated',
+    },
+    undefined,
+  ),
   statusChangedBy: {
     id: 'userId',
     firstName: 'firstName',

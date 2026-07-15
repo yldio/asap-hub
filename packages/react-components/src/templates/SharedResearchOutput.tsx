@@ -22,6 +22,8 @@ import {
   SharedResearchOutputBanners,
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
+  type ResearchOutputBanner,
+  type ResearchOutputBannerLocationState,
 } from '../organisms';
 import { rem } from '../pixels';
 import {
@@ -63,8 +65,7 @@ type SharedResearchOutputProps = Pick<
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
-    publishedNow: boolean;
-    draftCreated?: boolean;
+    banner?: ResearchOutputBanner;
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
@@ -84,8 +85,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
-  publishedNow,
-  draftCreated,
+  banner,
   relatedEvents,
   statusChangedBy,
   isInReview,
@@ -183,11 +183,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     <div>
       <SharedResearchOutputBanners
         published={published}
-        draftCreated={draftCreated}
+        banner={banner}
         association={association}
         documentType={props.documentType}
         statusChangedBy={statusChangedBy}
-        publishedNow={publishedNow}
         reviewToggled={reviewToggled}
         associationName={associationName}
         isInReview={isInReview}
@@ -269,9 +268,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             confirmText="Publish Output"
             onSave={() => publishOutput()}
             successHref={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .researchOutputPublished({}).$
+              sharedResearch({}).researchOutput({ researchOutputId: id }).$
+            }
+            successState={
+              {
+                banner: 'published',
+              } satisfies ResearchOutputBannerLocationState
             }
             onCancel={() => {
               setDisplayPublishModal(false);

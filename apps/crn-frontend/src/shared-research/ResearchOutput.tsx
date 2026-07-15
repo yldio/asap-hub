@@ -2,6 +2,8 @@ import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   Loading,
   NotFoundPage,
+  ResearchOutputBanner,
+  ResearchOutputBannerLocationState,
   ScrollToTop,
   SharedResearchOutput,
   utils,
@@ -12,7 +14,7 @@ import {
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
-import { Route, Routes, useLocation, useMatch } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { Suspense, useEffect, useState } from 'react';
@@ -27,15 +29,42 @@ const ResearchOutput: React.FC = () => {
     sharedResearch({}).researchOutput,
   );
 
-  const publishedNowMatch = useMatch(
-    sharedResearch({})
-      .researchOutput({ researchOutputId })
-      .researchOutputPublished({ researchOutputId }).$,
-  );
-
-  const publishedNow = !!publishedNowMatch;
   const location = useLocation();
-  const urlSearchParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
+
+  const outputPath = sharedResearch({}).researchOutput({ researchOutputId }).$;
+
+  // One-shot success banner handed over through navigation state (see
+  // ResearchOutputForm and the publish modal). Watched reactively because this
+  // component stays mounted when the banner arrives from its own child routes
+  // (edit/version forms) or from a same-path navigation (publish modal).
+  const [banner, setBanner] = useState<ResearchOutputBanner | undefined>();
+
+  useEffect(() => {
+    const stateBanner = (
+      location.state as ResearchOutputBannerLocationState | null
+    )?.banner;
+    if (stateBanner) {
+      setBanner(stateBanner);
+      // Strip the banner from history so refreshing, navigating back, or
+      // sharing the URL does not replay it.
+      void navigate(`${location.pathname}${location.search}`, {
+        replace: true,
+        state: null,
+      });
+    } else if (location.pathname !== outputPath) {
+      // Left the output view (e.g. opened the edit form) — the flash moment
+      // is over, so a later return without a new banner stays silent.
+      setBanner(undefined);
+    }
+  }, [
+    location.pathname,
+    location.search,
+    location.state,
+    navigate,
+    outputPath,
+  ]);
+
   const researchOutputData = useResearchOutputById(researchOutputId);
 
   const backHref = useBackHref() ?? sharedResearch({}).$;
@@ -99,7 +128,7 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     const renderResearchOutputView = () => (
       <Frame title={researchOutputData.title}>
-        {publishedNow && <ScrollToTop />}
+        {banner === 'published' && <ScrollToTop />}
         <SharedResearchOutput
           {...researchOutputData}
           backHref={backHref}
@@ -124,8 +153,7 @@ const ResearchOutput: React.FC = () => {
               published: true,
             })
           }
-          publishedNow={publishedNow}
-          draftCreated={urlSearchParams.get('draftCreated') === 'true'}
+          banner={banner}
           checkForNewVersion={checkForNewVersion}
         />
       </Frame>
@@ -136,13 +164,6 @@ const ResearchOutput: React.FC = () => {
         <Suspense key={location.pathname} fallback={<Loading />}>
           <Routes>
             <Route index element={renderResearchOutputView()} />
-            <Route
-              path={
-                sharedResearch({}).researchOutput({ researchOutputId })
-                  .researchOutputPublished.template
-              }
-              element={renderResearchOutputView()}
-            />
             {permissions.canVersionResearchOutput && (
               <Route
                 path={

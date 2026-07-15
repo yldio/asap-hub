@@ -17,6 +17,20 @@ import {
   stage,
 } from './shared';
 
+const cookiePreferencesEnvironment = {
+  COOKIE_PREFERENCES_TABLE_NAME:
+    stage === 'local'
+      ? 'asap-hub-dev-cookie-preferences'
+      : '${self:service}-${self:provider.stage}-cookie-preferences',
+  SENTRY_DSN: sentryDsnHandlers,
+  ...(stage === 'local'
+    ? {
+        LOCAL_DYNAMODB_ENDPOINT:
+          process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
+      }
+    : {}),
+};
+
 export const apiFunctions: AWS['functions'] = {
   publicApiHandler: {
     handler: 'src/handlers/public-api-handler.publicApiHandler',
@@ -158,19 +172,7 @@ export const apiFunctions: AWS['functions'] = {
         },
       },
     ],
-    environment: {
-      COOKIE_PREFERENCES_TABLE_NAME:
-        stage === 'local'
-          ? 'asap-hub-dev-cookie-preferences'
-          : '${self:service}-${self:provider.stage}-cookie-preferences',
-      SENTRY_DSN: sentryDsnHandlers,
-      ...(stage === 'local'
-        ? {
-            LOCAL_DYNAMODB_ENDPOINT:
-              process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
-          }
-        : {}),
-    },
+    environment: cookiePreferencesEnvironment,
   },
   getCookiePreferences: {
     handler:
@@ -183,19 +185,7 @@ export const apiFunctions: AWS['functions'] = {
         },
       },
     ],
-    environment: {
-      COOKIE_PREFERENCES_TABLE_NAME:
-        stage === 'local'
-          ? 'asap-hub-dev-cookie-preferences'
-          : '${self:service}-${self:provider.stage}-cookie-preferences',
-      SENTRY_DSN: sentryDsnHandlers,
-      ...(stage === 'local'
-        ? {
-            LOCAL_DYNAMODB_ENDPOINT:
-              process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
-          }
-        : {}),
-    },
+    environment: cookiePreferencesEnvironment,
   },
   getPresignedUrl: {
     handler: './src/handlers/files-upload/get-presigned-url-handler.handler',

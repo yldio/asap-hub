@@ -16,6 +16,14 @@ const opensearchHttpActions = [
   'es:ESHttpPatch',
 ];
 
+const opensearchHttpStatement = {
+  Effect: 'Allow',
+  Action: opensearchHttpActions,
+  Resource: {
+    'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
+  },
+};
+
 const describeOpensearchDomainStatement = {
   Effect: 'Allow',
   Action: ['es:DescribeDomain', 'es:DescribeDomains'],
@@ -200,13 +208,7 @@ export const apiIamRoleStatements = [
 ];
 
 export const asyncIamRoleStatements = [
-  {
-    Effect: 'Allow',
-    Action: opensearchHttpActions,
-    Resource: {
-      'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
-    },
-  },
+  opensearchHttpStatement,
   describeOpensearchDomainStatement,
   listDomainNamesStatement,
   invokeOpensearchSearchHandlerStatement,
@@ -245,4 +247,13 @@ export const asyncIamRoleStatements = [
   crossStackSqsQueueAccess('invite-user-queue'),
   crossStackSqsQueueAccess('google-calendar-event-queue'),
   ...(isProd ? [crossStackSqsQueueAccess('compliance-doc-sync-queue')] : []),
+];
+
+// Algolia access is via API keys in the environment, not IAM — the indexers
+// only need OpenSearch and the shared search lambda.
+export const indexersIamRoleStatements = [
+  opensearchHttpStatement,
+  describeOpensearchDomainStatement,
+  listDomainNamesStatement,
+  invokeOpensearchSearchHandlerStatement,
 ];

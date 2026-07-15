@@ -1,9 +1,8 @@
 import { AWS } from '@serverless/typescript';
-import { asyncIamRoleStatements } from './serverless/iam';
-import { asyncFunctions } from './serverless/functions-async';
-import { asyncExtensions, asyncResources } from './serverless/resources-async';
+import { indexersIamRoleStatements } from './serverless/iam';
+import { indexerFunctions } from './serverless/functions-indexers';
 import {
-  asyncService,
+  indexersService,
   providerEnvironment,
   region,
   stage,
@@ -15,7 +14,7 @@ const plugins = [
 ];
 
 const serverlessConfig: AWS = {
-  service: asyncService,
+  service: indexersService,
   plugins,
   provider: {
     name: 'aws',
@@ -32,7 +31,7 @@ const serverlessConfig: AWS = {
     environment: providerEnvironment,
     iam: {
       role: {
-        statements: asyncIamRoleStatements,
+        statements: indexersIamRoleStatements,
       },
     },
   },
@@ -49,11 +48,7 @@ const serverlessConfig: AWS = {
       concurrency: 4,
     },
   },
-  functions: asyncFunctions,
-  resources: {
-    Resources: asyncResources,
-    extensions: asyncExtensions,
-  },
+  functions: indexerFunctions,
 };
 
 module.exports = serverlessConfig;

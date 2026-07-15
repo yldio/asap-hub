@@ -17,6 +17,7 @@
     "@types/**/*.d.ts",
     "serverless.ts",
     "serverless-async.ts",
+    "serverless-indexers.ts",
     "serverless"
   ],
   "references": [

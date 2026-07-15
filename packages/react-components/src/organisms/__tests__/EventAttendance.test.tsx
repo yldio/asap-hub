@@ -62,13 +62,34 @@ describe('EventAttendance', () => {
     expect(getByText('75%')).toBeVisible();
   });
 
-  it('shows 0% when there are no teams to account for', () => {
-    const { getByText } = renderCard({
+  it('renders the empty state with an add action when there are no teams', async () => {
+    const onAddAttendance = jest.fn();
+    const { getByText, getByRole, queryByRole } = renderCard({
+      teamsAttended: 0,
+      teamsTotal: 0,
+      teams: [],
+      onAddAttendance,
+    });
+    expect(
+      getByText('Add the teams that took part, then mark who attended.'),
+    ).toBeVisible();
+    expect(queryByRole('table')).not.toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: /add attendance/i }));
+    expect(onAddAttendance).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the read-only empty state without an add action for non-editors', () => {
+    const { getByText, queryByText, queryByRole } = renderCard({
       teamsAttended: 0,
       teamsTotal: 0,
       teams: [],
     });
-    expect(getByText('0%')).toBeVisible();
+    expect(getByText('No attendance recorded yet')).toBeVisible();
+    expect(
+      queryByText('Add the teams that took part, then mark who attended.'),
+    ).not.toBeInTheDocument();
+    expect(queryByRole('button')).not.toBeInTheDocument();
   });
 
   it('colours the progress amber below 60% and green otherwise', () => {

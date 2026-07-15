@@ -2,7 +2,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
-import { Button, Card, Headline3, Link } from '../atoms';
+import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
 import { charcoal, fern, paper, steel, tin, warning500 } from '../colors';
 import {
   DiscoveryTeamIcon,
@@ -10,6 +10,7 @@ import {
   InactiveBadgeIcon,
   invalidTickIcon,
   PencilIcon,
+  plusIcon,
   ResourceTeamIcon,
   TeamIcon,
   validTickIcon,
@@ -146,6 +147,13 @@ const viewMoreStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
 });
 
+const emptyStateStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: rem(24),
+});
+
 export type EventAttendanceTeamType = 'discovery' | 'resource';
 
 export type EventAttendanceTeam = {
@@ -181,6 +189,7 @@ type EventAttendanceProps = {
   teams: EventAttendanceTeam[];
   onExport?: () => void;
   onEdit?: () => void;
+  onAddAttendance?: () => void;
 };
 
 const EventAttendance: React.FC<EventAttendanceProps> = ({
@@ -190,12 +199,37 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
   teams,
   onExport,
   onEdit,
+  onAddAttendance,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const showFooter = !expanded && teams.length > defaultVisibleTeams;
   const visibleTeams = expanded ? teams : teams.slice(0, defaultVisibleTeams);
   const attendancePercentage =
     teamsTotal > 0 ? Math.round((teamsAttended / teamsTotal) * 100) : 0;
+
+  if (teams.length === 0) {
+    return (
+      <Card>
+        <div css={emptyStateStyles}>
+          <Headline3 noMargin>Attendance</Headline3>
+          {onAddAttendance ? (
+            <>
+              <Paragraph noMargin accent="lead">
+                Add the teams that took part, then mark who attended.
+              </Paragraph>
+              <Button primary noMargin onClick={onAddAttendance}>
+                {plusIcon} Add Attendance
+              </Button>
+            </>
+          ) : (
+            <Paragraph noMargin accent="lead">
+              No attendance recorded yet
+            </Paragraph>
+          )}
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card padding={false}>

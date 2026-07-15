@@ -111,4 +111,21 @@ export const ManyTeams: Story = {
   },
 };
 
+export const Empty: Story = {
+  args: {
+    teamsAttended: 0,
+    teamsTotal: 0,
+    teams: [],
+    onAddAttendance: () => undefined,
+  },
+};
+
+export const EmptyReadOnly: Story = {
+  args: {
+    teamsAttended: 0,
+    teamsTotal: 0,
+    teams: [],
+  },
+};
+
 export default meta;

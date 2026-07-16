@@ -96,9 +96,7 @@ const RailTooltip: React.FC<RailTooltipProps> = ({
     <span
       css={wrapperStyles}
       onMouseEnter={
-        enabled
-          ? (event) => canHover() && show(event.currentTarget)
-          : undefined
+        enabled ? (event) => canHover() && show(event.currentTarget) : undefined
       }
       onMouseLeave={hide}
       onFocus={enabled ? onFocus : undefined}

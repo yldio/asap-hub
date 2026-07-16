@@ -12,18 +12,12 @@ const versionResearchOutput = route(
   {},
 );
 
-const researchOutputPublished = route(
-  '/publishedNow',
-  { researchOutputId: stringParser },
-  {},
-);
-
 const researchOutput = route(
   '/:researchOutputId',
   {
     researchOutputId: stringParser,
   },
-  { editResearchOutput, researchOutputPublished, versionResearchOutput },
+  { editResearchOutput, versionResearchOutput },
 );
 
 const sharedResearch = route('/shared-research', {}, { researchOutput });

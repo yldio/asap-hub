@@ -23,12 +23,20 @@ import { mockActErrorsInConsole } from '../../../test-utils';
 jest.setTimeout(60000);
 
 // Helper to capture location in tests
-let currentLocation: { pathname: string; search: string } | null = null;
+let currentLocation: {
+  pathname: string;
+  search: string;
+  state: unknown;
+} | null = null;
 let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
+    currentLocation = {
+      pathname: location.pathname,
+      search: location.search,
+      state: location.state,
+    };
   }, [location]);
   return null;
 };
@@ -192,7 +200,7 @@ describe('on submit', () => {
     await waitFor(() => {
       expect(currentLocation).not.toBeNull();
       expect(currentLocation?.pathname).toEqual(`/shared-research/${id}`);
-      expect(currentLocation?.search).toEqual('?draftCreated=true');
+      expect(currentLocation?.search).toEqual('');
     });
   });
 });

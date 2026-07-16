@@ -4,13 +4,18 @@ import { css } from '@emotion/react';
 import Toast from './Toast';
 import { rem } from '../pixels';
 
-export interface SharedResearchOutputBannersProps {
+export type ResearchOutputToast = 'published' | 'draftCreated';
+
+export type ResearchOutputToastLocationState = {
+  toast?: ResearchOutputToast;
+};
+
+export interface SharedResearchOutputToastsProps {
   association: string;
   documentType: string;
   published: boolean;
   statusChangedBy: ResearchOutputResponse['statusChangedBy'];
-  publishedNow: boolean;
-  draftCreated?: boolean;
+  toast?: ResearchOutputToast;
   reviewToggled: boolean;
   associationName: string;
   isInReview: boolean;
@@ -22,51 +27,44 @@ const toastContainer = css({
   gap: rem(4),
 });
 
-const SharedResearchOutputBanners: React.FC<
-  SharedResearchOutputBannersProps
-> = ({
+const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
   association,
   documentType,
   published,
-  publishedNow,
+  toast,
   statusChangedBy,
-  draftCreated,
   reviewToggled,
   associationName,
   isInReview,
 }) => {
-  const [publishedNowBanner, setPublishedNowBanner] = useState(publishedNow);
-  const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
-  const [reviewBannerState, setReviewBannerState] = useState(
+  const [flashToast, setFlashToast] = useState(toast);
+  const [reviewToastState, setReviewToastState] = useState(
     reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
   );
 
   useEffect(() => {
-    setReviewBannerState(
+    setReviewToastState(
       reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
     );
-    setPublishedNowBanner(publishedNow);
-  }, [reviewToggled, isInReview, publishedNow]);
+    setFlashToast(toast);
+  }, [reviewToggled, isInReview, toast]);
 
   return (
     <div css={toastContainer}>
-      {draftCreatedBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setDraftCreatedBanner(false)}
-        >
+      {flashToast === 'draftCreated' && (
+        <Toast accent="successLarge" onClose={() => setFlashToast(undefined)}>
           {`Draft ${
             association === 'working group' ? 'Working Group' : 'Team'
           } ${documentType} created successfully.`}
         </Toast>
       )}
-      {reviewBannerState === 'requested' && (
-        <Toast accent="successLarge" onClose={() => setReviewBannerState(null)}>
+      {reviewToastState === 'requested' && (
+        <Toast accent="successLarge" onClose={() => setReviewToastState(null)}>
           {`Draft ${association} ${documentType} submitted for PM review successfully.`}
         </Toast>
       )}
-      {reviewBannerState === 'dismissed' && (
-        <Toast accent="successLarge" onClose={() => setReviewBannerState(null)}>
+      {reviewToastState === 'dismissed' && (
+        <Toast accent="successLarge" onClose={() => setReviewToastState(null)}>
           {`In review ${association} ${documentType} switched to draft successfully.`}
         </Toast>
       )}
@@ -75,11 +73,8 @@ const SharedResearchOutputBanners: React.FC<
           {`${statusChangedBy.firstName} ${statusChangedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
-      {publishedNowBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setPublishedNowBanner(false)}
-        >
+      {flashToast === 'published' && (
+        <Toast accent="successLarge" onClose={() => setFlashToast(undefined)}>
           {`${
             association === 'working group' ? 'Working Group' : 'Team'
           } ${documentType} published successfully.`}
@@ -93,4 +88,4 @@ const SharedResearchOutputBanners: React.FC<
   );
 };
 
-export default SharedResearchOutputBanners;
+export default SharedResearchOutputToasts;

@@ -51,6 +51,8 @@ type ManuscriptVersionExport = {
   labs?: string;
   complianceReportUrl?: string;
   complianceReportDescription?: string;
+  preprintDate?: string;
+  publicationDate?: string;
   versionLastUpdatedDate: string;
 };
 
@@ -368,8 +370,8 @@ const formatComplianceData = (entries: GroupedEntries) => {
           manuscriptFields.apcCoverageRequestStatus?.['en-US'] || '',
         apcAmountPaid: manuscriptFields.apcAmountPaid?.['en-US'] || '',
         declinedReason: manuscriptFields.declinedReason?.['en-US'] || '',
-        assignedUsers: versionFields?.assignedUsers
-          ? getLinkedAuthors(versionFields?.assignedUsers['en-US'])
+        assignedUsers: manuscriptFields.assignedUsers
+          ? getLinkedAuthors(manuscriptFields.assignedUsers['en-US'])
           : '',
         impact: manuscriptFields.impact
           ? getLinkedImpact(manuscriptFields.impact['en-US'])
@@ -377,6 +379,8 @@ const formatComplianceData = (entries: GroupedEntries) => {
         categories: manuscriptFields.categories
           ? getLinkedCategories(manuscriptFields.categories?.['en-US'])
           : '',
+        preprintDate: manuscriptFields.preprintDate?.['en-US'] || '',
+        publicationDate: manuscriptFields.publicationDate?.['en-US'] || '',
         versionLastUpdatedDate: lastUpdatedDate || '',
       });
     });

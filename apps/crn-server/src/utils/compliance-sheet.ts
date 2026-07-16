@@ -57,9 +57,10 @@ export const mapToSheetRow = (
     safe(manuscriptVersion.layImpactStatement),
     safe(manuscriptVersion.categories),
     safe(manuscriptVersion.preprintDate),
+    safe(manuscriptVersion.publicationDate),
     safe(manuscriptVersion.versionLastUpdatedDate),
   ];
 };
 
-export const COMPLIANCE_SHEET_END_COLUMN = 'AY';
-export const COMPLIANCE_SHEET_COLUMN_LENGTH = 51;
+export const COMPLIANCE_SHEET_END_COLUMN = 'AZ';
+export const COMPLIANCE_SHEET_COLUMN_LENGTH = 52;

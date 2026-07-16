@@ -837,6 +837,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                         noMargin
                         onClick={save}
                         enabled={!isSaving}
+                        loading={isSaving}
                       >
                         {isEditing && !createVersion ? 'Save' : 'Publish'}
                       </Button>

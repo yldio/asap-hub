@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { MilestoneStatus } from '@asap-hub/model';
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
-import { Pill } from '../atoms';
+import { Pill, Spinner } from '../atoms';
 import {
   paper,
   steel,
@@ -118,11 +118,6 @@ const menuItemStyles = css({
   },
 });
 
-const spin = keyframes({
-  '0%': { transform: 'rotate(0deg)' },
-  '100%': { transform: 'rotate(360deg)' },
-});
-
 const trailingWrapperStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
@@ -138,19 +133,6 @@ const spinnerWrapperStyles = css({
   alignItems: 'center',
   justifyContent: 'center',
 });
-
-const spinnerStyles = (color: string) =>
-  css({
-    boxSizing: 'border-box',
-    width: rem(14),
-    height: rem(14),
-    border: `${rem(2)} solid transparent`,
-    borderTopColor: color,
-    borderRightColor: color,
-    borderRadius: '50%',
-    animation: `${spin} 0.8s linear infinite`,
-    display: 'block',
-  });
 
 const getStatusAccent = (status: MilestoneStatus): StatusAccent => {
   switch (status) {
@@ -275,9 +257,13 @@ const MilestoneStatusDropdown: React.FC<Props> = ({
         <span aria-hidden css={trailingWrapperStyles}>
           {isPending ? (
             <span css={spinnerWrapperStyles}>
-              <span
-                css={spinnerStyles(accentColor)}
-                data-testid="milestone-status-spinner"
+              <Spinner
+                size={14}
+                thickness={2}
+                color={accentColor}
+                arc
+                speed="0.8s"
+                testId="milestone-status-spinner"
               />
             </span>
           ) : isOpen ? (

@@ -108,7 +108,7 @@ describe('ConfirmStatusChangeModal', () => {
     );
     const onDismiss = jest.fn();
 
-    const { getByRole } = renderModal(
+    const { getByRole, queryByRole } = renderModal(
       <ConfirmStatusChangeModal
         {...defaultProps}
         onConfirm={onConfirm}
@@ -120,10 +120,12 @@ describe('ConfirmStatusChangeModal', () => {
     });
 
     expect(submitButton).not.toBeDisabled();
+    expect(queryByRole('progressbar')).not.toBeInTheDocument();
 
     await userEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
+    expect(getByRole('progressbar')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(onConfirm).toHaveBeenCalled();

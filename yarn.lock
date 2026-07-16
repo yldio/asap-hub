@@ -992,7 +992,6 @@ __metadata:
     "@types/qs": "npm:6.14.0"
     "@types/react": "npm:18.3.12"
     "@types/react-dom": "npm:18.3.1"
-    "@types/react-lottie": "npm:^1"
     "@types/react-test-renderer": "npm:18.3.1"
     "@types/streamsaver": "npm:2.0.5"
     "@types/uuid": "npm:8.3.4"
@@ -1020,7 +1019,6 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-error-boundary: "npm:4.1.2"
     react-hook-form: "npm:7.53.2"
-    react-lottie: "npm:^1.2.10"
     react-router: "npm:7.13.0"
     react-test-renderer: "npm:18.3.1"
     recoil: "npm:0.7.7"
@@ -1718,7 +1716,6 @@ __metadata:
     "@types/jest": "npm:29.5.14"
     "@types/react": "npm:18.3.12"
     "@types/react-dom": "npm:18.3.1"
-    "@types/react-lottie": "npm:^1"
     "@types/react-test-renderer": "npm:18.3.1"
     "@types/rehype-slug": "workspace:*"
     "@types/unist": "npm:^2.0.6"
@@ -1735,7 +1732,6 @@ __metadata:
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-hook-form: "npm:7.53.2"
-    react-lottie: "npm:^1.2.10"
     react-router: "npm:7.13.0"
     react-select: "npm:5.8.0"
     react-test-renderer: "npm:18.3.1"
@@ -16495,15 +16491,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-lottie@npm:^1":
-  version: 1.2.10
-  resolution: "@types/react-lottie@npm:1.2.10"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10/83eb419d636a7a7f61af58bfdad9cbe6a4beda4bf4e608a5c489eb77b6c2d99ac29efbd99c73d080c73ffcba3de65e0f33835a5b8bf984217e1f66bb687fccdb
-  languageName: node
-  linkType: hard
-
 "@types/react-modal@npm:^3.13.1, @types/react-modal@npm:^3.16.3":
   version: 3.16.3
   resolution: "@types/react-modal@npm:3.16.3"
@@ -19458,16 +19445,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-runtime@npm:^6.26.0":
-  version: 6.26.0
-  resolution: "babel-runtime@npm:6.26.0"
-  dependencies:
-    core-js: "npm:^2.4.0"
-    regenerator-runtime: "npm:^0.11.0"
-  checksum: 10/2cdf0f083b9598a43cdb11cbf1e7060584079a9a2230f06aec997ba81e887ef17fdcb5ad813a484ee099e06d2de0cea832bdd3011c06325acb284284c754ee8f
-  languageName: node
-  linkType: hard
-
 "babel-walk@npm:3.0.0-canary-5":
   version: 3.0.0-canary-5
   resolution: "babel-walk@npm:3.0.0-canary-5"
@@ -21807,13 +21784,6 @@ __metadata:
   version: 3.34.0
   resolution: "core-js@npm:3.34.0"
   checksum: 10/054474ab6a0a08a2277ca2c1c953e5789c562bbe144f6a43786b0f4167b4a76c671833bd0a112e275e1d99d84fa157e64814ff23aa01532e08e3b46403d7f7f4
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^2.4.0":
-  version: 2.6.12
-  resolution: "core-js@npm:2.6.12"
-  checksum: 10/7c624eb00a59c74c769d5d80f751f3bf1fc6201205b6562f27286ad5e00bbca1483f2f7eb0c2854b86f526ef5c7dc958b45f2ff536f8a31b8e9cb1a13a96efca
   languageName: node
   linkType: hard
 
@@ -32102,13 +32072,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-web@npm:^5.12.2":
-  version: 5.13.0
-  resolution: "lottie-web@npm:5.13.0"
-  checksum: 10/ccc65b91ddc569c874de265252ef41cb546798515dd63c5ee366844efd1e10335c080c483ce4305faba0cebd54c4afd6bb918fd0d6f4394dcc284fc0c3944941
-  languageName: node
-  linkType: hard
-
 "loupe@npm:^3.1.0, loupe@npm:^3.1.4":
   version: 3.2.1
   resolution: "loupe@npm:3.2.1"
@@ -35947,7 +35910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -36636,19 +36599,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-lottie@npm:^1.2.10":
-  version: 1.2.10
-  resolution: "react-lottie@npm:1.2.10"
-  dependencies:
-    babel-runtime: "npm:^6.26.0"
-    lottie-web: "npm:^5.12.2"
-    prop-types: "npm:^15.6.1"
-  peerDependencies:
-    react: ">=15.0.0"
-  checksum: 10/c4185414e9c3f3bf2886aea4be6695f87c43b59843bf0d5c320a0cbd7423b7359d0a75d3d45cb2cca265e59e7ef26ce870dffe485e223993d350bd96a7c8ed5a
-  languageName: node
-  linkType: hard
-
 "react-modal@npm:^3.16.1, react-modal@npm:^3.16.3":
   version: 3.16.3
   resolution: "react-modal@npm:3.16.3"
@@ -37097,13 +37047,6 @@ __metadata:
   version: 0.14.1
   resolution: "regenerator-runtime@npm:0.14.1"
   checksum: 10/5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.11.0":
-  version: 0.11.1
-  resolution: "regenerator-runtime@npm:0.11.1"
-  checksum: 10/64e62d78594c227e7d5269811bca9e4aa6451332adaae8c79a30cab0fa98733b1ad90bdb9d038095c340c6fad3b414a49a8d9e0b6b424ab7ff8f94f35704f8a2
   languageName: node
   linkType: hard
 

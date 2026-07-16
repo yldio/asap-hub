@@ -6,14 +6,6 @@ import { StaticRouter, MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import ManuscriptForm from '../ManuscriptForm';
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(30_000);
 
 const teamId = '1';

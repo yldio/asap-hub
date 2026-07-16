@@ -1,7 +1,6 @@
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, ReactNode } from 'react';
-import Lottie from 'react-lottie';
 import { useNavigate } from 'react-router';
 import { components } from 'react-select';
 import {
@@ -14,7 +13,6 @@ import {
   paper,
   Pill,
 } from '..';
-import loading from '../lotties/loading.json';
 import { mobileScreen, rem } from '../pixels';
 
 const mainStyles = css({
@@ -261,28 +259,8 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                 : onImportManuscript
             }
             primary
-            overrideStyles={
-              isImportingManuscript
-                ? css({
-                    gap: rem(8),
-                  })
-                : undefined
-            }
+            loading={isImportingManuscript}
           >
-            {isImportingManuscript && (
-              <Lottie
-                options={{
-                  loop: true,
-                  autoplay: true,
-                  animationData: loading,
-                  rendererSettings: {
-                    preserveAspectRatio: 'xMidYMid slice',
-                  },
-                }}
-                height={24}
-                width={24}
-              />
-            )}
             {manuscriptOutputSelection === 'manually' ? 'Create' : 'Import'}
           </Button>
         </div>

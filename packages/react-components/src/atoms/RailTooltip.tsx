@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   ReactNode,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 
@@ -68,6 +69,14 @@ const RailTooltip: React.FC<RailTooltipProps> = ({
   }, []);
   const hide = useCallback(() => setCoords(null), []);
 
+  // The rail removes the hover handlers while it animates (enabled=false), so
+  // a mouseleave during that window is lost; drop any coords captured before.
+  useEffect(() => {
+    if (!enabled) {
+      setCoords(null);
+    }
+  }, [enabled]);
+
   const onFocus = useCallback<FocusEventHandler<HTMLSpanElement>>(
     (event) => {
       if (event.currentTarget.matches(':focus-visible')) {
@@ -81,9 +90,9 @@ const RailTooltip: React.FC<RailTooltipProps> = ({
     <span
       css={wrapperStyles}
       onMouseEnter={enabled ? (event) => show(event.currentTarget) : undefined}
-      onMouseLeave={enabled ? hide : undefined}
+      onMouseLeave={hide}
       onFocus={enabled ? onFocus : undefined}
-      onBlur={enabled ? hide : undefined}
+      onBlur={hide}
     >
       {children}
       {enabled && coords && (

@@ -42,6 +42,26 @@ it('does not show on non-keyboard focus', () => {
   expect(queryByRole('tooltip')).not.toBeInTheDocument();
 });
 
+it('does not reappear with stale coords after being disabled while shown', () => {
+  const { getByText, getByRole, queryByRole, rerender } = renderTooltip();
+  const wrapper = getByText('icon').parentElement!;
+
+  fireEvent.mouseEnter(wrapper);
+  expect(getByRole('tooltip')).toBeInTheDocument();
+
+  rerender(
+    <RailTooltip label="Network" enabled={false}>
+      <button type="button">icon</button>
+    </RailTooltip>,
+  );
+  rerender(
+    <RailTooltip label="Network" enabled>
+      <button type="button">icon</button>
+    </RailTooltip>,
+  );
+  expect(queryByRole('tooltip')).not.toBeInTheDocument();
+});
+
 it('never shows when disabled', () => {
   const { getByText, queryByRole } = renderTooltip({ enabled: false });
   const wrapper = getByText('icon').parentElement!;

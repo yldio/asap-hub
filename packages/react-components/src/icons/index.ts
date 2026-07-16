@@ -151,6 +151,7 @@ export { default as tagsIcon } from './tags';
 export { default as TeamIcon } from './team';
 export { default as ThreadsIcon } from './threads';
 export { default as tickIcon } from './tick';
+export { default as tickInCircleIcon } from './tick-in-circle';
 export { default as tickSmallIcon } from './tick-small';
 export { default as toolsIcon } from './tools';
 export { default as TraineeIcon } from './trainee';

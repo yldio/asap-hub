@@ -13,7 +13,7 @@ import {
   plusIcon,
   ResourceTeamIcon,
   TeamIcon,
-  validTickIcon,
+  tickInCircleIcon,
 } from '../icons';
 import { EventAttendanceMetric } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
@@ -60,6 +60,17 @@ const iconButtonStyles = css({
     minWidth: rem(40),
   },
 });
+
+const editIconButtonStyles = css([
+  iconButtonStyles,
+  {
+    '> svg': {
+      width: rem(24),
+      height: rem(24),
+      padding: 0,
+    },
+  },
+]);
 
 const metricsStyles = css({
   display: 'grid',
@@ -127,19 +138,18 @@ const teamInnerStyles = css({
 const statusCellStyles = css([
   cellStyles,
   {
-    // icon-only cell: collapse the line box so the icon centers via the cell's
+    // collapse the line box so the 24x24 icon container centers via the cell's
     // middle vertical-align instead of sitting on the text baseline.
     lineHeight: 0,
-    '& svg': {
-      display: 'block',
-      width: rem(24),
-      height: rem(24),
-    },
   },
 ]);
 
 const statusIconStyles = css({
   display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: rem(24),
+  height: rem(24),
   verticalAlign: 'middle',
 });
 
@@ -256,7 +266,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               noMargin
               aria-label="Edit attendance"
               onClick={onEdit}
-              overrideStyles={iconButtonStyles}
+              overrideStyles={editIconButtonStyles}
             >
               <PencilIcon color={neutral1000.rgb} />
             </Button>
@@ -331,7 +341,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
                       role="img"
                       aria-label={team.attended ? 'Attended' : 'Did not attend'}
                     >
-                      {team.attended ? validTickIcon : invalidTickIcon}
+                      {team.attended ? tickInCircleIcon : invalidTickIcon}
                     </span>
                   </td>
                 </tr>

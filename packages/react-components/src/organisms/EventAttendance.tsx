@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
-import { charcoal, fern, steel, tin, warning500 } from '../colors';
+import { charcoal, fern, neutral1000, steel, tin, warning500 } from '../colors';
 import {
   DiscoveryTeamIcon,
   ExportIcon,
@@ -52,6 +52,9 @@ const iconButtonStyles = css({
   height: rem(40),
   alignItems: 'center',
   borderColor: tin.rgb,
+  ':hover, :focus': {
+    borderColor: tin.rgb,
+  },
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexGrow: 0,
     minWidth: rem(40),
@@ -254,7 +257,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               onClick={onEdit}
               overrideStyles={iconButtonStyles}
             >
-              <PencilIcon />
+              <PencilIcon color={neutral1000.rgb} />
             </Button>
           </div>
         </div>

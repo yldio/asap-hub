@@ -61,21 +61,26 @@ describe('researchOutputToCSV', () => {
       usageNotes: 'usageNotes',
       accession: 'accession',
       addedDate: 'addedDate',
-      asapFunded: false,
+      asapFunded: 'No',
       doi: 'doi',
       labCatalogNumber: 'labCatalogNumber',
       lastModifiedDate: 'lastModifiedDate',
       link: 'link',
-      contactEmails: '',
+      contactEmails: 'NA',
       publishDate: 'publishDate',
       rrid: 'rrid',
-      usedInPublication: false,
+      usedInPublication: 'No',
       type: '3D Printing',
       authors: expect.anything(),
-      labs: expect.anything(),
+      labs: 'NA',
       teams: expect.anything(),
       workingGroups: expect.anything(),
-      relatedResearch: '',
+      project: 'NA',
+      projectId: 'NA',
+      researchTheme: 'NA',
+      changelog: 'NA',
+      statusChangedAt: 'NA',
+      relatedResearch: 'NA',
       relatedEvents: 'Example Event',
       methods: 'Activity Assay,RNA Single Cell',
       keywords: 'Keyword1,Keyword2',
@@ -86,16 +91,15 @@ describe('researchOutputToCSV', () => {
       statusChangedBy: 'John Doe',
       isInReview: true,
       publishingEntity: 'Working Group',
-      firstVersionTitle: '',
-      firstVersionType: '',
-      firstVersionRrid: '',
-      firstVersionAccession: '',
-      firstVersionLink: '',
+      firstVersionTitle: 'NA',
+      firstVersionType: 'NA',
+      firstVersionRrid: 'NA',
+      firstVersionAccession: 'NA',
+      firstVersionLink: 'NA',
+      firstVersionDOI: 'NA',
       categories: 'Category 1',
       impact: 'Impact 1',
       layImpactStatement: 'lay impact statement',
-      project: '',
-      projectId: '',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {
@@ -170,7 +174,7 @@ describe('researchOutputToCSV', () => {
     expect(
       researchOutputToCSV({ ...output, workingGroups: undefined })
         .workingGroups,
-    ).toMatchInlineSnapshot(`""`);
+    ).toMatchInlineSnapshot(`"NA"`);
   });
   it('handles project based research outputs', () => {
     const output: ResearchOutputResponse = {
@@ -255,7 +259,7 @@ describe('researchOutputToCSV', () => {
     };
     expect(
       researchOutputToCSV(outputWithoutRelatedResearch).relatedResearch,
-    ).toMatchInlineSnapshot('""');
+    ).toMatchInlineSnapshot('"NA"');
   });
 
   it('Removes HTML from RTF fields', () => {
@@ -285,6 +289,7 @@ describe('researchOutputToCSV', () => {
           rrid: 'version0Rrid',
           accession: 'version0Accession',
           link: 'version0Link',
+          doi: 'version0Doi',
         },
       ],
     };
@@ -296,6 +301,7 @@ describe('researchOutputToCSV', () => {
       'version0Accession',
     );
     expect(researchOutputToCSV(output).firstVersionLink).toBe('version0Link');
+    expect(researchOutputToCSV(output).firstVersionDOI).toBe('version0Doi');
   });
 
   it('retrieves the first version title only if none of the other fields exist', () => {
@@ -311,10 +317,11 @@ describe('researchOutputToCSV', () => {
     };
 
     expect(researchOutputToCSV(output).firstVersionTitle).toBe('version0Title');
-    expect(researchOutputToCSV(output).firstVersionType).toBe('');
-    expect(researchOutputToCSV(output).firstVersionRrid).toBe('');
-    expect(researchOutputToCSV(output).firstVersionAccession).toBe('');
-    expect(researchOutputToCSV(output).firstVersionLink).toBe('');
+    expect(researchOutputToCSV(output).firstVersionType).toBe('NA');
+    expect(researchOutputToCSV(output).firstVersionRrid).toBe('NA');
+    expect(researchOutputToCSV(output).firstVersionAccession).toBe('NA');
+    expect(researchOutputToCSV(output).firstVersionLink).toBe('NA');
+    expect(researchOutputToCSV(output).firstVersionDOI).toBe('NA');
   });
 
   it('exports NA for doi when not present', () => {
@@ -324,6 +331,24 @@ describe('researchOutputToCSV', () => {
     };
     expect(researchOutputToCSV(output).doi).toBe('NA');
   });
+
+  it.each`
+    value        | expected
+    ${true}      | ${'Yes'}
+    ${false}     | ${'No'}
+    ${undefined} | ${'Not Sure'}
+  `(
+    'exports asapFunded and usedInPublication as $expected when $value',
+    ({ value, expected }) => {
+      const output: ResearchOutputResponse = {
+        ...createResearchOutputResponse(),
+        asapFunded: value,
+        usedInPublication: value,
+      };
+      expect(researchOutputToCSV(output).asapFunded).toBe(expected);
+      expect(researchOutputToCSV(output).usedInPublication).toBe(expected);
+    },
+  );
 });
 
 describe('squidexResultsToStream', () => {

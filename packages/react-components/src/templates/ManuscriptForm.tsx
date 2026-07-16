@@ -45,22 +45,16 @@ import { LabeledDropdownType } from '../molecules/LabeledDropdown';
 import { LabeledRadioButtonGroupType } from '../molecules/LabeledRadioButtonGroup';
 import { AuthorSelectType } from '../organisms/AuthorSelect';
 import { MultiSelectOnChange } from '../atoms/MultiSelect';
+import ManuscriptFormModals from '../organisms/ManuscriptFormModals';
+import LabeledFileField from '../molecules/LabeledFileField';
 
 const loadManuscriptAuthors = () =>
   import(
     /* webpackChunkName: "manuscript-authors" */ '../organisms/ManuscriptAuthors'
   );
-const loadManuscriptFormModals = () =>
-  import(
-    /* webpackChunkName: "manuscript-form-modals" */ '../organisms/ManuscriptFormModals'
-  );
 const loadShortDescriptionCard = () =>
   import(
     /* webpackChunkName: "short-description-card" */ '../organisms/ShortDescriptionCard'
-  );
-const loadLabeledFileField = () =>
-  import(
-    /* webpackChunkName: "labeled-file-field" */ '../molecules/LabeledFileField'
   );
 const loadLabeledMultiSelect = () =>
   import(
@@ -82,9 +76,7 @@ const loadLabeledRadioButtonGroup = () =>
   );
 
 const ManuscriptAuthors = lazy(loadManuscriptAuthors);
-const ManuscriptFormModals = lazy(loadManuscriptFormModals);
 const ShortDescriptionCard = lazy(loadShortDescriptionCard);
-const LabeledFileField = lazy(loadLabeledFileField);
 const LabeledMultiSelect = lazy(loadLabeledMultiSelect);
 const LabeledTextField = lazy(loadLabeledTextField);
 const FormCard = lazy(loadFormCard);

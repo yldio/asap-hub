@@ -1,7 +1,7 @@
 import { getLatestUserAward, UserResponse } from '@asap-hub/model';
 import { UserProfileContext, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useCallback, useContext } from 'react';
 import {
   Anchor,
@@ -11,6 +11,7 @@ import {
   TabLink,
   StateTag,
   CopyButton,
+  Spinner,
 } from '../atoms';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
@@ -159,10 +160,6 @@ const uploadOverlayStyles = css({
   },
 });
 
-const spin = keyframes({
-  from: { transform: 'rotate(0deg)' },
-  to: { transform: 'rotate(360deg)' },
-});
 const savingOverlayStyles = css({
   position: 'absolute',
   inset: 0,
@@ -171,14 +168,6 @@ const savingOverlayStyles = css({
   justifyContent: 'center',
   borderRadius: '50%',
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-});
-const spinnerStyles = css({
-  width: rem(24),
-  height: rem(24),
-  border: `${rem(3)} solid rgba(255, 255, 255, 0.4)`,
-  borderTopColor: paper.rgb,
-  borderRadius: '50%',
-  animation: `${spin} 1s linear infinite`,
 });
 const badgeSize = 48;
 const badgeStyles = css({
@@ -388,11 +377,12 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 {onImageSelect &&
                   (avatarSaving ? (
                     <div css={savingOverlayStyles}>
-                      <div
-                        css={spinnerStyles}
-                        role="progressbar"
-                        aria-label="Saving avatar"
-                        aria-busy
+                      <Spinner
+                        size={24}
+                        color={paper.rgb}
+                        trackColor="rgba(255, 255, 255, 0.4)"
+                        ariaLabel="Saving avatar"
+                        ariaBusy
                       />
                     </div>
                   ) : (

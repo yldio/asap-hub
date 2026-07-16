@@ -33553,6 +33553,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                       | 'link'
                       | 'rrid'
                       | 'accession'
+                      | 'doi'
                     > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
@@ -36748,6 +36749,7 @@ export type ResearchOutputsContentFragment = Pick<
           | 'link'
           | 'rrid'
           | 'accession'
+          | 'doi'
         > & { sys: Pick<Sys, 'id'> }
       >
     >;
@@ -37053,6 +37055,7 @@ export type FetchResearchOutputByIdQuery = {
               | 'link'
               | 'rrid'
               | 'accession'
+              | 'doi'
             > & { sys: Pick<Sys, 'id'> }
           >
         >;
@@ -37434,6 +37437,7 @@ export type FetchResearchOutputsQuery = {
                     | 'link'
                     | 'rrid'
                     | 'accession'
+                    | 'doi'
                   > & { sys: Pick<Sys, 'id'> }
                 >
               >;
@@ -46783,6 +46787,7 @@ export const ResearchOutputsContentFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'accession' },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                     ],
                   },
                 },

@@ -10,7 +10,10 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
-import { ResearchOutputPermissions } from '@asap-hub/react-context';
+import {
+  ResearchOutputAvailableActions,
+  ResearchOutputPermissions,
+} from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
@@ -92,6 +95,8 @@ type ResearchOutputFormProps = Pick<
     descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
     flowId?: ResearchOutputFlowId;
+    behaviorMode?: 'legacy' | 'flow';
+    availableActions?: ResearchOutputAvailableActions;
   };
 
 const mainStyles = css({
@@ -187,12 +192,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   versionAction,
   isImportedFromManuscript,
   flowId,
+  behaviorMode = 'legacy',
+  availableActions,
 }) => {
   const navigate = useNavigate();
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
-  const showSaveDraftButton =
-    !isImportedFromManuscript && !published && canShareResearchOutput;
+  const useFlowMode = behaviorMode === 'flow' && !!availableActions;
+
+  const showSaveDraftButton = useFlowMode
+    ? availableActions.canSaveDraft
+    : !isImportedFromManuscript && !published && canShareResearchOutput;
+
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 
@@ -445,6 +456,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  // Tracks which footer button triggered a direct save so only that button shows
+  // its loader — `isSaving` alone is shared across both save buttons.
+  const [savingAction, setSavingAction] = useState<'draft' | 'publish' | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isImportedFromManuscript) {
@@ -714,12 +731,20 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     {showSaveDraftButton && (
                       <Button
                         enabled={!isSaving}
+                        loading={isSaving && savingAction === 'draft'}
                         fullWidth
                         onClick={async () => {
                           setIsFormSubmitted(true);
-                          promptDescriptionChange
-                            ? setShowDescriptionChangePrompt('draft')
-                            : await save(true);
+                          if (promptDescriptionChange) {
+                            setShowDescriptionChangePrompt('draft');
+                          } else {
+                            setSavingAction('draft');
+                            try {
+                              await save(true);
+                            } finally {
+                              setSavingAction(null);
+                            }
+                          }
                         }}
                         primary={showSaveDraftButton && !showPublishButton}
                         noMargin
@@ -730,19 +755,27 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     {showPublishButton && (
                       <Button
                         enabled={!isSaving}
+                        loading={isSaving && savingAction === 'publish'}
                         fullWidth
                         primary
                         noMargin
                         onClick={async () => {
                           setIsFormSubmitted(true);
 
-                          promptDescriptionChange
-                            ? setShowDescriptionChangePrompt('publish')
-                            : promptNewVersion
-                              ? setShowVersionPrompt(true)
-                              : !published
-                                ? setShowConfirmPublish(true)
-                                : await save(false);
+                          if (promptDescriptionChange) {
+                            setShowDescriptionChangePrompt('publish');
+                          } else if (promptNewVersion) {
+                            setShowVersionPrompt(true);
+                          } else if (!published) {
+                            setShowConfirmPublish(true);
+                          } else {
+                            setSavingAction('publish');
+                            try {
+                              await save(false);
+                            } finally {
+                              setSavingAction(null);
+                            }
+                          }
                         }}
                       >
                         {published ? 'Save' : 'Publish'}

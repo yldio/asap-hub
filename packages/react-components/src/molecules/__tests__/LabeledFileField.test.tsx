@@ -169,6 +169,36 @@ it('calls handleFileUpload when a file is selected', async () => {
   );
 });
 
+it('shows a spinner while a file upload is in progress', async () => {
+  let resolveUpload: () => void = () => undefined;
+  handleFileUploadMock.mockReturnValue(
+    new Promise<void>((resolve) => {
+      resolveUpload = resolve;
+    }),
+  );
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      placeholder="Upload Manuscript File"
+    />,
+  );
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await userEvent.upload(uploadInput, testFile);
+
+  expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+
+  resolveUpload();
+  await waitFor(() =>
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument(),
+  );
+});
+
 it('calls the onRemove function when the remove button is clicked and allows for resubmitting a new file', async () => {
   jest.spyOn(console, 'error').mockImplementation();
   const onRemoveMock = jest.fn();

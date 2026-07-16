@@ -10,14 +10,6 @@ jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
 }));
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 describe('ManuscriptOutputSelection', () => {
   const mockNavigate = jest.fn();
 
@@ -271,6 +263,6 @@ describe('ManuscriptOutputSelection', () => {
     const importButton = screen.getByRole('button', { name: /Import/i });
     expect(importButton).toBeDisabled();
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 });

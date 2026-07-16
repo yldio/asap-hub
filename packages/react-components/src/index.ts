@@ -37,6 +37,7 @@ export {
   Overlay,
   Paragraph,
   Pill,
+  Spinner,
   Subtitle,
   Tag,
   TabLink,
@@ -369,7 +370,7 @@ export {
   portalContainerId,
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
-export type { AccentVariant, SwitchProps } from './atoms';
+export type { AccentVariant, SpinnerProps, SwitchProps } from './atoms';
 export type {
   ItemType,
   StatusType,

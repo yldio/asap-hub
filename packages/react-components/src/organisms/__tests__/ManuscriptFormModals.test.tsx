@@ -112,10 +112,7 @@ describe('ManuscriptFormModals', () => {
         name: /Submit Manuscript/i,
       });
       expect(submitButton).toBeDisabled();
-      // When isSubmitting is true, the conditional on line 114 evaluates to true,
-      // and Lottie is rendered (lines 115-126), which covers those lines.
-      // The global Lottie mock returns null, but the code path is executed.
-      expect(submitButton).toBeInTheDocument();
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
     it('calls setModal with null when close button is clicked', async () => {

@@ -266,6 +266,7 @@ export const researchOutputContentQueryFragment = gql`
         link
         rrid
         accession
+        doi
       }
     }
     relatedManuscriptVersion {

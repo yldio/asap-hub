@@ -31,7 +31,7 @@ type ProfileSwitchProps = {
   DraftOutputs?: ReactElement;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
-  Workspace?: FC;
+  Workspace?: ReactElement;
   Compliance?: ReactElement;
 };
 
@@ -82,11 +82,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
         {Workspace && (
           <Route
             path={`${paths.workspace}/*`}
-            element={
-              <Frame title="Workspace">
-                <Workspace />
-              </Frame>
-            }
+            element={<Frame title="Workspace">{Workspace}</Frame>}
           />
         )}
         {Compliance && (

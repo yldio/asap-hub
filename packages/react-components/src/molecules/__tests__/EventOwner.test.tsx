@@ -42,7 +42,8 @@ it('renders the working group name linking to the group and icon', () => {
 
 it('shows that the event is run by ASAP when there is no group', () => {
   render(<EventOwner />);
-  expect(screen.getByText(/asap event/i)).not.toHaveAttribute('href');
+  expect(screen.getByText('ASAP Event')).not.toHaveAttribute('href');
+  expect(screen.getByTitle('ASAP Event Icon')).toBeInTheDocument();
 });
 
 it('displays inactive badge when a group is inactive', () => {

@@ -3,15 +3,22 @@ import { css } from '@emotion/react';
 import { steel } from '../colors';
 import { crossQuery } from '../layout';
 import { Header, MenuButton } from '../molecules';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 
 const menuButtonWidth = 72;
 
 export const styles = css({
   display: 'flex',
+  // On desktop the logo sits at the left of the full-width top bar.
   [crossQuery]: {
-    flexDirection: 'column',
     alignItems: 'center',
+    // Override the Header's internal centering so the logo aligns left.
+    '& header': {
+      justifyContent: 'flex-start',
+      flexGrow: 0,
+      paddingLeft: rem(24),
+    },
   },
 });
 

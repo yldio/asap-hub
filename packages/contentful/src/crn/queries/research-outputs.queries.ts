@@ -128,6 +128,7 @@ export const researchOutputContentQueryFragment = gql`
                     }
                     title
                     projectType
+                    projectId
                   }
                 }
               }
@@ -155,6 +156,7 @@ export const researchOutputContentQueryFragment = gql`
       }
       title
       projectType
+      projectId
     }
     workingGroup {
       sys {
@@ -264,6 +266,7 @@ export const researchOutputContentQueryFragment = gql`
         link
         rrid
         accession
+        doi
       }
     }
     relatedManuscriptVersion {

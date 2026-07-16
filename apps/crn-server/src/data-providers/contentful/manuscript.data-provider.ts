@@ -17,6 +17,9 @@ import {
   FetchManuscriptVersionsQueryVariables,
   FetchResearchOutputByManuscriptVersionIdQuery,
   FetchResearchOutputByManuscriptVersionIdQueryVariables,
+  FetchLabsQuery,
+  FetchLabsQueryVariables,
+  FETCH_LABS,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_PROJECT_ID,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
@@ -288,7 +291,7 @@ export class ManuscriptContentfulDataProvider
         FetchManuscriptVersionsQueryVariables
       >(FETCH_MANUSCRIPT_VERSIONS, { id });
 
-    return parseGraphQLManuscript(
+    const manuscript = parseGraphQLManuscript(
       {
         ...manuscripts,
         discussionsCollection:
@@ -296,6 +299,54 @@ export class ManuscriptContentfulDataProvider
       },
       manuscriptVersions || {},
     );
+
+    if (manuscript) {
+      await this.enrichLabPITeamIds(manuscript);
+    }
+
+    return manuscript;
+  }
+
+  // The manuscript query only returns each lab's id/name/PI to keep it within
+  // Contentful's query complexity limit. The PI's teams (used to validate that a
+  // lab's PI team is a contributor) are resolved here via the flat labs query,
+  // which can fetch far more teams per PI without complexity pressure.
+  private async enrichLabPITeamIds(
+    manuscript: ManuscriptDataObject,
+  ): Promise<void> {
+    const labIds = Array.from(
+      new Set(
+        manuscript.versions.flatMap((version) =>
+          (version.labs || [])
+            .map((lab) => lab.id)
+            .filter((labId): labId is string => !!labId),
+        ),
+      ),
+    );
+
+    if (labIds.length === 0) {
+      return;
+    }
+
+    const response = await this.contentfulClient.request<
+      FetchLabsQuery,
+      FetchLabsQueryVariables
+    >(FETCH_LABS, {
+      limit: labIds.length,
+      skip: 0,
+      where: { sys: { id_in: labIds } },
+    });
+
+    const labPITeamIdsByLabId = parseLabPITeamIdsByLabId(
+      response?.labsCollection,
+    );
+
+    manuscript.versions.forEach((version) => {
+      (version.labs || []).forEach((lab) => {
+        // eslint-disable-next-line no-param-reassign
+        lab.labPITeamIds = lab.id ? labPITeamIdsByLabId.get(lab.id) ?? [] : [];
+      });
+    });
   }
   private async createManuscriptAssets(
     version: Pick<
@@ -979,21 +1030,13 @@ export const parseGraphqlManuscriptVersion = (
           projectType: project?.projectType,
         };
       }),
+      // labPITeamIds is resolved separately (see enrichLabPITeamIds) to avoid
+      // deep nesting in this query, which was capping the PI's teams and could
+      // push the query over Contentful's complexity limit.
       labs: version?.labsCollection?.items.map((labItem) => ({
         id: labItem?.sys.id,
         name: labItem?.name,
         labPi: labItem?.labPi?.sys.id,
-        labPITeamIds: labItem?.labPi?.teamsCollection?.items.reduce(
-          (teamIds: string[], team) => {
-            const isInactive =
-              !!team?.inactiveSinceDate || !!team?.team?.inactiveSince;
-            if (!isInactive && team?.team?.sys?.id) {
-              teamIds.push(team.team.sys.id);
-            }
-            return teamIds;
-          },
-          [],
-        ),
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],
@@ -1046,6 +1089,33 @@ const parseQuickCheckDetails = (
   field: Maybe<string> | undefined,
   details: Maybe<string> | undefined,
 ) => (field === 'No' || field === 'Not applicable' ? details : undefined);
+
+// Builds a map of lab id -> the active teams its PI belongs to. Mirrors the
+// inactive-team filtering used by the lab suggestions endpoint so the manuscript
+// edit form validates lab PI teams the same way the create form does.
+const parseLabPITeamIdsByLabId = (
+  labsCollection: FetchLabsQuery['labsCollection'],
+): Map<string, string[]> => {
+  const map = new Map<string, string[]>();
+  (labsCollection?.items || []).forEach((labItem) => {
+    if (!labItem?.sys.id) {
+      return;
+    }
+    const teamIds = (labItem.labPi?.teamsCollection?.items || []).reduce(
+      (ids: string[], team) => {
+        const isInactive =
+          !!team?.inactiveSinceDate || !!team?.team?.inactiveSince;
+        if (!isInactive && team?.team?.sys?.id) {
+          ids.push(team.team.sys.id);
+        }
+        return ids;
+      },
+      [],
+    );
+    map.set(labItem.sys.id, teamIds);
+  });
+  return map;
+};
 
 export const getLifecycleCode = (lifecycle: string) => {
   switch (lifecycle) {

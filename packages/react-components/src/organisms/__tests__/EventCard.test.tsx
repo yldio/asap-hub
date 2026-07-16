@@ -1,9 +1,11 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
+import { neutral200 } from '../../colors';
 
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
@@ -15,12 +17,12 @@ it('shows that an event has been cancelled', () => {
   const { getByTitle, getByText, queryByTitle, queryByText, rerender } = render(
     <EventCard {...props} status="Confirmed" />,
   );
-  expect(queryByTitle('Error Icon')).not.toBeInTheDocument();
+  expect(queryByTitle('Warning')).not.toBeInTheDocument();
   expect(queryByText(/cancelled/i)).not.toBeInTheDocument();
 
   rerender(<EventCard {...props} status="Cancelled" />);
-  expect(getByTitle('Error Icon')).toBeInTheDocument();
-  expect(getByText(/cancelled/i)).toBeVisible();
+  expect(getByTitle('Warning')).toBeInTheDocument();
+  expect(getByText('The event has been cancelled.')).toBeVisible();
 });
 
 it('renders the event tags', () => {
@@ -53,7 +55,7 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle('Error Icon')).toBeInTheDocument();
+    expect(screen.getByTitle('Warning')).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts for meetings without meeting link', () => {
@@ -67,6 +69,7 @@ describe('current events', () => {
       />,
     );
     expect(screen.getByText(/currently happening/i)).toBeVisible();
+    expect(screen.queryByText('Join Meeting Now')).not.toBeInTheDocument();
   });
   it('toasts for meetings with meeting link', () => {
     render(
@@ -78,8 +81,8 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/currently live/i)).toBeVisible();
-    expect(screen.getByText(/join/i).closest('a')).toHaveAttribute(
+    expect(screen.getByText('This event is happening now.')).toBeVisible();
+    expect(screen.getByText('Join Meeting Now').closest('a')).toHaveAttribute(
       'href',
       'http://example.com',
     );
@@ -122,10 +125,39 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle(/error icon/i)).toBeInTheDocument();
+    expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
-  it('toasts meeting materials coming soon', () => {
+
+  it('greys out the card of a past cancelled event', () => {
+    const { unmount } = render(
+      <EventCard
+        {...props}
+        status="Cancelled"
+        startDate={subDays(new Date(), 2).toISOString()}
+        endDate={subDays(new Date(), 1).toISOString()}
+      />,
+    );
+    expect(
+      findParentWithStyle(screen.getByRole('heading'), 'backgroundColor')
+        ?.backgroundColor,
+    ).toBe(neutral200.rgb);
+    unmount();
+
+    render(
+      <EventCard
+        {...props}
+        status="Cancelled"
+        startDate={addDays(new Date(), 1).toISOString()}
+        endDate={addDays(new Date(), 2).toISOString()}
+      />,
+    );
+    expect(
+      findParentWithStyle(screen.getByRole('heading'), 'backgroundColor')
+        ?.backgroundColor,
+    ).not.toBe(neutral200.rgb);
+  });
+  it('lists every material greyed out and non-clickable while they are still pending', () => {
     render(
       <EventCard
         {...props}
@@ -139,10 +171,13 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/coming soon/i)).toBeVisible();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    ['Notes', 'Recording', 'Presentation'].forEach((label) => {
+      expect(screen.getByText(label)).toBeVisible();
+      expect(screen.getByText(label).closest('a')).toBeNull();
+    });
   });
-  it('toasts number of available materials', () => {
+  it('toasts the names of the available materials', () => {
     render(
       <EventCard
         {...props}
@@ -159,11 +194,46 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/materials \(3\)/i)).toBeVisible();
+    expect(screen.getByText('Presentation').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-presentation',
+    );
+    expect(screen.queryByText('Meeting Materials')).not.toBeInTheDocument();
+    expect(screen.getByText('Notes')).toBeVisible();
+    expect(screen.getByText('Notes').closest('a')).toBeNull();
+    expect(screen.getByText('Recording').closest('a')).toBeNull();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
   });
 
-  it('toasts no materials are available', () => {
+  it('links every material name when every material is available', () => {
+    render(
+      <EventCard
+        {...props}
+        status="Confirmed"
+        meetingMaterials={[{ title: '123', url: 'http://example.com' }]}
+        presentation="presentation"
+        notes="notes"
+        videoRecording="recording"
+        startDate={subDays(new Date(), 2).toISOString()}
+        endDate={subDays(new Date(), 1).toISOString()}
+      />,
+    );
+    expect(screen.getByText('Notes').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-notes',
+    );
+    expect(screen.getByText('Recording').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-video-recording',
+    );
+    expect(screen.getByText('Presentation').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-presentation',
+    );
+    expect(screen.queryByText('Meeting Materials')).not.toBeInTheDocument();
+  });
+
+  it('lists every material greyed out and non-clickable when none are available', () => {
     render(
       <EventCard
         {...props}
@@ -177,8 +247,11 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/no meeting materials/i)).toBeVisible();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    ['Notes', 'Recording', 'Presentation'].forEach((label) => {
+      expect(screen.getByText(label)).toBeVisible();
+      expect(screen.getByText(label).closest('a')).toBeNull();
+    });
   });
 
   it("doesn't display toast if none of the conditions are match", () => {
@@ -192,7 +265,7 @@ describe('past events', () => {
 
     expect(screen.queryByText(/to be announced/)).not.toBeInTheDocument();
     expect(screen.queryByText(/cancelled/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/currently live/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/happening now/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently happening/)).not.toBeInTheDocument();
   });
 });

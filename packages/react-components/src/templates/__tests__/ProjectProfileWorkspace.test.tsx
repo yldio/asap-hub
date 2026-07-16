@@ -601,6 +601,22 @@ describe('ProjectProfileWorkspace', () => {
     expect(screen.getByTestId('team-manuscripts')).toBeInTheDocument();
   });
 
+  it('expands the target manuscript in the collaborator submission list', () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    renderWithRouter(
+      <ProjectProfileWorkspace
+        {...defaultProps}
+        manuscripts={[]}
+        collaborationManuscripts={['manuscript-collab-1']}
+        targetManuscriptId="manuscript-collab-1"
+      />,
+    );
+    // the tab buttons only render when the target card starts expanded
+    expect(
+      screen.getByRole('button', { name: 'Manuscripts and Reports' }),
+    ).toBeInTheDocument();
+  });
+
   describe('Tool actions', () => {
     it('calls onDeleteTool with correct index when delete is clicked', async () => {
       jest.spyOn(console, 'error').mockImplementation();

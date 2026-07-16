@@ -274,11 +274,11 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       }
                       paths={paths}
                       type="team"
-                      Workspace={() => (
+                      Workspace={
                         <Workspace
                           team={{ ...team, tools: team.tools ?? [] }}
                         />
-                      )}
+                      }
                       {...(canDisplayCompliancePage
                         ? { Compliance: <Compliance /> }
                         : {})}

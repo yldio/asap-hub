@@ -1,17 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import { css, Theme } from '@emotion/react';
+import { css, keyframes, Theme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
+import { crossQuery } from '../layout';
 import { useBlockedClick } from '../navigation';
 import { lineHeight, rem } from '../pixels';
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
+import RailTooltip from './RailTooltip';
 
 const styles = css({
   display: 'block',
   color: 'unset',
+  cursor: 'pointer',
   padding: rem(16),
   stroke: lead.rgb,
   svg: {
@@ -35,7 +38,35 @@ const iconStyles = css({
   display: 'inline-block',
   width: rem(lineHeight),
   height: rem(lineHeight),
-  paddingRight: rem(14),
+  // 16px gap between icon and label when expanded (per design).
+  paddingRight: rem(16),
+});
+const collapsedIconStyles = css({
+  [crossQuery]: {
+    paddingRight: 0,
+  },
+});
+// Suppresses the browser's native <title> tooltip so only the styled one shows.
+const iconNoTitleStyles = css({
+  [crossQuery]: {
+    svg: { pointerEvents: 'none' },
+  },
+});
+
+const collapsedLabelStyles = css({
+  [crossQuery]: {
+    display: 'none',
+  },
+});
+const labelFadeIn = keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+});
+
+const labelFadeInStyles = css({
+  [crossQuery]: {
+    animation: `${labelFadeIn} 150ms ease-in backwards`,
+  },
 });
 
 const disableStyles = css({
@@ -49,19 +80,44 @@ const squareBorderStyles = css({
 
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
+  readonly collapsed?: boolean;
+  // Hidden while collapsed or animating open, so it can't wrap in a narrow rail.
+  readonly labelsHidden?: boolean;
+  readonly fadeInLabel?: boolean;
 } & PropsWithChildren;
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
+  collapsed = false,
+  labelsHidden = collapsed,
+  fadeInLabel = false,
   ...props
-}) => (
-  <Navigation {...props}>
-    <p css={textStyles}>
-      {icon && <span css={iconStyles}>{icon}</span>}
-      {children}
-    </p>
-  </Navigation>
-);
+}) =>
+  labelsHidden ? (
+    <Navigation {...props}>
+      <RailTooltip label={children} enabled={collapsed}>
+        <p css={textStyles}>
+          {icon && (
+            <span css={[iconStyles, collapsedIconStyles, iconNoTitleStyles]}>
+              {icon}
+            </span>
+          )}
+          <span css={collapsedLabelStyles}>{children}</span>
+        </p>
+      </RailTooltip>
+    </Navigation>
+  ) : (
+    <Navigation {...props}>
+      <p css={textStyles}>
+        {icon && <span css={iconStyles}>{icon}</span>}
+        {fadeInLabel ? (
+          <span css={labelFadeInStyles}>{children}</span>
+        ) : (
+          children
+        )}
+      </p>
+    </Navigation>
+  );
 
 interface NavigationProps {
   readonly href: string;

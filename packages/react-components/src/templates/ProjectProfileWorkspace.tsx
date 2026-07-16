@@ -333,6 +333,9 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             getCreateComplianceReportHref={
                               getCreateComplianceReportHref
                             }
+                            {...(manuscriptId === targetManuscriptId
+                              ? { isTargetManuscript: true }
+                              : {})}
                           />
                         </div>
                       ))}

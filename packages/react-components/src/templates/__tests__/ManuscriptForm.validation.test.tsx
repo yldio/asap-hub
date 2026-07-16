@@ -1,4 +1,5 @@
 import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
+import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter, MemoryRouter } from 'react-router';
@@ -673,4 +674,266 @@ describe('ManuscriptForm URL Requirement', () => {
       });
     },
   );
+});
+
+describe('ManuscriptForm labs validation on the submit journey', () => {
+  const requiredLabsError = 'Please add at least one lab.';
+
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+    cleanup();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('shows the required labs error when the field is blurred without a selection', async () => {
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm {...defaultProps} />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
+    // Close the menu before tabbing away so no option gets selected
+    await userEvent.keyboard('{Escape}');
+    await userEvent.tab();
+
+    expect(await screen.findByText(requiredLabsError)).toBeVisible();
+  });
+
+  it('blocks submission and shows the required labs error when no lab was added', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const onInvalid = jest.fn();
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            onCreate={onCreate}
+            onInvalid={onInvalid}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Draft Manuscript (prior to Publication)"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            keyResourceTable={{
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            }}
+            shortDescription="A good short description"
+            layImpactStatement="manuscript impact statement"
+            firstAuthors={[
+              {
+                label: 'Author 1',
+                value: 'author-1',
+                id: 'author-1',
+                displayName: 'Author 1',
+              } as AuthorResponse & AuthorSelectOption,
+            ]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(await screen.findByText(requiredLabsError)).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: /Submit Manuscript/i }),
+    ).not.toBeInTheDocument();
+    expect(onCreate).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onInvalid).toHaveBeenCalled();
+    });
+  });
+
+  it('blocks submission and shows the required author error when no first author was added', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const onInvalid = jest.fn();
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            onCreate={onCreate}
+            onInvalid={onInvalid}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Draft Manuscript (prior to Publication)"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            keyResourceTable={{
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            }}
+            shortDescription="A good short description"
+            layImpactStatement="manuscript impact statement"
+            selectedLabs={[
+              { value: 'lab-1', label: 'Lab One', isFixed: false },
+            ]}
+            firstAuthors={[]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(
+      await screen.findByText('Please add at least one author.'),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: /Submit Manuscript/i }),
+    ).not.toBeInTheDocument();
+    expect(onCreate).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onInvalid).toHaveBeenCalled();
+    });
+  });
+
+  it('blocks submission when a selected lab PI team is not among the selected teams', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const onInvalid = jest.fn();
+    const labPiTeamError =
+      /The following lab\(s\) do not list their corresponding PI’s team as a contributor\./;
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            onCreate={onCreate}
+            onInvalid={onInvalid}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Draft Manuscript (prior to Publication)"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            keyResourceTable={{
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            }}
+            shortDescription="A good short description"
+            layImpactStatement="manuscript impact statement"
+            firstAuthors={[
+              {
+                label: 'Author 1',
+                value: 'author-1',
+                id: 'author-1',
+                displayName: 'Author 1',
+              } as AuthorResponse & AuthorSelectOption,
+            ]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    // Lab One's PI team is 'team-a', which is NOT among the selected teams
+    // (the fixed default team has value '1'), so submission must be blocked.
+    // Select the lab and click Submit without blurring the field first.
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
+    await userEvent.click(await screen.findByText('Lab One'));
+
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(await screen.findByText(labPiTeamError)).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: /Submit Manuscript/i }),
+    ).not.toBeInTheDocument();
+    expect(onCreate).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onInvalid).toHaveBeenCalled();
+    });
+  });
+
+  it('keeps the selected labs and teams when the lifecycle changes', async () => {
+    const getLabSuggestions = jest
+      .fn()
+      .mockResolvedValue([
+        { label: 'Lab One', value: 'lab-1', labPITeamIds: ['1'] },
+      ]);
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getLabSuggestions={getLabSuggestions}
+            type="Original Research"
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      screen.getByRole('combobox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+    );
+    await userEvent.click(
+      screen.getByText('Draft Manuscript (prior to Publication)'),
+    );
+    await userEvent.tab();
+
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
+    await userEvent.click(await screen.findByText('Lab One'));
+    await userEvent.tab();
+
+    // Add a second team so the assertion does not depend on the fixed default team
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
+    await userEvent.click(await screen.findByText('Team B'));
+    await userEvent.tab();
+
+    expect(screen.getByText('Lab One')).toBeVisible();
+    expect(screen.getByText('Team B')).toBeVisible();
+
+    await userEvent.click(
+      screen.getByRole('combobox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+    );
+    await userEvent.click(screen.getByText('Preprint'));
+    await userEvent.tab();
+
+    expect(screen.getByText('Lab One')).toBeVisible();
+    expect(screen.getByText('Team B')).toBeVisible();
+  });
 });

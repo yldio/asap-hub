@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react';
-import { steel, mint, tin, neutral900, pine, charcoal } from '../colors';
+import { steel, mint, tin, neutral900, paper, pine, charcoal } from '../colors';
 import { crossSmallIcon } from '../icons';
 import { rem } from '../pixels';
 import Ellipsis from './Ellipsis';
@@ -19,6 +19,7 @@ const styles = css({
   justifyContent: 'center',
   alignItems: 'center',
 
+  backgroundColor: paper.rgb,
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,

@@ -85,3 +85,23 @@ it('renders a special placeholder when all materials unavailable', () => {
   );
   expect(getByText(/no .* material/i)).toBeVisible();
 });
+
+it('anchors each material section with a stable id', () => {
+  const { container } = render(
+    <EventMaterials
+      {...props}
+      notes="notes"
+      presentation="presentation"
+      videoRecording="recording"
+      meetingMaterials={[{ title: 'material', url: 'http://example.com' }]}
+    />,
+  );
+  [
+    'event-notes',
+    'event-video-recording',
+    'event-presentation',
+    'event-additional-materials',
+  ].forEach((id) => {
+    expect(container.querySelector(`#${id}`)).not.toBeEmptyDOMElement();
+  });
+});

@@ -3,32 +3,38 @@ import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
+import { EventDateBlock, EventTime, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';
-import { neutral900 } from '../colors';
-import { eventPlaceholderIcon } from '../icons';
+import { neutral900, steel } from '../colors';
 import { largeDesktopScreen, rem } from '../pixels';
 
 const TITLE_LIMIT = 55;
+const TAG_LIMIT = 3;
 
-const imageContainerStyle = css({
-  flexShrink: 0,
-  borderRadius: rem(8),
-
-  height: rem(96),
-  width: rem(96),
-
-  overflow: 'hidden',
-
+const dateBlockContainerStyle = css({
   [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
     display: 'none',
   },
+});
+
+const thumbnailStyles = css({
+  display: 'block',
+  boxSizing: 'border-box',
+  width: rem(96),
+  height: rem(96),
+  objectFit: 'cover',
+
+  borderStyle: 'solid',
+  borderWidth: 1,
+  borderColor: steel.rgb,
+  borderRadius: rem(8),
 });
 
 const contentStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(16),
+  minWidth: 0,
 });
 
 const tagContainerStyles = css({
@@ -37,10 +43,8 @@ const tagContainerStyles = css({
   fontSize: rem(17),
 });
 
-const imageStyle = css({
-  objectFit: 'cover',
-  width: '100%',
-  height: '100%',
+const cancelledTitleStyles = css({
+  textDecoration: 'line-through',
 });
 
 const cardStyles = css({
@@ -51,7 +55,7 @@ const cardStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<BasicEvent, 'id' | 'title' | 'thumbnail' | 'status'> & {
+  Pick<BasicEvent, 'id' | 'title' | 'status' | 'thumbnail'> & {
     eventOwner: React.ReactNode;
     tags: string[];
     titleLimit?: number | null;
@@ -71,34 +75,37 @@ const EventInfo: React.FC<EventInfoProps> = ({
   tags,
   ...props
 }) => {
-  const imageComponent = thumbnail ? (
-    <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
-  ) : (
-    eventPlaceholderIcon
-  );
+  const cancelled = status === 'Cancelled';
+  const link = cancelled ? undefined : events({}).event({ eventId: id }).$;
 
-  const link =
-    status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
+  const displayTitle = (
+    <span css={cancelled && cancelledTitleStyles}>
+      {title.substring(0, titleLimit ?? undefined)}
+      {titleLimit && title.length > titleLimit ? '…' : undefined}
+    </span>
+  );
 
   return (
     <div css={cardStyles}>
-      <div css={imageContainerStyle}>
-        {link ? (
-          <ImageLink link={link}>{imageComponent}</ImageLink>
+      <div css={dateBlockContainerStyle}>
+        {thumbnail ? (
+          <img
+            alt={`Thumbnail for "${title}"`}
+            src={thumbnail}
+            css={thumbnailStyles}
+          />
         ) : (
-          <>{imageComponent}</>
+          <EventDateBlock startDate={props.startDate} />
         )}
       </div>
       <div css={contentStyles}>
         {link ? (
           <LinkHeadline level={3} styleAsHeading={4} href={link} noMargin>
-            {title.substring(0, titleLimit ?? undefined)}
-            {titleLimit && title.length > titleLimit ? '…' : undefined}
+            {displayTitle}
           </LinkHeadline>
         ) : (
           <Headline3 styleAsHeading={4} noMargin>
-            {title.substring(0, titleLimit ?? undefined)}
-            {titleLimit && title.length > titleLimit ? '…' : undefined}
+            {displayTitle}
           </Headline3>
         )}
         <EventTime {...props} />
@@ -107,7 +114,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
         {eventSpeakers}
         {tags.length > 0 && (
           <div css={tagContainerStyles}>
-            <TagList tags={tags} />
+            <TagList tags={tags} min={TAG_LIMIT} max={TAG_LIMIT} />
           </div>
         )}
       </div>

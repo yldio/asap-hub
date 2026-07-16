@@ -1,14 +1,8 @@
-import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
 import { LinkConditional } from '../atoms';
 import { createMailTo } from '../mail';
-import { rem } from '../pixels';
 import NoOutputsPage from './NoOutputsPage';
-
-const containerStyles = css({
-  padding: `${rem(36)} 0`,
-});
 
 export type ProfileOutputsProps = Omit<
   ComponentProps<typeof SharedResearchList>,
@@ -39,7 +33,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   draftOutputs,
   hasOutputs,
 }) => (
-  <div css={containerStyles}>
+  <div>
     {numberOfItems ? (
       <SharedResearchList
         algoliaIndexName={algoliaIndexName}

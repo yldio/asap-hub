@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { useScrollToTop } from '@asap-hub/react-context';
@@ -193,6 +193,93 @@ it('calls scrollToTop with merged options', async () => {
   expect(scrollToMock).toHaveBeenCalledWith({
     top: 0,
     behavior: 'auto', // overridden from default 'smooth'
+  });
+});
+
+describe('the collapsible menu', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  // The toggle only renders at desktop widths (display:none below), so under
+  // jsdom (no media queries) role queries must opt in to hidden elements.
+  it('toggles between Collapse Menu and Expand Menu', async () => {
+    const { getByRole, queryByRole, findByRole, container } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    // MainNavigation is lazy-loaded behind Suspense; wait for the toggle rather
+    // than assuming it mounted synchronously (which races on CI).
+    await userEvent.click(
+      await findByRole('button', { name: 'Collapse Menu', hidden: true }),
+    );
+    expect(
+      getByRole('button', { name: 'Expand', hidden: true }),
+    ).toBeInTheDocument();
+    expect(
+      queryByRole('button', { name: 'Collapse Menu', hidden: true }),
+    ).not.toBeInTheDocument();
+
+    // Once the collapse animation settles, hovering an item reveals its
+    // tooltip — which only arms after the animating flag clears.
+    const firstItem = container.querySelector('nav ul li a div > span')!;
+    await waitFor(() => {
+      fireEvent.mouseEnter(firstItem);
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+    fireEvent.mouseLeave(firstItem);
+
+    await userEvent.click(
+      getByRole('button', { name: 'Expand', hidden: true }),
+    );
+    expect(
+      getByRole('button', { name: 'Collapse Menu', hidden: true }),
+    ).toBeInTheDocument();
+  });
+
+  it('persists the collapsed state across mounts', async () => {
+    const { findByRole, unmount } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    await userEvent.click(
+      await findByRole('button', { name: 'Collapse Menu', hidden: true }),
+    );
+    unmount();
+
+    const { findByRole: findByRoleRemounted } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    expect(
+      await findByRoleRemounted('button', {
+        name: 'Expand',
+        hidden: true,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('falls back to expanded when localStorage is unavailable', async () => {
+    const getItem = jest
+      .spyOn(Storage.prototype, 'getItem')
+      .mockImplementation(() => {
+        throw new Error('localStorage blocked');
+      });
+    try {
+      const { findByRole } = render(
+        <MemoryRouter>
+          <Layout {...props} />
+        </MemoryRouter>,
+      );
+      expect(
+        await findByRole('button', { name: 'Collapse Menu', hidden: true }),
+      ).toBeInTheDocument();
+    } finally {
+      getItem.mockRestore();
+    }
   });
 });
 

@@ -84,6 +84,27 @@ it('renders a list of members', () => {
   expect(screen.getAllByRole('img')).toHaveLength(1);
 });
 
+it('renders members with multiple roles only once', () => {
+  const member = {
+    id: '42',
+    firstName: 'Unknown',
+    lastName: 'Unknown',
+    displayName: 'Unknown',
+    email: 'foo@bar.com',
+    avatarUrl: 'https://example.com',
+  };
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      members={[
+        { ...member, role: 'Collaborating PI' },
+        { ...member, role: 'Key Personnel' },
+      ]}
+    />,
+  );
+  expect(screen.getAllByRole('img')).toHaveLength(1);
+});
+
 it('renders no more than 5 members', () => {
   render(
     <TeamProfileHeader

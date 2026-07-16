@@ -507,6 +507,7 @@ describe('Research Outputs Data Provider', () => {
                     {
                       sys: { id: 'team-project-id' },
                       title: 'Team Discovery Project',
+                      projectId: 'discovery-project',
                     },
                   ],
                 },
@@ -528,6 +529,7 @@ describe('Research Outputs Data Provider', () => {
         project: {
           id: 'team-project-id',
           title: 'Team Discovery Project',
+          projectId: 'discovery-project',
         },
       });
     });
@@ -633,6 +635,7 @@ describe('Research Outputs Data Provider', () => {
         sys: { id: 'project-id-1' },
         title: 'Discovery Project Alpha',
         projectType: 'Discovery Project',
+        projectId: 'discovery-project',
       };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
@@ -644,6 +647,7 @@ describe('Research Outputs Data Provider', () => {
         id: 'project-id-1',
         title: 'Discovery Project Alpha',
         projectType: 'Discovery Project',
+        projectId: 'discovery-project',
       });
     });
 
@@ -653,6 +657,7 @@ describe('Research Outputs Data Provider', () => {
         sys: { id: 'project-id-1' },
         title: null,
         projectType: 'Resource Project',
+        projectId: 'resource-project',
       };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
@@ -664,6 +669,7 @@ describe('Research Outputs Data Provider', () => {
         id: 'project-id-1',
         title: '',
         projectType: 'Resource Project',
+        projectId: 'resource-project',
       });
     });
 
@@ -2222,6 +2228,7 @@ describe('mapOutputVersions ', () => {
       addedDate: '2022-01-01T12:00:00.000Z',
       rrid: 'RRID',
       accession: 'Accession',
+      doi: 'DOI',
     };
 
     const versions = mapOutputVersions([
@@ -2254,6 +2261,7 @@ describe('mapOutputVersions ', () => {
         type: undefined,
         rrid: '',
         accession: '',
+        doi: '',
       },
     ]);
   });

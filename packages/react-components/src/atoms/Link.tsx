@@ -89,12 +89,14 @@ type LinkProps = {
   readonly applyIconTheme?: boolean;
   readonly ellipsed?: boolean;
   readonly underlined?: boolean;
+  readonly onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
 const Link: React.FC<LinkProps> = ({
   children,
   href,
   label,
+  onClick,
   themeVariant = defaultThemeVariant,
   buttonStyle = false,
   primary = false,
@@ -132,6 +134,7 @@ const Link: React.FC<LinkProps> = ({
       href={href}
       enabled={enabled}
       aria-label={label}
+      onClick={onClick}
       css={(theme) => linkStyles(theme)}
       title={applyEllipsis ? linkChildren : undefined}
     >

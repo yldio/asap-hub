@@ -14,7 +14,7 @@ export const FETCH_LABS = gql`
           sys {
             id
           }
-          teamsCollection(limit: 10) {
+          teamsCollection(limit: 50) {
             items {
               inactiveSinceDate
               team {

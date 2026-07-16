@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, Fragment } from 'react';
 import { css } from '@emotion/react';
 
 import {
@@ -6,15 +6,17 @@ import {
   eventMaterialTypes,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
+import { events } from '@asap-hub/routing';
 
 import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, EventInfo } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
+import { tin } from '../colors';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
-import { ExternalLinkIcon } from '../icons';
+import { eventMaterialSectionIds } from './EventMaterials';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -38,10 +40,38 @@ const buttonStyle = css({
   },
 });
 
-const externalIconStyle = css({
+const displayedMaterialTypes = [
+  'notes',
+  'videoRecording',
+  'presentation',
+] as const;
+const eventMaterialLabels: Record<
+  (typeof displayedMaterialTypes)[number],
+  string
+> = {
+  notes: 'Notes',
+  videoRecording: 'Recording',
+  presentation: 'Presentation',
+};
+
+const materialListStyles = css({
   display: 'flex',
-  alignSelf: 'center',
-  marginLeft: rem(8),
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  columnGap: rem(8),
+  rowGap: rem(4),
+
+  a: {
+    color: 'inherit',
+    textDecoration: 'none',
+    ':hover': {
+      textDecoration: 'underline',
+    },
+  },
+});
+
+const unavailableMaterialStyles = css({
+  color: tin.rgb,
 });
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -65,8 +95,9 @@ const EventCard: React.FC<EventCardProps> = ({
     }
     if (status === 'Cancelled') {
       return {
-        toastContent: 'This event has been cancelled',
+        toastContent: 'The event has been cancelled.',
         type: 'alert',
+        ...(hasFinished ? { accent: 'neutral200' } : {}),
       };
     }
     if (hasStarted && !hasFinished) {
@@ -77,7 +108,7 @@ const EventCard: React.FC<EventCardProps> = ({
             {props.hideMeetingLink || !props.meetingLink ? (
               <span>This in-person event is currently happening.</span>
             ) : (
-              <span>This event is currently live.</span>
+              <span>This event is happening now.</span>
             )}
           </>
         ),
@@ -92,10 +123,7 @@ const EventCard: React.FC<EventCardProps> = ({
                   buttonStyle
                   small
                 >
-                  Join now
-                  <span css={externalIconStyle}>
-                    <ExternalLinkIcon />
-                  </span>
+                  Join Meeting Now
                 </Link>
               </div>
             )}
@@ -111,31 +139,44 @@ const EventCard: React.FC<EventCardProps> = ({
     }
 
     if (hasFinished) {
-      const materialCount = eventMaterialTypes.reduce((count, key) => {
+      const isMaterialAvailable = (
+        key: (typeof eventMaterialTypes)[number],
+      ): boolean => {
         const value = props[key];
-        if (Array.isArray(value)) {
-          return count + value.length;
-        }
-        if (value) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-      if (materialCount > 0) {
-        return {
-          type: 'attachment',
-          toastContent: `Meeting materials (${materialCount})`,
-        };
-      }
-      if (eventMaterialTypes.every((value) => props[value] === null)) {
-        return {
-          type: 'attachment',
-          toastContent: 'No meeting materials available',
-        };
-      }
+        return Array.isArray(value) ? value.length > 0 : Boolean(value);
+      };
+      const eventHref = events({}).event({ eventId: props.id }).$;
       return {
         type: 'attachment',
-        toastContent: 'Meeting materials coming soon…',
+        accent: 'neutral200',
+        mutedIcon: !displayedMaterialTypes.some(isMaterialAvailable),
+        toastContent: (
+          <span css={materialListStyles}>
+            {displayedMaterialTypes.map((key, index) => {
+              const available = isMaterialAvailable(key);
+              return (
+                <Fragment key={key}>
+                  {index > 0 && (
+                    <span
+                      css={available ? undefined : unavailableMaterialStyles}
+                    >
+                      •
+                    </span>
+                  )}
+                  {available ? (
+                    <Link href={`${eventHref}#${eventMaterialSectionIds[key]}`}>
+                      {eventMaterialLabels[key]}
+                    </Link>
+                  ) : (
+                    <span css={unavailableMaterialStyles}>
+                      {eventMaterialLabels[key]}
+                    </span>
+                  )}
+                </Fragment>
+              );
+            })}
+          </span>
+        ),
       };
     }
     return {};

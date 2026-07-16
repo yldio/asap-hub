@@ -1133,6 +1133,32 @@ describe('Tabs', () => {
       ).not.toHaveClass('active');
     });
 
+    it('expands and opens the Discussions tab when the card becomes the target after mount', () => {
+      const { getByRole, queryByRole, rerender } = render(
+        <MemoryRouter
+          initialEntries={['/workspace?tab=discussions#manuscript_0']}
+        >
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      expect(
+        queryByRole('button', { name: 'Discussions' }),
+      ).not.toBeInTheDocument();
+
+      rerender(
+        <MemoryRouter
+          initialEntries={['/workspace?tab=discussions#manuscript_0']}
+        >
+          <ManuscriptCard {...props} isTargetManuscript />
+        </MemoryRouter>,
+      );
+
+      expect(getByRole('button', { name: 'Discussions' })).toHaveClass(
+        'active',
+      );
+    });
+
     it('keeps the default tab when isTargetManuscript but tab query is missing', () => {
       const { getByRole } = render(
         <MemoryRouter initialEntries={['/workspace#manuscript_0']}>

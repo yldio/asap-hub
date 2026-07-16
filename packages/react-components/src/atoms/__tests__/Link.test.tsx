@@ -265,3 +265,15 @@ describe('for elipsed links', () => {
     });
   });
 });
+
+it('forwards the click handler to the anchor', () => {
+  const handleClick = jest.fn((event) => event.preventDefault());
+  const { getByText } = render(
+    <Link href="/" onClick={handleClick}>
+      text
+    </Link>,
+  );
+
+  getByText('text').click();
+  expect(handleClick).toHaveBeenCalled();
+});

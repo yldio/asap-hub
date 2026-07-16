@@ -2,16 +2,18 @@ import { render, screen } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import userEvent from '@testing-library/user-event';
 import Tag from '../Tag';
-import { mint, tin } from '../../colors';
+import { mint, paper, tin } from '../../colors';
 
 it('renders a tag with content', () => {
   const { container } = render(<Tag>Text</Tag>);
   expect(container.textContent).toEqual('Text');
 });
 
-it('renders a tag with background color when highlighted', () => {
+it('renders a white tag with a mint background when highlighted', () => {
   const { getByText, rerender } = render(<Tag>Text</Tag>);
-  expect(findParentWithStyle(getByText('Text'), 'backgroundColor')).toBeNull();
+  expect(
+    findParentWithStyle(getByText('Text'), 'backgroundColor')?.backgroundColor,
+  ).toBe(paper.rgb);
 
   rerender(<Tag highlight>Text</Tag>);
   expect(

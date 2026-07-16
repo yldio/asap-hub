@@ -36,30 +36,47 @@ it('does not truncate long event titles when limit is null', () => {
   );
 });
 
-it('renders event thumbnail', () => {
+it('renders the date block for the start date', () => {
   render(
     <EventInfo
       {...props}
-      thumbnail={'https://placeholder/40x40'}
-      title={'blablablha'}
+      startDate="2021-05-28T10:00:00Z"
+      thumbnail={undefined}
     />,
   );
 
-  expect(screen.getByAltText(/thumbnail/i).getAttribute('src')).toEqual(
-    'https://placeholder/40x40',
-  );
+  expect(screen.getByText('MAY')).toBeVisible();
+  expect(screen.getByText('28')).toBeVisible();
 });
 
-it('renders placeholder event thumbnail', () => {
+it('renders the thumbnail in place of the date block when provided', () => {
   render(
     <EventInfo
       {...props}
-      thumbnail={undefined}
-      title={'blablablha'.repeat(100)}
+      startDate="2021-05-28T10:00:00Z"
+      thumbnail="https://example.com/thumbnail.png"
     />,
   );
 
-  expect(screen.getByText(/placeholder/i)).toBeInTheDocument();
+  expect(screen.getByAltText(/thumbnail/i)).toHaveAttribute(
+    'src',
+    'https://example.com/thumbnail.png',
+  );
+  expect(screen.queryByText('MAY')).not.toBeInTheDocument();
+});
+
+it('strikes through the title of a cancelled event', () => {
+  const { rerender } = render(
+    <EventInfo {...props} title="My Event" status="Confirmed" />,
+  );
+  expect(screen.getByText('My Event')).not.toHaveStyle(
+    'text-decoration: line-through',
+  );
+
+  rerender(<EventInfo {...props} title="My Event" status="Cancelled" />);
+  expect(screen.getByText('My Event')).toHaveStyle(
+    'text-decoration: line-through',
+  );
 });
 
 it('shows the event time', () => {
@@ -87,4 +104,17 @@ it('displays the tags', () => {
   render(<EventInfo {...props} tags={['one tag']} />);
 
   expect(screen.getByText(/one tag/i)).toBeInTheDocument();
+});
+
+it('renders all tags with the overflow element hidden by css beyond the limit', () => {
+  render(
+    <EventInfo
+      {...props}
+      tags={['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5']}
+    />,
+  );
+
+  ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'].forEach((tag) => {
+    expect(screen.getByText(tag)).toBeInTheDocument();
+  });
 });

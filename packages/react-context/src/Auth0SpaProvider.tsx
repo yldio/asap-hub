@@ -10,7 +10,7 @@ import {
   Auth0ClientOptions,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
-import { Context, useCallback, useEffect, useState } from 'react';
+import { Context, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 interface Auth0SpaProviderProps<TUser> extends Auth0ClientOptions {
@@ -131,25 +131,29 @@ export const Auth0SpaProvider = <TUser,>(
     setUser(await auth0Client.getUser());
   };
 
-  const auth0: Auth0<TUser> = {
-    isAuthenticated,
-    user,
-    refreshUser,
-    loading,
-    popupOpen,
-    loginWithPopup,
-    handleRedirectCallback,
-    getTokenSilently:
-      getSafeAuth0ClientProperty('getTokenSilently').bind(auth0Client),
-    getIdTokenClaims:
-      getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
-    loginWithRedirect:
-      getSafeAuth0ClientProperty('loginWithRedirect').bind(auth0Client),
-    getTokenWithPopup:
-      getSafeAuth0ClientProperty('getTokenWithPopup').bind(auth0Client),
-    logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
-    checkSession,
-  };
+  const auth0: Auth0<TUser> = useMemo(
+    () => ({
+      isAuthenticated,
+      user,
+      refreshUser,
+      loading,
+      popupOpen,
+      loginWithPopup,
+      handleRedirectCallback,
+      getTokenSilently:
+        getSafeAuth0ClientProperty('getTokenSilently').bind(auth0Client),
+      getIdTokenClaims:
+        getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
+      loginWithRedirect:
+        getSafeAuth0ClientProperty('loginWithRedirect').bind(auth0Client),
+      getTokenWithPopup:
+        getSafeAuth0ClientProperty('getTokenWithPopup').bind(auth0Client),
+      logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
+      checkSession,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isAuthenticated, user, loading, popupOpen, auth0Client],
+  );
 
   return (
     <ContextProvider.Provider value={auth0}>

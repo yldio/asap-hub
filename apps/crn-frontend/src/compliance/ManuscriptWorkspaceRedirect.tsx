@@ -20,7 +20,9 @@ const ManuscriptWorkspaceRedirect: FC = () => {
     return <ManuscriptWorkspaceUnavailablePage />;
   }
 
-  return <Navigate to={workspaceUrl.url} replace />;
+  return (
+    <Navigate to={workspaceUrl.url} replace state={{ scrollToHash: true }} />
+  );
 };
 
 export default ManuscriptWorkspaceRedirect;

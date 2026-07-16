@@ -22,13 +22,33 @@ it('renders a toast card with paper clip icon', () => {
   expect(getByText('explanation text')).toBeVisible();
 });
 
-it('renders a toast card with error icon', () => {
+it('renders a toast card with warning icon', () => {
   const { getByTitle, getByText } = render(
     <ToastCard type="alert" toastContent="explanation text">
       content
     </ToastCard>,
   );
-  expect(getByTitle(/error/i)).toBeInTheDocument();
+  expect(getByTitle(/warning/i)).toBeInTheDocument();
+  expect(getByText('explanation text')).toBeVisible();
+});
+
+it('renders a toast card with live icon', () => {
+  const { getByTitle, getByText } = render(
+    <ToastCard type="live" toastContent="explanation text">
+      content
+    </ToastCard>,
+  );
+  expect(getByTitle(/live/i)).toBeInTheDocument();
+  expect(getByText('explanation text')).toBeVisible();
+});
+
+it('renders a toast card with info icon', () => {
+  const { getByTitle, getByText } = render(
+    <ToastCard type="info" toastContent="explanation text">
+      content
+    </ToastCard>,
+  );
+  expect(getByTitle(/info/i)).toBeInTheDocument();
   expect(getByText('explanation text')).toBeVisible();
 });
 

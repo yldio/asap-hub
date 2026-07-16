@@ -286,10 +286,15 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     teamWorkspaceRoute.editManuscript({ manuscriptId }).$;
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
-  const targetManuscriptRef = useRef<HTMLDivElement>(null);
-
   const [expandedState, setExpandedState] = useState(isTargetManuscript);
   const [showMore, setShowMore] = useState(false);
+
+  useEffect(() => {
+    if (isTargetManuscript) {
+      setExpandedState(true);
+      setInternalActiveTab(targetTabFromUrl);
+    }
+  }, [isTargetManuscript, targetTabFromUrl]);
 
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
@@ -375,36 +380,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       ? manuscript?.discussions.some((discussion) => !discussion.read)
       : false;
 
-  // scroll only once per page load when the URL pointed at this card.
-  // wait until the manuscript data is loaded so the layout is stable; never
-  // re-scroll on later expand/collapse cycles or tab switches.
-  const hasAutoScrolledRef = useRef(false);
-  const initialTabRef = useRef(activeTab);
-  /* istanbul ignore next */
-  useEffect(() => {
-    if (!isTargetManuscript || hasAutoScrolledRef.current || !manuscript) {
-      return undefined;
-    }
-
-    // give the layout one paint to settle (refs attach, tab content mounts)
-    // before measuring, then scroll to the target.
-    const timer = setTimeout(() => {
-      const scrollTarget =
-        initialTabRef.current === 'discussions' && discussionTabRef.current
-          ? discussionTabRef.current
-          : targetManuscriptRef.current;
-
-      if (scrollTarget) {
-        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        hasAutoScrolledRef.current = true;
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-    // intentionally only re-evaluates on isTargetManuscript flips or manuscript
-    // arriving; the ref guard prevents repeat scrolls after the first success.
-  }, [isTargetManuscript, manuscript]);
-
   return (
     <>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
@@ -414,7 +389,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           newStatus={newSelectedStatus}
         />
       )}
-      <div css={manuscriptContainerStyles} ref={targetManuscriptRef}>
+      {/* the DOM id makes the card a real #<manuscriptId> anchor target;
+          useScrollToHash (mounted in Layout) owns scrolling to it */}
+      <div id={id} css={manuscriptContainerStyles}>
         <div css={[toastStyles]}>
           <span css={[iconStyles]}>
             <Button

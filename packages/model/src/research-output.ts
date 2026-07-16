@@ -531,3 +531,42 @@ export const RESEARCH_OUTPUT_FLOW_IDS = {
 
 export type ResearchOutputFlowId =
   (typeof RESEARCH_OUTPUT_FLOW_IDS)[keyof typeof RESEARCH_OUTPUT_FLOW_IDS];
+
+export const FLOW_REGISTRY = {
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_MANUAL]: {
+    supportsDrafts: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_DRAFT]: {
+    supportsDrafts: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_PUBLISHED]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION_FROM_MANUSCRIPT]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE]: {
+    supportsDrafts: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE]: {
+    supportsDrafts: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_DRAFT]: {
+    supportsDrafts: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_PUBLISHED]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_ADD_VERSION]: {
+    supportsDrafts: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE]: {
+    supportsDrafts: true,
+  },
+};

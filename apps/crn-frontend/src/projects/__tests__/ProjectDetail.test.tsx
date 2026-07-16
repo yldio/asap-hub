@@ -4,9 +4,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import type {
   DiscoveryProjectDetail as DiscoveryProjectDetailType,
+  ResearchOutputTeamResponse,
   ResourceProjectDetail as ResourceProjectDetailType,
   TraineeProjectDetail as TraineeProjectDetailType,
 } from '@asap-hub/model';
@@ -14,6 +18,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import DiscoveryProjectDetail from '../DiscoveryProjectDetail';
 import ResourceProjectDetail from '../ResourceProjectDetail';
 import TraineeProjectDetail from '../TraineeProjectDetail';
+import { useResearchOutputById } from '../../shared-research/state';
 
 jest.mock('../../network/teams/state', () => ({
   useIsComplianceReviewer: jest.fn(() => false),
@@ -24,6 +29,24 @@ jest.mock('../../network/teams/state', () => ({
     .fn()
     .mockReturnValue(jest.fn().mockResolvedValue(undefined)),
   useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  useTeamById: jest.fn(() => jest.fn().mockResolvedValue({ id: 'team-1' })),
+  usePostPreprintResearchOutput: jest.fn(),
+  useManuscriptVersionSuggestions: jest.fn(() =>
+    jest.fn().mockResolvedValue([]),
+  ),
+}));
+jest.mock('../../shared-state', () => ({
+  useTeamSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  useLabSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  useResearchTags: jest.fn().mockReturnValue([]),
+  useAuthorSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  useGeneratedContent: jest.fn(() => jest.fn().mockResolvedValue('')),
+  useImpactSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  useCategorySuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  usePostResearchOutput: jest.fn(() => jest.fn().mockResolvedValue(undefined)),
+  usePutResearchOutput: jest.fn(() => jest.fn().mockResolvedValue(undefined)),
+  useRelatedEventsSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
+  useRelatedResearchSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
 }));
 
 const mockEditToolHref = jest.fn();
@@ -272,12 +295,19 @@ jest.mock('../state', () => ({
 
 jest.mock('../../shared-research/state', () => ({
   __esModule: true,
+  ...jest.requireActual('../../shared-research/state'),
   useResearchOutputs: jest.fn((options: { draftsOnly?: boolean }) =>
     options.draftsOnly
       ? { items: [mockDraftResearchOutput], total: 1 }
       : { items: [mockPublishedResearchOutput], total: 1 },
   ),
+  useResearchOutputById: jest.fn(),
+  useSetResearchOutputItem: jest.fn(),
 }));
+
+const mockUseResearchOutputById = useResearchOutputById as jest.MockedFunction<
+  typeof useResearchOutputById
+>;
 
 // --- Test helper ---
 
@@ -851,6 +881,60 @@ describe('DiscoveryProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('Jane Contact');
+  });
+
+  describe('Duplicate Output', () => {
+    const teamResponse = createTeamResponse();
+    const memberUser = {
+      id: 'user-team',
+      projects: [],
+      teams: [{ id: teamResponse.id, role: 'Project Manager' }],
+      role: 'Grantee',
+    };
+    it('allows a user who is a member of the primary team duplicate the output', async () => {
+      const researchOutput: ResearchOutputTeamResponse = {
+        ...createResearchOutputResponse(),
+        id: '123',
+        workingGroups: undefined,
+        teams: [
+          {
+            displayName: teamResponse.displayName,
+            id: teamResponse.id,
+            teamType: 'Discovery Team',
+          },
+        ],
+        title: 'Example',
+        link: 'http://example.com',
+      };
+      mockUseResearchOutputById.mockReturnValue(researchOutput);
+
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        DiscoveryProjectDetail,
+        'discovery',
+        'discovery-1',
+        memberUser,
+        `duplicate/${researchOutput.id}`,
+      );
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+        'Copy of Example',
+      );
+      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+    });
+
+    it('will show a page not found if research output does not exist', async () => {
+      mockUseResearchOutputById.mockReturnValue(undefined);
+
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        DiscoveryProjectDetail,
+        'discovery',
+        'discovery-1',
+        memberUser,
+        `duplicate/randomId`,
+      );
+      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+    });
   });
 });
 

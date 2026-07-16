@@ -70,7 +70,7 @@ const user = (() => {
 })();
 const users = route('/users', {}, { user });
 
-const outputDocumentTypeParser = {
+export const outputDocumentTypeParser = {
   parse: (data: string): OutputDocumentTypeParameter =>
     data as OutputDocumentTypeParameter,
   serialize: (data: OutputDocumentTypeParameter): string => data,

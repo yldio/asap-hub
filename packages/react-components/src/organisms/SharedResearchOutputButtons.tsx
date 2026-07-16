@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
+import { ResearchOutputDetailActionAvailability } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { mobileScreen, rem } from '../pixels';
 import { Link, Button } from '../atoms';
 import { editIcon, duplicateIcon, actionIcon, VersionIcon } from '../icons';
@@ -56,13 +56,12 @@ type SharedResearchOutputButtonsProps = {
   displayReviewModal: boolean;
   setDisplayReviewModal: (state: boolean) => void;
   duplicateLink: string | undefined;
-  published: boolean;
   displayPublishModal: boolean;
   setDisplayPublishModal: (state: boolean) => void;
   isInReview: boolean;
   checkForNewerManuscriptVersion: () => void;
   hasRelatedManuscript?: boolean;
-  canDuplicate?: boolean;
+  actions: ResearchOutputDetailActionAvailability;
 };
 
 const SharedResearchOutputButtons: React.FC<
@@ -72,50 +71,45 @@ const SharedResearchOutputButtons: React.FC<
   displayReviewModal,
   setDisplayReviewModal,
   duplicateLink,
-  published,
   displayPublishModal,
   setDisplayPublishModal,
   isInReview,
   checkForNewerManuscriptVersion,
-  hasRelatedManuscript = false,
-  canDuplicate,
+  actions,
 }) => {
-  const {
-    canEditResearchOutput,
-    canDuplicateResearchOutput,
-    canRequestReview,
-    canPublishResearchOutput,
-    canVersionResearchOutput,
-  } = useContext(ResearchOutputPermissionsContext);
+  const hasVisibleActions = Object.values(actions).some(Boolean);
+
+  if (!hasVisibleActions) {
+    return null;
+  }
 
   return (
     <div css={buttonsContainer}>
-      {canEditResearchOutput &&
-        (!isInReview || (isInReview && canPublishResearchOutput)) && (
-          <div css={leftButtons}>
-            <Link
-              noMargin
-              href={
-                sharedResearch({})
-                  .researchOutput({ researchOutputId: id })
-                  .editResearchOutput({}).$
-              }
-              buttonStyle
-              small
-              primary
-            >
-              {editIcon} Edit
-            </Link>
-          </div>
-        )}
-      {canDuplicateResearchOutput && duplicateLink && canDuplicate && (
+      {actions.showEdit && (
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              sharedResearch({})
+                .researchOutput({ researchOutputId: id })
+                .editResearchOutput({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            {editIcon} Edit
+          </Link>
+        </div>
+      )}
+      {actions.showDuplicate && (
         <div css={leftButtons}>
           <Link noMargin href={duplicateLink} buttonStyle small primary>
             {duplicateIcon} Duplicate
           </Link>
         </div>
       )}
-      {!published && canRequestReview && !isInReview && (
+      {actions.showRequestReview && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -127,7 +121,7 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {canVersionResearchOutput && published && hasRelatedManuscript && (
+      {actions.showImportManuscriptVersion && (
         <div css={leftButtons}>
           <Button
             noMargin
@@ -139,7 +133,7 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {canVersionResearchOutput && published && !hasRelatedManuscript && (
+      {actions.showAddVersion && (
         <div css={leftButtons}>
           <Link
             noMargin
@@ -156,7 +150,7 @@ const SharedResearchOutputButtons: React.FC<
           </Link>
         </div>
       )}
-      {!published && isInReview && canPublishResearchOutput && (
+      {actions.showSwitchToDraft && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -167,7 +161,7 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {!published && canPublishResearchOutput && (
+      {actions.showPublish && (
         <div css={isInReview ? leftButtons : reviewButton}>
           <Button
             noMargin

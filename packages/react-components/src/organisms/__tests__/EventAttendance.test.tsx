@@ -29,7 +29,7 @@ const props = {
   teamsAttended: 18,
   teamsTotal: 25,
   sinceLastEvent: {
-    percentage: 10,
+    count: 10,
     teamsAttended: 15,
     teamsTotal: 25,
   },
@@ -53,7 +53,7 @@ describe('EventAttendance', () => {
     expect(getByText('72%')).toBeVisible();
     expect(getByText('18 of 25 teams')).toBeVisible();
     expect(getByText('Since last event')).toBeVisible();
-    expect(getByText('10%')).toBeVisible();
+    expect(getByText('+ 10')).toBeVisible();
     expect(getByText('from 15 of 25 teams')).toBeVisible();
   });
 
@@ -130,10 +130,10 @@ describe('EventAttendance', () => {
 
   it('shows a decrease arrow when the delta is negative', () => {
     const { getByLabelText, getByText } = renderCard({
-      sinceLastEvent: { percentage: -8, teamsAttended: 12, teamsTotal: 25 },
+      sinceLastEvent: { count: -8, teamsAttended: 12, teamsTotal: 25 },
     });
     expect(getByLabelText('Decrease')).toBeInTheDocument();
-    expect(getByText('8%')).toBeVisible();
+    expect(getByText('- 8')).toBeVisible();
   });
 
   it('omits the Since last event metric when there is nothing to compare', () => {

@@ -63,7 +63,7 @@ export const Increase: Story = {
     teamsAttended: 5,
     teamsTotal: 6,
     sinceLastEvent: {
-      percentage: 12,
+      count: 2,
       teamsAttended: 4,
       teamsTotal: 6,
     },
@@ -75,7 +75,7 @@ export const Decrease: Story = {
   args: {
     ...Increase.args,
     sinceLastEvent: {
-      percentage: -8,
+      count: -1,
       teamsAttended: 6,
       teamsTotal: 6,
     },
@@ -103,7 +103,7 @@ export const ManyTeams: Story = {
     teamsAttended: 11,
     teamsTotal: 14,
     sinceLastEvent: {
-      percentage: 6,
+      count: 3,
       teamsAttended: 10,
       teamsTotal: 14,
     },

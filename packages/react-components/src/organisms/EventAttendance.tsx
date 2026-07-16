@@ -180,7 +180,8 @@ const teamIcon = (teamType?: EventAttendanceTeamType) => {
 };
 
 export type EventAttendanceSinceLastEvent = {
-  percentage: number;
+  // signed change in attending teams versus the previous event.
+  count: number;
   teamsAttended: number;
   teamsTotal: number;
 };
@@ -273,9 +274,9 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
           {sinceLastEvent && (
             <EventAttendanceMetric
               variant="delta"
-              direction={sinceLastEvent.percentage < 0 ? 'down' : 'up'}
+              direction={sinceLastEvent.count < 0 ? 'down' : 'up'}
               label="Since last event"
-              value={Math.abs(sinceLastEvent.percentage)}
+              value={Math.abs(sinceLastEvent.count)}
               caption={`from ${sinceLastEvent.teamsAttended} of ${sinceLastEvent.teamsTotal} teams`}
             />
           )}

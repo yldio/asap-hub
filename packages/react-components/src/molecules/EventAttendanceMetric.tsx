@@ -53,15 +53,23 @@ const deltaRowStyles = css({
   gap: rem(8),
 });
 
+const arrowContainerStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: rem(32),
+  height: rem(32),
+});
+
 const arrowStyles = (direction: 'up' | 'down') =>
   css({
     width: 0,
     height: 0,
-    borderLeft: `${rem(6)} solid transparent`,
-    borderRight: `${rem(6)} solid transparent`,
+    borderLeft: `${rem(7)} solid transparent`,
+    borderRight: `${rem(7)} solid transparent`,
     ...(direction === 'up'
-      ? { borderBottom: `${rem(8)} solid ${fern.rgb}` }
-      : { borderTop: `${rem(8)} solid ${ember.rgb}` }),
+      ? { borderBottom: `${rem(10)} solid ${fern.rgb}` }
+      : { borderTop: `${rem(10)} solid ${ember.rgb}` }),
   });
 
 type BaseProps = {
@@ -84,12 +92,16 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
       <div css={containerStyles}>
         <p css={labelStyles}>{label}</p>
         <div css={deltaRowStyles}>
-          <p css={valueStyles}>{value}%</p>
+          <p css={valueStyles}>
+            {`${props.direction === 'up' ? '+' : '-'} ${value}`}
+          </p>
           <span
-            css={arrowStyles(props.direction)}
+            css={arrowContainerStyles}
             role="img"
             aria-label={props.direction === 'up' ? 'Increase' : 'Decrease'}
-          />
+          >
+            <span css={arrowStyles(props.direction)} />
+          </span>
         </div>
         <p css={labelStyles}>{caption}</p>
       </div>

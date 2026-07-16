@@ -30,12 +30,12 @@ describe('EventAttendanceMetric', () => {
         caption="from 18 of 25 teams"
       />,
     );
-    expect(getByText('10%')).toBeVisible();
+    expect(getByText('+ 10')).toBeVisible();
     expect(getByLabelText('Increase')).toBeInTheDocument();
   });
 
   it('renders a decrease arrow for a down delta', () => {
-    const { getByLabelText } = render(
+    const { getByLabelText, getByText } = render(
       <EventAttendanceMetric
         variant="delta"
         direction="down"
@@ -44,6 +44,7 @@ describe('EventAttendanceMetric', () => {
         caption="from 12 of 25 teams"
       />,
     );
+    expect(getByText('- 5')).toBeVisible();
     expect(getByLabelText('Decrease')).toBeInTheDocument();
   });
 });

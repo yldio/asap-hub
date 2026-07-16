@@ -62,6 +62,21 @@ it('does not reappear with stale coords after being disabled while shown', () =>
   expect(queryByRole('tooltip')).not.toBeInTheDocument();
 });
 
+it('does not show on hover-incapable (touch) devices', () => {
+  const originalMatchMedia = window.matchMedia;
+  window.matchMedia = jest.fn().mockReturnValue({ matches: false });
+  try {
+    const { getByText, queryByRole } = renderTooltip();
+    const wrapper = getByText('icon').parentElement!;
+
+    fireEvent.mouseEnter(wrapper);
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
+    expect(window.matchMedia).toHaveBeenCalledWith('(hover: hover)');
+  } finally {
+    window.matchMedia = originalMatchMedia;
+  }
+});
+
 it('never shows when disabled', () => {
   const { getByText, queryByRole } = renderTooltip({ enabled: false });
   const wrapper = getByText('icon').parentElement!;

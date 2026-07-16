@@ -51,6 +51,12 @@ const bubbleStyles = css({
 
 type Coords = { left: number; top: number };
 
+// Touch taps fire an emulated mouseenter right before the click, which would
+// flash the tooltip on mobile; only hover-capable pointers should show it.
+const canHover = () =>
+  typeof window.matchMedia !== 'function' ||
+  window.matchMedia('(hover: hover)').matches;
+
 type RailTooltipProps = {
   readonly label: ReactNode;
   readonly enabled?: boolean;
@@ -89,7 +95,11 @@ const RailTooltip: React.FC<RailTooltipProps> = ({
   return (
     <span
       css={wrapperStyles}
-      onMouseEnter={enabled ? (event) => show(event.currentTarget) : undefined}
+      onMouseEnter={
+        enabled
+          ? (event) => canHover() && show(event.currentTarget)
+          : undefined
+      }
       onMouseLeave={hide}
       onFocus={enabled ? onFocus : undefined}
       onBlur={hide}

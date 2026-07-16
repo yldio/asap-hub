@@ -241,4 +241,23 @@ describe('after a failed flow', () => {
       });
     });
   });
+
+  describe('for an alumni error', () => {
+    beforeEach(() => {
+      result = render(
+        <MemoryRouter
+          initialEntries={[
+            '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
+          ]}
+        >
+          <Signin />
+        </MemoryRouter>,
+      );
+    });
+
+    it('shows an error message and contact info', () => {
+      expect(result.container).toHaveTextContent(/Alumni user/i);
+      expect(result.container).toHaveTextContent(/for further assistance/i);
+    });
+  });
 });

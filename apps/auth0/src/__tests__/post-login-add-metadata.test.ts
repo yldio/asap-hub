@@ -557,6 +557,18 @@ describe('For a GP2 login', () => {
       expect.objectContaining({ id: '42' }),
     );
   });
+
+  it('rejects the login for alumni users', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { ...baseUser, alumniSinceDate: '2026-06-16' });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.access.deny).toHaveBeenCalledWith(
+      'alumni-user-access-denied',
+    );
+    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+  });
   it('adds additional claim when AUTH0_ADDITIONAL_CLAIM_DOMAIN is set', async () => {
     nock(apiUrl)
       .get(`/webhook/users/${user.user_id}`)

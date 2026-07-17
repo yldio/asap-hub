@@ -1031,7 +1031,7 @@ describe('manuscript outputs flow', () => {
       await user.click(screen.getByRole('button', { name: /Publish/i }));
 
       const button = screen.getByRole('button', {
-        name: 'Publish Output',
+        name: /Publish new version/i,
       });
 
       await user.click(button);

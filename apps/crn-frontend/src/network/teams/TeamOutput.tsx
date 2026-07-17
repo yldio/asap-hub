@@ -185,7 +185,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     published,
     isImportedFromManuscript,
     isDuplicate,
-    hasResearchOutputId: !!researchOutputData?.id,
+    // When importing an already-published manuscript whose preprint was
+    // never shared as an output, the backend auto-creates the preprint
+    // output and updatedOutput gains its id at runtime, turning this
+    // import into an add-version flow.
+    hasResearchOutputId: !!(updatedOutput?.id || researchOutputData?.id),
   });
   const availableActions = resolveResearchOutputAvailableActions({
     flowId,

@@ -1,93 +1,48 @@
-import { TeamType } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
-import { charcoal, fern, neutral1000, steel, tin, warning500 } from '../colors';
+import { fern, neutral1000, steel, warning500 } from '../colors';
 import {
-  DiscoveryTeamIcon,
   ExportIcon,
   InactiveBadgeIcon,
   invalidTickIcon,
   PencilIcon,
   plusIcon,
-  ResourceTeamIcon,
-  TeamIcon,
   tickInCircleIcon,
 } from '../icons';
 import { EventAttendanceMetric } from '../molecules';
-import { mobileScreen, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
-const defaultVisibleTeams = 10;
+import {
+  defaultVisibleTeams,
+  EventTeamType,
+  teamIcon,
+} from './shared-event-card';
+import {
+  actionsStyles,
+  cellStyles,
+  contentStyles,
+  contentWithFooterStyles,
+  editIconButtonStyles,
+  emptyStateStyles,
+  headerCellStyles,
+  headerStyles,
+  iconButtonStyles,
+  metricsStyles,
+  statusCellStyles,
+  statusIconStyles,
+  tableWrapperStyles,
+  teamInfoStyles,
+  viewMoreStyles,
+} from './shared-event-card-styles';
 
 // Attendance below this threshold colours the progress amber, otherwise green.
 // (A lower "red" tier may be added once design confirms it.)
 const attendanceAmberThreshold = 60;
 const getAttendanceColor = (percentage: number): string =>
   percentage < attendanceAmberThreshold ? warning500.rgb : fern.rgb;
-
-const contentStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
-});
-
-const contentWithFooterStyles = css({
-  paddingBottom: 0,
-});
-
-const headerStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: rem(15),
-});
-
-const actionsStyles = css({
-  display: 'flex',
-  gap: rem(12),
-});
-
-export const iconButtonStyles = css({
-  flexGrow: 0,
-  width: rem(40),
-  height: rem(40),
-  alignItems: 'center',
-  borderColor: tin.rgb,
-  ':hover, :focus': {
-    borderColor: tin.rgb,
-  },
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexGrow: 0,
-    minWidth: rem(40),
-  },
-});
-
-const editIconButtonStyles = css([
-  iconButtonStyles,
-  {
-    '> svg': {
-      width: rem(24),
-      height: rem(24),
-      padding: 0,
-    },
-  },
-]);
-
-const metricsStyles = css({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: rem(24),
-  marginTop: rem(24),
-
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr',
-  },
-});
-
-const tableWrapperStyles = css({
-  marginTop: rem(40),
-  overflowX: 'auto',
-});
 
 const tableStyles = css({
   width: '100%',
@@ -98,22 +53,12 @@ const tableStyles = css({
   'tbody tr:last-child': {
     borderBottom: 'none',
   },
-});
-
-const headerCellStyles = css({
-  textAlign: 'left',
-  color: charcoal.rgb,
-  fontSize: rem(17),
-  fontWeight: 'bold',
-  lineHeight: rem(24),
-  letterSpacing: rem(0.1),
-});
-
-const cellStyles = css({
-  // 16px top + 16px bottom → 32px (16 + 16) between rows around the separator,
-  // and a 16px gap between the header and the first row.
-  padding: `${rem(16)} 0`,
-  verticalAlign: 'middle',
+  // on mobile the Attendance column (header + icons) centers.
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    'th:last-child, td:last-child': {
+      textAlign: 'center',
+    },
+  },
 });
 
 const teamCellStyles = css([
@@ -124,55 +69,7 @@ const teamCellStyles = css([
   },
 ]);
 
-const teamInnerStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
-const teamInfoNoWrapStyles = css({
-  whiteSpace: 'nowrap',
-  '> svg': { flexShrink: 0 },
-});
-
-const horizontalScrollGutter = css({ paddingBottom: rem(8) });
-
-const attendanceColStyles = css({ width: '1%' });
-
-const statusCellStyles = css([
-  cellStyles,
-  {
-    // collapse the line box so the 24x24 icon container centers via the cell's
-    // middle vertical-align instead of sitting on the text baseline.
-    lineHeight: 0,
-  },
-]);
-
-const statusIconStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(24),
-  height: rem(24),
-  verticalAlign: 'middle',
-});
-
-const viewMoreStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: rem(56),
-  borderTop: `1px solid ${steel.rgb}`,
-});
-
-const emptyStateStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: rem(24),
-});
-
-export type EventAttendanceTeamType = TeamType;
+export type EventAttendanceTeamType = EventTeamType;
 
 export type EventAttendanceTeam = {
   teamId: string;
@@ -182,39 +79,11 @@ export type EventAttendanceTeam = {
   isTeamInactive?: boolean;
 };
 
-export const teamIcon = (teamType?: EventAttendanceTeamType) => {
-  switch (teamType) {
-    case 'Discovery Team':
-      return <DiscoveryTeamIcon />;
-    case 'Resource Team':
-      return <ResourceTeamIcon />;
-    default:
-      return <TeamIcon />;
-  }
-};
-
 export type EventAttendanceSinceLastEvent = {
   // signed change in attending teams versus the previous event.
   count: number;
   teamsAttended: number;
   teamsTotal: number;
-};
-
-const useHorizontalOverflow = () => {
-  const [element, setElement] = useState<HTMLElement | null>(null);
-  const [overflowing, setOverflowing] = useState(false);
-  useEffect(() => {
-    if (!element) {
-      return undefined;
-    }
-    const measure = () =>
-      setOverflowing(element.scrollWidth > element.clientWidth);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [element]);
-  return [setElement, overflowing] as const;
 };
 
 type EventAttendanceProps = {
@@ -238,8 +107,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
   onAddAttendance,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [tableRef, teamsOverflowing] = useHorizontalOverflow();
-  const hasMoreRows = teams.length > defaultVisibleTeams;
+  const showFooter = !expanded && teams.length > defaultVisibleTeams;
   const visibleTeams = expanded ? teams : teams.slice(0, defaultVisibleTeams);
   const attendancePercentage =
     teamsTotal > 0 ? Math.round((teamsAttended / teamsTotal) * 100) : 0;
@@ -270,7 +138,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
 
   return (
     <Card padding={false}>
-      <div css={[contentStyles, hasMoreRows && contentWithFooterStyles]}>
+      <div css={[contentStyles, showFooter && contentWithFooterStyles]}>
         <div css={headerStyles}>
           <Headline3 noMargin>Attendance</Headline3>
           <div css={actionsStyles}>
@@ -314,10 +182,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
           )}
         </div>
 
-        <div
-          css={[tableWrapperStyles, teamsOverflowing && horizontalScrollGutter]}
-          ref={tableRef}
-        >
+        <div css={tableWrapperStyles}>
           <table
             css={[
               tableStyles,
@@ -325,14 +190,14 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               // the card's bottom padding.
               {
                 'tbody tr:last-child td': {
-                  paddingBottom: hasMoreRows ? rem(32) : 0,
+                  paddingBottom: showFooter ? rem(32) : 0,
                 },
               },
             ]}
           >
             <colgroup>
               <col />
-              <col css={attendanceColStyles} />
+              <col css={{ width: rem(204) }} />
             </colgroup>
             <thead>
               <tr>
@@ -348,7 +213,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               {visibleTeams.map((team) => (
                 <tr key={team.teamId}>
                   <td css={teamCellStyles}>
-                    <span css={[teamInnerStyles, teamInfoNoWrapStyles]}>
+                    <span css={teamInfoStyles}>
                       {teamIcon(team.teamType)}
                       <Link
                         href={
@@ -376,10 +241,10 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
         </div>
       </div>
 
-      {hasMoreRows && (
+      {showFooter && (
         <div css={viewMoreStyles}>
-          <Button linkStyle onClick={() => setExpanded((current) => !current)}>
-            {expanded ? 'View Less Attendees' : 'View More Attendees'}
+          <Button linkStyle onClick={() => setExpanded(true)}>
+            View More Attendees
           </Button>
         </div>
       )}

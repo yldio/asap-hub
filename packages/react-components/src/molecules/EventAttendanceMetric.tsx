@@ -1,51 +1,17 @@
 import { css } from '@emotion/react';
 
 import { ProgressBar, ProgressWheel } from '../atoms';
-import { charcoal, ember, fern, lead, pearl, steel } from '../colors';
-import { rem, tabletScreen } from '../pixels';
-import { headlineStyles } from '../text';
+import { ember, fern } from '../colors';
+import { rem } from '../pixels';
 
-const containerStyles = css({
-  boxSizing: 'border-box',
-  padding: rem(24),
-
-  backgroundColor: pearl.rgb,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
-});
-
-const labelStyles = css({
-  margin: 0,
-  color: lead.rgb,
-  fontSize: rem(17),
-  lineHeight: rem(24),
-});
-
-const valueStyles = css(headlineStyles[1], {
-  margin: 0,
-  color: charcoal.rgb,
-});
-
-const progressRowStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(24),
-});
-
-const wheelStyles = css({
-  display: 'none',
-  flexShrink: 0,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'flex',
-  },
-});
-
-const barStyles = css({
-  marginTop: rem(16),
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'none',
-  },
-});
+import {
+  metricBarStyles,
+  metricContainerStyles,
+  metricLabelStyles,
+  metricProgressRowStyles,
+  metricValueStyles,
+  metricWheelStyles,
+} from './shared-metric-card-styles';
 
 const deltaRowStyles = css({
   display: 'flex',
@@ -89,10 +55,10 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
 
   if (props.variant === 'delta') {
     return (
-      <div css={containerStyles}>
-        <p css={labelStyles}>{label}</p>
+      <div css={metricContainerStyles}>
+        <p css={metricLabelStyles}>{label}</p>
         <div css={deltaRowStyles}>
-          <p css={valueStyles}>
+          <p css={metricValueStyles}>
             {`${props.direction === 'up' ? '+' : '-'} ${value}`}
           </p>
           <span
@@ -103,24 +69,24 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
             <span css={arrowStyles(props.direction)} />
           </span>
         </div>
-        <p css={labelStyles}>{caption}</p>
+        <p css={metricLabelStyles}>{caption}</p>
       </div>
     );
   }
 
   return (
-    <div css={containerStyles}>
-      <div css={progressRowStyles}>
-        <span css={wheelStyles}>
+    <div css={metricContainerStyles}>
+      <div css={metricProgressRowStyles}>
+        <span css={metricWheelStyles}>
           <ProgressWheel percentage={value} color={props.color} />
         </span>
         <div>
-          <p css={labelStyles}>{label}</p>
-          <p css={valueStyles}>{value}%</p>
-          <p css={labelStyles}>{caption}</p>
+          <p css={metricLabelStyles}>{label}</p>
+          <p css={metricValueStyles}>{value}%</p>
+          <p css={metricLabelStyles}>{caption}</p>
         </div>
       </div>
-      <div css={barStyles}>
+      <div css={metricBarStyles}>
         <ProgressBar percentage={value} color={props.color} />
       </div>
     </div>

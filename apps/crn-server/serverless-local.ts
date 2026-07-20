@@ -9,6 +9,13 @@ import apiConfig = require('./serverless');
 // Never used by CI, packaging or deploys.
 const serverlessConfig: AWS = {
   ...apiConfig,
+  // s3-sync is dropped: under `offline start` its lifecycle hook fires and
+  // crashes on the missing frontend dist folders, and syncing buckets makes
+  // no sense locally.
+  plugins: [
+    ...(apiConfig.plugins as string[]).filter((p) => !p.includes('s3-sync')),
+    './serverless-plugins/local-dev-banner',
+  ],
   custom: {
     ...apiConfig.custom,
     // The mock bus the eventBridge subscribers listen on. Publish test events

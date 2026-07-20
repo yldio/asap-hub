@@ -28,13 +28,11 @@ import { cleanArray } from '@asap-hub/server-common';
 
 import { InterestGroupDataProvider } from '../types';
 import {
+  parseAwardsCollection,
   parseContentfulGraphqlCalendarToResponse,
   parseInterestGroupLeader,
 } from '../transformers';
-import {
-  parseAwardsCollection,
-  parseContentfulGraphQlUsers,
-} from './user.data-provider';
+import { parseContentfulGraphQlUsers } from './user.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
 type InterestGroupItem = NonNullable<

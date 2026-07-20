@@ -27,16 +27,14 @@ import {
 } from '@asap-hub/contentful';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
-import {
-  parseAwardsCollection,
-  parseTeamsCollection,
-} from './user.data-provider';
 import { WorkingGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   mapDeliverables,
+  parseAwardsCollection,
 } from '../transformers';
 import logger from '../../utils/logger';
+import { parseTeamsCollection } from './user.data-provider';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -247,8 +245,7 @@ export const parseContentfulGraphQlWorkingGroup = (
           workstreamRole: member.workstreamRole || '',
           inactiveSinceDate: member.inactiveSinceDate,
           user: getUserFromMemberCollection(member),
-          latestAward: 
-            getLatestUserAward(memberAwards),
+          latestAward: getLatestUserAward(memberAwards),
         } as WorkingGroupLeader;
       }
       return null;

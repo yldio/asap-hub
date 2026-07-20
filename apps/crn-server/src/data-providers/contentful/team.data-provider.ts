@@ -48,8 +48,7 @@ import {
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
-import { parseAwardsCollection } from './user.data-provider';
-import { sortMembers } from '../transformers';
+import { parseAwardsCollection, sortMembers } from '../transformers';
 import { TeamDataProvider } from '../types/teams.data-provider.types';
 import { parseResearchTags } from './research-tag.data-provider';
 import { getCleanTools } from '../../utils/team';

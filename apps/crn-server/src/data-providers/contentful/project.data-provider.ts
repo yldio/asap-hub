@@ -76,7 +76,6 @@ import {
   parseUserDisplayName,
   OpensearchRequest,
 } from '@asap-hub/server-common';
-import { parseAwardsCollection } from './user.data-provider';
 import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
@@ -95,6 +94,7 @@ import {
   aimNumbersAscSortScript,
   aimNumbersDescSortScript,
 } from '../../utils/opensearch/aim-numbers-sort-scripts';
+import { parseAwardsCollection } from '../transformers';
 
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;

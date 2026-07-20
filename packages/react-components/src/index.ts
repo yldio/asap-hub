@@ -288,6 +288,7 @@ export {
   DiscoverPage,
   DiscoverPageBody,
   DiscoveryProjectsList,
+  EventDetailPage,
   EventPage,
   EventsCalendar,
   EventsList,

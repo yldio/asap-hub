@@ -36,12 +36,13 @@ const expandableTextStyles = css({
   WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
 });
 
-const buttonContainerStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  width: '100%',
-  marginTop: rem(16),
-});
+const buttonContainerStyles = (marginTop: number) =>
+  css({
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: rem(marginTop),
+  });
 
 const expandableButtonIcon = css({
   marginLeft: rem(12),
@@ -74,8 +75,9 @@ const arrowIconStyles = css({
 
 const ExpandableText: React.FC<{
   variant?: 'chevron' | 'arrow';
+  toggleMarginTop?: number;
   children?: React.ReactNode;
-}> = ({ variant = 'chevron', children }) => {
+}> = ({ variant = 'chevron', toggleMarginTop = 16, children }) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);
@@ -97,7 +99,7 @@ const ExpandableText: React.FC<{
         {children}
       </div>
       {showToggle && (
-        <div css={buttonContainerStyles}>
+        <div css={buttonContainerStyles(toggleMarginTop)}>
           {variant === 'chevron' ? (
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
               Show {expanded ? 'less' : 'more'}

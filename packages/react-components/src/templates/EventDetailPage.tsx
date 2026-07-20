@@ -1,14 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
-import formatDistance from 'date-fns/formatDistance';
+import { EventResponse } from '@asap-hub/model';
 
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { EventInfo, BackLink, CtaCard } from '../molecules';
+import { BackLink, CtaCard } from '../molecules';
 import { Card, Link, Paragraph } from '../atoms';
-import { rem, tabletScreen } from '../pixels';
+import { rem } from '../pixels';
 import {
+  EventCard,
   EventMaterials,
   JoinEvent,
   EventAbout,
@@ -18,98 +18,102 @@ import {
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 import { useScrollToHash } from '../routing';
+import { useDateHasPassed } from '../date';
+import { considerEndedAfter } from '../utils';
+import { paper, steel } from '../colors';
+import PageConstraints from './PageConstraints';
 
 const cardsStyles = css({
   display: 'grid',
   rowGap: rem(33),
   marginBottom: rem(24),
 });
-const updatedParagraphStyles = css({
-  display: 'flex',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    justifyContent: 'end',
-  },
+
+const heroBandStyles = css({
+  background: paper.rgb,
+  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-type EventPageProps<
-  T extends
-    | EventResponse['relatedResearch']
-    | gp2.OutputResponse['relatedOutputs'],
-> = ComponentProps<typeof EventInfo> &
+const heroContentStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: rem(12),
+  paddingBottom: rem(40),
+});
+
+const backLinkContainerStyles = css({
+  marginBottom: rem(56),
+});
+
+type EventDetailPageProps = ComponentProps<typeof EventCard> &
   ComponentProps<typeof JoinEvent> &
   Omit<ComponentProps<typeof EventAbout>, 'variant'> &
   Pick<
     ComponentProps<typeof RelatedResearchCard>,
     'getSourceIcon' | 'tableTitles'
   > &
-  Pick<
-    BasicEvent,
-    | 'lastModifiedDate'
-    | 'notes'
-    | 'videoRecording'
-    | 'presentation'
-    | 'meetingMaterials'
-    | 'hideMeetingLink'
-    | 'calendar'
-  > &
-  Pick<EventResponse, 'relatedTutorials'> & {
-    readonly relatedResearch?: T;
+  Pick<EventResponse, 'calendar' | 'relatedTutorials'> & {
+    readonly relatedResearch?: EventResponse['relatedResearch'];
     readonly backHref?: string;
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
-    readonly titleOutputs?: string;
-    readonly descriptionOutput?: string;
     readonly getIconForDocumentType: (
-      documentType: T[number]['documentType'],
+      documentType: EventResponse['relatedResearch'][number]['documentType'],
     ) => EmotionJSX.Element;
     readonly hasFinished?: boolean;
     readonly children?: ReactNode;
   };
-const EventPage = <
-  T extends
-    | EventResponse['relatedResearch']
-    | gp2.OutputResponse['relatedOutputs'],
->({
+const EventDetailPage = ({
   hasFinished,
   backHref,
-  lastModifiedDate,
   calendar,
-  hideMeetingLink,
   eventConversation,
   displayCalendar,
   children,
   relatedTutorials,
   relatedResearch,
-  titleOutputs,
-  descriptionOutput,
   getIconForDocumentType,
   getSourceIcon,
   tableTitles,
   ...props
-}: EventPageProps<T>) => {
+}: EventDetailPageProps) => {
   useScrollToHash();
+  const hasEnded = useDateHasPassed(considerEndedAfter(props.endDate));
+  const finished = hasFinished ?? hasEnded;
+  const displayJoinEvent = !props.hideMeetingLink && !finished;
 
   return (
-    <div css={({ components }) => [components?.EventPage?.containerStyles]}>
-      {backHref && <BackLink href={backHref} />}
-      <>
+    <article>
+      <PageConstraints
+        unconstrainedStyles={heroBandStyles}
+        noPaddingTop
+        noPaddingBottom
+      >
+        <div css={heroContentStyles}>
+          {backHref && (
+            <div css={backLinkContainerStyles}>
+              <BackLink href={backHref} noPadding />
+            </div>
+          )}
+          <EventCard {...props} titleLimit={null} />
+        </div>
+      </PageConstraints>
+      <PageConstraints as="main">
         <div css={cardsStyles}>
-          <Card>
-            <EventInfo {...props} titleLimit={null} tags={[]} />
-            <Paragraph accent="lead" styles={updatedParagraphStyles}>
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
-            {children}
-            {!hideMeetingLink && <JoinEvent {...props} />}
-            <EventAbout {...props} />
-          </Card>
-          {relatedResearch && relatedResearch?.length > 0 && (
+          {(props.description || props.tags.length > 0) && (
+            <Card>
+              <EventAbout {...props} variant="expandable" />
+            </Card>
+          )}
+          {(children || displayJoinEvent) && (
+            <Card>
+              {children}
+              {displayJoinEvent && <JoinEvent {...props} />}
+            </Card>
+          )}
+          {relatedResearch && relatedResearch.length > 0 && (
             <RelatedResearchCard
-              title={titleOutputs}
-              description={descriptionOutput || 'Find all related research.'}
+              description="Find all related research."
               relatedResearch={relatedResearch}
               getIconForDocumentType={getIconForDocumentType}
               getSourceIcon={getSourceIcon}
@@ -132,7 +136,7 @@ const EventPage = <
             />
           )}
 
-          {!hasFinished && (
+          {!finished && (
             <CtaCard
               href={createMailTo(TECH_SUPPORT_EMAIL)}
               buttonText="Contact tech support"
@@ -143,7 +147,7 @@ const EventPage = <
             </CtaCard>
           )}
         </div>
-        {!hasFinished && (
+        {!finished && (
           <Paragraph noMargin accent="lead">
             Having issues? Set up your calendar manually with these instructions
             for{' '}
@@ -157,9 +161,9 @@ const EventPage = <
             .
           </Paragraph>
         )}
-      </>
-    </div>
+      </PageConstraints>
+    </article>
   );
 };
 
-export default EventPage;
+export default EventDetailPage;

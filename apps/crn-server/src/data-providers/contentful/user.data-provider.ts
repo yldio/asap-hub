@@ -873,6 +873,7 @@ export const parseLabsCollection = (
 
 export const parseTeamsCollection = (
   teamsCollection: TeamsCollection,
+  includeAwards = true,
 ): UserTeam[] =>
   (teamsCollection?.items || []).reduce(
     (userTeams: UserTeam[], team: TeamMembership | null): UserTeam[] => {
@@ -890,7 +891,9 @@ export const parseTeamsCollection = (
         team.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
           ?.projectsCollection?.items[0];
 
-      const awards = parseAwardsCollection(team as TeamMembershipWithAwards);
+      const awards = includeAwards
+        ? parseAwardsCollection(team as TeamMembershipWithAwards)
+        : [];
 
       return [
         ...userTeams,

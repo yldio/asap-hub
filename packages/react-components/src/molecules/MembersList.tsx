@@ -2,6 +2,7 @@ import { Fragment, ReactNode, isValidElement } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { UserAward, UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 
 import { rem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
@@ -11,7 +12,6 @@ import { hoverStyle } from './ImageLink';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
 import AvatarWithBadge from './AvatarWithBadge';
-import { useFlags } from '@asap-hub/react-context';
 
 const containerStyles = css({
   margin: 0,

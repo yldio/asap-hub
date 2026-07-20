@@ -229,7 +229,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     alumniSinceDate: member.user?.alumniSinceDate,
     email: member.user?.email || '',
     avatarUrl: member.user?.avatar?.url || undefined,
-    teams: parseTeamsCollection(member.user?.teamsCollection),
+    teams: parseTeamsCollection(member.user?.teamsCollection, false),
   });
 
   const leaders = (membersCollection?.items || [])

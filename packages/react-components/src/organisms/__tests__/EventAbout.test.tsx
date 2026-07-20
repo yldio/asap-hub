@@ -35,6 +35,50 @@ it('collapses the event description after the event', () => {
   expect(queryByText(/About/i)).not.toBeInTheDocument();
 });
 
+it('always shows the collapse toggle with the default variant', () => {
+  const { getByRole } = render(
+    <EventAbout {...props} description={'<p>description</p>'} />,
+  );
+  expect(getByRole('button', { name: /(show|hide) more/i })).toBeVisible();
+});
+
+it('hides the show more toggle with the expandable variant while the text fits', () => {
+  const { getByText, queryByRole } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={'<p>description</p>'}
+    />,
+  );
+  expect(getByText('description')).toBeVisible();
+  expect(queryByRole('button')).not.toBeInTheDocument();
+});
+
+it('omits the description and divider with the expandable variant when there is none', () => {
+  const { queryByText, getByText } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={undefined}
+      tags={['Tag A']}
+    />,
+  );
+  expect(queryByText(/About/i)).not.toBeInTheDocument();
+  expect(getByText('Tag A')).toBeVisible();
+});
+
+it('separates the description and tags with a divider in the expandable variant', () => {
+  const { container } = render(
+    <EventAbout
+      {...props}
+      variant="expandable"
+      description={'<p>description</p>'}
+      tags={['Tag A']}
+    />,
+  );
+  expect(container.querySelector('hr')).toBeInTheDocument();
+});
+
 it('renders the event tags', () => {
   const { getByText } = render(<EventAbout {...props} tags={['Tag A']} />);
   expect(getByText(/tags/i)).toBeVisible();

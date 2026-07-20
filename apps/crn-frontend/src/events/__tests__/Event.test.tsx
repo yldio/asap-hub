@@ -8,6 +8,7 @@ import {
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
+import { disable, enable } from '@asap-hub/flags';
 
 import {
   Auth0Provider,
@@ -23,6 +24,7 @@ const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
 beforeEach(() => {
+  disable('NEW_EVENT_PAGE');
   mockGetEvent.mockClear();
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
@@ -156,4 +158,32 @@ it('renders continue the event conversation when group with slack provided', asy
   const { findByTitle } = render(<Event />, { wrapper });
 
   expect(await findByTitle(/slack/i)).toBeInTheDocument();
+});
+
+describe('the NEW_EVENT_PAGE flag', () => {
+  it('shows the redesigned page with the event status banner when enabled', async () => {
+    enable('NEW_EVENT_PAGE');
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      status: 'Cancelled',
+    });
+    const { findByText } = render(<Event />, { wrapper });
+    expect(await findByText('The event has been cancelled.')).toBeVisible();
+  });
+
+  it('keeps the current page without the banner when disabled', async () => {
+    disable('NEW_EVENT_PAGE');
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      status: 'Cancelled',
+      title: 'My Event',
+    });
+    const { findByText, queryByText } = render(<Event />, { wrapper });
+    expect(await findByText('My Event')).toBeVisible();
+    expect(
+      queryByText('The event has been cancelled.'),
+    ).not.toBeInTheDocument();
+  });
 });

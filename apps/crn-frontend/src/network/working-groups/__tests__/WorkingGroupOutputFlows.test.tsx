@@ -63,14 +63,14 @@ async function renderPage({
   outputDocumentType = 'article',
   researchOutputData,
   versionAction,
-  descriptionUnchangedWarning,
+  isDuplicate,
 }: {
   user?: UserResponse;
   workingGroupId: string;
   versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
-  descriptionUnchangedWarning?: boolean;
+  isDuplicate?: boolean;
 }) {
   const path =
     network.template +
@@ -98,7 +98,7 @@ async function renderPage({
                       workingGroupId={workingGroupId}
                       researchOutputData={researchOutputData}
                       versionAction={versionAction}
-                      descriptionUnchangedWarning={descriptionUnchangedWarning}
+                      isDuplicate={isDuplicate}
                     />
                   }
                 />
@@ -169,7 +169,7 @@ it('passes WORKING_GROUP_DUPLICATE when duplicating a research output', async ()
       ...baseResearchOutput,
       published: false,
     },
-    descriptionUnchangedWarning: true,
+    isDuplicate: true,
   });
 
   expect(getFlowId()).toBe(RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE);

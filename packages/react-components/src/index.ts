@@ -223,6 +223,7 @@ export {
   ResearchOutputHeader,
   ResearchOutputRelatedEventsCard,
   ResearchOutputRelatedResearchCard,
+  ResearchOutputConfirmModal,
   ResultList,
   RichText,
   RichTextCard,
@@ -387,6 +388,7 @@ export type {
   AuthorOption,
   UserCollaborationMetric,
   TeamCollaborationMetric,
+  ResearchOutputConfirmModalType,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
 export type {

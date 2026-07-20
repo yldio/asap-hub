@@ -632,7 +632,8 @@ it.each([
     status: 'published',
     buttonName: 'Save',
     published: true,
-    shouldPublish: false,
+    shouldPublish: true,
+    versionAction: 'edit',
   },
   {
     status: 'draft',
@@ -642,7 +643,7 @@ it.each([
   },
 ])(
   'can edit a $status working group research output',
-  async ({ buttonName, published, shouldPublish }) => {
+  async ({ buttonName, published, shouldPublish, versionAction }) => {
     const user = userEvent.setup({ delay: null });
     const id = 'RO-ID';
     const workingGroupId = 'wg1';
@@ -677,6 +678,7 @@ it.each([
           .workingGroup({ workingGroupId })
           .createOutput({ outputDocumentType }).$,
       ],
+      versionAction: versionAction as 'create' | 'edit' | undefined,
     });
 
     const button = screen.getByRole('button', { name: buttonName });

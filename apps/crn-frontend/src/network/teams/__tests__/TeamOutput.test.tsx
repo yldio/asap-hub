@@ -270,6 +270,7 @@ it('displays the save button for existing research outputs', async () => {
     teamId: '42',
     outputDocumentType: 'bioinformatics',
     researchOutputData: baseResearchOutput,
+    versionAction: 'edit',
   });
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
@@ -473,6 +474,7 @@ it('can edit a research output', async () => {
     teamId: '42',
     outputDocumentType: 'article',
     researchOutputData: { ...baseResearchOutput, doi },
+    versionAction: 'edit',
   });
 
   const user = userEvent.setup({ delay: null });
@@ -788,6 +790,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     teamId: '42',
     outputDocumentType: 'article',
     researchOutputData: { ...baseResearchOutput, doi },
+    versionAction: 'edit',
   });
 
   const user = userEvent.setup({ delay: null });

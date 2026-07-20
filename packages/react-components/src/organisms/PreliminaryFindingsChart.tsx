@@ -57,9 +57,9 @@ export const ProgressWheel: React.FC<{ percentage: number }> = ({
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${steel.rgb} ${
-            value + EDGE_BLUR
-          }% 100%), ${findingsConicRamp}`,
+          background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${
+            steel.rgb
+          } ${value + EDGE_BLUR}% 100%), ${findingsConicRamp}`,
           WebkitMaskImage: wheelRingMask,
           maskImage: wheelRingMask,
         }}

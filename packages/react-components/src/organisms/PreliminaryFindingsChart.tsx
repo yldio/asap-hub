@@ -9,13 +9,17 @@ const findingsGradient = `linear-gradient(90deg, ${findingsRampStops})`;
 
 const WHEEL_SIZE = 74;
 const WHEEL_STROKE = 9;
+// Sub-pixel offset between paired colour stops so hard gradient edges get a
+// tiny blur band and antialias instead of showing a jagged spoke/ring.
+// https://codepen.io/mandymichael/pen/oNNdKzW
+const EDGE_BLUR = 0.6;
 
 // Green sits near 100% then blends back to purple at the seam so the ring loops.
 const findingsConicRamp = `conic-gradient(from 0deg, ${findingsRampStops}, ${iris.hex} 100%)`;
 
 const wheelRingMask = `radial-gradient(farthest-side, transparent calc(100% - ${rem(
   WHEEL_STROKE,
-)}), #000 calc(100% - ${rem(WHEEL_STROKE)}))`;
+)}), #000 calc(100% - ${rem(WHEEL_STROKE)} + ${EDGE_BLUR}px))`;
 
 const WHEEL_MID_RADIUS = (WHEEL_SIZE - WHEEL_STROKE) / 2;
 
@@ -53,7 +57,9 @@ export const ProgressWheel: React.FC<{ percentage: number }> = ({
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${steel.rgb} ${value}% 100%), ${findingsConicRamp}`,
+          background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${steel.rgb} ${
+            value + EDGE_BLUR
+          }% 100%), ${findingsConicRamp}`,
           WebkitMaskImage: wheelRingMask,
           maskImage: wheelRingMask,
         }}

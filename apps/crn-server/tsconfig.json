@@ -18,6 +18,7 @@
     "serverless.ts",
     "serverless-async.ts",
     "serverless-indexers.ts",
+    "serverless-local.ts",
     "serverless"
   ],
   "references": [

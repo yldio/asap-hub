@@ -158,8 +158,12 @@ export const eventBusName = `asap-events-${stage}`;
 // bus as pre-existing — and thus skips creating its own — when eventBus is a
 // string starting with "arn"; an object trips the config-schema validator
 // ("unsupported object format"). ${aws:accountId} is resolved by serverless
-// at build time.
-export const eventBusArn = `arn:aws:events:${region}:\${aws:accountId}:event-bus/${eventBusName}`;
+// at build time — which calls STS, so the local stage keeps the bare name
+// (no bus-ownership concern offline, and no AWS credentials required).
+export const eventBusArn =
+  stage === 'local'
+    ? eventBusName
+    : `arn:aws:events:${region}:\${aws:accountId}:event-bus/${eventBusName}`;
 
 // CloudFormation logical id for the bus. This mirrors the id serverless
 // itself generates for an auto-created event bus

@@ -14,7 +14,7 @@ import {
   stage,
 } from './serverless/shared';
 
-export const plugins = [
+const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
@@ -137,4 +137,4 @@ const serverlessConfig: AWS = {
   },
 };
 
-module.exports = serverlessConfig;
+export = serverlessConfig;

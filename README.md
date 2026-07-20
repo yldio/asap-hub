@@ -45,19 +45,21 @@ For a list of individual package and app scripts, look inside the readme file or
 
 ### Development
 
-| Script                    | Description                                                                              |
-| ------------------------- | ---------------------------------------------------------------------------------------- |
-| `yarn watch`              | Watch all packages and run babel + typecheck on changes (recommended during development) |
-| `yarn watch:babel`        | Watch packages and rebuild with Babel on changes                                         |
-| `yarn watch:typecheck`    | Watch packages and re-emit type definitions on changes                                   |
-| `yarn start:crn`          | Run both the CRN backend and frontend                                                    |
-| `yarn start:gp2`          | Run both the GP2 backend and frontend                                                    |
-| `yarn start:backend:crn`  | Run only the CRN backend                                                                 |
-| `yarn start:frontend:crn` | Run only the CRN frontend                                                                |
-| `yarn start:backend:gp2`  | Run only the GP2 backend                                                                 |
-| `yarn start:frontend:gp2` | Run only the GP2 frontend                                                                |
-| `yarn start:storybook`    | Run Storybook                                                                            |
-| `yarn start`              | Run all apps                                                                             |
+| Script                            | Description                                                                                                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `yarn watch`                      | Watch all packages and run babel + typecheck on changes (recommended during development)                                                                        |
+| `yarn watch:babel`                | Watch packages and rebuild with Babel on changes                                                                                                                |
+| `yarn watch:typecheck`            | Watch packages and re-emit type definitions on changes                                                                                                          |
+| `yarn start:crn`                  | Run both the CRN backend and frontend                                                                                                                           |
+| `yarn start:gp2`                  | Run both the GP2 backend and frontend                                                                                                                           |
+| `yarn start:backend:crn`          | Run only the CRN backend                                                                                                                                        |
+| `yarn start:backend:crn:sls`      | Run the CRN backend API via serverless offline on http://localhost:3333 (fast, API functions only)                                                              |
+| `yarn start:backend:crn:sls:full` | Same, plus the async/indexer functions with a mock EventBridge bus on http://localhost:4010 (bus `asap-events-local`) for end-to-end webhook → indexing testing |
+| `yarn start:frontend:crn`         | Run only the CRN frontend                                                                                                                                       |
+| `yarn start:backend:gp2`          | Run only the GP2 backend                                                                                                                                        |
+| `yarn start:frontend:gp2`         | Run only the GP2 frontend                                                                                                                                       |
+| `yarn start:storybook`            | Run Storybook                                                                                                                                                   |
+| `yarn start`                      | Run all apps                                                                                                                                                    |
 
 ### Build & test
 

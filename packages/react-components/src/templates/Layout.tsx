@@ -203,6 +203,9 @@ export const menuStyles = css({
     gridRow: `main-menu/-1`,
     gridColumn: 'main-menu/-2',
     visibility: 'hidden',
+    // The drawer height is split between its two sections, which scroll on
+    // their own, so the drawer itself must not scroll as one.
+    overflow: 'hidden',
     display: 'none',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
@@ -223,6 +226,10 @@ const mainMenuStyles = css({
 
   [drawerQuery]: {
     boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
+    // Main nav gets 60% of the drawer height, the user nav 40%.
+    flex: '3 3 0',
+    minHeight: 0,
+    overflowY: 'auto',
   },
 });
 
@@ -273,6 +280,11 @@ const userMenuStyles = css({
   backgroundColor: paper.rgb,
   gridArea: 'user-menu',
   flexGrow: 1,
+  [drawerQuery]: {
+    flex: '2 2 0',
+    minHeight: 0,
+    overflowY: 'auto',
+  },
   [crossQuery]: {
     gridArea: 'content',
 
@@ -287,13 +299,14 @@ const userMenuStyles = css({
   },
 });
 const userMenuShownStyles = css({
-  maxHeight: '90vh',
-  overflowY: 'scroll',
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,
   },
+  // The 90vh cap and own scrollbar are for the desktop dropdown only.
   [crossQuery]: {
     display: 'unset',
+    maxHeight: '95vh',
+    overflowY: 'scroll',
   },
 });
 

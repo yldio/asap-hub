@@ -4,6 +4,8 @@ import { rem } from '../pixels';
 import { fern } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
+import AvatarWithBadge from './AvatarWithBadge';
+import { useFlags } from '@asap-hub/react-context';
 
 const memberCardStyles = css({
   display: 'flex',
@@ -54,16 +56,33 @@ const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({
   const teams = member.teams || [];
   const firstTeam = teams[0];
   const additionalTeamsCount = teams.length > 1 ? teams.length - 1 : 0;
+  const { isEnabled } = useFlags();
+
+  const userAvatar =
+    isEnabled('STAGING_MODE') &&
+    member.latestAward &&
+    member.latestAward.iconUrl ? (
+      <AvatarWithBadge
+        imageUrl={member.avatarUrl}
+        firstName={member.firstName}
+        lastName={member.lastName}
+        badgeUrl={member.latestAward.iconUrl}
+        badgeAlt={member.latestAward.name}
+        badgeSize={18}
+        avatarSize={48}
+        overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+      />
+    ) : (
+      <Avatar
+        imageUrl={member.avatarUrl}
+        firstName={member.firstName || ''}
+        lastName={member.lastName || ''}
+      />
+    );
 
   return (
     <div css={memberCardStyles}>
-      <div css={avatarStyles}>
-        <Avatar
-          imageUrl={member.avatarUrl}
-          firstName={member.firstName || ''}
-          lastName={member.lastName || ''}
-        />
-      </div>
+      <div css={avatarStyles}>{userAvatar}</div>
       <div css={memberInfoStyles}>
         <Link href={'#'}>
           <span css={nameStyles}>{member.displayName}</span>

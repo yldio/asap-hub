@@ -69,12 +69,14 @@ import {
   ProjectAimExportRow,
   ProjectMilestoneExportRow,
   ProjectMilestonesExportResponse,
+  getLatestUserAward,
 } from '@asap-hub/model';
 import {
   cleanArray,
   parseUserDisplayName,
   OpensearchRequest,
 } from '@asap-hub/server-common';
+import { parseAwardsCollection } from './user.data-provider';
 import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
@@ -157,6 +159,10 @@ export const parseProjectUserMember = (
     };
   }
 
+  const memberAwards = cleanArray(projectMember.teamsCollection?.items).map(
+    (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+  );
+
   return {
     id: projectMember.sys.id,
     displayName: parseUserDisplayName(
@@ -171,6 +177,7 @@ export const parseProjectUserMember = (
     role: membership.role || undefined,
     email: projectMember.email || undefined,
     alumniSinceDate: projectMember.alumniSinceDate || undefined,
+    latestAward: getLatestUserAward(memberAwards),
   };
 };
 

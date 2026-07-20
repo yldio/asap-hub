@@ -17,7 +17,10 @@ const containerStyles = css({
 
 type InterestGroupLeadersTabbedCardProps = {
   leaders: ReadonlyArray<
-    Pick<InterestGroupLeader, 'user' | 'role' | 'inactiveSinceDate'>
+    Pick<
+      InterestGroupLeader,
+      'user' | 'role' | 'inactiveSinceDate' | 'latestAward'
+    >
   >;
   isInterestGroupActive: boolean;
 };
@@ -60,8 +63,9 @@ const InterestGroupLeadersTabbedCard: React.FC<
       {({ data }) => (
         <div css={containerStyles}>
           <MembersList
-            members={data.map(({ user, role }) => ({
+            members={data.map(({ user, role, latestAward }) => ({
               ...user,
+              latestAward,
               firstLine: user.displayName,
               secondLine: role,
               thirdLine: user.teams.length <= 1 ? user.teams : 'Multiple Teams',

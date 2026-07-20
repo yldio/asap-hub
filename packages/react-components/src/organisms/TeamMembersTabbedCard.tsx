@@ -103,6 +103,7 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
                 lastName,
                 id,
                 alumniSinceDate,
+                latestAward,
               }) => ({
                 firstLine: displayName,
                 secondLine: <RolesList roles={roles} maxVisible={2} />,
@@ -115,6 +116,7 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
                 lastName,
                 id,
                 alumniSinceDate,
+                latestAward,
               }),
             )}
             overrideNameStyles={nameStyles}

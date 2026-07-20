@@ -3,6 +3,7 @@ import { LabResponse } from './lab';
 import { ManuscriptResponse } from './manuscript';
 import { ProjectStatus, ProjectType } from './project';
 import { ResearchTagDataObject } from './research-tag';
+import { UserAward } from './user';
 
 export const piRole = [
   'Lead PI (Core Leadership)',
@@ -79,6 +80,7 @@ export interface TeamMember {
   labs?: LabResponse[];
   alumniSinceDate?: string;
   inactiveSinceDate?: string;
+  latestAward?: UserAward;
 }
 
 export type TeamManuscript = Pick<

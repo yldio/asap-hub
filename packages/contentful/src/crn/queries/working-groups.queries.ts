@@ -79,6 +79,17 @@ export const workingGroupsContentQueryFragment = gql`
                   }
                   displayName
                 }
+                awardsCollection(limit: 1, order: [date_DESC]) {
+                  items {
+                    date
+                    awardType {
+                      name
+                      icon {
+                        url
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -106,6 +117,17 @@ export const workingGroupsContentQueryFragment = gql`
                     id
                   }
                   displayName
+                }
+                awardsCollection(limit: 1, order: [date_DESC]) {
+                  items {
+                    date
+                    awardType {
+                      name
+                      icon {
+                        url
+                      }
+                    }
+                  }
                 }
               }
             }

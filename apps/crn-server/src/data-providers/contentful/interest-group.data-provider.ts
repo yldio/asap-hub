@@ -5,6 +5,7 @@ import {
   InterestGroupRole,
   InterestGroupLeader as GroupLeader,
   ListInterestGroupDataObject,
+  getLatestUserAward,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -23,13 +24,17 @@ import {
   FetchInterestGroupsByTeamIdQuery,
   FetchInterestGroupsByTeamIdQueryVariables,
 } from '@asap-hub/contentful';
+import { cleanArray } from '@asap-hub/server-common';
 
 import { InterestGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   parseInterestGroupLeader,
 } from '../transformers';
-import { parseContentfulGraphQlUsers } from './user.data-provider';
+import {
+  parseAwardsCollection,
+  parseContentfulGraphQlUsers,
+} from './user.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
 type InterestGroupItem = NonNullable<
@@ -248,6 +253,9 @@ const parseGraphQLInterestGroup = (
     if (!leader || !leader.user) {
       return acc;
     }
+    const leaderAwards = cleanArray(leader.user.teamsCollection?.items).map(
+      (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+    );
     return [
       ...acc,
       {
@@ -256,6 +264,7 @@ const parseGraphQLInterestGroup = (
         ),
         role: leader.role as InterestGroupRole,
         inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
+        latestAward: getLatestUserAward(leaderAwards),
       },
     ];
   }, []);

@@ -1,6 +1,6 @@
 import { Fragment, ReactNode, isValidElement } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserAward, UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { rem, tabletScreen } from '../pixels';
@@ -10,6 +10,8 @@ import { alumniBadgeIcon } from '../icons';
 import { hoverStyle } from './ImageLink';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
+import AvatarWithBadge from './AvatarWithBadge';
+import { useFlags } from '@asap-hub/react-context';
 
 const containerStyles = css({
   margin: 0,
@@ -74,7 +76,9 @@ interface MembersListProps {
           UserResponse,
           'firstName' | 'lastName' | 'avatarUrl' | 'alumniSinceDate'
         >
-      >
+      > & {
+        latestAward?: UserAward;
+      }
   >;
   singleColumn?: boolean;
   readonly overrideNameStyles?: SerializedStyles;
@@ -99,13 +103,29 @@ const MembersList: React.FC<MembersListProps> = ({
         ...member
       }) => {
         const href = userRoute({ userId: id }).$;
-        const userAvatar = (
-          <Avatar
-            firstName={member.firstName}
-            lastName={member.lastName}
-            imageUrl={member.avatarUrl}
-          />
-        );
+        const { isEnabled } = useFlags();
+        const userAvatar =
+          isEnabled('STAGING_MODE') &&
+          member.latestAward &&
+          member.latestAward.iconUrl ? (
+            <AvatarWithBadge
+              imageUrl={member.avatarUrl}
+              firstName={member.firstName}
+              lastName={member.lastName}
+              badgeUrl={member.latestAward.iconUrl}
+              badgeAlt={member.latestAward.name}
+              badgeSize={18}
+              avatarSize={48}
+              overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+            />
+          ) : (
+            <Avatar
+              firstName={member.firstName}
+              lastName={member.lastName}
+              imageUrl={member.avatarUrl}
+            />
+          );
+
         return (
           <li key={id} css={memberGridStyles}>
             <Anchor href={href} css={{ display: 'contents' }}>

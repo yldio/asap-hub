@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from './common';
 import { TeamListItemResponse } from './team';
-import { UserResponse } from './user';
+import { UserAward, UserResponse } from './user';
 import { CalendarResponse } from './calendar';
 import { ResearchTagDataObject } from './research-tag';
 
@@ -35,6 +35,7 @@ export type InterestGroupLeader = {
   >;
   readonly role: InterestGroupRole;
   readonly inactiveSinceDate?: string;
+  readonly latestAward?: UserAward;
 };
 
 export const isInterestGroupRole = (

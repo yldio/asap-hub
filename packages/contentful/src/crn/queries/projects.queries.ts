@@ -165,6 +165,21 @@ export const projectsContentQueryFragment = gql`
             avatar {
               url
             }
+            teamsCollection(limit: 10) {
+              items {
+                awardsCollection(limit: 1, order: [date_DESC]) {
+                  items {
+                    date
+                    awardType {
+                      name
+                      icon {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
           ... on Teams {
             __typename

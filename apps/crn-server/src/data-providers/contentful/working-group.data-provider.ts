@@ -1,5 +1,6 @@
 import {
   FetchWorkingGroupOptions,
+  getLatestUserAward,
   WorkingGroupDataObject,
   WorkingGroupDeliverable,
   WorkingGroupLeader,
@@ -26,13 +27,16 @@ import {
 } from '@asap-hub/contentful';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
+import {
+  parseAwardsCollection,
+  parseTeamsCollection,
+} from './user.data-provider';
 import { WorkingGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   mapDeliverables,
 } from '../transformers';
 import logger from '../../utils/logger';
-import { parseTeamsCollection } from './user.data-provider';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -233,11 +237,18 @@ export const parseContentfulGraphQlWorkingGroup = (
   const leaders = (membersCollection?.items || [])
     .map((member) => {
       if (member?.__typename === 'WorkingGroupLeaders') {
+        const memberAwards = cleanArray(
+          member.user?.teamsCollection?.items,
+        ).map((teamMembership) => ({
+          awards: parseAwardsCollection(teamMembership),
+        }));
         return {
           role: member.role as WorkingGroupRole,
           workstreamRole: member.workstreamRole || '',
           inactiveSinceDate: member.inactiveSinceDate,
           user: getUserFromMemberCollection(member),
+          latestAward: 
+            getLatestUserAward(memberAwards),
         } as WorkingGroupLeader;
       }
       return null;
@@ -247,9 +258,15 @@ export const parseContentfulGraphQlWorkingGroup = (
   const members = (membersCollection?.items || [])
     .map((member) => {
       if (member?.__typename === 'WorkingGroupMembers') {
+        const memberAwards = cleanArray(
+          member.user?.teamsCollection?.items,
+        ).map((teamMembership) => ({
+          awards: parseAwardsCollection(teamMembership),
+        }));
         return {
           inactiveSinceDate: member.inactiveSinceDate,
           user: getUserFromMemberCollection(member),
+          latestAward: getLatestUserAward(memberAwards),
         } as WorkingGroupMember;
       }
       return null;

@@ -90,6 +90,17 @@ export const interestGroupContentQueryFragment = gql`
                 inactiveSince
                 displayName
               }
+              awardsCollection(limit: 1, order: [date_DESC]) {
+                items {
+                  date
+                  awardType {
+                    name
+                    icon {
+                      url
+                    }
+                  }
+                }
+              }
             }
           }
         }

@@ -1,6 +1,6 @@
 import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
-import { UserResponse } from './user';
+import { UserAward, UserResponse } from './user';
 
 export const deliverableStatus = [
   'Complete',
@@ -34,6 +34,7 @@ export type WorkingGroupLeader = {
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
   readonly inactiveSinceDate?: string;
+  readonly latestAward?: UserAward;
 };
 export type WorkingGroupResponseLeader = WorkingGroupLeader & {
   readonly isActive: boolean;
@@ -52,6 +53,7 @@ export type WorkingGroupMember = {
     | 'teams'
   >;
   readonly inactiveSinceDate?: string;
+  readonly latestAward?: UserAward;
 };
 export type WorkingGroupResponseMember = WorkingGroupMember & {
   readonly isActive: boolean;

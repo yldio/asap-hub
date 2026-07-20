@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
+import { useFlags } from '@asap-hub/react-context';
 import { Avatar, Link, OverflowBadge } from '../atoms';
 import { rem } from '../pixels';
 import { fern } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
 import AvatarWithBadge from './AvatarWithBadge';
-import { useFlags } from '@asap-hub/react-context';
 
 const memberCardStyles = css({
   display: 'flex',

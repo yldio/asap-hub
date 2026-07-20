@@ -91,99 +91,103 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
   overrideNameStyles,
   userRoute = network({}).users({}).user,
-}) => (
-  <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(
-      ({
-        id,
-        firstLine,
-        secondLine,
-        thirdLine,
-        alumniSinceDate,
-        ...member
-      }) => {
-        const href = userRoute({ userId: id }).$;
-        const { isEnabled } = useFlags();
-        const userAvatar =
-          isEnabled('STAGING_MODE') &&
-          member.latestAward &&
-          member.latestAward.iconUrl ? (
-            <AvatarWithBadge
-              imageUrl={member.avatarUrl}
-              firstName={member.firstName}
-              lastName={member.lastName}
-              badgeUrl={member.latestAward.iconUrl}
-              badgeAlt={member.latestAward.name}
-              badgeSize={18}
-              avatarSize={48}
-              overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
-            />
-          ) : (
-            <Avatar
-              firstName={member.firstName}
-              lastName={member.lastName}
-              imageUrl={member.avatarUrl}
-            />
-          );
-
-        return (
-          <li key={id} css={memberGridStyles}>
-            <Anchor href={href} css={{ display: 'contents' }}>
-              <div css={[avatarStyles, hoverStyle]}>{userAvatar}</div>
-            </Anchor>
-            <Anchor
-              href={href}
-              css={({ colors }) => [
-                styles,
-                hover(colors),
-                nameStyles,
-                overrideNameStyles,
-              ]}
-            >
-              {firstLine}
-              {alumniSinceDate && (
-                <span css={badgeStyles}>{alumniBadgeIcon}</span>
-              )}
-            </Anchor>
-            {isValidElement(secondLine) ? (
-              <div css={[addToColumnStyles, textStyles]}>{secondLine}</div>
+}) => {
+  const { isEnabled } = useFlags();
+  return (
+    <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
+      {members.map(
+        ({
+          id,
+          firstLine,
+          secondLine,
+          thirdLine,
+          alumniSinceDate,
+          ...member
+        }) => {
+          const href = userRoute({ userId: id }).$;
+          const userAvatar =
+            isEnabled('STAGING_MODE') &&
+            member.latestAward &&
+            member.latestAward.iconUrl ? (
+              <AvatarWithBadge
+                imageUrl={member.avatarUrl}
+                firstName={member.firstName}
+                lastName={member.lastName}
+                badgeUrl={member.latestAward.iconUrl}
+                badgeAlt={member.latestAward.name}
+                badgeSize={18}
+                avatarSize={48}
+                overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+              />
             ) : (
+              <Avatar
+                firstName={member.firstName}
+                lastName={member.lastName}
+                imageUrl={member.avatarUrl}
+              />
+            );
+
+          return (
+            <li key={id} css={memberGridStyles}>
               <Anchor href={href} css={{ display: 'contents' }}>
-                <div css={[addToColumnStyles, secondLine && textStyles]}>
-                  <Ellipsis>{secondLine}</Ellipsis>
-                </div>
+                <div css={[avatarStyles, hoverStyle]}>{userAvatar}</div>
               </Anchor>
-            )}
-            <div css={[addToColumnStyles, thirdLine && textStyles, labStyles]}>
-              {isValidElement(thirdLine) ? (
-                thirdLine
+              <Anchor
+                href={href}
+                css={({ colors }) => [
+                  styles,
+                  hover(colors),
+                  nameStyles,
+                  overrideNameStyles,
+                ]}
+              >
+                {firstLine}
+                {alumniSinceDate && (
+                  <span css={badgeStyles}>{alumniBadgeIcon}</span>
+                )}
+              </Anchor>
+              {isValidElement(secondLine) ? (
+                <div css={[addToColumnStyles, textStyles]}>{secondLine}</div>
               ) : (
-                <Ellipsis>
-                  {thirdLine instanceof Array ? (
-                    thirdLine.map((team) => (
-                      <Fragment key={team.id}>
-                        <Link
-                          href={
-                            network({}).teams({}).team({ teamId: team.id }).$
-                          }
-                        >
-                          Team {team.displayName}
-                        </Link>{' '}
-                      </Fragment>
-                    ))
-                  ) : (
-                    <Anchor href={href} css={{ display: 'contents' }}>
-                      {thirdLine}
-                    </Anchor>
-                  )}
-                </Ellipsis>
+                <Anchor href={href} css={{ display: 'contents' }}>
+                  <div css={[addToColumnStyles, secondLine && textStyles]}>
+                    <Ellipsis>{secondLine}</Ellipsis>
+                  </div>
+                </Anchor>
               )}
-            </div>
-          </li>
-        );
-      },
-    )}
-  </ul>
-);
+              <div
+                css={[addToColumnStyles, thirdLine && textStyles, labStyles]}
+              >
+                {isValidElement(thirdLine) ? (
+                  thirdLine
+                ) : (
+                  <Ellipsis>
+                    {thirdLine instanceof Array ? (
+                      thirdLine.map((team) => (
+                        <Fragment key={team.id}>
+                          <Link
+                            href={
+                              network({}).teams({}).team({ teamId: team.id }).$
+                            }
+                          >
+                            Team {team.displayName}
+                          </Link>{' '}
+                        </Fragment>
+                      ))
+                    ) : (
+                      <Anchor href={href} css={{ display: 'contents' }}>
+                        {thirdLine}
+                      </Anchor>
+                    )}
+                  </Ellipsis>
+                )}
+              </div>
+            </li>
+          );
+        },
+      )}
+    </ul>
+  );
+};
 
 export default MembersList;

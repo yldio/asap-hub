@@ -9,6 +9,14 @@ import apiConfig = require('./serverless');
 // Never used by CI, packaging or deploys.
 const serverlessConfig: AWS = {
   ...apiConfig,
+  custom: {
+    ...apiConfig.custom,
+    // The mock bus the eventBridge subscribers listen on. Publish test events
+    // to http://localhost:4010 (bus name asap-events-local).
+    'serverless-offline-aws-eventbridge': {
+      port: 4010,
+    },
+  },
   functions: {
     ...apiConfig.functions,
     ...asyncFunctions,

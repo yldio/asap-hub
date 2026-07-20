@@ -135,3 +135,7 @@ export const getActiveProjectManager = (
       !member.alumniSinceDate &&
       !member.inactiveSinceDate,
   );
+
+// Clamp a percentage value into the 0–100 range.
+export const clampPercentage = (value: number): number =>
+  Math.min(100, Math.max(0, value));

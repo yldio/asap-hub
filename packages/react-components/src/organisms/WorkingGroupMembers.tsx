@@ -83,9 +83,8 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
             <MembersList
               members={data
                 .filter((member) => member.user !== undefined)
-                .map(({ user, role, latestAward }) => ({
+                .map(({ user, role }) => ({
                   ...user,
-                  latestAward,
                   id: user?.id || '',
                   firstLine: user.displayName || '',
                   secondLine: role,
@@ -131,9 +130,8 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
             <MembersList
               members={data
                 .filter((member) => member.user !== undefined)
-                .map(({ user, latestAward }) => ({
+                .map(({ user }) => ({
                   ...user,
-                  latestAward,
                   id: user?.id || '',
                   firstLine: user.displayName || '',
                   thirdLine:

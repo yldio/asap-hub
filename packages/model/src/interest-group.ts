@@ -32,10 +32,11 @@ export type InterestGroupLeader = {
     | 'alumniSinceDate'
     | 'avatarUrl'
     | 'teams'
-  >;
+  > & {
+    readonly latestAward?: UserAward;
+  };
   readonly role: InterestGroupRole;
   readonly inactiveSinceDate?: string;
-  readonly latestAward?: UserAward;
 };
 
 export const isInterestGroupRole = (

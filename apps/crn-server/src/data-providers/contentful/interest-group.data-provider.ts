@@ -259,10 +259,10 @@ const parseGraphQLInterestGroup = (
       {
         user: parseInterestGroupLeader(
           parseContentfulGraphQlUsers(leader.user),
+          getLatestUserAward(leaderAwards),
         ),
         role: leader.role as InterestGroupRole,
         inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
-        latestAward: getLatestUserAward(leaderAwards),
       },
     ];
   }, []);

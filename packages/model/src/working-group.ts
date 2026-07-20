@@ -30,11 +30,12 @@ export type WorkingGroupLeader = {
     | 'email'
     | 'avatarUrl'
     | 'teams'
-  >;
+  > & {
+    readonly latestAward?: UserAward;
+  };
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
   readonly inactiveSinceDate?: string;
-  readonly latestAward?: UserAward;
 };
 export type WorkingGroupResponseLeader = WorkingGroupLeader & {
   readonly isActive: boolean;
@@ -51,9 +52,10 @@ export type WorkingGroupMember = {
     | 'email'
     | 'avatarUrl'
     | 'teams'
-  >;
+  > & {
+    readonly latestAward?: UserAward;
+  };
   readonly inactiveSinceDate?: string;
-  readonly latestAward?: UserAward;
 };
 export type WorkingGroupResponseMember = WorkingGroupMember & {
   readonly isActive: boolean;

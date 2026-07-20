@@ -640,11 +640,11 @@ describe('Working Groups data provider', () => {
               teamInactiveSince: '',
             },
           ],
-        });
-        expect(result!.leaders[0]?.latestAward).toEqual({
-          name: 'Open Science Champion',
-          date: '2025-09-11',
-          iconUrl: 'https://example.com/avatar.jpg',
+          latestAward: {
+            name: 'Open Science Champion',
+            date: '2025-09-11',
+            iconUrl: 'https://example.com/avatar.jpg',
+          },
         });
         expect(result!.members).toHaveLength(1);
         expect(result!.members[0]?.user).toEqual({

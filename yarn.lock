@@ -8560,16 +8560,16 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-multiple-line@npm:^1.1.0":
-  version: 1.7.3
-  resolution: "@contentful/field-editor-multiple-line@npm:1.7.3"
+  version: 1.7.5
+  resolution: "@contentful/field-editor-multiple-line@npm:1.7.5"
   dependencies:
     "@contentful/f36-components": "npm:^5.4.1"
     "@contentful/f36-tokens": "npm:^5.1.0"
-    "@contentful/field-editor-shared": "npm:^2.18.0"
+    "@contentful/field-editor-shared": "npm:^3.0.0"
     emotion: "npm:^10.0.17"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 10/a5b65bcf90d9e1e4f595807d8ab48ae83a432bd6209b96fc685a685460f03c8c7d2341134522822729f5d8561468d6ce5a5ea1c0e787464e3deb96d35f7666c3
+  checksum: 10/13f196d9471d792c2f02e178521bee15d23a36fbc37c9cfb3ff1bb3e0fde7f91f99d6a0913e28039b7e7960010ff4ecadbbd7cf5ac8a2c0a9fdbde309d79b949
   languageName: node
   linkType: hard
 

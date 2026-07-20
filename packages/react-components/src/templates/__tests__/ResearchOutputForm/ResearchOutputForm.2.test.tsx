@@ -204,7 +204,13 @@ describe('on submit', () => {
   });
 
   it('can update a published form with minimum data', async () => {
-    await setupForm({ propOverride: { published: true } });
+    await setupForm({
+      propOverride: {
+        published: true,
+        flowId: 'team-edit-published',
+        availableActions: { canSaveDraft: false },
+      },
+    });
     await saveForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,

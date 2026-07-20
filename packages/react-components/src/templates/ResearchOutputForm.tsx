@@ -1,6 +1,7 @@
 import {
   DecisionOption,
   EventResponse,
+  getResearchOutputFlowBehavior,
   ResearchOutputDocumentType,
   ResearchOutputFlowId,
   ResearchOutputIdentifierType,
@@ -21,12 +22,12 @@ import { useMatch, useNavigate } from 'react-router';
 
 import { OptionsType } from '../select';
 
-import { Button, Link, MultiSelectOptionsType } from '../atoms';
+import { Button, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
-import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import {
-  ConfirmModal,
   Form,
+  ResearchOutputConfirmModal,
+  ResearchOutputConfirmModalType,
   ResearchOutputExtraInformationCard,
   ResearchOutputFormSharingCard,
   ResearchOutputPublishingCard,
@@ -47,6 +48,7 @@ import {
   noop,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
+import { SeenModalType } from '../organisms/ResearchOutputConfirmModal';
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
@@ -92,11 +94,9 @@ type ResearchOutputFormProps = Pick<
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
     permissions: ResearchOutputPermissions;
-    descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
-    flowId?: ResearchOutputFlowId;
-    behaviorMode?: 'legacy' | 'flow';
-    availableActions?: ResearchOutputAvailableActions;
+    flowId: ResearchOutputFlowId;
+    availableActions: ResearchOutputAvailableActions;
   };
 
 const mainStyles = css({
@@ -175,7 +175,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   authorsRequired = false,
   typeOptions,
   selectedTeams,
-  descriptionUnchangedWarning = false,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
@@ -192,17 +191,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   versionAction,
   isImportedFromManuscript,
   flowId,
-  behaviorMode = 'legacy',
   availableActions,
 }) => {
   const navigate = useNavigate();
-  const { canShareResearchOutput, canPublishResearchOutput } = permissions;
+  const { canPublishResearchOutput } = permissions;
 
-  const useFlowMode = behaviorMode === 'flow' && !!availableActions;
+  const behavior = getResearchOutputFlowBehavior(flowId);
 
-  const showSaveDraftButton = useFlowMode
-    ? availableActions.canSaveDraft
-    : !isImportedFromManuscript && !published && canShareResearchOutput;
+  const showSaveDraftButton = availableActions.canSaveDraft;
 
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
@@ -312,24 +308,33 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [changelog, setChangelog] = useState<
     ResearchOutputPostRequest['changelog']
   >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
-  const [
-    dismissedDescriptionChangePrompt,
-    setDismissedDescriptionChangePrompt,
-  ] = useState(false);
+
+  const [alreadySeenModals, setAlreadySeenModals] = useState<
+    Set<SeenModalType>
+  >(() => new Set());
+
+  const isModalAlreadySeen = (modal: SeenModalType) =>
+    alreadySeenModals.has(modal);
 
   const promptDescriptionChange =
     descriptionMD === researchOutputData?.descriptionMD &&
-    descriptionUnchangedWarning &&
-    !dismissedDescriptionChangePrompt;
-  const [showDescriptionChangePrompt, setShowDescriptionChangePrompt] =
-    useState<false | 'draft' | 'publish'>(false);
+    behavior.requiresSameDescriptionConfirm &&
+    !isModalAlreadySeen('description-change');
 
-  const [dismissedVersionPrompt, setDismissedVersionPrompt] = useState(false);
-  const [showVersionPrompt, setShowVersionPrompt] = useState(false);
   const promptNewVersion =
-    versionAction === 'create' && !dismissedVersionPrompt;
+    behavior.requiresAddVersionConfirm && !isModalAlreadySeen('version');
 
-  const [showConfirmPublish, setShowConfirmPublish] = useState<boolean>(false);
+  const [modal, setModal] = useState<ResearchOutputConfirmModalType>(null);
+
+  const getDraftModal: () => ResearchOutputConfirmModalType = () =>
+    promptDescriptionChange ? 'description-draft' : null;
+
+  const getPublishModal: () => ResearchOutputConfirmModalType = () => {
+    if (promptDescriptionChange) return 'description-publish';
+    if (promptNewVersion) return 'version';
+    if (behavior.requiresPublishConfirm) return 'confirm-publish';
+    return null;
+  };
 
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
@@ -520,74 +525,42 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               }
               return researchOutput;
             })();
-          const confirmDescriptionText = `Keep and ${
-            showDescriptionChangePrompt === 'draft' ? 'save' : 'publish'
-          }`;
+
+          const handleAction = async (
+            actionType: 'draft' | 'publish',
+            getModal: () => ResearchOutputConfirmModalType,
+            action: () => Promise<void | ResearchOutputResponse>,
+          ) => {
+            setIsFormSubmitted(true);
+
+            const nextModal = getModal();
+            if (nextModal) {
+              setModal(nextModal);
+              return;
+            }
+
+            setSavingAction(actionType);
+            try {
+              await action();
+            } finally {
+              setSavingAction(null);
+            }
+          };
+
+          const handleSaveDraft = () =>
+            handleAction('draft', getDraftModal, () => save(true));
+
+          const handlePublish = () =>
+            handleAction('publish', getPublishModal, () => save(false));
+
           return (
             <>
-              {showVersionPrompt && (
-                <ConfirmModal
-                  title="Publish new version for the whole hub?"
-                  cancelText="Cancel"
-                  onCancel={() => setShowVersionPrompt(false)}
-                  confirmText="Publish new version"
-                  onSave={async () => {
-                    setDismissedVersionPrompt(true);
-                    const result = await save(false);
-                    if (!result) {
-                      setShowVersionPrompt(false);
-                    }
-                  }}
-                  description={
-                    <>
-                      Once published this output version will be available to
-                      all Hub members and reminders will be issued to all
-                      associated contributors. If you have any issues with this
-                      output version after it has been published, please contact{' '}
-                      {<Link href={mailToSupport()}>{TECH_SUPPORT_EMAIL}</Link>}
-                      .
-                    </>
-                  }
-                />
-              )}
-
-              {showDescriptionChangePrompt && (
-                <ConfirmModal
-                  title="Keep the same description?"
-                  cancelText="Cancel"
-                  onCancel={() => setShowDescriptionChangePrompt(false)}
-                  confirmText={confirmDescriptionText}
-                  onSave={async () => {
-                    setDismissedDescriptionChangePrompt(true);
-                    const result = await save(
-                      showDescriptionChangePrompt === 'draft',
-                    );
-                    if (!result) {
-                      setShowDescriptionChangePrompt(false);
-                    }
-                  }}
-                  description="We noticed that you kept the same description as your previous output. ASAP encourages users to provide specific context for each output."
-                />
-              )}
-              {showConfirmPublish && (
-                <ConfirmModal
-                  title="Publish output for the whole hub?"
-                  cancelText="Cancel"
-                  onCancel={() => setShowConfirmPublish(false)}
-                  confirmText="Publish Output"
-                  onSave={async () => {
-                    await save(false);
-                    setShowConfirmPublish(false);
-                  }}
-                  description={
-                    <>
-                      Once published this output will be available to all Hub
-                      members and reminders will be issued to all associated
-                      contributors. If you have any issues with the output after
-                      it has been published, please contact{' '}
-                      <Link href={mailToSupport()}>{TECH_SUPPORT_EMAIL}</Link>.
-                    </>
-                  }
+              {modal && (
+                <ResearchOutputConfirmModal
+                  modal={modal}
+                  onCancel={() => setModal(null)}
+                  save={save}
+                  setAlreadySeenModals={setAlreadySeenModals}
                 />
               )}
               <div css={contentStyles} data-flow-id={flowId}>
@@ -733,19 +706,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         loading={isSaving && savingAction === 'draft'}
                         fullWidth
-                        onClick={async () => {
-                          setIsFormSubmitted(true);
-                          if (promptDescriptionChange) {
-                            setShowDescriptionChangePrompt('draft');
-                          } else {
-                            setSavingAction('draft');
-                            try {
-                              await save(true);
-                            } finally {
-                              setSavingAction(null);
-                            }
-                          }
-                        }}
+                        onClick={handleSaveDraft}
                         primary={showSaveDraftButton && !showPublishButton}
                         noMargin
                       >
@@ -759,24 +720,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         fullWidth
                         primary
                         noMargin
-                        onClick={async () => {
-                          setIsFormSubmitted(true);
-
-                          if (promptDescriptionChange) {
-                            setShowDescriptionChangePrompt('publish');
-                          } else if (promptNewVersion) {
-                            setShowVersionPrompt(true);
-                          } else if (!published) {
-                            setShowConfirmPublish(true);
-                          } else {
-                            setSavingAction('publish');
-                            try {
-                              await save(false);
-                            } finally {
-                              setSavingAction(null);
-                            }
-                          }
-                        }}
+                        onClick={handlePublish}
                       >
                         {published ? 'Save' : 'Publish'}
                       </Button>

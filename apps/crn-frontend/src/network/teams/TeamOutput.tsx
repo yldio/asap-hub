@@ -18,20 +18,17 @@ import {
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  resolveResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
   sharedResearch,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, {
-  ComponentProps,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   mapManuscriptVersionToResearchOutput,
@@ -73,16 +70,12 @@ type TeamOutputProps = {
   latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
   isDuplicate?: boolean;
-} & Pick<
-  ComponentProps<typeof ResearchOutputForm>,
-  'descriptionUnchangedWarning'
->;
+};
 
 const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
   latestManuscriptVersion,
-  descriptionUnchangedWarning,
   versionAction: versionActionProp,
   isDuplicate = false,
 }) => {
@@ -162,6 +155,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const getImpactSuggestions = useImpactSuggestions();
   const getCategorySuggestions = useCategorySuggestions();
+  const getShortDescriptionFromDescription = useGeneratedContent();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
@@ -191,9 +185,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     published,
     isImportedFromManuscript,
     isDuplicate,
-    hasResearchOutputId: !!researchOutputData?.id,
+    // When importing an already-published manuscript whose preprint was
+    // never shared as an output, the backend auto-creates the preprint
+    // output and updatedOutput gains its id at runtime, turning this
+    // import into an add-version flow.
+    hasResearchOutputId: !!(updatedOutput?.id || researchOutputData?.id),
   });
-  const getShortDescriptionFromDescription = useGeneratedContent();
+  const availableActions = resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
+  });
+
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
@@ -408,7 +410,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               )}
               published={published}
               permissions={permissions}
-              descriptionUnchangedWarning={descriptionUnchangedWarning}
               isImportedFromManuscript={isImportedFromManuscript}
               onSave={(output) =>
                 updatedOutput?.id
@@ -447,6 +448,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
               flowId={flowId}
+              availableActions={availableActions}
             />
           </InnerToastContext.Provider>
         </Frame>

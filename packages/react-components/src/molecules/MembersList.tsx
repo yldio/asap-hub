@@ -2,16 +2,15 @@ import { Fragment, ReactNode, isValidElement } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { UserAward, UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 
 import { rem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { Link, Anchor, Ellipsis } from '../atoms';
 import { alumniBadgeIcon } from '../icons';
 import { hoverStyle } from './ImageLink';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
-import AvatarWithBadge from './AvatarWithBadge';
+import UserAvatar from './UserAvatar';
 
 const containerStyles = css({
   margin: 0,
@@ -92,7 +91,6 @@ const MembersList: React.FC<MembersListProps> = ({
   overrideNameStyles,
   userRoute = network({}).users({}).user,
 }) => {
-  const { isEnabled } = useFlags();
   return (
     <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
       {members.map(
@@ -105,32 +103,21 @@ const MembersList: React.FC<MembersListProps> = ({
           ...member
         }) => {
           const href = userRoute({ userId: id }).$;
-          const userAvatar =
-            isEnabled('STAGING_MODE') &&
-            member.latestAward &&
-            member.latestAward.iconUrl ? (
-              <AvatarWithBadge
-                imageUrl={member.avatarUrl}
-                firstName={member.firstName}
-                lastName={member.lastName}
-                badgeUrl={member.latestAward.iconUrl}
-                badgeAlt={member.latestAward.name}
-                badgeSize={18}
-                avatarSize={48}
-                overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
-              />
-            ) : (
-              <Avatar
-                firstName={member.firstName}
-                lastName={member.lastName}
-                imageUrl={member.avatarUrl}
-              />
-            );
 
           return (
             <li key={id} css={memberGridStyles}>
               <Anchor href={href} css={{ display: 'contents' }}>
-                <div css={[avatarStyles, hoverStyle]}>{userAvatar}</div>
+                <div css={[avatarStyles, hoverStyle]}>
+                  <UserAvatar
+                    imageUrl={member.avatarUrl}
+                    firstName={member.firstName}
+                    lastName={member.lastName}
+                    latestAward={member.latestAward}
+                    badgeSize={18}
+                    avatarSize={48}
+                    overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+                  />
+                </div>
               </Anchor>
               <Anchor
                 href={href}

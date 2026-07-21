@@ -86,6 +86,7 @@ export { default as TeamCollaborationRow } from './TeamCollaborationRow';
 export { default as TeamProfileTags } from './TeamProfileTags';
 export { default as ToastCard } from './ToastCard';
 export { default as TooltipInfo } from './TooltipInfo';
+export { default as UserAvatar } from './UserAvatar';
 export { default as UserAvatarList } from './UserAvatarList';
 export { default as UserCommentHeader } from './UserCommentHeader';
 export { default as UserMenuButton } from './UserMenuButton';

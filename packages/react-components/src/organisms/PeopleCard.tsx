@@ -1,12 +1,11 @@
 import { css } from '@emotion/react';
 import { getLatestUserAward, UserListItemResponse } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
-import { Card, Avatar, Caption, StateTag } from '../atoms';
+import { Card, Caption, StateTag } from '../atoms';
 import {
-  AvatarWithBadge,
   LinkHeadline,
+  UserAvatar,
   UserProfilePersonalText,
   ImageLink,
 } from '../molecules';
@@ -60,27 +59,21 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
   ...props
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
-  const { isEnabled } = useFlags();
-  const latestAward = isEnabled('STAGING_MODE')
-    ? getLatestUserAward(props.teams)
-    : undefined;
-  const userAvatar = latestAward?.iconUrl ? (
-    <AvatarWithBadge
-      imageUrl={avatarUrl}
-      firstName={firstName}
-      lastName={lastName}
-      badgeUrl={latestAward.iconUrl}
-      badgeAlt={latestAward.name}
-      badgeSize={42}
-      avatarSize={90}
-    />
-  ) : (
-    <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
-  );
+  const latestAward = getLatestUserAward(props.teams);
+
   return (
     <Card accent={alumniSinceDate ? 'neutral200' : undefined}>
       <div css={[containerStyles]}>
-        <ImageLink link={userHref}>{userAvatar}</ImageLink>
+        <ImageLink link={userHref}>
+          <UserAvatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
+            latestAward={latestAward}
+            badgeSize={42}
+            avatarSize={90}
+          />
+        </ImageLink>
         <div css={textContainerStyles}>
           <div css={moveStyles}>
             <LinkHeadline href={userHref} level={2} styleAsHeading={4}>

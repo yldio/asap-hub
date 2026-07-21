@@ -12,12 +12,6 @@ const mockMember: GroupedProjectMember = {
   avatarUrl: undefined,
 };
 
-const mockIsEnabled = jest.fn();
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
 describe('ProjectMemberCard', () => {
   it('renders member name as a link', () => {
     render(<ProjectMemberCard member={mockMember} />);
@@ -123,62 +117,5 @@ describe('ProjectMemberCard', () => {
     );
     // Avatar component is rendered - just verify the component doesn't crash
     expect(screen.getByText(mockMember.displayName)).toBeInTheDocument();
-  });
-
-  describe('member avatar award badge', () => {
-    beforeEach(() => {
-      mockIsEnabled.mockReturnValue(true);
-    });
-
-    const memberWithAward = {
-      ...mockMember,
-      avatarUrl: 'https://example.com/avatar.jpg',
-      latestAward: {
-        name: 'Open Science Champion',
-        date: '2024-01-01',
-        iconUrl: 'new',
-      },
-    };
-
-    it('displays member avatar with badge if user has a latest award', () => {
-      const { getByAltText } = render(
-        <ProjectMemberCard member={memberWithAward} />,
-      );
-
-      const badge = getByAltText('Open Science Champion');
-      expect(badge).toHaveAttribute('src', 'new');
-    });
-
-    it('does not render an award badge when the user has none', () => {
-      const { queryByAltText } = render(
-        <ProjectMemberCard
-          member={{ ...memberWithAward, latestAward: undefined }}
-        />,
-      );
-
-      expect(queryByAltText('Open Science Champion')).not.toBeInTheDocument();
-    });
-
-    it('does not render an award badge when the latest award has no icon', () => {
-      const { queryByAltText } = render(
-        <ProjectMemberCard
-          member={{
-            ...memberWithAward,
-            latestAward: { name: 'Open Science Champion', date: '2024-01-01' },
-          }}
-        />,
-      );
-
-      expect(queryByAltText('Open Science Champion')).not.toBeInTheDocument();
-    });
-
-    it('does not render an award badge when STAGING_MODE is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-      const { queryByAltText } = render(
-        <ProjectMemberCard member={memberWithAward} />,
-      );
-
-      expect(queryByAltText('Open Science Champion')).not.toBeInTheDocument();
-    });
   });
 });

@@ -588,15 +588,19 @@ describe('getVisibleResearchOutputActions', () => {
 });
 
 describe('resolveResearchOutputAvailableActions', () => {
-  it('resolves saveDraft action correctly', () => {
+  it('resolves showSaveDraftButton action correctly', () => {
     expect(
       resolveResearchOutputAvailableActions({
         flowId: 'team-create-manual',
         permissions: { canShareResearchOutput: true },
+        researchOutputData: undefined,
+        documentType: 'Article',
+        versions: [],
+        isImportedFromManuscript: false,
       }),
     ).toEqual(
       expect.objectContaining({
-        canSaveDraft: true,
+        showSaveDraftButton: true,
       }),
     );
   });

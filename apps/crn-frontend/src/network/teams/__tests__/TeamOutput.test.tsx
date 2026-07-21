@@ -223,7 +223,7 @@ interface RenderPageOptions {
   teamId: string;
   versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
-  researchOutputData?: ResearchOutputResponse;
+  existingOutput?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
   isDuplicate?: boolean;
 }
@@ -269,7 +269,7 @@ it('displays the save button for existing research outputs', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'bioinformatics',
-    researchOutputData: baseResearchOutput,
+    existingOutput: baseResearchOutput,
     versionAction: 'edit',
   });
 
@@ -280,7 +280,7 @@ it('displays the research output with one version in create mode', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'bioinformatics',
-    researchOutputData: baseResearchOutput,
+    existingOutput: baseResearchOutput,
     versionAction: 'create',
   });
 
@@ -291,7 +291,7 @@ it('displays the research output with no version in edit mode', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'bioinformatics',
-    researchOutputData: baseResearchOutput,
+    existingOutput: baseResearchOutput,
     versionAction: 'edit',
   });
 
@@ -473,7 +473,7 @@ it('can edit a research output', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: { ...baseResearchOutput, doi },
+    existingOutput: { ...baseResearchOutput, doi },
     versionAction: 'edit',
   });
 
@@ -516,7 +516,7 @@ it('can edit a draft research output', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: { ...researchOutput, doi, published: false },
+    existingOutput: { ...researchOutput, doi, published: false },
   });
 
   const user = userEvent.setup({ delay: null });
@@ -557,7 +557,7 @@ it('can edit and publish a draft research output', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {
+    existingOutput: {
       ...researchOutput,
       doi,
       published: false,
@@ -608,7 +608,7 @@ it('can publish a new version for an output', async () => {
 
   await renderPage({
     teamId: '42',
-    researchOutputData: { ...baseResearchOutput, documentType: 'Article' },
+    existingOutput: { ...baseResearchOutput, documentType: 'Article' },
     versionAction: 'create',
   });
 
@@ -662,7 +662,7 @@ it('generates the short description based on the current description', async () 
   await renderPage({
     teamId: '42',
     outputDocumentType: 'bioinformatics',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       descriptionMD: 'output description',
     },
@@ -789,7 +789,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: { ...baseResearchOutput, doi },
+    existingOutput: { ...baseResearchOutput, doi },
     versionAction: 'edit',
   });
 
@@ -822,7 +822,7 @@ it('display a toast warning when creating a new version', async () => {
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: baseResearchOutput,
+    existingOutput: baseResearchOutput,
     versionAction: 'create',
   });
 
@@ -837,7 +837,7 @@ it('renders an empty changelog input field when creating a new version of a rese
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: baseResearchOutput,
+    existingOutput: baseResearchOutput,
     versionAction: 'create',
   });
 
@@ -848,7 +848,7 @@ it('shows changelog input with existing data when editing a versioned research o
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       changelog: 'example changelog',
       versions: [
@@ -871,7 +871,7 @@ it('hides changelog input when editing a research output with no version history
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       versions: [],
     },
@@ -1030,6 +1030,8 @@ describe('manuscript outputs flow', () => {
 
       await user.click(screen.getByRole('button', { name: /Publish/i }));
 
+      // the auto-created preprint has an id, so the import continues as
+      // adding a version of it (TEAM_ADD_VERSION_FROM_MANUSCRIPT)
       const button = screen.getByRole('button', {
         name: /Publish new version/i,
       });
@@ -1121,7 +1123,7 @@ describe('manuscript outputs flow', () => {
   it('skips manuscript output selection when editing existing research output', async () => {
     await renderPage({
       teamId: '42',
-      researchOutputData: {
+      existingOutput: {
         ...baseResearchOutput,
         id: '1',
         documentType: 'Article',
@@ -1140,7 +1142,7 @@ describe('manuscript outputs flow', () => {
   it('skips manuscript output selection when duplicating a research output', async () => {
     await renderPage({
       teamId: '42',
-      researchOutputData: {
+      existingOutput: {
         ...baseResearchOutput,
         id: '1',
         documentType: 'Article',
@@ -1161,7 +1163,7 @@ describe('manuscript outputs flow', () => {
   it('skips manuscript output selection when creating a new research output version', async () => {
     await renderPage({
       teamId: '42',
-      researchOutputData: {
+      existingOutput: {
         ...baseResearchOutput,
         id: '1',
         documentType: 'Article',
@@ -1389,7 +1391,7 @@ describe('manuscript outputs flow', () => {
 
     await renderPage({
       teamId,
-      researchOutputData: {
+      existingOutput: {
         ...baseResearchOutput,
         documentType: 'Article',
         relatedManuscript: 'manuscript-id-1',
@@ -1463,6 +1465,51 @@ describe('manuscript outputs flow', () => {
     consoleWarnSpy.mockRestore();
   });
 
+  it('redirects to the linked output even when the manuscript version is a Preprint, instead of creating a duplicate output', async () => {
+    const teamId = '42';
+    const outputDocumentType = 'article';
+    const researchOutputId = 'linked-output-id';
+    mockGetManuscriptVersions.mockResolvedValue({
+      total: 1,
+      items: [
+        {
+          id: 'mv-manuscript-id-1',
+          hasLinkedResearchOutput: false,
+          title: 'Version One',
+          url: 'http://example.com',
+          lifecycle: 'Preprint',
+          researchOutputId,
+        },
+      ],
+    });
+
+    // Suppress React Router warning about missing route
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+    await renderPage({ teamId, outputDocumentType });
+
+    const user = userEvent.setup({ delay: null });
+    await user.click(screen.getByLabelText('Import from compliance'));
+    const input = screen.getByRole('combobox');
+    await user.type(input, 'Version');
+    const option = await screen.findByText('Version One');
+    await user.click(option);
+
+    await user.click(screen.getByRole('button', { name: /import/i }));
+
+    await waitFor(() => {
+      expect(currentLocation).not.toBeNull();
+      expect(currentLocation?.pathname).toBe(
+        `/shared-research/${researchOutputId}/version`,
+      );
+    });
+    expect(
+      screen.queryByRole('heading', { name: 'What are you sharing?' }),
+    ).not.toBeInTheDocument();
+
+    consoleWarnSpy.mockRestore();
+  });
+
   it('navigates to standard output form when manual creation is confirmed', async () => {
     await renderPage({
       teamId: '42',
@@ -1488,7 +1535,7 @@ async function renderPage({
   },
   teamId,
   outputDocumentType = 'bioinformatics',
-  researchOutputData,
+  existingOutput,
   versionAction,
   latestManuscriptVersion,
   isDuplicate = false,
@@ -1523,7 +1570,7 @@ async function renderPage({
                   element={
                     <TeamOutput
                       teamId={teamId}
-                      researchOutputData={researchOutputData}
+                      existingOutput={existingOutput}
                       versionAction={versionAction}
                       latestManuscriptVersion={latestManuscriptVersion}
                       isDuplicate={isDuplicate}

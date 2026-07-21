@@ -1,6 +1,8 @@
 import {
   getResearchOutputFlowBehavior,
+  ResearchOutputDocumentType,
   ResearchOutputFlowId,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import { createContext, useContext } from 'react';
 
@@ -26,10 +28,6 @@ export const ResearchOutputPermissionsContext =
 export const useResearchOutputPermissionsContext =
   (): ResearchOutputPermissions => useContext(ResearchOutputPermissionsContext);
 
-export type ResearchOutputAvailableActions = {
-  canSaveDraft: boolean;
-};
-
 export type ResearchOutputDetailActionAvailability = {
   showEdit: boolean;
   showDuplicate: boolean;
@@ -40,16 +38,61 @@ export type ResearchOutputDetailActionAvailability = {
   showPublish: boolean;
 };
 
+type ResolveResearchOutputAvailableActionsInput = {
+  flowId: ResearchOutputFlowId;
+  permissions: ResearchOutputPermissions;
+  researchOutputData: ResearchOutputResponse | undefined;
+  documentType: ResearchOutputDocumentType;
+  versions: readonly unknown[];
+  isImportedFromManuscript: boolean;
+};
+
+export type ResearchOutputAvailableActions = {
+  disableDateMadePublic: boolean;
+  disableImpactAndCategory: boolean;
+  disableNonPublicSharingStatus: boolean;
+  disableUsedInPublication: boolean;
+  showCatalogNumber: boolean;
+  showChangelog: boolean;
+  showIdentifierSection: boolean;
+  showImpactAndCategory: boolean;
+  showSaveDraftButton: boolean;
+  showVersionHistory: boolean;
+};
+
 export const resolveResearchOutputAvailableActions = ({
   flowId,
   permissions,
-}: {
-  flowId: ResearchOutputFlowId;
-  permissions: ResearchOutputPermissions;
-}): ResearchOutputAvailableActions => {
-  const { supportsDrafts } = getResearchOutputFlowBehavior(flowId);
+  researchOutputData,
+  documentType,
+  versions,
+  isImportedFromManuscript,
+}: ResolveResearchOutputAvailableActionsInput): ResearchOutputAvailableActions => {
+  const behavior = getResearchOutputFlowBehavior(flowId);
   return {
-    canSaveDraft: supportsDrafts && !!permissions.canShareResearchOutput,
+    disableDateMadePublic:
+      !!researchOutputData?.publishDate &&
+      (isImportedFromManuscript || !!researchOutputData?.id),
+    disableImpactAndCategory: behavior.isAddVersionFlow,
+
+    disableNonPublicSharingStatus:
+      (documentType === 'Article' &&
+        researchOutputData?.sharingStatus === undefined) ||
+      isImportedFromManuscript,
+    disableUsedInPublication:
+      behavior.isCreateFlow &&
+      documentType === 'Article' &&
+      researchOutputData?.usedInPublication === undefined,
+    showCatalogNumber: documentType === 'Lab Material',
+    showChangelog:
+      behavior.isAddVersionFlow ||
+      (researchOutputData?.versions ?? []).length > 0,
+    showIdentifierSection: documentType !== 'Report',
+    showImpactAndCategory: documentType === 'Article',
+    showSaveDraftButton:
+      behavior.supportsDrafts && !!permissions.canShareResearchOutput,
+    showVersionHistory:
+      (behavior.isAddVersionFlow || behavior.isEditFlow) && versions.length > 0,
   };
 };
 

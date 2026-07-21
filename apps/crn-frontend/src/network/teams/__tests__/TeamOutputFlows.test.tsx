@@ -62,7 +62,7 @@ async function renderPage({
   },
   teamId,
   outputDocumentType = 'bioinformatics',
-  researchOutputData,
+  existingOutput,
   versionAction,
   latestManuscriptVersion,
   isDuplicate = false,
@@ -71,7 +71,7 @@ async function renderPage({
   teamId: string;
   versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
-  researchOutputData?: ResearchOutputResponse;
+  existingOutput?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
   isDuplicate?: boolean;
 }) {
@@ -98,7 +98,7 @@ async function renderPage({
                   element={
                     <TeamOutput
                       teamId={teamId}
-                      researchOutputData={researchOutputData}
+                      existingOutput={existingOutput}
                       versionAction={versionAction}
                       latestManuscriptVersion={latestManuscriptVersion}
                       isDuplicate={isDuplicate}
@@ -174,7 +174,7 @@ it('passes TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT when creating a team article fro
 it('passes TEAM_EDIT_PUBLISHED when editing a published research output', async () => {
   await renderPage({
     teamId: '42',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       published: true,
     },
@@ -187,7 +187,7 @@ it('passes TEAM_EDIT_PUBLISHED when editing a published research output', async 
 it('passes TEAM_EDIT_DRAFT when editing a draft research output', async () => {
   await renderPage({
     teamId: '42',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       published: false,
     },
@@ -200,7 +200,7 @@ it('passes TEAM_EDIT_DRAFT when editing a draft research output', async () => {
 it('passes TEAM_ADD_VERSION when creating a new research output version', async () => {
   await renderPage({
     teamId: '42',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       published: false,
     },
@@ -214,7 +214,7 @@ it('passes TEAM_ADD_VERSION_FROM_MANUSCRIPT when creating a new research output 
   const latestManuscriptVersion = createManuscriptVersionResponse();
   await renderPage({
     teamId: '42',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       documentType: 'Article',
       relatedManuscript: 'manuscript-id-1',
@@ -231,7 +231,7 @@ it('passes TEAM_ADD_VERSION_FROM_MANUSCRIPT when creating a new research output 
 it('passes TEAM_DUPLICATE when duplicating a research output', async () => {
   await renderPage({
     teamId: '42',
-    researchOutputData: {
+    existingOutput: {
       ...baseResearchOutput,
       published: false,
       documentType: 'Article',

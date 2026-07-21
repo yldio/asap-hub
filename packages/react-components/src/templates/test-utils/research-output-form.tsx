@@ -1,7 +1,15 @@
 /* istanbul ignore file */
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  ResearchOutputAvailableActions,
+  ResearchOutputPermissions,
+  resolveResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 import { MemoryRouter, useLocation } from 'react-router';
 import {
+  ResearchOutputDocumentType,
+  ResearchOutputFlowId,
+  ResearchOutputResponse,
   researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
 } from '@asap-hub/model';
@@ -30,10 +38,43 @@ const LocationCapture = () => {
   return null;
 };
 
+export const defaultPermissions: ResearchOutputPermissions = {
+  canEditResearchOutput: true,
+  canPublishResearchOutput: true,
+  canShareResearchOutput: true,
+};
+
+type GetAvailableActionsInput = {
+  flowId?: ResearchOutputFlowId;
+  permissions?: ResearchOutputPermissions;
+  researchOutputData?: ResearchOutputResponse;
+  documentType?: ResearchOutputDocumentType;
+  versions?: readonly unknown[];
+  isImportedFromManuscript?: boolean;
+};
+
+export const getAvailableActions = ({
+  flowId = 'team-create-manual',
+  permissions = defaultPermissions,
+  researchOutputData,
+  documentType = 'Article',
+  versions = researchOutputData?.versions ?? [],
+  isImportedFromManuscript = false,
+}: GetAvailableActionsInput = {}): ResearchOutputAvailableActions =>
+  resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
+    researchOutputData,
+    documentType,
+    versions,
+    isImportedFromManuscript,
+  });
+
+export const defaultAvailableActions = getAvailableActions();
+
 export const getDefaultProps = (): ComponentProps<
   typeof ResearchOutputForm
 > => ({
-  displayChangelog: false,
   onSave: jest.fn(),
   onSaveDraft: jest.fn(),
   published: false,
@@ -42,13 +83,9 @@ export const getDefaultProps = (): ComponentProps<
   documentType: 'Article',
   selectedTeams: [],
   flowId: 'team-create-manual',
-  availableActions: { canSaveDraft: true },
+  availableActions: defaultAvailableActions,
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
+  permissions: defaultPermissions,
   getRelatedResearchSuggestions: jest.fn(),
   getRelatedEventSuggestions: jest.fn(),
   getShortDescriptionFromDescription: jest.fn(),
@@ -120,6 +157,30 @@ export const initialResearchOutputData = {
   type: 'Code' as const,
 };
 
+const resolveFormProps = (
+  propOverride: Partial<ComponentProps<typeof ResearchOutputForm>> = {},
+): ComponentProps<typeof ResearchOutputForm> => {
+  const props = {
+    ...getDefaultProps(),
+    ...propOverride,
+  };
+
+  if (propOverride.availableActions) {
+    return props;
+  }
+
+  return {
+    ...props,
+    availableActions: getAvailableActions({
+      flowId: props.flowId,
+      permissions: props.permissions,
+      researchOutputData: props.researchOutputData,
+      documentType: props.documentType,
+      isImportedFromManuscript: !!props.isImportedFromManuscript,
+    }),
+  };
+};
+
 export const renderForm = (
   propOverride: Partial<ComponentProps<typeof ResearchOutputForm>> = {},
 ) =>
@@ -127,7 +188,7 @@ export const renderForm = (
     <InnerToastContext.Provider value={jest.fn()}>
       <MemoryRouter>
         <LocationCapture />
-        <ResearchOutputForm {...getDefaultProps()} {...propOverride} />
+        <ResearchOutputForm {...resolveFormProps(propOverride)} />
       </MemoryRouter>
     </InnerToastContext.Provider>,
   );

@@ -24,6 +24,7 @@ import {
   ManuscriptVersionExport,
   ManuscriptVersionResponse,
   mapManuscriptLifecycleToType,
+  toManuscriptVersionRecordId,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
@@ -290,7 +291,7 @@ const parseGraphQLManucriptVersion = (
         })
       : undefined,
     versionId: latestVersion?.sys.id || undefined,
-    id: `mv-${manuscript.sys.id}`,
+    id: toManuscriptVersionRecordId(manuscript.sys.id),
     title: manuscript?.title || '',
     url: latestVersion?.url || manuscript?.url || '',
     type: (latestVersion?.type as ManuscriptType) || undefined,

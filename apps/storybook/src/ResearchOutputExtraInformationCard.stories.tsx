@@ -24,6 +24,8 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   })),
   researchTags: researchTagsResponse,
   documentType: select('type', researchOutputDocumentTypes, 'Article'),
+  showIdentifierSection: true,
+  showCatalogNumber: false,
 };
 
 export const Normal = () => (

@@ -993,6 +993,20 @@ export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
 export type ListPartialManuscriptResponse =
   ListResponse<PartialManuscriptResponse>;
 
+// A ManuscriptVersionResponse is indexed in the shared Algolia index, whose
+// objectID is the record's `id`. The record derives from the same Contentful
+// entry as the `manuscript` record, so its id is the manuscript's id
+// namespaced with this prefix to avoid overwriting the manuscript record.
+export const MANUSCRIPT_VERSION_RECORD_ID_PREFIX = 'mv-';
+
+export const toManuscriptVersionRecordId = (manuscriptId: string): string =>
+  `${MANUSCRIPT_VERSION_RECORD_ID_PREFIX}${manuscriptId}`;
+
+export const manuscriptIdFromVersionRecordId = (
+  manuscriptVersionRecordId: string,
+): string =>
+  manuscriptVersionRecordId.replace(MANUSCRIPT_VERSION_RECORD_ID_PREFIX, '');
+
 export type ManuscriptVersionResponse = {
   id: string;
   hasLinkedResearchOutput: boolean;

@@ -135,6 +135,10 @@ export const NonAdmin: Story = {
   args: { ...Playground.args, isEditor: false },
 };
 
+export const Upcoming: Story = {
+  args: { ...Playground.args, hasFinished: false },
+};
+
 export const Overflow: Story = {
   args: { ...Playground.args, numberOfTeams: 14, teamsSharingFindings: 9 },
 };

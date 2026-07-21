@@ -45,7 +45,12 @@ const renderCard = (
 ) =>
   render(
     <StaticRouter location="/">
-      <EventSpeakers teams={teams} externalUsers={externalUsers} {...props} />
+      <EventSpeakers
+        teams={teams}
+        externalUsers={externalUsers}
+        hasFinished
+        {...props}
+      />
     </StaticRouter>,
   );
 
@@ -104,6 +109,39 @@ describe('EventSpeakers', () => {
       // 1 of 2 teams shared findings = 50%
       expect(getByText('50%')).toBeVisible();
       expect(getByText('1 of 2 teams')).toBeVisible();
+    });
+  });
+
+  describe('upcoming event', () => {
+    it('Should hide preliminary findings before the event has taken place', () => {
+      const { getByText, queryByText, queryByLabelText } = renderCard({
+        hasFinished: false,
+      });
+      // Speaker count stays; the findings metric, header and ticks disappear.
+      expect(getByText('4')).toBeVisible();
+      expect(queryByText('Preliminary findings')).not.toBeInTheDocument();
+      expect(queryByText('50%')).not.toBeInTheDocument();
+      expect(
+        queryByLabelText('Shared preliminary findings'),
+      ).not.toBeInTheDocument();
+      expect(
+        queryByLabelText('No preliminary findings'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('Should still expand a team to reveal members when findings are hidden', async () => {
+      const { getByRole, getByText } = renderCard({ hasFinished: false });
+      await userEvent.click(getByRole('button', { name: 'Expand Team Alpha' }));
+      expect(getByText('John Doe 0-0')).toBeVisible();
+    });
+
+    it('Should default to hiding findings when hasFinished is not provided', () => {
+      const { queryByText } = render(
+        <StaticRouter location="/">
+          <EventSpeakers teams={teams} externalUsers={externalUsers} />
+        </StaticRouter>,
+      );
+      expect(queryByText('Preliminary findings')).not.toBeInTheDocument();
     });
   });
 

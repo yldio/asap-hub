@@ -95,7 +95,7 @@ export const interestGroupContentQueryFragment = gql`
                   date
                   awardType {
                     name
-                    icon {
+                    smallIcon {
                       url
                     }
                   }

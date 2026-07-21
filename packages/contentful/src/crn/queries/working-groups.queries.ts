@@ -84,7 +84,7 @@ export const workingGroupsContentQueryFragment = gql`
                     date
                     awardType {
                       name
-                      icon {
+                      smallIcon {
                         url
                       }
                     }
@@ -123,7 +123,7 @@ export const workingGroupsContentQueryFragment = gql`
                     date
                     awardType {
                       name
-                      icon {
+                      smallIcon {
                         url
                       }
                     }

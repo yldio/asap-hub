@@ -66,6 +66,55 @@ describe('parseAwardsCollection', () => {
     ]);
   });
 
+  it('maps award entries using smallIcon when icon is not present', () => {
+    expect(
+      parseAwardsCollection({
+        awardsCollection: {
+          items: [
+            {
+              date: '2024-01-01',
+              awardType: {
+                name: 'Open Science Champion',
+                smallIcon: { url: 'https://example.com/small-badge.png' },
+              },
+            },
+          ],
+        },
+      }),
+    ).toEqual([
+      {
+        name: 'Open Science Champion',
+        date: '2024-01-01',
+        iconUrl: 'https://example.com/small-badge.png',
+      },
+    ]);
+  });
+
+  it('prefers icon over smallIcon when both are present', () => {
+    expect(
+      parseAwardsCollection({
+        awardsCollection: {
+          items: [
+            {
+              date: '2024-01-01',
+              awardType: {
+                name: 'Open Science Champion',
+                icon: { url: 'https://example.com/badge.png' },
+                smallIcon: { url: 'https://example.com/small-badge.png' },
+              },
+            },
+          ],
+        },
+      }),
+    ).toEqual([
+      {
+        name: 'Open Science Champion',
+        date: '2024-01-01',
+        iconUrl: 'https://example.com/badge.png',
+      },
+    ]);
+  });
+
   it('returns an empty array when there is no awards collection', () => {
     expect(parseAwardsCollection({})).toEqual([]);
   });

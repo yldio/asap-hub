@@ -19,6 +19,7 @@ export type TeamMembershipWithAwards = {
       awardType?: {
         name?: string | null;
         icon?: { url?: string | null } | null;
+        smallIcon?: { url?: string | null } | null;
       } | null;
     } | null)[];
   } | null;
@@ -88,7 +89,10 @@ export const parseAwardsCollection = (
         {
           name,
           date: award.date,
-          iconUrl: award.awardType?.icon?.url ?? undefined,
+          iconUrl:
+            award.awardType?.icon?.url ??
+            award.awardType?.smallIcon?.url ??
+            undefined,
         },
       ];
     },

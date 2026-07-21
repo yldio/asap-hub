@@ -91,7 +91,7 @@ export const FETCH_TEAM_BY_ID = gql`
                           date
                           awardType {
                             name
-                            icon {
+                            smallIcon {
                               url
                             }
                           }

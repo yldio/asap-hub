@@ -32011,7 +32011,7 @@ export type InterestGroupsContentFragment = Pick<
                             Pick<Awards, 'date'> & {
                               awardType?: Maybe<
                                 Pick<AwardType, 'name'> & {
-                                  icon?: Maybe<Pick<Asset, 'url'>>;
+                                  smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                 }
                               >;
                             }
@@ -32131,7 +32131,7 @@ export type FetchInterestGroupByIdQuery = {
                                 Pick<Awards, 'date'> & {
                                   awardType?: Maybe<
                                     Pick<AwardType, 'name'> & {
-                                      icon?: Maybe<Pick<Asset, 'url'>>;
+                                      smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                     }
                                   >;
                                 }
@@ -32268,7 +32268,9 @@ export type FetchInterestGroupsQuery = {
                                       Pick<Awards, 'date'> & {
                                         awardType?: Maybe<
                                           Pick<AwardType, 'name'> & {
-                                            icon?: Maybe<Pick<Asset, 'url'>>;
+                                            smallIcon?: Maybe<
+                                              Pick<Asset, 'url'>
+                                            >;
                                           }
                                         >;
                                       }
@@ -32420,7 +32422,7 @@ export type FetchInterestGroupsByUserIdQuery = {
                                               Pick<Awards, 'date'> & {
                                                 awardType?: Maybe<
                                                   Pick<AwardType, 'name'> & {
-                                                    icon?: Maybe<
+                                                    smallIcon?: Maybe<
                                                       Pick<Asset, 'url'>
                                                     >;
                                                   }
@@ -32582,7 +32584,7 @@ export type FetchInterestGroupsByTeamIdQuery = {
                                                 Pick<Awards, 'date'> & {
                                                   awardType?: Maybe<
                                                     Pick<AwardType, 'name'> & {
-                                                      icon?: Maybe<
+                                                      smallIcon?: Maybe<
                                                         Pick<Asset, 'url'>
                                                       >;
                                                     }
@@ -35259,7 +35261,7 @@ export type ProjectsContentDataFragment = Pick<
                                 Pick<Awards, 'date'> & {
                                   awardType?: Maybe<
                                     Pick<AwardType, 'name'> & {
-                                      icon?: Maybe<Pick<Asset, 'url'>>;
+                                      smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                     }
                                   >;
                                 }
@@ -35637,7 +35639,7 @@ export type FetchProjectByIdQuery = {
                                     Pick<Awards, 'date'> & {
                                       awardType?: Maybe<
                                         Pick<AwardType, 'name'> & {
-                                          icon?: Maybe<Pick<Asset, 'url'>>;
+                                          smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                         }
                                       >;
                                     }
@@ -37760,7 +37762,9 @@ export type FetchTeamByIdQuery = {
                                       Pick<Awards, 'date'> & {
                                         awardType?: Maybe<
                                           Pick<AwardType, 'name'> & {
-                                            icon?: Maybe<Pick<Asset, 'url'>>;
+                                            smallIcon?: Maybe<
+                                              Pick<Asset, 'url'>
+                                            >;
                                           }
                                         >;
                                       }
@@ -39901,7 +39905,7 @@ export type WorkingGroupsContentFragment = Pick<
                                 Pick<Awards, 'date'> & {
                                   awardType?: Maybe<
                                     Pick<AwardType, 'name'> & {
-                                      icon?: Maybe<Pick<Asset, 'url'>>;
+                                      smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                     }
                                   >;
                                 }
@@ -39945,7 +39949,7 @@ export type WorkingGroupsContentFragment = Pick<
                                 Pick<Awards, 'date'> & {
                                   awardType?: Maybe<
                                     Pick<AwardType, 'name'> & {
-                                      icon?: Maybe<Pick<Asset, 'url'>>;
+                                      smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                     }
                                   >;
                                 }
@@ -40134,7 +40138,7 @@ export type FetchWorkingGroupByIdQuery = {
                                     Pick<Awards, 'date'> & {
                                       awardType?: Maybe<
                                         Pick<AwardType, 'name'> & {
-                                          icon?: Maybe<Pick<Asset, 'url'>>;
+                                          smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                         }
                                       >;
                                     }
@@ -40178,7 +40182,7 @@ export type FetchWorkingGroupByIdQuery = {
                                     Pick<Awards, 'date'> & {
                                       awardType?: Maybe<
                                         Pick<AwardType, 'name'> & {
-                                          icon?: Maybe<Pick<Asset, 'url'>>;
+                                          smallIcon?: Maybe<Pick<Asset, 'url'>>;
                                         }
                                       >;
                                     }
@@ -40425,7 +40429,7 @@ export type FetchWorkingGroupsQuery = {
                                           Pick<Awards, 'date'> & {
                                             awardType?: Maybe<
                                               Pick<AwardType, 'name'> & {
-                                                icon?: Maybe<
+                                                smallIcon?: Maybe<
                                                   Pick<Asset, 'url'>
                                                 >;
                                               }
@@ -40471,7 +40475,7 @@ export type FetchWorkingGroupsQuery = {
                                           Pick<Awards, 'date'> & {
                                             awardType?: Maybe<
                                               Pick<AwardType, 'name'> & {
-                                                icon?: Maybe<
+                                                smallIcon?: Maybe<
                                                   Pick<Asset, 'url'>
                                                 >;
                                               }
@@ -42775,7 +42779,8 @@ export const InterestGroupsContentFragmentDoc = {
                                                             kind: 'Field',
                                                             name: {
                                                               kind: 'Name',
-                                                              value: 'icon',
+                                                              value:
+                                                                'smallIcon',
                                                             },
                                                             selectionSet: {
                                                               kind: 'SelectionSet',
@@ -44703,7 +44708,7 @@ export const ProjectsContentDataFragmentDoc = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
-                                                                      'icon',
+                                                                      'smallIcon',
                                                                   },
                                                                   selectionSet:
                                                                     {
@@ -49895,7 +49900,7 @@ export const WorkingGroupsContentFragmentDoc = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
-                                                                      'icon',
+                                                                      'smallIcon',
                                                                   },
                                                                   selectionSet:
                                                                     {
@@ -50178,7 +50183,7 @@ export const WorkingGroupsContentFragmentDoc = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
-                                                                      'icon',
+                                                                      'smallIcon',
                                                                   },
                                                                   selectionSet:
                                                                     {
@@ -70567,7 +70572,7 @@ export const FetchTeamByIdDocument = {
                                                                                                 name: {
                                                                                                   kind: 'Name',
                                                                                                   value:
-                                                                                                    'icon',
+                                                                                                    'smallIcon',
                                                                                                 },
                                                                                                 selectionSet:
                                                                                                   {

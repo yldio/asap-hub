@@ -172,7 +172,7 @@ export const projectsContentQueryFragment = gql`
                     date
                     awardType {
                       name
-                      icon {
+                      smallIcon {
                         url
                       }
                     }

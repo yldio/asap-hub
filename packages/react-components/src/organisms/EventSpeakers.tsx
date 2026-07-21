@@ -62,6 +62,9 @@ const mobileQuery = `@media (max-width: ${tabletScreen.min}px)`;
 const speakerTableStyles = css({
   width: '100%',
   borderCollapse: 'collapse',
+});
+
+const findingsCenterMobileStyles = css({
   [mobileQuery]: {
     'th:nth-of-type(2), tbody td:nth-of-type(2)': {
       textAlign: 'center',
@@ -242,6 +245,7 @@ const findingsIcon = (shared: boolean) => (
 const SpeakerRow: React.FC<{
   info: React.ReactNode;
   sharedPreliminaryFindings: boolean;
+  showFindings: boolean;
   expanded: boolean;
   onToggle: () => void;
   label: string;
@@ -250,6 +254,7 @@ const SpeakerRow: React.FC<{
 }> = ({
   info,
   sharedPreliminaryFindings,
+  showFindings,
   expanded,
   onToggle,
   label,
@@ -266,9 +271,11 @@ const SpeakerRow: React.FC<{
         <td css={[cellStyles, collapsedBottom]}>
           <span css={teamInfoStyles}>{info}</span>
         </td>
-        <td css={[statusCellStyles, collapsedBottom]}>
-          {findingsIcon(sharedPreliminaryFindings)}
-        </td>
+        {showFindings && (
+          <td css={[statusCellStyles, collapsedBottom]}>
+            {findingsIcon(sharedPreliminaryFindings)}
+          </td>
+        )}
         <td css={[statusCellStyles, chevronCellStyles, collapsedBottom]}>
           <button
             type="button"
@@ -283,7 +290,7 @@ const SpeakerRow: React.FC<{
       </tr>
       {expanded && (
         <tr>
-          <td colSpan={3} css={membersCellStyles}>
+          <td colSpan={showFindings ? 3 : 2} css={membersCellStyles}>
             {children}
           </td>
         </tr>
@@ -309,6 +316,9 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
     () => new Set(),
   );
   const [showAll, setShowAll] = useState(false);
+
+  // Preliminary findings are only shared once the event has taken place.
+  const showFindings = hasFinished;
 
   const externalCount = externalUsers?.members.length ?? 0;
   const hasExternal = externalCount > 0;
@@ -412,32 +422,41 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
             value={totalSpeakers}
             caption={`${teamMemberCount} from teams • ${externalCount} non-CRN`}
           />
-          <FindingsMetric
-            label="Preliminary findings"
-            value={findingsPercentage}
-            caption={`${teamsShared} of ${teamsTotal} teams`}
-          />
+          {showFindings && (
+            <FindingsMetric
+              label="Preliminary findings"
+              value={findingsPercentage}
+              caption={`${teamsShared} of ${teamsTotal} teams`}
+            />
+          )}
         </div>
 
         <div css={tableWrapperStyles}>
-          <table css={speakerTableStyles}>
+          <table
+            css={[
+              speakerTableStyles,
+              showFindings && findingsCenterMobileStyles,
+            ]}
+          >
             <colgroup>
               <col />
-              <col css={findingsColStyles} />
+              {showFindings && <col css={findingsColStyles} />}
               <col css={chevronColStyles} />
             </colgroup>
-            <thead>
-              <tr>
-                <th css={headerCellStyles} scope="col">
-                  Speakers
-                </th>
-                <th css={headerCellStyles} scope="col">
-                  <span css={fullFindingsLabel}>Preliminary Findings</span>
-                  <span css={shortFindingsLabel}>P. Findings</span>
-                </th>
-                <th css={headerCellStyles} />
-              </tr>
-            </thead>
+            {showFindings && (
+              <thead>
+                <tr>
+                  <th css={headerCellStyles} scope="col">
+                    Speakers
+                  </th>
+                  <th css={headerCellStyles} scope="col">
+                    <span css={fullFindingsLabel}>Preliminary Findings</span>
+                    <span css={shortFindingsLabel}>P. Findings</span>
+                  </th>
+                  <th css={headerCellStyles} />
+                </tr>
+              </thead>
+            )}
 
             {visibleTeams.map((team, index) => {
               const bottomOverride = lastRowPadding(
@@ -448,6 +467,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                   key={team.teamId}
                   label={team.teamName}
                   sharedPreliminaryFindings={team.sharedPreliminaryFindings}
+                  showFindings={showFindings}
                   expanded={expandedRows.has(team.teamId)}
                   onToggle={() => toggleRow(team.teamId)}
                   collapsedBottomPadding={bottomOverride}
@@ -512,6 +532,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                 sharedPreliminaryFindings={
                   externalUsers.sharedPreliminaryFindings
                 }
+                showFindings={showFindings}
                 expanded={expandedRows.has('external')}
                 onToggle={() => toggleRow('external')}
                 collapsedBottomPadding={0}

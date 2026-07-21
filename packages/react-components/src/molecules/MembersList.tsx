@@ -90,91 +90,87 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
   overrideNameStyles,
   userRoute = network({}).users({}).user,
-}) => {
-  return (
-    <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-      {members.map(
-        ({
-          id,
-          firstLine,
-          secondLine,
-          thirdLine,
-          alumniSinceDate,
-          ...member
-        }) => {
-          const href = userRoute({ userId: id }).$;
+}) => (
+  <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
+    {members.map(
+      ({
+        id,
+        firstLine,
+        secondLine,
+        thirdLine,
+        alumniSinceDate,
+        ...member
+      }) => {
+        const href = userRoute({ userId: id }).$;
 
-          return (
-            <li key={id} css={memberGridStyles}>
+        return (
+          <li key={id} css={memberGridStyles}>
+            <Anchor href={href} css={{ display: 'contents' }}>
+              <div css={[avatarStyles, hoverStyle]}>
+                <UserAvatar
+                  imageUrl={member.avatarUrl}
+                  firstName={member.firstName}
+                  lastName={member.lastName}
+                  latestAward={member.latestAward}
+                  badgeSize={18}
+                  avatarSize={48}
+                  overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+                />
+              </div>
+            </Anchor>
+            <Anchor
+              href={href}
+              css={({ colors }) => [
+                styles,
+                hover(colors),
+                nameStyles,
+                overrideNameStyles,
+              ]}
+            >
+              {firstLine}
+              {alumniSinceDate && (
+                <span css={badgeStyles}>{alumniBadgeIcon}</span>
+              )}
+            </Anchor>
+            {isValidElement(secondLine) ? (
+              <div css={[addToColumnStyles, textStyles]}>{secondLine}</div>
+            ) : (
               <Anchor href={href} css={{ display: 'contents' }}>
-                <div css={[avatarStyles, hoverStyle]}>
-                  <UserAvatar
-                    imageUrl={member.avatarUrl}
-                    firstName={member.firstName}
-                    lastName={member.lastName}
-                    latestAward={member.latestAward}
-                    badgeSize={18}
-                    avatarSize={48}
-                    overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
-                  />
+                <div css={[addToColumnStyles, secondLine && textStyles]}>
+                  <Ellipsis>{secondLine}</Ellipsis>
                 </div>
               </Anchor>
-              <Anchor
-                href={href}
-                css={({ colors }) => [
-                  styles,
-                  hover(colors),
-                  nameStyles,
-                  overrideNameStyles,
-                ]}
-              >
-                {firstLine}
-                {alumniSinceDate && (
-                  <span css={badgeStyles}>{alumniBadgeIcon}</span>
-                )}
-              </Anchor>
-              {isValidElement(secondLine) ? (
-                <div css={[addToColumnStyles, textStyles]}>{secondLine}</div>
+            )}
+            <div css={[addToColumnStyles, thirdLine && textStyles, labStyles]}>
+              {isValidElement(thirdLine) ? (
+                thirdLine
               ) : (
-                <Anchor href={href} css={{ display: 'contents' }}>
-                  <div css={[addToColumnStyles, secondLine && textStyles]}>
-                    <Ellipsis>{secondLine}</Ellipsis>
-                  </div>
-                </Anchor>
+                <Ellipsis>
+                  {thirdLine instanceof Array ? (
+                    thirdLine.map((team) => (
+                      <Fragment key={team.id}>
+                        <Link
+                          href={
+                            network({}).teams({}).team({ teamId: team.id }).$
+                          }
+                        >
+                          Team {team.displayName}
+                        </Link>{' '}
+                      </Fragment>
+                    ))
+                  ) : (
+                    <Anchor href={href} css={{ display: 'contents' }}>
+                      {thirdLine}
+                    </Anchor>
+                  )}
+                </Ellipsis>
               )}
-              <div
-                css={[addToColumnStyles, thirdLine && textStyles, labStyles]}
-              >
-                {isValidElement(thirdLine) ? (
-                  thirdLine
-                ) : (
-                  <Ellipsis>
-                    {thirdLine instanceof Array ? (
-                      thirdLine.map((team) => (
-                        <Fragment key={team.id}>
-                          <Link
-                            href={
-                              network({}).teams({}).team({ teamId: team.id }).$
-                            }
-                          >
-                            Team {team.displayName}
-                          </Link>{' '}
-                        </Fragment>
-                      ))
-                    ) : (
-                      <Anchor href={href} css={{ display: 'contents' }}>
-                        {thirdLine}
-                      </Anchor>
-                    )}
-                  </Ellipsis>
-                )}
-              </div>
-            </li>
-          );
-        },
-      )}
-    </ul>
-  );
-};
+            </div>
+          </li>
+        );
+      },
+    )}
+  </ul>
+);
 
 export default MembersList;

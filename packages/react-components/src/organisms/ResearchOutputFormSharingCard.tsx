@@ -1,6 +1,5 @@
 import {
   ResearchOutputPostRequest,
-  ResearchOutputResponse,
   ResearchOutputType,
   ResearchTagResponse,
   ValidationErrorResponse,
@@ -33,8 +32,11 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'changelog'
   | 'subtype'
 > & {
+  showChangelog: boolean;
+  showImpactAndCategory: boolean;
+  disableImpactAndCategory: boolean;
+
   isFormSubmitted: boolean;
-  isCreatingNewVersion: boolean;
   getImpactSuggestions: (
     searchQuery: string,
   ) => Promise<{ label: string; value: string }[]>;
@@ -49,8 +51,6 @@ type ResearchOutputFormSharingCardProps = Pick<
   onChangeCategories: NonNullable<
     ComponentPropsWithRef<typeof LabeledMultiSelect>['onChange']
   >;
-  displayChangelog?: boolean;
-  documentType?: ResearchOutputResponse['documentType'];
   type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
@@ -74,7 +74,8 @@ const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
   isFormSubmitted,
-  isCreatingNewVersion,
+  showImpactAndCategory,
+  disableImpactAndCategory,
   getImpactSuggestions,
   impact,
   layImpactStatement,
@@ -82,8 +83,7 @@ const ResearchOutputFormSharingCard: React.FC<
   getCategorySuggestions = noop,
   categories,
   onChangeCategories,
-  displayChangelog = false,
-  documentType,
+  showChangelog = false,
   isSaving,
   link,
   title,
@@ -148,7 +148,7 @@ const ResearchOutputFormSharingCard: React.FC<
   >([]);
 
   useEffect(() => {
-    if (documentType !== 'Article') return;
+    if (!showImpactAndCategory) return;
 
     const loadImpactOptions = async () => {
       const options = await getImpactSuggestions('');
@@ -156,7 +156,7 @@ const ResearchOutputFormSharingCard: React.FC<
     };
 
     void loadImpactOptions();
-  }, [documentType, getImpactSuggestions]);
+  }, [showImpactAndCategory, getImpactSuggestions]);
 
   useEffect(() => {
     setUrlValidationMessage(
@@ -204,10 +204,10 @@ const ResearchOutputFormSharingCard: React.FC<
   );
 
   useEffect(() => {
-    if (isFormSubmitted && documentType === 'Article') {
+    if (isFormSubmitted && showImpactAndCategory) {
       validateImpact();
     }
-  }, [isFormSubmitted, validateImpact, documentType]);
+  }, [isFormSubmitted, validateImpact, showImpactAndCategory]);
 
   return (
     <FormCard title="What are you sharing?">
@@ -324,7 +324,7 @@ const ResearchOutputFormSharingCard: React.FC<
         customValidationMessage={shortDescriptionValidationMessage}
       />
 
-      {documentType === 'Article' && (
+      {showImpactAndCategory && (
         <>
           <LabeledMultiSelect
             required
@@ -336,7 +336,7 @@ const ResearchOutputFormSharingCard: React.FC<
             title="Category"
             description="Select up to two options that best describe the scientific category of this manuscript."
             subtitle="(required)"
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             placeholder="Start typing..."
             loadOptions={getCategorySuggestions}
             onChange={(newValues) => {
@@ -371,7 +371,7 @@ const ResearchOutputFormSharingCard: React.FC<
             onBlur={validateImpact}
             customValidationMessage={impactValidationMessage}
             value={impact?.value ?? ''}
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             noOptionsMessage={(option) =>
               `Sorry, no impacts match ${option.inputValue}`
             }
@@ -399,7 +399,7 @@ const ResearchOutputFormSharingCard: React.FC<
           />
         </>
       )}
-      {displayChangelog && (
+      {showChangelog && (
         <LabeledTextArea
           title="Changelog"
           subtitle="(required)"

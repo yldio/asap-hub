@@ -35,6 +35,8 @@ type ResearchOutputExtraInformationProps = Pick<
   onChangeLabCatalogNumber?: (value: string) => void;
   isSaving: boolean;
   researchTags: ResearchTagResponse[];
+  showIdentifierSection: boolean;
+  showCatalogNumber: boolean;
 } & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<
@@ -60,6 +62,8 @@ const ResearchOutputExtraInformationCard: React.FC<
   environments,
   onChangeEnvironments = noop,
   researchTags,
+  showIdentifierSection,
+  showCatalogNumber,
 }) => {
   const filterByCategory = (name: string) => (tag: ResearchTagResponse) =>
     tag.category === name;
@@ -150,7 +154,7 @@ const ResearchOutputExtraInformationCard: React.FC<
           Ask ASAP to add a new keyword
         </Link>
       </div>
-      {documentType !== 'Report' && (
+      {showIdentifierSection && (
         <>
           <ResearchOutputIdentifier
             documentType={documentType}
@@ -159,7 +163,7 @@ const ResearchOutputExtraInformationCard: React.FC<
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
           />
-          {documentType === 'Lab Material' && (
+          {showCatalogNumber && (
             <LabeledTextField
               title="Catalog Number (Vendor/Lab)"
               subtitle="(optional)"

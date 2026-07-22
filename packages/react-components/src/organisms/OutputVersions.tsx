@@ -118,13 +118,13 @@ type Version = Omit<ResearchOutputVersion, 'documentType' | 'type'> & {
 export type OutputVersionsProps = {
   readonly themeVariant?: ThemeVariant;
   versions: Version[];
-  versionAction?: 'create' | 'edit';
+  formLayout?: boolean;
   app?: 'crn' | 'gp2';
 };
 
 const OutputVersions: React.FC<OutputVersionsProps> = ({
   versions,
-  versionAction,
+  formLayout = false,
   app,
 }) => {
   const truncateFrom = 5;
@@ -139,11 +139,11 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
   });
 
   return (
-    <main css={versionAction && app === 'crn' ? [mainStyles] : []}>
-      <div css={versionAction ? [createVersionWrapperStyles] : []}>
+    <main css={formLayout && app === 'crn' ? [mainStyles] : []}>
+      <div css={formLayout ? [createVersionWrapperStyles] : []}>
         <Card
           padding={false}
-          overrideStyles={versionAction ? createVersionCardStyles : undefined}
+          overrideStyles={formLayout ? createVersionCardStyles : undefined}
         >
           <div
             css={[
@@ -153,7 +153,7 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
           >
             <Headline2 noMargin>Version History</Headline2>
             <div css={descriptionStyles}>
-              {versionAction ? (
+              {formLayout ? (
                 <Paragraph noMargin>
                   List with all previous output versions that contributed to
                   this one. In case you want to add or edit older versions,

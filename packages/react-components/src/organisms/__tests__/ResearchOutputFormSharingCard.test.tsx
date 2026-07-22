@@ -1,22 +1,26 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MultiSelectOptionsType } from '../../atoms';
+import { editorRef, MultiSelectOptionsType } from '../../atoms';
 import { OptionsType } from '../../select';
+import { mockActErrorsInConsole } from '../../test-utils';
 import { noop } from '../../utils';
 
 import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
 
 const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
+  showChangelog: true,
+  showImpactAndCategory: true,
+  disableImpactAndCategory: false,
+
   isFormSubmitted: false,
-  documentType: 'Bioinformatics',
   link: '',
   title: '',
   descriptionMD: '',
   shortDescription: '',
   changelog: '',
   subtype: '',
-  displayChangelog: true,
   isSaving: false,
   researchTags: [],
   typeOptions: [],
@@ -34,11 +38,251 @@ const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   getCategorySuggestions: jest.fn().mockResolvedValue([]),
   categories: undefined,
   onChangeCategories: jest.fn(),
-  isCreatingNewVersion: false,
 };
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();
+});
+
+it('renders the card with provided values', () => {
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      descriptionMD="description text"
+      link="http://example.com"
+      title="title"
+      type={'Preprint'}
+      typeOptions={['Preprint', '3D Printing']}
+    />,
+  );
+  expect(screen.getAllByText('description text')[0]).toBeVisible();
+  expect(screen.getByDisplayValue('http://example.com')).toBeVisible();
+  expect(screen.getByDisplayValue('title')).toBeVisible();
+  expect(screen.getByText('Preprint')).toBeVisible();
+});
+
+it.each`
+  title      | label       | error
+  ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
+  ${'Title'} | ${/title/i} | ${'Please enter a title'}
+  ${'Type'}  | ${/type/i}  | ${'Please choose a type'}
+`('shows error message for missing value $title', async ({ label, error }) => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const { findByText } = render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      urlRequired
+      typeOptions={['3D Printing']}
+    />,
+  );
+  const input = screen.getByLabelText(label);
+  await userEvent.click(input);
+  await userEvent.tab();
+  expect(await findByText(error)).toBeVisible();
+
+  consoleMock.mockRestore();
+});
+
+it('does not require an url', async () => {
+  render(
+    <ResearchOutputFormSharingCard {...defaultProps} urlRequired={false} />,
+  );
+  expect(
+    await screen.findByText(
+      (content, node) =>
+        (content === 'URL' &&
+          node?.nextSibling?.textContent?.includes('(optional)')) ??
+        false,
+    ),
+  ).toBeVisible();
+
+  const input = screen.getByLabelText(/URL/i);
+  fireEvent.focusOut(input);
+  await expect(
+    screen.findByText('Please enter a valid URL, starting with http://'),
+  ).rejects.toThrow();
+});
+
+it.each`
+  field      | label       | prop
+  ${'Url'}   | ${/URL/i}   | ${'onChangeLink'}
+  ${'Title'} | ${/title/i} | ${'onChangeTitle'}
+`('triggers an onchange event for $field', async ({ label, prop }) => {
+  const onChangeFn = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...{ ...defaultProps, [prop]: onChangeFn }}
+    />,
+  );
+  const input = screen.getByLabelText(label);
+  fireEvent.change(input, { target: { value: 'test' } });
+  expect(onChangeFn).toHaveBeenLastCalledWith('test');
+});
+
+it('triggers an onchange event for Description', async () => {
+  const onChangeFn = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      onChangeDescription={onChangeFn}
+    />,
+  );
+  await waitFor(() => expect(editorRef.current).not.toBeNull());
+
+  editorRef.current?.focus();
+  const input = screen.getByTestId('editor');
+
+  await userEvent.click(input);
+  await userEvent.tab();
+  fireEvent.input(input, { data: 'test' });
+
+  await waitFor(() => {
+    expect(onChangeFn).toHaveBeenLastCalledWith('test');
+  });
+});
+
+it('triggers an onchange event for Short Description', async () => {
+  // Suppress act() warnings from TextArea's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const onChangeFn = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...{ ...defaultProps, onChangeShortDescription: onChangeFn }}
+    />,
+  );
+  const input = screen.getByRole('textbox', { name: /short description/i });
+  fireEvent.change(input, { target: { value: 'test' } });
+  await waitFor(() => {
+    expect(onChangeFn).toHaveBeenCalledWith('test');
+  });
+
+  consoleMock.mockRestore();
+});
+
+it('triggers an on change for type', async () => {
+  const onChangeFn = jest.fn();
+
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      typeOptions={['Preprint', '3D Printing', 'ASAP subgroup meeting']}
+      onChangeType={onChangeFn}
+    />,
+  );
+
+  const type = screen.getByLabelText(/type/i);
+  await userEvent.type(type, 'Preprint');
+  await userEvent.type(type, '{Enter}');
+
+  expect(onChangeFn).toHaveBeenCalledWith('Preprint');
+});
+
+it('triggers an on change for subtype', async () => {
+  const onChangeFn = jest.fn();
+
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      researchTags={[researchTagSubtypeResponse]}
+      onChangeSubtype={onChangeFn}
+    />,
+  );
+
+  const type = screen.getByLabelText(/subtype/i);
+  await userEvent.type(type, 'Metabolite');
+  await userEvent.type(type, '{Enter}');
+
+  expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
+});
+
+it('shows the custom no options message for type', async () => {
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      typeOptions={['ASAP annual meeting', '3D Printing']}
+    />,
+  );
+
+  await userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
+
+  expect(
+    screen.getByText('Sorry, no types match asdflkjasdflkj'),
+  ).toBeVisible();
+});
+
+it('displays server side validation error for link and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const mockClearError = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      link="http://example.com"
+      serverValidationErrors={[
+        {
+          instancePath: '/link',
+          keyword: '',
+          params: {},
+          schemaPath: '',
+        },
+      ]}
+      clearServerValidationError={mockClearError}
+    />,
+  );
+  expect(
+    screen.getByText(
+      'A Research Output with this URL already exists. Please enter a different URL.',
+    ),
+  ).toBeVisible();
+
+  const input = screen.getByLabelText(/URL/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/link');
+  });
+
+  consoleMock.mockRestore();
+});
+
+it('displays server side validation error for title and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const mockClearError = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      title="Example"
+      serverValidationErrors={[
+        {
+          instancePath: '/title',
+          keyword: '',
+          params: {},
+          schemaPath: '',
+        },
+      ]}
+      clearServerValidationError={mockClearError}
+    />,
+  );
+  expect(
+    screen.getByText(
+      'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
+    ),
+  ).toBeVisible();
+
+  const input = screen.getByLabelText(/title/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/title');
+  });
+
+  consoleMock.mockRestore();
 });
 
 describe('Changelog validation', () => {
@@ -92,7 +336,6 @@ it('renders the impact and categories', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       getImpactSuggestions={loadOptions}
       getCategorySuggestions={loadOptions}
     />,
@@ -125,7 +368,6 @@ it('renders category input and does not throw when getCategorySuggestions is noo
   render(
     <ResearchOutputFormSharingCard
       {...propsWithoutCategorySuggestions}
-      documentType="Article"
       getCategorySuggestions={undefined}
     />,
   );
@@ -148,7 +390,6 @@ it('renders category input and does not throw when onChangeCategories is noop', 
   render(
     <ResearchOutputFormSharingCard
       {...propsWithoutOnChangeCategories}
-      documentType="Article"
       onChangeCategories={noop}
     />,
   );
@@ -176,7 +417,6 @@ it('shows validation message when more than two categories are selected', async 
     rerender(
       <ResearchOutputFormSharingCard
         {...defaultProps}
-        documentType="Article"
         onChangeCategories={onChangeCategories}
         getCategorySuggestions={getCategorySuggestions}
         categories={newCategories}
@@ -187,7 +427,6 @@ it('shows validation message when more than two categories are selected', async 
   const { rerender } = render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       onChangeCategories={onChangeCategories}
       getCategorySuggestions={getCategorySuggestions}
       categories={[
@@ -223,17 +462,16 @@ it('shows validation message when more than two categories are selected', async 
   ).not.toBeInTheDocument();
 });
 
-it('disables impact and category fields when isCreatingNewVersion is true', () => {
+it('disables impact and category fields when disableImpactAndCategory is true', () => {
   const loadOptions = jest.fn();
   loadOptions.mockResolvedValue([]);
 
   const { rerender } = render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       getImpactSuggestions={loadOptions}
       getCategorySuggestions={loadOptions}
-      isCreatingNewVersion={true}
+      disableImpactAndCategory={true}
     />,
   );
   expect(screen.getByLabelText(/impact\(required\)/i)).toBeDisabled();
@@ -242,11 +480,10 @@ it('disables impact and category fields when isCreatingNewVersion is true', () =
   rerender(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       getImpactSuggestions={loadOptions}
       getCategorySuggestions={loadOptions}
       isSaving={false}
-      isCreatingNewVersion={false}
+      disableImpactAndCategory={false}
     />,
   );
   expect(screen.getByLabelText(/impact\(required\)/i)).toBeEnabled();
@@ -264,7 +501,6 @@ it('calls onChangeImpact with the correct option when an impact is selected', as
   render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       impact={undefined}
       onChangeImpact={onChangeImpact}
       getImpactSuggestions={getImpactSuggestions}
@@ -298,7 +534,6 @@ it('shows validation message when impact is not selected', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       isFormSubmitted={true}
       impact={undefined}
       getImpactSuggestions={getImpactSuggestions}
@@ -321,7 +556,6 @@ it('does not show impact validation message when impact is selected', async () =
   render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
-      documentType="Article"
       isFormSubmitted={true}
       impact={{ label: 'High Impact', value: 'high' }}
       getImpactSuggestions={getImpactSuggestions}
@@ -336,9 +570,7 @@ it('does not show impact validation message when impact is selected', async () =
 });
 
 it('shows validation message when lay impact statement exceeds 100 characters', async () => {
-  render(
-    <ResearchOutputFormSharingCard {...defaultProps} documentType="Article" />,
-  );
+  render(<ResearchOutputFormSharingCard {...defaultProps} />);
 
   const longText = 'a'.repeat(101);
   const layImpactInput = screen.getByRole('textbox', {

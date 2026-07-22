@@ -5,6 +5,7 @@ import {
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
+import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
@@ -16,9 +17,19 @@ export default {
 };
 
 const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
   flowId: 'team-create-manual',
-  availableActions: { canSaveDraft: true },
+  availableActions: resolveResearchOutputAvailableActions({
+    flowId: 'team-create-manual',
+    permissions: {
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      canShareResearchOutput: true,
+    },
+    researchOutputData: undefined,
+    documentType: 'Article',
+    versions: [],
+    isImportedFromManuscript: false,
+  }),
   permissions: {
     canEditResearchOutput: true,
     canPublishResearchOutput: true,

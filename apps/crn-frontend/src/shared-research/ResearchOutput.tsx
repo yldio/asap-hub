@@ -170,14 +170,21 @@ const ResearchOutput: React.FC = () => {
                       versionAction={'create'}
                     />
                   ) : (
-                    researchOutputData.teams[0]?.id && (
+                    researchOutputData.teams[0]?.id &&
+                    // hold the flow until the tracked manuscript's latest
+                    // version arrives, so TeamOutput can derive its state
+                    // instead of waiting on it
+                    (researchOutputData.relatedManuscript &&
+                    !latestManuscriptVersion ? (
+                      <Loading />
+                    ) : (
                       <TeamOutput
                         teamId={researchOutputData.teams[0]?.id}
-                        researchOutputData={researchOutputData}
+                        existingOutput={researchOutputData}
                         latestManuscriptVersion={latestManuscriptVersion}
                         versionAction={'create'}
                       />
-                    )
+                    ))
                   )
                 }
               />
@@ -199,7 +206,7 @@ const ResearchOutput: React.FC = () => {
                     researchOutputData.teams[0]?.id && (
                       <TeamOutput
                         teamId={researchOutputData.teams[0].id}
-                        researchOutputData={researchOutputData}
+                        existingOutput={researchOutputData}
                         versionAction={'edit'}
                       />
                     )

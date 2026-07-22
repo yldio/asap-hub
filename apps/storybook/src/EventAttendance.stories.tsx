@@ -24,37 +24,37 @@ const teams = [
     teamId: 't1',
     teamName: 'Barbieri',
     attended: true,
-    teamType: 'discovery' as const,
+    teamType: 'Discovery Team' as const,
   },
   {
     teamId: 't2',
     teamName: 'De Camilli',
     attended: true,
-    teamType: 'discovery' as const,
+    teamType: 'Discovery Team' as const,
   },
   {
     teamId: 't3',
     teamName: 'Edwards',
     attended: true,
-    teamType: 'resource' as const,
+    teamType: 'Resource Team' as const,
   },
   {
     teamId: 't4',
     teamName: 'Ferguson',
     attended: true,
-    teamType: 'resource' as const,
+    teamType: 'Resource Team' as const,
   },
   {
     teamId: 't5',
     teamName: 'Herzog',
     attended: true,
-    teamType: 'resource' as const,
+    teamType: 'Resource Team' as const,
   },
   {
     teamId: 't6',
     teamName: 'Lippincott-Schwartz',
     attended: false,
-    teamType: 'discovery' as const,
+    teamType: 'Discovery Team' as const,
   },
 ];
 
@@ -90,7 +90,7 @@ export const NoComparison: Story = {
   },
 };
 
-const teamTypes = ['discovery', 'resource'] as const;
+const teamTypes = ['Discovery Team', 'Resource Team'] as const;
 const manyTeams = Array.from({ length: 14 }, (_, index) => ({
   teamId: `team-${index + 1}`,
   teamName: `Team ${index + 1}`,

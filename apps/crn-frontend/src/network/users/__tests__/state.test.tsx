@@ -143,6 +143,11 @@ describe('usePatchUserAvatarById', () => {
     queryClient.setQueryData(manuscriptQueryKeys.detail('m-1'), {
       id: 'm-1',
     });
+    queryClient.setQueryData(manuscriptQueryKeys.list(manuscriptListOptions), {
+      total: 1,
+      items: [{ id: 'm-1' }],
+    });
+    queryClient.setQueryData(manuscriptQueryKeys.batch(['m-1']), 1);
     queryClient.setQueryData(projectQueryKeys.detail('p-1'), { id: 'p-1' });
 
     await act(() => result.current('data:image/jpeg;base64,abc'));
@@ -153,6 +158,10 @@ describe('usePatchUserAvatarById', () => {
     expect(isInvalidated(userQueryKeys.detail('someone-else'))).toBe(true);
     expect(isInvalidated(userQueryKeys.detail(id))).toBe(false);
     expect(isInvalidated(manuscriptQueryKeys.detail('m-1'))).toBe(false);
+    expect(isInvalidated(manuscriptQueryKeys.list(manuscriptListOptions))).toBe(
+      false,
+    );
+    expect(isInvalidated(manuscriptQueryKeys.batch(['m-1']))).toBe(false);
     expect(isInvalidated(projectQueryKeys.detail('p-1'))).toBe(false);
   });
 });
@@ -186,6 +195,12 @@ const createWrapper =
       </Suspense>
     </QueryClientProvider>
   );
+
+const manuscriptListOptions = {
+  searchQuery: '',
+  currentPage: 0,
+  pageSize: 10,
+} as Parameters<typeof manuscriptQueryKeys.list>[0];
 
 const listOptions = {
   searchQuery: '',

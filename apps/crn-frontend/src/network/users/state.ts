@@ -61,7 +61,9 @@ export const useUserById = (id: string): UserResponse | undefined => {
 const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
   const overlayKeys = [
     userQueryKeys.detail(userId),
-    manuscriptQueryKeys.details(),
+    // the whole scope: lists hold write-through merges (Algolia lag) and the
+    // batch query fans fetched data into the detail overlays
+    manuscriptQueryKeys.all,
     projectQueryKeys.details(),
     discussionQueryKeys.all,
     researchOutputQueryKeys.details(),

@@ -13,14 +13,14 @@ const teams: EventAttendanceTeam[] = [
     teamId: 't1',
     teamName: 'Team Alpha',
     attended: true,
-    teamType: 'discovery',
+    teamType: 'Discovery Team',
   },
   {
     teamId: 't2',
     teamName: 'Team Beta',
     attended: false,
     isTeamInactive: true,
-    teamType: 'resource',
+    teamType: 'Resource Team',
   },
   { teamId: 't3', teamName: 'Team Gamma', attended: true },
 ];

@@ -55,6 +55,10 @@ export {
 } from './atoms';
 export type { MultiSelectOptionsType, MultiSelectProps } from './atoms';
 export type { ManuscriptVersionOption } from './templates';
+export type {
+  ResearchOutputToast,
+  ResearchOutputToastLocationState,
+} from './organisms';
 export * from './colors';
 export { borderWidth } from './form';
 export * from './hooks';
@@ -235,7 +239,7 @@ export {
   SharedResearchDetailsTagsCard,
   SharedResearchListCard,
   SharedResearchMetadata,
-  SharedResearchOutputBanners,
+  SharedResearchOutputToasts,
   SharedResearchOutputButtons,
   SharingPrelimFindingsTable,
   SpeakerList,

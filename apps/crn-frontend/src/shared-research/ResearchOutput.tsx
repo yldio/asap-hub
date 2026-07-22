@@ -2,6 +2,8 @@ import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   Loading,
   NotFoundPage,
+  ResearchOutputToast,
+  ResearchOutputToastLocationState,
   ScrollToTop,
   SharedResearchOutput,
   utils,
@@ -12,7 +14,7 @@ import {
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
-import { Route, Routes, useLocation, useMatch } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { Suspense, useEffect, useState } from 'react';
@@ -27,15 +29,34 @@ const ResearchOutput: React.FC = () => {
     sharedResearch({}).researchOutput,
   );
 
-  const publishedNowMatch = useMatch(
-    sharedResearch({})
-      .researchOutput({ researchOutputId })
-      .researchOutputPublished({ researchOutputId }).$,
-  );
-
-  const publishedNow = !!publishedNowMatch;
   const location = useLocation();
-  const urlSearchParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
+
+  const outputPath = sharedResearch({}).researchOutput({ researchOutputId }).$;
+
+  const [toast, setToast] = useState<ResearchOutputToast | undefined>();
+
+  useEffect(() => {
+    const stateToast = (
+      location.state as ResearchOutputToastLocationState | null
+    )?.toast;
+    if (stateToast) {
+      setToast(stateToast);
+      void navigate(`${location.pathname}${location.search}`, {
+        replace: true,
+        state: null,
+      });
+    } else if (location.pathname !== outputPath) {
+      setToast(undefined);
+    }
+  }, [
+    location.pathname,
+    location.search,
+    location.state,
+    navigate,
+    outputPath,
+  ]);
+
   const researchOutputData = useResearchOutputById(researchOutputId);
 
   const backHref = useBackHref() ?? sharedResearch({}).$;
@@ -99,7 +120,7 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     const renderResearchOutputView = () => (
       <Frame title={researchOutputData.title}>
-        {publishedNow && <ScrollToTop />}
+        {toast === 'published' && <ScrollToTop />}
         <SharedResearchOutput
           {...researchOutputData}
           backHref={backHref}
@@ -124,8 +145,7 @@ const ResearchOutput: React.FC = () => {
               published: true,
             })
           }
-          publishedNow={publishedNow}
-          draftCreated={urlSearchParams.get('draftCreated') === 'true'}
+          toast={toast}
           checkForNewVersion={checkForNewVersion}
         />
       </Frame>
@@ -136,13 +156,6 @@ const ResearchOutput: React.FC = () => {
         <Suspense key={location.pathname} fallback={<Loading />}>
           <Routes>
             <Route index element={renderResearchOutputView()} />
-            <Route
-              path={
-                sharedResearch({}).researchOutput({ researchOutputId })
-                  .researchOutputPublished.template
-              }
-              element={renderResearchOutputView()}
-            />
             {permissions.canVersionResearchOutput && (
               <Route
                 path={

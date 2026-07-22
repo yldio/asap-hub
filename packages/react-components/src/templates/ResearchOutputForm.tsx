@@ -22,20 +22,21 @@ import { useMatch, useNavigate } from 'react-router';
 
 import { OptionsType } from '../select';
 
-import { Button, MultiSelectOptionsType } from '../atoms';
+import { MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import {
   Form,
   ResearchOutputConfirmModal,
   ResearchOutputConfirmModalType,
   ResearchOutputExtraInformationCard,
+  ResearchOutputFormActions,
   ResearchOutputFormSharingCard,
   ResearchOutputPublishingCard,
   ResearchOutputRelatedEventsCard,
 } from '../organisms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
-import { mobileScreen, rem } from '../pixels';
+import { rem } from '../pixels';
 
 import {
   getDecision,
@@ -112,58 +113,6 @@ const contentStyles = css({
   rowGap: rem(32),
 });
 
-const formControlsContainerStyles = css({
-  display: 'flex',
-  justifyContent: 'end',
-  paddingBottom: rem(200), // Hack for labs selector
-  [`@media (max-width: 810px)`]: {
-    justifySelf: 'end',
-    width: '100%',
-  },
-});
-
-const formControlsTwoButtonsStyles = css({
-  display: 'grid',
-  alignItems: 'end',
-  gridGap: rem(24),
-  gridTemplateColumns: '1fr 1fr',
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gridTemplateColumns: '1fr',
-    width: '100%',
-    'button:nth-of-type(1)': {
-      order: 2,
-      margin: '0',
-    },
-    'button:nth-of-type(2)': {
-      order: 1,
-      margin: '0',
-    },
-  },
-});
-
-const formControlsThreeButtonsStyles = css({
-  display: 'grid',
-  alignItems: 'end',
-  gap: rem(24),
-  gridTemplateColumns: '1fr 1fr 1fr',
-  [`@media (max-width: 1110px)`]: {
-    gridTemplateColumns: '1fr',
-    width: '100%',
-    'button:nth-of-type(1)': {
-      order: 3,
-      margin: '0',
-    },
-    'button:nth-of-type(2)': {
-      order: 2,
-      margin: '0',
-    },
-    'button:nth-of-type(3)': {
-      order: 1,
-      margin: '0',
-    },
-  },
-});
-
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   displayChangelog,
   documentType,
@@ -200,8 +149,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const showSaveDraftButton = availableActions.canSaveDraft;
 
-  const showPublishButton = canPublishResearchOutput;
-  const displayThreeButtons = showSaveDraftButton && showPublishButton;
+  const showPublishButton = !!canPublishResearchOutput;
 
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
     researchOutputData?.type || undefined,
@@ -488,43 +436,21 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           setRedirectOnSave,
           onCancel: handleCancel,
         }) => {
-          const save = (draftSave = false) =>
-            getWrappedOnSave(async () => {
-              const researchOutput = await (draftSave
-                ? onSaveDraft(currentPayload)
-                : onSave(currentPayload));
-              setRemotePayload(currentPayload);
+          const navigateToDetailPage = (id: string, toast?: string) => {
+            const detailPageUrl = sharedResearch({}).researchOutput({
+              researchOutputId: id,
+            }).$;
+            const locationState = toast ? { toast } : undefined;
 
-              if (researchOutput) {
-                const { id } = researchOutput;
-                const baseUrl = sharedResearch({}).researchOutput({
-                  researchOutputId: id,
-                }).$;
-                const savePath =
-                  draftSave && !researchOutputData?.id
-                    ? `${baseUrl}?draftCreated=true`
-                    : baseUrl;
+            setRedirectOnSave(detailPageUrl, locationState);
 
-                const publishPath = sharedResearch({})
-                  .researchOutput({
-                    researchOutputId: id,
-                  })
-                  .researchOutputPublished({}).$;
-
-                const redirectPath =
-                  (!published || versionAction === 'create') && !draftSave
-                    ? publishPath
-                    : savePath;
-
-                setRedirectOnSave(redirectPath);
-
-                // Force navigation immediately to prevent React 18 batching from
-                // letting useNavigationWarning cleanup interfere with the redirect.
-                // See https://asaphub.atlassian.net/browse/ASAP-1319
-                void navigate(redirectPath);
-              }
-              return researchOutput;
-            })();
+            // Force navigation immediately to prevent React 18 batching from
+            // letting useNavigationWarning cleanup interfere with the redirect.
+            // See https://asaphub.atlassian.net/browse/ASAP-1319
+            void navigate(detailPageUrl, {
+              state: locationState,
+            });
+          };
 
           const handleAction = async (
             actionType: 'draft' | 'publish',
@@ -534,24 +460,51 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             setIsFormSubmitted(true);
 
             const nextModal = getModal();
+
             if (nextModal) {
               setModal(nextModal);
-              return;
-            }
-
-            setSavingAction(actionType);
-            try {
-              await action();
-            } finally {
-              setSavingAction(null);
+            } else {
+              setSavingAction(actionType);
+              try {
+                await action();
+              } finally {
+                setSavingAction(null);
+              }
             }
           };
 
-          const handleSaveDraft = () =>
-            handleAction('draft', getDraftModal, () => save(true));
+          const saveDraft = getWrappedOnSave(async () => {
+            const researchOutput = await onSaveDraft(currentPayload);
+            setRemotePayload(currentPayload);
 
+            if (researchOutput) {
+              navigateToDetailPage(
+                researchOutput.id,
+                !researchOutputData?.id ? 'draftCreated' : undefined,
+              );
+            }
+
+            return researchOutput;
+          });
+
+          const save = getWrappedOnSave(async () => {
+            const researchOutput = await onSave(currentPayload);
+            setRemotePayload(currentPayload);
+
+            if (researchOutput) {
+              navigateToDetailPage(
+                researchOutput.id,
+                behavior.publishesOnSave ? 'published' : undefined,
+              );
+            }
+
+            return researchOutput;
+          });
+
+          const handleSaveDraft = () =>
+            handleAction('draft', getDraftModal, saveDraft);
           const handlePublish = () =>
-            handleAction('publish', getPublishModal, () => save(false));
+            handleAction('publish', getPublishModal, save);
 
           return (
             <>
@@ -559,7 +512,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 <ResearchOutputConfirmModal
                   modal={modal}
                   onCancel={() => setModal(null)}
-                  save={save}
+                  save={(draftSave) => (draftSave ? saveDraft() : save())}
                   setAlreadySeenModals={setAlreadySeenModals}
                 />
               )}
@@ -685,48 +638,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeRelatedEvents={setRelatedEvents}
                   isEditMode={!!researchOutputData}
                 />
-                <div css={formControlsContainerStyles}>
-                  <div
-                    css={
-                      displayThreeButtons
-                        ? formControlsThreeButtonsStyles
-                        : formControlsTwoButtonsStyles
-                    }
-                  >
-                    <Button
-                      enabled={!isSaving}
-                      fullWidth
-                      onClick={handleCancel}
-                      noMargin
-                    >
-                      Cancel
-                    </Button>
-                    {showSaveDraftButton && (
-                      <Button
-                        enabled={!isSaving}
-                        loading={isSaving && savingAction === 'draft'}
-                        fullWidth
-                        onClick={handleSaveDraft}
-                        primary={showSaveDraftButton && !showPublishButton}
-                        noMargin
-                      >
-                        Save Draft
-                      </Button>
-                    )}
-                    {showPublishButton && (
-                      <Button
-                        enabled={!isSaving}
-                        loading={isSaving && savingAction === 'publish'}
-                        fullWidth
-                        primary
-                        noMargin
-                        onClick={handlePublish}
-                      >
-                        {published ? 'Save' : 'Publish'}
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                <ResearchOutputFormActions
+                  savingAction={savingAction}
+                  isSaving={isSaving}
+                  published={published}
+                  showSaveDraftButton={showSaveDraftButton}
+                  showPublishButton={showPublishButton}
+                  onCancel={handleCancel}
+                  onSaveDraft={handleSaveDraft}
+                  onPublish={handlePublish}
+                />
               </div>
             </>
           );

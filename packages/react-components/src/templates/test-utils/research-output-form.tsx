@@ -1,14 +1,34 @@
 /* istanbul ignore file */
 import { InnerToastContext } from '@asap-hub/react-context';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useLocation } from 'react-router';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
 } from '@asap-hub/model';
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react';
 import ResearchOutputForm from '../ResearchOutputForm';
+
+export const capturedLocation: {
+  current: {
+    pathname: string;
+    search: string;
+    state: unknown;
+  } | null;
+} = { current: null };
+
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    capturedLocation.current = {
+      pathname: location.pathname,
+      search: location.search,
+      state: location.state,
+    };
+  }, [location]);
+  return null;
+};
 
 export const getDefaultProps = (): ComponentProps<
   typeof ResearchOutputForm
@@ -106,6 +126,7 @@ export const renderForm = (
   render(
     <InnerToastContext.Provider value={jest.fn()}>
       <MemoryRouter>
+        <LocationCapture />
         <ResearchOutputForm {...getDefaultProps()} {...propOverride} />
       </MemoryRouter>
     </InnerToastContext.Provider>,

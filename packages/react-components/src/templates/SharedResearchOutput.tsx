@@ -19,9 +19,11 @@ import {
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchDetailsTagsCard,
-  SharedResearchOutputBanners,
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
+  SharedResearchOutputToasts,
+  type ResearchOutputToast,
+  type ResearchOutputToastLocationState,
 } from '../organisms';
 import { rem } from '../pixels';
 import {
@@ -63,8 +65,7 @@ type SharedResearchOutputProps = Pick<
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
-    publishedNow: boolean;
-    draftCreated?: boolean;
+    toast?: ResearchOutputToast;
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
@@ -84,8 +85,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
-  publishedNow,
-  draftCreated,
+  toast,
   relatedEvents,
   statusChangedBy,
   isInReview,
@@ -181,13 +181,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   return (
     <div>
-      <SharedResearchOutputBanners
+      <SharedResearchOutputToasts
         published={published}
-        draftCreated={draftCreated}
+        toast={toast}
         association={association}
         documentType={props.documentType}
         statusChangedBy={statusChangedBy}
-        publishedNow={publishedNow}
         reviewToggled={reviewToggled}
         associationName={associationName}
         isInReview={isInReview}
@@ -269,9 +268,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             confirmText="Publish Output"
             onSave={() => publishOutput()}
             successHref={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .researchOutputPublished({}).$
+              sharedResearch({}).researchOutput({ researchOutputId: id }).$
+            }
+            successState={
+              {
+                toast: 'published',
+              } satisfies ResearchOutputToastLocationState
             }
             onCancel={() => {
               setDisplayPublishModal(false);

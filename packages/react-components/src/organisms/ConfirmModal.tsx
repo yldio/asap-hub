@@ -65,6 +65,7 @@ type ConfirmModalProps = {
   readonly confirmButtonStyle?: 'primary' | 'warning';
 
   readonly successHref?: string;
+  readonly successState?: unknown;
   readonly onSave?: () => void | Promise<void>;
 } & (
   | {
@@ -84,6 +85,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   error = 'There was an error',
   backHref,
   successHref,
+  successState,
   confirmButtonStyle = 'primary',
   onCancel = noop,
   onSave = noop,
@@ -139,7 +141,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                   setStatus('hasSaved');
                   const redirect = successHref ?? backHref;
                   if (redirect) {
-                    void historyPush(redirect);
+                    void historyPush(redirect, { state: successState });
                   }
                 } catch (e) {
                   setStatus('hasError');

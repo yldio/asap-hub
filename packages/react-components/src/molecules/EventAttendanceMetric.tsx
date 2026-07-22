@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { ProgressBar, ProgressWheel } from '../atoms';
+import { GradientProgressBar, GradientProgressWheel } from '../atoms';
 import { ember, fern } from '../colors';
 import { rem } from '../pixels';
 
@@ -45,10 +45,7 @@ type BaseProps = {
 };
 
 type EventAttendanceMetricProps = BaseProps &
-  (
-    | { variant: 'progress'; color?: string }
-    | { variant: 'delta'; direction: 'up' | 'down' }
-  );
+  ({ variant: 'progress' } | { variant: 'delta'; direction: 'up' | 'down' });
 
 const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
   const { label, value, caption } = props;
@@ -78,7 +75,7 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
     <div css={metricContainerStyles}>
       <div css={metricProgressRowStyles}>
         <span css={metricWheelStyles}>
-          <ProgressWheel percentage={value} color={props.color} />
+          <GradientProgressWheel percentage={value} />
         </span>
         <div>
           <p css={metricLabelStyles}>{label}</p>
@@ -87,7 +84,7 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
         </div>
       </div>
       <div css={metricBarStyles}>
-        <ProgressBar percentage={value} color={props.color} />
+        <GradientProgressBar percentage={value} />
       </div>
     </div>
   );

@@ -66,7 +66,7 @@ describe('parseAwardsCollection', () => {
     ]);
   });
 
-  it('maps award entries using smallIcon when icon is not present', () => {
+  it('maps award entries to name, date and small icon url', () => {
     expect(
       parseAwardsCollection({
         awardsCollection: {
@@ -85,12 +85,12 @@ describe('parseAwardsCollection', () => {
       {
         name: 'Open Science Champion',
         date: '2024-01-01',
-        iconUrl: 'https://example.com/small-badge.png',
+        smallIconUrl: 'https://example.com/small-badge.png',
       },
     ]);
   });
 
-  it('prefers icon over smallIcon when both are present', () => {
+  it('maps icon and smallIcon independently when both are present', () => {
     expect(
       parseAwardsCollection({
         awardsCollection: {
@@ -111,6 +111,7 @@ describe('parseAwardsCollection', () => {
         name: 'Open Science Champion',
         date: '2024-01-01',
         iconUrl: 'https://example.com/badge.png',
+        smallIconUrl: 'https://example.com/small-badge.png',
       },
     ]);
   });

@@ -89,10 +89,8 @@ export const parseAwardsCollection = (
         {
           name,
           date: award.date,
-          iconUrl:
-            award.awardType?.icon?.url ??
-            award.awardType?.smallIcon?.url ??
-            undefined,
+          iconUrl: award.awardType?.icon?.url ?? undefined,
+          smallIconUrl: award.awardType?.smallIcon?.url ?? undefined,
         },
       ];
     },

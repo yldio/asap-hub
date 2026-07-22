@@ -570,7 +570,7 @@ describe('Working Groups data provider', () => {
                                 date: '2025-09-11',
                                 awardType: {
                                   name: 'Open Science Champion',
-                                  icon: {
+                                  smallIcon: {
                                     url: 'https://example.com/avatar.jpg',
                                   },
                                 },
@@ -643,7 +643,7 @@ describe('Working Groups data provider', () => {
           latestAward: {
             name: 'Open Science Champion',
             date: '2025-09-11',
-            iconUrl: 'https://example.com/avatar.jpg',
+            smallIconUrl: 'https://example.com/avatar.jpg',
           },
         });
         expect(result!.members).toHaveLength(1);

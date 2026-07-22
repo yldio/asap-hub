@@ -13,35 +13,27 @@ describe('member avatar award badge', () => {
     mockIsEnabled.mockReturnValue(true);
   });
 
-  const latestAward = {
-    name: 'Open Science Champion',
-    date: '2024-01-01',
-    iconUrl: 'new',
-  };
-
-  it('displays avatar with badge if user has a latest award', () => {
+  it('displays avatar with badge if a badge url is provided', () => {
     const { getByAltText } = render(
-      <UserAvatar firstName="Bat" lastName="Man" latestAward={latestAward} />,
+      <UserAvatar
+        firstName="Bat"
+        lastName="Man"
+        badgeUrl="https://example.com"
+        badgeAlt="Open Science Champion"
+      />,
     );
 
     const badge = getByAltText('Open Science Champion');
-    expect(badge).toHaveAttribute('src', 'new');
+    expect(badge).toHaveAttribute('src', 'https://example.com');
   });
 
-  it('does not render an award badge when the user has none', () => {
-    const { queryByAltText } = render(
-      <UserAvatar firstName="Bat" lastName="Man" latestAward={undefined} />,
-    );
-
-    expect(queryByAltText('Open Science Champion')).not.toBeInTheDocument();
-  });
-
-  it('does not render an award badge when the latest award has no icon', () => {
+  it('does not render an award badge when no badge url is provided', () => {
     const { queryByAltText } = render(
       <UserAvatar
         firstName="Bat"
         lastName="Man"
-        latestAward={{ name: 'Open Science Champion', date: '2024-01-01' }}
+        badgeUrl={undefined}
+        badgeAlt="Open Science Champion"
       />,
     );
 
@@ -51,7 +43,12 @@ describe('member avatar award badge', () => {
   it('does not render an award badge when STAGING_MODE is disabled', () => {
     mockIsEnabled.mockReturnValue(false);
     const { queryByAltText } = render(
-      <UserAvatar firstName="Bat" lastName="Man" latestAward={latestAward} />,
+      <UserAvatar
+        firstName="Bat"
+        lastName="Man"
+        badgeUrl="https://example.com"
+        badgeAlt="Open Science Champion"
+      />,
     );
 
     expect(queryByAltText('Open Science Champion')).not.toBeInTheDocument();

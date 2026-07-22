@@ -1,36 +1,35 @@
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import SharedResearchOutputBanners, {
-  SharedResearchOutputBannersProps,
-} from '../SharedResearchOutputBanners';
+import SharedResearchOutputToasts, {
+  SharedResearchOutputToastsProps,
+} from '../SharedResearchOutputToasts';
 
-const defaultProps: SharedResearchOutputBannersProps = {
+const defaultProps: SharedResearchOutputToastsProps = {
   association: 'working group',
   documentType: 'Article',
   published: false,
   statusChangedBy: undefined,
-  publishedNow: false,
-  draftCreated: false,
+  toast: undefined,
   reviewToggled: false,
   associationName: 'Association Name',
   isInReview: false,
 };
 
-it('should render draft created banner', async () => {
+it('should render draft created toast', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners {...defaultProps} draftCreated={true} />,
+    <SharedResearchOutputToasts {...defaultProps} toast="draftCreated" />,
   );
 
-  const bannerText = 'Draft Working Group Article created successfully.';
+  const toastText = 'Draft Working Group Article created successfully.';
 
-  expect(getByText(bannerText)).toBeInTheDocument();
+  expect(getByText(toastText)).toBeInTheDocument();
 
   const closeButton = getByRole('button');
 
   await userEvent.click(closeButton);
 
-  await waitFor(() => expect(queryByText(bannerText)).toBeNull());
+  await waitFor(() => expect(queryByText(toastText)).toBeNull());
 });
 
 test.each`
@@ -38,31 +37,31 @@ test.each`
   ${'Working Group'}         | ${'working group'}
   ${'Team'}                  | ${'team'}
 `(
-  'should render draft created banner for $associationDisplayableText',
+  'should render draft created toast for $associationDisplayableText',
   async ({ associationDisplayableText, association }) => {
     const { queryByText, getByText, getByRole } = render(
-      <SharedResearchOutputBanners
+      <SharedResearchOutputToasts
         {...defaultProps}
-        draftCreated={true}
+        toast="draftCreated"
         association={association}
       />,
     );
 
-    const bannerText = `Draft ${associationDisplayableText} Article created successfully.`;
+    const toastText = `Draft ${associationDisplayableText} Article created successfully.`;
 
-    expect(getByText(bannerText)).toBeInTheDocument();
+    expect(getByText(toastText)).toBeInTheDocument();
 
     const closeButton = getByRole('button');
 
     await userEvent.click(closeButton);
 
-    await waitFor(() => expect(queryByText(bannerText)).toBeNull());
+    await waitFor(() => expect(queryByText(toastText)).toBeNull());
   },
 );
 
-it('should render review requested banner', async () => {
+it('should render review requested toast', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners
+    <SharedResearchOutputToasts
       {...defaultProps}
       reviewToggled={true}
       statusChangedBy={{
@@ -74,42 +73,42 @@ it('should render review requested banner', async () => {
     />,
   );
 
-  const bannerText =
+  const toastText =
     'Draft working group Article submitted for PM review successfully.';
 
-  expect(getByText(bannerText)).toBeInTheDocument();
+  expect(getByText(toastText)).toBeInTheDocument();
 
   const closeButton = getByRole('button');
 
   await userEvent.click(closeButton);
 
-  await waitFor(() => expect(queryByText(bannerText)).toBeNull());
+  await waitFor(() => expect(queryByText(toastText)).toBeNull());
 });
 
-it('should render review dismissed banner', async () => {
+it('should render review dismissed toast', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners
+    <SharedResearchOutputToasts
       {...defaultProps}
       reviewToggled={true}
       statusChangedBy={undefined}
     />,
   );
 
-  const bannerText =
+  const toastText =
     'In review working group Article switched to draft successfully.';
 
-  expect(getByText(bannerText)).toBeInTheDocument();
+  expect(getByText(toastText)).toBeInTheDocument();
 
   const closeButton = getByRole('button');
 
   await userEvent.click(closeButton);
 
-  await waitFor(() => expect(queryByText(bannerText)).toBeNull());
+  await waitFor(() => expect(queryByText(toastText)).toBeNull());
 });
 
-it('should render review requested banner with association name', async () => {
+it('should render review requested toast with association name', async () => {
   const { getByText } = render(
-    <SharedResearchOutputBanners
+    <SharedResearchOutputToasts
       {...defaultProps}
       statusChangedBy={{
         id: 'user-id',
@@ -127,25 +126,29 @@ it('should render review requested banner with association name', async () => {
   ).toBeInTheDocument();
 });
 
-it('should render published now banner', async () => {
+it('should render published now toast', async () => {
   const { queryByText, getByText, getByRole } = render(
-    <SharedResearchOutputBanners {...defaultProps} published publishedNow />,
+    <SharedResearchOutputToasts
+      {...defaultProps}
+      published
+      toast="published"
+    />,
   );
 
-  const bannerText = 'Working Group Article published successfully.';
+  const toastText = 'Working Group Article published successfully.';
 
-  expect(getByText(bannerText)).toBeInTheDocument();
+  expect(getByText(toastText)).toBeInTheDocument();
 
   const closeButton = getByRole('button');
 
   await userEvent.click(closeButton);
 
-  await waitFor(() => expect(queryByText(bannerText)).toBeNull());
+  await waitFor(() => expect(queryByText(toastText)).toBeNull());
 });
 
 it('should render only PMs can publish output', async () => {
   const { getByText } = render(
-    <SharedResearchOutputBanners
+    <SharedResearchOutputToasts
       {...defaultProps}
       statusChangedBy={undefined}
     />,

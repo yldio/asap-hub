@@ -9,7 +9,7 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent, within } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
@@ -24,12 +24,20 @@ import { mockActErrorsInConsole } from '../../../test-utils';
 jest.setTimeout(60000);
 
 // Helper to capture location in tests
-let currentLocation: { pathname: string; search: string } | null = null;
+let currentLocation: {
+  pathname: string;
+  search: string;
+  state: unknown;
+} | null = null;
 let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
+    currentLocation = {
+      pathname: location.pathname,
+      search: location.search,
+      state: location.state,
+    };
   }, [location]);
   return null;
 };
@@ -197,9 +205,7 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
     await waitFor(() => {
       expect(currentLocation).not.toBeNull();
-      expect(currentLocation?.pathname).toEqual(
-        `/shared-research/${id}/publishedNow`,
-      );
+      expect(currentLocation?.pathname).toEqual(`/shared-research/${id}`);
     });
   });
 
@@ -222,6 +228,28 @@ describe('on submit', () => {
     });
   });
 
+  it('saves as draft, not publish, when confirming the same description warning', async () => {
+    await setupForm({
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        descriptionMD: 'example description',
+      },
+      propOverride: {
+        flowId: 'team-duplicate',
+        availableActions: { canSaveDraft: true },
+      },
+    });
+    await userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+    expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+    await userEvent.click(
+      screen.getByRole('button', { name: /Keep and save/i }),
+    );
+    await waitFor(() => {
+      expect(saveDraftFn).toHaveBeenCalled();
+    });
+    expect(saveFn).not.toHaveBeenCalled();
+  });
+
   it('will show you confirmation dialog and allow you to cancel it', async () => {
     const documentType = 'Bioinformatics' as const;
 
@@ -230,6 +258,7 @@ describe('on submit', () => {
         <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}
+          flowId="team-create-manual"
           researchOutputData={initialResearchOutputData}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
@@ -250,12 +279,16 @@ describe('on submit', () => {
     );
     const button = screen.getByRole('button', { name: /Publish/i });
     await userEvent.click(button);
+
     expect(
       screen.getByRole('button', { name: 'Publish Output' }),
     ).toBeVisible();
     await userEvent.click(
-      screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      within(screen.getByRole('dialog')).getAllByRole('button', {
+        name: /Cancel/i,
+      })[0]!,
     );
+
     expect(screen.queryByRole('button', { name: 'Publish Output' })).toBeNull();
     expect(saveFn).not.toHaveBeenCalled();
   });

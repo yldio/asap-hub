@@ -90,6 +90,7 @@ export { default as ResearchOutputExtraInformationCard } from './ResearchOutputE
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
 export { default as ResearchOutputPublishingCard } from './ResearchOutputPublishingCard';
 export { default as ResearchOutputConfirmModal } from './ResearchOutputConfirmModal';
+export { default as ResearchOutputFormActions } from './ResearchOutputFormActions';
 export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as ResearchOutputRelatedEventsCard } from './ResearchOutputRelatedEventsCard';
 export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRelatedResearchCard';
@@ -109,7 +110,11 @@ export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchDetailsTagsCard } from './SharedResearchDetailsTagsCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';
-export { default as SharedResearchOutputBanners } from './SharedResearchOutputBanners';
+export { default as SharedResearchOutputToasts } from './SharedResearchOutputToasts';
+export type {
+  ResearchOutputToast,
+  ResearchOutputToastLocationState,
+} from './SharedResearchOutputToasts';
 export { default as SharedResearchOutputButtons } from './SharedResearchOutputButtons';
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakerList } from './SpeakerList';

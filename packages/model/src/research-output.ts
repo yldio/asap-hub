@@ -630,11 +630,15 @@ const requiresDescriptionConfirm = (
   flow: ResearchOutputFlowDescriptor,
 ): boolean => flow.action === 'duplicate';
 
+const publishesOnSave = (flow: ResearchOutputFlowDescriptor): boolean =>
+  !flow.startsPublished || flow.action === 'add-version';
+
 export type ResearchOutputFlowBehavior = {
   supportsDrafts: boolean;
   requiresAddVersionConfirm: boolean;
   requiresPublishConfirm: boolean;
   requiresSameDescriptionConfirm: boolean;
+  publishesOnSave: boolean;
 };
 
 export const getResearchOutputFlowBehavior = (
@@ -646,5 +650,6 @@ export const getResearchOutputFlowBehavior = (
     requiresAddVersionConfirm: requiresAddVersionConfirm(flow),
     requiresPublishConfirm: requiresPublishConfirm(flow),
     requiresSameDescriptionConfirm: requiresDescriptionConfirm(flow),
+    publishesOnSave: publishesOnSave(flow),
   };
 };

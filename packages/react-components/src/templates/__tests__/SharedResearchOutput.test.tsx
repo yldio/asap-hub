@@ -31,8 +31,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   environments: [],
   organisms: [],
   backHref: '#',
-  publishedNow: false,
-  draftCreated: false,
+  toast: undefined,
   onRequestReview: jest.fn(() => Promise.resolve()),
   onPublish: jest.fn(() => Promise.resolve()),
   checkForNewVersion: jest.fn(() => Promise.resolve(false)),
@@ -420,12 +419,12 @@ it('merges different tag types in the correct order', () => {
 });
 
 describe('a draft output', () => {
-  it('can never display the published now banner for a draft', () => {
+  it('can never display the published now toast for a draft', () => {
     const { queryByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
-        publishedNow={true}
+        toast="published"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -441,7 +440,7 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        draftCreated={true}
+        toast="draftCreated"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -458,7 +457,7 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        draftCreated={true}
+        toast="draftCreated"
         teams={[
           { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
         ]}
@@ -477,7 +476,7 @@ describe('a draft output', () => {
         <SharedResearchOutput
           {...props}
           published={false}
-          draftCreated={true}
+          toast="draftCreated"
           teams={[
             { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
           ]}
@@ -499,7 +498,7 @@ describe('a draft output', () => {
         <SharedResearchOutput
           {...props}
           published={false}
-          draftCreated={true}
+          toast="draftCreated"
           teams={[
             { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
           ]}
@@ -593,7 +592,7 @@ describe('a newly published output', () => {
         workingGroups={undefined}
         documentType="Article"
         published={true}
-        publishedNow
+        toast="published"
       />,
     );
     const toast = getByText('Team Article published successfully.');
@@ -613,7 +612,7 @@ describe('a newly published output', () => {
           workingGroups={undefined}
           documentType={researchOutputDocumentType}
           published={true}
-          publishedNow
+          toast="published"
         />,
       );
       expect(
@@ -638,7 +637,7 @@ describe('a newly published output', () => {
           ]}
           documentType={researchOutputDocumentType}
           published={true}
-          publishedNow
+          toast="published"
         />,
       );
       expect(

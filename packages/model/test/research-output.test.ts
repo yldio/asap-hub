@@ -100,33 +100,35 @@ describe('convertDecisionToBoolean', () => {
 
 describe('getResearchOutputFlowBehavior', () => {
   test.each`
-    flowId                                    | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm
-    ${'team-create-manual'}                   | ${true}        | ${false}                  | ${true}                | ${false}
-    ${'team-create-imported-from-manuscript'} | ${false}       | ${false}                  | ${true}                | ${false}
-    ${'team-edit-draft'}                      | ${true}        | ${false}                  | ${true}                | ${false}
-    ${'team-edit-published'}                  | ${false}       | ${false}                  | ${false}               | ${false}
-    ${'team-add-version'}                     | ${false}       | ${true}                   | ${false}               | ${false}
-    ${'team-add-version-from-manuscript'}     | ${false}       | ${true}                   | ${false}               | ${false}
-    ${'team-duplicate'}                       | ${true}        | ${false}                  | ${true}                | ${true}
-    ${'working-group-create'}                 | ${true}        | ${false}                  | ${true}                | ${false}
-    ${'working-group-edit-draft'}             | ${true}        | ${false}                  | ${true}                | ${false}
-    ${'working-group-edit-published'}         | ${false}       | ${false}                  | ${false}               | ${false}
-    ${'working-group-add-version'}            | ${false}       | ${true}                   | ${false}               | ${false}
-    ${'working-group-duplicate'}              | ${true}        | ${false}                  | ${true}                | ${true}
+    flowId                                    | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm | publishesOnSave
+    ${'team-create-manual'}                   | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-create-imported-from-manuscript'} | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-draft'}                      | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-published'}                  | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'team-add-version'}                     | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-add-version-from-manuscript'}     | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-duplicate'}                       | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    ${'working-group-create'}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-draft'}             | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-published'}         | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'working-group-add-version'}            | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'working-group-duplicate'}              | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
   `(
-    '$flowId supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm',
+    '$flowId supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm, publishes on save: $publishesOnSave',
     ({
       flowId,
       supportsDrafts,
       requiresAddVersionConfirm,
       requiresPublishConfirm,
       requiresSameDescriptionConfirm,
+      publishesOnSave,
     }) => {
       expect(getResearchOutputFlowBehavior(flowId)).toEqual({
         supportsDrafts,
         requiresAddVersionConfirm,
         requiresPublishConfirm,
         requiresSameDescriptionConfirm,
+        publishesOnSave,
       });
     },
   );
@@ -150,6 +152,17 @@ describe('getResearchOutputFlowBehavior', () => {
       expect(
         behavior.requiresAddVersionConfirm && behavior.requiresPublishConfirm,
       ).toBe(false);
+    });
+  });
+
+  it('publishes on save exactly when a confirmation was required', () => {
+    Object.keys(FLOW_DEFINITIONS).forEach((flowId) => {
+      const behavior = getResearchOutputFlowBehavior(
+        flowId as keyof typeof FLOW_DEFINITIONS,
+      );
+      expect(behavior.publishesOnSave).toBe(
+        behavior.requiresAddVersionConfirm || behavior.requiresPublishConfirm,
+      );
     });
   });
 

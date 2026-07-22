@@ -24,7 +24,7 @@ type FormProps<T> = {
   toastType?: 'inner' | 'base';
   children: (state: {
     isSaving: boolean;
-    setRedirectOnSave: (url: string) => void;
+    setRedirectOnSave: (url: string, locationState?: unknown) => void;
     getWrappedOnSave: (
       onSaveFunction: () => Promise<T | void>,
     ) => () => Promise<T | void>;
@@ -44,17 +44,18 @@ const Form = <T extends void | Record<string, unknown>>({
   );
   const navigate = useNavigate();
 
-  const redirectOnSaveRef = useRef<string>();
+  const redirectOnSaveRef = useRef<{ url: string; state?: unknown }>();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>('initial');
 
-  const handleSetRedirectOnSave = (url: string) => {
-    redirectOnSaveRef.current = url;
+  const handleSetRedirectOnSave = (url: string, locationState?: unknown) => {
+    redirectOnSaveRef.current = { url, state: locationState };
   };
 
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSaveRef.current) {
-      void navigate(redirectOnSaveRef.current);
+      const { url, state } = redirectOnSaveRef.current;
+      void navigate(url, { state });
     }
   }, [status, navigate]);
 

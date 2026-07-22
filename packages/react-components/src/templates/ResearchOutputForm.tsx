@@ -68,7 +68,6 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
-    displayChangelog: boolean;
     versionAction?: 'create' | 'edit';
     onSave: (
       output: ResearchOutputPostRequest,
@@ -114,7 +113,6 @@ const contentStyles = css({
 });
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
-  displayChangelog,
   documentType,
   researchOutputData,
   onSave,
@@ -523,7 +521,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   }
                   showImpactAndCategory={availableActions.showImpactAndCategory}
                   isFormSubmitted={isFormSubmitted}
-                  displayChangelog={displayChangelog}
+                  displayChangelog={
+                    availableActions.showChangelogAndVersionHistory
+                  }
                   serverValidationErrors={serverValidationErrors}
                   clearServerValidationError={clearServerValidationError}
                   isSaving={isSaving}

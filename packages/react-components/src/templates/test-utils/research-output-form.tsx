@@ -34,6 +34,7 @@ const LocationCapture = () => {
 };
 
 export const defaultAvailableActions: ResearchOutputAvailableActions = {
+  disableImpactAndCategory: false,
   canSaveDraft: true,
   showImpactAndCategory: false,
 };

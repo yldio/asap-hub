@@ -518,9 +518,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles} data-flow-id={flowId}>
                 <ResearchOutputFormSharingCard
+                  disableImpactAndCategory={
+                    availableActions.disableImpactAndCategory
+                  }
                   showImpactAndCategory={availableActions.showImpactAndCategory}
                   isFormSubmitted={isFormSubmitted}
-                  isCreatingNewVersion={versionAction === 'create'}
                   displayChangelog={displayChangelog}
                   serverValidationErrors={serverValidationErrors}
                   clearServerValidationError={clearServerValidationError}

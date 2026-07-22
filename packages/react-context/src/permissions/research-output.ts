@@ -38,6 +38,7 @@ export type ResearchOutputDetailActionAvailability = {
 };
 
 export type ResearchOutputAvailableActions = {
+  disableImpactAndCategory: boolean;
   canSaveDraft: boolean;
   showImpactAndCategory: boolean;
 };
@@ -51,9 +52,11 @@ export const resolveResearchOutputAvailableActions = ({
   permissions: ResearchOutputPermissions;
   documentType: ResearchOutputDocumentType;
 }): ResearchOutputAvailableActions => {
-  const { supportsDrafts } = getResearchOutputFlowBehavior(flowId);
+  const behavior = getResearchOutputFlowBehavior(flowId);
   return {
-    canSaveDraft: supportsDrafts && !!permissions.canShareResearchOutput,
+    disableImpactAndCategory: behavior.isAddVersionFlow,
+    canSaveDraft:
+      behavior.supportsDrafts && !!permissions.canShareResearchOutput,
     showImpactAndCategory: documentType === 'Article',
   };
 };

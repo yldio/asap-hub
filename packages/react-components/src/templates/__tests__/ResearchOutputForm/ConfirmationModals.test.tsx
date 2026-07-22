@@ -105,7 +105,7 @@ describe('ResearchOutputForm confirmation modals', () => {
       },
     );
 
-    it('does not show on  a  flow that does not require the confirmation', async () => {
+    it('does not show on a flow that does not require the confirmation', async () => {
       renderFormWithSave({
         flowId: 'team-edit-published',
         availableActions: { ...defaultAvailableActions, canSaveDraft: false },

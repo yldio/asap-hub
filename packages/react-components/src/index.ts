@@ -23,6 +23,8 @@ export {
   Divider,
   editorRef,
   Ellipsis,
+  GradientProgressBar,
+  GradientProgressWheel,
   Headline2,
   Headline3,
   Headline4,

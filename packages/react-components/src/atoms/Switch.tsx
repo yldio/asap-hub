@@ -1,14 +1,18 @@
 import { css, Theme } from '@emotion/react';
-import { fern, steel } from '../colors';
+import { error500, fern, steel } from '../colors';
 import { noop } from '../utils';
 
-const toggleStyles = ({ primary500 = fern }: Theme['colors'] = {}) =>
+const toggleStyles = (
+  uncheckedColor: 'default' | 'error',
+  { primary500 = fern }: Theme['colors'] = {},
+) =>
   css({
     position: 'relative',
     width: '40px',
     height: '20px',
+    flexShrink: 0,
     appearance: 'none',
-    backgroundColor: steel.rgb,
+    backgroundColor: uncheckedColor === 'error' ? error500.rgb : steel.rgb,
     borderRadius: '10px',
     outline: 'none',
     cursor: 'pointer',
@@ -49,6 +53,7 @@ export type SwitchProps = {
   readonly checked?: boolean;
   readonly onClick?: () => void;
   readonly ariaLabel?: string;
+  readonly uncheckedColor?: 'default' | 'error';
 };
 
 const Switch: React.FC<SwitchProps> = ({
@@ -57,6 +62,7 @@ const Switch: React.FC<SwitchProps> = ({
   checked = false,
   onClick = noop,
   ariaLabel = 'Toggle switch',
+  uncheckedColor = 'default',
 }) => (
   <input
     id={id}
@@ -66,7 +72,7 @@ const Switch: React.FC<SwitchProps> = ({
     checked={checked}
     disabled={!enabled}
     onChange={onClick}
-    css={({ colors }) => toggleStyles(colors)}
+    css={({ colors }) => toggleStyles(uncheckedColor, colors)}
   />
 );
 

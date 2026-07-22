@@ -396,7 +396,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -422,7 +422,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-html-renderer": "npm:16.6.10"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -451,7 +451,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-date": "npm:^1.6.2"
     "@contentful/field-editor-reference": "npm:^5.9.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-react-renderer": "npm:^15.16.4"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -478,7 +478,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -505,7 +505,7 @@ __metadata:
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-date": "npm:^1.6.2"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@lingui/core": "npm:^4.0.0"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -532,7 +532,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-react-renderer": "npm:^15.16.4"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -559,7 +559,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -585,7 +585,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-react-renderer": "npm:^15.16.4"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -614,7 +614,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-reference": "npm:^5.9.0"
     "@contentful/field-editor-shared": "npm:^1.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -642,7 +642,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-reference": "npm:^5.9.0"
     "@contentful/field-editor-shared": "npm:^1.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -668,7 +668,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-html-renderer": "npm:16.6.10"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -695,7 +695,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-react-renderer": "npm:^15.16.4"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -724,7 +724,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-reference": "npm:^5.9.0"
     "@contentful/field-editor-shared": "npm:^1.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -750,7 +750,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -778,7 +778,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-date": "npm:^1.6.2"
     "@contentful/field-editor-reference": "npm:^5.9.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@contentful/rich-text-react-renderer": "npm:^15.16.4"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
@@ -807,7 +807,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-multiple-line": "npm:^1.1.0"
     "@contentful/field-editor-single-line": "npm:^1.1.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -833,7 +833,7 @@ __metadata:
     "@contentful/app-sdk": "npm:4.51.0"
     "@contentful/f36-components": "npm:4.81.1"
     "@contentful/f36-tokens": "npm:4.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -861,7 +861,7 @@ __metadata:
     "@contentful/f36-tokens": "npm:4.2.0"
     "@contentful/field-editor-reference": "npm:^5.9.0"
     "@contentful/field-editor-shared": "npm:^1.2.0"
-    "@contentful/react-apps-toolkit": "npm:1.2.16"
+    "@contentful/react-apps-toolkit": "npm:1.2.23"
     "@testing-library/dom": "npm:10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.0"
     "@testing-library/react": "npm:16.3.1"
@@ -8692,15 +8692,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/react-apps-toolkit@npm:1.2.16":
-  version: 1.2.16
-  resolution: "@contentful/react-apps-toolkit@npm:1.2.16"
+"@contentful/react-apps-toolkit@npm:1.2.23":
+  version: 1.2.23
+  resolution: "@contentful/react-apps-toolkit@npm:1.2.23"
   dependencies:
-    contentful-management: "npm:>=7.30.0"
+    contentful-management: "npm:^11.75.0"
   peerDependencies:
     "@contentful/app-sdk": ">=4.0.0"
     react: ">=16.8.0"
-  checksum: 10/915ce28ec97f78bbfe8d4c84204add80b018e6249a188c70eaad737119e4b95cc9f381d1b556e807e62c646a2865bad5f054a9fc4ef1927f7fbc96f238940137
+  checksum: 10/d29e08b1aab95a145faef9c2d69d89b03f853036ae105e5270e0034b9780b0877c97486d5f7b8ed83ad067d3644adbda669757b6b40c7c93490603f021f14974
   languageName: node
   linkType: hard
 
@@ -19026,6 +19026,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.15.0":
+  version: 1.18.1
+  resolution: "axios@npm:1.18.1"
+  dependencies:
+    follow-redirects: "npm:^1.16.0"
+    form-data: "npm:^4.0.5"
+    https-proxy-agent: "npm:^5.0.1"
+    proxy-from-env: "npm:^2.1.0"
+  checksum: 10/c4cdced3ee0a9bf7dcae189fbc74a124aa079d4f04dbd995e602d39c1419476e8d021f87ee39ac8d8398e5a55e6d0b986238b3645f0d9177ac80de87c2a73f18
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^3.2.1":
   version: 3.2.4
   resolution: "axobject-query@npm:3.2.4"
@@ -21485,7 +21497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:>=7.30.0, contentful-management@npm:^11.35.1, contentful-management@npm:^11.48.1, contentful-management@npm:^11.60.4":
+"contentful-management@npm:^11.35.1, contentful-management@npm:^11.48.1, contentful-management@npm:^11.60.4":
   version: 11.63.1
   resolution: "contentful-management@npm:11.63.1"
   dependencies:
@@ -21508,6 +21520,19 @@ __metadata:
     fast-copy: "npm:^3.0.0"
     globals: "npm:^15.15.0"
   checksum: 10/321cf52deb44704563a739bfafb2439134b1a4bea1a408b63ff99122d1a5c71a077e56842caf7cb42af6ae3b887e0fa096b06f1525e25c6295d061b56eaa670d
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:^11.75.0":
+  version: 11.76.0
+  resolution: "contentful-management@npm:11.76.0"
+  dependencies:
+    "@contentful/rich-text-types": "npm:^16.6.1"
+    axios: "npm:^1.15.0"
+    contentful-sdk-core: "npm:^9.4.4"
+    fast-copy: "npm:^3.0.0"
+    globals: "npm:^15.15.0"
+  checksum: 10/a1c08498024ed42335f6f9db4e52bb7c5d79e5ebdcadc3db4ca088efdb40d1b61fc18c36eff339df9cc90409895a93261eef348cdce3a6130b40a5bfb74b84c4
   languageName: node
   linkType: hard
 
@@ -21645,6 +21670,22 @@ __metadata:
     "@rollup/rollup-linux-x64-gnu":
       optional: true
   checksum: 10/da4033ce9a60f4945be5ddb6fe57047d14c7ed5f9917eedaae2bf2be1c96e923c8017cc73f15b370ba4214441000c5e5eed3778dd8a1c37ac281c1ea241e1d16
+  languageName: node
+  linkType: hard
+
+"contentful-sdk-core@npm:^9.4.4":
+  version: 9.4.5
+  resolution: "contentful-sdk-core@npm:9.4.5"
+  dependencies:
+    "@rollup/rollup-linux-x64-gnu": "npm:^4.18.0"
+    fast-copy: "npm:^3.0.2"
+    lodash: "npm:^4.17.23"
+    process: "npm:^0.11.10"
+    qs: "npm:^6.15.0"
+  dependenciesMeta:
+    "@rollup/rollup-linux-x64-gnu":
+      optional: true
+  checksum: 10/cfbff8feceb1b0f59737076283356f283998f4d57898b243357039d50000bcc59046f6a89f181ace3df19a1a8d9d7743460320b3b8cd9a38ca6a990eac068494
   languageName: node
   linkType: hard
 
@@ -26068,6 +26109,16 @@ __metadata:
     debug:
       optional: true
   checksum: 10/07372fd74b98c78cf4d417d68d41fdaa0be4dcacafffb9e67b1e3cf090bc4771515e65020651528faab238f10f9b9c0d9707d6c1574a6c0387c5de1042cde9ba
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "follow-redirects@npm:1.16.0"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 10/3fbe3d80b3b544c22705d837aa5d4a0d07a740d913534a2620b0a004c610af4148e3b58723536dd099aaa1c9d3a155964bde9665d6e5cb331460809a1fc572fd
   languageName: node
   linkType: hard
 
@@ -31951,6 +32002,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.23":
+  version: 4.18.1
+  resolution: "lodash@npm:4.18.1"
+  checksum: 10/306fea53dfd39dad1f03d45ba654a2405aebd35797b673077f401edb7df2543623dc44b9effbb98f69b32152295fff725a4cec99c684098947430600c6af0c3f
+  languageName: node
+  linkType: hard
+
 "log-node@npm:^8.0.3":
   version: 8.0.3
   resolution: "log-node@npm:8.0.3"
@@ -35954,6 +36012,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-from-env@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "proxy-from-env@npm:2.1.0"
+  checksum: 10/fbbaf4dab2a6231dc9e394903a5f66f20475e36b734335790b46feb9da07c37d6b32e2c02e3e2ea4d4b23774c53d8562e5b7cc73282cb43f4a597b7eacaee2ee
+  languageName: node
+  linkType: hard
+
 "prr@npm:~0.0.0":
   version: 0.0.0
   resolution: "prr@npm:0.0.0"
@@ -36230,6 +36295,16 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.1.0"
   checksum: 10/34b5ab00a910df432d55180ef39c1d1375e550f098b5ec153b41787f1a6a6d7e5f9495593c3b112b77dbc6709d0ae18e55b82847a4c2bbbb0de1e8ccbb1794c5
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.15.0":
+  version: 6.15.3
+  resolution: "qs@npm:6.15.3"
+  dependencies:
+    es-define-property: "npm:^1.0.1"
+    side-channel: "npm:^1.1.1"
+  checksum: 10/1cbb4b050872a19ba8a311445be29babb8f66ea5d6462b3c48c6efb2c95187cd286b69734cd4caea1878cca3b9d1f0e9b49335336be9e999a7d8d7cf137ba60d
   languageName: node
   linkType: hard
 
@@ -38721,6 +38796,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"side-channel-list@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "side-channel-list@npm:1.0.1"
+  dependencies:
+    es-errors: "npm:^1.3.0"
+    object-inspect: "npm:^1.13.4"
+  checksum: 10/3499671cd52adaee739eac1e14d07530b8e3530192741aeb05e7fe4ad1b51d1368ceea2cd3c21b0f62b05410a5c70a7c4d997ba4b143303ef73d0c65dfd1c252
+  languageName: node
+  linkType: hard
+
 "side-channel-map@npm:^1.0.1":
   version: 1.0.1
   resolution: "side-channel-map@npm:1.0.1"
@@ -38756,6 +38841,19 @@ __metadata:
     side-channel-map: "npm:^1.0.1"
     side-channel-weakmap: "npm:^1.0.2"
   checksum: 10/7d53b9db292c6262f326b6ff3bc1611db84ece36c2c7dc0e937954c13c73185b0406c56589e2bb8d071d6fee468e14c39fb5d203ee39be66b7b8174f179afaba
+  languageName: node
+  linkType: hard
+
+"side-channel@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "side-channel@npm:1.1.1"
+  dependencies:
+    es-errors: "npm:^1.3.0"
+    object-inspect: "npm:^1.13.4"
+    side-channel-list: "npm:^1.0.1"
+    side-channel-map: "npm:^1.0.1"
+    side-channel-weakmap: "npm:^1.0.2"
+  checksum: 10/5fa6393ff6ad25d8b4a38e9ba095481e498c8ebe5ab78481c1455146255a3d18ca37a6f936595cc671a6149134cdc295bbd2fa017620bdc73cbc7380634fa2fc
   languageName: node
   linkType: hard
 

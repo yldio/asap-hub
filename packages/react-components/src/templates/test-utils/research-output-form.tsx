@@ -1,5 +1,8 @@
 /* istanbul ignore file */
-import { InnerToastContext } from '@asap-hub/react-context';
+import {
+  InnerToastContext,
+  ResearchOutputAvailableActions,
+} from '@asap-hub/react-context';
 import { MemoryRouter, useLocation } from 'react-router';
 import {
   researchOutputDocumentTypeToType,
@@ -30,6 +33,11 @@ const LocationCapture = () => {
   return null;
 };
 
+export const defaultAvailableActions: ResearchOutputAvailableActions = {
+  canSaveDraft: true,
+  showImpactAndCategory: false,
+};
+
 export const getDefaultProps = (): ComponentProps<
   typeof ResearchOutputForm
 > => ({
@@ -42,7 +50,7 @@ export const getDefaultProps = (): ComponentProps<
   documentType: 'Article',
   selectedTeams: [],
   flowId: 'team-create-manual',
-  availableActions: { canSaveDraft: true },
+  availableActions: defaultAvailableActions,
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
   permissions: {
     canEditResearchOutput: true,

@@ -1,4 +1,3 @@
-import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
@@ -6,23 +5,27 @@ import { MemoryRouter } from 'react-router';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { getDefaultProps } from '../../test-utils/research-output-form';
 
-const getCategorySuggestionsMock = jest.fn();
+let researchOutputFormProps: ReturnType<typeof getDefaultProps>;
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();
-  getCategorySuggestionsMock.mockResolvedValue([
-    { label: 'Category 3', value: 'category-3' },
-  ]);
+  researchOutputFormProps = getDefaultProps();
 });
 
 afterEach(() => {
   jest.resetAllMocks();
 });
 
-it('displays impact and category fields when document type is Article', async () => {
+it('displays impact and category fields when availableAction showImpactAndCategory is true', async () => {
   render(
     <MemoryRouter>
-      <ResearchOutputForm {...getDefaultProps()} documentType="Article" />
+      <ResearchOutputForm
+        {...researchOutputFormProps}
+        availableActions={{
+          ...researchOutputFormProps.availableActions,
+          showImpactAndCategory: true,
+        }}
+      />
     </MemoryRouter>,
   );
 
@@ -30,33 +33,15 @@ it('displays impact and category fields when document type is Article', async ()
   expect(screen.getByText('Category')).toBeInTheDocument();
 });
 
-const notArticleDocumentTypes = researchOutputDocumentTypes.filter(
-  (type) => type !== 'Article',
-);
-
-it.each(notArticleDocumentTypes)(
-  'does not display impact and category fields when document type is %s',
-  async (documentType) => {
-    render(
-      <MemoryRouter>
-        <ResearchOutputForm
-          {...getDefaultProps()}
-          documentType={documentType}
-        />
-      </MemoryRouter>,
-    );
-
-    expect(screen.queryByText('Impact')).not.toBeInTheDocument();
-    expect(screen.queryByText('Category')).not.toBeInTheDocument();
-  },
-);
-
 it('renders impact input and does not throw when getImpactSuggestions is noop', async () => {
   render(
     <MemoryRouter>
       <ResearchOutputForm
-        {...getDefaultProps()}
-        documentType="Article"
+        {...researchOutputFormProps}
+        availableActions={{
+          ...researchOutputFormProps.availableActions,
+          showImpactAndCategory: true,
+        }}
         getImpactSuggestions={() => Promise.resolve([])}
       />
     </MemoryRouter>,
@@ -78,8 +63,11 @@ it('renders category input and does not throw when getCategorySuggestions is noo
   render(
     <MemoryRouter>
       <ResearchOutputForm
-        {...getDefaultProps()}
-        documentType="Article"
+        {...researchOutputFormProps}
+        availableActions={{
+          ...researchOutputFormProps.availableActions,
+          showImpactAndCategory: true,
+        }}
         getCategorySuggestions={undefined}
       />
     </MemoryRouter>,

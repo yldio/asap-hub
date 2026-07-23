@@ -619,6 +619,99 @@ describe('resolveResearchOutputAvailableActions', () => {
     );
   });
 
+  describe('disableDateMadePublic truth table', () => {
+    // pseudo code: disabled = hasPublishDate && (isImportedFromManuscript || hasId)
+    // note 1: the flows team-create-manual and working-group-create shouldn't
+    // have already a publish date pre-filled in real life, but they are still in
+    // this truth table so all cases are covered
+    // note 2: the flows team-duplicate and working-group-duplicate also shouldn't
+    // have ids pre-filled in real life
+
+    const withDate = '2021-01-01T00:00:00Z';
+
+    test.each`
+      flowId                                    | publishDate  | id        | expectedDisabled
+      ${'team-create-imported-from-manuscript'} | ${withDate}  | ${''}     | ${true}
+      ${'team-create-imported-from-manuscript'} | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-add-version-from-manuscript'}     | ${withDate}  | ${''}     | ${true}
+      ${'team-add-version-from-manuscript'}     | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-create-manual'}                   | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-edit-draft'}                      | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-edit-published'}                  | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-add-version'}                     | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-duplicate'}                       | ${withDate}  | ${'ro-1'} | ${true}
+      ${'working-group-create'}                 | ${withDate}  | ${'ro-1'} | ${true}
+      ${'working-group-edit-draft'}             | ${withDate}  | ${'ro-1'} | ${true}
+      ${'working-group-edit-published'}         | ${withDate}  | ${'ro-1'} | ${true}
+      ${'working-group-add-version'}            | ${withDate}  | ${'ro-1'} | ${true}
+      ${'working-group-duplicate'}              | ${withDate}  | ${'ro-1'} | ${true}
+      ${'team-create-manual'}                   | ${undefined} | ${''}     | ${false}
+      ${'team-create-manual'}                   | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-create-manual'}                   | ${withDate}  | ${''}     | ${false}
+      ${'team-create-imported-from-manuscript'} | ${undefined} | ${''}     | ${false}
+      ${'team-create-imported-from-manuscript'} | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-edit-draft'}                      | ${undefined} | ${''}     | ${false}
+      ${'team-edit-draft'}                      | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-edit-draft'}                      | ${withDate}  | ${''}     | ${false}
+      ${'team-edit-published'}                  | ${undefined} | ${''}     | ${false}
+      ${'team-edit-published'}                  | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-edit-published'}                  | ${withDate}  | ${''}     | ${false}
+      ${'team-add-version'}                     | ${undefined} | ${''}     | ${false}
+      ${'team-add-version'}                     | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-add-version'}                     | ${withDate}  | ${''}     | ${false}
+      ${'team-add-version-from-manuscript'}     | ${undefined} | ${''}     | ${false}
+      ${'team-add-version-from-manuscript'}     | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-duplicate'}                       | ${undefined} | ${''}     | ${false}
+      ${'team-duplicate'}                       | ${undefined} | ${'ro-1'} | ${false}
+      ${'team-duplicate'}                       | ${withDate}  | ${''}     | ${false}
+      ${'working-group-create'}                 | ${undefined} | ${''}     | ${false}
+      ${'working-group-create'}                 | ${undefined} | ${'ro-1'} | ${false}
+      ${'working-group-create'}                 | ${withDate}  | ${''}     | ${false}
+      ${'working-group-edit-draft'}             | ${undefined} | ${''}     | ${false}
+      ${'working-group-edit-draft'}             | ${undefined} | ${'ro-1'} | ${false}
+      ${'working-group-edit-draft'}             | ${withDate}  | ${''}     | ${false}
+      ${'working-group-edit-published'}         | ${undefined} | ${''}     | ${false}
+      ${'working-group-edit-published'}         | ${undefined} | ${'ro-1'} | ${false}
+      ${'working-group-edit-published'}         | ${withDate}  | ${''}     | ${false}
+      ${'working-group-add-version'}            | ${undefined} | ${''}     | ${false}
+      ${'working-group-add-version'}            | ${undefined} | ${'ro-1'} | ${false}
+      ${'working-group-add-version'}            | ${withDate}  | ${''}     | ${false}
+      ${'working-group-duplicate'}              | ${undefined} | ${''}     | ${false}
+      ${'working-group-duplicate'}              | ${undefined} | ${'ro-1'} | ${false}
+      ${'working-group-duplicate'}              | ${withDate}  | ${''}     | ${false}
+    `(
+      'disableDateMadePublic is $expectedDisabled for $flowId (publishDate: $publishDate, id: $id)',
+      ({ flowId, publishDate, id, expectedDisabled }) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId,
+            permissions: { canShareResearchOutput: true },
+            documentType: 'Bioinformatics',
+            researchOutputData: { versions: [], publishDate, id },
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            disableDateMadePublic: expectedDisabled,
+          }),
+        );
+      },
+    );
+
+    it('is false when researchOutputData is not provided', () => {
+      expect(
+        resolveResearchOutputAvailableActions({
+          flowId: 'team-create-imported-from-manuscript',
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Bioinformatics',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          disableDateMadePublic: false,
+        }),
+      );
+    });
+  });
+
   it('resolves saveDraft action correctly', () => {
     expect(
       resolveResearchOutputAvailableActions({

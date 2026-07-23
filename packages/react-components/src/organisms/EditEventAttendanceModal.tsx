@@ -34,6 +34,7 @@ import {
 } from '../icons';
 import { Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
+import { noop } from '../utils';
 import { EventAttendanceTeam, teamIcon } from './EventAttendance';
 
 export type AttendanceSearchOption = MultiSelectOptionsType &
@@ -201,6 +202,12 @@ const pillStyles = css({
 
 const addedPillStyles = css({
   color: neutral800.rgb,
+  backgroundColor: pearl.rgb,
+  // Recolour only the tick (first icon); the interest-group icon is recoloured
+  // via its own `color` prop to keep its outlined shapes intact.
+  '> svg:first-of-type': {
+    fill: neutral800.rgb,
+  },
 });
 
 const attendeesHeaderStyles = css({
@@ -209,6 +216,11 @@ const attendeesHeaderStyles = css({
   justifyContent: 'space-between',
   flexWrap: 'wrap',
   gap: rem(12),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: rem(24),
+  },
 });
 
 const attendeesStatsStyles = css({
@@ -256,7 +268,10 @@ const hideOnDesktopStyles = css({
 const attendeesSectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(40),
+  gap: rem(16),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    gap: rem(24),
+  },
 });
 
 const markAllButtonStyles = css({
@@ -272,6 +287,7 @@ const emptyAttendeesStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(8),
+  backgroundColor: pearl.rgb,
 });
 
 const attendeesCardStyles = css({
@@ -366,8 +382,9 @@ const footerStyles = (isConfirmingCancel: boolean) =>
     gap: rem(24),
     padding: `${rem(48)} ${rem(24)} ${rem(24)}`,
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      flexDirection: 'column-reverse',
+      flexDirection: 'column',
       alignItems: 'stretch',
+      paddingTop: rem(56),
     },
   });
 
@@ -415,6 +432,10 @@ const searchOptionMetaStyles = css({
   color: lead.rgb,
 });
 
+const placeholderStyles = css({
+  color: tin.rgb,
+});
+
 const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   teams = [],
   interestGroups = [],
@@ -449,9 +470,8 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const hiddenCount = rows.length - visibleRows.length;
 
   const interestGroupColumns = interestGroups.length > 3 ? 2 : 1;
-  const interestGroupRows = Math.max(
-    1,
-    Math.ceil(interestGroups.length / interestGroupColumns),
+  const interestGroupRows = Math.ceil(
+    interestGroups.length / interestGroupColumns,
   );
 
   const addTeams = (teamsToAdd: EventAttendanceTeam[]) =>
@@ -472,6 +492,19 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     });
   };
 
+  const addInterestGroup = (
+    groupId: string,
+    groupTeams: EventAttendanceTeam[],
+  ) => {
+    addTeams(groupTeams);
+    setAddedGroups((prev) =>
+      new Map(prev).set(
+        groupId,
+        groupTeams.map((team) => team.teamId),
+      ),
+    );
+  };
+
   const removeInterestGroup = (groupId: string) => {
     const remaining = new Map(addedGroups);
     remaining.delete(groupId);
@@ -488,9 +521,12 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     setAddedGroups(remaining);
   };
 
-  const handleSelectSearchOption = (option: AttendanceSearchOption) => {
+  const handleSelectSearchOption = (option: AttendanceSearchOption | null) => {
+    if (!option) {
+      return;
+    }
     if (option.optionType === 'interestGroup') {
-      addManualTeams(option.teams);
+      addInterestGroup(option.value, option.teams);
     } else {
       addManualTeams([
         {
@@ -519,6 +555,18 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       }
       const next = new Set(prev);
       next.delete(teamId);
+      return next;
+    });
+    // Drop the team from any interest group that contributed it, and stop
+    // treating a group as "added" once it has no teams left.
+    setAddedGroups((prev) => {
+      const next = new Map<string, ReadonlyArray<string>>();
+      prev.forEach((teamIds, groupId) => {
+        const remaining = teamIds.filter((id) => id !== teamId);
+        if (remaining.length > 0) {
+          next.set(groupId, remaining);
+        }
+      });
       return next;
     });
   };
@@ -584,22 +632,18 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       if (added) {
                         removeInterestGroup(group.id);
                       } else {
-                        void onSelectInterestGroup(group.id).then(
-                          (groupTeams) => {
-                            addTeams(groupTeams);
-                            setAddedGroups((prev) =>
-                              new Map(prev).set(
-                                group.id,
-                                groupTeams.map((team) => team.teamId),
-                              ),
-                            );
-                          },
-                        );
+                        void onSelectInterestGroup(group.id)
+                          .then((groupTeams) =>
+                            addInterestGroup(group.id, groupTeams),
+                          )
+                          .catch(noop);
                       }
                     }}
                   >
                     {added ? tickSmallIcon : plusIcon}
-                    <InterestGroupsIcon />
+                    <InterestGroupsIcon
+                      color={added ? neutral800.rgb : undefined}
+                    />
                     {group.name}
                   </Button>
                 );
@@ -615,7 +659,6 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             noMargin
             defaultOptions={false}
             leftIndicator={searchIcon}
-            placeholder="Search for a team or interest group to add…"
             loadOptions={(inputValue) => loadSearchOptions(inputValue)}
             onChange={handleSelectSearchOption}
             noOptionsMessage={({ inputValue }) =>
@@ -624,10 +667,12 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             components={{
               Placeholder: (placeholderProps) => (
                 <components.Placeholder {...placeholderProps}>
-                  <span css={hideOnMobileStyles}>
+                  <span css={[placeholderStyles, hideOnMobileStyles]}>
                     Search for a team or interest group to add…
                   </span>
-                  <span css={hideOnDesktopStyles}>Search team or group…</span>
+                  <span css={[placeholderStyles, hideOnDesktopStyles]}>
+                    Search team or group…
+                  </span>
                 </components.Placeholder>
               ),
               Menu: (menuProps) =>
@@ -681,7 +726,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (file) {
-                  void onUploadList(file).then(addTeams);
+                  void onUploadList(file).then(addTeams).catch(noop);
                 }
               }}
             />
@@ -725,7 +770,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
 
           {rows.length === 0 ? (
             <div css={emptyAttendeesStyles} role="status">
-              <Paragraph noMargin>
+              <Paragraph noMargin accent="lead">
                 <strong>Add teams to track attendance</strong>
               </Paragraph>
               <Paragraph noMargin accent="lead">

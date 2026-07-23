@@ -711,7 +711,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         </div>
 
         {onUploadList && (
-          <section css={[uploadSectionStyles, spacingLarge, hideOnMobileStyles]}>
+          <section
+            css={[uploadSectionStyles, spacingLarge, hideOnMobileStyles]}
+          >
             <div css={uploadTextStyles}>
               <SectionTitle optional>Upload a list</SectionTitle>
               <Paragraph noMargin accent="lead">

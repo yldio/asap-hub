@@ -570,7 +570,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 />
                 <ResearchOutputPublishingCard
                   documentType={documentType}
-                  isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}
                   asapFunded={asapFunded}
                   onChangeAsapFunded={setAsapFunded}
@@ -584,6 +583,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   }
                   isImportedFromManuscript={isImportedFromManuscript}
                   disableDateMadePublic={availableActions.disableDateMadePublic}
+                  disableUsedInPublication={
+                    availableActions.disableUsedInPublication
+                  }
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}

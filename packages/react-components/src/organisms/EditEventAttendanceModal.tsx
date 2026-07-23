@@ -93,6 +93,22 @@ const bodyStyles = css({
 const spacingMedium = css({ marginTop: rem(32) });
 const spacingLarge = css({ marginTop: rem(48) });
 
+// The upload section is hidden on mobile, so the search field needs its own
+// wider top/bottom spacing there (48 above, 56 below).
+const searchSpacingStyles = css({
+  marginTop: rem(32),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: rem(48),
+  },
+});
+
+const attendeesSpacingStyles = css({
+  marginTop: rem(48),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: rem(56),
+  },
+});
+
 const sectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -641,7 +657,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
           </section>
         )}
 
-        <div css={spacingMedium}>
+        <div css={searchSpacingStyles}>
           <MultiSelect<AttendanceSearchOption, false>
             isMulti={false}
             values={null}
@@ -698,7 +714,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         </div>
 
         {onUploadList && (
-          <section css={[uploadSectionStyles, spacingLarge]}>
+          <section css={[uploadSectionStyles, spacingLarge, hideOnMobileStyles]}>
             <div css={uploadTextStyles}>
               <SectionTitle optional>Upload a list</SectionTitle>
               <Paragraph noMargin accent="lead">
@@ -730,7 +746,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
           </section>
         )}
 
-        <section css={[attendeesSectionStyles, spacingLarge]}>
+        <section css={[attendeesSectionStyles, attendeesSpacingStyles]}>
           <div css={attendeesHeaderStyles}>
             <div css={attendeesStatsStyles}>
               <SectionTitle>Attendees</SectionTitle>

@@ -35,7 +35,11 @@ import {
 import { Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { noop } from '../utils';
-import { EventAttendanceTeam, teamIcon } from './EventAttendance';
+import {
+  EventAttendanceTeam,
+  iconButtonStyles,
+  teamIcon,
+} from './EventAttendance';
 
 export type AttendanceSearchOption = MultiSelectOptionsType &
   (
@@ -78,21 +82,6 @@ const titleStyles = css({
   fontWeight: 700,
   lineHeight: rem(32),
   color: neutral1000.rgb,
-});
-
-const iconButtonStyles = css({
-  flexGrow: 0,
-  width: rem(40),
-  height: rem(40),
-  alignItems: 'center',
-  borderColor: tin.rgb,
-  ':hover, :focus': {
-    borderColor: tin.rgb,
-  },
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexGrow: 0,
-    minWidth: rem(40),
-  },
 });
 
 const bodyStyles = css({

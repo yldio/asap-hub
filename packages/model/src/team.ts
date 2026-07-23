@@ -38,6 +38,9 @@ export type TeamTool = {
 
 export type TeamType = (typeof teamType)[number];
 
+export const isTeamType = (type: unknown): type is TeamType =>
+  typeof type === 'string' && (teamType as readonly string[]).includes(type);
+
 export const teamStatus = ['Active', 'Inactive'] as const;
 
 export type TeamStatus = (typeof teamStatus)[number];

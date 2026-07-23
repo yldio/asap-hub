@@ -5,6 +5,7 @@ import {
   FetchEventsByUserIdQuery,
   FetchEventsQuery as ContentfulFetchEventsQuery,
   FetchInterestGroupCalendarQuery,
+  FetchPreviousEventAttendanceQuery,
   FetchWorkingGroupCalendarQuery,
 } from '@asap-hub/contentful';
 import {
@@ -246,6 +247,35 @@ export const getContentfulGraphqlEvent = (
       url: 'https://link.pt/additional-material',
     },
   ],
+  attendanceCollection: isList
+    ? undefined
+    : {
+        total: 2,
+        items: [
+          {
+            attended: true,
+            team: {
+              sys: { id: 'team-id-1' },
+              displayName: 'The team one',
+              teamType: 'Discovery Team',
+              inactiveSince: null,
+            },
+          },
+          {
+            attended: false,
+            team: {
+              sys: { id: 'team-id-2' },
+              displayName: 'The team two',
+              teamType: 'Unknown Team Type',
+              inactiveSince: '2022-10-24T11:00:00Z',
+            },
+          },
+          {
+            attended: true,
+            team: null,
+          },
+        ],
+      },
   calendar: {
     googleCalendarId: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     color: '#125A12' as const,
@@ -404,7 +434,50 @@ export const getContentfulEventDataObject = (
     '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
   tags: [],
+  ...(isList
+    ? {}
+    : {
+        attendance: [
+          {
+            attended: true,
+            team: {
+              id: 'team-id-1',
+              displayName: 'The team one',
+              teamType: 'Discovery Team',
+              inactiveSince: undefined,
+            },
+          },
+          {
+            attended: false,
+            team: {
+              id: 'team-id-2',
+              displayName: 'The team two',
+              teamType: undefined,
+              inactiveSince: '2022-10-24T11:00:00Z',
+            },
+          },
+        ],
+      }),
 });
+
+export const getPreviousEventAttendanceGraphqlResponse =
+  (): FetchPreviousEventAttendanceQuery => ({
+    eventsCollection: {
+      items: [
+        {
+          sys: { id: 'previous-event-id' },
+          attendanceCollection: {
+            total: 3,
+            items: [
+              { attended: true },
+              { attended: false },
+              { attended: true },
+            ],
+          },
+        },
+      ],
+    },
+  });
 
 export const getContentfulEventResponse = (): EventResponse =>
   getEventDataObject();

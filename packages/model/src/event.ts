@@ -7,7 +7,7 @@ import {
   ResearchOutputWorkingGroupResponse,
 } from './research-output';
 import { ResearchTagDataObject } from './research-tag';
-import { TeamResponse } from './team';
+import { TeamResponse, TeamType } from './team';
 import { TutorialsDataObject } from './tutorials';
 import { WorkingGroupResponse } from './working-group';
 
@@ -43,6 +43,21 @@ export type EventSpeaker =
   | EventSpeakerUser
   | EventSpeakerExternalUser;
 
+export type EventTeamAttendance = {
+  team: {
+    id: string;
+    displayName: string;
+    teamType?: TeamType;
+    inactiveSince?: string;
+  };
+  attended: boolean;
+};
+
+export type EventPreviousAttendance = {
+  teamsAttended: number;
+  teamsTotal: number;
+};
+
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   interestGroup?: Pick<
@@ -70,6 +85,8 @@ export interface EventDataObject extends BasicEvent {
         >[]
       | ResearchOutputResponse['workingGroups'];
   })[];
+  attendance?: EventTeamAttendance[];
+  previousEventAttendance?: EventPreviousAttendance;
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;

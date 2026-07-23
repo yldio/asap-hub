@@ -1,39 +1,38 @@
-import { gp2, ListReminderResponse } from '@asap-hub/model';
-import { atom, selector, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { getDashboardStats, getNews, getReminders } from './api';
 
-const fetchNewsState = selector<gp2.ListNewsResponse>({
-  key: 'fetchNewsState',
-  get: ({ get }) => getNews(get(authorizationState)),
-});
+// The dashboard owns its own namespace: its `news` key is DISTINCT from the
+// news module's `newsQueryKeys` — different fetchers (REST `getNews` here vs
+// Algolia `getAlgoliaNews` there), so the caches must not be shared.
+export const dashboardQueryKeys = {
+  all: ['dashboard'] as const,
+  news: () => [...dashboardQueryKeys.all, 'news'] as const,
+  stats: () => [...dashboardQueryKeys.all, 'stats'] as const,
+  reminders: () => [...dashboardQueryKeys.all, 'reminders'] as const,
+};
 
-const newsState = atom<gp2.ListNewsResponse>({
-  key: 'news',
-  default: fetchNewsState,
-});
+export const useNews = () => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: dashboardQueryKeys.news(),
+    queryFn: async () => getNews(await getAuthorization()),
+  }).data;
+};
 
-export const useNews = () => useRecoilValue(newsState);
+export const useDashboard = () => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: dashboardQueryKeys.stats(),
+    queryFn: async () => getDashboardStats(await getAuthorization()),
+  }).data;
+};
 
-const fetchDashboardState = selector<gp2.ListDashboardResponse>({
-  key: 'fetchDashboardState',
-  get: ({ get }) => getDashboardStats(get(authorizationState)),
-});
-
-const dashboardState = atom<gp2.ListDashboardResponse>({
-  key: 'dashboard',
-  default: fetchDashboardState,
-});
-
-export const fetchRemindersState = selector<ListReminderResponse>({
-  key: 'fetchRemindersState',
-  get: ({ get }) => getReminders(get(authorizationState)),
-});
-
-export const reminderState = atom<ListReminderResponse>({
-  key: 'reminderState',
-  default: fetchRemindersState,
-});
-
-export const useDashboard = () => useRecoilValue(dashboardState);
-export const useReminderState = () => useRecoilValue(reminderState);
+export const useReminderState = () => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: dashboardQueryKeys.reminders(),
+    queryFn: async () => getReminders(await getAuthorization()),
+  }).data;
+};

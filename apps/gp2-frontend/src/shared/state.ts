@@ -1,33 +1,28 @@
-import { gp2 } from '@asap-hub/model';
-import { atom, selector, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
-import { getTags, getContributingCohorts } from './api';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-const tagsSelector = selector({
-  key: 'tags',
-  get: ({ get }) => {
-    const authorization = get(authorizationState);
-    return getTags(authorization);
-  },
-});
-const tagsState = atom<gp2.ListTagsResponse>({
-  key: 'tagsState',
-  default: tagsSelector,
-});
+import { useAuthorization } from '../auth/useAuthorization';
+import { getContributingCohorts, getTags } from './api';
 
-export const useTags = () => useRecoilValue(tagsState);
+export const tagsQueryKeys = {
+  all: ['tags'] as const,
+};
 
-const contributingCohortSelector = selector({
-  key: 'contributingCohorts',
-  get: ({ get }) => {
-    const authorization = get(authorizationState);
-    return getContributingCohorts(authorization);
-  },
-});
-const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
-  key: 'contributingCohortsState',
-  default: contributingCohortSelector,
-});
+export const contributingCohortsQueryKeys = {
+  all: ['contributing-cohorts'] as const,
+};
 
-export const useContributingCohorts = () =>
-  useRecoilValue(contributingCohortsState);
+export const useTags = () => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: tagsQueryKeys.all,
+    queryFn: async () => getTags(await getAuthorization()),
+  }).data;
+};
+
+export const useContributingCohorts = () => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: contributingCohortsQueryKeys.all,
+    queryFn: async () => getContributingCohorts(await getAuthorization()),
+  }).data;
+};

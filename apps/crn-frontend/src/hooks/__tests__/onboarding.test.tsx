@@ -1,14 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import React, { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router';
 import { UserResponse } from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import { useOnboarding } from '../onboarding';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshUserState } from '../../network/users/state';
 import { getUser } from '../../network/users/api';
 
 jest.mock('../../network/users/api');
@@ -32,11 +32,7 @@ const wrapper =
     user?: UserResponse;
   }): React.FC<{ children: React.ReactNode }> =>
   ({ children }: { children: React.ReactNode }) => (
-    <RecoilRoot
-      initializeState={({ set }) => {
-        user?.id && set(refreshUserState(user.id), Math.random());
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
@@ -55,7 +51,7 @@ const wrapper =
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>
+    </QueryClientProvider>
   );
 
 describe('useOnboarding', () => {

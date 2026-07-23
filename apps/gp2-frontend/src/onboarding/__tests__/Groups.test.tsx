@@ -1,14 +1,11 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-} from '@testing-library/react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor, screen } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser } from '../../users/api';
@@ -20,7 +17,7 @@ mockConsoleError();
 
 const renderGroups = async (id: string) => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>
@@ -37,10 +34,12 @@ const renderGroups = async (id: string) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 describe('Groups', () => {
   beforeEach(jest.resetAllMocks);

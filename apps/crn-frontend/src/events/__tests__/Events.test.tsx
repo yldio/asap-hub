@@ -1,18 +1,15 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
-import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
-import { refreshCalendarsState } from '../calendar/state';
 import Events from '../Events';
-
-import { eventsState } from '../state';
 
 jest.mock('../calendar/api');
 jest.mock('../api');
@@ -26,12 +23,7 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
 
 const renderEventsPage = (pathname = events({}).$, search?: string) =>
   render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshCalendarsState, Math.random());
-        reset(eventsState(getEventListOptions(new Date(), { past: false })));
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Auth0Provider user={{}}>
         <WhenReady>
           <MemoryRouter initialEntries={[{ pathname, search }]}>
@@ -41,7 +33,7 @@ const renderEventsPage = (pathname = events({}).$, search?: string) =>
           </MemoryRouter>
         </WhenReady>
       </Auth0Provider>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 beforeEach(() => {

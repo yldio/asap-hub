@@ -3,10 +3,13 @@ import { ComponentProps, Suspense } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import { FetchListFilter, ResourceProject } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -128,7 +131,7 @@ const renderResourceProjects = (
   filtersMap: FetchListFilter = {},
 ) =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -142,7 +145,7 @@ const renderResourceProjects = (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 it('renders the Resource Projects page', async () => {

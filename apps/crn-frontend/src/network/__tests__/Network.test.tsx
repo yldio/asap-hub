@@ -21,7 +21,8 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import Network from '../Network';
 import { getAlgoliaTeams } from '../teams/api';
 import { getInterestGroups } from '../interest-groups/api';
@@ -99,7 +100,7 @@ mockGetWorkingGroup.mockResolvedValue(createWorkingGroupResponse());
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const { container } = render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -111,12 +112,13 @@ const renderNetworkPage = async (pathname: string, query = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i), {
-    timeout: 30_000,
-  });
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 
   return container;
 };

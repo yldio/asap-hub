@@ -6,8 +6,7 @@ import {
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from './auth/state';
+import { useAuthorization } from './auth/useAuthorization';
 import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
 import { getGeneratedOutputContent, getOutputs } from './outputs/api';
@@ -74,10 +73,10 @@ export const useAuthorSuggestions = () => {
 };
 
 export const useOutputGeneratedContent = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
 
-  return (description: string): Promise<string> =>
-    getGeneratedOutputContent({ description }, authorization).then(
+  return async (description: string): Promise<string> =>
+    getGeneratedOutputContent({ description }, await getAuthorization()).then(
       (output) => output.shortDescription || '',
     );
 };

@@ -9,8 +9,11 @@ import {
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { RecoilRoot } from 'recoil';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import Outputs from '../Outputs';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -18,12 +21,8 @@ import {
   getDraftResearchOutputs,
   getResearchOutputs,
 } from '../../../shared-research/api';
-import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import {
-  MAX_ALGOLIA_RESULTS,
-  MAX_CONTENTFUL_RESULTS,
-} from '../../../shared-research/export';
+import { MAX_CONTENTFUL_RESULTS } from '../../../shared-research/export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -61,28 +60,7 @@ const renderOutputs = async (
   draftOutputs = false,
 ) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset: resetState }) => {
-        resetState(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            teamId: team.id,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        resetState(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            teamId: team.id,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -115,7 +93,7 @@ const renderOutputs = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -139,8 +117,10 @@ it('renders a list of research outputs', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { container } = await renderOutputs('');
-  expect(container.textContent).toContain('Test Output 0');
+  const { findByText, container } = await renderOutputs('');
+  // findByText: SearchFrame's suspense fallback is a textless skeleton, so the
+  // /loading/i render-wait can resolve before the list content commits
+  expect(await findByText('Test Output 0')).toBeVisible();
   expect(container.textContent).toContain('Test Output 1');
 });
 
@@ -286,8 +266,10 @@ it('uses team pointOfContact for contact email', async () => {
     ],
   };
 
-  const { getByRole } = await renderOutputs('', new Set(), team);
-  expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+  const { findByRole } = await renderOutputs('', new Set(), team);
+  // findByRole: SearchFrame's suspense fallback is a textless skeleton, so the
+  // /loading/i render-wait can resolve before the list content commits
+  expect(await findByRole('link', { name: /contact the PM/i })).toHaveAttribute(
     'href',
     'mailto:project@example.com',
   );

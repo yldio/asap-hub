@@ -3,7 +3,6 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { renderHook, waitFor } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../../config';
@@ -46,11 +45,9 @@ describe('useAlgolia', () => {
       >;
     renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
-            <WhenReady>{children}</WhenReady>
-          </Auth0Provider>
-        </RecoilRoot>
+        <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
       ),
     });
 
@@ -72,13 +69,9 @@ describe('useAlgolia', () => {
 
     const { result } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Auth0Provider
-            user={{ algoliaApiKey: 'algolia key', id: 'usertoken' }}
-          >
-            <WhenReady>{children}</WhenReady>
-          </Auth0Provider>
-        </RecoilRoot>
+        <Auth0Provider user={{ algoliaApiKey: 'algolia key', id: 'usertoken' }}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
       ),
     });
 

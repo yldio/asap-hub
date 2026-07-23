@@ -2,20 +2,18 @@ import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListTeamResponse } from '@asap-hub/fixtures';
-import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import * as flags from '@asap-hub/flags';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { Frame } from '@asap-hub/frontend-utils';
+import { createTestQueryClient, Frame } from '@asap-hub/frontend-utils';
 import { TeamType } from '@asap-hub/model';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import Teams from '../TeamList';
 import { getAlgoliaTeams } from '../api';
-import { teamsState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -33,21 +31,7 @@ const renderTeamList = async (
   teamType: TeamType | 'all' = 'all',
 ) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          teamsState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            status: [],
-            researchTheme: [],
-            resourceType: [],
-            searchQuery: '',
-            teamType,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -72,7 +56,7 @@ const renderTeamList = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

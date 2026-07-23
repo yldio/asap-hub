@@ -1,8 +1,9 @@
 import { CRNTagSearchEntitiesListArray } from '@asap-hub/algolia';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, RenderResult } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { WhenReady, Auth0Provider } from '../../auth/test-utils';
 
@@ -10,7 +11,7 @@ import TagList from '../TagsList';
 
 const renderTags = async (): Promise<RenderResult> =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">
@@ -25,7 +26,7 @@ const renderTags = async (): Promise<RenderResult> =>
           </Suspense>
         </WhenReady>
       </Auth0Provider>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 it('renders a headline', async () => {

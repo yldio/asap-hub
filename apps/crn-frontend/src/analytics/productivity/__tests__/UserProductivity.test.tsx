@@ -10,10 +10,10 @@ import {
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { getUserProductivity, getUserProductivityPerformance } from '../api';
-import { analyticsUserProductivityState } from '../state';
 import UserProductivity from '../UserProductivity';
 
 jest.mock('../api');
@@ -67,20 +67,7 @@ const userProductivity: ListUserProductivityResponse = {
 
 const renderPage = async () => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          analyticsUserProductivityState({
-            currentPage: 0,
-            pageSize: 10,
-            timeRange: '30d',
-            documentCategory: 'all',
-            sort: 'user_asc',
-            tags: [],
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -94,7 +81,7 @@ const renderPage = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

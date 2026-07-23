@@ -16,7 +16,6 @@ import {
   ResearchOutputResponse,
   TeamResponse,
 } from '@asap-hub/model';
-import { useRecoilValue } from 'recoil';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
@@ -31,7 +30,7 @@ import {
   researchOutputToCSV,
   squidexResultsToStream,
 } from '../../shared-research/export';
-import { authorizationState } from '../../auth/state';
+import { useAuthorization } from '../../auth/useAuthorization';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
@@ -86,7 +85,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
     pageSize,
   );
   const { client } = useAlgolia();
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const exportResults = () =>
     draftOutputs
       ? squidexResultsToStream<ResearchOutputResponse>(
@@ -96,7 +95,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
               .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
             { header: true },
           ),
-          (paginationParams) =>
+          async (paginationParams) =>
             getDraftResearchOutputs(
               {
                 documentType: filtersMap.documentType,
@@ -107,7 +106,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
                 draftsOnly: true,
                 ...paginationParams,
               },
-              authorization,
+              await getAuthorization(),
             ),
           researchOutputToCSV,
         )

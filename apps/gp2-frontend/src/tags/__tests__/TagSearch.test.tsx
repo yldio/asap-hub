@@ -1,24 +1,20 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import {
   AlgoliaSearchClient,
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE, useSearch } from '../../hooks';
+import { useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getTagSearchResults } from '../api';
 import TagSearch from '../TagSearch';
-import { tagSearchResultsState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../hooks/search');
@@ -28,20 +24,9 @@ jest.mock('../../hooks/algolia', () => ({
 const mockToggleFilter = jest.fn();
 const mockSetTags = jest.fn();
 
-const renderPage = async (tags = []) => {
+const renderPage = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          tagSearchResultsState({
-            tags: [],
-            currentPage: 0,
-            entityType: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -51,9 +36,11 @@ const renderPage = async (tags = []) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 beforeEach(() => {
   jest.clearAllMocks();

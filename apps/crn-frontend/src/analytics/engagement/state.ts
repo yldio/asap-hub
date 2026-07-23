@@ -1,4 +1,9 @@
 import {
+  normalizeListOptions,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
+import {
   EngagementPerformance,
   EngagementResponse,
   ListEngagementResponse,
@@ -6,136 +11,64 @@ import {
   MeetingRepAttendanceDataObject,
   SortEngagement,
 } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValueLoadable,
-} from 'recoil';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks';
+import { makePerformanceQuery } from '../utils/state';
 import {
-  makeFlagBasedPerformanceHook,
-  makePerformanceState,
-} from '../utils/state';
-import {
-  EngagementListOptions,
   getEngagement,
   getEngagementPerformance,
   getMeetingRepAttendance,
   MeetingRepAttendanceOptions,
 } from './api';
 
-const analyticsEngagementIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  EngagementListOptions
->({
-  key: 'analyticsEngagementIndex',
-  default: undefined,
-});
+export const engagementQueryKeys = {
+  all: ['analytics-engagement'] as const,
+  lists: () => [...engagementQueryKeys.all, 'list'] as const,
+  list: (options: AnalyticsSearchOptionsWithFiltering<SortEngagement>) =>
+    [...engagementQueryKeys.lists(), normalizeListOptions(options)] as const,
+};
 
-export const analyticsEngagementListState = atomFamily<
-  EngagementResponse | undefined,
-  string
->({
-  key: 'analyticsEngagementList',
-  default: undefined,
-});
-
-export const analyticsEngagementState = selectorFamily<
-  ListEngagementResponse | Error | undefined,
-  EngagementListOptions
->({
-  key: 'engagement',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(analyticsEngagementIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: EngagementResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsEngagementListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newEngagement) => {
-      if (
-        newEngagement === undefined ||
-        newEngagement instanceof DefaultValue
-      ) {
-        reset(analyticsEngagementIndexState(options));
-      } else if (newEngagement instanceof Error) {
-        set(analyticsEngagementIndexState(options), newEngagement);
-      } else {
-        newEngagement?.items.forEach((engagement) =>
-          set(
-            analyticsEngagementListState(
-              engagement.id + JSON.stringify(options),
-            ),
-            engagement,
-          ),
-        );
-        set(analyticsEngagementIndexState(options), {
-          total: newEngagement.total,
-          ids: newEngagement.items.map(
-            (engagement) => engagement.id + JSON.stringify(options),
-          ),
-        });
-      }
-    },
-});
+export const meetingRepAttendanceQueryKeys = {
+  all: ['analytics-meeting-rep-attendance'] as const,
+  lists: () => [...meetingRepAttendanceQueryKeys.all, 'list'] as const,
+  list: (options: MeetingRepAttendanceOptions) =>
+    [
+      ...meetingRepAttendanceQueryKeys.lists(),
+      normalizeListOptions(options),
+    ] as const,
+};
 
 export const useAnalyticsEngagement = (
   options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
-) => {
+): ListEngagementResponse => {
   const opensearchClient = useAnalyticsOpensearch<EngagementResponse>(
     'presenter-representation',
   ).client;
-  const [engagement, setEngagement] = useRecoilState(
-    analyticsEngagementState(options),
-  );
 
-  if (engagement === undefined) {
-    throw getEngagement(opensearchClient, options)
-      .then(setEngagement)
-      .catch(setEngagement);
-  }
-  if (engagement instanceof Error) {
-    throw engagement;
-  }
-  return engagement;
+  return useSuspenseQuery({
+    queryKey: engagementQueryKeys.list(options),
+    queryFn: (): Promise<ListEngagementResponse> =>
+      withEmptyListFallback(() => getEngagement(opensearchClient, options), {
+        total: 0,
+        items: [],
+      }),
+  }).data;
 };
 
-export const engagementPerformanceState =
-  makePerformanceState<EngagementPerformance>('analyticsEngagementPerformance');
+const engagementPerformanceQuery = makePerformanceQuery<EngagementPerformance>(
+  'presenter-representation-performance',
+);
 
 export const useEngagementPerformance =
-  makeFlagBasedPerformanceHook<EngagementPerformance>(
-    engagementPerformanceState,
+  engagementPerformanceQuery.useSuspenseHook(
     getEngagementPerformance,
     'presenter-representation-performance',
   );
 
-export const useEngagementPerformanceValue = (
-  options: Parameters<typeof getEngagementPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(engagementPerformanceState(options));
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
-
-const analyticsMeetingRepAttendanceState = atomFamily<
-  ListMeetingRepAttendanceResponse | Error | undefined,
-  MeetingRepAttendanceOptions
->({
-  key: 'analyticsMeetingRepAttendance',
-  default: undefined,
-});
+export const useEngagementPerformanceValue =
+  engagementPerformanceQuery.useValueHook;
 
 export const useAnalyticsMeetingRepAttendance = (
   options: MeetingRepAttendanceOptions,
@@ -143,31 +76,25 @@ export const useAnalyticsMeetingRepAttendance = (
   const opensearchClient =
     useAnalyticsOpensearch<MeetingRepAttendanceDataObject>('attendance').client;
 
-  const [meetingRepAttendance, setMeetingRepAttendance] = useRecoilState(
-    analyticsMeetingRepAttendanceState({
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    }),
-  );
+  // Cache identity depends on exactly these option fields.
+  const stateOptions: MeetingRepAttendanceOptions = {
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    tags: options.tags,
+    timeRange: options.timeRange,
+    sort: options.sort,
+  };
 
-  if (meetingRepAttendance === undefined) {
-    throw getMeetingRepAttendance(opensearchClient, {
-      currentPage: options.currentPage,
-      pageSize: options.pageSize,
-      tags: options.tags,
-      timeRange: options.timeRange,
-      sort: options.sort,
-    })
-      .then(setMeetingRepAttendance)
-      .catch(setMeetingRepAttendance);
-  }
-
-  if (meetingRepAttendance instanceof Error) {
-    throw meetingRepAttendance;
-  }
-
-  return meetingRepAttendance;
+  const { data } = useSuspenseQuery({
+    queryKey: meetingRepAttendanceQueryKeys.list(stateOptions),
+    queryFn: () =>
+      withEmptyListFallback(
+        () =>
+          nullOnUndefined(() =>
+            getMeetingRepAttendance(opensearchClient, stateOptions),
+          ),
+        { total: 0, items: [] },
+      ),
+  });
+  return data as ListMeetingRepAttendanceResponse;
 };

@@ -1,9 +1,10 @@
 import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { gp2 } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
   createAlgoliaResponse,
@@ -24,8 +25,8 @@ const mockGetNews = getAlgoliaNews as jest.MockedFunction<
 >;
 const renderNews = async ({ user = {} }: { user?: Partial<gp2Auth.User> }) => {
   render(
-    <Suspense fallback="loading">
-      <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
             <MemoryRouter initialEntries={['/news']}>
@@ -35,8 +36,8 @@ const renderNews = async ({ user = {} }: { user?: Partial<gp2Auth.User> }) => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

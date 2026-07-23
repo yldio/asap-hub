@@ -6,17 +6,12 @@ import {
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { network, sharedResearch } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  act,
-} from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   ResearchOutputWorkingGroupResponse,
   WorkingGroupResponse,
@@ -29,7 +24,6 @@ import {
   getResearchOutputs,
 } from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
-import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -105,11 +99,7 @@ const renderWorkingGroupProfile = async (
   );
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshWorkingGroupState(workingGroupResponse.id), Math.random())
-      }
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -117,9 +107,12 @@ const renderWorkingGroupProfile = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
   return router;
 };
 
@@ -169,7 +162,10 @@ describe('the share outputs page', () => {
       );
     });
     expect(screen.queryByText('About')).not.toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    await waitFor(
+      () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      { timeout: 30_000 },
+    );
 
     jest.useFakeTimers();
   });

@@ -48,7 +48,7 @@ const createAuth0ClientParams = {
 };
 /**
  * You probably don't want to use this in the frontend,
- * which has its own recoil-integrated auth test utils.
+ * which has its own auth test utils.
  */
 interface Auth0ProviderProps<T> {
   readonly children: React.ReactNode;

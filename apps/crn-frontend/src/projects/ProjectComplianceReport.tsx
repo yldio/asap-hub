@@ -9,13 +9,12 @@ import {
 import { projects } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
-import { useSetRecoilState } from 'recoil';
 import {
   useManuscriptById,
   usePostComplianceReport,
 } from '../network/teams/state';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { refreshProjectState } from './state';
+import { useInvalidateProjectById } from './state';
 
 type ProjectComplianceReportProps = {
   projectId: string;
@@ -58,9 +57,7 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
   const pushFromHere = usePushFromHere();
   const { state } = useLocation();
 
-  const setRefreshProjectState = useSetRecoilState(
-    refreshProjectState(projectId),
-  );
+  const invalidateProject = useInvalidateProjectById(projectId);
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
 
@@ -81,7 +78,7 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
         type: 'compliance-report',
         accent: 'successLarge',
       });
-      setRefreshProjectState((value) => value + 1);
+      invalidateProject();
       void pushFromHere(projectWorkspacePath, { replace: true });
     };
 

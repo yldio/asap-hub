@@ -1,5 +1,9 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   performanceByDocumentType,
   userProductivityPerformance,
@@ -15,7 +19,6 @@ import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes, useNavigate } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { OpensearchClient } from '../../utils/opensearch';
@@ -54,8 +57,8 @@ jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
 }));
 
-// Don't mock ../../../hooks at all - let it use the real implementations
-// which are connected to Recoil state and will respond to user interactions
+// Don't mock ../../../hooks at all - the real implementations respond to
+// user interactions
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -197,7 +200,7 @@ const teamProductivityResponse: TeamProductivityResponse = {
 
 const renderPage = async (path: string) => {
   const result = render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -212,7 +215,7 @@ const renderPage = async (path: string) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -372,7 +375,7 @@ describe('team productivity', () => {
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    expect(await screen.findByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
     const rangeButton = screen.getByRole('button', {
@@ -426,7 +429,7 @@ describe('team productivity', () => {
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    expect(await screen.findByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
     const outputTypeButton = screen.getByRole('button', {

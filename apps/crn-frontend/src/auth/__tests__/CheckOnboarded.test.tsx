@@ -16,7 +16,6 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 
@@ -63,17 +62,15 @@ describe('an unauthenticated user', () => {
 
   it('is not allowed', async () => {
     const { findByText } = render(
-      <RecoilRoot>
-        <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
-          <Auth0Provider user={undefined}>
-            <WhenReady>
-              <MemoryRouter>
-                <CheckOnboarded>text</CheckOnboarded>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </ErrorBoundary>
-      </RecoilRoot>,
+      <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
+        <Auth0Provider user={undefined}>
+          <WhenReady>
+            <MemoryRouter>
+              <CheckOnboarded>text</CheckOnboarded>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </ErrorBoundary>,
     );
     expect(await findByText(/authenticate/i)).toBeVisible();
   });
@@ -82,37 +79,33 @@ describe('an unauthenticated user', () => {
 describe('an authenticated and onboarded user', () => {
   it('is let through', async () => {
     const { findByText } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: true }}>
-          <WhenReady>
-            <MemoryRouter>
-              <CheckOnboarded>text</CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: true }}>
+        <WhenReady>
+          <MemoryRouter>
+            <CheckOnboarded>text</CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
     expect(await findByText('text')).toBeVisible();
   });
 
   it('can navigate to any page', async () => {
     const { findByText } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: true }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
-              <NavigationHelper />
-              <CheckOnboarded>
-                <Routes>
-                  <Route path={ownProfilePath} element={<>profile page</>} />
-                  <Route path={teamPage} element={<>team page</>} />
-                  <Route path={outputs} element={<>outputs page</>} />
-                </Routes>
-              </CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: true }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[ownProfilePath]}>
+            <NavigationHelper />
+            <CheckOnboarded>
+              <Routes>
+                <Route path={ownProfilePath} element={<>profile page</>} />
+                <Route path={teamPage} element={<>team page</>} />
+                <Route path={outputs} element={<>outputs page</>} />
+              </Routes>
+            </CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     expect(await findByText('profile page')).toBeVisible();
@@ -134,17 +127,15 @@ describe('an authenticated user in onboarding', () => {
 
   it('is let through to their own profile', async () => {
     const { findByText, findByTestId } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: false }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
-              <NavigationHelper />
-              <LocationDisplay />
-              <CheckOnboarded>profile</CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: false }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[ownProfilePath]}>
+            <NavigationHelper />
+            <LocationDisplay />
+            <CheckOnboarded>profile</CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     expect(await findByText('profile')).toBeVisible();
@@ -157,24 +148,22 @@ describe('an authenticated user in onboarding', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     const dashboardPath = dashboard({}).$;
     const { findByTestId } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: false }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[dashboardPath]}>
-              <LocationDisplay />
-              <CheckOnboarded>
-                <Routes>
-                  <Route
-                    path={`${ownProfileBasePath}/*`}
-                    element={<>profile</>}
-                  />
-                  <Route path={dashboardPath} element={<>dashboard</>} />
-                </Routes>
-              </CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: false }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[dashboardPath]}>
+            <LocationDisplay />
+            <CheckOnboarded>
+              <Routes>
+                <Route
+                  path={`${ownProfileBasePath}/*`}
+                  element={<>profile</>}
+                />
+                <Route path={dashboardPath} element={<>dashboard</>} />
+              </Routes>
+            </CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     // Should redirect to profile
@@ -188,23 +177,21 @@ describe('an authenticated user in onboarding', () => {
     window.alert = jest.fn();
     const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
     const { findByTestId } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: false }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[foreignProfilePath]}>
-              <LocationDisplay />
-              <CheckOnboarded>
-                <Routes>
-                  <Route
-                    path={`${ownProfileBasePath}/*`}
-                    element={<>own profile</>}
-                  />
-                </Routes>
-              </CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: false }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[foreignProfilePath]}>
+            <LocationDisplay />
+            <CheckOnboarded>
+              <Routes>
+                <Route
+                  path={`${ownProfileBasePath}/*`}
+                  element={<>own profile</>}
+                />
+              </Routes>
+            </CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     // Should redirect to own profile
@@ -218,23 +205,21 @@ describe('an authenticated user in onboarding', () => {
     window.alert = jest.fn();
     const anotherPagePath = sharedResearch({}).$;
     const { findByTestId } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: false }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[anotherPagePath]}>
-              <LocationDisplay />
-              <CheckOnboarded>
-                <Routes>
-                  <Route
-                    path={`${ownProfileBasePath}/*`}
-                    element={<>own profile</>}
-                  />
-                </Routes>
-              </CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: false }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[anotherPagePath]}>
+            <LocationDisplay />
+            <CheckOnboarded>
+              <Routes>
+                <Route
+                  path={`${ownProfileBasePath}/*`}
+                  element={<>own profile</>}
+                />
+              </Routes>
+            </CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     // Should redirect to own profile
@@ -248,16 +233,14 @@ describe('an authenticated user in onboarding', () => {
     window.alert = jest.fn();
 
     const { findByText } = render(
-      <RecoilRoot>
-        <Auth0Provider user={{ ...user, onboarded: false }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
-              <NavigationHelper />
-              <CheckOnboarded>profile page</CheckOnboarded>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>,
+      <Auth0Provider user={{ ...user, onboarded: false }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[ownProfilePath]}>
+            <NavigationHelper />
+            <CheckOnboarded>profile page</CheckOnboarded>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>,
     );
 
     expect(await findByText('profile page')).toBeVisible();

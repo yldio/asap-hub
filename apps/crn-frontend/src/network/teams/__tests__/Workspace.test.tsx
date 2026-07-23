@@ -1,5 +1,4 @@
 import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import {
   render,
@@ -18,7 +17,8 @@ import {
 import { network } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 import { mockAlert } from '@asap-hub/dom-test-utils';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import {
   Auth0Provider,
@@ -39,7 +39,6 @@ import { useProjectById, usePatchProjectById } from '../../../projects/state';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
-  patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),
   getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
@@ -72,7 +71,7 @@ const renderWithWrapper = (
   user = {},
 ): ReturnType<typeof render> =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -96,7 +95,7 @@ const renderWithWrapper = (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 const user = {
@@ -554,7 +553,7 @@ describe('the edit tool dialog', () => {
     };
 
     render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={user as never}>
             <WhenReady>
@@ -583,7 +582,7 @@ describe('the edit tool dialog', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {

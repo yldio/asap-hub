@@ -1,5 +1,4 @@
 import { render, waitFor } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import * as reactContext from '@asap-hub/react-context';
 
 import ContinueOnboarding from '../ContinueOnboarding';
@@ -36,9 +35,7 @@ it('renders its children once Auth0 is loaded', async () => {
     } as never);
 
   const { getByText } = render(
-    <RecoilRoot>
-      <ContinueOnboarding>content</ContinueOnboarding>
-    </RecoilRoot>,
+    <ContinueOnboarding>content</ContinueOnboarding>,
   );
 
   // When auth0Loading is true, setLoading(false) is called, so children should render
@@ -56,9 +53,7 @@ it('returns null when loading is true', async () => {
   } as never);
 
   const { container } = render(
-    <RecoilRoot>
-      <ContinueOnboarding>content</ContinueOnboarding>
-    </RecoilRoot>,
+    <ContinueOnboarding>content</ContinueOnboarding>,
   );
 
   // The component starts with loading=true (useState(true))
@@ -80,9 +75,7 @@ it('sets loading to false when auth0Loading is true', () => {
   } as never);
 
   const { getByText } = render(
-    <RecoilRoot>
-      <ContinueOnboarding>content</ContinueOnboarding>
-    </RecoilRoot>,
+    <ContinueOnboarding>content</ContinueOnboarding>,
   );
 
   // When auth0Loading is true, setLoading(false) is called (line 20)
@@ -100,11 +93,7 @@ it('calls cleanup function when component unmounts', () => {
     getTokenSilently: jest.fn(),
   } as never);
 
-  const { unmount } = render(
-    <RecoilRoot>
-      <ContinueOnboarding>content</ContinueOnboarding>
-    </RecoilRoot>,
-  );
+  const { unmount } = render(<ContinueOnboarding>content</ContinueOnboarding>);
 
   // Unmount to trigger cleanup
   unmount();
@@ -125,9 +114,7 @@ it('returns undefined from useEffect when auth0Loading is false', () => {
   } as never);
 
   const { container } = render(
-    <RecoilRoot>
-      <ContinueOnboarding>content</ContinueOnboarding>
-    </RecoilRoot>,
+    <ContinueOnboarding>content</ContinueOnboarding>,
   );
 
   // When !auth0Loading is true, useEffect returns undefined early (line 17)

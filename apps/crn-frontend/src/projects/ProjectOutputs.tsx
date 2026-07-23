@@ -17,14 +17,13 @@ import {
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import format from 'date-fns/format';
-import { useRecoilValue } from 'recoil';
 
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useResearchOutputs } from '../shared-research/state';
 import { getProjectResearchOutputListScope } from './projectResearchOutputScope';
 import { researchOutputToProjectOutput } from './researchOutputToProjectOutput';
 import { useAlgolia } from '../hooks/algolia';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import {
   getDraftResearchOutputs,
   getResearchOutputs,
@@ -77,7 +76,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   };
 
   const { client } = useAlgolia();
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const exportResults = () =>
     draftOutputs
       ? resultsToStream<ResearchOutputResponse>(
@@ -87,7 +86,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
               .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
             { header: true },
           ),
-          (paginationParams) =>
+          async (paginationParams) =>
             getDraftResearchOutputs(
               {
                 documentType: filtersMap.documentType,
@@ -98,7 +97,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
                 ...listScope,
                 ...paginationParams,
               },
-              authorization,
+              await getAuthorization(),
             ),
           researchOutputToCSV,
         )

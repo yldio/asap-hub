@@ -4,19 +4,20 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import { FetchResearchOutputsFilter } from '@asap-hub/model';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import Outputs from '../Outputs';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getResearchOutputs } from '../../../shared-research/api';
-import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getUser } from '../api';
-import { refreshUserState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -68,29 +69,7 @@ const renderOutputs = async (
     : { pathname };
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset, set }) => {
-        set(refreshUserState(userId), Math.random());
-        reset(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            userId,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        reset(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            userId,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -105,7 +84,7 @@ const renderOutputs = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

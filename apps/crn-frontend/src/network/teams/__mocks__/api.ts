@@ -14,7 +14,6 @@ import {
   ListPartialManuscriptResponse,
   ListTeamResponse,
   ManuscriptVersionResponse,
-  TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
@@ -31,16 +30,6 @@ export const getTeam = jest.fn(
     ...createTeamResponse(),
     id,
   }),
-);
-
-export const patchTeam = jest.fn(
-  async (id: string, patch: TeamPatchRequest): Promise<TeamResponse> => {
-    const user = await getTeam(id);
-    return {
-      ...user,
-      ...patch,
-    };
-  },
 );
 
 export const getTeams = jest.fn(

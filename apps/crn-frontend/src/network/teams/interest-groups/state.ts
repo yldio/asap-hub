@@ -1,91 +1,50 @@
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import {
-  InterestGroupResponse,
-  ListInterestGroupResponse,
-} from '@asap-hub/model';
+import { withEmptyListFallback } from '@asap-hub/frontend-utils';
+import { ListInterestGroupResponse } from '@asap-hub/model';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { interestGroupListState } from '../../interest-groups/state';
-import { authorizationState } from '../../../auth/state';
+import { useAuthorization } from '../../../auth/useAuthorization';
+import { interestGroupQueryKeys } from '../../interest-groups/state';
 import { getTeamInterestGroups } from './api';
 
-const teamInterestGroupIndexState = atomFamily<
-  | { ids: ReadonlyArray<string>; total: number }
-  | Error
-  | 'noSuchTeam'
-  | undefined,
-  string
->({
-  key: 'teamInterestGroupIndex',
-  default: undefined,
-});
-export const teamInterestGroupsState = selectorFamily<
-  ListInterestGroupResponse | Error | 'noSuchTeam' | undefined,
-  string
->({
-  key: 'teamInterestGroups',
-  get:
-    (teamId) =>
-    ({ get }) => {
-      const index = get(teamInterestGroupIndexState(teamId));
-      if (
-        index === undefined ||
-        index === 'noSuchTeam' ||
-        index instanceof Error
-      )
-        return index;
-      const interestGroups: InterestGroupResponse[] = [];
-      for (const id of index.ids) {
-        const interestGroup = get(interestGroupListState(id));
-        if (interestGroup === undefined) return undefined;
-        interestGroups.push(interestGroup);
-      }
-      return { total: index.total, items: interestGroups };
-    },
-  set:
-    (teamId) =>
-    ({ get, set, reset }, newInterestGroups) => {
-      if (
-        newInterestGroups === undefined ||
-        newInterestGroups instanceof DefaultValue
-      ) {
-        reset(teamInterestGroupIndexState(teamId));
-      } else if (
-        newInterestGroups instanceof Error ||
-        newInterestGroups === 'noSuchTeam'
-      ) {
-        set(teamInterestGroupIndexState(teamId), newInterestGroups);
-      } else {
-        newInterestGroups?.items.forEach((interestGroup) =>
-          set(interestGroupListState(interestGroup.id), interestGroup),
-        );
-        set(teamInterestGroupIndexState(teamId), {
-          total: newInterestGroups.total,
-          ids: newInterestGroups.items.map((group) => group.id),
-        });
-      }
-    },
-});
+export const teamInterestGroupQueryKeys = {
+  all: ['team-interest-groups'] as const,
+  byTeam: (teamId: string) =>
+    [...teamInterestGroupQueryKeys.all, teamId] as const,
+};
 
-export const useTeamInterestGroupsById = (teamId: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [teamInterestGroups, setTeamInterestGroups] = useRecoilState(
-    teamInterestGroupsState(teamId),
-  );
-  if (teamInterestGroups === undefined) {
-    throw getTeamInterestGroups(teamId, authorization)
-      .then((newTeamInterestGroups) =>
-        setTeamInterestGroups(newTeamInterestGroups ?? 'noSuchTeam'),
-      )
-      .catch(setTeamInterestGroups);
-  }
-  if (teamInterestGroups instanceof Error) {
-    throw teamInterestGroups;
-  }
-  return teamInterestGroups;
+export const useTeamInterestGroupsById = (
+  teamId: string,
+): ListInterestGroupResponse | 'noSuchTeam' => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  return useSuspenseQuery({
+    queryKey: teamInterestGroupQueryKeys.byTeam(teamId),
+    queryFn: (): Promise<ListInterestGroupResponse | 'noSuchTeam'> =>
+      withEmptyListFallback<ListInterestGroupResponse | 'noSuchTeam'>(
+        async () => {
+          const interestGroups = await getTeamInterestGroups(
+            teamId,
+            await getAuthorization(),
+          );
+          if (interestGroups === undefined) {
+            return 'noSuchTeam';
+          }
+          // Write-through into the shared interest-group entity store,
+          // updating any cached interest-group list that contains them.
+          const byId = new Map(
+            interestGroups.items.map((group) => [group.id, group]),
+          );
+          queryClient.setQueriesData<ListInterestGroupResponse>(
+            { queryKey: interestGroupQueryKeys.lists() },
+            (cached) =>
+              cached && {
+                ...cached,
+                items: cached.items.map((item) => byId.get(item.id) ?? item),
+              },
+          );
+          return interestGroups;
+        },
+        { total: 0, items: [] },
+      ),
+  }).data;
 };

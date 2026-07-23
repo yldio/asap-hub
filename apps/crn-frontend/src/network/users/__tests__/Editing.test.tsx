@@ -1,5 +1,5 @@
 import { ReactNode, Suspense, useState, useCallback } from 'react';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +10,10 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import {
+  createTestQueryClient,
+  loadInstitutionOptions,
+} from '@asap-hub/frontend-utils';
 import { ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 
@@ -48,13 +51,13 @@ const id = '42';
 
 const renderWithRoot = (children: ReactNode): ReturnType<typeof render> =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }}>
           <WhenReady>{children}</WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 const aboutRoute = network({}).users({}).user({ userId: id }).about;
 const aboutPath =
@@ -272,7 +275,7 @@ describe('the personal info modal', () => {
     // so it is a reliable signal that the avatar mutation deferred its refresh
     const refreshUser = jest.fn().mockResolvedValue(undefined);
     const { findByLabelText, findByText } = render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{ id }} auth0Overrides={() => ({ refreshUser })}>
             <WhenReady>
@@ -292,7 +295,7 @@ describe('the personal info modal', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     imageCompressionMock.mockImplementationOnce((fileToCompress) =>
@@ -316,7 +319,7 @@ describe('the personal info modal', () => {
     const toast = jest.fn();
     mockDeleteUserAvatar.mockRejectedValueOnce(new Error('500'));
     const { findByRole, findByText } = render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{ id }}>
             <WhenReady>
@@ -342,7 +345,7 @@ describe('the personal info modal', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await userEvent.click(await findByRole('button', { name: /remove/i }));
@@ -537,7 +540,7 @@ describe('the onboarded modal', () => {
       );
 
       return (
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={currentUser} auth0Overrides={auth0Overrides}>
               <WhenReady>
@@ -573,7 +576,7 @@ describe('the onboarded modal', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>
+        </QueryClientProvider>
       );
     };
 

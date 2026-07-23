@@ -1,13 +1,9 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router';
-import { RecoilRoot, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Dashboard from '../dashboard/Dashboard';
 import OnboardedApp from '../OnboardedApp';
@@ -22,15 +18,12 @@ const MockDashboard = Dashboard as jest.MockedFunction<typeof Dashboard>;
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 beforeEach(jest.resetAllMocks);
 beforeEach(() => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
+  MockDashboard.mockImplementation(() => null);
 });
 const renderAuthenticatedApp = async () => {
   const id = '42';
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }}>
           <WhenReady>
@@ -40,10 +33,12 @@ const renderAuthenticatedApp = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 it('displays the onboarded page', async () => {
   const user = gp2Fixtures.createUserResponse();

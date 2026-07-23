@@ -1,23 +1,27 @@
-import { RecoilRoot } from 'recoil';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
+import { useFlags } from '@asap-hub/react-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { usePageByPageId } from './state';
+import ReactQueryDevtoolsProduction from '../ReactQueryDevtoolsProduction';
 
 interface ContentProps {
   pageId: string;
 }
 const Content: React.FC<ContentProps> = ({ pageId }) => {
-  const pageLoadable = usePageByPageId(pageId);
+  // loading → Loading, value → ContentPage, error or missing → NotFoundPage
+  const { isPending, data: page } = usePageByPageId(pageId);
 
-  if (pageLoadable.state === 'loading') {
+  if (isPending) {
     return <Loading />;
   }
 
-  if (pageLoadable.state === 'hasValue' && pageLoadable.contents) {
+  if (page) {
     return (
-      <Frame title={pageLoadable.contents.title}>
-        <ContentPage {...pageLoadable.contents} />
+      <Frame title={page.title}>
+        <ContentPage {...page} />
       </Frame>
     );
   }
@@ -25,10 +29,19 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
   return <NotFoundPage />;
 };
 
-const ContentWithRecoil: React.FC<ContentProps> = (props) => (
-  <RecoilRoot>
-    <Content {...props} />
-  </RecoilRoot>
-);
+const ContentWithProviders: React.FC<ContentProps> = (props) => {
+  // The QueryClient lives and dies with this component: unmounting the
+  // content page discards the cache.
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
+  );
+  const { isEnabled } = useFlags();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Content {...props} />
+      {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
+    </QueryClientProvider>
+  );
+};
 
-export default ContentWithRecoil;
+export default ContentWithProviders;

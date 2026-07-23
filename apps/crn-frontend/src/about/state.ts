@@ -1,24 +1,17 @@
-import { selector, atom, useRecoilValue } from 'recoil';
 import { DiscoverResponse } from '@asap-hub/model';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { getDiscover } from './api';
 
-export const fetchDiscoverState = selector<DiscoverResponse>({
-  key: 'fetchDiscoverState',
-  get: ({ get }) => {
-    get(refreshDiscoverState);
-    return getDiscover(get(authorizationState));
-  },
-});
+export const discoverQueryKeys = {
+  all: ['discover'] as const,
+};
 
-export const discoverState = atom<DiscoverResponse>({
-  key: 'discoverState',
-  default: fetchDiscoverState,
-});
-
-export const refreshDiscoverState = atom<number>({
-  key: 'refreshDiscoverState',
-  default: 0,
-});
-
-export const useDiscoverState = () => useRecoilValue(discoverState);
+export const useDiscoverState = (): DiscoverResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: discoverQueryKeys.all,
+    queryFn: async () => getDiscover(await getAuthorization()),
+  }).data;
+};

@@ -3,9 +3,12 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListUserResponse } from '@asap-hub/fixtures';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import { User } from '@asap-hub/auth';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   Auth0Provider,
   WhenReady,
@@ -13,8 +16,6 @@ import {
 
 import UserList from '../UserList';
 import { getUsers } from '../api';
-import { usersState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -37,18 +38,7 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 
 const renderUserList = async (user: Partial<User> = {}) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          usersState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
-            searchQuery: '',
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -60,7 +50,7 @@ const renderUserList = async (user: Partial<User> = {}) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

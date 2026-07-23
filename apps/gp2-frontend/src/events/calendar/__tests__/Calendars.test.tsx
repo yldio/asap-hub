@@ -1,13 +1,9 @@
 import { gp2 } from '@asap-hub/fixtures';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-  within,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor, screen, within } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getCalendars } from '../api';
 import Calendars from '../Calendars';
@@ -16,7 +12,7 @@ jest.mock('../api');
 
 const renderCalendars = async () => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -26,9 +22,11 @@ const renderCalendars = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 describe('Calendars', () => {
   beforeEach(jest.resetAllMocks);

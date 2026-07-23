@@ -1,15 +1,23 @@
 import { gp2 } from '@asap-hub/model';
+import {
+  createQueryKeys,
+  nullOnUndefined,
+  withEmptyListFallback,
+} from '@asap-hub/frontend-utils';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+  matchQuery,
+  QueryClient,
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
+import { outputQueryKeys } from '../outputs/state';
+import { projectQueryKeys } from '../projects/state';
+import { workingGroupQueryKeys } from '../working-groups/state';
 import {
   getAlgoliaUsers,
   getUser,
@@ -18,162 +26,110 @@ import {
   UserListOptions,
 } from './api';
 
-// Promise cache to prevent throwing new promises on every render (Suspense requirement)
-const pendingUserPromises = new Map<string, Promise<void>>();
+export const userQueryKeys = createQueryKeys<UserListOptions>('users');
 
-// Helper to create a stable key from options
-const serializeUserOptions = (options: UserListOptions): string =>
-  JSON.stringify({
-    currentPage: options.currentPage,
-    pageSize: options.pageSize,
-    searchQuery: options.searchQuery,
-    filters: options.filters ? Array.from(options.filters).sort() : [],
-  });
-
-const userIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  UserListOptions
->({ key: 'userIndex', default: undefined });
-
-export const usersState = selectorFamily<
-  gp2.ListUserResponse | Error | undefined,
-  UserListOptions
->({
-  key: 'users',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(userIndexState({ ...options }));
-      if (index === undefined || index instanceof Error) return index;
-      const users: gp2.UserResponse[] = [];
-      for (const id of index.ids) {
-        const user = get(userState(id));
-        if (user === undefined) return undefined;
-        users.push(user);
-      }
-      return {
-        total: index.total,
-        items: users,
-        algoliaIndexName: index.algoliaIndexName,
-        algoliaQueryId: index.algoliaQueryId,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, users) => {
-      const indexStateOptions = { ...options };
-      if (users === undefined || users instanceof DefaultValue) {
-        const oldUsers = get(userIndexState(indexStateOptions));
-        if (!(oldUsers instanceof Error)) {
-          oldUsers?.ids.forEach((id) => reset(userState(id)));
-        }
-        reset(userIndexState(indexStateOptions));
-      } else if (users instanceof Error) {
-        set(userIndexState(indexStateOptions), users);
-      } else {
-        users.items.forEach((user) => set(userState(user.id), user));
-        set(userIndexState(indexStateOptions), {
-          total: users.total,
-          ids: users.items.map(({ id }) => id),
-          algoliaIndexName: users.algoliaIndexName,
-          algoliaQueryId: users.algoliaQueryId,
-        });
-      }
-    },
-});
-
-export const useUsers = (options: UserListOptions) => {
-  const [users, setUsers] = useRecoilState(usersState(options));
+export const useUsers = (options: UserListOptions): gp2.ListUserResponse => {
   const { client } = useAlgolia();
-  const optionsKey = serializeUserOptions(options);
-
-  if (users === undefined) {
-    let pendingPromise = pendingUserPromises.get(optionsKey);
-
-    if (!pendingPromise) {
-      pendingPromise = getAlgoliaUsers(client, options)
-        .then(
-          (data): gp2.ListUserResponse => ({
+  return useSuspenseQuery({
+    queryKey: userQueryKeys.list(options),
+    queryFn: (): Promise<gp2.ListUserResponse> =>
+      withEmptyListFallback<gp2.ListUserResponse>(
+        async () => {
+          const data = await getAlgoliaUsers(client, options);
+          return {
             total: data.nbHits ?? 0,
             items: data.hits,
             algoliaIndexName: data.index,
             algoliaQueryId: data.queryID,
-          }),
-        )
-        .then(setUsers)
-        .catch(setUsers)
-        .finally(() => {
-          pendingUserPromises.delete(optionsKey);
-        });
-
-      pendingUserPromises.set(optionsKey, pendingPromise);
-    }
-
-    throw pendingPromise;
-  }
-
-  if (users instanceof Error) {
-    throw users;
-  }
-
-  return users;
+          };
+        },
+        { total: 0, items: [] },
+      ),
+  }).data;
 };
 
-const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
-  key: 'fetchUser',
-  get:
-    (id) =>
-    async ({ get }) => {
-      const authorization = get(authorizationState);
-      return getUser(id, authorization);
-    },
-});
+export const useUserById = (id: string): gp2.UserResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: userQueryKeys.detail(id),
+    queryFn: () =>
+      nullOnUndefined(async () => getUser(id, await getAuthorization())),
+  });
+  return data ?? undefined;
+};
 
-const userState = atomFamily<gp2.UserResponse | undefined, string>({
-  key: 'user',
-  default: fetchUserState,
-});
+// A profile change can show up anywhere (names, roles, avatars embedded in
+// other records), so refetch every cache except the ones holding mutation
+// overlays, which must never be refetched (§6.1).
+const refetchAllButOverlays = (queryClient: QueryClient, userId: string) => {
+  const overlayKeys = [
+    userQueryKeys.detail(userId),
+    outputQueryKeys.details(),
+    projectQueryKeys.details(),
+    workingGroupQueryKeys.details(),
+  ];
+  void queryClient.invalidateQueries({
+    predicate: (query) =>
+      !overlayKeys.some((queryKey) => matchQuery({ queryKey }, query)),
+  });
+};
 
-export const useUserById = (id: string) => useRecoilValue(userState(id));
-
-const patchedUserState = atomFamily<gp2.UserResponse | undefined, string>({
-  key: 'patchedUser',
-  default: undefined,
-});
-
-export const usePatchUserById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0GP2();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
-  return async (patch: gp2.UserPatchRequest) => {
-    setPatchedUser(await patchUser(id, patch, authorization));
+// Refreshes the Auth0 token + user so the id token picks up the profile
+// change. Best-effort: the profile is already saved, so a failed refresh
+// (e.g. silent auth cannot skip consent on localhost) must not fail the form.
+const refreshAuth0Session = async ({
+  getTokenSilently,
+  refreshUser,
+}: Pick<
+  ReturnType<typeof useAuth0GP2>,
+  'getTokenSilently' | 'refreshUser'
+>) => {
+  try {
     await getTokenSilently({
       redirect_uri: window.location.origin,
       ignoreCache: true,
     });
-
     await refreshUser();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('auth0 session refresh after profile update failed', error);
+  }
+};
+
+// The mutation hooks below write the mutation response straight into the
+// detail cache — never refetched.
+export const usePatchUserById = (id: string) => {
+  const auth0 = useAuth0GP2();
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (patch: gp2.UserPatchRequest) =>
+      patchUser(id, patch, await getAuthorization()),
+    onSuccess: async (user) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      await refreshAuth0Session(auth0);
+      refetchAllButOverlays(queryClient, id);
+    },
+  });
+  return async (patch: gp2.UserPatchRequest) => {
+    await mutateAsync(patch);
   };
 };
 
 export const usePostUserAvatarById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0GP2();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  const auth0 = useAuth0GP2();
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (avatar: string) =>
+      postUserAvatar(id, { avatar }, await getAuthorization()),
+    onSuccess: async (user) => {
+      queryClient.setQueryData(userQueryKeys.detail(id), user);
+      await refreshAuth0Session(auth0);
+      refetchAllButOverlays(queryClient, id);
+    },
+  });
   return async (avatar: string) => {
-    setPatchedUser(await postUserAvatar(id, { avatar }, authorization));
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-
-    await refreshUser();
+    await mutateAsync(avatar);
   };
 };

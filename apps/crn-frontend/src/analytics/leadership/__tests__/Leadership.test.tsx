@@ -1,15 +1,18 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { analytics } from '@asap-hub/routing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import {
   OSChampionOpensearchResponse,
@@ -17,7 +20,6 @@ import {
 } from '@asap-hub/model';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
-import { analyticsLeadershipState } from '../state';
 import { useAnalyticsOpensearch, useOpensearchMetrics } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 
@@ -152,19 +154,7 @@ const getPath = (metric: string) =>
   analytics({}).leadership({}).metric({ metric }).$;
 const renderPage = async (metric = 'working-group') => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          analyticsLeadershipState({
-            currentPage: 0,
-            pageSize: 10,
-            sort: 'team_asc',
-            tags: [],
-            metric: metric as 'working-group' | 'interest-group',
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -179,7 +169,7 @@ const renderPage = async (metric = 'working-group') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -601,19 +591,7 @@ describe('error handling', () => {
     });
 
     const result = render(
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            analyticsLeadershipState({
-              currentPage: 0,
-              pageSize: 10,
-              sort: 'team_asc',
-              tags: [],
-              metric: 'working-group',
-            }),
-          );
-        }}
-      >
+      <QueryClientProvider client={createTestQueryClient()}>
         <ErrorBoundary>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
@@ -630,11 +608,11 @@ describe('error handling', () => {
             </Auth0Provider>
           </Suspense>
         </ErrorBoundary>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     // The error should be caught and the component should handle it
-    // This covers the catch(setLeadership) path and throw leadership path (line 159)
+    // (covers the queryFn's Error re-throw to the error boundary)
     await waitFor(() => {
       expect(caughtError?.message).toBe('Failed to fetch leadership data');
     });
@@ -642,10 +620,9 @@ describe('error handling', () => {
     expect(result.getByTestId('error')).toBeInTheDocument();
   });
 
-  it('handles errors when setting error state in selector', async () => {
-    // This test covers the selector set method when newTeams is an Error
-    // Specifically line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
+  it('handles errors when the fetch rejects', async () => {
     const error = new Error('Test error');
+    jest.spyOn(wgLeadershipClient, 'search').mockRejectedValueOnce(error);
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let caughtError: Error | null = null;
@@ -654,22 +631,7 @@ describe('error handling', () => {
     });
 
     const result = render(
-      <RecoilRoot
-        initializeState={({ set }) => {
-          // Set error state directly to test the selector's error handling
-          // This covers line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
-          set(
-            analyticsLeadershipState({
-              currentPage: 0,
-              pageSize: 10,
-              sort: 'team_asc',
-              tags: [],
-              metric: 'working-group',
-            }),
-            error,
-          );
-        }}
-      >
+      <QueryClientProvider client={createTestQueryClient()}>
         <ErrorBoundary>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
@@ -686,12 +648,9 @@ describe('error handling', () => {
             </Auth0Provider>
           </Suspense>
         </ErrorBoundary>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
-    // The error should be thrown and handled by ErrorBoundary
-    // This covers line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
-    // and line 159: throw leadership when leadership is Error
     await waitFor(() => {
       expect(caughtError?.message).toBe('Test error');
     });
@@ -699,9 +658,7 @@ describe('error handling', () => {
     expect(result.getByTestId('error')).toBeInTheDocument();
   });
 
-  it('sets team list states when setting valid leadership data', async () => {
-    // This test covers the selector set method when newTeams is valid
-    // Specifically line 83: set(analyticsLeadershipListState(team.id), team)
+  it('renders when the fetch resolves valid leadership data', async () => {
     const mockTeam1 = {
       ...teamLeadershipResponse,
       id: 'team-1',
@@ -717,19 +674,7 @@ describe('error handling', () => {
     });
 
     const result = render(
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            analyticsLeadershipState({
-              currentPage: 0,
-              pageSize: 10,
-              sort: 'team_asc',
-              tags: [],
-              metric: 'working-group',
-            }),
-          );
-        }}
-      >
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
@@ -744,7 +689,7 @@ describe('error handling', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     // Wait for data to load - this verifies that the selector properly

@@ -241,6 +241,18 @@ it('renders the children', () => {
   expect(screen.getByText('Children')).toBeVisible();
 });
 
+it('renders the attendance node when passed', () => {
+  renderPage(
+    <EventDetailPage {...props} eventAttendance={<div>Attendance Card</div>} />,
+  );
+  expect(screen.getByText('Attendance Card')).toBeVisible();
+});
+
+it('does not render an attendance node when none is passed', () => {
+  renderPage(<EventDetailPage {...props} />);
+  expect(screen.queryByText('Attendance Card')).not.toBeInTheDocument();
+});
+
 it('renders the footer cta only when the event has not finished', () => {
   const { rerender } = renderPage(
     <EventDetailPage {...props} hasFinished={false} />,

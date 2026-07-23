@@ -212,15 +212,33 @@ describe('the NEW_EVENT_PAGE flag', () => {
         id,
         endDate: pastEndDate,
         attendance: [
-          { team: { id: 't1', displayName: 'Team One' }, attended: true },
-          { team: { id: 't2', displayName: 'Team Two' }, attended: false },
+          {
+            team: {
+              id: 't1',
+              displayName: 'Team One',
+              teamType: 'Discovery Team',
+            },
+            attended: true,
+          },
+          {
+            team: {
+              id: 't2',
+              displayName: 'Team Two',
+              teamType: 'Resource Team',
+            },
+            attended: false,
+          },
+          { team: { id: 't3', displayName: 'Team Three' }, attended: false },
         ],
       });
-      const { findByText } = render(<Event />, { wrapper });
+      const { findByText, getByTitle } = render(<Event />, { wrapper });
       const teamOne = await findByText('Team One');
       expect(teamOne).toBeVisible();
       expect(teamOne.closest('a')).toHaveAttribute('href', '/network/teams/t1');
       expect(await findByText('Team Two')).toBeVisible();
+      expect(await findByText('Team Three')).toBeVisible();
+      expect(getByTitle('Discovery Team Icon')).toBeInTheDocument();
+      expect(getByTitle('Resource Team Icon')).toBeInTheDocument();
     });
 
     it('shows the view more attendees control beyond ten teams', async () => {

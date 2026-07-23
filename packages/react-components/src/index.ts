@@ -172,6 +172,7 @@ export {
   EventConversation,
   EventMaterials,
   EventSearch,
+  EventSpeakers,
   ExportAnalyticsModal,
   Filter,
   Form,
@@ -393,6 +394,10 @@ export type {
   UserCollaborationMetric,
   TeamCollaborationMetric,
   ResearchOutputConfirmModalType,
+  EventSpeakerTeamRow,
+  EventSpeakerExternalRow,
+  EventSpeakerExternalMember,
+  EventSpeakerMember,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
 export type {

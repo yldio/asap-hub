@@ -28,6 +28,13 @@ export { default as EventCard } from './EventCard';
 export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';
 export { default as EventSearch } from './EventSearch';
+export { default as EventSpeakers } from './EventSpeakers';
+export type {
+  EventSpeakerTeamRow,
+  EventSpeakerExternalRow,
+  EventSpeakerExternalMember,
+  EventSpeakerMember,
+} from './EventSpeakers';
 export { default as ExportAnalyticsModal } from './ExportAnalyticsModal';
 export { default as Filter } from './Filter';
 export { default as Form } from './Form';

@@ -8,7 +8,7 @@ module.exports.up = (migration) => {
     .name('Small Icon')
     .type('Link')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         linkMimetypeGroup: ['image'],
@@ -22,9 +22,12 @@ module.exports.up = (migration) => {
     showLinkEntityAction: true,
     showCreateEntityAction: true,
   });
+
+  awardType.editField('icon').required(true);
 };
 
 module.exports.down = (migration) => {
   const awardType = migration.editContentType('awardType');
   awardType.deleteField('smallIcon');
+  awardType.editField('icon').required(false);
 };

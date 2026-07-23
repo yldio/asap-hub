@@ -205,6 +205,30 @@ describe('EditEventAttendanceModal', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('Should let a group be re-added after all its teams are removed', async () => {
+    renderModal({
+      teams: [],
+      interestGroups: [{ id: 'ig2', name: 'Group Two' }],
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /Group Two/ }));
+    await screen.findByRole('link', { name: 'Only Two' });
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Remove Shared Team' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Remove Only Two' }),
+    );
+
+    // The group reverted to addable, so clicking it adds its teams again.
+    await userEvent.click(screen.getByRole('button', { name: /Group Two/ }));
+
+    expect(onSelectInterestGroup).toHaveBeenCalledTimes(2);
+    expect(
+      await screen.findByRole('link', { name: 'Only Two' }),
+    ).toBeInTheDocument();
+  });
+
   it('Should add all teams from an interest group', async () => {
     renderModal({ teams: [] });
 

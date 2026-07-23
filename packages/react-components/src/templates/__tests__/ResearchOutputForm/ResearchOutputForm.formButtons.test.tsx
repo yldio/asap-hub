@@ -104,6 +104,7 @@ describe('form buttons', () => {
             availableActions={resolveResearchOutputAvailableActions({
               flowId,
               permissions,
+              documentType,
             })}
             permissions={permissions}
           />

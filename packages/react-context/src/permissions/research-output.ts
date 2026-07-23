@@ -1,5 +1,6 @@
 import {
   getResearchOutputFlowBehavior,
+  ResearchOutputDocumentType,
   ResearchOutputFlowId,
 } from '@asap-hub/model';
 import { createContext, useContext } from 'react';
@@ -26,10 +27,6 @@ export const ResearchOutputPermissionsContext =
 export const useResearchOutputPermissionsContext =
   (): ResearchOutputPermissions => useContext(ResearchOutputPermissionsContext);
 
-export type ResearchOutputAvailableActions = {
-  canSaveDraft: boolean;
-};
-
 export type ResearchOutputDetailActionAvailability = {
   showEdit: boolean;
   showDuplicate: boolean;
@@ -40,16 +37,24 @@ export type ResearchOutputDetailActionAvailability = {
   showPublish: boolean;
 };
 
+export type ResearchOutputAvailableActions = {
+  canSaveDraft: boolean;
+  showImpactAndCategory: boolean;
+};
+
 export const resolveResearchOutputAvailableActions = ({
   flowId,
   permissions,
+  documentType,
 }: {
   flowId: ResearchOutputFlowId;
   permissions: ResearchOutputPermissions;
+  documentType: ResearchOutputDocumentType;
 }): ResearchOutputAvailableActions => {
   const { supportsDrafts } = getResearchOutputFlowBehavior(flowId);
   return {
     canSaveDraft: supportsDrafts && !!permissions.canShareResearchOutput,
+    showImpactAndCategory: documentType === 'Article',
   };
 };
 

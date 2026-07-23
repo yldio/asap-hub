@@ -3,7 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputFlowId, ResearchOutputResponse } from '@asap-hub/model';
 import { screen, waitFor } from '@testing-library/react';
-import { renderPrefilledForm } from '../../test-utils/research-output-form';
+import {
+  defaultAvailableActions,
+  renderPrefilledForm,
+} from '../../test-utils/research-output-form';
 import { mockActErrorsInConsole } from '../../../test-utils';
 
 describe('ResearchOutputForm confirmation modals', () => {
@@ -48,7 +51,6 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('is dismissed if there are errors on the form', async () => {
       renderFormWithSave({
         flowId: 'team-add-version',
-        availableActions: { canSaveDraft: false },
         researchOutputData: {
           ...createResearchOutputResponse(),
           link: '',
@@ -106,7 +108,7 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('does not show on a flow that does not require the confirmation', async () => {
       renderFormWithSave({
         flowId: 'team-edit-published',
-        availableActions: { canSaveDraft: false },
+        availableActions: { ...defaultAvailableActions, canSaveDraft: false },
         researchOutputData: createResearchOutputResponse(),
         published: true,
       });
@@ -117,7 +119,6 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('does not show on a create flow even with an unchanged description', async () => {
       renderFormWithSave({
         flowId: 'team-create-manual',
-        availableActions: { canSaveDraft: false },
         researchOutputData: createResearchOutputResponse(),
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
@@ -157,7 +158,6 @@ describe('ResearchOutputForm confirmation modals', () => {
     ])('shows on %s flow regardless of versionAction', async (flowId) => {
       renderFormWithSave({
         flowId: flowId as ResearchOutputFlowId,
-        availableActions: { canSaveDraft: false },
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
@@ -171,7 +171,6 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('does not show on a create flow even when versionAction is set', async () => {
       renderFormWithSave({
         flowId: 'team-create-manual',
-        availableActions: { canSaveDraft: false },
         versionAction: 'create',
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
@@ -186,7 +185,6 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('will not reappear once dismissed', async () => {
       renderFormWithSave({
         flowId: 'team-add-version',
-        availableActions: { canSaveDraft: false },
         researchOutputData: {
           ...createResearchOutputResponse(),
           link: '',
@@ -230,7 +228,7 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('does not show on an edit-published flow', async () => {
       renderFormWithSave({
         flowId: 'team-edit-published',
-        availableActions: { canSaveDraft: false },
+        availableActions: { ...defaultAvailableActions, canSaveDraft: false },
         published: true,
         researchOutputData: createResearchOutputResponse(),
       });

@@ -111,6 +111,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const availableActions = resolveResearchOutputAvailableActions({
     flowId,
     permissions,
+    documentType,
   });
 
   const researchSuggestions = researchTags

@@ -17,6 +17,7 @@ import {
   defaultProps,
   initialResearchOutputData,
   expectedRequest,
+  defaultAvailableActions,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
 import { mockActErrorsInConsole } from '../../../test-utils';
@@ -214,7 +215,7 @@ describe('on submit', () => {
       propOverride: {
         published: true,
         flowId: 'team-edit-published',
-        availableActions: { canSaveDraft: false },
+        availableActions: { ...defaultAvailableActions, canSaveDraft: false },
       },
     });
     await saveForm();
@@ -236,7 +237,7 @@ describe('on submit', () => {
       },
       propOverride: {
         flowId: 'team-duplicate',
-        availableActions: { canSaveDraft: true },
+        availableActions: { ...defaultAvailableActions, canSaveDraft: true },
       },
     });
     await userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));

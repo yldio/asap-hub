@@ -191,6 +191,7 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
   const availableActions = resolveResearchOutputAvailableActions({
     flowId,
     permissions,
+    documentType,
   });
 
   const getShortDescriptionFromDescription = useGeneratedContent();

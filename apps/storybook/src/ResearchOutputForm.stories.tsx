@@ -18,7 +18,7 @@ export default {
 const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
   displayChangelog: false,
   flowId: 'team-create-manual',
-  availableActions: { canSaveDraft: true },
+  availableActions: { canSaveDraft: true, showImpactAndCategory: true },
   permissions: {
     canEditResearchOutput: true,
     canPublishResearchOutput: true,

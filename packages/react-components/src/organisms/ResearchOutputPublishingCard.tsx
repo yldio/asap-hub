@@ -24,9 +24,9 @@ type ResearchOutputPublishingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
-  isCreatingOutputRoute?: boolean;
   isImportedFromManuscript?: boolean;
   disableDateMadePublic?: boolean;
+  disableUsedInPublication?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -44,13 +44,13 @@ const ResearchOutputPublishingCard: React.FC<
 > = ({
   researchOutputData,
   documentType,
-  isCreatingOutputRoute,
   asapFunded,
   usedInPublication,
   sharingStatus,
   publishDate,
   isImportedFromManuscript,
   disableDateMadePublic,
+  disableUsedInPublication,
   onChangeAsapFunded = noop,
   onChangeUsedInPublication = noop,
   onChangeSharingStatus = noop,
@@ -77,18 +77,12 @@ const ResearchOutputPublishingCard: React.FC<
         {
           value: 'No',
           label: 'No',
-          disabled:
-            isCreatingOutputRoute &&
-            documentType === 'Article' &&
-            researchOutputData?.usedInPublication === undefined,
+          disabled: disableUsedInPublication,
         },
         {
           value: 'Not Sure',
           label: 'Not Sure',
-          disabled:
-            isCreatingOutputRoute &&
-            documentType === 'Article' &&
-            researchOutputData?.usedInPublication === undefined,
+          disabled: disableUsedInPublication,
         },
       ]}
       value={usedInPublication}

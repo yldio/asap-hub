@@ -47,7 +47,7 @@ const actionsStyles = css({
   gap: rem(12),
 });
 
-const iconButtonStyles = css({
+export const iconButtonStyles = css({
   flexGrow: 0,
   width: rem(40),
   height: rem(40),

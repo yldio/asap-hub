@@ -10,6 +10,8 @@ import {
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 import { disable, enable } from '@asap-hub/flags';
+import { subDays } from 'date-fns';
+import { EventTeamAttendance } from '@asap-hub/model';
 
 import {
   Auth0Provider,
@@ -32,24 +34,30 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <QueryClientProvider client={createTestQueryClient()}>
-    <Auth0Provider user={{}}>
-      <WhenReady>
-        <Suspense fallback="Loading...">
-          <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Routes>
-              <Route
-                path={events.template + events({}).event.template}
-                element={children}
-              />
-            </Routes>
-          </StaticRouter>
-        </Suspense>
-      </WhenReady>
-    </Auth0Provider>
-  </QueryClientProvider>
-);
+const createWrapper =
+  (
+    user: Parameters<typeof Auth0Provider>[0]['user'] = {},
+  ): React.FC<{ children: React.ReactNode }> =>
+  ({ children }) => (
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Auth0Provider user={user}>
+        <WhenReady>
+          <Suspense fallback="Loading...">
+            <StaticRouter location={events({}).event({ eventId: id }).$}>
+              <Routes>
+                <Route
+                  path={events.template + events({}).event.template}
+                  element={children}
+                />
+              </Routes>
+            </StaticRouter>
+          </Suspense>
+        </WhenReady>
+      </Auth0Provider>
+    </QueryClientProvider>
+  );
+
+const wrapper = createWrapper();
 
 it('displays the event with given id', async () => {
   mockGetEvent.mockResolvedValue({
@@ -183,5 +191,106 @@ describe('the NEW_EVENT_PAGE flag', () => {
     expect(
       queryByText('The event has been cancelled.'),
     ).not.toBeInTheDocument();
+  });
+
+  describe('attendance', () => {
+    const pastEndDate = subDays(new Date(), 3).toISOString();
+
+    const createAttendance = (count: number): EventTeamAttendance[] =>
+      Array.from({ length: count }, (_, i) => ({
+        team: { id: `team-${i}`, displayName: `Team ${i}` },
+        attended: true,
+      }));
+
+    beforeEach(() => {
+      enable('NEW_EVENT_PAGE');
+    });
+
+    it('shows the attendance card with team names linking to their teams', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          { team: { id: 't1', displayName: 'Team One' }, attended: true },
+          { team: { id: 't2', displayName: 'Team Two' }, attended: false },
+        ],
+      });
+      const { findByText } = render(<Event />, { wrapper });
+      const teamOne = await findByText('Team One');
+      expect(teamOne).toBeVisible();
+      expect(teamOne.closest('a')).toHaveAttribute('href', '/network/teams/t1');
+      expect(await findByText('Team Two')).toBeVisible();
+    });
+
+    it('shows the view more attendees control beyond ten teams', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: createAttendance(11),
+      });
+      const { findByText } = render(<Event />, { wrapper });
+      expect(await findByText('View More Attendees')).toBeVisible();
+    });
+
+    it('shows the empty state for a non project manager when no teams attended', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [],
+      });
+      const { findByText, queryByText } = render(<Event />, { wrapper });
+      expect(await findByText('No attendance recorded yet')).toBeVisible();
+      expect(queryByText('Add Attendance')).not.toBeInTheDocument();
+    });
+
+    it('shows the add attendance cta for a project manager of the event group', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
+        attendance: [],
+      });
+      const pmWrapper = createWrapper({
+        interestGroups: [
+          {
+            id: 'ig-pm',
+            name: 'Group',
+            active: true,
+            role: 'Project Manager',
+          },
+        ],
+      });
+      const { findByText } = render(<Event />, { wrapper: pmWrapper });
+      expect(await findByText('Add Attendance')).toBeVisible();
+    });
+
+    it('shows the since last event metric when previous attendance exists', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: createAttendance(3),
+        previousEventAttendance: { teamsAttended: 1, teamsTotal: 4 },
+      });
+      const { findByText } = render(<Event />, { wrapper });
+      expect(await findByText('Since last event')).toBeVisible();
+    });
+
+    it('does not show the attendance card for an upcoming event', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        attendance: [
+          { team: { id: 't1', displayName: 'Team One' }, attended: true },
+        ],
+      });
+      const { findByText, queryByText } = render(<Event />, { wrapper });
+      await findByText('Speakers');
+      expect(queryByText('Team One')).not.toBeInTheDocument();
+    });
   });
 });

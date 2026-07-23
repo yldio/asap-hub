@@ -526,10 +526,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     setAddedGroups(remaining);
   };
 
-  const handleSelectSearchOption = (option: AttendanceSearchOption | null) => {
-    if (!option) {
-      return;
-    }
+  const handleSelectSearchOption = (option: AttendanceSearchOption) => {
     if (option.optionType === 'interestGroup') {
       addInterestGroup(option.value, option.teams);
     } else {

@@ -28354,6 +28354,7 @@ export type EventsContentFragment = Pick<
   | 'status'
   | 'hidden'
   | 'title'
+  | 'googleId'
   | 'notesPermanentlyUnavailable'
   | 'notesUpdatedAt'
   | 'videoRecordingPermanentlyUnavailable'
@@ -28364,6 +28365,21 @@ export type EventsContentFragment = Pick<
   | 'meetingMaterials'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+  attendanceCollection?: Maybe<
+    Pick<EventsAttendanceCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<Attendance, 'attended'> & {
+            team?: Maybe<
+              Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
+                sys: Pick<Sys, 'id'>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -28741,6 +28757,7 @@ export type FetchEventByIdQuery = {
       | 'status'
       | 'hidden'
       | 'title'
+      | 'googleId'
       | 'notesPermanentlyUnavailable'
       | 'notesUpdatedAt'
       | 'videoRecordingPermanentlyUnavailable'
@@ -28751,6 +28768,21 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterials'
     > & {
       sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+      attendanceCollection?: Maybe<
+        Pick<EventsAttendanceCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<Attendance, 'attended'> & {
+                team?: Maybe<
+                  Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
+                    sys: Pick<Sys, 'id'>;
+                  }
+                >;
+              }
+            >
+          >;
+        }
+      >;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -29191,6 +29223,7 @@ export type FetchEventsQuery = {
             | 'status'
             | 'hidden'
             | 'title'
+            | 'googleId'
             | 'notesPermanentlyUnavailable'
             | 'notesUpdatedAt'
             | 'videoRecordingPermanentlyUnavailable'
@@ -29201,6 +29234,22 @@ export type FetchEventsQuery = {
             | 'meetingMaterials'
           > & {
             sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+            attendanceCollection?: Maybe<
+              Pick<EventsAttendanceCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<Attendance, 'attended'> & {
+                      team?: Maybe<
+                        Pick<
+                          Teams,
+                          'displayName' | 'teamType' | 'inactiveSince'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -29801,6 +29850,7 @@ export type FetchEventsByUserIdQuery = {
                         | 'status'
                         | 'hidden'
                         | 'title'
+                        | 'googleId'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
                         | 'videoRecordingPermanentlyUnavailable'
@@ -29813,6 +29863,24 @@ export type FetchEventsByUserIdQuery = {
                         sys: Pick<
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
+                        >;
+                        attendanceCollection?: Maybe<
+                          Pick<EventsAttendanceCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<Attendance, 'attended'> & {
+                                  team?: Maybe<
+                                    Pick<
+                                      Teams,
+                                      | 'displayName'
+                                      | 'teamType'
+                                      | 'inactiveSince'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >;
+                                }
+                              >
+                            >;
+                          }
                         >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
@@ -30508,6 +30576,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         | 'status'
                         | 'hidden'
                         | 'title'
+                        | 'googleId'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
                         | 'videoRecordingPermanentlyUnavailable'
@@ -30520,6 +30589,24 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         sys: Pick<
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
+                        >;
+                        attendanceCollection?: Maybe<
+                          Pick<EventsAttendanceCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<Attendance, 'attended'> & {
+                                  team?: Maybe<
+                                    Pick<
+                                      Teams,
+                                      | 'displayName'
+                                      | 'teamType'
+                                      | 'inactiveSince'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >;
+                                }
+                              >
+                            >;
+                          }
                         >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
@@ -31215,6 +31302,7 @@ export type FetchEventsByTeamIdQuery = {
                         | 'status'
                         | 'hidden'
                         | 'title'
+                        | 'googleId'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
                         | 'videoRecordingPermanentlyUnavailable'
@@ -31227,6 +31315,24 @@ export type FetchEventsByTeamIdQuery = {
                         sys: Pick<
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
+                        >;
+                        attendanceCollection?: Maybe<
+                          Pick<EventsAttendanceCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<Attendance, 'attended'> & {
+                                  team?: Maybe<
+                                    Pick<
+                                      Teams,
+                                      | 'displayName'
+                                      | 'teamType'
+                                      | 'inactiveSince'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >;
+                                }
+                              >
+                            >;
+                          }
                         >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
@@ -31887,6 +31993,26 @@ export type FetchEventsByTeamIdQuery = {
         >;
       }>;
     }>;
+  }>;
+};
+
+export type FetchPreviousEventAttendanceQueryVariables = Exact<{
+  googleId: Scalars['String'];
+  startDate: Scalars['DateTime'];
+}>;
+
+export type FetchPreviousEventAttendanceQuery = {
+  eventsCollection?: Maybe<{
+    items: Array<
+      Maybe<{
+        sys: Pick<Sys, 'id'>;
+        attendanceCollection?: Maybe<
+          Pick<EventsAttendanceCollection, 'total'> & {
+            items: Array<Maybe<Pick<Attendance, 'attended'>>>;
+          }
+        >;
+      }>
+    >;
   }>;
 };
 
@@ -41561,6 +41687,87 @@ export const EventsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleId' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attendanceCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'singleEvent' },
+                    },
+                  },
+                ],
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attended' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'team' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'displayName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inactiveSince' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'notesPermanentlyUnavailable' },
@@ -60320,6 +60527,163 @@ export const FetchEventsByTeamIdDocument = {
 } as unknown as DocumentNode<
   FetchEventsByTeamIdQuery,
   FetchEventsByTeamIdQueryVariables
+>;
+export const FetchPreviousEventAttendanceDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchPreviousEventAttendance' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'googleId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'startDate' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'DateTime' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'eventsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'ListValue',
+                  values: [{ kind: 'EnumValue', value: 'startDate_DESC' }],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'googleId_contains' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'googleId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'startDate_lt' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'startDate' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'hidden_not' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attendanceCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '50' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'attended' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchPreviousEventAttendanceQuery,
+  FetchPreviousEventAttendanceQueryVariables
 >;
 export const FetchWorkingGroupCalendarDocument = {
   kind: 'Document',

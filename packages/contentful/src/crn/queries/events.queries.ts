@@ -21,6 +21,21 @@ export const eventsContentQueryFragment = gql`
     status
     hidden
     title
+    googleId
+    attendanceCollection(limit: 50) @include(if: $singleEvent) {
+      total
+      items {
+        attended
+        team {
+          sys {
+            id
+          }
+          displayName
+          teamType
+          inactiveSince
+        }
+      }
+    }
     notesPermanentlyUnavailable
     notes {
       json
@@ -335,6 +350,35 @@ export const FETCH_EVENTS_BY_TEAM_ID = gql`
     }
   }
   ${eventsContentQueryFragment}
+`;
+
+export const FETCH_PREVIOUS_EVENT_ATTENDANCE = gql`
+  query FetchPreviousEventAttendance(
+    $googleId: String!
+    $startDate: DateTime!
+  ) {
+    eventsCollection(
+      limit: 1
+      order: [startDate_DESC]
+      where: {
+        googleId_contains: $googleId
+        startDate_lt: $startDate
+        hidden_not: true
+      }
+    ) {
+      items {
+        sys {
+          id
+        }
+        attendanceCollection(limit: 50) {
+          total
+          items {
+            attended
+          }
+        }
+      }
+    }
+  }
 `;
 
 export const FETCH_WORKING_GROUP_CALENDAR = gql`

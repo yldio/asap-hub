@@ -9,7 +9,8 @@ import {
 import { ListProjectMilestonesResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -24,12 +25,6 @@ import {
   putMilestoneArticles,
   waitForMilestonesSync,
 } from '../api';
-import {
-  projectMilestonesIndexState,
-  projectMilestonesListItemState,
-  projectMilestonesState,
-  RefreshMilestonesListOptions,
-} from '../state';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 jest.mock('../api');
@@ -106,31 +101,9 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
     .milestones({}).$;
 
   const path = queryString ? `${basePath}?${queryString}` : basePath;
-  const options: RefreshMilestonesListOptions = {
-    searchQuery: '',
-    currentPage: 0,
-    filters: new Set(),
-    pageSize: 10,
-    grantType: 'supplement',
-    projectId,
-    refreshToken: 1,
-  };
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset, set }) => {
-        set(projectMilestonesIndexState(options), {
-          ids: ['1'],
-          total: 1,
-        });
-        set(
-          projectMilestonesListItemState('1'),
-          createProjectMilestoneResponse({ key: '1' }),
-        );
-
-        reset(projectMilestonesState(options));
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -159,7 +132,7 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   if (waitForLoad) {

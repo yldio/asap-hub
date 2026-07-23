@@ -1,11 +1,11 @@
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { ListOSChampionOpensearchResponse } from '@asap-hub/model';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, useNavigate } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { getAnalyticsOSChampion } from '../api';
-import { analyticsOSChampionState } from '../state';
 import OSChampion from '../OSChampion';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
@@ -89,19 +89,7 @@ describe('OSChampion', () => {
     mockGetAnalyticsOSChampion.mockResolvedValue(data);
 
     const result = render(
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            analyticsOSChampionState({
-              currentPage: 0,
-              pageSize: 10,
-              tags: [],
-              sort: 'team_asc',
-              timeRange: 'all',
-            }),
-          );
-        }}
-      >
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
@@ -111,7 +99,7 @@ describe('OSChampion', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() =>
@@ -145,7 +133,7 @@ describe('OSChampion', () => {
           '/analytics/leadership/os-champion?sort=os_champion_awards_desc',
         ]}
       >
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -153,7 +141,7 @@ describe('OSChampion', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>
+        </QueryClientProvider>
       </MemoryRouter>,
     );
 
@@ -183,7 +171,7 @@ describe('OSChampion', () => {
 
     render(
       <MemoryRouter>
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -191,7 +179,7 @@ describe('OSChampion', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>
+        </QueryClientProvider>
       </MemoryRouter>,
     );
 

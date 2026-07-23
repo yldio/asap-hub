@@ -1,15 +1,11 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
   createProjectAlgoliaRecord,
@@ -22,7 +18,7 @@ mockConsoleError();
 
 const renderRoutes = async () => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -34,11 +30,12 @@ const renderRoutes = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i), {
-    timeout: 30_000,
-  });
+  return waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 beforeEach(() => {
   jest.resetAllMocks();
@@ -78,7 +75,7 @@ describe('Routes', () => {
 
     await renderRoutes();
     expect(mockGetProjects).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
   it('can perform a search', async () => {
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));

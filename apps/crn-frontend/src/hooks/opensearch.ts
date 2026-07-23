@@ -16,7 +16,6 @@ import {
   EngagementResponse,
   EngagementPerformance,
 } from '@asap-hub/model';
-import { useRecoilValue } from 'recoil';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -47,10 +46,10 @@ import {
   OpensearchClient,
   OpensearchIndex,
 } from '../analytics/utils/opensearch';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 
 export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
-  const authorization = useRecoilValue(authorizationState);
+  const authorization = useAuthorization();
   const client = new OpensearchClient<T>(index, authorization);
   return {
     client,
@@ -61,7 +60,7 @@ export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
  * Façade to all metrics stored in OpenSearch.
  */
 export const useOpensearchMetrics = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const authorization = useAuthorization();
 
   return {
     getPublicationCompliance(

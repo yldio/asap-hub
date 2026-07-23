@@ -10,12 +10,9 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { userEvent } from '@testing-library/user-event';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { render, screen, waitFor } from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import {
   Auth0Provider,
@@ -87,7 +84,7 @@ async function renderPage({
     .createOutput({ outputDocumentType }).$;
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -110,9 +107,12 @@ async function renderPage({
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 }
 
 it('passes TEAM_CREATE_MANUAL for a new manual team output', async () => {

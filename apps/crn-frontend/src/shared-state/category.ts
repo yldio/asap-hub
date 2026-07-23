@@ -1,15 +1,16 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import { getCategories } from '../shared-api/category';
 
 export const useCategorySuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getCategories({ search: searchQuery, take: 1000 }, authorization).then(
-      ({ items }) =>
-        items.map(({ id, name }) => ({
-          label: name,
-          value: id,
-        })),
+  const getAuthorization = useAuthorization();
+  return async (searchQuery: string) =>
+    getCategories(
+      { search: searchQuery, take: 1000 },
+      await getAuthorization(),
+    ).then(({ items }) =>
+      items.map(({ id, name }) => ({
+        label: name,
+        value: id,
+      })),
     );
 };

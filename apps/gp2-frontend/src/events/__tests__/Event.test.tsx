@@ -1,11 +1,8 @@
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { Route, Routes, StaticRouter } from 'react-router';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { gp2 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 
@@ -22,7 +19,7 @@ beforeEach(jest.resetAllMocks);
 
 const renderEvent = async () => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">
@@ -37,9 +34,11 @@ const renderEvent = async () => {
           </Suspense>
         </WhenReady>
       </Auth0Provider>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 
 it('displays the event with given id', async () => {
@@ -62,7 +61,7 @@ it('displays the event with given id', async () => {
 it('falls back to the not found page for a missing event', async () => {
   mockGetEvent.mockResolvedValue(undefined);
   await renderEvent();
-  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+  expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
 });
 describe('Event Speakers', () => {
   it('displays the speakers section when there are speakers', async () => {

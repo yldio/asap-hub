@@ -1,12 +1,12 @@
 import {
   ResearchOutputPostRequest,
-  ResearchOutputResponse,
   ResearchOutputType,
   ResearchTagResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
+import { ResearchOutputAvailableActions } from '@asap-hub/react-context';
 import { getAjvErrorForPath } from '../ajv-errors';
 import { OptionsType } from '../select';
 import { Markdown } from '../atoms';
@@ -32,47 +32,50 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'shortDescription'
   | 'changelog'
   | 'subtype'
-> & {
-  isFormSubmitted: boolean;
-  isCreatingNewVersion: boolean;
-  getImpactSuggestions: (
-    searchQuery: string,
-  ) => Promise<{ label: string; value: string }[]>;
-  impact?: MultiSelectOptionsType;
-  onChangeImpact: (
-    newValue: MultiSelectOptionsType & OptionsType<MultiSelectOptionsType>,
-  ) => void;
-  getCategorySuggestions: ComponentPropsWithRef<
-    typeof LabeledMultiSelect
-  >['loadOptions'];
-  categories: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
-  onChangeCategories: NonNullable<
-    ComponentPropsWithRef<typeof LabeledMultiSelect>['onChange']
-  >;
-  displayChangelog?: boolean;
-  documentType?: ResearchOutputResponse['documentType'];
-  type?: ResearchOutputType | '';
-  onChangeLink?: (newValue: string) => void;
-  onChangeTitle?: (newValue: string) => void;
-  onChangeDescription?: (newValue: string) => void;
-  onChangeShortDescription?: (newValue: string) => void;
-  onChangeLayImpactStatement?: (newValue: string) => void;
-  onChangeChangelog?: (newValue: string) => void;
-  onChangeType?: (newValue: ResearchOutputType | '') => void;
-  onChangeSubtype?: (newValue: string | '') => void;
-  isSaving: boolean;
-  researchTags: ResearchTagResponse[];
-  serverValidationErrors?: ValidationErrorResponse['data'];
-  clearServerValidationError?: (instancePath: string) => void;
-  typeDescription?: string;
-  urlRequired?: boolean;
-  typeOptions: ResearchOutputType[];
-  getShortDescriptionFromDescription: (description: string) => Promise<string>;
-};
+> &
+  Pick<ResearchOutputAvailableActions, 'showImpactAndCategory'> & {
+    isFormSubmitted: boolean;
+    isCreatingNewVersion: boolean;
+    getImpactSuggestions: (
+      searchQuery: string,
+    ) => Promise<{ label: string; value: string }[]>;
+    impact?: MultiSelectOptionsType;
+    onChangeImpact: (
+      newValue: MultiSelectOptionsType & OptionsType<MultiSelectOptionsType>,
+    ) => void;
+    getCategorySuggestions: ComponentPropsWithRef<
+      typeof LabeledMultiSelect
+    >['loadOptions'];
+    categories: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+    onChangeCategories: NonNullable<
+      ComponentPropsWithRef<typeof LabeledMultiSelect>['onChange']
+    >;
+    displayChangelog?: boolean;
+    type?: ResearchOutputType | '';
+    onChangeLink?: (newValue: string) => void;
+    onChangeTitle?: (newValue: string) => void;
+    onChangeDescription?: (newValue: string) => void;
+    onChangeShortDescription?: (newValue: string) => void;
+    onChangeLayImpactStatement?: (newValue: string) => void;
+    onChangeChangelog?: (newValue: string) => void;
+    onChangeType?: (newValue: ResearchOutputType | '') => void;
+    onChangeSubtype?: (newValue: string | '') => void;
+    isSaving: boolean;
+    researchTags: ResearchTagResponse[];
+    serverValidationErrors?: ValidationErrorResponse['data'];
+    clearServerValidationError?: (instancePath: string) => void;
+    typeDescription?: string;
+    urlRequired?: boolean;
+    typeOptions: ResearchOutputType[];
+    getShortDescriptionFromDescription: (
+      description: string,
+    ) => Promise<string>;
+  };
 
 const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
+  showImpactAndCategory,
   isFormSubmitted,
   isCreatingNewVersion,
   getImpactSuggestions,
@@ -83,7 +86,6 @@ const ResearchOutputFormSharingCard: React.FC<
   categories,
   onChangeCategories,
   displayChangelog = false,
-  documentType,
   isSaving,
   link,
   title,
@@ -148,7 +150,7 @@ const ResearchOutputFormSharingCard: React.FC<
   >([]);
 
   useEffect(() => {
-    if (documentType !== 'Article') return;
+    if (!showImpactAndCategory) return;
 
     const loadImpactOptions = async () => {
       const options = await getImpactSuggestions('');
@@ -156,7 +158,7 @@ const ResearchOutputFormSharingCard: React.FC<
     };
 
     void loadImpactOptions();
-  }, [documentType, getImpactSuggestions]);
+  }, [showImpactAndCategory, getImpactSuggestions]);
 
   useEffect(() => {
     setUrlValidationMessage(
@@ -204,10 +206,10 @@ const ResearchOutputFormSharingCard: React.FC<
   );
 
   useEffect(() => {
-    if (isFormSubmitted && documentType === 'Article') {
+    if (isFormSubmitted && showImpactAndCategory) {
       validateImpact();
     }
-  }, [isFormSubmitted, validateImpact, documentType]);
+  }, [isFormSubmitted, validateImpact, showImpactAndCategory]);
 
   return (
     <FormCard title="What are you sharing?">
@@ -324,7 +326,7 @@ const ResearchOutputFormSharingCard: React.FC<
         customValidationMessage={shortDescriptionValidationMessage}
       />
 
-      {documentType === 'Article' && (
+      {showImpactAndCategory && (
         <>
           <LabeledMultiSelect
             required

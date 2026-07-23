@@ -5,7 +5,8 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 import type {
@@ -134,7 +135,7 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
   const path = `${projects.template}/discovery/${projectId}/about`;
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -149,7 +150,7 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {
@@ -205,7 +206,7 @@ describe('DiscoveryProjectDetail', () => {
     const path = `${projects.template}/discovery/discovery-1/milestones`;
 
     render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
@@ -220,7 +221,7 @@ describe('DiscoveryProjectDetail', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {
@@ -255,7 +256,7 @@ describe('DiscoveryProjectDetail', () => {
     };
 
     render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <Suspense fallback="loading">
           <Auth0Provider user={mockUser}>
             <WhenReady>
@@ -270,7 +271,7 @@ describe('DiscoveryProjectDetail', () => {
             </WhenReady>
           </Auth0Provider>
         </Suspense>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {

@@ -2,8 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { ComponentProps, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { DiscoveryProject, FetchListFilter } from '@asap-hub/model';
 
@@ -90,7 +93,7 @@ const renderDiscoveryProjects = (
   filtersMap: FetchListFilter = {},
 ) =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -104,7 +107,7 @@ const renderDiscoveryProjects = (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 it('renders the Discovery Projects page', async () => {

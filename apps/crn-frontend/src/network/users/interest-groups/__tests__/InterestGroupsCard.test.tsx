@@ -4,16 +4,15 @@ import {
   createListInterestGroupResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { ErrorBoundary } from '@asap-hub/frontend-utils';
+import { createTestQueryClient, ErrorBoundary } from '@asap-hub/frontend-utils';
 
 import { StaticRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
 import InterestGroupsCard from '../InterestGroupsCard';
 import { getUserInterestGroups } from '../api';
-import { userInterestGroupsState } from '../state';
 
 jest.mock('../api');
 const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
@@ -26,9 +25,7 @@ const userId = 'u42';
 
 const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: '42' }}>
           <WhenReady>
@@ -36,7 +33,7 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 it('is not rendered when there are no groups', async () => {

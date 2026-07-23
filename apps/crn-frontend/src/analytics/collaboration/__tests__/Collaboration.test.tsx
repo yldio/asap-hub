@@ -4,7 +4,11 @@ import {
   userCollaborationPerformance,
   preliminaryDataSharingResponse,
 } from '@asap-hub/fixtures';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
@@ -25,7 +29,6 @@ import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 import { OpensearchClient } from '../../utils/opensearch';
@@ -220,7 +223,7 @@ const renderPage = async (
   const path = search ? `${basePath}?${search}` : basePath;
 
   const result = render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -235,7 +238,7 @@ const renderPage = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -694,11 +697,11 @@ describe('sharing prelim findings', () => {
     }
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <ErrorBoundary>
           <Suspense fallback="loading">{children}</Suspense>
         </ErrorBoundary>
-      </RecoilRoot>
+      </QueryClientProvider>
     );
 
     renderHook(

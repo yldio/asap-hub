@@ -1,6 +1,7 @@
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchThemes } from '../../shared-research/api';
 import { useResearchThemes } from '../shared-research';
@@ -15,13 +16,13 @@ const mockGetResearchThemes = getResearchThemes as jest.MockedFunction<
 >;
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <RecoilRoot>
+  <QueryClientProvider client={createTestQueryClient()}>
     <Suspense fallback={null}>
       <Auth0Provider user={{}}>
         <WhenReady>{children}</WhenReady>
       </Auth0Provider>
     </Suspense>
-  </RecoilRoot>
+  </QueryClientProvider>
 );
 
 describe('useResearchThemes', () => {

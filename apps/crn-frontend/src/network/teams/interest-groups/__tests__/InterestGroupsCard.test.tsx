@@ -1,16 +1,15 @@
 import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { StaticRouter } from 'react-router';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { ErrorBoundary } from '@asap-hub/frontend-utils';
+import { createTestQueryClient, ErrorBoundary } from '@asap-hub/frontend-utils';
 
 import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
 
 import { getTeamInterestGroups } from '../api';
 import InterestGroupsCard from '../InterestGroupsCard';
-import { teamInterestGroupsState } from '../state';
 
 jest.mock('../api');
 const mockGetTeamInterestGroups = getTeamInterestGroups as jest.MockedFunction<
@@ -23,9 +22,7 @@ const id = 't42';
 
 const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: 'u42' }}>
           <WhenReady>
@@ -33,7 +30,7 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 afterEach(() => {

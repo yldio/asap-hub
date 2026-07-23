@@ -1,3 +1,4 @@
+import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 
 import {
@@ -593,11 +594,49 @@ describe('resolveResearchOutputAvailableActions', () => {
       resolveResearchOutputAvailableActions({
         flowId: 'team-create-manual',
         permissions: { canShareResearchOutput: true },
+        documentType: 'Bioinformatics',
       }),
     ).toEqual(
       expect.objectContaining({
         canSaveDraft: true,
       }),
+    );
+  });
+
+  describe('showImpactAndCategory', () => {
+    it('is true when documentType is Article', () => {
+      expect(
+        resolveResearchOutputAvailableActions({
+          flowId: 'team-create-manual',
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Article',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          showImpactAndCategory: true,
+        }),
+      );
+    });
+
+    const notArticleDocumentTypes = researchOutputDocumentTypes.filter(
+      (type) => type !== 'Article',
+    );
+
+    it.each(notArticleDocumentTypes)(
+      'is false when document type is %s',
+      (documentType) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId: 'team-create-manual',
+            permissions: { canShareResearchOutput: true },
+            documentType,
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            showImpactAndCategory: false,
+          }),
+        );
+      },
     );
   });
 });

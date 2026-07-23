@@ -1,37 +1,21 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE } from '../../hooks';
 import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutputs } from '../api';
 import OutputList from '../OutputList';
-import { outputsState } from '../state';
 
 jest.mock('../api');
 
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
-const renderOutputList = async (searchQuery = '') => {
+const renderOutputList = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          outputsState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -46,9 +30,12 @@ const renderOutputList = async (searchQuery = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 beforeEach(jest.resetAllMocks);

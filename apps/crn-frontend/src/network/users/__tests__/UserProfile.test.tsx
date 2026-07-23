@@ -19,12 +19,12 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getUser, patchUser, postUserAvatar } from '../api';
-import { refreshUserState } from '../state';
 import UserProfile from '../UserProfile';
 
 jest.mock('../api');
@@ -127,11 +127,7 @@ const renderUserProfile = async (
   mockToast.mockClear();
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(userResponse.id), Math.random());
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider
@@ -157,7 +153,7 @@ const renderUserProfile = async (
           </Auth0Provider>
         </ToastContext.Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

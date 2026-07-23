@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { render, screen, waitFor, act } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -137,7 +138,7 @@ const renderPage = async (
   );
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -145,7 +146,7 @@ const renderPage = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {
@@ -191,7 +192,7 @@ const renderEditPage = async (manuscriptId = 'ms-1') => {
   );
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -199,7 +200,7 @@ const renderEditPage = async (manuscriptId = 'ms-1') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {

@@ -3,13 +3,11 @@ import type { Auth0, Auth0User, User } from '@asap-hub/auth';
 import type { UserResponse } from '@asap-hub/model';
 import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useContext, useEffect } from 'react';
-import {
-  useRecoilRefresher_UNSTABLE as useRecoilRefresher,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { auth0State } from './state';
+import { useContext, useEffect, useRef, useState } from 'react';
+
+// The fixture provides the Auth0 context directly (async-initialised, exactly
+// like the production `AuthProvider`): `useAuthorization()` and react-query
+// hooks read the token through that context.
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -126,7 +124,7 @@ const createAuth0 = (
   };
 };
 
-export const Auth0Provider: React.FC<{
+type Auth0ProviderProps = {
   // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
   readonly user: TestUser | undefined;
   readonly children: React.ReactNode;
@@ -134,9 +132,25 @@ export const Auth0Provider: React.FC<{
     auth0Client?: Auth0Client,
     auth0User?: Auth0User,
   ) => Partial<Auth0>;
-}> = ({ user, children, auth0Overrides }) => {
-  const [auth0, setAuth0] = useRecoilState(auth0State);
-  const resetAuth0 = useRecoilRefresher(auth0State);
+};
+
+export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
+  user,
+  children,
+  auth0Overrides,
+}) => {
+  const [auth0, setAuth0] = useState<Auth0>();
+
+  // Re-init whenever the (stringified) user changes so onboarding flows that
+  // swap the user mid-test are reflected, but ignore the identity churn of an
+  // inline `auth0Overrides` callback (read the latest via a ref). Keeping
+  // `auth0Overrides` in the dependency array would re-run this effect every
+  // render and flap the context between loading and ready, unmounting
+  // `WhenReady`'s children mid-test.
+  const auth0OverridesRef = useRef(auth0Overrides);
+  auth0OverridesRef.current = auth0Overrides;
+  const userKey = JSON.stringify(user ?? null);
+
   useEffect(() => {
     let cancelled = false;
     const initAuth0 = async () => {
@@ -146,7 +160,7 @@ export const Auth0Provider: React.FC<{
         redirect_uri: 'http://localhost',
       });
       if (!cancelled) {
-        setAuth0(createAuth0(auth0Client, user, auth0Overrides));
+        setAuth0(createAuth0(auth0Client, user, auth0OverridesRef.current));
       }
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -154,9 +168,9 @@ export const Auth0Provider: React.FC<{
 
     return () => {
       cancelled = true;
-      resetAuth0();
     };
-  }, [user, setAuth0, resetAuth0, auth0Overrides]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userKey]);
 
   return (
     <Auth0ContextCRN.Provider
@@ -170,8 +184,6 @@ export const Auth0Provider: React.FC<{
 export const WhenReady: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const contextAuth0 = useContext(Auth0ContextCRN);
-  const loading =
-    (useRecoilValue(auth0State)?.loading ?? true) || contextAuth0.loading;
+  const { loading } = useContext(Auth0ContextCRN);
   return loading ? <p>Auth0 loading...</p> : <>{children}</>;
 };

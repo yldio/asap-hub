@@ -1,25 +1,20 @@
 import { useEffect, Suspense } from 'react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { compliance } from '@asap-hub/routing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ManuscriptWorkspaceRedirect from '../ManuscriptWorkspaceRedirect';
 
 const mockGetManuscriptWorkspaceUrl = jest.fn();
 const mockIsEnabled = jest.fn();
-const mockAuthorization = 'Bearer test-token';
+const mockAuthorization = 'Bearer access_token';
 
 jest.mock('@asap-hub/react-context', () => ({
   ...jest.requireActual('@asap-hub/react-context'),
   useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
-jest.mock('../../auth/state', () => ({
-  authorizationState: jest.requireActual('recoil').atom({
-    key: 'authorizationState-test',
-    default: 'Bearer test-token',
-  }),
 }));
 
 jest.mock('../../network/teams/api', () => ({
@@ -47,20 +42,29 @@ beforeEach(() => {
 
 const renderRedirect = (initialPath: string) =>
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback={null}>
-        <MemoryRouter initialEntries={[initialPath]}>
-          <LocationCapture />
-          <Routes>
-            <Route
-              path={compliance.template + compliance({}).manuscript.template}
-              element={<ManuscriptWorkspaceRedirect />}
-            />
-            <Route path="/target-workspace" element={<div>Workspace</div>} />
-          </Routes>
-        </MemoryRouter>
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[initialPath]}>
+              <LocationCapture />
+              <Routes>
+                <Route
+                  path={
+                    compliance.template + compliance({}).manuscript.template
+                  }
+                  element={<ManuscriptWorkspaceRedirect />}
+                />
+                <Route
+                  path="/target-workspace"
+                  element={<div>Workspace</div>}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
 it('redirects to the workspace url when available', async () => {

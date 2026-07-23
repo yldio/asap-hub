@@ -2,7 +2,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { gp2 } from '@asap-hub/routing';
 import React, { Suspense } from 'react';
 
@@ -29,7 +30,7 @@ const wrapper =
     step: string = gp2.onboarding({}).coreDetails({}).$,
   ): React.FC<{ children: React.ReactNode }> =>
   ({ children }: { children: React.ReactNode }) => (
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
@@ -37,7 +38,7 @@ const wrapper =
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>
+    </QueryClientProvider>
   );
 
 describe('useOnboarding', () => {

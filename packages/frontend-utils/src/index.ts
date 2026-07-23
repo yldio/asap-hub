@@ -1,4 +1,5 @@
 export * from './api-util';
+export * from './query';
 export * from './csv-export';
 export * from './cookie-consent';
 export * from './hooks';

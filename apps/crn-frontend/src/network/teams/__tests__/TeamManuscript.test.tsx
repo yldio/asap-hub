@@ -2,22 +2,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { network } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-  waitFor,
-} from '@testing-library/react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
-import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
 
 jest.mock('../../../shared-api/content-generator');
@@ -110,11 +105,7 @@ const renderPage = async (
   );
 
   const { container } = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshTeamState(teamId), Math.random());
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -122,9 +113,12 @@ const renderPage = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
   return { container };
 };
 

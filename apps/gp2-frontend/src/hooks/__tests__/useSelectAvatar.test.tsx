@@ -10,7 +10,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, postUserAvatar } from '../../users/api';
 import { useSelectAvatar } from '../useSelectAvatar';
@@ -48,7 +49,7 @@ const wrapper =
     ) => Partial<Auth0<gp2.User>>,
   ): React.FC<{ children?: React.ReactNode }> =>
   ({ children }) => (
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider
@@ -65,7 +66,7 @@ const wrapper =
           </Auth0Provider>
         </ToastContext.Provider>
       </Suspense>
-    </RecoilRoot>
+    </QueryClientProvider>
   );
 
 describe('useSelectAvatar', () => {

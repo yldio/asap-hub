@@ -2,7 +2,8 @@ import { Suspense, FC } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import { enable, disable, reset } from '@asap-hub/flags';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 import {
   createResearchOutputResponse,
@@ -321,7 +322,7 @@ const renderProjectDetail = async (
   const path = `${projects.template}/${routeKeyword}/${projectId}/${subPath}`;
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -336,7 +337,7 @@ const renderProjectDetail = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {

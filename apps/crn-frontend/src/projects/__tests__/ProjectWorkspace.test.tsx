@@ -1,8 +1,8 @@
 import { ComponentProps, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
@@ -102,7 +102,7 @@ const renderProjectWorkspace = async (
   };
 
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -125,7 +125,7 @@ const renderProjectWorkspace = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {
@@ -409,7 +409,7 @@ describe('ProjectWorkspace', () => {
   describe('tool routes', () => {
     it('renders ToolModal on /tools route', async () => {
       render(
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -447,7 +447,7 @@ describe('ProjectWorkspace', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>,
+        </QueryClientProvider>,
       );
 
       await waitFor(() => {
@@ -461,7 +461,7 @@ describe('ProjectWorkspace', () => {
 
     it('renders ToolModal for editing on /tools/tool/:toolIndex route', async () => {
       render(
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -505,7 +505,7 @@ describe('ProjectWorkspace', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>,
+        </QueryClientProvider>,
       );
 
       await waitFor(() => {
@@ -520,7 +520,7 @@ describe('ProjectWorkspace', () => {
 
     it('renders NotFoundPage for invalid tool index', async () => {
       render(
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -564,7 +564,7 @@ describe('ProjectWorkspace', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>,
+        </QueryClientProvider>,
       );
 
       await waitFor(() => {
@@ -576,7 +576,7 @@ describe('ProjectWorkspace', () => {
 
     it('calls patchProject with updated tool on edit save', async () => {
       render(
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -620,7 +620,7 @@ describe('ProjectWorkspace', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>,
+        </QueryClientProvider>,
       );
 
       await waitFor(() => {
@@ -646,7 +646,7 @@ describe('ProjectWorkspace', () => {
 
     it('calls patchProject with new tool on add save', async () => {
       render(
-        <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -690,7 +690,7 @@ describe('ProjectWorkspace', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </RecoilRoot>,
+        </QueryClientProvider>,
       );
 
       await waitFor(() => {

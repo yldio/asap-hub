@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,7 +12,6 @@ import { network } from '@asap-hub/routing';
 
 import InterestGroupProfile from '../InterestGroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshInterestGroupState } from '../state';
 import { getInterestGroup } from '../api';
 import { getEvents } from '../../../events/api';
 
@@ -36,11 +36,7 @@ const renderGroupProfile = async (
   );
 
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(interestGroupResponse.id), Math.random())
-      }
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -63,7 +59,7 @@ const renderGroupProfile = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -202,11 +198,7 @@ it('renders the not-found page when the interest group is not found', async () =
   mockGetInterestGroup.mockResolvedValueOnce(undefined);
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(nonExistentId), Math.random())
-      }
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -229,7 +221,7 @@ it('renders the not-found page when the interest group is not found', async () =
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {

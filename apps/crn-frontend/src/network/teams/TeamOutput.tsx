@@ -194,6 +194,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const availableActions = resolveResearchOutputAvailableActions({
     flowId,
     permissions,
+    documentType,
   });
 
   const researchSuggestions = researchTags

@@ -1,18 +1,21 @@
-import { act, renderHook } from '@testing-library/react';
-import { useRecoilValue } from 'recoil';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
+
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getCategories } from '../../shared-api/category';
 import { useCategorySuggestions } from '../category';
 
-jest.mock('recoil');
 jest.mock('../../shared-api/category');
 
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <Suspense fallback="loading">
+    <Auth0Provider user={{ id: 'user-id' }}>
+      <WhenReady>{children}</WhenReady>
+    </Auth0Provider>
+  </Suspense>
+);
+
 describe('useCategorySuggestions', () => {
-  const mockAuthorization = 'mock-token';
-
-  beforeEach(() => {
-    (useRecoilValue as jest.Mock).mockReturnValue(mockAuthorization);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -25,7 +28,8 @@ describe('useCategorySuggestions', () => {
 
     (getCategories as jest.Mock).mockResolvedValue({ items: mockItems });
 
-    const { result } = renderHook(() => useCategorySuggestions());
+    const { result } = renderHook(() => useCategorySuggestions(), { wrapper });
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     let suggestions;
     await act(async () => {
@@ -34,7 +38,7 @@ describe('useCategorySuggestions', () => {
 
     expect(getCategories).toHaveBeenCalledWith(
       { search: 'example search', take: 1000 },
-      mockAuthorization,
+      'Bearer access_token',
     );
 
     expect(suggestions).toEqual([
@@ -46,7 +50,8 @@ describe('useCategorySuggestions', () => {
   it('should handle empty results', async () => {
     (getCategories as jest.Mock).mockResolvedValue({ items: [] });
 
-    const { result } = renderHook(() => useCategorySuggestions());
+    const { result } = renderHook(() => useCategorySuggestions(), { wrapper });
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     let suggestions;
     await act(async () => {

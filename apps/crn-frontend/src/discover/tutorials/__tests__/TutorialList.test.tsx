@@ -2,18 +2,17 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor, screen, renderHook } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   createTutorialsResponse,
   createListTutorialsResponse,
 } from '@asap-hub/fixtures';
-import { Frame } from '@asap-hub/frontend-utils';
+import { createTestQueryClient, Frame } from '@asap-hub/frontend-utils';
 import { usePagination, usePaginationParams } from '../../../hooks';
 
 import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
-import { tutorialsListState } from '../state';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>{children}</MemoryRouter>
@@ -34,19 +33,8 @@ const pageSize = 10;
 
 const renderTutorials = async (searchQuery = '') => {
   const result = render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            tutorialsListState({
-              searchQuery,
-              currentPage: 0,
-              filters: new Set(),
-              pageSize: 10,
-            }),
-          );
-        }}
-      >
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
@@ -63,8 +51,8 @@ const renderTutorials = async (searchQuery = '') => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

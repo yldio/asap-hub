@@ -10,7 +10,6 @@ import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
-import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,
   useCategorySuggestions,
@@ -20,7 +19,7 @@ import {
   useImpactSuggestions,
 } from '../../shared-state';
 import {
-  refreshTeamState,
+  useInvalidateTeamById,
   useManuscriptById,
   usePostManuscript,
   usePutManuscript,
@@ -46,7 +45,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   teamId,
   resubmitManuscript = false,
 }) => {
-  const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
+  const invalidateTeam = useInvalidateTeamById(teamId);
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
 
@@ -72,7 +71,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const onSuccess = () => {
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setFormType({ type: 'manuscript', accent: 'successLarge' });
-    setRefreshTeamState((value) => value + 1);
+    invalidateTeam();
     void pushFromHere(path);
   };
 

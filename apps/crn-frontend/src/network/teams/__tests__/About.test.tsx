@@ -1,24 +1,19 @@
 import { ComponentProps, Suspense } from 'react';
-import {
-  render,
-  waitFor,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import {
   createTeamResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import { network } from '@asap-hub/routing';
 
 import About from '../About';
-import { refreshTeamState } from '../state';
 import { getTeamInterestGroups } from '../interest-groups/api';
 
 jest.mock('../api');
@@ -38,11 +33,7 @@ const renderTeamAbout = async (
   >,
 ) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(aboutProps.team.id), Math.random())
-      }
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -72,9 +63,12 @@ const renderTeamAbout = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 it('renders the member links', async () => {

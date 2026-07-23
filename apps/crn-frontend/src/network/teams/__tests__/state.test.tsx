@@ -1,61 +1,105 @@
-import { TeamDataObject, TeamStatus, TeamType } from '@asap-hub/model';
-import { BackendError } from '@asap-hub/frontend-utils';
-import { waitFor } from '@testing-library/dom';
-import { act, renderHook } from '@testing-library/react';
-import { startTransition, Suspense } from 'react';
-import * as recoilModule from 'recoil';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
-  MutableSnapshot,
-  RecoilRoot,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { authorizationState, auth0State } from '../../../auth/state';
+  ManuscriptResponse,
+  TeamResponse,
+  TeamStatus,
+  TeamType,
+} from '@asap-hub/model';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { Component, ReactNode, Suspense } from 'react';
+
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { researchOutputQueryKeys } from '../../../shared-research/state';
 import {
-  getManuscript,
-  getManuscriptsByIds,
-  patchTeam,
-  updateDiscussion,
   createDiscussion,
   createPreprintResearchOutput,
+  getAlgoliaTeams,
+  GetTeamsListOptions,
+  getManuscript,
+  getManuscripts,
+  getManuscriptsByIds,
+  getTeam,
+  markDiscussionAsRead,
+  updateDiscussion,
+  uploadManuscriptFileViaPresignedUrl,
 } from '../api';
-import * as stateModule from '../state';
 import {
-  patchedTeamState,
-  teamState,
+  discussionQueryKeys,
+  manuscriptQueryKeys,
+  teamQueryKeys,
   useBatchManuscriptsByIds,
-  usePatchTeamById,
+  useCreateDiscussion,
+  useManuscriptById,
+  useManuscripts,
+  useMarkDiscussionAsRead,
+  usePostPreprintResearchOutput,
   useReplyToDiscussion,
+  useTeamById,
+  useTeams,
   useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
 
-import * as uploadApi from '../api';
-import { getPresignedUrl } from '../../../shared-api/files';
-
-const mockSetDiscussion = jest.fn();
-
 jest.mock('../api', () => ({
-  updateDiscussion: jest.fn(),
-  getManuscript: jest.fn(),
-  getManuscriptsByIds: jest.fn(),
-  uploadManuscriptFileViaPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
-  patchTeam: jest.fn(),
+  getAlgoliaTeams: jest.fn(),
+  getManuscript: jest.fn(),
+  getManuscripts: jest.fn(),
+  getManuscriptsByIds: jest.fn(),
   getTeam: jest.fn().mockResolvedValue(undefined),
+  markDiscussionAsRead: jest.fn(),
+  updateDiscussion: jest.fn(),
+  uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
 
-jest.mock('../../../shared-api/files');
+jest.mock('../../../hooks/algolia', () => ({
+  useAlgolia: jest.fn(() => ({ client: {} })),
+}));
+
+const mockAuthorization = 'Bearer access_token';
+
+const createWrapper =
+  (queryClient: QueryClient) =>
+  ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: 'user-id' }}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>
+  );
+
+const renderStateHook = <T,>(hook: () => T) => {
+  const queryClient = createTestQueryClient();
+  const utils = renderHook(hook, { wrapper: createWrapper(queryClient) });
+  return { ...utils, queryClient };
+};
+
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? 'errored' : this.props.children;
+  }
+}
 
 const teamId = 'team-id-0';
-const teamType = 'Discovery Team' as TeamType;
-const teamStatus = 'Active' as TeamStatus;
-
 const teamMock = {
-  id: 'id-0',
-  teamId: 'team-id-0',
-  teamType,
-  teamStatus,
+  id: teamId,
+  teamType: 'Discovery Team' as TeamType,
+  teamStatus: 'Active' as TeamStatus,
   tags: [{ id: 'tag-1', name: 'Research' }],
   members: [],
   lastModifiedDate: '2021-09-01T00:00:00Z',
@@ -63,144 +107,11 @@ const teamMock = {
   displayName: 'Team One',
   projectTitle: 'Project Title',
   labs: [],
-};
-
-describe('team selectors', () => {
-  test('teamState selector retrieves team with tags', () => {
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam: TeamDataObject = {
-        ...teamMock,
-        manuscripts: [],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => useRecoilValue(teamState(teamId)), {
-      wrapper,
-    });
-
-    expect(result.current?.displayName).toBe('Team One');
-    expect(result.current?.tags.length).toBe(1);
-  });
-
-  test('resets team state when newValue is undefined', async () => {
-    // Suppress React 18 suspend warning - it's expected when resetting
-    // to undefined triggers async selector evaluation.
-    // React 18 introduced stricter warnings about suspending during synchronous input.
-    // We use startTransition to mark the update as non-urgent, but the warning
-    // may still appear. This is expected behavior and handled correctly by React.
-    jest.spyOn(console, 'error').mockImplementation();
-    const mockTeam = {
-      id: 'id-0',
-      teamId,
-      teamType,
-      teamStatus,
-      tags: [],
-      members: [],
-      lastModifiedDate: '2021-09-01T00:00:00Z',
-      labCount: 1,
-      displayName: 'Team One',
-      projectTitle: 'Project Title',
-      manuscripts: [],
-      labs: [],
-    };
-    const initialState = ({ set }: MutableSnapshot) => {
-      // Mock auth0State to prevent "Auth0 not available" error
-      set(auth0State, {
-        getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
-      } as never);
-      set(patchedTeamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>
-        <Suspense fallback="loading">{children}</Suspense>
-      </RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () => {
-        const [getTeamState, setTeamState] = useRecoilState(teamState(teamId));
-        return { setTeamState, getTeamState };
-      },
-      { wrapper },
-    );
-
-    // Wait for initial render to complete
-    await waitFor(() => {
-      expect(result.current.getTeamState).toEqual(mockTeam);
-    });
-
-    // Reset the state - this will cause teamState to fall back to initialTeamState
-    // which is async. We use startTransition to mark this as non-urgent.
-    act(() => {
-      startTransition(() => {
-        result.current.setTeamState(undefined);
-      });
-    });
-
-    // Wait for async selector to resolve
-    await waitFor(() => {
-      expect(result.current.getTeamState).toEqual(mockTeam);
-    });
-  });
-
-  test('merges new team data when team data already exists', async () => {
-    const initialTeam: TeamDataObject = {
-      ...teamMock,
-      manuscripts: [],
-    };
-
-    const updatedTeam: TeamDataObject = {
-      ...teamMock,
-      manuscripts: ['new-manuscript'],
-    };
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(patchedTeamState(teamId), initialTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () => {
-        const [getTeamState, setTeamState] = useRecoilState(teamState(teamId));
-        return { setTeamState, getTeamState };
-      },
-      { wrapper },
-    );
-
-    await waitFor(() => {
-      expect(result.current.getTeamState).toEqual(initialTeam);
-    });
-
-    act(() => {
-      result.current.setTeamState(updatedTeam);
-    });
-
-    expect(result.current.getTeamState).toEqual({
-      ...initialTeam,
-      ...updatedTeam,
-    });
-  });
-});
+  manuscripts: [],
+} as unknown as TeamResponse;
 
 const discussionId = 'discussion-id-0';
 const manuscriptId = 'manuscript-id-0';
-const manuscriptId2 = 'manuscript-id-1';
-
-const mockTeam = {
-  ...teamMock,
-  manuscripts: [manuscriptId],
-  labs: [],
-};
 
 const mockDiscussion = {
   id: discussionId,
@@ -213,47 +124,104 @@ const mockUpdatedManuscript = {
   status: 'Addendum Required',
 };
 
-const mockAuthorization = 'mock-token';
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-describe('useReplyToDiscussion', () => {
-  beforeEach(() => {
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return undefined;
-    });
+describe('useTeamById', () => {
+  it('fetches the team with the authorization token', async () => {
+    (getTeam as jest.Mock).mockResolvedValue(teamMock);
 
-    jest
-      .spyOn(stateModule, 'useSetDiscussion')
-      .mockReturnValue(mockSetDiscussion);
+    const { result } = renderStateHook(() => useTeamById(teamId));
+
+    await waitFor(() => expect(result.current).toEqual(teamMock));
+    expect(getTeam).toHaveBeenCalledWith(teamId, mockAuthorization);
+    expect(result.current?.displayName).toBe('Team One');
+    expect(result.current?.tags.length).toBe(1);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  it('returns undefined when the team does not exist', async () => {
+    (getTeam as jest.Mock).mockResolvedValue(undefined);
 
-  test('calls updateDiscussion API with the correct parameters', async () => {
-    (updateDiscussion as jest.Mock).mockResolvedValue({
-      discussion: mockDiscussion,
-      manuscript: mockUpdatedManuscript,
-    });
-
-    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), mockTeam as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    const { result, queryClient } = renderStateHook(() =>
+      useTeamById('nonexistent-team'),
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
+    await waitFor(() => expect(getTeam).toHaveBeenCalled());
+    // the 404 is cached as null and mapped back to undefined
+    await waitFor(() =>
+      expect(
+        queryClient.getQueryData(teamQueryKeys.detail('nonexistent-team')),
+      ).toBeNull(),
+    );
+    expect(result.current).toBeUndefined();
+  });
+
+  it('reads a seeded cache without fetching', async () => {
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(teamQueryKeys.detail(teamId), teamMock);
+
+    const { result } = renderHook(() => useTeamById(teamId), {
+      wrapper: createWrapper(queryClient),
     });
 
-    const patch = { text: 'Reply message', manuscriptId };
+    await waitFor(() => expect(result.current).toEqual(teamMock));
+    expect(getTeam).not.toHaveBeenCalled();
+  });
+});
+
+describe('useManuscriptById', () => {
+  const manuscriptMock = {
+    id: manuscriptId,
+    title: 'The Manuscript',
+    status: 'Waiting for Report',
+    versions: [],
+    discussions: [],
+  } as unknown as ManuscriptResponse;
+
+  it('fetches the manuscript and returns a working setter', async () => {
+    (getManuscript as jest.Mock).mockResolvedValue(manuscriptMock);
+
+    const { result } = renderStateHook(() => useManuscriptById(manuscriptId));
+
+    await waitFor(() => expect(result.current?.[0]).toEqual(manuscriptMock));
+    expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
+
+    const updated = { ...manuscriptMock, title: 'Renamed' };
+    act(() => {
+      result.current[1](updated);
+    });
+    await waitFor(() => expect(result.current[0]).toEqual(updated));
+  });
+
+  it('supports functional updates like React state setters', async () => {
+    (getManuscript as jest.Mock).mockResolvedValue(manuscriptMock);
+
+    const { result } = renderStateHook(() => useManuscriptById(manuscriptId));
+
+    await waitFor(() => expect(result.current?.[0]).toEqual(manuscriptMock));
+
+    act(() => {
+      result.current[1](
+        (manuscript) =>
+          manuscript && { ...manuscript, status: 'Addendum Required' },
+      );
+    });
+    await waitFor(() =>
+      expect(result.current[0]?.status).toBe('Addendum Required'),
+    );
+  });
+});
+
+describe('useReplyToDiscussion', () => {
+  const patch = { text: 'Reply message', manuscriptId };
+
+  it('calls updateDiscussion API with the correct parameters', async () => {
+    (updateDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
+    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
+
+    const { result } = renderStateHook(() => useReplyToDiscussion());
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       await result.current(manuscriptId, discussionId, patch);
@@ -269,7 +237,28 @@ describe('useReplyToDiscussion', () => {
     );
   });
 
-  test('handles 403 error and refetches manuscript', async () => {
+  it('writes the discussion and the re-fetched manuscript into the caches', async () => {
+    (updateDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
+    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
+
+    const { result, queryClient } = renderStateHook(() =>
+      useReplyToDiscussion(),
+    );
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, discussionId, patch);
+    });
+
+    expect(
+      queryClient.getQueryData(discussionQueryKeys.detail(discussionId)),
+    ).toEqual(mockDiscussion);
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.detail(manuscriptId)),
+    ).toEqual(mockUpdatedManuscript);
+  });
+
+  it('handles 403 error and refetches manuscript', async () => {
     const mockResponse = {
       status: 403,
       statusText: 'Forbidden',
@@ -289,328 +278,79 @@ describe('useReplyToDiscussion', () => {
     (updateDiscussion as jest.Mock).mockRejectedValueOnce(mock403Error);
     (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
 
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), mockTeam as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    const { result, queryClient } = renderStateHook(() =>
+      useReplyToDiscussion(),
     );
-
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
-    });
-
-    const patch = { text: 'Reply after 403', manuscriptId };
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       await expect(
-        result.current(manuscriptId, discussionId, patch),
+        result.current(manuscriptId, discussionId, {
+          text: 'Reply after 403',
+          manuscriptId,
+        }),
       ).rejects.toThrow(errorMessage);
     });
 
     expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.detail(manuscriptId)),
+    ).toEqual(mockUpdatedManuscript);
   });
 
-  test('updates teamState with the updated manuscript status', async () => {
-    (updateDiscussion as jest.Mock).mockResolvedValue({
-      discussion: mockDiscussion,
-      manuscript: mockUpdatedManuscript,
-    });
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), {
-        ...mockTeam,
-        manuscripts: [
-          ...mockTeam.manuscripts,
-          {
-            id: manuscriptId2,
-            status: 'Waiting for Report',
-          },
-        ],
-      } as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
-    });
-
-    const patch = { text: 'Reply message', manuscriptId };
-
-    await act(async () => {
-      await result.current(manuscriptId, discussionId, patch);
-    });
-
-    const { result: stateResult } = renderHook(
-      () => useRecoilValue(teamState(teamId)),
-      { wrapper },
-    );
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    waitFor(() => {
-      expect(stateResult.current?.manuscripts).toEqual([
-        {
-          id: manuscriptId,
-          status: 'Addendum Required',
-        },
-        {
-          id: manuscriptId2,
-          status: 'Waiting for Report',
-        },
-      ]);
-    });
-  });
-
-  test('does not update teamState if the response does not include manuscript updates', async () => {
-    (updateDiscussion as jest.Mock).mockResolvedValue({
-      discussion: mockDiscussion,
-    });
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), mockTeam as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
-    });
-
-    const patch = { text: 'Reply message', manuscriptId };
-
-    await act(async () => {
-      await result.current(manuscriptId, discussionId, patch);
-    });
-
-    const { result: stateResult } = renderHook(
-      () => useRecoilValue(teamState(teamId)),
-      { wrapper },
-    );
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    waitFor(() => {
-      expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
-    });
-  });
-
-  test('handles nonexistant team gracefully', async () => {
-    jest.spyOn(console, 'error').mockImplementation();
-    (updateDiscussion as jest.Mock).mockResolvedValue({
-      discussion: mockDiscussion,
-      manuscript: mockUpdatedManuscript,
-    });
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), mockTeam as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
-    });
-
-    const patch = { text: 'Reply message', manuscriptId };
-
-    await act(async () => {
-      await result.current(manuscriptId, discussionId, patch);
-    });
-
-    const { result: stateResult } = renderHook(
-      () => useRecoilValue(teamState(`${teamId}-nonexistent`)),
-      { wrapper },
-    );
-
-    expect(stateResult.current).toBeUndefined();
-  });
-
-  test('handles API errors without updating state', async () => {
+  it('re-throws other API errors without refetching the manuscript', async () => {
     const mockError = new Error('API error');
     (updateDiscussion as jest.Mock).mockRejectedValue(mockError);
 
-    const initialState = ({ set }: MutableSnapshot) => {
-      set(teamState(teamId), mockTeam as TeamDataObject);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    const { result, queryClient } = renderStateHook(() =>
+      useReplyToDiscussion(),
     );
-
-    const { result } = renderHook(() => useReplyToDiscussion(), {
-      wrapper,
-    });
-
-    const patch = { text: 'Reply message', manuscriptId };
-
-    await expect(
-      act(async () => {
-        await result.current(manuscriptId, discussionId, patch);
-      }),
-    ).rejects.toThrow();
-
-    const { result: stateResult } = renderHook(
-      () => useRecoilValue(teamState(teamId)),
-      { wrapper },
-    );
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    waitFor(() => {
-      expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
-    });
-  });
-});
-
-describe('useUploadManuscriptFileViaPresignedUrl', () => {
-  const mockHandleError = jest.fn();
-  const file = new File(['test content'], 'file.pdf', {
-    type: 'application/pdf',
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return undefined;
-    });
-  });
-
-  it('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
-    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
-    mockFn.mockResolvedValueOnce({ success: true });
-
-    const { result } = renderHook(
-      () => useUploadManuscriptFileViaPresignedUrl(),
-      {
-        wrapper: RecoilRoot,
-      },
-    );
-
-    await act(async () => {
-      const resultValue = await result.current(
-        file,
-        'Manuscript File',
-        mockHandleError,
-      );
-      expect(resultValue).toEqual({ success: true });
-    });
-
-    await waitFor(() => {
-      expect(
-        uploadApi.uploadManuscriptFileViaPresignedUrl,
-      ).toHaveBeenCalledWith(
-        file,
-        'Manuscript File',
-        mockAuthorization,
-        mockHandleError,
-      );
-    });
-  });
-
-  it('handles upload errors and calls error handler', async () => {
-    const errorMessage = 'Upload failed!';
-
-    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
-    mockFn.mockImplementationOnce(
-      async (
-        _file: File,
-        _type: string,
-        _auth: string,
-        handleError: (msg: string) => void,
-      ) => {
-        handleError(errorMessage);
-        throw new Error(errorMessage);
-      },
-    );
-
-    const { result } = renderHook(
-      () => useUploadManuscriptFileViaPresignedUrl(),
-      {
-        wrapper: RecoilRoot,
-      },
-    );
-
-    await act(async () => {
-      try {
-        await result.current(file, 'Manuscript File', mockHandleError);
-      } catch (e) {
-        // expected
-      }
-    });
-
-    expect(mockFn).toHaveBeenCalled();
-    expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
-  });
-});
-
-describe('usePresignedUrl', () => {
-  const mockUploadUrl = 'https://presigned-url.com/file.pdf';
-  const mockGetPresignedUrl = getPresignedUrl as jest.Mock;
-
-  beforeEach(() => {
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) return mockAuthorization;
-      return undefined;
-    });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('fetches the presigned URL successfully and updates loading state', async () => {
-    mockGetPresignedUrl.mockResolvedValueOnce({ presignedUrl: mockUploadUrl });
-
-    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
-      wrapper: RecoilRoot,
-    });
-
-    let url: string | undefined;
-    await act(async () => {
-      url = await result.current.fetchPresignedUrl(
-        'file.pdf',
-        'application/pdf',
-      );
-    });
-
-    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
-      'file.pdf',
-      mockAuthorization,
-      'application/pdf',
-    );
-    expect(url).toBe(mockUploadUrl);
-    expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBeNull();
-  });
-
-  it('sets error state on failure and throws error', async () => {
-    mockGetPresignedUrl.mockRejectedValueOnce(new Error('Oops'));
-
-    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
-      wrapper: RecoilRoot,
-    });
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       await expect(
-        result.current.fetchPresignedUrl('file.pdf', 'application/pdf'),
-      ).rejects.toThrow('Oops');
+        result.current(manuscriptId, discussionId, patch),
+      ).rejects.toThrow('API error');
     });
 
-    expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBe('Failed to generate pre-signed URL');
+    expect(getManuscript).not.toHaveBeenCalled();
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.detail(manuscriptId)),
+    ).toBeUndefined();
   });
 });
 
 describe('useCreateDiscussion', () => {
+  it('creates a discussion and writes the re-fetched manuscript into the cache', async () => {
+    (createDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
+    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
+
+    const { result, queryClient } = renderStateHook(() =>
+      useCreateDiscussion(),
+    );
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    let createdId: string | undefined;
+    await act(async () => {
+      createdId = await result.current(manuscriptId, 'title', 'content');
+    });
+
+    expect(createdId).toBe(discussionId);
+    expect(createDiscussion).toHaveBeenCalledWith(
+      {
+        manuscriptId,
+        title: 'title',
+        text: 'content',
+        files: undefined,
+        notificationList: undefined,
+      },
+      mockAuthorization,
+    );
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.detail(manuscriptId)),
+    ).toEqual(mockUpdatedManuscript);
+  });
+
   it('handles 403 error and refetches manuscript', async () => {
     const mockResponse = {
       status: 403,
@@ -631,13 +371,8 @@ describe('useCreateDiscussion', () => {
     (createDiscussion as jest.Mock).mockRejectedValueOnce(mock403Error);
     (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => stateModule.useCreateDiscussion(), {
-      wrapper,
-    });
+    const { result } = renderStateHook(() => useCreateDiscussion());
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       await expect(
@@ -646,6 +381,287 @@ describe('useCreateDiscussion', () => {
     });
 
     expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
+  });
+});
+
+describe('useMarkDiscussionAsRead', () => {
+  const cachedManuscript = {
+    id: manuscriptId,
+    title: 'The Manuscript',
+    discussions: [
+      { id: discussionId, read: false },
+      { id: 'discussion-id-1', read: false },
+    ],
+  } as unknown as ManuscriptResponse;
+
+  it('optimistically marks the discussion as read in the cached manuscript', async () => {
+    (markDiscussionAsRead as jest.Mock).mockResolvedValue(mockDiscussion);
+
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(
+      manuscriptQueryKeys.detail(manuscriptId),
+      cachedManuscript,
+    );
+
+    const { result } = renderHook(() => useMarkDiscussionAsRead(), {
+      wrapper: createWrapper(queryClient),
+    });
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, discussionId);
+    });
+
+    expect(markDiscussionAsRead).toHaveBeenCalledWith(
+      discussionId,
+      mockAuthorization,
+    );
+    expect(
+      queryClient.getQueryData<ManuscriptResponse>(
+        manuscriptQueryKeys.detail(manuscriptId),
+      )?.discussions,
+    ).toEqual([
+      { id: discussionId, read: true },
+      { id: 'discussion-id-1', read: false },
+    ]);
+    expect(
+      queryClient.getQueryData(discussionQueryKeys.detail(discussionId)),
+    ).toEqual(mockDiscussion);
+  });
+
+  it('still calls the API when no manuscript is cached', async () => {
+    (markDiscussionAsRead as jest.Mock).mockResolvedValue(mockDiscussion);
+
+    const { result, queryClient } = renderStateHook(() =>
+      useMarkDiscussionAsRead(),
+    );
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, discussionId);
+    });
+
+    expect(markDiscussionAsRead).toHaveBeenCalledWith(
+      discussionId,
+      mockAuthorization,
+    );
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.detail(manuscriptId)),
+    ).toBeUndefined();
+  });
+});
+
+describe('useBatchManuscriptsByIds', () => {
+  it('seeds the empty-ids result without fetching, so the query is never pending', async () => {
+    const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
+
+    await waitFor(() =>
+      expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
+    );
+    expect(getManuscriptsByIds).not.toHaveBeenCalled();
+    expect(
+      queryClient.getQueryState(manuscriptQueryKeys.batch([]))?.fetchStatus,
+    ).toBe('idle');
+  });
+
+  it('skips the API even when the empty-ids query is explicitly refetched', async () => {
+    const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
+    await waitFor(() =>
+      expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
+    );
+
+    await act(() =>
+      queryClient.refetchQueries({ queryKey: manuscriptQueryKeys.batch([]) }),
+    );
+
+    expect(getManuscriptsByIds).not.toHaveBeenCalled();
+    expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0);
+  });
+
+  it('deduplicates, sorts and hydrates the manuscript detail caches', async () => {
+    const manuscript1 = { id: 'm-1', title: 'One' };
+    const manuscript2 = { id: 'm-2', title: 'Two' };
+    (getManuscriptsByIds as jest.Mock).mockResolvedValue([
+      manuscript1,
+      manuscript2,
+    ]);
+
+    const { queryClient } = renderStateHook(() =>
+      useBatchManuscriptsByIds(['m-2', 'm-1', '', 'm-1']),
+    );
+
+    await waitFor(() => {
+      expect(getManuscriptsByIds).toHaveBeenCalledTimes(1);
+    });
+    expect(getManuscriptsByIds).toHaveBeenCalledWith(
+      ['m-1', 'm-2'],
+      mockAuthorization,
+    );
+
+    await waitFor(() => {
+      expect(
+        queryClient.getQueryData(manuscriptQueryKeys.detail('m-1')),
+      ).toEqual(manuscript1);
+    });
+    expect(queryClient.getQueryData(manuscriptQueryKeys.detail('m-2'))).toEqual(
+      manuscript2,
+    );
+  });
+});
+
+describe('useManuscripts', () => {
+  const listOptions = {
+    searchQuery: '',
+    currentPage: 0,
+    pageSize: 10,
+    requestedAPCCoverage: 'all',
+    completedStatus: 'show',
+    selectedStatuses: [],
+  } as unknown as Parameters<typeof useManuscripts>[0];
+
+  it('fetches the list and surgically merges refreshed items into every cached list', async () => {
+    const listItem = {
+      id: manuscriptId,
+      title: 'The Manuscript',
+      status: 'Waiting for Report',
+    };
+    (getManuscripts as jest.Mock).mockResolvedValue({
+      total: 1,
+      items: [listItem],
+    });
+
+    const otherOptions = { ...listOptions, currentPage: 1 };
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(manuscriptQueryKeys.list(otherOptions), {
+      total: 1,
+      items: [listItem],
+    });
+
+    const { result } = renderHook(() => useManuscripts(listOptions), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(result.current?.items).toEqual([listItem]));
+
+    act(() => {
+      result.current.refresh({
+        id: manuscriptId,
+        status: 'Addendum Required',
+      } as unknown as ManuscriptResponse);
+    });
+
+    await waitFor(() =>
+      expect(result.current.items[0]?.status).toBe('Addendum Required'),
+    );
+    // the write-through reaches every cached manuscript list, not just the
+    // rendered one
+    expect(
+      queryClient.getQueryData<{ items: { status: string }[] }>(
+        manuscriptQueryKeys.list(otherOptions),
+      )?.items[0]?.status,
+    ).toBe('Addendum Required');
+  });
+
+  it('maps a non-Error rejection to an empty list', async () => {
+    (getManuscripts as jest.Mock).mockRejectedValue('nope');
+
+    const { result } = renderStateHook(() => useManuscripts(listOptions));
+
+    await waitFor(() =>
+      expect(result.current).toMatchObject({ total: 0, items: [] }),
+    );
+  });
+
+  it('re-throws Error rejections to the error boundary', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    (getManuscripts as jest.Mock).mockRejectedValue(new Error('boom'));
+
+    const Probe = () => {
+      useManuscripts(listOptions);
+      return <>rendered</>;
+    };
+    const { getByText } = render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{ id: 'user-id' }}>
+              <WhenReady>
+                <Probe />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
+    consoleErrorSpy.mockRestore();
+  });
+});
+
+describe('useUploadManuscriptFileViaPresignedUrl', () => {
+  const mockHandleError = jest.fn();
+  const file = new File(['test content'], 'file.pdf', {
+    type: 'application/pdf',
+  });
+
+  it('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
+    (uploadManuscriptFileViaPresignedUrl as jest.Mock).mockResolvedValueOnce({
+      success: true,
+    });
+
+    const { result } = renderStateHook(() =>
+      useUploadManuscriptFileViaPresignedUrl(),
+    );
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      const resultValue = await result.current(
+        file,
+        'Manuscript File',
+        mockHandleError,
+      );
+      expect(resultValue).toEqual({ success: true });
+    });
+
+    expect(uploadManuscriptFileViaPresignedUrl).toHaveBeenCalledWith(
+      file,
+      'Manuscript File',
+      mockAuthorization,
+      mockHandleError,
+    );
+  });
+
+  it('handles upload errors and calls error handler', async () => {
+    const errorMessage = 'Upload failed!';
+
+    (uploadManuscriptFileViaPresignedUrl as jest.Mock).mockImplementationOnce(
+      async (
+        _file: File,
+        _type: string,
+        _auth: string,
+        handleError: (msg: string) => void,
+      ) => {
+        handleError(errorMessage);
+        throw new Error(errorMessage);
+      },
+    );
+
+    const { result } = renderStateHook(() =>
+      useUploadManuscriptFileViaPresignedUrl(),
+    );
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await expect(
+        result.current(file, 'Manuscript File', mockHandleError),
+      ).rejects.toThrow(errorMessage);
+    });
+
+    expect(uploadManuscriptFileViaPresignedUrl).toHaveBeenCalled();
+    expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
   });
 });
 
@@ -659,34 +675,15 @@ describe('usePostPreprintResearchOutput', () => {
     published: true,
   };
 
-  beforeEach(() => {
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return undefined;
-    });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('calls createPreprintResearchOutput with correct parameters and updates state', async () => {
+  it('calls createPreprintResearchOutput with correct parameters and updates the cache', async () => {
     (createPreprintResearchOutput as jest.Mock).mockResolvedValue(
       mockResearchOutputResponse,
     );
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+    const { result, queryClient } = renderStateHook(() =>
+      usePostPreprintResearchOutput(),
     );
-
-    const { result } = renderHook(
-      () => stateModule.usePostPreprintResearchOutput(),
-      {
-        wrapper,
-      },
-    );
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       const response = await result.current(mockManuscriptId);
@@ -697,22 +694,19 @@ describe('usePostPreprintResearchOutput', () => {
       mockManuscriptId,
       mockAuthorization,
     );
+    expect(
+      queryClient.getQueryData(
+        researchOutputQueryKeys.detail('research-output-123'),
+      ),
+    ).toEqual(mockResearchOutputResponse);
   });
 
   it('handles errors from createPreprintResearchOutput', async () => {
     const mockError = new Error('Failed to create preprint research output');
     (createPreprintResearchOutput as jest.Mock).mockRejectedValue(mockError);
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () => stateModule.usePostPreprintResearchOutput(),
-      {
-        wrapper,
-      },
-    );
+    const { result } = renderStateHook(() => usePostPreprintResearchOutput());
+    await waitFor(() => expect(result.current).toBeTruthy());
 
     await act(async () => {
       await expect(result.current(mockManuscriptId)).rejects.toThrow(
@@ -725,151 +719,23 @@ describe('usePostPreprintResearchOutput', () => {
       mockAuthorization,
     );
   });
-
-  it('returns the research output response from the API', async () => {
-    (createPreprintResearchOutput as jest.Mock).mockResolvedValue(
-      mockResearchOutputResponse,
-    );
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () => stateModule.usePostPreprintResearchOutput(),
-      {
-        wrapper,
-      },
-    );
-
-    let response;
-    await act(async () => {
-      response = await result.current(mockManuscriptId);
-    });
-
-    expect(response).toEqual(mockResearchOutputResponse);
-  });
 });
 
-describe('usePatchTeamById', () => {
-  beforeEach(() => {
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return undefined;
-    });
-  });
+describe('useTeams', () => {
+  const teamsOptions: GetTeamsListOptions = {
+    searchQuery: '',
+    teamType: 'all',
+    currentPage: 0,
+    pageSize: 10,
+  };
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  it('maps a non-Error rejection to an empty list', async () => {
+    (getAlgoliaTeams as jest.Mock).mockRejectedValue('string rejection');
 
-  it('calls patchTeam and updates the team state', async () => {
-    const initialTeam: TeamDataObject = {
-      ...teamMock,
-      manuscripts: [],
-    };
+    const { result } = renderStateHook(() => useTeams(teamsOptions));
 
-    const updatedTeam: TeamDataObject = {
-      ...initialTeam,
-      tools: [{ name: 'Slack', url: 'https://slack.com' }],
-    };
-
-    const patch = { tools: [{ name: 'Slack', url: 'https://slack.com' }] };
-    (patchTeam as jest.Mock).mockResolvedValueOnce(updatedTeam);
-
-    const initializeState = ({ set }: MutableSnapshot) => {
-      set(auth0State, {
-        getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
-      } as never);
-      set(patchedTeamState(teamId), initialTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initializeState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () => {
-        const patchFn = usePatchTeamById(teamId);
-        const [team] = useRecoilState(teamState(teamId));
-        return { patchFn, team };
-      },
-      { wrapper },
-    );
-
-    // Wait for initial state to be set
-    await waitFor(() => {
-      expect(result.current.team).toEqual(initialTeam);
-    });
-
-    await act(async () => {
-      await result.current.patchFn(patch);
-    });
-
-    expect(patchTeam).toHaveBeenCalledWith(teamId, patch, mockAuthorization);
-
-    // Verify state was updated
-    await waitFor(() => {
-      expect(result.current.team).toEqual(updatedTeam);
-    });
-  });
-});
-
-describe('useBatchManuscriptsByIds', () => {
-  const actualUseRecoilValue = jest.requireActual('recoil').useRecoilValue;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return actualUseRecoilValue(state);
-    });
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
-  it('returns immediately when ids are empty', () => {
-    const { result } = renderHook(() => useBatchManuscriptsByIds([]), {
-      wrapper: ({ children }: { children: React.ReactNode }) => (
-        <RecoilRoot>{children}</RecoilRoot>
-      ),
-    });
-
-    expect(result.current).toBeUndefined();
-    expect(getManuscriptsByIds).not.toHaveBeenCalled();
-  });
-
-  it('deduplicates, sorts, and calls getManuscriptsByIds', async () => {
-    const manuscript1 = { id: 'm-1', title: 'One' };
-    const manuscript2 = { id: 'm-2', title: 'Two' };
-    (getManuscriptsByIds as jest.Mock).mockResolvedValue([
-      manuscript1,
-      manuscript2,
-    ]);
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>
-        <Suspense fallback="loading">{children}</Suspense>
-      </RecoilRoot>
-    );
-
-    renderHook(() => useBatchManuscriptsByIds(['m-2', 'm-1', '', 'm-1']), {
-      wrapper,
-    });
-
-    await waitFor(() => {
-      expect(getManuscriptsByIds).toHaveBeenCalledTimes(1);
-    });
-
-    expect(getManuscriptsByIds).toHaveBeenCalledWith(
-      ['m-1', 'm-2'],
-      mockAuthorization,
+    await waitFor(() =>
+      expect(result.current).toEqual({ total: 0, items: [] }),
     );
   });
 });

@@ -1,38 +1,29 @@
-import { selector, atom, useRecoilValue } from 'recoil';
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { getDashboard, getReminders } from './api';
 
-export const fetchDashboardState = selector<DashboardResponse>({
-  key: 'fetchDashboardState',
-  get: ({ get }) => {
-    get(refreshDashboardState);
-    return getDashboard(get(authorizationState));
-  },
-});
+// Both fetches share the 'dashboard' key root — invalidating it refreshes
+// both.
+export const dashboardQueryKeys = {
+  all: ['dashboard'] as const,
+  data: () => [...dashboardQueryKeys.all, 'data'] as const,
+  reminders: () => [...dashboardQueryKeys.all, 'reminders'] as const,
+};
 
-export const dashboardState = atom<DashboardResponse>({
-  key: 'dashboardState',
-  default: fetchDashboardState,
-});
+export const useDashboardState = (): DashboardResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: dashboardQueryKeys.data(),
+    queryFn: async () => getDashboard(await getAuthorization()),
+  }).data;
+};
 
-export const refreshDashboardState = atom<number>({
-  key: 'refreshDashboardState',
-  default: 0,
-});
-
-export const fetchRemindersState = selector<ListReminderResponse>({
-  key: 'fetchRemindersState',
-  get: ({ get }) => {
-    get(refreshDashboardState);
-    return getReminders(get(authorizationState));
-  },
-});
-
-export const reminderState = atom<ListReminderResponse>({
-  key: 'reminderState',
-  default: fetchRemindersState,
-});
-
-export const useDashboardState = () => useRecoilValue(dashboardState);
-export const useReminderState = () => useRecoilValue(reminderState);
+export const useReminderState = (): ListReminderResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: dashboardQueryKeys.reminders(),
+    queryFn: async () => getReminders(await getAuthorization()),
+  }).data;
+};

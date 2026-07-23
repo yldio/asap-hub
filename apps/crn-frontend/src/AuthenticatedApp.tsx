@@ -1,11 +1,14 @@
-import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
+import {
+  SkeletonHeaderFrame as Frame,
+  queryClientDefaultOptions,
+} from '@asap-hub/frontend-utils';
 import {
   Layout,
   Loading,
   LoadingContentHeader,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -19,12 +22,13 @@ import {
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
-import { FC, Suspense, lazy, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
+
+import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 
 import CheckOnboarded from './auth/CheckOnboarded';
-import { auth0State } from './auth/state';
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
 import { ProjectsBanner } from './components/ProjectsBanner';
@@ -69,15 +73,6 @@ const ComplianceRedirect = lazy(loadCompliance);
 const AuthenticatedApp: FC<{
   setIsOnboardable?: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setIsOnboardable }) => {
-  const auth0 = useAuth0CRN();
-  const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
-  const resetAuth0 = useResetRecoilState(auth0State);
-
-  useEffect(() => {
-    setAuth0(auth0);
-    return () => resetAuth0();
-  }, [auth0, setAuth0, resetAuth0]);
-
   useEffect(() => {
     // order by the likelyhood of user navigating there
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -101,7 +96,9 @@ const AuthenticatedApp: FC<{
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
   const canViewAnalytics = user?.role === 'Staff';
-  if (!user || !recoilAuth0) {
+  // `user` is null until auth0 finishes loading, so this guard also covers
+  // the pre-ready state.
+  if (!user) {
     return <Loading />;
   }
 
@@ -290,12 +287,26 @@ const AuthenticatedApp: FC<{
     </Onboardable>
   );
 };
-const AuthenticatedAppWithRecoil: FC<
+const AuthenticatedAppWithProviders: FC<
   Record<string, React.Dispatch<React.SetStateAction<boolean>> | never>
-> = ({ setIsOnboardable }) => (
-  <RecoilRoot>
-    <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
-  </RecoilRoot>
-);
+> = ({ setIsOnboardable }) => {
+  // The QueryClient lives and dies with this component: logout unmounts
+  // AuthenticatedApp and discards the whole cache.
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
+  );
+  const { isEnabled } = useFlags();
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* the boundary must sit inside the provider: a suspension escaping
+          above it would keep this component from committing, recreating the
+          QueryClient (and refetching) on every retry */}
+      <Suspense fallback={<Loading />}>
+        <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+      </Suspense>
+      {isEnabled('QUERY_DEVTOOLS') && <ReactQueryDevtoolsProduction />}
+    </QueryClientProvider>
+  );
+};
 
-export default AuthenticatedAppWithRecoil;
+export default AuthenticatedAppWithProviders;

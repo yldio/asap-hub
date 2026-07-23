@@ -1,16 +1,19 @@
-import { waitFor } from '@testing-library/dom';
-import { act, renderHook } from '@testing-library/react';
-import { RecoilRoot, useRecoilValue } from 'recoil';
-import type { Milestone } from '@asap-hub/model';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import type { ListProjectMilestonesResponse, Milestone } from '@asap-hub/model';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
+
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
-  aimArticlesState,
-  milestoneArticlesState,
+  articleQueryKeys,
   useFetchAimArticles,
   useFetchMilestoneArticles,
   useUpdateMilestone,
   useUpdateMilestoneArticles,
 } from '../articles-state';
-import { projectMilestonesListItemState } from '../state';
+import { projectMilestoneQueryKeys } from '../state';
+import type { MilestonesListOptions } from '../api';
 
 const mockGetAimArticles = jest.fn();
 const mockGetMilestoneArticles = jest.fn();
@@ -27,22 +30,48 @@ jest.mock('../api', () => ({
   patchMilestone: (...args: unknown[]) => mockPatchMilestone(...args),
 }));
 
-jest.mock('../../auth/state', () => ({
-  authorizationState: jest.requireActual('recoil').atom({
-    key: 'authorizationState-test',
-    default: 'Bearer test-token',
-  }),
-}));
+const mockAuthorization = 'Bearer access_token';
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <RecoilRoot>{children}</RecoilRoot>
-);
+const milestonesOptions: MilestonesListOptions = {
+  projectId: 'proj-1',
+  grantType: 'supplement',
+  searchQuery: '',
+  filters: new Set<string>(),
+  currentPage: 0,
+  pageSize: 10,
+};
 
-function useFetchAndState(aimId: string) {
-  const fetchArticles = useFetchAimArticles();
-  const articles = useRecoilValue(aimArticlesState(aimId));
-  return { fetchArticles, articles };
-}
+const createWrapper =
+  (queryClient: QueryClient) =>
+  ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>
+  );
+
+const renderArticlesHook = <T,>(hook: () => T, queryClient?: QueryClient) => {
+  const client = queryClient ?? createTestQueryClient();
+  const utils = renderHook(hook, { wrapper: createWrapper(client) });
+  return { ...utils, queryClient: client };
+};
+
+const seedMilestoneList = (queryClient: QueryClient, milestone: Milestone) => {
+  queryClient.setQueryData<ListProjectMilestonesResponse>(
+    projectMilestoneQueryKeys.list(milestonesOptions),
+    { total: 1, items: [milestone] },
+  );
+};
+
+const getCachedMilestone = (queryClient: QueryClient, milestoneId: string) =>
+  queryClient
+    .getQueryData<ListProjectMilestonesResponse>(
+      projectMilestoneQueryKeys.list(milestonesOptions),
+    )
+    ?.items.find(({ id }) => id === milestoneId);
 
 describe('aim-articles-state', () => {
   afterEach(() => {
@@ -50,28 +79,35 @@ describe('aim-articles-state', () => {
   });
 
   describe('useFetchAimArticles', () => {
-    it('calls getAimArticles with the aimId and authorization, updates Recoil state, and returns the list', async () => {
+    it('calls getAimArticles with the aimId and authorization, updates the cache, and returns the list', async () => {
       const mockArticles = [
         { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
       ];
       mockGetAimArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
+      const { result, queryClient } = renderArticlesHook(() =>
+        useFetchAimArticles(),
+      );
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       const articles = await act(async () => result.current('aim-1'));
 
       expect(articles).toEqual(mockArticles);
       expect(mockGetAimArticles).toHaveBeenCalledWith(
         'aim-1',
-        'Bearer test-token',
+        mockAuthorization,
+      );
+      expect(queryClient.getQueryData(articleQueryKeys.aim('aim-1'))).toEqual(
+        mockArticles,
       );
     });
 
-    it('returns empty array and sets state when API returns no articles', async () => {
+    it('returns empty array and sets the cache when the API returns no articles', async () => {
       mockGetAimArticles.mockResolvedValueOnce([]);
 
-      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
+      const { result } = renderArticlesHook(() => useFetchAimArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       const articles = await act(async () => result.current('aim-empty'));
 
       expect(articles).toEqual([]);
@@ -83,8 +119,9 @@ describe('aim-articles-state', () => {
       ];
       mockGetAimArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
+      const { result } = renderArticlesHook(() => useFetchAimArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => result.current('aim-cached'));
       const cachedArticles = await act(async () =>
         result.current('aim-cached'),
@@ -96,32 +133,35 @@ describe('aim-articles-state', () => {
   });
 
   describe('useFetchMilestoneArticles', () => {
-    it('calls getMilestoneArticles with the milestoneId and authorization, updates Recoil state, and returns the list', async () => {
+    it('calls getMilestoneArticles with the milestoneId and authorization, updates the cache, and returns the list', async () => {
       const mockArticles = [
         { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
       ];
       mockGetMilestoneArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchMilestoneArticles(), {
-        wrapper,
-      });
+      const { result, queryClient } = renderArticlesHook(() =>
+        useFetchMilestoneArticles(),
+      );
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       const articles = await act(async () => result.current('milestone-1'));
 
       expect(articles).toEqual(mockArticles);
       expect(mockGetMilestoneArticles).toHaveBeenCalledWith(
         'milestone-1',
-        'Bearer test-token',
+        mockAuthorization,
       );
+      expect(
+        queryClient.getQueryData(articleQueryKeys.milestone('milestone-1')),
+      ).toEqual(mockArticles);
     });
 
-    it('returns empty array and sets state when API returns no articles', async () => {
+    it('returns empty array and sets the cache when the API returns no articles', async () => {
       mockGetMilestoneArticles.mockResolvedValueOnce([]);
 
-      const { result } = renderHook(() => useFetchMilestoneArticles(), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useFetchMilestoneArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       const articles = await act(async () => result.current('milestone-empty'));
 
       expect(articles).toEqual([]);
@@ -133,10 +173,9 @@ describe('aim-articles-state', () => {
       ];
       mockGetMilestoneArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchMilestoneArticles(), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useFetchMilestoneArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => result.current('milestone-cached'));
       const cachedArticles = await act(async () =>
         result.current('milestone-cached'),
@@ -160,109 +199,93 @@ describe('aim-articles-state', () => {
       articleCount: 0,
     };
 
-    function useUpdateAndRead(milestoneId: string) {
-      const updateArticles = useUpdateMilestoneArticles();
-      const cachedArticles = useRecoilValue(
-        milestoneArticlesState(milestoneId),
-      );
-      const cachedMilestone = useRecoilValue(
-        projectMilestonesListItemState(milestoneId),
-      );
-      return { updateArticles, cachedArticles, cachedMilestone };
-    }
-
     it('calls putMilestoneArticles with milestoneId, article ids, and authorization', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-1'), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useUpdateMilestoneArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateArticles('milestone-1', mockArticles);
+        await result.current('milestone-1', mockArticles);
       });
 
       expect(mockPutMilestoneArticles).toHaveBeenCalledWith(
         'milestone-1',
         ['ro-1', 'ro-2'],
-        'Bearer test-token',
+        mockAuthorization,
       );
     });
 
-    it('updates milestoneArticlesState after a successful save', async () => {
+    it('updates the milestone articles cache after a successful save', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-2'), {
-        wrapper,
-      });
-
-      expect(result.current.cachedArticles).toBeUndefined();
-
-      await act(async () => {
-        await result.current.updateArticles('milestone-2', mockArticles);
-      });
-
-      await waitFor(() => {
-        expect(result.current.cachedArticles).toEqual(mockArticles);
-      });
-    });
-
-    it('updates projectMilestonesListItemState articleCount when milestone is cached', async () => {
-      mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
-
-      const wrapperWithMilestone = ({
-        children,
-      }: {
-        children: React.ReactNode;
-      }) => (
-        <RecoilRoot
-          initializeState={(snap) => {
-            snap.set(
-              projectMilestonesListItemState('milestone-3'),
-              mockMilestone,
-            );
-          }}
-        >
-          {children}
-        </RecoilRoot>
+      const { result, queryClient } = renderArticlesHook(() =>
+        useUpdateMilestoneArticles(),
       );
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-3'), {
-        wrapper: wrapperWithMilestone,
-      });
+      expect(
+        queryClient.getQueryData(articleQueryKeys.milestone('milestone-2')),
+      ).toBeUndefined();
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateArticles('milestone-3', mockArticles);
+        await result.current('milestone-2', mockArticles);
       });
 
-      await waitFor(() => {
-        expect(result.current.cachedMilestone).toMatchObject({
-          articleCount: 2,
-        });
+      expect(
+        queryClient.getQueryData(articleQueryKeys.milestone('milestone-2')),
+      ).toEqual(mockArticles);
+    });
+
+    it('updates the cached milestone list articleCount when the milestone is cached', async () => {
+      mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
+
+      const queryClient = createTestQueryClient();
+      seedMilestoneList(queryClient, { ...mockMilestone, id: 'milestone-3' });
+
+      const { result } = renderArticlesHook(
+        () => useUpdateMilestoneArticles(),
+        queryClient,
+      );
+
+      await waitFor(() => expect(result.current).toBeTruthy());
+      await act(async () => {
+        await result.current('milestone-3', mockArticles);
+      });
+
+      expect(getCachedMilestone(queryClient, 'milestone-3')).toMatchObject({
+        articleCount: 2,
       });
     });
 
-    it('does not modify projectMilestonesListItemState when milestone is not cached', async () => {
+    it('does not modify cached milestone lists when the milestone is not cached', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-4'), {
-        wrapper,
-      });
+      const queryClient = createTestQueryClient();
+      seedMilestoneList(queryClient, mockMilestone);
 
+      const { result } = renderArticlesHook(
+        () => useUpdateMilestoneArticles(),
+        queryClient,
+      );
+
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateArticles('milestone-4', mockArticles);
+        await result.current('milestone-4', mockArticles);
       });
 
-      expect(result.current.cachedMilestone).toBeUndefined();
+      expect(getCachedMilestone(queryClient, 'milestone-4')).toBeUndefined();
+      expect(getCachedMilestone(queryClient, 'milestone-1')).toEqual(
+        mockMilestone,
+      );
     });
 
     it('propagates errors from putMilestoneArticles', async () => {
       mockPutMilestoneArticles.mockRejectedValueOnce(new Error('save failed'));
 
-      const { result } = renderHook(() => useUpdateMilestoneArticles(), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useUpdateMilestoneArticles());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await expect(
         act(async () => {
           await result.current('milestone-5', mockArticles);
@@ -283,26 +306,14 @@ describe('aim-articles-state', () => {
       articleCount: 0,
     };
 
-    function useUpdateAndRead(milestoneId: string) {
-      const updateMilestone = useUpdateMilestone();
-      const cachedArticles = useRecoilValue(
-        milestoneArticlesState(milestoneId),
-      );
-      const cachedMilestone = useRecoilValue(
-        projectMilestonesListItemState(milestoneId),
-      );
-      return { updateMilestone, cachedArticles, cachedMilestone };
-    }
-
     it('calls patchMilestone with status only when articles are not provided', async () => {
       mockPatchMilestone.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useUpdateMilestone());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateMilestone('milestone-7', {
+        await result.current('milestone-7', {
           status: 'Complete',
         });
       });
@@ -310,19 +321,18 @@ describe('aim-articles-state', () => {
       expect(mockPatchMilestone).toHaveBeenCalledWith(
         'milestone-7',
         { status: 'Complete' },
-        'Bearer test-token',
+        mockAuthorization,
       );
     });
 
     it('calls patchMilestone with status and articleIds when articles are provided', async () => {
       mockPatchMilestone.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
-        wrapper,
-      });
+      const { result } = renderArticlesHook(() => useUpdateMilestone());
 
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateMilestone('milestone-7', {
+        await result.current('milestone-7', {
           status: 'Complete',
           articles: mockArticles,
         });
@@ -331,71 +341,36 @@ describe('aim-articles-state', () => {
       expect(mockPatchMilestone).toHaveBeenCalledWith(
         'milestone-7',
         { status: 'Complete', articleIds: ['ro-1'] },
-        'Bearer test-token',
+        mockAuthorization,
       );
     });
 
     it('updates the cached milestone status and articleCount on success', async () => {
       mockPatchMilestone.mockResolvedValueOnce(undefined);
 
-      const wrapperWithMilestone = ({
-        children,
-      }: {
-        children: React.ReactNode;
-      }) => (
-        <RecoilRoot
-          initializeState={(snap) => {
-            snap.set(
-              projectMilestonesListItemState('milestone-7'),
-              mockMilestone,
-            );
-          }}
-        >
-          {children}
-        </RecoilRoot>
+      const queryClient = createTestQueryClient();
+      seedMilestoneList(queryClient, mockMilestone);
+
+      const { result } = renderArticlesHook(
+        () => useUpdateMilestone(),
+        queryClient,
       );
 
-      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
-        wrapper: wrapperWithMilestone,
-      });
-
+      await waitFor(() => expect(result.current).toBeTruthy());
       await act(async () => {
-        await result.current.updateMilestone('milestone-7', {
+        await result.current('milestone-7', {
           status: 'Complete',
           articles: mockArticles,
         });
       });
 
-      await waitFor(() => {
-        expect(result.current.cachedMilestone).toMatchObject({
-          status: 'Complete',
-          articleCount: 1,
-        });
-        expect(result.current.cachedArticles).toEqual(mockArticles);
+      expect(getCachedMilestone(queryClient, 'milestone-7')).toMatchObject({
+        status: 'Complete',
+        articleCount: 1,
       });
-    });
-  });
-
-  describe('aimArticlesState', () => {
-    it('is updated after useFetchArticles resolves', async () => {
-      const mockArticles = [
-        { id: 'ro-2', title: 'Article Two', href: '/shared-research/ro-2' },
-      ];
-      mockGetAimArticles.mockResolvedValueOnce(mockArticles);
-
-      const { result } = renderHook(() => useFetchAndState('aim-2'), {
-        wrapper,
-      });
-
-      expect(result.current.articles).toBeUndefined();
-
-      await act(async () => {
-        await result.current.fetchArticles('aim-2');
-      });
-
-      await waitFor(() => {
-        expect(result.current.articles).toEqual(mockArticles);
-      });
+      expect(
+        queryClient.getQueryData(articleQueryKeys.milestone('milestone-7')),
+      ).toEqual(mockArticles);
     });
   });
 });

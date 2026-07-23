@@ -2,15 +2,7 @@ import failOnConsole from 'jest-fail-on-console';
 import { TextEncoder, TextDecoder } from 'util';
 
 failOnConsole({
-  silenceMessage: (msg, method, context) => {
-    // Silence Recoil performance warnings
-    if (
-      /Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(
-        context.group,
-      )
-    ) {
-      return true;
-    }
+  silenceMessage: (msg) => {
     // Silence React 18 compatibility warnings from third-party libraries
     if (typeof msg === 'string') {
       // react-select defaultProps warning

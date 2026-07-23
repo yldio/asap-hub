@@ -1,18 +1,13 @@
 import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ValidationErrorResponse } from '@asap-hub/model';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
@@ -63,7 +58,7 @@ const renderCreateWorkingGroupOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
 ) => {
   render(
-    <RecoilRoot>
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -97,10 +92,13 @@ const renderCreateWorkingGroupOutput = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 describe('Create WorkingGroup Output', () => {

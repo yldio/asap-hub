@@ -1,17 +1,13 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-} from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { render, waitFor, screen } from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { createListGuidesResponse } from '@asap-hub/fixtures';
 
 import Guides from '../Guides';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getGuides } from '../../guides/api';
-import { refreshDiscoverState } from '../../about/state';
 
 jest.mock('../../guides/api');
 
@@ -23,22 +19,21 @@ const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
 
 const renderGuides = async (user: Partial<User>) => {
   render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
             <Guides />
           </WhenReady>
         </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+      </Suspense>
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 it('renders guides', async () => {

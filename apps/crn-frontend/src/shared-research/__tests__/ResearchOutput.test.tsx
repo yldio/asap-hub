@@ -9,7 +9,8 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   Auth0Provider,
   WhenReady,
@@ -18,7 +19,6 @@ import { User } from '@asap-hub/auth';
 
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
-import { refreshResearchOutputState } from '../state';
 import {
   getManuscriptVersionByManuscriptId,
   updateTeamResearchOutput,
@@ -125,11 +125,7 @@ const renderComponent = async (
   user = defaultUser,
 ) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshResearchOutputState(id), Math.random())
-      }
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
@@ -148,7 +144,7 @@ const renderComponent = async (
           </Suspense>
         </WhenReady>
       </Auth0Provider>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

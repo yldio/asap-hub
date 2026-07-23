@@ -16,9 +16,8 @@ import {
 import { network } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { ComponentProps } from 'react';
-import { useRecoilValue } from 'recoil';
 
-import { authorizationState } from '../../auth/state';
+import { useAuthorization } from '../../auth/useAuthorization';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import {
@@ -77,7 +76,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
         }),
   });
   const { client } = useAlgolia();
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const exportResults = () =>
     draftOutputs
       ? squidexResultsToStream<ResearchOutputResponse>(
@@ -87,7 +86,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
               .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
             { header: true },
           ),
-          (paginationParams) =>
+          async (paginationParams) =>
             getDraftResearchOutputs(
               {
                 documentType: filtersMap.documentType,
@@ -98,7 +97,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
                 draftsOnly: true,
                 ...paginationParams,
               },
-              authorization,
+              await getAuthorization(),
             ),
           researchOutputToCSV,
         )

@@ -4,7 +4,9 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createManuscriptResponse } from '@asap-hub/fixtures';
 import { AuthorResponse } from '@asap-hub/model';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { network } from '@asap-hub/routing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   cleanup,
   render,
@@ -15,7 +17,6 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import {
   getManuscript,
@@ -24,7 +25,6 @@ import {
 } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
 
 jest.setTimeout(100_000);
@@ -158,11 +158,7 @@ const renderPage = async (
   initialEntries: string[] = [defaultPath],
 ) => {
   const { container } = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshTeamState(teamId), Math.random());
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -187,7 +183,7 @@ const renderPage = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   await waitFor(
     () => {

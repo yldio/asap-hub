@@ -1,9 +1,12 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -11,7 +14,6 @@ import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algo
 import { getResearchOutputs } from '../api';
 import { MAX_ALGOLIA_RESULTS } from '../export';
 import ResearchOutputList from '../ResearchOutputList';
-import { researchOutputsState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -32,19 +34,9 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
 
-const renderResearchOutputList = async (searchQuery = '') => {
+const renderResearchOutputList = async () => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          researchOutputsState({
-            searchQuery,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-      }}
-    >
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -59,7 +51,7 @@ const renderResearchOutputList = async (searchQuery = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -88,7 +80,7 @@ it('triggers and export with the same parameters', async () => {
   mockGetResearchOutputs.mockResolvedValue(
     createResearchOutputListAlgoliaResponse(2),
   );
-  const { getByText } = await renderResearchOutputList('example');
+  const { getByText } = await renderResearchOutputList();
   await userEvent.click(getByText(/csv/i));
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
     expect.stringMatching(/SharedOutputs_\d+\.csv/),

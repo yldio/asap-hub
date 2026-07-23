@@ -25,7 +25,6 @@ import {
   ManuscriptWorkspaceUrlResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  TeamPatchRequest,
   TeamResponse,
   ListManuscriptVersionResponse,
   ManuscriptVersionResponse,
@@ -151,28 +150,6 @@ export const getAlgoliaTeams = async (
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
-};
-
-export const patchTeam = async (
-  id: string,
-  patch: TeamPatchRequest,
-  authorization: string,
-): Promise<TeamResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/teams/${id}`, {
-    method: 'PATCH',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(patch),
-  });
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to update team with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
 };
 
 export const createResearchOutput = async (

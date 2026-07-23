@@ -89,6 +89,14 @@ inputs:
   aws-os-password:
     description: 'AWS OS Password'
     required: true
+  config-file:
+    description: 'Serverless config file to package'
+    required: false
+    default: 'serverless.ts'
+  package-suffix:
+    description: 'Suffix appended to the package directory and artifact name'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -115,7 +123,7 @@ runs:
     - name: Generate package
       shell: bash
       run: |
-        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
+        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --config ${{ inputs.config-file }} --package $PWD/${{ inputs.app }}${{ inputs.package-suffix }}-sls-package
       env:
         ACTIVE_CAMPAIGN_ACCOUNT: ${{ inputs.active-campaign-account }}
         ACTIVE_CAMPAIGN_TOKEN: ${{ inputs.active-campaign-token }}
@@ -152,7 +160,7 @@ runs:
         AWS_OS_PASSWORD: ${{ inputs.aws-os-password }}
     - uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}
-        path: '${{ inputs.app }}-sls-package'
+        name: ${{ inputs.app }}${{ inputs.package-suffix }}-sls-package-${{ inputs.environment-name }}
+        path: '${{ inputs.app }}${{ inputs.package-suffix }}-sls-package'
         retention-days: 1
         overwrite: true

@@ -712,6 +712,53 @@ describe('resolveResearchOutputAvailableActions', () => {
     });
   });
 
+  describe('disableUsedInPublication truth table', () => {
+    test.each`
+      flowId                                    | documentType        | usedInPublication | expectedDisabled
+      ${'team-create-manual'}                   | ${'Article'}        | ${undefined}      | ${true}
+      ${'team-create-imported-from-manuscript'} | ${'Article'}        | ${undefined}      | ${true}
+      ${'working-group-create'}                 | ${'Article'}        | ${undefined}      | ${true}
+      ${'team-create-manual'}                   | ${'Article'}        | ${true}           | ${false}
+      ${'team-create-manual'}                   | ${'Article'}        | ${false}          | ${false}
+      ${'team-create-manual'}                   | ${'Bioinformatics'} | ${undefined}      | ${false}
+      ${'team-edit-draft'}                      | ${'Article'}        | ${undefined}      | ${false}
+      ${'team-edit-published'}                  | ${'Article'}        | ${undefined}      | ${false}
+      ${'team-add-version'}                     | ${'Article'}        | ${undefined}      | ${false}
+      ${'team-duplicate'}                       | ${'Article'}        | ${undefined}      | ${false}
+      ${'working-group-add-version'}            | ${'Article'}        | ${undefined}      | ${false}
+    `(
+      'disableUsedInPublication is $expectedDisabled for $flowId (documentType: $documentType, usedInPublication: $usedInPublication)',
+      ({ flowId, documentType, usedInPublication, expectedDisabled }) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId,
+            permissions: { canShareResearchOutput: true },
+            documentType,
+            researchOutputData: { versions: [], id: '', usedInPublication },
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            disableUsedInPublication: expectedDisabled,
+          }),
+        );
+      },
+    );
+
+    it('is true on an Article create flow when researchOutputData is not provided', () => {
+      expect(
+        resolveResearchOutputAvailableActions({
+          flowId: 'team-create-manual',
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Article',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          disableUsedInPublication: true,
+        }),
+      );
+    });
+  });
+
   it('resolves saveDraft action correctly', () => {
     expect(
       resolveResearchOutputAvailableActions({

@@ -11,7 +11,7 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 
-type ResearchOutputFormSharingCardProps = Pick<
+type ResearchOutputPublishingCardProps = Pick<
   ResearchOutputPostRequest,
   'sharingStatus'
 > & {
@@ -26,6 +26,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   publishDate?: Date;
   isCreatingOutputRoute?: boolean;
   isImportedFromManuscript?: boolean;
+  disableDateMadePublic?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -38,8 +39,8 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
   return 'Publish date cannot be greater than today';
 };
 
-const ResearchOutputFormSharingCard: React.FC<
-  ResearchOutputFormSharingCardProps
+const ResearchOutputPublishingCard: React.FC<
+  ResearchOutputPublishingCardProps
 > = ({
   researchOutputData,
   documentType,
@@ -49,6 +50,7 @@ const ResearchOutputFormSharingCard: React.FC<
   sharingStatus,
   publishDate,
   isImportedFromManuscript,
+  disableDateMadePublic,
   onChangeAsapFunded = noop,
   onChangeUsedInPublication = noop,
   onChangeSharingStatus = noop,
@@ -117,12 +119,7 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle={'(required)'}
         description={'The date this output first became publicly available.'}
         required
-        enabled={
-          !(
-            researchOutputData?.publishDate &&
-            (isImportedFromManuscript || researchOutputData?.id)
-          )
-        }
+        enabled={!disableDateMadePublic}
         onChange={onChangePublishDate}
         value={publishDate}
         max={new Date()}
@@ -132,4 +129,4 @@ const ResearchOutputFormSharingCard: React.FC<
   </FormCard>
 );
 
-export default ResearchOutputFormSharingCard;
+export default ResearchOutputPublishingCard;

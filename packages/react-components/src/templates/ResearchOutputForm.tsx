@@ -583,6 +583,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     setPublishDate(date ? new Date(date) : undefined)
                   }
                   isImportedFromManuscript={isImportedFromManuscript}
+                  disableDateMadePublic={availableActions.disableDateMadePublic}
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}

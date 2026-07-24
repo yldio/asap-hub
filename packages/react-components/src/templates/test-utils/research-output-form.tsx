@@ -10,7 +10,9 @@ import {
 } from '@asap-hub/model';
 import { ComponentProps, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import userEvent from '@testing-library/user-event';
 import ResearchOutputForm from '../ResearchOutputForm';
 
 export const capturedLocation: {
@@ -35,6 +37,7 @@ const LocationCapture = () => {
 
 export const defaultAvailableActions: ResearchOutputAvailableActions = {
   disableImpactAndCategory: false,
+  disableDateMadePublic: false,
   canSaveDraft: true,
   showImpactAndCategory: false,
   showChangelogAndVersionHistory: false,
@@ -151,3 +154,14 @@ export const renderPrefilledForm = (
     selectedTeams: [{ value: 'TEAMID', label: 'Example Team' }],
     ...propOverride,
   });
+
+export const submitForm = async () => {
+  await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /Publish Output/i }),
+  );
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+  });
+};

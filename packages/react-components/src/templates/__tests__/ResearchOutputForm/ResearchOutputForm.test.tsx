@@ -115,7 +115,6 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByText(researchOutputData.shortDescription)).toBeVisible();
   expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
   expect(screen.getByText(researchOutputData.type!)).toBeVisible();
-  expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
   expect(
     screen.getByText(researchOutputData.authors[0]!.displayName),
   ).toBeVisible();

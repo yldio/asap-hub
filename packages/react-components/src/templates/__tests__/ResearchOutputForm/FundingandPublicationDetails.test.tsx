@@ -1,4 +1,8 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
+import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -65,5 +69,79 @@ describe('ResearchOutputForm publishing decisions', () => {
     expect(
       within(usedInPublication).getByRole('radio', { name: 'Not Sure' }),
     ).toBeDisabled();
+  });
+
+  it('disables the "CRN Only" sharing status option when disableNonPublicSharingStatus is true', () => {
+    renderForm({
+      availableActions: {
+        ...defaultAvailableActions,
+        disableNonPublicSharingStatus: true,
+      },
+    });
+
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
+
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /CRN Only/i }),
+    ).toBeDisabled();
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /Public/i }),
+    ).toBeEnabled();
+  });
+
+  it('enables the "CRN Only" sharing status option when disableNonPublicSharingStatus is false', () => {
+    renderForm({
+      availableActions: {
+        ...defaultAvailableActions,
+        disableNonPublicSharingStatus: false,
+      },
+    });
+
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
+
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /CRN Only/i }),
+    ).toBeEnabled();
+  });
+
+  it('disables the "CRN Only" sharing status option when importing from a manuscript', () => {
+    const flowId = 'team-create-imported-from-manuscript';
+    const documentType = 'Article' as ResearchOutputDocumentType;
+    renderForm({
+      documentType,
+      flowId,
+      availableActions: resolveResearchOutputAvailableActions({
+        flowId,
+        permissions: { canShareResearchOutput: true },
+        documentType,
+      }),
+    });
+
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
+
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /CRN Only/i }),
+    ).toBeDisabled();
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /Public/i }),
+    ).toBeEnabled();
+  });
+
+  it('displays the sharing status from the pre-populated research output data', () => {
+    renderPrefilledForm();
+
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
+
+    expect(
+      within(sharingStatus).getByRole('radio', { name: /Public/i }),
+    ).toBeChecked();
   });
 });

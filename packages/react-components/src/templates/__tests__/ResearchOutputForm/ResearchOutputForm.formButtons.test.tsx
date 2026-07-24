@@ -282,15 +282,6 @@ describe('form buttons', () => {
     });
   });
 
-  it('disables CRN Only option when importing from manuscript', async () => {
-    await setupForm({
-      isImportedFromManuscript: true,
-    });
-
-    expect(screen.getByRole('radio', { name: /CRN Only/i })).toBeDisabled();
-    expect(screen.getByRole('radio', { name: /Public/i })).toBeEnabled();
-  });
-
   it('pre-selects DOI on identifier type when importing from manuscript', async () => {
     await setupForm({ isImportedFromManuscript: true });
 

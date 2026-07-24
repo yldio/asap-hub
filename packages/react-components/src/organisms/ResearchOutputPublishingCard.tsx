@@ -1,7 +1,6 @@
 import {
   DecisionOption,
   ResearchOutputPostRequest,
-  ResearchOutputResponse,
   ResearchOutputSharingStatus,
 } from '@asap-hub/model';
 import {
@@ -15,8 +14,6 @@ type ResearchOutputPublishingCardProps = Pick<
   ResearchOutputPostRequest,
   'sharingStatus'
 > & {
-  researchOutputData?: ResearchOutputResponse;
-  documentType?: ResearchOutputResponse['documentType'];
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
@@ -24,9 +21,9 @@ type ResearchOutputPublishingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
-  isImportedFromManuscript?: boolean;
   disableDateMadePublic?: boolean;
   disableUsedInPublication?: boolean;
+  disableNonPublicSharingStatus?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -42,15 +39,13 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
 const ResearchOutputPublishingCard: React.FC<
   ResearchOutputPublishingCardProps
 > = ({
-  researchOutputData,
-  documentType,
   asapFunded,
   usedInPublication,
   sharingStatus,
   publishDate,
-  isImportedFromManuscript,
   disableDateMadePublic,
   disableUsedInPublication,
+  disableNonPublicSharingStatus,
   onChangeAsapFunded = noop,
   onChangeUsedInPublication = noop,
   onChangeSharingStatus = noop,
@@ -96,10 +91,7 @@ const ResearchOutputPublishingCard: React.FC<
         {
           value: 'Network Only',
           label: 'CRN Only',
-          disabled:
-            (documentType === 'Article' &&
-              researchOutputData?.sharingStatus === undefined) ||
-            isImportedFromManuscript,
+          disabled: disableNonPublicSharingStatus,
         },
         { value: 'Public', label: 'Public' },
       ]}

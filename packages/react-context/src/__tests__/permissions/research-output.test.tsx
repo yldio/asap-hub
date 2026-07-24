@@ -687,7 +687,12 @@ describe('resolveResearchOutputAvailableActions', () => {
             flowId,
             permissions: { canShareResearchOutput: true },
             documentType: 'Bioinformatics',
-            researchOutputData: { versions: [], publishDate, id },
+            researchOutputData: {
+              versions: [],
+              publishDate,
+              id,
+              sharingStatus: 'Public',
+            },
           }),
         ).toEqual(
           expect.objectContaining({
@@ -734,7 +739,12 @@ describe('resolveResearchOutputAvailableActions', () => {
             flowId,
             permissions: { canShareResearchOutput: true },
             documentType,
-            researchOutputData: { versions: [], id: '', usedInPublication },
+            researchOutputData: {
+              versions: [],
+              id: '',
+              usedInPublication,
+              sharingStatus: 'Public',
+            },
           }),
         ).toEqual(
           expect.objectContaining({
@@ -757,6 +767,48 @@ describe('resolveResearchOutputAvailableActions', () => {
         }),
       );
     });
+  });
+
+  describe('disableNonPublicSharingStatus truth table', () => {
+    const publicSharing = {
+      versions: [],
+      id: '',
+      sharingStatus: 'Public',
+    } as const;
+    const networkOnlySharing = {
+      versions: [],
+      id: '',
+      sharingStatus: 'Network Only',
+    } as const;
+
+    test.each`
+      flowId                                    | documentType        | researchOutputData    | expectedDisabled
+      ${'team-create-manual'}                   | ${'Article'}        | ${undefined}          | ${true}
+      ${'working-group-create'}                 | ${'Article'}        | ${undefined}          | ${true}
+      ${'team-create-imported-from-manuscript'} | ${'Article'}        | ${undefined}          | ${true}
+      ${'team-add-version-from-manuscript'}     | ${'Article'}        | ${undefined}          | ${true}
+      ${'team-create-manual'}                   | ${'Article'}        | ${networkOnlySharing} | ${false}
+      ${'team-create-manual'}                   | ${'Bioinformatics'} | ${undefined}          | ${false}
+      ${'team-edit-published'}                  | ${'Article'}        | ${publicSharing}      | ${false}
+      ${'working-group-edit-published'}         | ${'Article'}        | ${publicSharing}      | ${false}
+      ${'team-add-version'}                     | ${'Bioinformatics'} | ${publicSharing}      | ${false}
+    `(
+      'disableNonPublicSharingStatus is $expectedDisabled for $flowId (documentType: $documentType)',
+      ({ flowId, documentType, researchOutputData, expectedDisabled }) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId,
+            permissions: { canShareResearchOutput: true },
+            documentType,
+            researchOutputData,
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            disableNonPublicSharingStatus: expectedDisabled,
+          }),
+        );
+      },
+    );
   });
 
   it('resolves saveDraft action correctly', () => {

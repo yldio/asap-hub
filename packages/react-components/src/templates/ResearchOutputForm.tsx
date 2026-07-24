@@ -542,8 +542,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   typeDescription="Select the type that matches your output the best."
                 />
                 <ResearchOutputPublishingCard
-                  documentType={documentType}
-                  researchOutputData={researchOutputData}
                   asapFunded={asapFunded}
                   onChangeAsapFunded={setAsapFunded}
                   usedInPublication={usedInPublication}
@@ -554,10 +552,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangePublishDate={(date) =>
                     setPublishDate(date ? new Date(date) : undefined)
                   }
-                  isImportedFromManuscript={isImportedFromManuscript}
                   disableDateMadePublic={availableActions.disableDateMadePublic}
                   disableUsedInPublication={
                     availableActions.disableUsedInPublication
+                  }
+                  disableNonPublicSharingStatus={
+                    availableActions.disableNonPublicSharingStatus
                   }
                 />
                 <ResearchOutputExtraInformationCard

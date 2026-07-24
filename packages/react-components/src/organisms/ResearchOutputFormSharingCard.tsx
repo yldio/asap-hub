@@ -33,9 +33,11 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'changelog'
   | 'subtype'
 > &
-  Pick<ResearchOutputAvailableActions, 'showImpactAndCategory'> & {
+  Pick<
+    ResearchOutputAvailableActions,
+    'showImpactAndCategory' | 'disableImpactAndCategory'
+  > & {
     isFormSubmitted: boolean;
-    isCreatingNewVersion: boolean;
     getImpactSuggestions: (
       searchQuery: string,
     ) => Promise<{ label: string; value: string }[]>;
@@ -52,14 +54,14 @@ type ResearchOutputFormSharingCardProps = Pick<
     >;
     displayChangelog?: boolean;
     type?: ResearchOutputType | '';
-    onChangeLink?: (newValue: string) => void;
-    onChangeTitle?: (newValue: string) => void;
-    onChangeDescription?: (newValue: string) => void;
-    onChangeShortDescription?: (newValue: string) => void;
-    onChangeLayImpactStatement?: (newValue: string) => void;
-    onChangeChangelog?: (newValue: string) => void;
-    onChangeType?: (newValue: ResearchOutputType | '') => void;
-    onChangeSubtype?: (newValue: string | '') => void;
+    onChangeLink: (newValue: string) => void;
+    onChangeTitle: (newValue: string) => void;
+    onChangeDescription: (newValue: string) => void;
+    onChangeShortDescription: (newValue: string) => void;
+    onChangeLayImpactStatement: (newValue: string) => void;
+    onChangeChangelog: (newValue: string) => void;
+    onChangeType: (newValue: ResearchOutputType | '') => void;
+    onChangeSubtype: (newValue: string | '') => void;
     isSaving: boolean;
     researchTags: ResearchTagResponse[];
     serverValidationErrors?: ValidationErrorResponse['data'];
@@ -77,7 +79,7 @@ const ResearchOutputFormSharingCard: React.FC<
 > = ({
   showImpactAndCategory,
   isFormSubmitted,
-  isCreatingNewVersion,
+  disableImpactAndCategory,
   getImpactSuggestions,
   impact,
   layImpactStatement,
@@ -101,14 +103,14 @@ const ResearchOutputFormSharingCard: React.FC<
   urlRequired,
   getShortDescriptionFromDescription,
   clearServerValidationError = noop,
-  onChangeDescription = noop,
-  onChangeShortDescription = noop,
-  onChangeChangelog = noop,
-  onChangeLink = noop,
-  onChangeTitle = noop,
-  onChangeType = noop,
-  onChangeSubtype = noop,
-  onChangeLayImpactStatement = noop,
+  onChangeDescription,
+  onChangeShortDescription,
+  onChangeChangelog,
+  onChangeLink,
+  onChangeTitle,
+  onChangeType,
+  onChangeSubtype,
+  onChangeLayImpactStatement,
 }) => {
   const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
   const [titleValidationMessage, setTitleValidationMessage] =
@@ -338,7 +340,7 @@ const ResearchOutputFormSharingCard: React.FC<
             title="Category"
             description="Select up to two options that best describe the scientific category of this manuscript."
             subtitle="(required)"
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             placeholder="Start typing..."
             loadOptions={getCategorySuggestions}
             onChange={(newValues) => {
@@ -373,7 +375,7 @@ const ResearchOutputFormSharingCard: React.FC<
             onBlur={validateImpact}
             customValidationMessage={impactValidationMessage}
             value={impact?.value ?? ''}
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             noOptionsMessage={(option) =>
               `Sorry, no impacts match ${option.inputValue}`
             }

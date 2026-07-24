@@ -82,3 +82,37 @@ it('renders category input and does not throw when getCategorySuggestions is noo
     screen.queryByText(/no category options match/i),
   ).not.toBeInTheDocument();
 });
+
+it('should disable impact and category when available action disableImpactAndCategory is true', () => {
+  const { rerender } = render(
+    <MemoryRouter>
+      <ResearchOutputForm
+        {...researchOutputFormProps}
+        availableActions={{
+          ...researchOutputFormProps.availableActions,
+          showImpactAndCategory: true,
+          disableImpactAndCategory: true,
+        }}
+      />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByLabelText(/impact\(required\)/i)).toBeDisabled();
+  expect(screen.getByLabelText(/category/i)).toBeDisabled();
+
+  rerender(
+    <MemoryRouter>
+      <ResearchOutputForm
+        {...researchOutputFormProps}
+        availableActions={{
+          ...researchOutputFormProps.availableActions,
+          showImpactAndCategory: true,
+          disableImpactAndCategory: false,
+        }}
+      />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByLabelText(/impact\(required\)/i)).toBeEnabled();
+  expect(screen.getByLabelText(/category/i)).toBeEnabled();
+});

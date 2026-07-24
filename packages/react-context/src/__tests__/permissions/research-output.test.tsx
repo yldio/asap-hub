@@ -589,6 +589,32 @@ describe('getVisibleResearchOutputActions', () => {
 });
 
 describe('resolveResearchOutputAvailableActions', () => {
+  it('resolves disableImpactAndCategory action correctly', () => {
+    expect(
+      resolveResearchOutputAvailableActions({
+        flowId: 'team-create-manual',
+        permissions: { canShareResearchOutput: true },
+        documentType: 'Bioinformatics',
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        disableImpactAndCategory: false,
+      }),
+    );
+
+    expect(
+      resolveResearchOutputAvailableActions({
+        flowId: 'team-add-version',
+        permissions: { canShareResearchOutput: true },
+        documentType: 'Bioinformatics',
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        disableImpactAndCategory: true,
+      }),
+    );
+  });
+
   it('resolves saveDraft action correctly', () => {
     expect(
       resolveResearchOutputAvailableActions({

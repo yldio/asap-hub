@@ -8,9 +8,9 @@ import { mockActErrorsInConsole } from '../../test-utils';
 import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
 
 const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
+  disableImpactAndCategory: false,
   showImpactAndCategory: false,
   isFormSubmitted: false,
-  isCreatingNewVersion: false,
   isSaving: false,
   link: '',
   title: '',
@@ -30,6 +30,7 @@ const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   onChangeChangelog: jest.fn(),
   onChangeType: jest.fn(),
   onChangeSubtype: jest.fn(),
+  onChangeLayImpactStatement: jest.fn(),
   getImpactSuggestions: jest.fn().mockResolvedValue([]),
   impact: undefined,
   onChangeImpact: jest.fn(),
@@ -396,6 +397,24 @@ describe('impact and category', () => {
     expect(onChangeCategories).toHaveBeenCalled();
   });
 
+  it('shows validation message when no category is selected', async () => {
+    render(
+      <ResearchOutputFormSharingCard
+        {...defaultProps}
+        showImpactAndCategory={true}
+        categories={[]}
+      />,
+    );
+
+    const categoryInput = screen.getByRole('combobox', { name: /category/i });
+    await userEvent.click(categoryInput);
+    await userEvent.tab();
+
+    expect(
+      await screen.findByText('Please add at least one category.'),
+    ).toBeVisible();
+  });
+
   it('shows validation message when more than two categories are selected', async () => {
     const getCategorySuggestions = jest
       .fn()
@@ -454,17 +473,17 @@ describe('impact and category', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('disables impact and category fields when isCreatingNewVersion is true', () => {
+  it('disables impact and category fields when disableImpactAndCategory is true', () => {
     const loadOptions = jest.fn();
     loadOptions.mockResolvedValue([]);
 
     const { rerender } = render(
       <ResearchOutputFormSharingCard
         {...defaultProps}
+        disableImpactAndCategory={true}
         showImpactAndCategory={true}
         getImpactSuggestions={loadOptions}
         getCategorySuggestions={loadOptions}
-        isCreatingNewVersion={true}
       />,
     );
     expect(screen.getByLabelText(/impact\(required\)/i)).toBeDisabled();
@@ -473,11 +492,11 @@ describe('impact and category', () => {
     rerender(
       <ResearchOutputFormSharingCard
         {...defaultProps}
+        disableImpactAndCategory={false}
         showImpactAndCategory={true}
         getImpactSuggestions={loadOptions}
         getCategorySuggestions={loadOptions}
         isSaving={false}
-        isCreatingNewVersion={false}
       />,
     );
     expect(screen.getByLabelText(/impact\(required\)/i)).toBeEnabled();

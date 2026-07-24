@@ -30,6 +30,14 @@ export type {
   EventAttendanceTeam,
   EventAttendanceTeamType,
 } from './EventAttendance';
+export { default as SourceLists } from './SourceLists';
+export { default as UploadListModal } from './UploadListModal';
+export type {
+  UploadListResult,
+  UploadListSuggestion,
+  UploadListUnmatchedTeam,
+  UploadListSourceFile,
+} from './UploadListModal';
 export { default as EventCard } from './EventCard';
 export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';

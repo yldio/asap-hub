@@ -5,6 +5,13 @@ import { StaticRouter } from 'react-router';
 const meta: Meta<typeof EditEventAttendanceModal> = {
   title: 'Organisms / Events / Edit Attendance Modal',
   component: EditEventAttendanceModal,
+  argTypes: {
+    loadSearchOptions: { control: false },
+    onSelectInterestGroup: { control: false },
+    onUploadList: { control: false },
+    onSave: { control: false },
+    onDismiss: { control: false },
+  },
   decorators: [
     (Story) => (
       <StaticRouter location="/">
@@ -83,6 +90,13 @@ const teams = Array.from({ length: 6 }, (_, index) => ({
   teamType: teamTypes[index % 2],
 }));
 
+// Simulate round-trips so the "+ Add" (upload) and Download loading spinners
+// are visible when interacting with the stories.
+const delay = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
 const commonArgs = {
   interestGroups,
   loadSearchOptions,
@@ -100,14 +114,43 @@ const commonArgs = {
       teamType: 'Resource Team' as const,
     },
   ],
-  onUploadList: async () => [
-    {
-      teamId: 'uploaded-1',
-      teamName: 'Uploaded Team',
-      attended: true,
-      teamType: 'Resource Team' as const,
-    },
-  ],
+  onUploadList: async () => {
+    await delay(1000);
+    return {
+      matched: [
+        {
+          teamId: 'uploaded-1',
+          teamName: 'Aguzzi',
+          attended: true,
+          teamType: 'Discovery Team' as const,
+        },
+        {
+          teamId: 'uploaded-2',
+          teamName: 'Alessi',
+          attended: true,
+          teamType: 'Resource Team' as const,
+        },
+        {
+          teamId: 'uploaded-3',
+          teamName: 'Chen',
+          attended: true,
+          teamType: 'Discovery Team' as const,
+        },
+      ],
+      alreadyInCount: 2,
+      unmatched: [
+        {
+          name: 'Imagimg',
+          suggestion: {
+            teamId: 'sugg-1',
+            teamName: 'Imaging',
+            teamType: 'Discovery Team' as const,
+          },
+        },
+        { name: 'Data Scince' },
+      ],
+    };
+  },
   onSave: () => undefined,
   onDismiss: () => undefined,
 };
@@ -132,6 +175,27 @@ export const NoOptionalSections: Story = {
     onSave: () => undefined,
     onDismiss: () => undefined,
     teams,
+  },
+};
+
+export const PostUpload: Story = {
+  args: {
+    ...commonArgs,
+    teams,
+    sourceLists: [
+      {
+        id: 'file-1',
+        filename: 'attendees-day-1.csv',
+        addedDate: '12/03/2025',
+        onDownload: () => delay(1000),
+      },
+      {
+        id: 'file-2',
+        filename: 'attendees-day-2.xlsx',
+        addedDate: '13/03/2025',
+        onDownload: () => delay(1000),
+      },
+    ],
   },
 };
 

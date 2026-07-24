@@ -1,5 +1,13 @@
-import { EventAttendance } from '@asap-hub/react-components';
+import {
+  EditEventAttendanceModal,
+  EventAttendance,
+} from '@asap-hub/react-components';
+import type {
+  AttendanceSearchOption,
+  EventAttendanceTeam,
+} from '@asap-hub/react-components';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { StaticRouter } from 'react-router';
 
 import { CenterDecorator } from './layout';
@@ -125,6 +133,91 @@ export const EmptyReadOnly: Story = {
     teamsAttended: 0,
     teamsTotal: 0,
     teams: [],
+  },
+};
+
+const editInterestGroups = [
+  { id: 'ig1', name: 'Alpha Synuclein' },
+  { id: 'ig2', name: 'Mitochondria' },
+];
+
+const loadSearchOptions = async (
+  inputValue: string,
+): Promise<AttendanceSearchOption[]> =>
+  [
+    {
+      value: 'searched-1',
+      label: 'Searched Team',
+      optionType: 'team' as const,
+      teamType: 'Discovery Team' as const,
+    },
+    {
+      value: 'searched-group-1',
+      label: 'Searched Group',
+      optionType: 'interestGroup' as const,
+      teams: [
+        { teamId: 'sgt-1', teamName: 'Group Search Team', attended: true },
+      ],
+    },
+  ].filter((option) =>
+    option.label.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+
+const onSelectInterestGroup = async (
+  interestGroupId: string,
+): Promise<EventAttendanceTeam[]> => [
+  {
+    teamId: `${interestGroupId}-team-1`,
+    teamName: `${interestGroupId} Team A`,
+    attended: true,
+    teamType: 'Discovery Team',
+  },
+];
+
+// Composes the read-only card with the edit modal so Save updates the card —
+// open the pencil, change attendance, and Save to see the card refresh.
+export const EditAndSave: Story = {
+  render: () => {
+    const [attendanceTeams, setAttendanceTeams] =
+      useState<EventAttendanceTeam[]>(teams);
+    const [isEditing, setIsEditing] = useState(false);
+
+    return (
+      <>
+        <EventAttendance
+          teamsAttended={attendanceTeams.filter((team) => team.attended).length}
+          teamsTotal={attendanceTeams.length}
+          teams={attendanceTeams}
+          onExport={() => undefined}
+          onEdit={() => setIsEditing(true)}
+        />
+        {isEditing && (
+          <EditEventAttendanceModal
+            teams={attendanceTeams}
+            interestGroups={editInterestGroups}
+            loadSearchOptions={loadSearchOptions}
+            onSelectInterestGroup={onSelectInterestGroup}
+            onUploadList={async () => ({
+              matched: [
+                {
+                  teamId: 'uploaded-1',
+                  teamName: 'Aguzzi',
+                  attended: true,
+                  teamType: 'Discovery Team',
+                },
+              ],
+              alreadyInCount: 0,
+              unmatched: [{ name: 'Data Scince' }],
+            })}
+            onSave={(updated) => {
+              setAttendanceTeams(updated);
+              setIsEditing(false);
+            }}
+            onDismiss={() => setIsEditing(false)}
+          />
+        )}
+      </>
+    );
   },
 };
 

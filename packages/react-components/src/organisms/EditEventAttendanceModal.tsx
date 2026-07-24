@@ -1,6 +1,6 @@
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { components } from 'react-select';
 
 import {
@@ -32,12 +32,17 @@ import {
   tickSmallIcon,
   uploadIcon,
 } from '../icons';
-import { Modal } from '../molecules';
+import { ConfirmableModalFooter, Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { noop } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
 import { iconButtonStyles } from './shared-event-card-styles';
+import SourceLists from './SourceLists';
+import UploadListModal, {
+  UploadListResult,
+  UploadListSourceFile,
+} from './UploadListModal';
 
 export type AttendanceSearchOption = MultiSelectOptionsType &
   (
@@ -56,7 +61,8 @@ type EditEventAttendanceModalProps = {
   onSelectInterestGroup?: (
     interestGroupId: string,
   ) => Promise<EventAttendanceTeam[]>;
-  onUploadList?: (file: File) => Promise<EventAttendanceTeam[]>;
+  onUploadList?: (files: File[]) => Promise<UploadListResult>;
+  sourceLists?: UploadListSourceFile[];
   onSave: (teams: EventAttendanceTeam[]) => void | Promise<void>;
   onDismiss: () => void;
 };
@@ -377,49 +383,6 @@ const deleteButtonStyles = css({
   },
 });
 
-const footerStyles = (isConfirmingCancel: boolean) =>
-  css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: isConfirmingCancel ? 'space-between' : 'flex-end',
-    gap: rem(24),
-    padding: `${rem(48)} ${rem(24)} ${rem(24)}`,
-    [`@media (max-width: ${mobileScreen.max}px)`]: {
-      flexDirection: 'column',
-      alignItems: 'stretch',
-      paddingTop: rem(56),
-    },
-  });
-
-const footerActionsStyles = css({
-  display: 'flex',
-  gap: rem(24),
-  flexShrink: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexDirection: 'column-reverse',
-  },
-});
-
-const footerButtonStyles = css({
-  width: 'fit-content',
-  flexShrink: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    width: '100%',
-  },
-});
-
-const footerButtonTextStyles = css({
-  fontSize: rem(17),
-  fontWeight: 700,
-  lineHeight: rem(24),
-  whiteSpace: 'nowrap',
-});
-
-const discardWarningStyles = css({
-  fontWeight: 'bold',
-  color: neutral1000.rgb,
-});
-
 const searchOptionStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -445,10 +408,14 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   loadSearchOptions,
   onSelectInterestGroup,
   onUploadList,
+  sourceLists = [],
   onSave,
   onDismiss,
 }) => {
   const [rows, setRows] = useState<EventAttendanceTeam[]>(() => [...teams]);
+  const [showUploadList, setShowUploadList] = useState(false);
+  const [sourceFiles, setSourceFiles] =
+    useState<UploadListSourceFile[]>(sourceLists);
   // Each active interest group maps to the team ids it contributed, so toggling
   // a group off can drop only the teams no other group (or manual add) still owns.
   const [addedGroups, setAddedGroups] = useState<
@@ -460,7 +427,6 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const isEditMode = teams.length > 0;
   const title = isEditMode ? 'Edit Attendance' : 'Add Attendance';
@@ -506,6 +472,31 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         groupTeams.map((team) => team.teamId),
       ),
     );
+  };
+
+  const handleUploadAddAttendees = (
+    uploadedTeams: EventAttendanceTeam[],
+    files: File[],
+  ) => {
+    addManualTeams(uploadedTeams);
+    const addedDate = new Date().toLocaleDateString('en-GB');
+    setSourceFiles((current) => [
+      ...current,
+      ...files.map((file, index) => ({
+        id: `${file.name}-${current.length + index}`,
+        filename: file.name,
+        addedDate,
+        onDownload: () => {
+          const url = URL.createObjectURL(file);
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = file.name;
+          anchor.click();
+          URL.revokeObjectURL(url);
+        },
+      })),
+    ]);
+    setShowUploadList(false);
   };
 
   const removeInterestGroup = (groupId: string) => {
@@ -595,6 +586,16 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     );
 
   const handleCancel = () => (isDirty ? setIsCancelling(true) : onDismiss());
+
+  if (showUploadList && onUploadList) {
+    return (
+      <UploadListModal
+        onUploadList={onUploadList}
+        onAddAttendees={handleUploadAddAttendees}
+        onBack={() => setShowUploadList(false)}
+      />
+    );
+  }
 
   return (
     <Modal padding={false} overrideModalStyles={modalStyles}>
@@ -719,26 +720,13 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                 searching one by one.
               </Paragraph>
             </div>
-            <input
-              ref={uploadInputRef}
-              type="file"
-              accept=".csv,.xls,.xlsx"
-              aria-label="Upload a list"
-              hidden
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  void onUploadList(file).then(addTeams).catch(noop);
-                }
-              }}
-            />
             <Button
               noMargin
               overrideStyles={uploadButtonStyles}
-              onClick={() => uploadInputRef.current?.click()}
+              onClick={() => setShowUploadList(true)}
             >
               {uploadIcon}
-              Upload a list
+              Upload a List
             </Button>
           </section>
         )}
@@ -834,71 +822,24 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             </div>
           )}
         </section>
+
+        <SourceLists files={sourceFiles} />
       </div>
 
-      <footer css={footerStyles(isCancelling)}>
-        {isCancelling && (
-          <span css={discardWarningStyles}>
-            You&apos;ll lose all unsaved changes if you cancel now.
-          </span>
-        )}
-        <div css={footerActionsStyles}>
-          {isCancelling ? (
-            <>
-              <div css={footerButtonStyles}>
-                <Button
-                  fullWidth
-                  noMargin
-                  overrideStyles={footerButtonTextStyles}
-                  onClick={() => setIsCancelling(false)}
-                >
-                  Keep Editing
-                </Button>
-              </div>
-              <div css={footerButtonStyles}>
-                <Button
-                  warning
-                  fullWidth
-                  noMargin
-                  overrideStyles={footerButtonTextStyles}
-                  onClick={onDismiss}
-                >
-                  Discard changes
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div css={footerButtonStyles}>
-                <Button
-                  fullWidth
-                  noMargin
-                  enabled={!isSaving}
-                  overrideStyles={footerButtonTextStyles}
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-              </div>
-              <div css={footerButtonStyles}>
-                <Button
-                  primary
-                  fullWidth
-                  noMargin
-                  enabled={saveEnabled}
-                  loading={isSaving}
-                  overrideStyles={footerButtonTextStyles}
-                  onClick={() => {
-                    void handleSave();
-                  }}
-                >
-                  Save
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </footer>
+      <ConfirmableModalFooter
+        isConfirming={isCancelling}
+        confirmationMessage="You'll lose all unsaved changes if you cancel now."
+        onKeepEditing={() => setIsCancelling(false)}
+        onDiscard={onDismiss}
+        onCancel={handleCancel}
+        cancelEnabled={!isSaving}
+        confirmLabel="Save"
+        onConfirm={() => {
+          void handleSave();
+        }}
+        confirmEnabled={saveEnabled}
+        confirmLoading={isSaving}
+      />
     </Modal>
   );
 };

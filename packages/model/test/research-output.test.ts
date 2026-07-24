@@ -100,24 +100,25 @@ describe('convertDecisionToBoolean', () => {
 
 describe('getResearchOutputFlowBehavior', () => {
   test.each`
-    flowId                                    | isAddVersionFlow | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm | publishesOnSave
-    ${'team-create-manual'}                   | ${false}         | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-create-imported-from-manuscript'} | ${false}         | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-edit-draft'}                      | ${false}         | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-edit-published'}                  | ${false}         | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
-    ${'team-add-version'}                     | ${true}          | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'team-add-version-from-manuscript'}     | ${true}          | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'team-duplicate'}                       | ${false}         | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
-    ${'working-group-create'}                 | ${false}         | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'working-group-edit-draft'}             | ${false}         | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'working-group-edit-published'}         | ${false}         | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
-    ${'working-group-add-version'}            | ${true}          | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'working-group-duplicate'}              | ${false}         | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    flowId                                    | isAddVersionFlow | isEditFlow | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm | publishesOnSave
+    ${'team-create-manual'}                   | ${false}         | ${false}   | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-create-imported-from-manuscript'} | ${false}         | ${false}   | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-draft'}                      | ${false}         | ${true}    | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-published'}                  | ${false}         | ${true}    | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'team-add-version'}                     | ${true}          | ${false}   | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-add-version-from-manuscript'}     | ${true}          | ${false}   | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-duplicate'}                       | ${false}         | ${false}   | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    ${'working-group-create'}                 | ${false}         | ${false}   | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-draft'}             | ${false}         | ${true}    | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-published'}         | ${false}         | ${true}    | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'working-group-add-version'}            | ${true}          | ${false}   | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'working-group-duplicate'}              | ${false}         | ${false}   | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
   `(
-    '$flowId is add version flow: $isAddVersionFlow, supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm, publishes on save: $publishesOnSave',
+    '$flowId is add version flow: $isAddVersionFlow, is edit flow: $isEditFlow, supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm, publishes on save: $publishesOnSave',
     ({
       flowId,
       isAddVersionFlow,
+      isEditFlow,
       supportsDrafts,
       requiresAddVersionConfirm,
       requiresPublishConfirm,
@@ -126,6 +127,7 @@ describe('getResearchOutputFlowBehavior', () => {
     }) => {
       expect(getResearchOutputFlowBehavior(flowId)).toEqual({
         isAddVersionFlow,
+        isEditFlow,
         supportsDrafts,
         requiresAddVersionConfirm,
         requiresPublishConfirm,

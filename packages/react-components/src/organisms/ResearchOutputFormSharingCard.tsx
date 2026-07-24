@@ -338,7 +338,7 @@ const ResearchOutputFormSharingCard: React.FC<
                 : 'You can select up to two categories only.'
             }
             title="Category"
-            description="Select up to two options that best describe the scientific category of this manuscript."
+            description="Select up to two options that best describe the scientific category of this output."
             subtitle="(required)"
             enabled={!isSaving && !disableImpactAndCategory}
             placeholder="Start typing..."
@@ -361,7 +361,7 @@ const ResearchOutputFormSharingCard: React.FC<
             getValidationMessage={() => 'Please choose an impact.'}
             title="Impact"
             subtitle="(required)"
-            description="Select the option that best describes the impact of this manuscript on the PD field."
+            description="Select the option that best describes the impact of this output on the PD field."
             options={impactOptions}
             onChange={(e) => {
               const impactOption = impactOptions.find(
@@ -407,7 +407,7 @@ const ResearchOutputFormSharingCard: React.FC<
         <LabeledTextArea
           title="Changelog"
           subtitle="(required)"
-          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript."
+          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the output."
           customValidationMessage={changelogValidationMessage}
           value={changelog ?? ''}
           onChange={(changelogNewValue) => {

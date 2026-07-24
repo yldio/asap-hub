@@ -1,4 +1,8 @@
-import { researchOutputDocumentTypes } from '@asap-hub/model';
+import {
+  RESEARCH_OUTPUT_FLOW_IDS,
+  researchOutputDocumentTypes,
+  ResearchOutputFlowId,
+} from '@asap-hub/model';
 import { render } from '@testing-library/react';
 
 import {
@@ -662,6 +666,54 @@ describe('resolveResearchOutputAvailableActions', () => {
             showImpactAndCategory: false,
           }),
         );
+      },
+    );
+  });
+
+  describe('showChangelogAndVersionHistory', () => {
+    const version = {
+      id: 'v1',
+      title: 'Previous',
+      documentType: 'Article' as const,
+    };
+
+    // Changelog and version history are visible only on edit/add-version flows
+    // AND when the output already has versions. This truth table locks the
+    // expected outcome for every RESEARCH_OUTPUT_FLOW_IDS when versions exist.
+    const whenVersionedExpectations = {
+      'team-create-manual': false,
+      'team-create-imported-from-manuscript': false,
+      'team-edit-draft': true,
+      'team-edit-published': true,
+      'team-add-version': true,
+      'team-add-version-from-manuscript': true,
+      'team-duplicate': false,
+      'working-group-create': false,
+      'working-group-edit-draft': true,
+      'working-group-edit-published': true,
+      'working-group-add-version': true,
+      'working-group-duplicate': false,
+    } as const satisfies Record<ResearchOutputFlowId, boolean>;
+
+    const resolve = (flowId: ResearchOutputFlowId, hasVersions: boolean) =>
+      resolveResearchOutputAvailableActions({
+        flowId,
+        permissions: { canShareResearchOutput: true },
+        documentType: 'Article',
+        versions: hasVersions ? [version] : [],
+      }).showChangelogAndVersionHistory;
+
+    it.each(Object.entries(whenVersionedExpectations))(
+      'flow %s with versions resolves to %s',
+      (flowId, expected) => {
+        expect(resolve(flowId as ResearchOutputFlowId, true)).toBe(expected);
+      },
+    );
+
+    it.each(Object.values(RESEARCH_OUTPUT_FLOW_IDS))(
+      'is false when flow is %s and there are no versions',
+      (flowId) => {
+        expect(resolve(flowId, false)).toBe(false);
       },
     );
   });

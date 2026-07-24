@@ -281,6 +281,8 @@ describe('Changelog validation', () => {
     fireEvent.change(changelogInput, { target: { value: '  ' } });
     fireEvent.blur(changelogInput);
 
+    expect(screen.queryByText(/manuscript/i)).not.toBeInTheDocument();
+
     expect(screen.getByText('Please enter a changelog')).toBeInTheDocument();
   });
 
@@ -336,6 +338,8 @@ describe('impact and category', () => {
 
     const categoryInput = screen.getByRole('combobox', { name: /category/i });
     expect(categoryInput).toBeInTheDocument();
+
+    expect(screen.queryByText(/manuscript/i)).not.toBeInTheDocument();
 
     fireEvent.change(categoryInput, { target: { value: 'Category' } });
 

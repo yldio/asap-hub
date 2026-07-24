@@ -164,6 +164,7 @@ export {
   DashboardUpcomingEvents,
   DeliverablesCard,
   DiscussionModal,
+  EditEventAttendanceModal,
   EditModal,
   EmailPasswordSignin,
   EventAbout,
@@ -389,7 +390,10 @@ export type {
 } from './molecules';
 export type {
   Association,
+  AttendanceSearchOption,
   AuthorOption,
+  EventAttendanceTeam,
+  EventAttendanceTeamType,
   UserCollaborationMetric,
   TeamCollaborationMetric,
   ResearchOutputConfirmModalType,

@@ -1,3 +1,4 @@
+import { TeamType } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -46,7 +47,7 @@ const actionsStyles = css({
   gap: rem(12),
 });
 
-const iconButtonStyles = css({
+export const iconButtonStyles = css({
   flexGrow: 0,
   width: rem(40),
   height: rem(40),
@@ -168,7 +169,7 @@ const emptyStateStyles = css({
   gap: rem(24),
 });
 
-export type EventAttendanceTeamType = 'discovery' | 'resource';
+export type EventAttendanceTeamType = TeamType;
 
 export type EventAttendanceTeam = {
   teamId: string;
@@ -178,11 +179,11 @@ export type EventAttendanceTeam = {
   isTeamInactive?: boolean;
 };
 
-const teamIcon = (teamType?: EventAttendanceTeamType) => {
+export const teamIcon = (teamType?: EventAttendanceTeamType) => {
   switch (teamType) {
-    case 'discovery':
+    case 'Discovery Team':
       return <DiscoveryTeamIcon />;
-    case 'resource':
+    case 'Resource Team':
       return <ResourceTeamIcon />;
     default:
       return <TeamIcon />;

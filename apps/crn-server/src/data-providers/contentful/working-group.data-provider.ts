@@ -1,5 +1,6 @@
 import {
   FetchWorkingGroupOptions,
+  getLatestUserAward,
   WorkingGroupDataObject,
   WorkingGroupDeliverable,
   WorkingGroupLeader,
@@ -30,6 +31,7 @@ import { WorkingGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   mapDeliverables,
+  parseAwardsCollection,
 } from '../transformers';
 import logger from '../../utils/logger';
 import { parseTeamsCollection } from './user.data-provider';
@@ -214,21 +216,28 @@ export const parseContentfulGraphQlWorkingGroup = (
     }))
     .map(mapDeliverables(!!complete));
 
-  const getUserFromMemberCollection = (member: MemberItem) => ({
-    id: member.user?.sys.id || '',
-    firstName: member.user?.firstName || '',
-    lastName: member.user?.lastName || '',
-    displayName: parseUserDisplayName(
-      member.user?.firstName || '',
-      member.user?.lastName || '',
-      undefined,
-      member.user?.nickname || '',
-    ),
-    alumniSinceDate: member.user?.alumniSinceDate,
-    email: member.user?.email || '',
-    avatarUrl: member.user?.avatar?.url || undefined,
-    teams: parseTeamsCollection(member.user?.teamsCollection),
-  });
+  const getUserFromMemberCollection = (member: MemberItem) => {
+    const memberAwards = cleanArray(member.user?.teamsCollection?.items).map(
+      (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+    );
+
+    return {
+      id: member.user?.sys.id || '',
+      firstName: member.user?.firstName || '',
+      lastName: member.user?.lastName || '',
+      displayName: parseUserDisplayName(
+        member.user?.firstName || '',
+        member.user?.lastName || '',
+        undefined,
+        member.user?.nickname || '',
+      ),
+      alumniSinceDate: member.user?.alumniSinceDate,
+      email: member.user?.email || '',
+      avatarUrl: member.user?.avatar?.url || undefined,
+      teams: parseTeamsCollection(member.user?.teamsCollection, false),
+      latestAward: getLatestUserAward(memberAwards),
+    };
+  };
 
   const leaders = (membersCollection?.items || [])
     .map((member) => {

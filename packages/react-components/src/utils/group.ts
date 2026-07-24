@@ -3,6 +3,7 @@ import {
   ProjectMemberTeam,
   TeamMember,
   TeamRole,
+  UserAward,
   UserTeam,
 } from '@asap-hub/model';
 
@@ -127,6 +128,7 @@ export type GroupedProjectMember = {
   href?: string;
   teams?: ProjectMemberTeam[];
   roles: string[];
+  latestAward?: UserAward;
 };
 
 export const groupProjectMembersByUserId = (
@@ -153,6 +155,7 @@ export const groupProjectMembersByUserId = (
         href: member.href,
         teams: member.teams ? [...member.teams] : undefined,
         roles: member.role ? [member.role] : [],
+        latestAward: member.latestAward,
       });
     }
   }

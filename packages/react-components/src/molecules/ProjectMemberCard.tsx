@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
-import { Avatar, Link, OverflowBadge } from '../atoms';
+import { Link, OverflowBadge } from '../atoms';
 import { rem } from '../pixels';
 import { fern } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
+import UserAvatar from './UserAvatar';
 
 const memberCardStyles = css({
   display: 'flex',
@@ -58,10 +59,15 @@ const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({
   return (
     <div css={memberCardStyles}>
       <div css={avatarStyles}>
-        <Avatar
+        <UserAvatar
           imageUrl={member.avatarUrl}
-          firstName={member.firstName || ''}
-          lastName={member.lastName || ''}
+          firstName={member.firstName}
+          lastName={member.lastName}
+          badgeUrl={member.latestAward?.smallIconUrl}
+          badgeAlt={member.latestAward?.name}
+          badgeSize={18}
+          avatarSize={48}
+          overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
         />
       </div>
       <div css={memberInfoStyles}>

@@ -1777,6 +1777,58 @@ describe('parseProjectUserMember', () => {
     });
   });
 
+  it('parses the latest award received by a user member', () => {
+    const membership = {
+      sys: { id: 'membership-users-1' },
+      role: 'Contributor',
+      projectMember: {
+        __typename: 'Users',
+        sys: { id: 'user-1' },
+        firstName: 'Taylor',
+        lastName: 'Swift',
+        nickname: 'T',
+        email: 'taylor@example.com',
+        avatar: { url: 'https://example.com/avatar.png' },
+        alumniSinceDate: '2024-01-01',
+        teamsCollection: {
+          items: [
+            {
+              awardsCollection: {
+                items: [
+                  {
+                    date: '2025-09-11',
+                    awardType: {
+                      name: 'Open Science Champion',
+                      icon: {
+                        url: 'https://example.com/avatar.jpg',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    } as unknown as ProjectMembershipItem;
+
+    expect(parseProjectUserMember(membership)).toEqual({
+      id: 'user-1',
+      displayName: 'Taylor (T) Swift',
+      firstName: 'Taylor',
+      lastName: 'Swift',
+      avatarUrl: 'https://example.com/avatar.png',
+      role: 'Contributor',
+      email: 'taylor@example.com',
+      alumniSinceDate: '2024-01-01',
+      latestAward: {
+        name: 'Open Science Champion',
+        date: '2025-09-11',
+        iconUrl: 'https://example.com/avatar.jpg',
+      },
+    });
+  });
+
   it('returns placeholder when membership is not a user', () => {
     const membership = {
       sys: { id: 'membership-users-2' },

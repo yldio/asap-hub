@@ -43,11 +43,12 @@ import {
   TeamUpdateDataObject,
   isPIRole,
   teamStatusRank,
+  getLatestUserAward,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
-import { sortMembers } from '../transformers';
+import { parseAwardsCollection, sortMembers } from '../transformers';
 import { TeamDataProvider } from '../types/teams.data-provider.types';
 import { parseResearchTags } from './research-tag.data-provider';
 import { getCleanTools } from '../../utils/team';
@@ -565,6 +566,7 @@ export const parseContentfulGraphQlTeam = (
         avatar,
         labsCollection,
         alumniSinceDate,
+        teamsCollection,
       } = membership.linkedFrom?.usersCollection?.items[0] || {};
 
       const labs: LabResponse[] = (labsCollection?.items || []).reduce(
@@ -585,6 +587,10 @@ export const parseContentfulGraphQlTeam = (
         [],
       );
 
+      const memberAwards = cleanArray(teamsCollection?.items).map(
+        (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+      );
+
       return [
         ...userList,
         {
@@ -603,6 +609,7 @@ export const parseContentfulGraphQlTeam = (
             nickname ?? '',
           ),
           labs,
+          latestAward: getLatestUserAward(memberAwards),
         },
       ];
     },

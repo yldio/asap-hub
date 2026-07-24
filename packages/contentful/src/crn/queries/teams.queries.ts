@@ -84,6 +84,21 @@ export const FETCH_TEAM_BY_ID = gql`
                       }
                     }
                   }
+                  teamsCollection(limit: 10) {
+                    items {
+                      awardsCollection(limit: 1, order: [date_DESC]) {
+                        items {
+                          date
+                          awardType {
+                            name
+                            smallIcon {
+                              url
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }

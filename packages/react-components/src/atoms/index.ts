@@ -11,6 +11,8 @@ export { default as Divider } from './Divider';
 export { default as Dropdown } from './Dropdown';
 export { editorRef } from './EditorRefPluginWrapper';
 export { default as Ellipsis } from './Ellipsis';
+export { default as GradientProgressBar } from './GradientProgressBar';
+export { default as GradientProgressWheel } from './GradientProgressWheel';
 export { default as Headline2 } from './Headline2';
 export { default as Headline3 } from './Headline3';
 export { default as Headline4 } from './Headline4';

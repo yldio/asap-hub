@@ -37807,12 +37807,12 @@ export type FetchTeamsQuery = {
               teamMembershipCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<TeamMembership, 'role'> & {
+                    Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
                       linkedFrom?: Maybe<{
                         usersCollection?: Maybe<{
                           items: Array<
                             Maybe<
-                              Pick<Users, 'onboarded'> & {
+                              Pick<Users, 'onboarded' | 'alumniSinceDate'> & {
                                 sys: Pick<Sys, 'id'>;
                                 labsCollection?: Maybe<{
                                   items: Array<
@@ -70802,6 +70802,13 @@ export const FetchTeamsDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'linkedFrom',
                                           },
                                           selectionSet: {
@@ -70863,6 +70870,14 @@ export const FetchTeamsDocument = {
                                                               kind: 'Name',
                                                               value:
                                                                 'onboarded',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'alumniSinceDate',
                                                             },
                                                           },
                                                           {

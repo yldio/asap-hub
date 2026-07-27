@@ -412,7 +412,7 @@ export const getContentfulGraphqlTeamMembers = () => ({
   nickname: 'Tim',
   lastName: 'Hardy',
   avatar: null,
-  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  alumniSinceDate: null,
   onboarded: true,
 });
 
@@ -569,7 +569,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   members: [
     {
       id: 'user-id-1',
-      alumniSinceDate: '2020-09-23T20:45:22.000Z',
+      alumniSinceDate: undefined,
       email: 'H@rdy.io',
       firstName: 'Tom',
       lastName: 'Hardy',

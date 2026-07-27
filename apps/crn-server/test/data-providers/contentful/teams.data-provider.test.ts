@@ -627,7 +627,12 @@ describe('Teams data provider', () => {
                   linkedFrom: {
                     usersCollection: {
                       total: 1,
-                      items: [getContentfulGraphqlTeamMembers()],
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          alumniSinceDate: null,
+                        },
+                      ],
                     },
                   },
                 },
@@ -664,7 +669,13 @@ describe('Teams data provider', () => {
                   linkedFrom: {
                     usersCollection: {
                       total: 1,
-                      items: [getContentfulGraphqlTeamMembers()],
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'onboarded-user-1' },
+                          alumniSinceDate: null,
+                        },
+                      ],
                     },
                   },
                 },
@@ -689,7 +700,13 @@ describe('Teams data provider', () => {
                   linkedFrom: {
                     usersCollection: {
                       total: 1,
-                      items: [getContentfulGraphqlTeamMembers()],
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'onboarded-user-2' },
+                          alumniSinceDate: null,
+                        },
+                      ],
                     },
                   },
                 },
@@ -709,6 +726,140 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           items: [expect.objectContaining({ memberCount: 2 })],
+          total: 1,
+        });
+      });
+
+      test('should not count past members (alumni or inactive) towards memberCount', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 3,
+              items: [
+                {
+                  role: 'Collaborating PI',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'active-user' },
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'alumni-user' },
+                          alumniSinceDate: '2020-09-23T20:45:22.000Z',
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: '2021-01-01T00:00:00.000Z',
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'inactive-user' },
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ memberCount: 1 })],
+          total: 1,
+        });
+      });
+
+      test('should count a user with multiple memberships only once', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 2,
+              items: [
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'duplicate-user' },
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'duplicate-user' },
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ memberCount: 1 })],
           total: 1,
         });
       });

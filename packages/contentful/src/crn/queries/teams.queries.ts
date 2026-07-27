@@ -132,6 +132,7 @@ export const FETCH_TEAMS = gql`
           teamMembershipCollection(limit: 100) {
             items {
               role
+              inactiveSinceDate
               linkedFrom {
                 usersCollection(limit: 1) {
                   items {
@@ -139,6 +140,7 @@ export const FETCH_TEAMS = gql`
                       id
                     }
                     onboarded
+                    alumniSinceDate
                     labsCollection(limit: 5) {
                       items {
                         sys {

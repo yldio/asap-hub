@@ -401,7 +401,7 @@ describe('the contact info modal', () => {
       </MemoryRouter>,
     );
 
-    expect(await findByLabelText(/e-?mail/i)).toHaveValue(
+    expect(await findByLabelText(/contact e-?mail/i)).toHaveValue(
       'contact@example.com',
     );
   });
@@ -434,7 +434,7 @@ describe('the contact info modal', () => {
       </MemoryRouter>,
     );
 
-    await userEvent.type(await findByLabelText(/e-?mail/i), 'm');
+    await userEvent.type(await findByLabelText(/contact e-?mail/i), 'm');
     expect(getByDisplayValue('contact@example.comm')).toBeVisible();
 
     await userEvent.click(await findByText(/save/i));

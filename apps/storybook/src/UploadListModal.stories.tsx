@@ -21,14 +21,11 @@ const meta: Meta<typeof UploadListModal> = {
 
 type Story = StoryObj<typeof UploadListModal>;
 
-// Simulate a parse round-trip so the "+ Add" loading spinner is visible.
 const delay = (ms: number) =>
   new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
   });
 
-// Click "Add" and choose any .csv/.xlsx file to move from the empty step to the
-// populated review step, then expand each section to inspect the teams.
 const fullResult: UploadListResult = {
   matched: [
     {
@@ -65,11 +62,14 @@ const fullResult: UploadListResult = {
 };
 
 const commonArgs = {
+  onUploadList: async () => fullResult,
   onAddAttendees: () => undefined,
   onBack: () => undefined,
-  onDismiss: () => undefined,
 };
 
+const seedFiles = [new File([], 'attendees.csv')];
+
+// Starts on the empty step; the parse mock delays ~1s so the Add spinner shows.
 export const Default: Story = {
   args: {
     ...commonArgs,
@@ -80,36 +80,26 @@ export const Default: Story = {
   },
 };
 
+// Seeds the review step directly, expanded, with no upload needed.
 export const AllMatched: Story = {
   args: {
     ...commonArgs,
-    onUploadList: async () => {
-      await delay(1000);
-      return { ...fullResult, unmatched: [] };
-    },
+    initialFiles: seedFiles,
+    initialResult: { ...fullResult, unmatched: [] },
+    initialSectionsOpen: true,
   },
 };
 
 export const NoMatches: Story = {
   args: {
     ...commonArgs,
-    onUploadList: async () => {
-      await delay(1000);
-      return {
-        matched: [],
-        alreadyInCount: 0,
-        unmatched: fullResult.unmatched,
-      };
+    initialFiles: seedFiles,
+    initialResult: {
+      matched: [],
+      alreadyInCount: 0,
+      unmatched: fullResult.unmatched,
     },
-  },
-};
-
-// Choose any file to trigger the "file too large" validation copy.
-export const FileSizeError: Story = {
-  args: {
-    ...commonArgs,
-    maxFileSizeMb: 0,
-    onUploadList: async () => fullResult,
+    initialSectionsOpen: true,
   },
 };
 

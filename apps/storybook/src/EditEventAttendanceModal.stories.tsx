@@ -90,8 +90,7 @@ const teams = Array.from({ length: 6 }, (_, index) => ({
   teamType: teamTypes[index % 2],
 }));
 
-// Simulate round-trips so the "+ Add" (upload) and Download loading spinners
-// are visible when interacting with the stories.
+// Simulate a round-trip so the Download loading spinner is visible.
 const delay = (ms: number) =>
   new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
@@ -114,43 +113,13 @@ const commonArgs = {
       teamType: 'Resource Team' as const,
     },
   ],
-  onUploadList: async () => {
-    await delay(1000);
-    return {
-      matched: [
-        {
-          teamId: 'uploaded-1',
-          teamName: 'Aguzzi',
-          attended: true,
-          teamType: 'Discovery Team' as const,
-        },
-        {
-          teamId: 'uploaded-2',
-          teamName: 'Alessi',
-          attended: true,
-          teamType: 'Resource Team' as const,
-        },
-        {
-          teamId: 'uploaded-3',
-          teamName: 'Chen',
-          attended: true,
-          teamType: 'Discovery Team' as const,
-        },
-      ],
-      alreadyInCount: 2,
-      unmatched: [
-        {
-          name: 'Imagimg',
-          suggestion: {
-            teamId: 'sugg-1',
-            teamName: 'Imaging',
-            teamType: 'Discovery Team' as const,
-          },
-        },
-        { name: 'Data Scince' },
-      ],
-    };
-  },
+  // Present only so the "Upload a list" button renders; the full upload flow is
+  // demonstrated in the Attendance > Edit and Save story, not here.
+  onUploadList: async () => ({
+    matched: [],
+    alreadyInCount: 0,
+    unmatched: [],
+  }),
   onSave: () => undefined,
   onDismiss: () => undefined,
 };
@@ -165,15 +134,6 @@ export const AddAttendance: Story = {
 export const EditAttendance: Story = {
   args: {
     ...commonArgs,
-    teams,
-  },
-};
-
-export const NoOptionalSections: Story = {
-  args: {
-    loadSearchOptions,
-    onSave: () => undefined,
-    onDismiss: () => undefined,
     teams,
   },
 };

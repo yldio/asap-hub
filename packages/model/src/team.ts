@@ -83,6 +83,10 @@ export interface TeamMember {
   latestAward?: UserAward;
 }
 
+export const isActiveTeamMember = (
+  member: Pick<TeamMember, 'alumniSinceDate' | 'inactiveSinceDate'>,
+): boolean => !member.alumniSinceDate && !member.inactiveSinceDate;
+
 export type TeamManuscript = Pick<
   ManuscriptResponse,
   | 'id'

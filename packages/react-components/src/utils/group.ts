@@ -1,4 +1,5 @@
 import {
+  isActiveTeamMember,
   ProjectMember,
   ProjectMemberTeam,
   TeamMember,
@@ -6,6 +7,8 @@ import {
   UserAward,
   UserTeam,
 } from '@asap-hub/model';
+
+import { splitListBy } from './common';
 
 const mergeInactiveSinceDate = (
   existing: string | undefined,
@@ -115,6 +118,22 @@ export const groupTeamMembersByUserId = (
   }
 
   return Array.from(memberMap.values());
+};
+
+export const getTeamMembersByStatus = (
+  members: ReadonlyArray<TeamMember>,
+  isTeamInactive: boolean,
+): { activeMembers: GroupedTeamMember[]; pastMembers: GroupedTeamMember[] } => {
+  const [rawPast, rawActive] = splitListBy(
+    [...members],
+    (member) => isTeamInactive || !isActiveTeamMember(member),
+  );
+  const active = groupTeamMembersByUserId(rawActive);
+  const activeIdSet = new Set(active.map((m) => m.id));
+  const past = groupTeamMembersByUserId(rawPast).filter(
+    (m) => !activeIdSet.has(m.id),
+  );
+  return { activeMembers: active, pastMembers: past };
 };
 
 export type GroupedProjectMember = {

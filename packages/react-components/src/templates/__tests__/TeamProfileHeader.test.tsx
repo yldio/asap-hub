@@ -105,6 +105,28 @@ it('renders members with multiple roles only once', () => {
   expect(screen.getAllByRole('img')).toHaveLength(1);
 });
 
+it('does not render past members (alumni or inactive)', () => {
+  const member = {
+    firstName: 'Unknown',
+    lastName: 'Unknown',
+    displayName: 'Unknown',
+    email: 'foo@bar.com',
+    avatarUrl: 'https://example.com',
+    role: 'Collaborating PI' as const,
+  };
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      members={[
+        { ...member, id: 'active' },
+        { ...member, id: 'alumni', alumniSinceDate: '2024-01-01' },
+        { ...member, id: 'inactive', inactiveSinceDate: '2024-01-01' },
+      ]}
+    />,
+  );
+  expect(screen.getAllByRole('img')).toHaveLength(1);
+});
+
 it('renders no more than 5 members', () => {
   render(
     <TeamProfileHeader

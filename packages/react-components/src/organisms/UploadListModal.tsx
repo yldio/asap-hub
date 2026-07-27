@@ -498,7 +498,6 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     setIsSaving(true);
     try {
       await onAddAttendees(matchedTeams, files);
-    } catch {
     } finally {
       setIsSaving(false);
     }

@@ -19,6 +19,7 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
   flowId: 'team-create-manual',
   availableActions: {
     disableImpactAndCategory: false,
+    disableDateMadePublic: false,
     canSaveDraft: true,
     showImpactAndCategory: true,
     showChangelogAndVersionHistory: false,

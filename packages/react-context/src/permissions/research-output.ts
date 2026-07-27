@@ -41,6 +41,7 @@ export type ResearchOutputDetailActionAvailability = {
 
 export type ResearchOutputAvailableActions = {
   disableImpactAndCategory: boolean;
+  disableDateMadePublic: boolean;
   canSaveDraft: boolean;
   showImpactAndCategory: boolean;
   showChangelogAndVersionHistory: boolean;
@@ -56,13 +57,19 @@ export const resolveResearchOutputAvailableActions = ({
   flowId: ResearchOutputFlowId;
   permissions: ResearchOutputPermissions;
   documentType: ResearchOutputDocumentType;
-  researchOutputData?: Pick<ResearchOutputResponse, 'versions'>;
+  researchOutputData?: Pick<
+    ResearchOutputResponse,
+    'versions' | 'publishDate' | 'id'
+  >;
   versions?: readonly ResearchOutputVersion[];
 }): ResearchOutputAvailableActions => {
   const behavior = getResearchOutputFlowBehavior(flowId);
 
   return {
     disableImpactAndCategory: behavior.isAddVersionFlow,
+    disableDateMadePublic:
+      !!researchOutputData?.publishDate &&
+      (behavior.isImportedFromManuscript || !!researchOutputData?.id),
     canSaveDraft:
       behavior.supportsDrafts && !!permissions.canShareResearchOutput,
     showImpactAndCategory: documentType === 'Article',

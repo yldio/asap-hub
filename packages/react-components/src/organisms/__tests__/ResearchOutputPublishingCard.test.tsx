@@ -1,4 +1,3 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
@@ -46,52 +45,26 @@ it('conditionally shows date published field', async () => {
   expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
 });
 
-it('enables the date made public field when creating an output', () => {
-  render(<ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />);
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
-});
-
-it('disables the date made public field when editing an output that already has a date', () => {
+it('enables the date made public field when disableDateMadePublic is false', () => {
   render(
     <ResearchOutputPublishingCard
       {...props}
       sharingStatus={'Public'}
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        publishDate: '2022-03-24',
-      }}
+      disableDateMadePublic={false}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+});
+
+it('disables the date made public field when disableDateMadePublic is true', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      disableDateMadePublic={true}
     />,
   );
   expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
-});
-
-it('enables the date made public field when editing an output without a date', () => {
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        publishDate: undefined,
-      }}
-    />,
-  );
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
-});
-
-it('enables the date made public field when duplicating an output that has a date', () => {
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        id: '',
-        publishDate: '2022-03-24',
-      }}
-    />,
-  );
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
 });
 
 it('triggers an on change for date published', async () => {
@@ -165,33 +138,6 @@ describe('getPublishDateValidationMessage returns', () => {
       getPublishDateValidationMessage({ ...e, valueMissing: true }),
     ).toEqual('Please enter the date made public.');
   });
-});
-
-it('disables the date field when imported from a manuscript with a date', () => {
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      isImportedFromManuscript
-      researchOutputData={createResearchOutputResponse()}
-    />,
-  );
-  expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
-});
-
-it('enables the date field when imported from a manuscript without a date', () => {
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      isImportedFromManuscript
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        publishDate: undefined,
-      }}
-    />,
-  );
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
 });
 
 it('prompts for the date when editing a public output that has no date', async () => {

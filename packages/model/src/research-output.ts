@@ -620,6 +620,10 @@ const isAddVersionFlow = (flow: ResearchOutputFlowDescriptor): boolean =>
 const isEditFlow = (flow: ResearchOutputFlowDescriptor): boolean =>
   flow.action === 'edit';
 
+const isImportedFromManuscript = (
+  flow: ResearchOutputFlowDescriptor,
+): boolean => flow.origin === 'manuscript';
+
 const supportsDrafts = (flow: ResearchOutputFlowDescriptor): boolean =>
   flow.origin !== 'manuscript' &&
   flow.action !== 'add-version' &&
@@ -642,6 +646,7 @@ const publishesOnSave = (flow: ResearchOutputFlowDescriptor): boolean =>
 export type ResearchOutputFlowBehavior = {
   isAddVersionFlow: boolean;
   isEditFlow: boolean;
+  isImportedFromManuscript: boolean;
   supportsDrafts: boolean;
   requiresAddVersionConfirm: boolean;
   requiresPublishConfirm: boolean;
@@ -656,6 +661,7 @@ export const getResearchOutputFlowBehavior = (
   return {
     isAddVersionFlow: isAddVersionFlow(flow),
     isEditFlow: isEditFlow(flow),
+    isImportedFromManuscript: isImportedFromManuscript(flow),
     supportsDrafts: supportsDrafts(flow),
     requiresAddVersionConfirm: requiresAddVersionConfirm(flow),
     requiresPublishConfirm: requiresPublishConfirm(flow),

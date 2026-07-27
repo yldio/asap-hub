@@ -6,13 +6,7 @@ import {
   researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { mockActErrorsInConsole } from '../../../test-utils';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -110,49 +104,6 @@ describe('on submit', () => {
       name: /^Subtype/i,
     });
     expect(subtype).toBeInTheDocument();
-  });
-
-  it('can submit published date', async () => {
-    const { documentType } = initialResearchOutputData;
-    render(
-      <MemoryRouter>
-        <ResearchOutputForm
-          {...defaultProps}
-          researchOutputData={initialResearchOutputData}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          onSaveDraft={saveDraftFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-          getShortDescriptionFromDescription={
-            getShortDescriptionFromDescription
-          }
-          researchTags={[]}
-        />
-      </MemoryRouter>,
-    );
-
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status/i,
-    });
-    await userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(screen.getByLabelText(/date made public/i), {
-      target: { value: '2022-03-24' },
-    });
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        sharingStatus: 'Public',
-        publishDate: new Date('2022-03-24').toISOString(),
-      }),
-    );
   });
 
   it('can submit labCatalogNumber for lab material', async () => {

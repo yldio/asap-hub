@@ -188,11 +188,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
     // auto-created preprint that turns the import flow into add-version
     hasResearchOutputId: !!(updatedOutput?.id || researchOutputData?.id),
   });
-  const availableActions = resolveResearchOutputAvailableActions({
-    flowId,
-    permissions,
-    documentType,
-  });
 
   const getShortDescriptionFromDescription = useGeneratedContent();
   const researchSuggestions = researchTags
@@ -228,6 +223,14 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
       },
     ]);
   }
+
+  const availableActions = resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
+    documentType,
+    researchOutputData: updatedOutput,
+    versions,
+  });
 
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     !isManuscriptVersion &&
@@ -351,7 +354,7 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
               documentType={documentType}
               workingGroupAssociation={false}
             />
-            {versionAction && versions.length > 0 && (
+            {availableActions.showChangelogAndVersionHistory && (
               <OutputVersions
                 app="crn"
                 versions={versions}
@@ -365,10 +368,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
                 />
               )}
             <ResearchOutputForm
-              displayChangelog={Boolean(
-                versionAction === 'create' ||
-                  (updatedOutput?.versions || []).length > 0,
-              )}
               versionAction={versionAction}
               tagSuggestions={researchSuggestions}
               documentType={documentType}

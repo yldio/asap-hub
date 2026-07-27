@@ -877,6 +877,44 @@ it('hides changelog input when editing a research output with no version history
   ).not.toBeInTheDocument();
 });
 
+it('displays the version history when editing a versioned research output', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: {
+      ...baseResearchOutput,
+      versions: [
+        {
+          documentType: 'Article',
+          title: 'Previous version',
+          id: '1',
+        },
+      ],
+    },
+    versionAction: 'edit',
+  });
+
+  expect(
+    screen.getByRole('heading', { name: /version history/i }),
+  ).toBeVisible();
+});
+
+it('hides the version history when editing a research output with no versions', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: {
+      ...baseResearchOutput,
+      versions: [],
+    },
+    versionAction: 'edit',
+  });
+
+  expect(
+    screen.queryByRole('heading', { name: /version history/i }),
+  ).not.toBeInTheDocument();
+});
+
 describe('manuscript outputs flow', () => {
   const manuscriptImportLabelText = 'Import from compliance';
 

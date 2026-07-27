@@ -191,11 +191,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     // import into an add-version flow.
     hasResearchOutputId: !!(updatedOutput?.id || researchOutputData?.id),
   });
-  const availableActions = resolveResearchOutputAvailableActions({
-    flowId,
-    permissions,
-    documentType,
-  });
 
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
@@ -231,6 +226,13 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     ]);
   }
 
+  const availableActions = resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
+    documentType,
+    researchOutputData: updatedOutput,
+    versions,
+  });
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     !isManuscriptVersion &&
       !isDuplicate &&
@@ -353,7 +355,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               documentType={documentType}
               workingGroupAssociation={false}
             />
-            {versionAction && versions.length > 0 && (
+            {availableActions.showChangelogAndVersionHistory && (
               <OutputVersions
                 app="crn"
                 versions={versions}
@@ -367,10 +369,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 />
               )}
             <ResearchOutputForm
-              displayChangelog={Boolean(
-                versionAction === 'create' ||
-                  (updatedOutput?.versions || []).length > 0,
-              )}
               versionAction={versionAction}
               tagSuggestions={researchSuggestions}
               documentType={documentType}

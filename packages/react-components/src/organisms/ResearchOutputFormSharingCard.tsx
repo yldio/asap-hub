@@ -33,9 +33,11 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'changelog'
   | 'subtype'
 > &
-  Pick<ResearchOutputAvailableActions, 'showImpactAndCategory'> & {
+  Pick<
+    ResearchOutputAvailableActions,
+    'showImpactAndCategory' | 'disableImpactAndCategory'
+  > & {
     isFormSubmitted: boolean;
-    isCreatingNewVersion: boolean;
     getImpactSuggestions: (
       searchQuery: string,
     ) => Promise<{ label: string; value: string }[]>;
@@ -52,14 +54,14 @@ type ResearchOutputFormSharingCardProps = Pick<
     >;
     displayChangelog?: boolean;
     type?: ResearchOutputType | '';
-    onChangeLink?: (newValue: string) => void;
-    onChangeTitle?: (newValue: string) => void;
-    onChangeDescription?: (newValue: string) => void;
-    onChangeShortDescription?: (newValue: string) => void;
-    onChangeLayImpactStatement?: (newValue: string) => void;
-    onChangeChangelog?: (newValue: string) => void;
-    onChangeType?: (newValue: ResearchOutputType | '') => void;
-    onChangeSubtype?: (newValue: string | '') => void;
+    onChangeLink: (newValue: string) => void;
+    onChangeTitle: (newValue: string) => void;
+    onChangeDescription: (newValue: string) => void;
+    onChangeShortDescription: (newValue: string) => void;
+    onChangeLayImpactStatement: (newValue: string) => void;
+    onChangeChangelog: (newValue: string) => void;
+    onChangeType: (newValue: ResearchOutputType | '') => void;
+    onChangeSubtype: (newValue: string | '') => void;
     isSaving: boolean;
     researchTags: ResearchTagResponse[];
     serverValidationErrors?: ValidationErrorResponse['data'];
@@ -77,7 +79,7 @@ const ResearchOutputFormSharingCard: React.FC<
 > = ({
   showImpactAndCategory,
   isFormSubmitted,
-  isCreatingNewVersion,
+  disableImpactAndCategory,
   getImpactSuggestions,
   impact,
   layImpactStatement,
@@ -101,14 +103,14 @@ const ResearchOutputFormSharingCard: React.FC<
   urlRequired,
   getShortDescriptionFromDescription,
   clearServerValidationError = noop,
-  onChangeDescription = noop,
-  onChangeShortDescription = noop,
-  onChangeChangelog = noop,
-  onChangeLink = noop,
-  onChangeTitle = noop,
-  onChangeType = noop,
-  onChangeSubtype = noop,
-  onChangeLayImpactStatement = noop,
+  onChangeDescription,
+  onChangeShortDescription,
+  onChangeChangelog,
+  onChangeLink,
+  onChangeTitle,
+  onChangeType,
+  onChangeSubtype,
+  onChangeLayImpactStatement,
 }) => {
   const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
   const [titleValidationMessage, setTitleValidationMessage] =
@@ -336,9 +338,9 @@ const ResearchOutputFormSharingCard: React.FC<
                 : 'You can select up to two categories only.'
             }
             title="Category"
-            description="Select up to two options that best describe the scientific category of this manuscript."
+            description="Select up to two options that best describe the scientific category of this output."
             subtitle="(required)"
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             placeholder="Start typing..."
             loadOptions={getCategorySuggestions}
             onChange={(newValues) => {
@@ -359,7 +361,7 @@ const ResearchOutputFormSharingCard: React.FC<
             getValidationMessage={() => 'Please choose an impact.'}
             title="Impact"
             subtitle="(required)"
-            description="Select the option that best describes the impact of this manuscript on the PD field."
+            description="Select the option that best describes the impact of this output on the PD field."
             options={impactOptions}
             onChange={(e) => {
               const impactOption = impactOptions.find(
@@ -373,7 +375,7 @@ const ResearchOutputFormSharingCard: React.FC<
             onBlur={validateImpact}
             customValidationMessage={impactValidationMessage}
             value={impact?.value ?? ''}
-            enabled={!isSaving && !isCreatingNewVersion}
+            enabled={!isSaving && !disableImpactAndCategory}
             noOptionsMessage={(option) =>
               `Sorry, no impacts match ${option.inputValue}`
             }
@@ -405,7 +407,7 @@ const ResearchOutputFormSharingCard: React.FC<
         <LabeledTextArea
           title="Changelog"
           subtitle="(required)"
-          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript."
+          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the output."
           customValidationMessage={changelogValidationMessage}
           value={changelog ?? ''}
           onChange={(changelogNewValue) => {

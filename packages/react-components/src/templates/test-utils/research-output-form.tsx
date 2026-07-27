@@ -34,14 +34,15 @@ const LocationCapture = () => {
 };
 
 export const defaultAvailableActions: ResearchOutputAvailableActions = {
+  disableImpactAndCategory: false,
   canSaveDraft: true,
   showImpactAndCategory: false,
+  showChangelogAndVersionHistory: false,
 };
 
 export const getDefaultProps = (): ComponentProps<
   typeof ResearchOutputForm
 > => ({
-  displayChangelog: false,
   onSave: jest.fn(),
   onSaveDraft: jest.fn(),
   published: false,

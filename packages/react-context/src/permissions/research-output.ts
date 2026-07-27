@@ -2,6 +2,8 @@ import {
   getResearchOutputFlowBehavior,
   ResearchOutputDocumentType,
   ResearchOutputFlowId,
+  ResearchOutputResponse,
+  ResearchOutputVersion,
 } from '@asap-hub/model';
 import { createContext, useContext } from 'react';
 
@@ -38,23 +40,34 @@ export type ResearchOutputDetailActionAvailability = {
 };
 
 export type ResearchOutputAvailableActions = {
+  disableImpactAndCategory: boolean;
   canSaveDraft: boolean;
   showImpactAndCategory: boolean;
+  showChangelogAndVersionHistory: boolean;
 };
 
 export const resolveResearchOutputAvailableActions = ({
   flowId,
   permissions,
   documentType,
+  researchOutputData,
+  versions = researchOutputData?.versions ?? [],
 }: {
   flowId: ResearchOutputFlowId;
   permissions: ResearchOutputPermissions;
   documentType: ResearchOutputDocumentType;
+  researchOutputData?: Pick<ResearchOutputResponse, 'versions'>;
+  versions?: readonly ResearchOutputVersion[];
 }): ResearchOutputAvailableActions => {
-  const { supportsDrafts } = getResearchOutputFlowBehavior(flowId);
+  const behavior = getResearchOutputFlowBehavior(flowId);
+
   return {
-    canSaveDraft: supportsDrafts && !!permissions.canShareResearchOutput,
+    disableImpactAndCategory: behavior.isAddVersionFlow,
+    canSaveDraft:
+      behavior.supportsDrafts && !!permissions.canShareResearchOutput,
     showImpactAndCategory: documentType === 'Article',
+    showChangelogAndVersionHistory:
+      (behavior.isAddVersionFlow || behavior.isEditFlow) && versions.length > 0,
   };
 };
 

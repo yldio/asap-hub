@@ -43,6 +43,8 @@ export const defaultAvailableActions: ResearchOutputAvailableActions = {
   canSaveDraft: true,
   showImpactAndCategory: false,
   showChangelogAndVersionHistory: false,
+  showExtraInformationFields: true,
+  showCatalogNumber: false,
 };
 
 export const getDefaultProps = (): ComponentProps<

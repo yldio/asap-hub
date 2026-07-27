@@ -3,6 +3,7 @@ import {
   ResearchOutputPostRequest,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { ResearchOutputAvailableActions } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 import { mailToSupport } from '../mail';
@@ -22,20 +23,24 @@ import {
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   'usageNotes' | 'labCatalogNumber' | 'methods' | 'organisms' | 'environments'
-> & {
-  tags: string[];
-  tagSuggestions: NonNullable<
-    ComponentProps<typeof LabeledMultiSelect>['suggestions']
-  >;
-  onChangeTags?: (values: string[]) => void;
-  onChangeUsageNotes?: (value: string) => void;
-  onChangeMethods?: (value: string[]) => void;
-  onChangeOrganisms?: (value: string[]) => void;
-  onChangeEnvironments?: (value: string[]) => void;
-  onChangeLabCatalogNumber?: (value: string) => void;
-  isSaving: boolean;
-  researchTags: ResearchTagResponse[];
-} & Omit<ResearchOutputIdentifierProps, 'required'>;
+> &
+  Pick<
+    ResearchOutputAvailableActions,
+    'showExtraInformationFields' | 'showCatalogNumber'
+  > & {
+    tags: string[];
+    tagSuggestions: NonNullable<
+      ComponentProps<typeof LabeledMultiSelect>['suggestions']
+    >;
+    onChangeTags?: (values: string[]) => void;
+    onChangeUsageNotes?: (value: string) => void;
+    onChangeMethods?: (value: string[]) => void;
+    onChangeOrganisms?: (value: string[]) => void;
+    onChangeEnvironments?: (value: string[]) => void;
+    onChangeLabCatalogNumber?: (value: string) => void;
+    isSaving: boolean;
+    researchTags: ResearchTagResponse[];
+  } & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<
   ResearchOutputExtraInformationProps
@@ -60,6 +65,8 @@ const ResearchOutputExtraInformationCard: React.FC<
   environments,
   onChangeEnvironments = noop,
   researchTags,
+  showExtraInformationFields,
+  showCatalogNumber,
 }) => {
   const filterByCategory = (name: string) => (tag: ResearchTagResponse) =>
     tag.category === name;
@@ -150,7 +157,7 @@ const ResearchOutputExtraInformationCard: React.FC<
           Ask ASAP to add a new keyword
         </Link>
       </div>
-      {documentType !== 'Report' && (
+      {showExtraInformationFields && (
         <>
           <ResearchOutputIdentifier
             documentType={documentType}
@@ -159,7 +166,8 @@ const ResearchOutputExtraInformationCard: React.FC<
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
           />
-          {documentType === 'Lab Material' && (
+
+          {showCatalogNumber && (
             <LabeledTextField
               title="Catalog Number (Vendor/Lab)"
               subtitle="(optional)"
@@ -170,6 +178,7 @@ const ResearchOutputExtraInformationCard: React.FC<
               value={labCatalogNumber || ''}
             />
           )}
+
           <LabeledTextArea
             title="Usage Notes"
             subtitle="(optional)"

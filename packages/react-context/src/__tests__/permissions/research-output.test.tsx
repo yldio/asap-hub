@@ -862,6 +862,80 @@ describe('resolveResearchOutputAvailableActions', () => {
     );
   });
 
+  describe('showExtraInformationFields', () => {
+    it('is false when documentType is Report', () => {
+      expect(
+        resolveResearchOutputAvailableActions({
+          flowId: 'team-create-manual',
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Report',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          showExtraInformationFields: false,
+        }),
+      );
+    });
+
+    const notReportDocumentTypes = researchOutputDocumentTypes.filter(
+      (type) => type !== 'Report',
+    );
+
+    it.each(notReportDocumentTypes)(
+      'is true when document type is %s',
+      (documentType) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId: 'team-create-manual',
+            permissions: { canShareResearchOutput: true },
+            documentType,
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            showExtraInformationFields: true,
+          }),
+        );
+      },
+    );
+  });
+
+  describe('showCatalogNumber', () => {
+    it('is true when documentType is Lab Material', () => {
+      expect(
+        resolveResearchOutputAvailableActions({
+          flowId: 'team-create-manual',
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Lab Material',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          showCatalogNumber: true,
+        }),
+      );
+    });
+
+    const notLabMaterialDocumentTypes = researchOutputDocumentTypes.filter(
+      (type) => type !== 'Lab Material',
+    );
+
+    it.each(notLabMaterialDocumentTypes)(
+      'is false when document type is %s',
+      (documentType) => {
+        expect(
+          resolveResearchOutputAvailableActions({
+            flowId: 'team-create-manual',
+            permissions: { canShareResearchOutput: true },
+            documentType,
+          }),
+        ).toEqual(
+          expect.objectContaining({
+            showCatalogNumber: false,
+          }),
+        );
+      },
+    );
+  });
+
   describe('showChangelogAndVersionHistory', () => {
     const version = {
       id: 'v1',

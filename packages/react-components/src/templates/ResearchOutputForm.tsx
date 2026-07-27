@@ -584,6 +584,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeOrganisms={setOrganisms}
                   environments={environments}
                   onChangeEnvironments={setEnvironments}
+                  showExtraInformationFields={
+                    availableActions.showExtraInformationFields
+                  }
+                  showCatalogNumber={availableActions.showCatalogNumber}
                 />
                 <ResearchOutputContributorsCard
                   isSaving={isSaving}

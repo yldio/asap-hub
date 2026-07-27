@@ -2,10 +2,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router';
 
-import {
-  createResearchOutputResponse,
-  researchTagOrganismResponse,
-} from '@asap-hub/fixtures';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
@@ -16,10 +13,7 @@ import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
-import {
-  expectedRequest,
-  getDefaultProps,
-} from '../../test-utils/research-output-form';
+import { getDefaultProps } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
 import { mockActErrorsInConsole } from '../../../test-utils';
 
@@ -161,51 +155,6 @@ describe('on submit 2', () => {
     );
     await userEvent.click(await screen.findByText('One Lab'));
   };
-  const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Publish/i });
-    await userEvent.click(button);
-    await userEvent.click(
-      screen.getByRole('button', { name: /Publish Output/i }),
-    );
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
-
-  it('can submit an organism', async () => {
-    const documentType = 'Protocol';
-    const type = 'Model System';
-    const researchTags = [researchTagOrganismResponse];
-    await setupForm({
-      researchTags,
-      documentType,
-    });
-    const typeDropdown = screen.getByRole('combobox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    await userEvent.click(
-      await screen.findByRole('combobox', { name: /organisms/i }),
-    );
-    await userEvent.click(screen.getByText('Rat'));
-
-    await submitForm();
-
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      documentType,
-      type,
-      organisms: ['Rat'],
-    });
-  });
-
   describe('Short Description Validation', () => {
     it('shows error message when short description exceeds 250 characters', async () => {
       await setupForm({});

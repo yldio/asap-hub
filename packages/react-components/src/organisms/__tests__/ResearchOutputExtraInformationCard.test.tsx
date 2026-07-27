@@ -17,6 +17,8 @@ const props: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   environments: [],
   documentType: 'Article',
   researchTags: [],
+  showExtraInformationFields: true,
+  showCatalogNumber: false,
 };
 
 it('should render a tag', async () => {
@@ -45,6 +47,7 @@ it('should trigger an onChange event when a text is being typed into access inst
       {...props}
       usageNotes="access-instructions-value"
       onChangeUsageNotes={mockOnChange}
+      showExtraInformationFields
     />,
   );
 
@@ -55,9 +58,9 @@ it('should trigger an onChange event when a text is being typed into access inst
   expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
 });
 
-it('should show lab catalogue number for lab materials', async () => {
+it('should show lab catalogue number when showCatalogNumber is true', async () => {
   const { rerender } = render(
-    <ResearchOutputExtraInformationCard {...props} documentType={'Article'} />,
+    <ResearchOutputExtraInformationCard {...props} showCatalogNumber={false} />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeNull();
 
@@ -65,9 +68,35 @@ it('should show lab catalogue number for lab materials', async () => {
     <ResearchOutputExtraInformationCard
       {...props}
       documentType={'Lab Material'}
+      showCatalogNumber
     />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeVisible();
+});
+
+it('should show the identifier section when showExtraInformationFields is true', async () => {
+  const { rerender } = render(
+    <ResearchOutputExtraInformationCard
+      {...props}
+      showExtraInformationFields={false}
+    />,
+  );
+  expect(
+    screen.queryByRole('combobox', { name: /Identifier Type/i }),
+  ).toBeNull();
+
+  expect(screen.queryByRole('textbox', { name: /usage notes/i })).toBeNull();
+
+  rerender(
+    <ResearchOutputExtraInformationCard
+      {...props}
+      showExtraInformationFields
+    />,
+  );
+  expect(
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
+  ).toBeVisible();
+  expect(screen.getByRole('textbox', { name: /usage notes/i })).toBeVisible();
 });
 
 it('should hide methods when there is no suggestions', async () => {

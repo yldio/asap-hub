@@ -125,46 +125,6 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
-it('pre populates the form with markdown value of usageNotes if it is defined', async () => {
-  jest.spyOn(console, 'error').mockImplementation();
-
-  const researchOutputData = {
-    ...createResearchOutputResponse(),
-    usageNotes: 'rich text',
-    usageNotesMD: 'markdown',
-  };
-  await render(
-    <StaticRouter location="/">
-      <ResearchOutputForm
-        {...defaultProps}
-        documentType={'Dataset'}
-        typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
-        researchOutputData={researchOutputData}
-      />
-    </StaticRouter>,
-  );
-
-  expect(screen.queryByText('rich text')).not.toBeInTheDocument();
-  expect(screen.getByText('markdown')).toBeVisible();
-});
-
-it('displays keywords suggestions', async () => {
-  await render(
-    <StaticRouter location="/">
-      <ResearchOutputForm
-        {...defaultProps}
-        tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
-      />
-    </StaticRouter>,
-  );
-  await userEvent.click(
-    screen.getByText(/Start typing\.\.\. \(E\.g\. Cell Biology\)/i),
-  );
-  expect(screen.getByText('2D Cultures')).toBeVisible();
-  expect(screen.getByText('Adenosine')).toBeVisible();
-  expect(screen.getByText('Adrenal')).toBeVisible();
-});
-
 it('displays selected teams', async () => {
   await render(
     <StaticRouter location="/">

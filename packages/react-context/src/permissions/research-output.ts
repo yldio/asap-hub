@@ -47,6 +47,8 @@ export type ResearchOutputAvailableActions = {
   canSaveDraft: boolean;
   showImpactAndCategory: boolean;
   showChangelogAndVersionHistory: boolean;
+  showExtraInformationFields: boolean;
+  showCatalogNumber: boolean;
 };
 
 export const resolveResearchOutputAvailableActions = ({
@@ -85,6 +87,8 @@ export const resolveResearchOutputAvailableActions = ({
     showImpactAndCategory: documentType === 'Article',
     showChangelogAndVersionHistory:
       (behavior.isAddVersionFlow || behavior.isEditFlow) && versions.length > 0,
+    showExtraInformationFields: documentType !== 'Report',
+    showCatalogNumber: documentType === 'Lab Material',
   };
 };
 

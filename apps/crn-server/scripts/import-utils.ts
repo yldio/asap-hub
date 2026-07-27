@@ -145,14 +145,39 @@ export const REQUIRED_EXISTING_USER_COLUMNS = [
   'Team 3 Role',
 ] as const;
 
+/** CSV columns required for the labs import. */
+export const REQUIRED_LAB_COLUMNS = [
+  'Lab Name',
+  'PI Last Name',
+  'PI First Name',
+  'PI Team',
+  'Lab On Hub?',
+] as const;
+
+/** CSV columns required for the combined lab-team-members import. */
+export const REQUIRED_TEAM_MEMBER_COLUMNS = [
+  'Team',
+  'Last Name',
+  'First Name',
+  'Position',
+  'Lab',
+  'Email',
+  'ORCID',
+] as const;
+
 /** Maps CSV team role labels to the team membership roles used in Contentful. */
 export const TEAM_ROLE_MAPPING: Record<string, string> = {
   'Coordinating Lead PI': 'Lead PI (Core Leadership)',
+  'Lead PI': 'Lead PI (Core Leadership)',
   'Core Leadership - Co-Investigator': 'Co-PI (Core Leadership)',
+  'Co-PI': 'Co-PI (Core Leadership)',
+  'Collaborating PI': 'Collaborating PI',
   'Paid Collaborator': 'Collaborating PI',
   'Unpaid Collaborator': 'Collaborating PI',
   'Project Manager': 'Project Manager',
   'Data Manager': 'Data Manager',
+  Trainee: 'Trainee',
+  'Scientific Staff': 'Scientific Advisory Board',
 };
 
 /**
@@ -854,6 +879,35 @@ export const findTeamByName = async (
 
 export const clearTeamCache = () => teamCache.clear();
 
+const labCache = new Map<string, string | null>();
+
+/**
+ * Finds a lab by name and caches the result for later lookups.
+ */
+export const findLabByName = async (
+  env: Environment,
+  name: string,
+): Promise<{ id: string } | null> => {
+  if (labCache.has(name)) {
+    const cached = labCache.get(name);
+    return cached ? { id: cached } : null;
+  }
+
+  const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
+    content_type: 'labs',
+    'fields.name': name,
+    limit: 1,
+  });
+
+  const [firstItem] = entries.items;
+  const id = firstItem ? firstItem.sys.id : null;
+  labCache.set(name, id);
+  return id ? { id } : null;
+};
+
+export const clearLabCache = () => labCache.clear();
+
 /** Finds a project by its short project ID. */
 export const findProjectByProjectId = async (
   env: Environment,
@@ -908,11 +962,33 @@ export const findUserByEmail = async (
   return { id: firstItem.sys.id, entry: firstItem };
 };
 
+/**
+ * Finds all users matching an exact first+last name pair. Name alone isn't
+ * unique, so this returns every non-archived candidate rather than the first
+ * match - callers need all of them to run dedup/disambiguation logic.
+ */
+export const findUsersByName = async (
+  env: Environment,
+  firstName: string,
+  lastName: string,
+): Promise<ContentfulEntryLookup[]> => {
+  const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
+    content_type: 'users',
+    'fields.firstName': firstName,
+    'fields.lastName': lastName,
+    limit: 10,
+  });
+
+  return entries.items.map((item) => ({ id: item.sys.id, entry: item }));
+};
+
 /** Creates a draft team membership entry for a user and team pair. */
 export const createTeamMembership = async (
   env: Environment,
   teamId: string,
   role: string,
+  publish: boolean = false,
 ): Promise<string> => {
   const entry = await env.createEntry('teamMembership', {
     fields: {
@@ -920,6 +996,11 @@ export const createTeamMembership = async (
       role: loc(mapTeamRole(role)),
     },
   });
+
+  if (publish) {
+    const published = await entry.publish();
+    return published.sys.id;
+  }
   return entry.sys.id;
 };
 

@@ -44,6 +44,7 @@ const wrapIcon = (
 
 type ContactInfoModalProps = {
   readonly email?: string;
+  readonly personalEmail?: string;
 
   readonly fallbackEmail: string;
 
@@ -52,6 +53,7 @@ type ContactInfoModalProps = {
 } & Pick<UserResponse, 'social'>;
 const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   email = '',
+  personalEmail = '',
   fallbackEmail,
   social: {
     website1 = '',
@@ -71,6 +73,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const [newEmail, setNewEmail] = useState(email);
+  const [newPersonalEmail, setNewPersonalEmail] = useState(personalEmail);
   const [newWebsite1, setNewWebsite1] = useState(website1);
   const [newWebsite2, setNewWebsite2] = useState(website2);
   const [newOrcid, setNewOrcid] = useState(orcid);
@@ -86,10 +89,11 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
     <EditUserModal
       backHref={backHref}
       title="Contact Details"
-      dirty={newEmail !== email}
+      dirty={newEmail !== email || newPersonalEmail !== personalEmail}
       onSave={async () => {
         await onSave({
           contactEmail: newEmail || undefined,
+          personalEmail: newPersonalEmail || undefined,
           social: {
             twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
             blueSky: formatUserSocial(newBlueSky, 'blueSky') || undefined,
@@ -125,6 +129,17 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               </>
             }
             hint="Note: This will not affect the way you login into the Hub."
+          />
+          <LabeledTextField
+            type="email"
+            value={newPersonalEmail}
+            onChange={setNewPersonalEmail}
+            enabled={!isSaving}
+            title="Personal Email"
+            subtitle="(optional)"
+            description="Enter a permanent personal email (e.g., Gmail or Yahoo) where we can reach you once you transition to a CRN alum. Because alumni lose access to the CRN Hub, ASAP staff may use this information to keep in touch."
+            hint="Note: This address is hidden from the community and will not appear on your profile. Only administrative staff will have access."
+            placeholder="Add a personal email"
           />
           <LabeledTextField
             title="Website 1"

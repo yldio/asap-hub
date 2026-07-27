@@ -9,6 +9,7 @@ export const getUserResponse = (): UserResponse => ({
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
   email: 'tony@stark.com',
   contactEmail: 'tony@stark.com',
+  personalEmail: 'tony.personal@gmail.com',
   firstName: 'Tony',
   lastName: 'Stark',
   jobTitle: 'CEO',

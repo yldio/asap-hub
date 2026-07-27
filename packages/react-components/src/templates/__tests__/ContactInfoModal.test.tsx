@@ -23,6 +23,7 @@ it('indicates which fields are optional', () => {
 
   [
     { title: 'Contact email', subtitle: 'optional' },
+    { title: 'Personal Email', subtitle: 'optional' },
     { title: 'Website 1', subtitle: 'optional' },
     { title: 'Website 2', subtitle: 'optional' },
     { title: 'Researcher ID', subtitle: 'optional' },
@@ -54,7 +55,18 @@ it('renders a text field containing the email', () => {
       backHref="#"
     />,
   );
-  expect(getByLabelText(/email/i)).toHaveValue('contact@example.com');
+  expect(getByLabelText(/contact email/i)).toHaveValue('contact@example.com');
+});
+
+it('renders a text field containing the personal email', () => {
+  const { getByLabelText } = renderModal(
+    <ContactInfoModal
+      fallbackEmail="fallback@example.com"
+      personalEmail="personal@example.com"
+      backHref="#"
+    />,
+  );
+  expect(getByLabelText(/personal email/i)).toHaveValue('personal@example.com');
 });
 
 it('fires onSave when submitting', async () => {
@@ -67,8 +79,11 @@ it('fires onSave when submitting', async () => {
     />,
   );
 
-  await userEvent.clear(getByLabelText(/email/i));
-  await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
+  await userEvent.clear(getByLabelText(/contact email/i));
+  await userEvent.type(
+    getByLabelText(/contact email/i),
+    'new-contact@example.com',
+  );
   await userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith(
     expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
@@ -78,6 +93,30 @@ it('fires onSave when submitting', async () => {
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
+it('fires onSave with the personal email when submitting', async () => {
+  const handleSave = jest.fn();
+  const { getByLabelText, getByText } = renderModal(
+    <ContactInfoModal
+      fallbackEmail="fallback@example.com"
+      backHref="#"
+      onSave={handleSave}
+    />,
+  );
+
+  await userEvent.type(
+    getByLabelText(/personal email/i),
+    'new-personal@example.com',
+  );
+  await userEvent.click(getByText(/save/i));
+  expect(handleSave).toHaveBeenLastCalledWith(
+    expect.objectContaining({ personalEmail: 'new-personal@example.com' }),
+  );
+
+  await waitFor(() =>
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+  );
+});
+
 it('does not fire onSave when the email is invalid', async () => {
   const handleSave = jest.fn();
   const { getByLabelText, getByText } = renderModal(
@@ -88,8 +127,8 @@ it('does not fire onSave when the email is invalid', async () => {
     />,
   );
 
-  await userEvent.clear(getByLabelText(/email/i));
-  await userEvent.type(getByLabelText(/email/i), '.');
+  await userEvent.clear(getByLabelText(/contact email/i));
+  await userEvent.type(getByLabelText(/contact email/i), '.');
   await userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
 });

@@ -137,7 +137,10 @@ const SourceLists: React.FC<SourceListsProps> = ({ files }) => {
     <section css={sectionStyles}>
       <div css={textStyles}>
         <h3 css={titleStyles}>
-          Source lists <span css={countStyles}>• {files.length} Files</span>
+          Source lists{' '}
+          <span css={countStyles}>
+            • {files.length} {files.length === 1 ? 'File' : 'Files'}
+          </span>
         </h3>
         <Paragraph noMargin accent="lead">
           The lists you uploaded. The panel shows teams, so open a file to check

@@ -446,7 +446,19 @@ describe('EditEventAttendanceModal', () => {
       await screen.findByRole('link', { name: 'Uploaded Team' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Source lists')).toBeInTheDocument();
+    expect(screen.getByText('• 1 File')).toBeInTheDocument();
     expect(screen.getByText('teams.csv')).toBeInTheDocument();
+  });
+
+  it('Should pluralise the source list count for multiple files', () => {
+    renderModal({
+      sourceLists: [
+        { id: 'file-1', filename: 'day-1.csv' },
+        { id: 'file-2', filename: 'day-2.xlsx' },
+      ],
+    });
+
+    expect(screen.getByText('• 2 Files')).toBeInTheDocument();
   });
 
   it('Should download a recorded source list file', async () => {

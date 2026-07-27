@@ -2783,6 +2783,8 @@ export enum DiscoverMembersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -2868,6 +2870,8 @@ export enum DiscoverMembersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -2965,6 +2969,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -3050,6 +3056,8 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -3387,6 +3395,8 @@ export enum DiscussionsReadByCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -3472,6 +3482,8 @@ export enum DiscussionsReadByCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -7644,6 +7656,8 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -7723,6 +7737,8 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -8234,6 +8250,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -8313,6 +8331,8 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -10012,6 +10032,8 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -10097,6 +10119,8 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -13094,6 +13118,8 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -13179,6 +13205,8 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -17950,6 +17978,8 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -18029,6 +18059,8 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -19050,6 +19082,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -19129,6 +19163,8 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -21177,6 +21213,7 @@ export type Users = Entry &
     orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
     orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
     orcidWorks?: Maybe<Scalars['JSON']>;
+    personalEmail?: Maybe<Scalars['String']>;
     questions?: Maybe<Scalars['JSON']>;
     reachOut?: Maybe<Scalars['String']>;
     researchGate?: Maybe<Scalars['String']>;
@@ -21447,6 +21484,12 @@ export type UsersOrcidLastSyncDateArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersOrcidWorksArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersPersonalEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -21819,6 +21862,13 @@ export type UsersFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  personalEmail?: InputMaybe<Scalars['String']>;
+  personalEmail_contains?: InputMaybe<Scalars['String']>;
+  personalEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  personalEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  personalEmail_not?: InputMaybe<Scalars['String']>;
+  personalEmail_not_contains?: InputMaybe<Scalars['String']>;
+  personalEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_exists?: InputMaybe<Scalars['Boolean']>;
   reachOut?: InputMaybe<Scalars['String']>;
   reachOut_contains?: InputMaybe<Scalars['String']>;
@@ -23168,6 +23218,8 @@ export enum UsersOrder {
   OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
   ResearchGateAsc = 'researchGate_ASC',
   ResearchGateDesc = 'researchGate_DESC',
   ResearcherIdAsc = 'researcherId_ASC',
@@ -26177,6 +26229,13 @@ export type CfUsersNestedFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  personalEmail?: InputMaybe<Scalars['String']>;
+  personalEmail_contains?: InputMaybe<Scalars['String']>;
+  personalEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  personalEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  personalEmail_not?: InputMaybe<Scalars['String']>;
+  personalEmail_not_contains?: InputMaybe<Scalars['String']>;
+  personalEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_exists?: InputMaybe<Scalars['Boolean']>;
   reachOut?: InputMaybe<Scalars['String']>;
   reachOut_contains?: InputMaybe<Scalars['String']>;
@@ -39114,6 +39173,7 @@ export type UsersContentFragment = Pick<
   | 'degree'
   | 'email'
   | 'contactEmail'
+  | 'personalEmail'
   | 'dismissedGettingStarted'
   | 'firstName'
   | 'middleName'
@@ -39497,6 +39557,7 @@ export type FetchUserByIdQuery = {
       | 'degree'
       | 'email'
       | 'contactEmail'
+      | 'personalEmail'
       | 'dismissedGettingStarted'
       | 'firstName'
       | 'middleName'
@@ -48409,6 +48470,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'contactEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'personalEmail' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'dismissedGettingStarted' },

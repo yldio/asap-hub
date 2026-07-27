@@ -1765,6 +1765,8 @@ enum DiscoverMembersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -1850,6 +1852,8 @@ enum DiscoverMembersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -1947,6 +1951,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -2032,6 +2038,8 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -2259,6 +2267,8 @@ enum DiscussionsReadByCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -2344,6 +2354,8 @@ enum DiscussionsReadByCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -5182,6 +5194,8 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -5261,6 +5275,8 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -5639,6 +5655,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -5718,6 +5736,8 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -6657,6 +6677,8 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -6742,6 +6764,8 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -8831,6 +8855,8 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -8916,6 +8942,8 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -11215,6 +11243,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -11294,6 +11324,8 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -12005,6 +12037,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -12084,6 +12118,8 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -13515,6 +13551,7 @@ type Users implements Entry & _Node {
   orcidLastModifiedDate(locale: String, useFallbackLocale: Boolean): DateTime
   orcidLastSyncDate(locale: String, useFallbackLocale: Boolean): DateTime
   orcidWorks(locale: String, useFallbackLocale: Boolean): JSON
+  personalEmail(locale: String, useFallbackLocale: Boolean): String
   questions(locale: String, useFallbackLocale: Boolean): JSON
   reachOut(locale: String, useFallbackLocale: Boolean): String
   researchGate(locale: String, useFallbackLocale: Boolean): String
@@ -13779,6 +13816,13 @@ input UsersFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
+  personalEmail: String
+  personalEmail_contains: String
+  personalEmail_exists: Boolean
+  personalEmail_in: [String]
+  personalEmail_not: String
+  personalEmail_not_contains: String
+  personalEmail_not_in: [String]
   questions_exists: Boolean
   reachOut: String
   reachOut_contains: String
@@ -14727,6 +14771,8 @@ enum UsersOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -17301,6 +17347,13 @@ input cfUsersNestedFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
+  personalEmail: String
+  personalEmail_contains: String
+  personalEmail_exists: Boolean
+  personalEmail_in: [String]
+  personalEmail_not: String
+  personalEmail_not_contains: String
+  personalEmail_not_in: [String]
   questions_exists: Boolean
   reachOut: String
   reachOut_contains: String

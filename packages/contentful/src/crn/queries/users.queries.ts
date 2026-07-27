@@ -21,6 +21,7 @@ export const usersContentQueryFragment = gql`
     degree
     email
     contactEmail
+    personalEmail
     dismissedGettingStarted
     firstName
     middleName

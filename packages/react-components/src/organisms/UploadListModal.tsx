@@ -746,7 +746,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
         cancelEnabled={!isSaving}
         confirmLabel="Add Attendees"
         onConfirm={() => {
-          void handleAddAttendees();
+          // Swallow rejections so the modal stays usable; the parent reports them.
+          void handleAddAttendees().catch(() => undefined);
         }}
         confirmEnabled={addEnabled}
         confirmLoading={isSaving}

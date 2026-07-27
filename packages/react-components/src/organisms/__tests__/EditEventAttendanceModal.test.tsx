@@ -480,7 +480,8 @@ describe('EditEventAttendanceModal', () => {
 
     expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
-    expect(revokeObjectURL).toHaveBeenCalled();
+    // The object URL is revoked on a deferred timer so the download can start.
+    await waitFor(() => expect(revokeObjectURL).toHaveBeenCalled());
     clickSpy.mockRestore();
   });
 

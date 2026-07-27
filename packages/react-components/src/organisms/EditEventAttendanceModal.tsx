@@ -492,7 +492,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
           anchor.href = url;
           anchor.download = file.name;
           anchor.click();
-          URL.revokeObjectURL(url);
+          // Defer so the click-triggered download can read the blob before the
+          // URL is revoked (a synchronous revoke cancels it in Firefox/Safari).
+          setTimeout(() => URL.revokeObjectURL(url), 0);
         },
       })),
     ]);

@@ -504,6 +504,9 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     setIsSaving(true);
     try {
       await onAddAttendees(matchedTeams, files);
+    } catch {
+      // The caller surfaces the error; the modal only needs to unlock so the
+      // user can retry or cancel instead of staying stuck on "saving".
     } finally {
       setIsSaving(false);
     }
@@ -752,8 +755,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
         cancelEnabled={!isSaving}
         confirmLabel="Add Attendees"
         onConfirm={() => {
-          // Swallow rejections so the modal stays usable; the parent reports them.
-          void handleAddAttendees().catch(() => undefined);
+          void handleAddAttendees();
         }}
         confirmEnabled={addEnabled}
         confirmLoading={isSaving}

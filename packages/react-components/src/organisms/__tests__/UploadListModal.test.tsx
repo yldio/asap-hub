@@ -97,6 +97,42 @@ describe('UploadListModal', () => {
     expect(screen.getByRole('button', { name: 'Add Attendees' })).toBeEnabled();
   });
 
+  it('Should render a seeded result without any upload', async () => {
+    renderModal({
+      initialFiles: [makeFile('seeded.csv')],
+      initialResult: uploadResult,
+    });
+
+    expect(onUploadList).not.toHaveBeenCalled();
+    expect(screen.getByText('seeded.csv')).toBeInTheDocument();
+    expect(screen.getByText('5 Teams')).toBeInTheDocument();
+    expect(screen.getByText('2 not matched')).toBeInTheDocument();
+    // Sections are collapsed by default.
+    expect(
+      screen.queryByRole('link', { name: 'Imaging' }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add Attendees' }),
+    );
+    expect(onAddAttendees).toHaveBeenCalledWith(
+      [expect.objectContaining({ teamId: 'm1', teamName: 'Imaging' })],
+      [expect.objectContaining({ name: 'seeded.csv' })],
+    );
+  });
+
+  it('Should render seeded sections expanded when initialSectionsOpen is set', () => {
+    renderModal({
+      initialFiles: [makeFile('seeded.csv')],
+      initialResult: uploadResult,
+      initialSectionsOpen: true,
+    });
+
+    // Both accordions are open on mount without any click.
+    expect(screen.getByRole('link', { name: 'Imaging' })).toBeInTheDocument();
+    expect(screen.getByText(/did you mean/)).toBeInTheDocument();
+  });
+
   it('Should disable the Add button while the upload is in progress', async () => {
     let resolveUpload: (result: UploadListResult) => void = () => undefined;
     const pendingUpload = jest.fn(

@@ -64,6 +64,9 @@ type UploadListModalProps = {
   onBack: () => void;
   maxFileSizeMb?: number;
   accept?: string;
+  initialFiles?: File[];
+  initialResult?: UploadListResult | null;
+  initialSectionsOpen?: boolean;
 };
 
 const defaultMaxFileSizeMb = 10;
@@ -378,9 +381,12 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   onBack,
   maxFileSizeMb = defaultMaxFileSizeMb,
   accept = defaultAccept,
+  initialFiles = [],
+  initialResult = null,
+  initialSectionsOpen = false,
 }) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [result, setResult] = useState<UploadListResult | null>(null);
+  const [files, setFiles] = useState<File[]>(initialFiles);
+  const [result, setResult] = useState<UploadListResult | null>(initialResult);
   const [error, setError] = useState<string | null>(null);
   const [addedSuggestionIds, setAddedSuggestionIds] = useState<
     ReadonlySet<string>
@@ -388,8 +394,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const [removedMatchedIds, setRemovedMatchedIds] = useState<
     ReadonlySet<string>
   >(() => new Set());
-  const [matchedOpen, setMatchedOpen] = useState(false);
-  const [unmatchedOpen, setUnmatchedOpen] = useState(false);
+  const [matchedOpen, setMatchedOpen] = useState(initialSectionsOpen);
+  const [unmatchedOpen, setUnmatchedOpen] = useState(initialSectionsOpen);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);

@@ -69,6 +69,7 @@ import {
   ProjectAimExportRow,
   ProjectMilestoneExportRow,
   ProjectMilestonesExportResponse,
+  getLatestUserAward,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -93,6 +94,7 @@ import {
   aimNumbersAscSortScript,
   aimNumbersDescSortScript,
 } from '../../utils/opensearch/aim-numbers-sort-scripts';
+import { parseAwardsCollection } from '../transformers';
 
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;
@@ -157,6 +159,10 @@ export const parseProjectUserMember = (
     };
   }
 
+  const memberAwards = cleanArray(projectMember.teamsCollection?.items).map(
+    (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+  );
+
   return {
     id: projectMember.sys.id,
     displayName: parseUserDisplayName(
@@ -171,6 +177,7 @@ export const parseProjectUserMember = (
     role: membership.role || undefined,
     email: projectMember.email || undefined,
     alumniSinceDate: projectMember.alumniSinceDate || undefined,
+    latestAward: getLatestUserAward(memberAwards),
   };
 };
 

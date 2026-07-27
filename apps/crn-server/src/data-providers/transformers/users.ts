@@ -1,7 +1,29 @@
-import { OrcidWork, orcidWorkType, OrcidWorkType } from '@asap-hub/model';
+import {
+  OrcidWork,
+  orcidWorkType,
+  OrcidWorkType,
+  UserAward,
+} from '@asap-hub/model';
+import { cleanArray } from '@asap-hub/server-common';
 
 export const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);
+
+// Minimal awardsCollection shape shared by the three team-membership query
+// results (detail, list, algolia). Declared locally so the one parser can
+// accept all three without coupling to a single codegen query type.
+export type TeamMembershipWithAwards = {
+  awardsCollection?: {
+    items: ({
+      date?: string | null;
+      awardType?: {
+        name?: string | null;
+        icon?: { url?: string | null } | null;
+        smallIcon?: { url?: string | null } | null;
+      } | null;
+    } | null)[];
+  } | null;
+};
 
 export const getOrcidWorkPublicationDate = (input: {
   day?: string;
@@ -52,3 +74,25 @@ export const parseOrcidWorkFromCMS = (orcidWork: OrcidWorkCMS): OrcidWork => ({
     {},
   lastModifiedDate: orcidWork.lastModifiedDate || '',
 });
+
+export const parseAwardsCollection = (
+  team: TeamMembershipWithAwards,
+): UserAward[] =>
+  cleanArray(team.awardsCollection?.items).reduce(
+    (awards: UserAward[], award): UserAward[] => {
+      const name = award.awardType?.name;
+      if (!name || !award.date) {
+        return awards;
+      }
+      return [
+        ...awards,
+        {
+          name,
+          date: award.date,
+          iconUrl: award.awardType?.icon?.url ?? undefined,
+          smallIconUrl: award.awardType?.smallIcon?.url ?? undefined,
+        },
+      ];
+    },
+    [],
+  );

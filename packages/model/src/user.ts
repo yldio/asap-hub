@@ -53,6 +53,7 @@ export interface UserAward {
   name: string;
   date: string;
   iconUrl?: string;
+  smallIconUrl?: string;
 }
 
 export interface UserTeam {

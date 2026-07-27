@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse } from './common';
 import { ResearchOutputType } from './research-output';
 import { TeamDataObject, TeamRole, TeamType } from './team';
+import { UserAward } from './user';
 
 export type ProjectTool = {
   id?: string;
@@ -72,6 +73,7 @@ export type ProjectMember = {
   readonly alumniSinceDate?: string;
   readonly href?: string;
   readonly teams?: ReadonlyArray<ProjectMemberTeam>;
+  readonly latestAward?: UserAward;
 };
 
 export type FundedTeam = Pick<

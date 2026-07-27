@@ -564,6 +564,19 @@ describe('Working Groups data provider', () => {
                             },
                             displayName: 'Team 1',
                           },
+                          awardsCollection: {
+                            items: [
+                              {
+                                date: '2025-09-11',
+                                awardType: {
+                                  name: 'Open Science Champion',
+                                  smallIcon: {
+                                    url: 'https://example.com/avatar.jpg',
+                                  },
+                                },
+                              },
+                            ],
+                          },
                         },
                       ],
                     },
@@ -627,6 +640,11 @@ describe('Working Groups data provider', () => {
               teamInactiveSince: '',
             },
           ],
+          latestAward: {
+            name: 'Open Science Champion',
+            date: '2025-09-11',
+            smallIconUrl: 'https://example.com/avatar.jpg',
+          },
         });
         expect(result!.members).toHaveLength(1);
         expect(result!.members[0]?.user).toEqual({

@@ -1,8 +1,13 @@
-import { InterestGroupLeader, UserDataObject } from '@asap-hub/model';
+import {
+  InterestGroupLeader,
+  UserAward,
+  UserDataObject,
+} from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 export const parseInterestGroupLeader = (
   user: UserDataObject,
+  latestAward?: UserAward,
 ): InterestGroupLeader['user'] => ({
   id: user.id,
   firstName: user.firstName,
@@ -17,4 +22,5 @@ export const parseInterestGroupLeader = (
   teams: user.teams,
   avatarUrl: user.avatarUrl,
   alumniSinceDate: user.alumniSinceDate,
+  latestAward,
 });

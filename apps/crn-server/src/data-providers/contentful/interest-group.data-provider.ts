@@ -5,6 +5,7 @@ import {
   InterestGroupRole,
   InterestGroupLeader as GroupLeader,
   ListInterestGroupDataObject,
+  getLatestUserAward,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -23,9 +24,11 @@ import {
   FetchInterestGroupsByTeamIdQuery,
   FetchInterestGroupsByTeamIdQueryVariables,
 } from '@asap-hub/contentful';
+import { cleanArray } from '@asap-hub/server-common';
 
 import { InterestGroupDataProvider } from '../types';
 import {
+  parseAwardsCollection,
   parseContentfulGraphqlCalendarToResponse,
   parseInterestGroupLeader,
 } from '../transformers';
@@ -248,11 +251,15 @@ const parseGraphQLInterestGroup = (
     if (!leader || !leader.user) {
       return acc;
     }
+    const leaderAwards = cleanArray(leader.user.teamsCollection?.items).map(
+      (teamMembership) => ({ awards: parseAwardsCollection(teamMembership) }),
+    );
     return [
       ...acc,
       {
         user: parseInterestGroupLeader(
           parseContentfulGraphQlUsers(leader.user),
+          getLatestUserAward(leaderAwards),
         ),
         role: leader.role as InterestGroupRole,
         inactiveSinceDate: leader.inactiveSinceDate ?? undefined,

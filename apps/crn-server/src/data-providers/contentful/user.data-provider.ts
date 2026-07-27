@@ -14,7 +14,6 @@ import {
   TeamRole,
   UserDataObject,
   UserListItemDataObject,
-  UserAward,
   UserListItemTeam,
   UserProjectMembership,
   UserSocialLinks,
@@ -55,7 +54,12 @@ import {
 } from '@asap-hub/contentful';
 import { cleanArray } from '@asap-hub/server-common';
 import { DocumentNode } from 'graphql';
-import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
+import {
+  isTeamRole,
+  parseAwardsCollection,
+  parseOrcidWorkFromCMS,
+  TeamMembershipWithAwards,
+} from '../transformers';
 import { UserDataProvider } from '../types';
 import { parseResearchTags } from './research-tag.data-provider';
 import logger from '../../utils/logger';
@@ -867,44 +871,9 @@ export const parseLabsCollection = (
     [],
   );
 
-// Minimal awardsCollection shape shared by the three team-membership query
-// results (detail, list, algolia). Declared locally so the one parser can
-// accept all three without coupling to a single codegen query type.
-type TeamMembershipWithAwards = {
-  awardsCollection?: {
-    items: ({
-      date?: string | null;
-      awardType?: {
-        name?: string | null;
-        icon?: { url?: string | null } | null;
-      } | null;
-    } | null)[];
-  } | null;
-};
-
-export const parseAwardsCollection = (
-  team: TeamMembershipWithAwards,
-): UserAward[] =>
-  cleanArray(team.awardsCollection?.items).reduce(
-    (awards: UserAward[], award): UserAward[] => {
-      const name = award.awardType?.name;
-      if (!name || !award.date) {
-        return awards;
-      }
-      return [
-        ...awards,
-        {
-          name,
-          date: award.date,
-          iconUrl: award.awardType?.icon?.url ?? undefined,
-        },
-      ];
-    },
-    [],
-  );
-
 export const parseTeamsCollection = (
   teamsCollection: TeamsCollection,
+  includeAwards = true,
 ): UserTeam[] =>
   (teamsCollection?.items || []).reduce(
     (userTeams: UserTeam[], team: TeamMembership | null): UserTeam[] => {
@@ -922,7 +891,9 @@ export const parseTeamsCollection = (
         team.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
           ?.projectsCollection?.items[0];
 
-      const awards = parseAwardsCollection(team as TeamMembershipWithAwards);
+      const awards = includeAwards
+        ? parseAwardsCollection(team as TeamMembershipWithAwards)
+        : [];
 
       return [
         ...userTeams,

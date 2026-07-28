@@ -80,6 +80,10 @@ describe('/teams/ route', () => {
 
   describe('GET /teams/{team_id}', () => {
     const teamResponse = getTeamResponse();
+    const pastMember = {
+      ...teamResponse.members[0]!,
+      alumniSinceDate: '2020-09-23T20:45:22.000Z',
+    } as TeamMember;
     const activeMember = {
       id: 'user-id-2',
       alumniSinceDate: undefined,
@@ -91,7 +95,7 @@ describe('/teams/ route', () => {
       avatarUrl: undefined,
     } as TeamMember;
 
-    teamResponse.members = [teamResponse.members[0]!, activeMember];
+    teamResponse.members = [pastMember, activeMember];
     const publicTeamResponse = getPublicTeamResponse();
     test('Should return a 404 error when the team or members are not found', async () => {
       teamControllerMock.fetchPublicTeamById.mockRejectedValueOnce(

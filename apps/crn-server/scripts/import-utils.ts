@@ -177,7 +177,7 @@ export const TEAM_ROLE_MAPPING: Record<string, string> = {
   'Project Manager': 'Project Manager',
   'Data Manager': 'Data Manager',
   Trainee: 'Trainee',
-  'Scientific Staff': 'Scientific Advisory Board',
+  'Scientific Staff': 'Key Personnel',
 };
 
 /**

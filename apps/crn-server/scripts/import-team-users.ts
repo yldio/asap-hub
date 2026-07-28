@@ -34,20 +34,24 @@ import {
  * and skipped without failing the row.
  *
  * Each row is matched against Contentful first by ORCID, then by email if no
- * ORCID match is found (covers users created before ORCID was recorded). A
- * match found by email whose CMS ORCID differs from the sheet's is treated as
- * ambiguous and skipped; an ORCID match is treated as authoritative even if
- * the email on file differs.
+ * ORCID match is found (covers users created before ORCID was recorded). An
+ * ORCID match is treated as authoritative even if the email on file differs -
+ * the mismatch is only flagged with a warning (not written), so affected
+ * users can be reviewed before deciding whether to update the CMS email. A
+ * match found by email whose CMS ORCID differs from (or is missing from) the
+ * sheet's is logged as a warning and the CMS ORCID is updated to match the
+ * sheet - it is not treated as ambiguous or skipped.
  *
- * For a matched (existing) user, nothing is ever overwritten or removed - the
- * script only adds what the sheet has that the CMS record is missing:
+ * For a matched (existing) user, nothing else is overwritten or removed - the
+ * script only adds/corrects what the sheet has that the CMS record is
+ * missing or wrong:
  * - `Position` may contain multiple comma-separated roles (e.g. "Data
  *   Manager, Project Manager") for the same team; any role not already held
  *   on that team gets a new published teamMembership linked onto the user.
  * - The `Lab` column is linked if the user isn't linked to it already.
- * - The ORCID field is backfilled if the user was matched by email and had
- *   none on file.
- * If none of the above is missing, the row is skipped as already up to date.
+ * - The ORCID field is written whenever the user was matched by email and
+ *   the sheet's ORCID differs from (including missing from) the CMS record.
+ * If none of the above is needed, the row is skipped as already up to date.
  *
  * For a new person (no ORCID or email match), the `Team` must resolve to an
  * existing team or the row is skipped entirely and no user is created.
@@ -146,13 +150,14 @@ const app = async () => {
 
   let created = 0;
   let skippedExists = 0;
-  let skippedAmbiguous = 0;
   let teamLinkSkippedNotFound = 0;
   let teamLinkSkippedInvalidRole = 0;
   let labLinkSkipped = 0;
   let membershipsAddedToExistingUsers = 0;
   let orcidBackfilled = 0;
+  let orcidMismatchUpdated = 0;
   let labsBackfilled = 0;
+  let emailMismatchFlagged = 0;
   let failed = 0;
   const warnings: string[] = [];
 
@@ -215,29 +220,42 @@ const app = async () => {
     foundByOrcid: boolean,
     { team, position, lab, orcid, email, label }: RowData,
   ): Promise<void> => {
-    const existingUserEmail =
-      (foundUser.entry.fields?.email?.['en-US'] as string | undefined) || '';
+    const existingUserEmail = (
+      (foundUser.entry.fields?.email?.['en-US'] as string | undefined) || ''
+    ).toLowerCase();
     const existingUserOrcid =
       (foundUser.entry.fields?.orcid?.['en-US'] as string | undefined) || '';
 
-    if (!foundByOrcid && existingUserOrcid && existingUserOrcid !== orcid) {
-      const message = `AMBIGUOUS: "${label}" (email=${email}) matches existing user ${foundUser.id} by email, but ORCID differs (CSV: ${orcid}, CMS: ${existingUserOrcid}) - possible duplicate person or data error. Skipping, no changes made.`;
+    const orcidMismatch =
+      !foundByOrcid &&
+      Boolean(existingUserOrcid) &&
+      existingUserOrcid !== orcid;
+
+    if (orcidMismatch) {
+      const message = `ORCID MISMATCH: "${label}" matched by email (${email}), but CMS has a different ORCID (CMS: ${existingUserOrcid}, CSV: ${orcid}) - updating ORCID in CMS to match sheet.`;
       console.log(message);
       warnings.push(message);
-      skippedAmbiguous += 1;
-      return;
     }
 
-    const emailMatches = existingUserEmail.toLowerCase() === email;
+    const emailMatches = existingUserEmail === email;
 
-    // an orcid backfill is needed if the user was found by email and does not already have an orcid
-    const needsOrcidBackfill =
-      !foundByOrcid && emailMatches && !existingUserOrcid;
+    // an orcid update is needed if the user was found by email and the sheet's orcid differs from (or is missing from) the CMS record
+    const needsOrcidUpdate = !foundByOrcid && orcid !== existingUserOrcid;
 
-    if (needsOrcidBackfill) {
+    if (needsOrcidUpdate && !existingUserOrcid) {
       console.log(
         `Note: existing user ${label} (${foundUser.id}) matched by email; CMS record has no ORCID recorded (CSV: ${orcid}) - backfilling.`,
       );
+    }
+
+    const emailMismatch = foundByOrcid && !emailMatches;
+
+    // if the user is found by orcid but the email doesn't match what we have in the cms for now we flag for manual review but continue to update labs / team membership if any.
+    if (emailMismatch) {
+      const message = `EMAIL MISMATCH: existing user ${label} (${foundUser.id}) matched by ORCID (${orcid}), but email differs (CMS: ${existingUserEmail}, CSV: ${email}) - email not updated, please review.`;
+      console.log(message);
+      warnings.push(message);
+      emailMismatchFlagged += 1;
     }
 
     const teamEntry = await resolveTeam(
@@ -274,8 +292,8 @@ const app = async () => {
       }
     }
 
-    // if the mentioned roles are already present and no backfilling on orcid or labs field is needed then the user is up to date and needs no update
-    if (missingRoles.length === 0 && !needsOrcidBackfill && !labBackfillId) {
+    // if the mentioned roles are already present and no backfilling on orcid/labs is needed then the user is up to date and needs no update
+    if (missingRoles.length === 0 && !needsOrcidUpdate && !labBackfillId) {
       console.log(
         `Skipped (exact match, membership up to date): ${label} (${foundUser.id})`,
       );
@@ -305,12 +323,19 @@ const app = async () => {
         );
       }
 
-      if (needsOrcidBackfill) {
+      if (needsOrcidUpdate) {
         foundUser.entry.fields.orcid = loc(orcid);
-        orcidBackfilled += 1;
-        console.log(
-          `Backfilled ORCID for existing user ${label} (${foundUser.id}): ${orcid}`,
-        );
+        if (existingUserOrcid) {
+          orcidMismatchUpdated += 1;
+          console.log(
+            `Updated ORCID for existing user ${label} (${foundUser.id}): ${existingUserOrcid} -> ${orcid}`,
+          );
+        } else {
+          orcidBackfilled += 1;
+          console.log(
+            `Backfilled ORCID for existing user ${label} (${foundUser.id}): ${orcid}`,
+          );
+        }
       }
 
       if (labBackfillId) {
@@ -454,10 +479,10 @@ const app = async () => {
 
   console.log(`\n--- Summary ---`);
   console.log(
-    `Created: ${created}, Skipped (exact match): ${skippedExists}, Skipped (ambiguous): ${skippedAmbiguous}, Failed: ${failed}`,
+    `Created: ${created}, Skipped (exact match): ${skippedExists}, Failed: ${failed}`,
   );
   console.log(
-    `Team links skipped (not found): ${teamLinkSkippedNotFound}, Team links skipped (invalid role): ${teamLinkSkippedInvalidRole}, Lab links skipped: ${labLinkSkipped}, Memberships added to existing users: ${membershipsAddedToExistingUsers}, ORCID backfilled: ${orcidBackfilled}, Labs backfilled: ${labsBackfilled}`,
+    `Team links skipped (not found): ${teamLinkSkippedNotFound}, Team links skipped (invalid role): ${teamLinkSkippedInvalidRole}, Lab links skipped: ${labLinkSkipped}, Memberships added to existing users: ${membershipsAddedToExistingUsers}, ORCID backfilled: ${orcidBackfilled}, ORCID updated (mismatch corrected): ${orcidMismatchUpdated}, Labs backfilled: ${labsBackfilled}, Email mismatches flagged (ORCID match, not updated): ${emailMismatchFlagged}`,
   );
   if (warnings.length > 0) {
     console.log(`\nWarnings (${warnings.length}):`);

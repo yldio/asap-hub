@@ -26,7 +26,7 @@ import {
  * exist and be published (Phase 1), and PI users need to already exist
  * (Phase 2) before they can be linked as a lab's PI.
  *
- * A PI name that matches more than one user is disambiguated using `PI Team`
+ * A PI name that matches more than one user is resolved using `PI Team`
  * against each candidate's team memberships; if that still doesn't resolve to
  * exactly one user, the lab is logged and skipped.
  *
@@ -100,12 +100,6 @@ const app = async () => {
     const piLastName = cell(row, columns.piLastName);
     const piTeam = cell(row, columns.piTeam);
 
-    // if (!labName || !piFirstName || !piLastName) {
-    //   console.log(`Skipped row ${rowNum}: missing lab name or PI name`);
-    //   skippedEmpty += 1;
-    //   return;
-    // }
-
     try {
       const lab = await findLabByName(env, labName);
       if (!lab) {
@@ -169,15 +163,6 @@ const app = async () => {
         alreadyCorrect += 1;
         return;
       }
-
-      // if (currentLabPI) {
-      //   // TODO: remove this guard once the client confirms overwriting an existing labPI is OK.
-      //   const message = `CONFLICT: "${labName}" already has a different labPI (${currentLabPI}) - sheet says it should be ${piUserId}. Skipping, no changes made.`;
-      //   console.log(message);
-      //   warnings.push(message);
-      //   piConflict += 1;
-      //   return;
-      // }
 
       labEntry.fields = labEntry.fields || {};
       labEntry.fields.labPI = loc(createEntryLink(piUserId));

@@ -13,15 +13,13 @@ import {
 } from './import-utils';
 
 /**
- * Imports labs into Contentful from a CSV with columns:
- *
- * This is Phase 1 of a three-phase pipeline (see import-lab-team-users.ts and
+ * This is Phase 1 of a three-phase pipeline (see import-team-users.ts and
  * link-lab-pis.ts) that resolves the circular Lab <-> User reference: labs are
  * created here WITHOUT their PI link, since the PI user may not exist yet.
  * PI columns are read by link-lab-pis.ts, not this script.
  *
- * "Lab On Hub?" can sometimes be wrong, i.e it says no but the lab exists in cms or yes but it doesn't, so it's
- * treated as a signal to reconcile and log, not a create/skip gate - every lab
+ * The "Lab On Hub?" column can sometimes be wrong, i.e it says no but the lab exists in cms or yes but it doesn't, so it's
+ * treated as a signal to log for manual reconciliation, not a create/skip gate - every lab
  * named in the CSV ends up created or confirmed already published either way.
  *
  * Entries are created and published immediately (no draft review step).

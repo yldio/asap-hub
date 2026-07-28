@@ -58,10 +58,8 @@ it('displays type as Report when document type is report.', () => {
   );
   expect(screen.getByText('Report')).toBeVisible();
 });
-it('displays the correct message when versionAction is truthy', () => {
-  const { getByText } = render(
-    <OutputVersions {...baseProps} versionAction={'create'} />,
-  );
+it('displays the correct message when formLayout is true', () => {
+  const { getByText } = render(<OutputVersions {...baseProps} formLayout />);
   expect(
     getByText(
       /list with all previous output versions that contributed to this one/i,
@@ -69,7 +67,7 @@ it('displays the correct message when versionAction is truthy', () => {
   ).toBeVisible();
 });
 
-it('displays the correct message when versionAction is undefined', () => {
+it('displays the correct message when formLayout is false', () => {
   const { getByText } = render(<OutputVersions {...baseProps} />);
   expect(
     getByText(

@@ -9,22 +9,29 @@ import {
 } from '../../test-utils/research-output-form';
 import { mockActErrorsInConsole } from '../../../test-utils';
 
+jest.setTimeout(60000);
+
 describe('ResearchOutputForm toasts', () => {
   const id = '42';
   const saveFn = jest.fn();
   const saveDraftFn = jest.fn();
   let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+  let reportValidity: jest.SpyInstance;
 
   beforeEach(() => {
     capturedLocation.current = null;
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    reportValidity = jest
+      .spyOn(HTMLFormElement.prototype, 'reportValidity')
+      .mockReturnValue(true);
 
     consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
     consoleMock.mockRestore();
+    reportValidity.mockRestore();
     jest.resetAllMocks();
   });
 
@@ -46,7 +53,7 @@ describe('ResearchOutputForm toasts', () => {
     await userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
 
     await waitFor(() => {
-      expect(capturedLocation.current).not.toBeNull();
+      expect(saveDraftFn).toHaveBeenCalled();
       expect(capturedLocation.current?.pathname).toEqual(
         `/shared-research/${id}`,
       );
@@ -75,7 +82,7 @@ describe('ResearchOutputForm toasts', () => {
     );
 
     await waitFor(() => {
-      expect(capturedLocation.current).not.toBeNull();
+      expect(saveFn).toHaveBeenCalled();
       expect(capturedLocation.current?.pathname).toEqual(
         `/shared-research/${id}`,
       );

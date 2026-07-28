@@ -51,7 +51,6 @@ describe('form buttons', () => {
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
       researchOutputData = undefined,
-      versionAction = undefined,
       isImportedFromManuscript = false,
       flowId = 'team-create-manual',
     }: {
@@ -60,9 +59,6 @@ describe('form buttons', () => {
 
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
-      versionAction?: ComponentProps<
-        typeof ResearchOutputForm
-      >['versionAction'];
       researchTags?: ResearchTagResponse[];
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
@@ -86,7 +82,6 @@ describe('form buttons', () => {
         <MemoryRouter>
           <ResearchOutputForm
             {...getDefaultProps()}
-            versionAction={versionAction}
             researchOutputData={researchOutputData}
             selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
             documentType={documentType}
@@ -104,6 +99,10 @@ describe('form buttons', () => {
             availableActions={resolveResearchOutputAvailableActions({
               flowId,
               permissions,
+              researchOutputData,
+              documentType,
+              versions: researchOutputData?.versions ?? [],
+              isImportedFromManuscript,
             })}
             permissions={permissions}
           />

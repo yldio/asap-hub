@@ -108,6 +108,11 @@ export const getSharingStatus = (
   return documentType === 'Article' ? 'Public' : 'Network Only';
 };
 
+export const getChangelog = (
+  changelog?: ResearchOutputPostRequest['changelog'],
+  isAddVersionFlow = false,
+): string => (isAddVersionFlow ? '' : changelog || '');
+
 export const getOwnRelatedResearchLinks = (
   relatedResearch?: ResearchOutputDataObject['relatedResearch'],
 ) =>

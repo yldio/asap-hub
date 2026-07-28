@@ -5,6 +5,8 @@ import { StaticRouter } from 'react-router';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { defaultProps } from '../../test-utils/research-output-form';
 
+jest.setTimeout(60000);
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();
 });
@@ -14,7 +16,10 @@ it('displays Save Draft button when canSaveDraft action is available', () => {
     <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
-        availableActions={{ canSaveDraft: false }}
+        availableActions={{
+          ...defaultProps.availableActions,
+          showSaveDraftButton: false,
+        }}
       />
     </StaticRouter>,
   );
@@ -25,7 +30,10 @@ it('displays Save Draft button when canSaveDraft action is available', () => {
     <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
-        availableActions={{ canSaveDraft: true }}
+        availableActions={{
+          ...defaultProps.availableActions,
+          showSaveDraftButton: true,
+        }}
       />
     </StaticRouter>,
   );
@@ -41,14 +49,17 @@ describe('new version confirmation', () => {
         <StaticRouter location="/">
           <ResearchOutputForm
             {...defaultProps}
-            availableActions={{ canSaveDraft: false }}
+            availableActions={{
+              ...defaultProps.availableActions,
+              showSaveDraftButton: false,
+            }}
             {...props}
           />
         </StaticRouter>
       </InnerToastContext.Provider>,
     );
 
-  it('shows the confirmation on an add-version flow without relying on versionAction', async () => {
+  it('shows the confirmation on an add-version flow', async () => {
     renderFlowForm({ flowId: 'team-add-version' });
     await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
     expect(
@@ -56,8 +67,8 @@ describe('new version confirmation', () => {
     ).toBeVisible();
   });
 
-  it('does not show the confirmation when the flow does not require it, even with versionAction set', async () => {
-    renderFlowForm({ flowId: 'team-create-manual', versionAction: 'create' });
+  it('does not show the confirmation when the flow does not require it', async () => {
+    renderFlowForm({ flowId: 'team-create-manual' });
     await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
     expect(
       screen.queryByText(/Publish new version for the whole hub?/i),

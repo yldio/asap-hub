@@ -17,6 +17,8 @@ const props: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   environments: [],
   documentType: 'Article',
   researchTags: [],
+  showIdentifierSection: true,
+  showCatalogNumber: false,
 };
 
 it('should render a tag', async () => {
@@ -57,7 +59,11 @@ it('should trigger an onChange event when a text is being typed into access inst
 
 it('should show lab catalogue number for lab materials', async () => {
   const { rerender } = render(
-    <ResearchOutputExtraInformationCard {...props} documentType={'Article'} />,
+    <ResearchOutputExtraInformationCard
+      {...props}
+      documentType={'Article'}
+      showCatalogNumber={false}
+    />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeNull();
 
@@ -65,6 +71,7 @@ it('should show lab catalogue number for lab materials', async () => {
     <ResearchOutputExtraInformationCard
       {...props}
       documentType={'Lab Material'}
+      showCatalogNumber={true}
     />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeVisible();

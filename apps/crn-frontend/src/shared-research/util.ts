@@ -1,4 +1,5 @@
 import {
+  manuscriptIdFromVersionRecordId,
   mapManuscriptLifecycleToType,
   mapManuscriptTypeToSubType,
   ManuscriptVersionResponse,
@@ -50,7 +51,7 @@ export const mapManuscriptVersionToResearchOutput = (
   layImpactStatement: manuscriptVersion.layImpactStatement,
   categories: manuscriptVersion.categories,
   relatedManuscriptVersion: manuscriptVersion.versionId,
-  relatedManuscript: manuscriptVersion.id.split('mv-')[1],
+  relatedManuscript: manuscriptIdFromVersionRecordId(manuscriptVersion.id),
   doi: manuscriptVersion.doi,
   publishDate:
     manuscriptVersion.lifecycle === 'Publication' ||

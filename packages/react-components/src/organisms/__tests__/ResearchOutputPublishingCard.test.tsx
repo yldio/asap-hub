@@ -9,6 +9,9 @@ import ResearchOutputPublishingCard, {
 } from '../ResearchOutputPublishingCard';
 
 const props: ComponentProps<typeof ResearchOutputPublishingCard> = {
+  disableDateMadePublic: false,
+  disableNonPublicSharingStatus: false,
+  disableUsedInPublication: false,
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
@@ -44,25 +47,6 @@ it('conditionally shows date published field', async () => {
     <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
   );
   expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
-});
-
-it('enables the date made public field when creating an output', () => {
-  render(<ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />);
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
-});
-
-it('disables the date made public field when editing an output that already has a date', () => {
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        publishDate: '2022-03-24',
-      }}
-    />,
-  );
-  expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
 });
 
 it('enables the date made public field when editing an output without a date', () => {
@@ -167,12 +151,12 @@ describe('getPublishDateValidationMessage returns', () => {
   });
 });
 
-it('disables the date field when imported from a manuscript with a date', () => {
+it('disables the date field when disableDateMadePublic is true', () => {
   render(
     <ResearchOutputPublishingCard
       {...props}
-      sharingStatus={'Public'}
-      isImportedFromManuscript
+      sharingStatus="Public"
+      disableDateMadePublic={true}
       researchOutputData={createResearchOutputResponse()}
     />,
   );
@@ -183,12 +167,9 @@ it('enables the date field when imported from a manuscript without a date', () =
   render(
     <ResearchOutputPublishingCard
       {...props}
-      sharingStatus={'Public'}
-      isImportedFromManuscript
-      researchOutputData={{
-        ...createResearchOutputResponse(),
-        publishDate: undefined,
-      }}
+      sharingStatus="Public"
+      disableDateMadePublic={false}
+      researchOutputData={createResearchOutputResponse()}
     />,
   );
   expect(screen.getByLabelText(/date made public/i)).toBeEnabled();

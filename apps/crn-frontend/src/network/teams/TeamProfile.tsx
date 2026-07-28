@@ -62,7 +62,7 @@ const DuplicateOutput: FC = () => {
   if (output && output.teams[0]?.id) {
     return (
       <TeamOutput
-        researchOutputData={{
+        existingOutput={{
           ...output,
           id: '',
           published: false,

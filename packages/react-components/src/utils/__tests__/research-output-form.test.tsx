@@ -5,6 +5,7 @@ import {
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
+  getChangelog,
   getDecision,
   getIdentifierType,
   getOwnRelatedResearchLinks,
@@ -37,6 +38,20 @@ describe('getDecision', () => {
   });
   it('return yes for "Article" and decision undefined', () => {
     expect(getDecision(undefined, 'Article')).toEqual('Yes');
+  });
+});
+
+describe('getChangelog', () => {
+  it('returns empty string on add-version flow', () => {
+    expect(getChangelog('previous changelog', true)).toEqual('');
+  });
+  it('returns existing changelog when not adding a version', () => {
+    expect(getChangelog('previous changelog', false)).toEqual(
+      'previous changelog',
+    );
+  });
+  it('returns empty string when changelog is undefined', () => {
+    expect(getChangelog(undefined, false)).toEqual('');
   });
 });
 

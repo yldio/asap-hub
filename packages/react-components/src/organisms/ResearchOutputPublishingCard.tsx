@@ -11,12 +11,14 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 
-type ResearchOutputFormSharingCardProps = Pick<
+type ResearchOutputPublishingCardProps = Pick<
   ResearchOutputPostRequest,
   'sharingStatus'
 > & {
+  disableUsedInPublication: boolean;
+  disableNonPublicSharingStatus: boolean;
+  disableDateMadePublic: boolean;
   researchOutputData?: ResearchOutputResponse;
-  documentType?: ResearchOutputResponse['documentType'];
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
@@ -24,8 +26,6 @@ type ResearchOutputFormSharingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
-  isCreatingOutputRoute?: boolean;
-  isImportedFromManuscript?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -38,17 +38,16 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
   return 'Publish date cannot be greater than today';
 };
 
-const ResearchOutputFormSharingCard: React.FC<
-  ResearchOutputFormSharingCardProps
+const ResearchOutputPublishingCard: React.FC<
+  ResearchOutputPublishingCardProps
 > = ({
-  researchOutputData,
-  documentType,
-  isCreatingOutputRoute,
+  disableUsedInPublication,
+  disableNonPublicSharingStatus,
+  disableDateMadePublic,
   asapFunded,
   usedInPublication,
   sharingStatus,
   publishDate,
-  isImportedFromManuscript,
   onChangeAsapFunded = noop,
   onChangeUsedInPublication = noop,
   onChangeSharingStatus = noop,
@@ -75,18 +74,12 @@ const ResearchOutputFormSharingCard: React.FC<
         {
           value: 'No',
           label: 'No',
-          disabled:
-            isCreatingOutputRoute &&
-            documentType === 'Article' &&
-            researchOutputData?.usedInPublication === undefined,
+          disabled: disableUsedInPublication,
         },
         {
           value: 'Not Sure',
           label: 'Not Sure',
-          disabled:
-            isCreatingOutputRoute &&
-            documentType === 'Article' &&
-            researchOutputData?.usedInPublication === undefined,
+          disabled: disableUsedInPublication,
         },
       ]}
       value={usedInPublication}
@@ -100,10 +93,7 @@ const ResearchOutputFormSharingCard: React.FC<
         {
           value: 'Network Only',
           label: 'CRN Only',
-          disabled:
-            (documentType === 'Article' &&
-              researchOutputData?.sharingStatus === undefined) ||
-            isImportedFromManuscript,
+          disabled: disableNonPublicSharingStatus,
         },
         { value: 'Public', label: 'Public' },
       ]}
@@ -117,12 +107,7 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle={'(required)'}
         description={'The date this output first became publicly available.'}
         required
-        enabled={
-          !(
-            researchOutputData?.publishDate &&
-            (isImportedFromManuscript || researchOutputData?.id)
-          )
-        }
+        enabled={!disableDateMadePublic}
         onChange={onChangePublishDate}
         value={publishDate}
         max={new Date()}
@@ -132,4 +117,4 @@ const ResearchOutputFormSharingCard: React.FC<
   </FormCard>
 );
 
-export default ResearchOutputFormSharingCard;
+export default ResearchOutputPublishingCard;

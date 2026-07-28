@@ -15,13 +15,10 @@ import {
   ResearchOutputAvailableActions,
   ResearchOutputPermissions,
 } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
-import { useMatch, useNavigate } from 'react-router';
-
-import { OptionsType } from '../select';
-
+import { useNavigate } from 'react-router';
 import { MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import {
@@ -39,6 +36,7 @@ import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelate
 import { rem } from '../pixels';
 
 import {
+  getChangelog,
   getDecision,
   getIconForDocumentType,
   getIdentifierType,
@@ -68,8 +66,6 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
-    displayChangelog: boolean;
-    versionAction?: 'create' | 'edit';
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
@@ -114,7 +110,6 @@ const contentStyles = css({
 });
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
-  displayChangelog,
   documentType,
   researchOutputData,
   onSave,
@@ -137,7 +132,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   clearServerValidationError,
   published,
   permissions,
-  versionAction,
   isImportedFromManuscript,
   flowId,
   availableActions,
@@ -146,8 +140,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const { canPublishResearchOutput } = permissions;
 
   const behavior = getResearchOutputFlowBehavior(flowId);
-
-  const showSaveDraftButton = availableActions.canSaveDraft;
 
   const showPublishButton = !!canPublishResearchOutput;
 
@@ -255,7 +247,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [changelog, setChangelog] = useState<
     ResearchOutputPostRequest['changelog']
-  >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
+  >(getChangelog(researchOutputData?.changelog, behavior.isAddVersionFlow));
 
   const [alreadySeenModals, setAlreadySeenModals] = useState<
     Set<SeenModalType>
@@ -294,35 +286,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
-  const isCreatingTeamArticle = !!useMatch(
-    network({})
-      .teams({})
-      .team({
-        teamId: (teams as OptionsType<MultiSelectOptionsType>)[0]?.value || '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
-
-  const isCreatingWorkingGroupArticle = !!useMatch(
-    network({})
-      .workingGroups({})
-      .workingGroup({
-        workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
-
-  const isCreatingOutput =
-    isCreatingTeamArticle || isCreatingWorkingGroupArticle;
-
   const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
     getDecision(
       researchOutputData?.usedInPublication,
-      isCreatingOutput ? documentType : undefined,
+      behavior.isCreateFlow ? documentType : undefined,
     ),
   );
 
@@ -331,7 +298,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   >(
     getSharingStatus(
       researchOutputData?.sharingStatus,
-      isCreatingOutput ? documentType : undefined,
+      behavior.isCreateFlow ? documentType : undefined,
     ),
   );
 
@@ -518,10 +485,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles} data-flow-id={flowId}>
                 <ResearchOutputFormSharingCard
+                  showChangelog={availableActions.showChangelog}
+                  showImpactAndCategory={availableActions.showImpactAndCategory}
+                  disableImpactAndCategory={
+                    availableActions.disableImpactAndCategory
+                  }
                   isFormSubmitted={isFormSubmitted}
-                  isCreatingNewVersion={versionAction === 'create'}
-                  displayChangelog={displayChangelog}
-                  documentType={documentType}
                   serverValidationErrors={serverValidationErrors}
                   clearServerValidationError={clearServerValidationError}
                   isSaving={isSaving}
@@ -567,8 +536,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   typeDescription="Select the type that matches your output the best."
                 />
                 <ResearchOutputPublishingCard
-                  documentType={documentType}
-                  isCreatingOutputRoute={!!isCreatingOutput}
+                  disableUsedInPublication={
+                    availableActions.disableUsedInPublication
+                  }
+                  disableDateMadePublic={availableActions.disableDateMadePublic}
+                  disableNonPublicSharingStatus={
+                    availableActions.disableNonPublicSharingStatus
+                  }
                   researchOutputData={researchOutputData}
                   asapFunded={asapFunded}
                   onChangeAsapFunded={setAsapFunded}
@@ -580,10 +554,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangePublishDate={(date) =>
                     setPublishDate(date ? new Date(date) : undefined)
                   }
-                  isImportedFromManuscript={isImportedFromManuscript}
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}
+                  showIdentifierSection={availableActions.showIdentifierSection}
+                  showCatalogNumber={availableActions.showCatalogNumber}
                   isSaving={isSaving}
                   researchTags={filteredResearchTags}
                   tagSuggestions={tagSuggestions.map((suggestion) => ({
@@ -642,7 +617,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   savingAction={savingAction}
                   isSaving={isSaving}
                   published={published}
-                  showSaveDraftButton={showSaveDraftButton}
+                  showSaveDraftButton={availableActions.showSaveDraftButton}
                   showPublishButton={showPublishButton}
                   onCancel={handleCancel}
                   onSaveDraft={handleSaveDraft}

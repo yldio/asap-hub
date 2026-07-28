@@ -108,10 +108,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     hasResearchOutputId: !!researchOutputData?.id,
     isDuplicate,
   });
-  const availableActions = resolveResearchOutputAvailableActions({
-    flowId,
-    permissions,
-  });
 
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
@@ -135,6 +131,15 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     versions = researchOutputData?.versions ?? [];
   }
 
+  const availableActions = resolveResearchOutputAvailableActions({
+    flowId,
+    permissions,
+    researchOutputData,
+    documentType,
+    versions,
+    isImportedFromManuscript: false,
+  });
+
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
@@ -150,18 +155,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
-          {versionAction && versions.length > 0 && (
-            <OutputVersions
-              app="crn"
-              versions={versions}
-              versionAction={versionAction}
-            />
+          {availableActions.showVersionHistory && (
+            <OutputVersions app="crn" versions={versions} formLayout />
           )}
           <ResearchOutputForm
-            displayChangelog={Boolean(
-              versionAction === 'create' || versions.length > 0,
-            )}
-            versionAction={versionAction}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getImpactSuggestions={getImpactSuggestions}

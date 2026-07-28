@@ -962,6 +962,31 @@ export const findUserByEmail = async (
   return { id: firstItem.sys.id, entry: firstItem };
 };
 
+export const findUserByEmailCaseInsensitive = async (
+  env: Environment,
+  email: string,
+): Promise<ContentfulEntryLookup | null> => {
+  const normalizedEmail = email.toLowerCase();
+  const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
+    content_type: 'users',
+    'fields.email[match]': normalizedEmail,
+    limit: 10,
+  });
+
+  const match = entries.items.find(
+    (item) =>
+      (
+        (item.fields?.email?.['en-US'] as string | undefined) || ''
+      ).toLowerCase() === normalizedEmail,
+  );
+
+  if (!match) {
+    return null;
+  }
+  return { id: match.sys.id, entry: match };
+};
+
 /**
  * Finds all users matching an exact first+last name pair. Name alone isn't
  * unique, so this returns every non-archived candidate rather than the first

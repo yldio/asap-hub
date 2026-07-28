@@ -9,7 +9,7 @@ import {
   createTeamMembership,
   findLabByName,
   findTeamByName,
-  findUserByEmail,
+  findUserByEmailCaseInsensitive,
   findUserByOrcid,
   getContentfulEnvironment,
   getErrorMessage,
@@ -32,6 +32,9 @@ import {
  * link-lab-pis.ts). Labs referenced by the `Lab` column must already exist
  * and be published (run import-labs.ts first) - an unresolved lab is logged
  * and skipped without failing the row.
+ *
+ * A row with no ORCID or no Email is skipped entirely and logged - both are
+ * required to safely look a person up.
  *
  * Each row is matched against Contentful first by ORCID, then by email if no
  * ORCID match is found (covers users created before ORCID was recorded). An
@@ -150,6 +153,7 @@ const app = async () => {
 
   let created = 0;
   let skippedExists = 0;
+  let skippedMissingIdentifier = 0;
   let teamLinkSkippedNotFound = 0;
   let teamLinkSkippedInvalidRole = 0;
   let labLinkSkipped = 0;
@@ -455,8 +459,17 @@ const app = async () => {
       label,
     };
 
+    if (!orcid || !email) {
+      const message = `Skipped (missing ORCID or email): ${label} - both are required to safely match or create a user.`;
+      console.log(message);
+      warnings.push(message);
+      skippedMissingIdentifier += 1;
+      return;
+    }
+
     const byOrcid = await findUserByOrcid(env, orcid);
-    const foundUser = byOrcid || (await findUserByEmail(env, email));
+    const foundUser =
+      byOrcid || (await findUserByEmailCaseInsensitive(env, email));
 
     if (foundUser) {
       await updateExistingUser(foundUser, Boolean(byOrcid), rowData);
@@ -479,7 +492,7 @@ const app = async () => {
 
   console.log(`\n--- Summary ---`);
   console.log(
-    `Created: ${created}, Skipped (exact match): ${skippedExists}, Failed: ${failed}`,
+    `Created: ${created}, Skipped (exact match): ${skippedExists}, Skipped (missing ORCID or email): ${skippedMissingIdentifier}, Failed: ${failed}`,
   );
   console.log(
     `Team links skipped (not found): ${teamLinkSkippedNotFound}, Team links skipped (invalid role): ${teamLinkSkippedInvalidRole}, Lab links skipped: ${labLinkSkipped}, Memberships added to existing users: ${membershipsAddedToExistingUsers}, ORCID backfilled: ${orcidBackfilled}, ORCID updated (mismatch corrected): ${orcidMismatchUpdated}, Labs backfilled: ${labsBackfilled}, Email mismatches flagged (ORCID match, not updated): ${emailMismatchFlagged}`,

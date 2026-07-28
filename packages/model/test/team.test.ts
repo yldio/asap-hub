@@ -74,9 +74,9 @@ describe('countActiveUniqueMembers', () => {
   });
 
   test('should count a user with multiple active memberships only once', () => {
-    expect(
-      countActiveUniqueMembers([{ id: 'user-1' }, { id: 'user-1' }]),
-    ).toBe(1);
+    expect(countActiveUniqueMembers([{ id: 'user-1' }, { id: 'user-1' }])).toBe(
+      1,
+    );
   });
 
   test('should count a user as active when they have an active and a past membership', () => {

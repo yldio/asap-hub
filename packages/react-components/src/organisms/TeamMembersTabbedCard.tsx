@@ -49,10 +49,8 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
       activeTabIndex={isTeamInactive ? 1 : 0}
       tabs={[
         {
-          tabTitle: `Active Team Members (${
-            isTeamInactive ? 0 : activeMembers.length
-          })`,
-          items: isTeamInactive ? [] : activeMembers,
+          tabTitle: `Active Team Members (${activeMembers.length})`,
+          items: activeMembers,
           truncateFrom: 8,
           disabled: isTeamInactive,
           empty: (

@@ -41,7 +41,7 @@ import {
   TeamTool,
   TeamType,
   TeamUpdateDataObject,
-  isActiveTeamMember,
+  countActiveUniqueMembers,
   isPIRole,
   teamStatusRank,
   getLatestUserAward,
@@ -376,16 +376,17 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 export const parseContentfulGraphQlTeamListItem = (
   item: TeamItem,
 ): TeamListItemDataObject => {
-  const [activeMemberIds, labIds]: [Set<string>, Set<string>] = (
-    item.linkedFrom?.teamMembershipCollection?.items || []
-  ).reduce(
-    ([memberIdsSet, labIdsSet], membership: Membership | null) => {
+  const [members, labIds]: [
+    Array<Pick<TeamMember, 'id' | 'alumniSinceDate' | 'inactiveSinceDate'>>,
+    Set<string>,
+  ] = (item.linkedFrom?.teamMembershipCollection?.items || []).reduce(
+    ([memberList, labIdsSet], membership: Membership | null) => {
       if (
         !membership ||
         !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
         !membership.role
       ) {
-        return [memberIdsSet, labIdsSet];
+        return [memberList, labIdsSet];
       }
 
       const user = membership.linkedFrom?.usersCollection?.items[0];
@@ -400,19 +401,22 @@ export const parseContentfulGraphQlTeamListItem = (
         memberLabIds?.forEach((labId) => labIdsSet.add(labId));
       }
 
-      if (
-        userId &&
-        isActiveTeamMember({
+      if (userId) {
+        memberList.push({
+          id: userId,
           alumniSinceDate: user?.alumniSinceDate ?? undefined,
           inactiveSinceDate: membership.inactiveSinceDate ?? undefined,
-        })
-      ) {
-        memberIdsSet.add(userId);
+        });
       }
 
-      return [memberIdsSet, labIdsSet];
+      return [memberList, labIdsSet];
     },
-    [new Set() as Set<string>, new Set() as Set<string>],
+    [
+      [] as Array<
+        Pick<TeamMember, 'id' | 'alumniSinceDate' | 'inactiveSinceDate'>
+      >,
+      new Set() as Set<string>,
+    ],
   );
 
   const linkedProject =
@@ -431,7 +435,7 @@ export const parseContentfulGraphQlTeamListItem = (
     linkedProjectId: linkedProject?.sys.id ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
-    memberCount: activeMemberIds.size,
+    memberCount: countActiveUniqueMembers(members),
     labCount: labIds.size,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,

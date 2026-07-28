@@ -87,6 +87,13 @@ export const isActiveTeamMember = (
   member: Pick<TeamMember, 'alumniSinceDate' | 'inactiveSinceDate'>,
 ): boolean => !member.alumniSinceDate && !member.inactiveSinceDate;
 
+export const countActiveUniqueMembers = (
+  members: ReadonlyArray<
+    Pick<TeamMember, 'id' | 'alumniSinceDate' | 'inactiveSinceDate'>
+  >,
+): number =>
+  new Set(members.filter(isActiveTeamMember).map(({ id }) => id)).size;
+
 export type TeamManuscript = Pick<
   ManuscriptResponse,
   | 'id'

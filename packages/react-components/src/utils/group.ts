@@ -125,7 +125,7 @@ export const getTeamMembersByStatus = (
   isTeamInactive: boolean,
 ): { activeMembers: GroupedTeamMember[]; pastMembers: GroupedTeamMember[] } => {
   const [rawPast, rawActive] = splitListBy(
-    [...members],
+    members,
     (member) => isTeamInactive || !isActiveTeamMember(member),
   );
   const active = groupTeamMembersByUserId(rawActive);

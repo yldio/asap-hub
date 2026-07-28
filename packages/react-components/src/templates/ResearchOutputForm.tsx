@@ -15,12 +15,10 @@ import {
   ResearchOutputAvailableActions,
   ResearchOutputPermissions,
 } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
-import { useMatch, useNavigate } from 'react-router';
-
-import { OptionsType } from '../select';
+import { useNavigate } from 'react-router';
 
 import { MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -292,35 +290,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
-  const isCreatingTeamArticle = !!useMatch(
-    network({})
-      .teams({})
-      .team({
-        teamId: (teams as OptionsType<MultiSelectOptionsType>)[0]?.value || '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
-
-  const isCreatingWorkingGroupArticle = !!useMatch(
-    network({})
-      .workingGroups({})
-      .workingGroup({
-        workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
-
-  const isCreatingOutput =
-    isCreatingTeamArticle || isCreatingWorkingGroupArticle;
-
   const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
     getDecision(
       researchOutputData?.usedInPublication,
-      isCreatingOutput ? documentType : undefined,
+      behavior.isCreateFlow ? documentType : undefined,
     ),
   );
 
@@ -329,7 +302,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   >(
     getSharingStatus(
       researchOutputData?.sharingStatus,
-      isCreatingOutput ? documentType : undefined,
+      behavior.isCreateFlow ? documentType : undefined,
     ),
   );
 
@@ -570,7 +543,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 />
                 <ResearchOutputPublishingCard
                   documentType={documentType}
-                  isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}
                   asapFunded={asapFunded}
                   onChangeAsapFunded={setAsapFunded}
@@ -584,6 +556,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   }
                   isImportedFromManuscript={isImportedFromManuscript}
                   disableDateMadePublic={availableActions.disableDateMadePublic}
+                  disableUsedInPublication={
+                    availableActions.disableUsedInPublication
+                  }
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}

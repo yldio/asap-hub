@@ -3,7 +3,27 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
 
 import { fern, warning500 } from '../../colors';
+import { rem } from '../../pixels';
 import EventAttendance, { EventAttendanceTeam } from '../EventAttendance';
+
+globalThis.ResizeObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+})) as unknown as typeof ResizeObserver;
+
+const mockTableOverflow = (scrollWidth: number, clientWidth: number) => {
+  Object.defineProperty(Element.prototype, 'scrollWidth', {
+    configurable: true,
+    get: () => scrollWidth,
+  });
+  Object.defineProperty(Element.prototype, 'clientWidth', {
+    configurable: true,
+    get: () => clientWidth,
+  });
+};
+
+afterEach(() => mockTableOverflow(0, 0));
 
 const progressArcStroke = (wheel: Element | undefined) =>
   wheel?.querySelectorAll('circle')[1]?.getAttribute('stroke');
@@ -161,27 +181,51 @@ describe('EventAttendance', () => {
     expect(queryByText('View More Attendees')).not.toBeInTheDocument();
   });
 
+  const manyTeams: EventAttendanceTeam[] = Array.from(
+    { length: 12 },
+    (_, index) => ({
+      teamId: `t${index + 1}`,
+      teamName: `Team ${index + 1}`,
+      attended: true,
+    }),
+  );
+
   it('collapses to 10 teams and reveals the rest on View More Attendees', async () => {
-    const manyTeams: EventAttendanceTeam[] = Array.from(
-      { length: 12 },
-      (_, index) => ({
-        teamId: `t${index + 1}`,
-        teamName: `Team ${index + 1}`,
-        attended: true,
-      }),
-    );
     const { getByText, queryByText } = renderCard({ teams: manyTeams });
 
-    // only the first 10 are shown initially
     expect(getByText('Team 10')).toBeInTheDocument();
     expect(queryByText('Team 11')).not.toBeInTheDocument();
     expect(queryByText('Team 12')).not.toBeInTheDocument();
 
     await userEvent.click(getByText('View More Attendees'));
 
-    // all teams are shown and the control disappears
     expect(getByText('Team 11')).toBeInTheDocument();
     expect(getByText('Team 12')).toBeInTheDocument();
     expect(queryByText('View More Attendees')).not.toBeInTheDocument();
+    expect(getByText('View Less Attendees')).toBeInTheDocument();
+  });
+
+  it('collapses the extra rows again on View Less Attendees', async () => {
+    const { getByText, queryByText } = renderCard({ teams: manyTeams });
+
+    await userEvent.click(getByText('View More Attendees'));
+    await userEvent.click(getByText('View Less Attendees'));
+
+    expect(queryByText('Team 11')).not.toBeInTheDocument();
+    expect(queryByText('Team 12')).not.toBeInTheDocument();
+    expect(getByText('View More Attendees')).toBeInTheDocument();
+  });
+
+  it('shrinks the attendance column to its header so teams get the space', () => {
+    const { container } = renderCard();
+    const attendanceCol = container.querySelectorAll('col')[1];
+    expect(attendanceCol).toHaveStyleRule('width', '1%');
+  });
+
+  it('adds a scroll gutter when the team table overflows horizontally', () => {
+    mockTableOverflow(400, 100);
+    const { getByRole } = renderCard();
+    const wrapper = getByRole('table').parentElement as HTMLElement;
+    expect(wrapper).toHaveStyleRule('padding-bottom', rem(8));
   });
 });

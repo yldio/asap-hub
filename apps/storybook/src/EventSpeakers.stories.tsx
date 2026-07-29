@@ -16,13 +16,14 @@ const buildTeams = (
   numberOfTeams: number,
   membersPerTeam: number,
   teamsSharingFindings: number,
+  hasInactiveTeam: boolean,
 ): EventSpeakerTeamRow[] =>
   Array.from({ length: numberOfTeams }, (_, teamIndex) => ({
     teamId: `team-${teamIndex}`,
     teamName: `Team ${teamIndex + 1}`,
     teamType:
       teamIndex % 2 === 0 ? ('discovery' as const) : ('resource' as const),
-    isTeamInactive: teamIndex === 2,
+    isTeamInactive: hasInactiveTeam && teamIndex === 2,
     // The first N teams share findings — drives the preliminary-findings %.
     sharedPreliminaryFindings: teamIndex < teamsSharingFindings,
     members: Array.from({ length: membersPerTeam }, (_m, memberIndex) => ({
@@ -56,6 +57,8 @@ type ControlArgs = {
   externalSharedFindings: boolean;
   isEditor: boolean;
   hasFinished: boolean;
+  longTeamNameExample: boolean;
+  hasInactiveTeam: boolean;
 };
 
 const meta: Meta<ControlArgs> = {
@@ -91,6 +94,15 @@ const meta: Meta<ControlArgs> = {
       control: 'boolean',
       description: 'Whether the event has already taken place',
     },
+    longTeamNameExample: {
+      control: 'boolean',
+      description:
+        'Rename the first team to a long single word to demo the horizontal-scroll + "Preliminary Findings" header behaviour',
+    },
+    hasInactiveTeam: {
+      control: 'boolean',
+      description: 'Mark the third team as inactive (shows the inactive badge)',
+    },
   },
   render: ({
     numberOfTeams,
@@ -100,19 +112,32 @@ const meta: Meta<ControlArgs> = {
     externalSharedFindings,
     isEditor,
     hasFinished,
-  }) => (
-    <EventSpeakers
-      teams={buildTeams(numberOfTeams, membersPerTeam, teamsSharingFindings)}
-      externalUsers={buildExternalUsers(
-        numberOfExternalUsers,
-        externalSharedFindings,
-      )}
-      hasFinished={hasFinished}
-      onEdit={isEditor ? noop : undefined}
-      onExport={isEditor ? noop : undefined}
-      onAddSpeaker={isEditor ? noop : undefined}
-    />
-  ),
+    longTeamNameExample,
+    hasInactiveTeam,
+  }) => {
+    const teams = buildTeams(
+      numberOfTeams,
+      membersPerTeam,
+      teamsSharingFindings,
+      hasInactiveTeam,
+    );
+    if (longTeamNameExample && teams[0]) {
+      teams[0] = { ...teams[0], teamName: 'Sundaravadivelu' };
+    }
+    return (
+      <EventSpeakers
+        teams={teams}
+        externalUsers={buildExternalUsers(
+          numberOfExternalUsers,
+          externalSharedFindings,
+        )}
+        hasFinished={hasFinished}
+        onEdit={isEditor ? noop : undefined}
+        onExport={isEditor ? noop : undefined}
+        onAddSpeaker={isEditor ? noop : undefined}
+      />
+    );
+  },
 };
 
 export default meta;
@@ -128,6 +153,8 @@ export const Playground: Story = {
     externalSharedFindings: false,
     isEditor: true,
     hasFinished: true,
+    longTeamNameExample: false,
+    hasInactiveTeam: false,
   },
 };
 
@@ -140,7 +167,12 @@ export const Upcoming: Story = {
 };
 
 export const Overflow: Story = {
-  args: { ...Playground.args, numberOfTeams: 14, teamsSharingFindings: 9 },
+  args: {
+    ...Playground.args,
+    numberOfTeams: 14,
+    teamsSharingFindings: 9,
+    longTeamNameExample: true,
+  },
 };
 
 export const FindingsFull: Story = {

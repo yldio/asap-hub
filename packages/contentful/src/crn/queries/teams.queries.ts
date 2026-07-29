@@ -32,7 +32,7 @@ export const FETCH_TEAM_BY_ID = gql`
         }
       }
       linkedFrom {
-        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
+        manuscriptsCollection(limit: 100, order: sys_firstPublishedAt_DESC) {
           items {
             sys {
               id

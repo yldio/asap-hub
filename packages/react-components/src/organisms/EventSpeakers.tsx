@@ -6,6 +6,8 @@ import {
   Avatar,
   Button,
   Card,
+  GradientProgressBar,
+  GradientProgressWheel,
   Headline3,
   Link,
   Paragraph,
@@ -33,7 +35,6 @@ import {
 } from '../molecules/shared-metric-card-styles';
 import { rem, tabletScreen } from '../pixels';
 
-import { ProgressBar, ProgressWheel } from './PreliminaryFindingsChart';
 import {
   defaultVisibleTeams,
   EventTeamType,
@@ -174,7 +175,7 @@ const FindingsMetric: React.FC<{
   <MetricCard>
     <div css={metricProgressRowStyles}>
       <span css={metricWheelStyles}>
-        <ProgressWheel percentage={value} label={label} />
+        <GradientProgressWheel percentage={value} label={label} />
       </span>
       <div>
         <p css={metricLabelStyles}>{label}</p>
@@ -183,7 +184,7 @@ const FindingsMetric: React.FC<{
       </div>
     </div>
     <div css={metricBarStyles}>
-      <ProgressBar percentage={value} label={label} />
+      <GradientProgressBar percentage={value} label={label} />
     </div>
   </MetricCard>
 );

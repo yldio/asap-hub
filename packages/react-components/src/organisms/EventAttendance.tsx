@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 
 import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
-import { fern, neutral1000, steel, warning500 } from '../colors';
+import { neutral1000, steel } from '../colors';
 import {
   ExportIcon,
   InactiveBadgeIcon,
@@ -35,12 +35,6 @@ import {
   teamInfoNoWrapStyles,
   viewMoreStyles,
 } from './shared-event-card-styles';
-
-// Attendance below this threshold colours the progress amber, otherwise green.
-// (A lower "red" tier may be added once design confirms it.)
-const attendanceAmberThreshold = 60;
-const getAttendanceColor = (percentage: number): string =>
-  percentage < attendanceAmberThreshold ? warning500.rgb : fern.rgb;
 
 const tableStyles = css({
   width: '100%',
@@ -187,7 +181,6 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
             label="Attendance"
             value={attendancePercentage}
             caption={`${teamsAttended} of ${teamsTotal} teams`}
-            color={getAttendanceColor(attendancePercentage)}
           />
           {sinceLastEvent && (
             <EventAttendanceMetric

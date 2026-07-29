@@ -53,6 +53,7 @@ it('renders the tag for inactive teams', () => {
     <TeamProfileHeader
       {...boilerplateProps}
       inactiveSince="2022-09-30T09:00:00Z"
+      teamStatus="Inactive"
     />,
   );
   expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
@@ -185,6 +186,7 @@ it('does not render upcoming events tab when team is inactive', () => {
     <TeamProfileHeader
       {...boilerplateProps}
       inactiveSince="2022-09-30T09:00:00Z"
+      teamStatus="Inactive"
     />,
   );
   expect(

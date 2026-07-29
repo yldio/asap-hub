@@ -399,6 +399,20 @@ describe('getTeamMembersByStatus', () => {
     expect(activeMembers.map((m) => m.id)).toEqual(['u1']);
     expect(pastMembers).toEqual([]);
   });
+
+  it('ignores null and undefined member entries', () => {
+    const members = [
+      { ...baseMember, id: 'active' },
+      null,
+      undefined,
+    ] as ReadonlyArray<TeamMember | null | undefined>;
+    const { activeMembers, pastMembers } = getTeamMembersByStatus(
+      members,
+      false,
+    );
+    expect(activeMembers.map((m) => m.id)).toEqual(['active']);
+    expect(pastMembers).toEqual([]);
+  });
 });
 
 describe('groupProjectMembersByUserId', () => {

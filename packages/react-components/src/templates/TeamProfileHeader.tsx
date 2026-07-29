@@ -158,7 +158,6 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
   displayName,
-  inactiveSince,
   members,
   pointOfContact,
   tools,
@@ -194,11 +193,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
     ResearchOutputPermissionsContext,
   );
 
-  const isActive = !inactiveSince;
+  const isActive = teamStatus === 'Active';
 
   const { activeMembers } = useMemo(
-    () => getTeamMembersByStatus(members, Boolean(inactiveSince)),
-    [members, inactiveSince],
+    () => getTeamMembersByStatus(members, !isActive),
+    [members, isActive],
   );
 
   return (

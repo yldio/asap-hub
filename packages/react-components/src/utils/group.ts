@@ -121,11 +121,14 @@ export const groupTeamMembersByUserId = (
 };
 
 export const getTeamMembersByStatus = (
-  members: ReadonlyArray<TeamMember>,
+  members: ReadonlyArray<TeamMember | null | undefined>,
   isTeamInactive: boolean,
 ): { activeMembers: GroupedTeamMember[]; pastMembers: GroupedTeamMember[] } => {
+  const validMembers = members.filter((member): member is TeamMember =>
+    Boolean(member),
+  );
   const [rawPast, rawActive] = splitListBy(
-    members,
+    validMembers,
     (member) => isTeamInactive || !isActiveTeamMember(member),
   );
   const active = groupTeamMembersByUserId(rawActive);

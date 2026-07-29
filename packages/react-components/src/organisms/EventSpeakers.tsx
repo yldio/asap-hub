@@ -1,6 +1,6 @@
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Avatar,
@@ -64,24 +64,26 @@ const speakerTableStyles = css({
   borderCollapse: 'collapse',
 });
 
-const findingsCenterMobileStyles = css({
-  [mobileQuery]: {
-    'th:nth-of-type(2), tbody td:nth-of-type(2)': {
-      textAlign: 'center',
-    },
-  },
-});
-
-const findingsColStyles = css({ width: '33%' });
+// width:1% shrinks the column to its header so the tick sits under the label.
+const findingsColStyles = css({ width: '1%' });
+const findingsHeaderCellStyles = css({ whiteSpace: 'nowrap' });
 const chevronColStyles = css({ width: rem(40) });
 
-const fullFindingsLabel = css({
-  [mobileQuery]: { display: 'none' },
-});
-
+// The compact "P. Findings" is only used on mobile while the table fits;
+// horizontal overflow forces the full label at any width (handled in JS).
+const fullFindingsLabel = css({ [mobileQuery]: { display: 'none' } });
 const shortFindingsLabel = css({
   display: 'none',
   [mobileQuery]: { display: 'inline' },
+});
+
+const teamCellStyles = css({ paddingRight: rem(24) });
+
+// Keep team rows on one line so a long name scrolls the table rather than
+// wrapping the name or shrinking the icons.
+const teamInfoNoWrapStyles = css({
+  whiteSpace: 'nowrap',
+  '> svg': { flexShrink: 0 },
 });
 
 const teamGroupStyles = css({
@@ -177,7 +179,7 @@ const FindingsMetric: React.FC<{
   <MetricCard>
     <div css={metricProgressRowStyles}>
       <span css={metricWheelStyles}>
-        <ProgressWheel percentage={value} />
+        <ProgressWheel percentage={value} label={label} />
       </span>
       <div>
         <p css={metricLabelStyles}>{label}</p>
@@ -186,7 +188,7 @@ const FindingsMetric: React.FC<{
       </div>
     </div>
     <div css={metricBarStyles}>
-      <ProgressBar percentage={value} />
+      <ProgressBar percentage={value} label={label} />
     </div>
   </MetricCard>
 );
@@ -268,8 +270,8 @@ const SpeakerRow: React.FC<{
   return (
     <tbody css={teamGroupStyles}>
       <tr>
-        <td css={[cellStyles, collapsedBottom]}>
-          <span css={teamInfoStyles}>{info}</span>
+        <td css={[cellStyles, teamCellStyles, collapsedBottom]}>
+          <span css={[teamInfoStyles, teamInfoNoWrapStyles]}>{info}</span>
         </td>
         {showFindings && (
           <td css={[statusCellStyles, collapsedBottom]}>
@@ -299,6 +301,25 @@ const SpeakerRow: React.FC<{
   );
 };
 
+// Reports whether an element's content overflows it horizontally, tracking
+// layout and content changes via ResizeObserver.
+const useHorizontalOverflow = () => {
+  const [element, setElement] = useState<HTMLElement | null>(null);
+  const [overflowing, setOverflowing] = useState(false);
+  useEffect(() => {
+    if (!element) {
+      return undefined;
+    }
+    const measure = () =>
+      setOverflowing(element.scrollWidth > element.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [element]);
+  return [setElement, overflowing] as const;
+};
+
 const editorEmptyMessage = (hasFinished: boolean): string =>
   hasFinished
     ? 'Add the people who presented at this event, then mark who shared preliminary findings.'
@@ -316,8 +337,8 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
     () => new Set(),
   );
   const [showAll, setShowAll] = useState(false);
+  const [tableRef, findingsOverflowing] = useHorizontalOverflow();
 
-  // Preliminary findings are only shared once the event has taken place.
   const showFindings = hasFinished;
 
   const externalCount = externalUsers?.members.length ?? 0;
@@ -373,21 +394,19 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
     teamsTotal > 0 ? Math.round((teamsShared / teamsTotal) * 100) : 0;
 
   const totalRows = teamsTotal + (hasExternal ? 1 : 0);
-  const showFooter = !showAll && totalRows > defaultVisibleTeams;
+  const hasMoreRows = totalRows > defaultVisibleTeams;
   const visibleTeams = showAll
     ? teamsWithSpeakers
     : teamsWithSpeakers.slice(0, defaultVisibleTeams - (hasExternal ? 1 : 0));
-  const showExternalRow = hasExternal && (showAll || !showFooter);
+  const showExternalRow = hasExternal && (showAll || !hasMoreRows);
 
-  const lastRowPadding = (isLastTeam: boolean): string | number | undefined => {
-    if (showFooter && isLastTeam) return rem(32);
-    if (isLastTeam && !showExternalRow) return 0;
-    return undefined;
-  };
+  const lastRowBottomPadding = hasMoreRows ? rem(32) : 0;
+  const lastRowPadding = (isLastTeam: boolean): string | number | undefined =>
+    isLastTeam && !showExternalRow ? lastRowBottomPadding : undefined;
 
   return (
     <Card padding={false}>
-      <div css={[contentStyles, showFooter && contentWithFooterStyles]}>
+      <div css={[contentStyles, hasMoreRows && contentWithFooterStyles]}>
         <div css={headerStyles}>
           <Headline3 noMargin>Speakers</Headline3>
           <div css={actionsStyles}>
@@ -431,13 +450,8 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
           )}
         </div>
 
-        <div css={tableWrapperStyles}>
-          <table
-            css={[
-              speakerTableStyles,
-              showFindings && findingsCenterMobileStyles,
-            ]}
-          >
+        <div css={tableWrapperStyles} ref={tableRef}>
+          <table css={speakerTableStyles}>
             <colgroup>
               <col />
               {showFindings && <col css={findingsColStyles} />}
@@ -449,9 +463,20 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                   <th css={headerCellStyles} scope="col">
                     Speakers
                   </th>
-                  <th css={headerCellStyles} scope="col">
-                    <span css={fullFindingsLabel}>Preliminary Findings</span>
-                    <span css={shortFindingsLabel}>P. Findings</span>
+                  <th
+                    css={[headerCellStyles, findingsHeaderCellStyles]}
+                    scope="col"
+                  >
+                    {findingsOverflowing ? (
+                      'Preliminary Findings'
+                    ) : (
+                      <>
+                        <span css={fullFindingsLabel}>
+                          Preliminary Findings
+                        </span>
+                        <span css={shortFindingsLabel}>P. Findings</span>
+                      </>
+                    )}
                   </th>
                   <th css={headerCellStyles} />
                 </tr>
@@ -535,7 +560,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                 showFindings={showFindings}
                 expanded={expandedRows.has('external')}
                 onToggle={() => toggleRow('external')}
-                collapsedBottomPadding={0}
+                collapsedBottomPadding={lastRowBottomPadding}
                 info={
                   <>
                     <span css={leadTextStyles}>External Users</span>
@@ -543,7 +568,12 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                   </>
                 }
               >
-                <ul css={[membersListStyles, { paddingBottom: 0 }]}>
+                <ul
+                  css={[
+                    membersListStyles,
+                    { paddingBottom: lastRowBottomPadding },
+                  ]}
+                >
                   {externalUsers.members.map((member, index) => (
                     <li key={`external-${index}`} css={memberRowStyles}>
                       <span css={leadTextStyles}>{member.name}</span>
@@ -559,10 +589,10 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
         </div>
       </div>
 
-      {showFooter && (
+      {hasMoreRows && (
         <div css={viewMoreStyles}>
-          <Button linkStyle onClick={() => setShowAll(true)}>
-            View More Speakers
+          <Button linkStyle onClick={() => setShowAll((current) => !current)}>
+            {showAll ? 'View Less Speakers' : 'View More Speakers'}
           </Button>
         </div>
       )}

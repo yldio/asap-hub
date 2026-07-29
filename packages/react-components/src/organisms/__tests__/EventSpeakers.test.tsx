@@ -7,6 +7,26 @@ import EventSpeakers, {
   EventSpeakerExternalRow,
 } from '../EventSpeakers';
 
+// jsdom has no ResizeObserver and does no layout.
+globalThis.ResizeObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+})) as unknown as typeof ResizeObserver;
+
+const mockTableOverflow = (scrollWidth: number, clientWidth: number) => {
+  Object.defineProperty(Element.prototype, 'scrollWidth', {
+    configurable: true,
+    get: () => scrollWidth,
+  });
+  Object.defineProperty(Element.prototype, 'clientWidth', {
+    configurable: true,
+    get: () => clientWidth,
+  });
+};
+
+afterEach(() => mockTableOverflow(0, 0));
+
 const makeMembers = (teamIndex: number, count: number) =>
   Array.from({ length: count }, (_, index) => ({
     id: `user-${teamIndex}-${index}`,
@@ -109,6 +129,29 @@ describe('EventSpeakers', () => {
       // 1 of 2 teams shared findings = 50%
       expect(getByText('50%')).toBeVisible();
       expect(getByText('1 of 2 teams')).toBeVisible();
+    });
+
+    it('Should give the findings progress indicators an accessible name', () => {
+      const { container } = renderCard();
+      const progressbars = container.querySelectorAll('[role="progressbar"]');
+      expect(progressbars.length).toBeGreaterThan(0);
+      progressbars.forEach((bar) =>
+        expect(bar).toHaveAttribute('aria-label', 'Preliminary findings'),
+      );
+    });
+  });
+
+  describe('findings column label', () => {
+    it('Should render the compact "P. Findings" label when the table fits', () => {
+      const { getByText } = renderCard();
+      expect(getByText('P. Findings')).toBeInTheDocument();
+    });
+
+    it('Should drop the compact label and only show "Preliminary Findings" when the table overflows', () => {
+      mockTableOverflow(400, 100);
+      const { getByText, queryByText } = renderCard();
+      expect(getByText('Preliminary Findings')).toBeInTheDocument();
+      expect(queryByText('P. Findings')).not.toBeInTheDocument();
     });
   });
 
@@ -290,6 +333,25 @@ describe('EventSpeakers', () => {
       expect(
         queryByRole('button', { name: /view more speakers/i }),
       ).not.toBeInTheDocument();
+    });
+
+    it('Should collapse the extra rows again on View Less', async () => {
+      const { getByRole, queryByRole } = renderCard({
+        teams: manyTeams,
+        externalUsers: undefined,
+      });
+      await userEvent.click(
+        getByRole('button', { name: /view more speakers/i }),
+      );
+      await userEvent.click(
+        getByRole('button', { name: /view less speakers/i }),
+      );
+      expect(
+        queryByRole('button', { name: 'Expand Team 14' }),
+      ).not.toBeInTheDocument();
+      expect(
+        getByRole('button', { name: /view more speakers/i }),
+      ).toBeInTheDocument();
     });
 
     it('Should still expand the last visible team above the footer', async () => {

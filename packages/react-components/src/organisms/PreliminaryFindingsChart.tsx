@@ -36,13 +36,15 @@ const capStyles = (fraction: number) => {
   };
 };
 
-export const ProgressWheel: React.FC<{ percentage: number }> = ({
-  percentage,
-}) => {
+export const ProgressWheel: React.FC<{
+  percentage: number;
+  label?: string;
+}> = ({ percentage, label }) => {
   const value = clampPercentage(percentage);
   return (
     <div
       role="progressbar"
+      aria-label={label}
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={100}
@@ -57,9 +59,10 @@ export const ProgressWheel: React.FC<{ percentage: number }> = ({
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
+          // At 0% the blur band is dropped so the ramp seam can't peek through.
           background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${
             steel.rgb
-          } ${value + EDGE_BLUR}% 100%), ${findingsConicRamp}`,
+          } ${value > 0 ? value + EDGE_BLUR : 0}% 100%), ${findingsConicRamp}`,
           WebkitMaskImage: wheelRingMask,
           maskImage: wheelRingMask,
         }}
@@ -74,8 +77,9 @@ export const ProgressWheel: React.FC<{ percentage: number }> = ({
   );
 };
 
-export const ProgressBar: React.FC<{ percentage: number }> = ({
+export const ProgressBar: React.FC<{ percentage: number; label?: string }> = ({
   percentage,
+  label,
 }) => {
   const value = clampPercentage(percentage);
   return (
@@ -88,6 +92,7 @@ export const ProgressBar: React.FC<{ percentage: number }> = ({
         overflow: 'hidden',
       }}
       role="progressbar"
+      aria-label={label}
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={100}

@@ -79,6 +79,8 @@ const shortFindingsLabel = css({
 
 const teamCellStyles = css({ paddingRight: rem(24) });
 
+const horizontalScrollGutter = css({ paddingBottom: rem(8) });
+
 // Keep team rows on one line so a long name scrolls the table rather than
 // wrapping the name or shrinking the icons.
 const teamInfoNoWrapStyles = css({
@@ -450,7 +452,13 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
           )}
         </div>
 
-        <div css={tableWrapperStyles} ref={tableRef}>
+        <div
+          css={[
+            tableWrapperStyles,
+            findingsOverflowing && horizontalScrollGutter,
+          ]}
+          ref={tableRef}
+        >
           <table css={speakerTableStyles}>
             <colgroup>
               <col />

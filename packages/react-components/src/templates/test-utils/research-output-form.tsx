@@ -39,6 +39,7 @@ export const defaultAvailableActions: ResearchOutputAvailableActions = {
   disableImpactAndCategory: false,
   disableDateMadePublic: false,
   disableUsedInPublication: false,
+  disableNonPublicSharingStatus: false,
   canSaveDraft: true,
   showImpactAndCategory: false,
   showChangelogAndVersionHistory: false,

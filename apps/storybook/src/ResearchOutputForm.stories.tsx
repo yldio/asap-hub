@@ -21,6 +21,7 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
     disableImpactAndCategory: false,
     disableDateMadePublic: false,
     disableUsedInPublication: false,
+    disableNonPublicSharingStatus: false,
     canSaveDraft: true,
     showImpactAndCategory: true,
     showChangelogAndVersionHistory: false,

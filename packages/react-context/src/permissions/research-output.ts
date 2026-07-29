@@ -43,6 +43,7 @@ export type ResearchOutputAvailableActions = {
   disableImpactAndCategory: boolean;
   disableDateMadePublic: boolean;
   disableUsedInPublication: boolean;
+  disableNonPublicSharingStatus: boolean;
   canSaveDraft: boolean;
   showImpactAndCategory: boolean;
   showChangelogAndVersionHistory: boolean;
@@ -60,7 +61,7 @@ export const resolveResearchOutputAvailableActions = ({
   documentType: ResearchOutputDocumentType;
   researchOutputData?: Pick<
     ResearchOutputResponse,
-    'versions' | 'publishDate' | 'id' | 'usedInPublication'
+    'versions' | 'publishDate' | 'id' | 'usedInPublication' | 'sharingStatus'
   >;
   versions?: readonly ResearchOutputVersion[];
 }): ResearchOutputAvailableActions => {
@@ -75,6 +76,10 @@ export const resolveResearchOutputAvailableActions = ({
       behavior.isCreateFlow &&
       documentType === 'Article' &&
       researchOutputData?.usedInPublication === undefined,
+    disableNonPublicSharingStatus:
+      (documentType === 'Article' &&
+        researchOutputData?.sharingStatus === undefined) ||
+      behavior.isImportedFromManuscript,
     canSaveDraft:
       behavior.supportsDrafts && !!permissions.canShareResearchOutput,
     showImpactAndCategory: documentType === 'Article',

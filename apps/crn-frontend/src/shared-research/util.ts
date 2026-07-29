@@ -1,4 +1,5 @@
 import {
+  manuscriptIdFromVersionRecordId,
   mapManuscriptLifecycleToType,
   mapManuscriptTypeToSubType,
   ManuscriptVersionResponse,
@@ -6,6 +7,7 @@ import {
   ResearchOutputResponse,
   ResearchOutputFlowId,
   RESEARCH_OUTPUT_FLOW_IDS,
+  ResearchOutputVersion,
 } from '@asap-hub/model';
 
 export const mapManuscriptVersionToResearchOutput = (
@@ -50,7 +52,7 @@ export const mapManuscriptVersionToResearchOutput = (
   layImpactStatement: manuscriptVersion.layImpactStatement,
   categories: manuscriptVersion.categories,
   relatedManuscriptVersion: manuscriptVersion.versionId,
-  relatedManuscript: manuscriptVersion.id.split('mv-')[1],
+  relatedManuscript: manuscriptIdFromVersionRecordId(manuscriptVersion.id),
   doi: manuscriptVersion.doi,
   publishDate:
     manuscriptVersion.lifecycle === 'Publication' ||
@@ -114,3 +116,14 @@ export const resolveResearchOutputFlowId = ({
     ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_MANUAL
     : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE;
 };
+
+export const toResearchOutputVersion = (
+  output?: ResearchOutputResponse,
+): ResearchOutputVersion => ({
+  id: output?.id ?? '',
+  title: output?.title ?? '',
+  documentType: output?.documentType ?? 'Article',
+  type: output?.type,
+  link: output?.link,
+  addedDate: output?.addedDate,
+});

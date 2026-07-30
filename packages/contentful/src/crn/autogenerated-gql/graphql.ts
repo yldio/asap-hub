@@ -39780,7 +39780,7 @@ export type UsersContentFragment = Pick<
     interestGroupLeadersCollection?: Maybe<{
       items: Array<
         Maybe<
-          Pick<InterestGroupLeaders, 'role'> & {
+          Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
             linkedFrom?: Maybe<{
               interestGroupsCollection?: Maybe<{
                 items: Array<
@@ -39943,7 +39943,7 @@ export type FetchPublicUsersQuery = {
               interestGroupLeadersCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<InterestGroupLeaders, 'role'> & {
+                    Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
                       linkedFrom?: Maybe<{
                         interestGroupsCollection?: Maybe<{
                           items: Array<
@@ -40166,7 +40166,7 @@ export type FetchUserByIdQuery = {
         interestGroupLeadersCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<InterestGroupLeaders, 'role'> & {
+              Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
                 linkedFrom?: Maybe<{
                   interestGroupsCollection?: Maybe<{
                     items: Array<
@@ -51420,6 +51420,13 @@ export const UsersContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
                             },
                             {
                               kind: 'Field',
@@ -74584,6 +74591,13 @@ export const FetchPublicUsersDocument = {
                                         {
                                           kind: 'Field',
                                           name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
                                         },
                                         {
                                           kind: 'Field',

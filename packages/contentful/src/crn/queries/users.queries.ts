@@ -185,6 +185,7 @@ export const usersContentQueryFragment = gql`
       interestGroupLeadersCollection(limit: 10) {
         items {
           role
+          inactiveSinceDate
           linkedFrom {
             interestGroupsCollection(limit: 1) {
               items {
@@ -346,6 +347,7 @@ export const FETCH_PUBLIC_USERS = gql`
           interestGroupLeadersCollection(limit: 10) {
             items {
               role
+              inactiveSinceDate
               linkedFrom {
                 interestGroupsCollection(limit: 1) {
                   items {

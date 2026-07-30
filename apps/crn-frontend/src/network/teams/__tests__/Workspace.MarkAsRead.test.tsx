@@ -18,6 +18,7 @@ import Workspace from '../Workspace';
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
   getManuscript: jest.fn(),
+  getManuscriptsByIds: jest.fn().mockResolvedValue([]),
   markDiscussionAsRead: jest.fn().mockResolvedValue({}),
 }));
 

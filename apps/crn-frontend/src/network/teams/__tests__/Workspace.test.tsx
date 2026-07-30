@@ -10,6 +10,7 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { setCurrentOverrides } from '@asap-hub/flags';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
@@ -29,6 +30,7 @@ import { updateManuscript, createDiscussion, getManuscript } from '../api';
 
 import Workspace from '../Workspace';
 import {
+  useBatchManuscriptsByIds,
   useManuscriptById,
   useReplyToDiscussion,
   useMarkDiscussionAsRead,
@@ -52,6 +54,7 @@ jest.mock('../state', () => ({
   useManuscriptById: jest.fn(),
   useReplyToDiscussion: jest.fn(),
   useMarkDiscussionAsRead: jest.fn(),
+  useBatchManuscriptsByIds: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -130,6 +133,7 @@ beforeEach(() => {
   (useMarkDiscussionAsRead as jest.Mock).mockImplementation(
     () => mockMarkDiscussionAsRead,
   );
+  (updateManuscript as jest.Mock).mockResolvedValue({});
   (createDiscussion as jest.Mock).mockResolvedValue({});
   (getManuscript as jest.Mock).mockResolvedValue(
     createTeamManuscriptResponse(),
@@ -144,7 +148,30 @@ describe('Manuscript', () => {
     jest.spyOn(console, 'error').mockImplementation();
   });
 
+  it('preloads manuscript ids for the workspace', async () => {
+    renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: ['manuscript_0'],
+          collaborationManuscripts: ['manuscript_1'],
+        }}
+      />,
+      user,
+    );
+
+    await waitFor(() => {
+      expect(useBatchManuscriptsByIds).toHaveBeenCalledWith([
+        'manuscript_0',
+        'manuscript_1',
+      ]);
+    });
+  });
+
   it('status can be changed', async () => {
+    setCurrentOverrides({ COMPLIANCE_NOTIFICATION_LIST: '' });
     renderWithWrapper(
       <Workspace
         team={{

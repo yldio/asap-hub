@@ -68,6 +68,8 @@ export const Increase: Story = {
       teamsTotal: 6,
     },
     teams,
+    onExport: () => undefined,
+    onEdit: () => undefined,
   },
 };
 
@@ -87,6 +89,8 @@ export const NoComparison: Story = {
     teamsAttended: 5,
     teamsTotal: 6,
     teams,
+    onExport: () => undefined,
+    onEdit: () => undefined,
   },
 };
 
@@ -108,6 +112,8 @@ export const ManyTeams: Story = {
       teamsTotal: 14,
     },
     teams: manyTeams,
+    onExport: () => undefined,
+    onEdit: () => undefined,
   },
 };
 

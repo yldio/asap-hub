@@ -70,6 +70,8 @@ const Event: React.FC = () => {
           }
         }
         onAddAttendance={isEventProjectManager ? noop : undefined}
+        onExport={isEventProjectManager ? noop : undefined}
+        onEdit={isEventProjectManager ? noop : undefined}
       />
     ) : undefined;
 

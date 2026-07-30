@@ -55,7 +55,9 @@ const Event: React.FC = () => {
     const teamsAttended = teams.filter(({ attended }) => attended).length;
     const isEventProjectManager = !!user?.interestGroups.some(
       (ig) =>
-        ig.id === event.interestGroup?.id && ig.role === 'Project Manager',
+        ig.id === event.interestGroup?.id &&
+        ig.role === 'Project Manager' &&
+        ig.active,
     );
     const attendance = hasFinished ? (
       <EventAttendance
@@ -70,8 +72,6 @@ const Event: React.FC = () => {
           }
         }
         onAddAttendance={isEventProjectManager ? noop : undefined}
-        onExport={isEventProjectManager ? noop : undefined}
-        onEdit={isEventProjectManager ? noop : undefined}
       />
     ) : undefined;
 

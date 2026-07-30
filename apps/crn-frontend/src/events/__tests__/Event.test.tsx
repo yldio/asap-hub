@@ -286,6 +286,31 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(await findByText('Add Attendance')).toBeVisible();
     });
 
+    it('hides the add attendance cta for a project manager of an inactive group', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
+        attendance: [],
+      });
+      const pmWrapper = createWrapper({
+        interestGroups: [
+          {
+            id: 'ig-pm',
+            name: 'Group',
+            active: false,
+            role: 'Project Manager',
+          },
+        ],
+      });
+      const { findByText, queryByText } = render(<Event />, {
+        wrapper: pmWrapper,
+      });
+      expect(await findByText('No attendance recorded yet')).toBeVisible();
+      expect(queryByText('Add Attendance')).not.toBeInTheDocument();
+    });
+
     it('shows the since last event metric when previous attendance exists', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),

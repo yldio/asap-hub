@@ -290,7 +290,11 @@ export const usePutManuscript = () => {
           cached && {
             manuscripts: cached.manuscripts.map((item) =>
               item.id === manuscript.id
-                ? { ...item, status: manuscript.status, title: manuscript.title }
+                ? {
+                    ...item,
+                    status: manuscript.status,
+                    title: manuscript.title,
+                  }
                 : item,
             ),
             collaborationManuscripts: cached.collaborationManuscripts.map(

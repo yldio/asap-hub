@@ -1,6 +1,7 @@
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
+  createWorkspaceManuscript,
 } from '@asap-hub/fixtures';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { network } from '@asap-hub/routing';
@@ -11,14 +12,18 @@ import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getManuscript, markDiscussionAsRead } from '../api';
+import {
+  getManuscript,
+  getWorkspaceManuscripts,
+  markDiscussionAsRead,
+} from '../api';
 import { useManuscriptToast } from '../useManuscriptToast';
 import Workspace from '../Workspace';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
   getManuscript: jest.fn(),
-  getManuscriptsByIds: jest.fn().mockResolvedValue([]),
+  getWorkspaceManuscripts: jest.fn(),
   markDiscussionAsRead: jest.fn().mockResolvedValue({}),
 }));
 
@@ -72,6 +77,10 @@ beforeEach(() => {
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: mockSetFormType,
   }));
+  (getWorkspaceManuscripts as jest.Mock).mockResolvedValue({
+    manuscripts: [createWorkspaceManuscript()],
+    collaborationManuscripts: [],
+  });
 });
 
 it('should mark discussion as read and remove discussion notification dot', async () => {
@@ -106,19 +115,12 @@ it('should mark discussion as read and remove discussion notification dot', asyn
   });
 
   const screen = renderWithWrapper(
-    <Workspace
-      team={{
-        ...createTeamResponse(),
-        id,
-        tools: [],
-        manuscripts: ['manuscript_0'],
-      }}
-    />,
+    <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
   );
 
   await userEvent.click(await screen.findByTestId('collapsible-button'));
 
-  expect(screen.getByTitle('Notification Dot')).toBeInTheDocument();
+  expect(await screen.findByTitle('Notification Dot')).toBeInTheDocument();
 
   await userEvent.click(screen.getByText('Discussions'));
   await act(async () => {
@@ -194,19 +196,12 @@ it('if there are still unread discussions, the notification dot should be shown'
   });
 
   const screen = renderWithWrapper(
-    <Workspace
-      team={{
-        ...createTeamResponse(),
-        id,
-        tools: [],
-        manuscripts: ['manuscript_0'],
-      }}
-    />,
+    <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
   );
 
   await userEvent.click(await screen.findByTestId('collapsible-button'));
 
-  expect(screen.getByTitle('Notification Dot')).toBeInTheDocument();
+  expect(await screen.findByTitle('Notification Dot')).toBeInTheDocument();
 
   await userEvent.click(screen.getByText('Discussions'));
   await act(async () => {

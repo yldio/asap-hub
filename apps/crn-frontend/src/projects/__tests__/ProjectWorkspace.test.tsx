@@ -17,7 +17,10 @@ const mockMarkDiscussionAsRead = jest.fn().mockResolvedValue(undefined);
 const mockSetFormType = jest.fn();
 
 jest.mock('../../network/teams/state', () => ({
-  useBatchManuscriptsByIds: jest.fn(),
+  useWorkspaceManuscripts: jest.fn(() => ({
+    manuscripts: [],
+    collaborationManuscripts: [],
+  })),
   useIsComplianceReviewer: jest.fn(() => false),
   usePutManuscript: jest.fn(() => mockUpdateManuscript),
   useCreateDiscussion: jest.fn(() => mockCreateDiscussion),
@@ -89,8 +92,7 @@ const renderProjectWorkspace = async (
     id: 'proj-1',
     isProjectMember: true,
     isTeamBased: true,
-    manuscripts: [],
-    collaborationManuscripts: [],
+    teamId: 'team-1',
     tools: [],
     lastModifiedDate: new Date().toISOString(),
     toolsHref: '/workspace/tools',
@@ -154,7 +156,6 @@ describe('ProjectWorkspace', () => {
       id: 'proj-1',
       isProjectMember: true,
       isTeamBased: true,
-      manuscripts: [],
       tools: [],
     });
     expect(capturedProps.id).toBe('proj-1');
@@ -168,22 +169,42 @@ describe('ProjectWorkspace', () => {
     expect(capturedProps.isComplianceReviewer).toBe(false);
   });
 
-  it('preloads manuscript ids for the workspace', async () => {
-    const { useBatchManuscriptsByIds } = jest.requireMock(
+  it('fetches workspace manuscripts by teamId for team-based projects', async () => {
+    const { useWorkspaceManuscripts } = jest.requireMock(
       '../../network/teams/state',
     ) as {
-      useBatchManuscriptsByIds: jest.Mock;
+      useWorkspaceManuscripts: jest.Mock;
     };
 
-    await renderProjectWorkspace({
-      manuscripts: ['manuscript-1'],
-      collaborationManuscripts: ['manuscript-2'],
-    });
+    await renderProjectWorkspace({ isTeamBased: true, teamId: 'team-1' });
 
-    expect(useBatchManuscriptsByIds).toHaveBeenCalledWith([
-      'manuscript-1',
-      'manuscript-2',
-    ]);
+    expect(useWorkspaceManuscripts).toHaveBeenCalledWith({ teamId: 'team-1' });
+  });
+
+  it('fetches nothing for a team-based project without a teamId', async () => {
+    const { useWorkspaceManuscripts } = jest.requireMock(
+      '../../network/teams/state',
+    ) as {
+      useWorkspaceManuscripts: jest.Mock;
+    };
+
+    await renderProjectWorkspace({ isTeamBased: true, teamId: undefined });
+
+    expect(useWorkspaceManuscripts).toHaveBeenCalledWith(null);
+  });
+
+  it('fetches workspace manuscripts by projectId for non-team-based projects', async () => {
+    const { useWorkspaceManuscripts } = jest.requireMock(
+      '../../network/teams/state',
+    ) as {
+      useWorkspaceManuscripts: jest.Mock;
+    };
+
+    await renderProjectWorkspace({ isTeamBased: false });
+
+    expect(useWorkspaceManuscripts).toHaveBeenCalledWith({
+      projectId: 'proj-1',
+    });
   });
 
   describe('handleUpdateManuscript', () => {
@@ -428,8 +449,6 @@ describe('ProjectWorkspace', () => {
                               id="proj-1"
                               isProjectMember
                               isTeamBased
-                              manuscripts={[]}
-                              collaborationManuscripts={[]}
                               tools={[]}
                               lastModifiedDate={new Date().toISOString()}
                               toolsHref="/workspace/tools"
@@ -480,8 +499,6 @@ describe('ProjectWorkspace', () => {
                               id="proj-1"
                               isProjectMember
                               isTeamBased
-                              manuscripts={[]}
-                              collaborationManuscripts={[]}
                               tools={[
                                 {
                                   name: 'Slack',
@@ -539,8 +556,6 @@ describe('ProjectWorkspace', () => {
                               id="proj-1"
                               isProjectMember
                               isTeamBased
-                              manuscripts={[]}
-                              collaborationManuscripts={[]}
                               tools={[
                                 {
                                   name: 'Slack',
@@ -595,8 +610,6 @@ describe('ProjectWorkspace', () => {
                               id="proj-1"
                               isProjectMember
                               isTeamBased
-                              manuscripts={[]}
-                              collaborationManuscripts={[]}
                               tools={[
                                 {
                                   name: 'Slack',
@@ -665,8 +678,6 @@ describe('ProjectWorkspace', () => {
                               id="proj-1"
                               isProjectMember
                               isTeamBased
-                              manuscripts={[]}
-                              collaborationManuscripts={[]}
                               tools={[
                                 {
                                   name: 'Slack',

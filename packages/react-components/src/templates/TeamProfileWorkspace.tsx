@@ -109,8 +109,7 @@ type TeamProfileWorkspaceProps = Readonly<
 > & {
   readonly manuscripts: ReadonlyArray<WorkspaceManuscript>;
   readonly collaborationManuscripts?: ReadonlyArray<WorkspaceManuscript>;
-} &
-  Pick<
+} & Pick<
     ComponentProps<typeof ManuscriptCard>,
     'onUpdateManuscript' | 'isComplianceReviewer'
   > &

@@ -56,11 +56,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
   const { manuscripts, collaborationManuscripts } = useWorkspaceManuscripts(
-    props.isTeamBased
-      ? teamId
-        ? { teamId }
-        : null
-      : { projectId: props.id },
+    props.isTeamBased ? (teamId ? { teamId } : null) : { projectId: props.id },
   );
   const updateManuscript = usePutManuscript();
   const {

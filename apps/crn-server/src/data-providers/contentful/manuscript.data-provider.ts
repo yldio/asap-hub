@@ -80,10 +80,7 @@ import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { chunk } from '../../utils/chunk';
 import { getCommaAndString } from '../../utils/text';
 import { EmailNotificationService } from '../email-notification-service';
-import {
-  ManuscriptDataProvider,
-  WorkspaceManuscriptsFilter,
-} from '../types';
+import { ManuscriptDataProvider, WorkspaceManuscriptsFilter } from '../types';
 import { parseGraphQLResearchOutput } from './research-output.data-provider';
 
 const MANUSCRIPT_BATCH_SIZE = 30;
@@ -111,9 +108,7 @@ type WorkspaceManuscriptItem = NonNullable<
 >;
 type ManuscriptTeamItem =
   | ManuscriptListTeamItem
-  | NonNullable<
-      NonNullable<ManuscriptItem['teamsCollection']>['items'][number]
-    >
+  | NonNullable<NonNullable<ManuscriptItem['teamsCollection']>['items'][number]>
   | NonNullable<
       NonNullable<WorkspaceManuscriptItem['teamsCollection']>['items'][number]
     >;

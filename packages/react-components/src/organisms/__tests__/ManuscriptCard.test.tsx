@@ -1,6 +1,7 @@
 import {
   createManuscriptResponse,
   createUserResponse,
+  createWorkspaceManuscript,
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
 import { User } from '@asap-hub/auth';
@@ -42,6 +43,11 @@ const createTestManuscript = (
   ...overrides,
 });
 
+const workspaceManuscript = {
+  ...createWorkspaceManuscript(),
+  title: 'Mock Manuscript Title',
+};
+
 const mockUseManuscriptById = (
   overrides: Partial<ManuscriptDataObject> = {},
 ): ComponentProps<typeof ManuscriptCard>['useManuscriptById'] =>
@@ -69,7 +75,7 @@ const props: ComponentProps<typeof ManuscriptCard> & {
 } = {
   teamId: 'team-1',
   useManuscriptById,
-  id: `manuscript_0`,
+  manuscript: workspaceManuscript,
   user: {
     ...baseUser,
     teams: baseUser.teams.map(({ role, ...team }) => ({
@@ -380,7 +386,7 @@ it('redirects to compliance report form when user clicks on share compliance rep
   );
 
   expect(currentLocation?.pathname).toBe(
-    `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`,
+    `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.manuscript.id}`,
   );
 });
 
@@ -427,7 +433,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   );
 
   expect(currentLocation?.pathname).toBe(
-    `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`,
+    `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.manuscript.id}`,
   );
 });
 
@@ -460,7 +466,7 @@ it('uses override getCreateComplianceReportHref for the share compliance report 
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   );
   expect(currentLocation?.pathname).toBe(
-    `/projects/discovery/project-1/workspace/create-compliance-report/${props.id}`,
+    `/projects/discovery/project-1/workspace/create-compliance-report/${props.manuscript.id}`,
   );
 });
 
@@ -507,7 +513,7 @@ it('uses override getResubmitManuscriptHref for the resubmit manuscript button',
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
   );
   expect(currentLocation?.pathname).toBe(
-    `/projects/discovery/project-1/workspace/resubmit-manuscript/${props.id}`,
+    `/projects/discovery/project-1/workspace/resubmit-manuscript/${props.manuscript.id}`,
   );
 });
 
@@ -544,7 +550,7 @@ it.each([
     await userActions.click(getByTestId('collapsible-button'));
     await userActions.click(getByRole('button', { name: 'Edit' }));
     expect(currentLocation?.pathname).toBe(
-      `/projects/${routeSegment}/proj-1/workspace/edit-manuscript/${props.id}`,
+      `/projects/${routeSegment}/proj-1/workspace/edit-manuscript/${props.manuscript.id}`,
     );
   },
 );
@@ -585,7 +591,7 @@ it.each([
       getByRole('button', { name: /Share Compliance Report Icon/i }),
     );
     expect(currentLocation?.pathname).toBe(
-      `/projects/${routeSegment}/proj-1/workspace/create-compliance-report/${props.id}`,
+      `/projects/${routeSegment}/proj-1/workspace/create-compliance-report/${props.manuscript.id}`,
     );
   },
 );
@@ -627,7 +633,7 @@ it.each([
       getByRole('button', { name: /Resubmit Manuscript Icon/i }),
     );
     expect(currentLocation?.pathname).toBe(
-      `/projects/${routeSegment}/proj-1/workspace/resubmit-manuscript/${props.id}`,
+      `/projects/${routeSegment}/proj-1/workspace/resubmit-manuscript/${props.manuscript.id}`,
     );
   },
 );
@@ -645,7 +651,7 @@ it('project route takes precedence over injected getEditManuscriptHref when manu
               <ManuscriptCard
                 {...props}
                 getEditManuscriptHref={() =>
-                  `/network/teams/${props.teamId}/workspace/edit-manuscript/${props.id}`
+                  `/network/teams/${props.teamId}/workspace/edit-manuscript/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [{ ...mockVersion, firstAuthors: [user] }],
@@ -662,7 +668,7 @@ it('project route takes precedence over injected getEditManuscriptHref when manu
   await userActions.click(getByTestId('collapsible-button'));
   await userActions.click(getByRole('button', { name: 'Edit' }));
   expect(currentLocation?.pathname).toBe(
-    `/projects/discovery/proj-1/workspace/edit-manuscript/${props.id}`,
+    `/projects/discovery/proj-1/workspace/edit-manuscript/${props.manuscript.id}`,
   );
 });
 
@@ -680,7 +686,7 @@ it('project route takes precedence over injected getCreateComplianceReportHref w
                 {...props}
                 isComplianceReviewer
                 getCreateComplianceReportHref={() =>
-                  `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`
+                  `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [],
@@ -699,7 +705,7 @@ it('project route takes precedence over injected getCreateComplianceReportHref w
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   );
   expect(currentLocation?.pathname).toBe(
-    `/projects/discovery/proj-1/workspace/create-compliance-report/${props.id}`,
+    `/projects/discovery/proj-1/workspace/create-compliance-report/${props.manuscript.id}`,
   );
 });
 
@@ -716,7 +722,7 @@ it('project route takes precedence over injected getResubmitManuscriptHref when 
               <ManuscriptCard
                 {...props}
                 getResubmitManuscriptHref={() =>
-                  `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`
+                  `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [
@@ -737,7 +743,7 @@ it('project route takes precedence over injected getResubmitManuscriptHref when 
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
   );
   expect(currentLocation?.pathname).toBe(
-    `/projects/discovery/proj-1/workspace/resubmit-manuscript/${props.id}`,
+    `/projects/discovery/proj-1/workspace/resubmit-manuscript/${props.manuscript.id}`,
   );
 });
 
@@ -763,15 +769,7 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
       <ManuscriptCard
         {...props}
         isComplianceReviewer
-        useManuscriptById={useManuscriptById.mockImplementation(() => [
-          {
-            id: 'manuscript_0',
-            title: 'Mock Manuscript Title',
-            status: 'Addendum Required',
-            versions: [],
-          },
-          jest.fn(),
-        ])}
+        manuscript={{ ...workspaceManuscript, status: 'Addendum Required' }}
       />
     </MemoryRouter>,
   );
@@ -804,7 +802,7 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
       <ManuscriptCard
         {...props}
         isComplianceReviewer
-        id="manuscript-1"
+        manuscript={{ ...workspaceManuscript, id: 'manuscript-1' }}
         onUpdateManuscript={onUpdateManuscript}
       />
     </MemoryRouter>,
@@ -846,17 +844,8 @@ it.each`
       <MemoryRouter>
         <ManuscriptCard
           {...props}
-          useManuscriptById={useManuscriptById.mockImplementation(() => [
-            {
-              id: 'manuscript_0',
-              title: 'Mock Manuscript Title',
-              status,
-              versions: [],
-            },
-            jest.fn(),
-          ])}
+          manuscript={{ ...workspaceManuscript, id: 'manuscript-1', status }}
           isComplianceReviewer
-          id="manuscript-1"
           onUpdateManuscript={onUpdateManuscript}
         />
       </MemoryRouter>,
@@ -884,17 +873,12 @@ it.each`
       <MemoryRouter>
         <ManuscriptCard
           {...props}
-          useManuscriptById={useManuscriptById.mockImplementation(() => [
-            {
-              id: 'manuscript_0',
-              title: 'Mock Manuscript Title',
-              status: 'Waiting for Report',
-              versions: [],
-            },
-            jest.fn(),
-          ])}
+          manuscript={{
+            ...workspaceManuscript,
+            id: 'manuscript-1',
+            status: 'Waiting for Report',
+          }}
           isComplianceReviewer
-          id="manuscript-1"
           onUpdateManuscript={onUpdateManuscript}
         />
       </MemoryRouter>,
@@ -933,7 +917,7 @@ it('disables submit compliance report button when there is an existing complianc
       <ManuscriptCard
         {...props}
         isComplianceReviewer
-        id="manuscript-1"
+        manuscript={{ ...workspaceManuscript, id: 'manuscript-1' }}
         useManuscriptById={useManuscriptByIdWithReport}
       />
     </MemoryRouter>,
@@ -1007,17 +991,8 @@ it.each`
       <MemoryRouter>
         <ManuscriptCard
           {...props}
-          useManuscriptById={useManuscriptById.mockImplementation(() => [
-            {
-              id: 'manuscript_0',
-              title: 'Mock Manuscript Title',
-              status,
-              versions: [],
-            },
-            jest.fn(),
-          ])}
+          manuscript={{ ...workspaceManuscript, id: 'manuscript-1', status }}
           isComplianceReviewer
-          id="manuscript-1"
           isActiveTeam={isActiveTeam}
         />
       </MemoryRouter>,

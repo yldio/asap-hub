@@ -11,6 +11,7 @@ import {
   FETCH_MANUSCRIPT_VERSIONS_BY_IDS,
   FETCH_MANUSCRIPTS_BY_IDS,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
+  FETCH_WORKSPACE_MANUSCRIPTS,
   getContentfulGraphqlClientMockServer,
   pollContentfulGql,
 } from '@asap-hub/contentful';
@@ -1403,6 +1404,246 @@ describe('Manuscripts Contentful Data Provider', () => {
         items: [],
         total: 0,
       });
+    });
+  });
+
+  describe('FetchWorkspaceManuscripts', () => {
+    const getWorkspaceManuscriptItem = (
+      overrides: Record<string, unknown> = {},
+    ) => ({
+      sys: { id: 'manuscript-id-1' },
+      title: 'Manuscript Title',
+      status: 'Compliant',
+      count: 1,
+      project: null,
+      teamsCollection: {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            linkedFrom: {
+              projectMembershipCollection: {
+                items: [
+                  {
+                    linkedFrom: {
+                      projectsCollection: {
+                        items: [
+                          getContentfulGraphqlManuscriptProject({
+                            projectId: 'WH1',
+                            grantId: '000282',
+                          }),
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      versionsCollection: {
+        items: [
+          {
+            type: 'Original Research',
+            lifecycle: 'Preprint',
+            count: 1,
+          },
+        ],
+      },
+      ...overrides,
+    });
+
+    test('Should fetch and map the workspace manuscripts for a team', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: {
+          total: 2,
+          items: [
+            getWorkspaceManuscriptItem(),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'manuscript-id-2' },
+              title: 'Manuscript 2',
+              status: 'Waiting for Report',
+              count: 2,
+            }),
+          ],
+        },
+      });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        teamId: 'team-1',
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_WORKSPACE_MANUSCRIPTS,
+        {
+          limit: 100,
+          skip: 0,
+          where: { teams: { sys: { id: 'team-1' } } },
+        },
+      );
+      expect(result).toEqual({
+        manuscripts: [
+          {
+            id: 'manuscript-id-2',
+            title: 'Manuscript 2',
+            status: 'Waiting for Report',
+            versionUID: 'WH1-000282-002-org-P-1',
+          },
+          {
+            id: 'manuscript-id-1',
+            title: 'Manuscript Title',
+            status: 'Compliant',
+            versionUID: 'WH1-000282-001-org-P-1',
+          },
+        ],
+        collaborationManuscripts: [],
+      });
+    });
+
+    test('Should paginate through the manuscripts collection', async () => {
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce({
+          manuscriptsCollection: {
+            total: 150,
+            items: Array.from({ length: 100 }, (_, index) =>
+              getWorkspaceManuscriptItem({
+                sys: { id: `manuscript-id-${index}` },
+              }),
+            ),
+          },
+        })
+        .mockResolvedValueOnce({
+          manuscriptsCollection: {
+            total: 150,
+            items: Array.from({ length: 50 }, (_, index) =>
+              getWorkspaceManuscriptItem({
+                sys: { id: `manuscript-id-${100 + index}` },
+              }),
+            ),
+          },
+        });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        teamId: 'team-1',
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        1,
+        FETCH_WORKSPACE_MANUSCRIPTS,
+        expect.objectContaining({ limit: 100, skip: 0 }),
+      );
+      expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        2,
+        FETCH_WORKSPACE_MANUSCRIPTS,
+        expect.objectContaining({ limit: 100, skip: 100 }),
+      );
+      expect(result.manuscripts).toHaveLength(150);
+    });
+
+    test('Should separate team manuscripts from collaboration manuscripts', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: {
+          total: 3,
+          items: [
+            getWorkspaceManuscriptItem({
+              sys: { id: 'team-owned-manuscript-id' },
+            }),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'collaborating-team-manuscript-id' },
+              teamsCollection: {
+                items: [{ sys: { id: 'other-team' }, linkedFrom: null }],
+              },
+            }),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'project-manuscript-id' },
+              project: getContentfulGraphqlManuscriptProject(),
+            }),
+          ],
+        },
+      });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        teamId: 'team-1',
+      });
+
+      expect(result.manuscripts.map(({ id }) => id)).toEqual([
+        'team-owned-manuscript-id',
+      ]);
+      expect(result.collaborationManuscripts.map(({ id }) => id)).toEqual([
+        'collaborating-team-manuscript-id',
+        'project-manuscript-id',
+      ]);
+    });
+
+    test('Should sort manuscripts so that Compliant and Closed (other) are last', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: {
+          total: 3,
+          items: [
+            getWorkspaceManuscriptItem({
+              sys: { id: 'compliant-manuscript-id' },
+              status: 'Compliant',
+            }),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'waiting-for-report-manuscript-id' },
+              status: 'Waiting for Report',
+            }),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'closed-manuscript-id' },
+              status: 'Closed (other)',
+            }),
+          ],
+        },
+      });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        teamId: 'team-1',
+      });
+
+      expect(result.manuscripts.map(({ id }) => id)).toEqual([
+        'waiting-for-report-manuscript-id',
+        'compliant-manuscript-id',
+        'closed-manuscript-id',
+      ]);
+    });
+
+    test('Should put all manuscripts in the manuscripts list when fetching by project', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: {
+          total: 2,
+          items: [
+            getWorkspaceManuscriptItem({
+              sys: { id: 'project-manuscript-id-1' },
+              project: getContentfulGraphqlManuscriptProject(),
+            }),
+            getWorkspaceManuscriptItem({
+              sys: { id: 'project-manuscript-id-2' },
+              teamsCollection: {
+                items: [{ sys: { id: 'other-team' }, linkedFrom: null }],
+              },
+            }),
+          ],
+        },
+      });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        projectId: 'project-1',
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_WORKSPACE_MANUSCRIPTS,
+        {
+          limit: 100,
+          skip: 0,
+          where: { project: { sys: { id: 'project-1' } } },
+        },
+      );
+      expect(result.manuscripts.map(({ id }) => id)).toEqual([
+        'project-manuscript-id-1',
+        'project-manuscript-id-2',
+      ]);
+      expect(result.collaborationManuscripts).toEqual([]);
     });
   });
 

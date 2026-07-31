@@ -1010,6 +1010,18 @@ export const manuscriptIdFromVersionRecordId = (
     '',
   );
 
+export type WorkspaceManuscript = {
+  id: string;
+  title: string;
+  status?: ManuscriptStatus;
+  versionUID?: string;
+};
+
+export type WorkspaceManuscriptsResponse = {
+  manuscripts: WorkspaceManuscript[];
+  collaborationManuscripts: WorkspaceManuscript[];
+};
+
 export type ManuscriptVersionResponse = {
   id: string;
   hasLinkedResearchOutput: boolean;

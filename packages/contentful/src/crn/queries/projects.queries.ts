@@ -121,21 +121,6 @@ export const projectsContentQueryFragment = gql`
       }
     }
     linkedFrom {
-      manuscriptsCollection(limit: 100, order: sys_firstPublishedAt_DESC) {
-        items {
-          sys {
-            id
-          }
-          status
-          teamsCollection(limit: 1) {
-            items {
-              sys {
-                id
-              }
-            }
-          }
-        }
-      }
       researchOutputsCollection(limit: 50, order: sys_firstPublishedAt_DESC) {
         total
         items {
@@ -193,29 +178,6 @@ export const projectsContentQueryFragment = gql`
             }
             teamDescription
             linkedFrom {
-              manuscriptsCollection(
-                limit: 20
-                order: sys_firstPublishedAt_DESC
-              ) {
-                items {
-                  sys {
-                    id
-                  }
-                  status
-                  teamsCollection(limit: 1) {
-                    items {
-                      sys {
-                        id
-                      }
-                    }
-                  }
-                  project {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
               researchOutputsCollection(
                 limit: 50
                 order: sys_firstPublishedAt_DESC

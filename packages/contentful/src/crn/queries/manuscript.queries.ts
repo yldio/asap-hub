@@ -553,6 +553,62 @@ export const FETCH_MANUSCRIPTS = gql`
   ${manuscriptProjectQueryFragment}
 `;
 
+export const FETCH_WORKSPACE_MANUSCRIPTS = gql`
+  query FetchWorkspaceManuscripts(
+    $limit: Int
+    $skip: Int
+    $where: ManuscriptsFilter
+  ) {
+    manuscriptsCollection(
+      limit: $limit
+      skip: $skip
+      where: $where
+      order: sys_firstPublishedAt_DESC
+    ) {
+      total
+      items {
+        sys {
+          id
+        }
+        title
+        status
+        count
+        project {
+          ...ManuscriptProject
+        }
+        teamsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        ...ManuscriptProject
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+          items {
+            type
+            lifecycle
+            count
+          }
+        }
+      }
+    }
+  }
+  ${manuscriptProjectQueryFragment}
+`;
+
 export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
   query FetchManuscriptNotificationDetails($id: String!) {
     manuscripts(id: $id) {

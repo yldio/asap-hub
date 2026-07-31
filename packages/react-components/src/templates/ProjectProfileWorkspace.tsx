@@ -1,4 +1,4 @@
-import { TeamTool } from '@asap-hub/model';
+import { TeamTool, WorkspaceManuscript } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
@@ -129,8 +129,8 @@ type ProjectProfileWorkspaceProps = Pick<
     readonly id: string;
     readonly isProjectMember: boolean;
     readonly isTeamBased: boolean;
-    readonly manuscripts: ReadonlyArray<string>;
-    readonly collaborationManuscripts?: ReadonlyArray<string>;
+    readonly manuscripts: ReadonlyArray<WorkspaceManuscript>;
+    readonly collaborationManuscripts?: ReadonlyArray<WorkspaceManuscript>;
     readonly tools: ReadonlyArray<TeamTool>;
     readonly lastModifiedDate: string;
     readonly lastModifiedBy?: string;
@@ -262,10 +262,10 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                       {manuscriptSubmissions}
                     </Paragraph>
                     <div>
-                      {manuscripts.map((manuscriptId) => (
-                        <div key={manuscriptId}>
+                      {manuscripts.map((manuscript) => (
+                        <div key={manuscript.id}>
                           <ManuscriptCard
-                            id={manuscriptId}
+                            manuscript={manuscript}
                             user={user}
                             // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                             teamId={id}
@@ -285,7 +285,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             getCreateComplianceReportHref={
                               getCreateComplianceReportHref
                             }
-                            {...(manuscriptId === targetManuscriptId
+                            {...(manuscript.id === targetManuscriptId
                               ? { isTargetManuscript: true }
                               : {})}
                           />
@@ -310,10 +310,10 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                       {manuscriptCollaborations}
                     </Paragraph>
                     <div>
-                      {collaborationManuscripts.map((manuscriptId) => (
-                        <div key={manuscriptId}>
+                      {collaborationManuscripts.map((manuscript) => (
+                        <div key={manuscript.id}>
                           <ManuscriptCard
-                            id={manuscriptId}
+                            manuscript={manuscript}
                             user={user}
                             // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                             teamId={id}
@@ -333,7 +333,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             getCreateComplianceReportHref={
                               getCreateComplianceReportHref
                             }
-                            {...(manuscriptId === targetManuscriptId
+                            {...(manuscript.id === targetManuscriptId
                               ? { isTargetManuscript: true }
                               : {})}
                           />
@@ -350,10 +350,10 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
             </>
           ) : !isTeamBased && manuscripts.length > 0 ? (
             <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
-              {manuscripts.map((manuscriptId) => (
-                <div key={manuscriptId}>
+              {manuscripts.map((manuscript) => (
+                <div key={manuscript.id}>
                   <ManuscriptCard
-                    id={manuscriptId}
+                    manuscript={manuscript}
                     user={user}
                     // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                     teamId={id}
@@ -371,7 +371,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                     getCreateComplianceReportHref={
                       getCreateComplianceReportHref
                     }
-                    {...(manuscriptId === targetManuscriptId
+                    {...(manuscript.id === targetManuscriptId
                       ? { isTargetManuscript: true }
                       : {})}
                   />

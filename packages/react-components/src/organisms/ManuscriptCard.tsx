@@ -1,80 +1,66 @@
 import { User } from '@asap-hub/auth';
 import {
-  AuthorResponse,
   ManuscriptDataObject,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
   manuscriptStatus,
   ManuscriptFileResponse,
-  ManuscriptVersion,
   statusButtonOptions,
-  TeamManuscript,
+  WorkspaceManuscript,
 } from '@asap-hub/model';
-import { network, projectRouteByType } from '@asap-hub/routing';
-import { css, Theme } from '@emotion/react';
-import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { css } from '@emotion/react';
+import { ComponentProps, Suspense, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { DiscussionsTab } from '.';
 import {
   Button,
-  charcoal,
   colors,
-  complianceReportIcon,
-  fern,
+  Loading,
   minusRectIcon,
-  neutral900,
-  NotificationDotIcon,
   Pill,
   plusRectIcon,
-  resubmitManuscriptIcon,
   StatusButton,
   Subtitle,
-  Tooltip,
 } from '..';
-import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { getReviewerStatusType } from '../utils';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import DiscussionCard from './DiscussionCard';
 import DiscussionModal from './DiscussionModal';
-import ManuscriptVersionCard from './ManuscriptVersionCard';
+import ManuscriptCardDetail from './ManuscriptCardDetail';
 
-const VERSION_LIMIT = 3;
-
-type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
-  Pick<
-    ComponentProps<typeof DiscussionCard>,
-    'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
-  > & {
-    user: User | null;
-    teamId: string;
-    isComplianceReviewer: boolean;
-    isActiveTeam: boolean;
-    onUpdateManuscript: (
-      manuscriptId: string,
-      payload: ManuscriptPutRequest,
-    ) => Promise<ManuscriptResponse>;
-    createDiscussion: (
-      manuscriptId: string,
-      title: string,
-      message: string,
-      files?: ManuscriptFileResponse[],
-    ) => Promise<string | undefined>;
-    handleFileUpload: ComponentProps<
-      typeof DiscussionModal
-    >['handleFileUpload'];
-    useManuscriptById: (
-      id: string,
-    ) => [
-      ManuscriptDataObject | undefined,
-      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
-    ];
-    readonly isTargetManuscript?: boolean;
-    readonly showTeamName?: boolean;
-    readonly getEditManuscriptHref?: (manuscriptId: string) => string;
-    readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
-    readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
-  };
+type ManuscriptCardProps = Pick<
+  ComponentProps<typeof DiscussionCard>,
+  'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
+> & {
+  manuscript: WorkspaceManuscript;
+  user: User | null;
+  teamId: string;
+  isComplianceReviewer: boolean;
+  isActiveTeam: boolean;
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
+  createDiscussion: (
+    manuscriptId: string,
+    title: string,
+    message: string,
+    files?: ManuscriptFileResponse[],
+  ) => Promise<string | undefined>;
+  handleFileUpload: ComponentProps<typeof DiscussionModal>['handleFileUpload'];
+  useManuscriptById: (
+    id: string,
+  ) => [
+    ManuscriptDataObject | undefined,
+    React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
+  ];
+  readonly isTargetManuscript?: boolean;
+  readonly showTeamName?: boolean;
+  readonly getEditManuscriptHref?: (manuscriptId: string) => string;
+  readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
+  readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
+};
 
 const manuscriptContainerStyles = css({
   marginTop: rem(12),
@@ -117,128 +103,14 @@ const toastHeaderStyles = css({
   },
 });
 
-const buttonsContainerStyles = css({
-  borderBottom: `1px solid ${colors.steel.rgb}`,
+const detailLoadingStyles = css({
+  padding: `0 ${rem(16)} ${rem(16)}`,
 });
-
-const buttonsStyles = css({
-  display: 'flex',
-  padding: `${rem(24)} ${rem(16)}`,
-  borderRadius: rem(8),
-  gap: rem(16),
-  [`@media (max-width: ${smallDesktopScreen.max}px)`]: {
-    flexDirection: 'column',
-  },
-});
-
-const buttonStyles = css({
-  '> svg': { stroke: 'none' },
-  height: rem(24),
-  display: 'flex',
-  gap: rem(8),
-  borderRadius: rem(8),
-  minHeight: 'fit-content',
-});
-
-const buttonTextStyles = css({
-  minHeight: 'fit-content',
-});
-
-const notificationDotStyles = css({
-  marginLeft: rem(8),
-});
-
-const manuscriptDetailsContainerStyles = css({
-  margin: `0 ${rem(16)} ${rem(16)}`,
-  border: `1px solid ${colors.steel.rgb}`,
-  borderRadius: `${rem(8)}`,
-  boxSizing: 'border-box',
-  borderWidth: 1,
-  borderStyle: 'solid',
-  backgroundColor: colors.paper.rgb,
-});
-
-const showMoreContainerStyles = css({
-  padding: `${rem(16)} 0`,
-  textAlign: 'center',
-});
-
-type VersionUserProps = {
-  version:
-    | Pick<
-        ManuscriptVersion,
-        | 'teams'
-        | 'firstAuthors'
-        | 'correspondingAuthor'
-        | 'additionalAuthors'
-        | 'labs'
-      >
-    | undefined;
-  user: User | null;
-};
-
-const tabButtonStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
-  css({
-    paddingLeft: rem(0),
-    paddingRight: rem(0),
-    paddingBottom: rem(20),
-    color: neutral900.rgb,
-    backgroundColor: 'transparent',
-    border: 'none',
-    '&.active': {
-      paddingBottom: rem(16),
-      color: charcoal.rgb,
-      fontWeight: 'bold',
-      borderBottom: `${rem(4)} solid ${primary500.rgba}`,
-    },
-  });
-
-const isManuscriptLead = ({ version, user }: VersionUserProps) =>
-  user &&
-  version &&
-  user.teams.find((team) =>
-    version.teams.find(
-      (versionTeam) =>
-        versionTeam.id === team.id &&
-        team.roles.some(
-          (r) => r === 'Lead PI (Core Leadership)' || r === 'Project Manager',
-        ),
-    ),
-  );
-
-const isManuscriptAuthor = ({
-  authors,
-  user,
-}: {
-  authors: AuthorResponse[];
-  user: User | null;
-}) => user && authors.find((author) => author.id === user.id);
-
-const isManuscriptLabPi = ({
-  labs,
-  user,
-}: {
-  labs: ManuscriptVersion['labs'] | undefined;
-  user: User | null;
-}) => user && labs && labs.some((lab) => lab.labPi === user.id);
-
-const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
-  user?.openScienceTeamMember ||
-  !!isManuscriptLead({ version, user }) ||
-  !!isManuscriptAuthor({
-    authors: [
-      ...(version?.firstAuthors || []),
-      ...(version?.correspondingAuthor || []),
-      ...(version?.additionalAuthors || []),
-    ],
-    user,
-  }) ||
-  !!isManuscriptLabPi({ labs: version?.labs, user });
 
 const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
-  id,
+  manuscript,
   teamId,
   isComplianceReviewer,
   isActiveTeam,
@@ -255,7 +127,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   getResubmitManuscriptHref,
   getCreateComplianceReportHref,
 }) => {
-  const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
+  const { id, title, status, versionUID } = manuscript;
 
   const { pathname, search, hash } = useLocation();
   const targetTabFromUrl =
@@ -265,29 +137,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const [activeTab, setInternalActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
   >(isTargetManuscript ? targetTabFromUrl : 'manuscripts-and-reports');
-  const [manuscript, setManuscript] = useManuscriptById(id);
-  const { title, status, versions } = manuscript ?? { versions: [] };
 
-  const projectWorkspaceRoute =
-    manuscript?.projectId && manuscript.projectType
-      ? projectRouteByType[manuscript.projectType](
-          manuscript.projectId,
-        ).workspace({})
-      : undefined;
-
-  const teamWorkspaceRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({});
-
-  const resolvedGetEditManuscriptHref = (manuscriptId: string): string =>
-    projectWorkspaceRoute?.editManuscript({ manuscriptId }).$ ??
-    getEditManuscriptHref?.(manuscriptId) ??
-    teamWorkspaceRoute.editManuscript({ manuscriptId }).$;
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const [expandedState, setExpandedState] = useState(isTargetManuscript);
-  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     if (isTargetManuscript) {
@@ -299,8 +152,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
   const navigate = useNavigate();
-
-  const discussionTabRef = useRef<HTMLButtonElement>(null);
 
   // keep URL in sync so the user can copy/share the open state
   const syncUrl = (
@@ -329,24 +180,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     if (expandedState) syncUrl(true, next);
   };
 
-  const complianceReportRoute =
-    projectWorkspaceRoute?.createComplianceReport({ manuscriptId: id }).$ ??
-    getCreateComplianceReportHref?.(id) ??
-    teamWorkspaceRoute.createComplianceReport({ manuscriptId: id }).$;
-
-  const resubmitManuscriptRoute =
-    projectWorkspaceRoute?.resubmitManuscript({ manuscriptId: id }).$ ??
-    getResubmitManuscriptHref?.(id) ??
-    teamWorkspaceRoute.resubmitManuscript({ manuscriptId: id }).$;
-
-  const handleShareComplianceReport = () => {
-    void navigate(complianceReportRoute, { state: { fromButton: true } });
-  };
-
-  const handleResubmitManuscript = () => {
-    void navigate(resubmitManuscriptRoute);
-  };
-
   const handleStatusClick = (statusItem: ManuscriptStatus) => {
     if (statusItem !== status) {
       setNewSelectedStatus(statusItem);
@@ -354,31 +187,18 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     }
   };
 
-  const currentManuscriptVersion = versions[0];
-
-  const canSubmitComplianceReport =
-    !closedManuscriptStatuses.includes(status ?? '') &&
-    !currentManuscriptVersion?.complianceReport;
-
-  const hasUpdateAccess = canUpdateManuscript({
-    version: currentManuscriptVersion,
-    user,
-  });
   const isActiveManuscript =
     !closedManuscriptStatuses.includes(status ?? '') && isActiveTeam;
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
-      const updatedManuscript = await onUpdateManuscript(id, {
+      // the mutation writes both the workspace list and the manuscript detail
+      // caches, so the header and any mounted detail re-render from there
+      await onUpdateManuscript(id, {
         status: newSelectedStatus,
       });
-      setManuscript(updatedManuscript);
     }
   };
-  const hasUnreadDiscussions =
-    (manuscript?.discussions || []).length > 0
-      ? manuscript?.discussions.some((discussion) => !discussion.read)
-      : false;
 
   return (
     <>
@@ -429,177 +249,39 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                     },
                   }))}
                 </StatusButton>
-                {currentManuscriptVersion?.versionUID && (
-                  <Pill accent="blue">
-                    {currentManuscriptVersion.versionUID}
-                  </Pill>
-                )}
+                {versionUID && <Pill accent="blue">{versionUID}</Pill>}
               </span>
             </span>
           </span>
         </div>
 
         {expandedState && (
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                gap: rem(32),
-                marginLeft: rem(55),
-              }}
-            >
-              <button
-                className={
-                  activeTab === 'manuscripts-and-reports' ? 'active' : ''
-                }
-                css={tabButtonStyles}
-                onClick={() => setActiveTab('manuscripts-and-reports')}
-              >
-                Manuscripts and Reports
-              </button>
-              <button
-                className={activeTab === 'discussions' ? 'active' : ''}
-                css={tabButtonStyles}
-                onClick={() => setActiveTab('discussions')}
-                ref={discussionTabRef}
-              >
-                Discussions
-                {hasUnreadDiscussions && (
-                  <span css={notificationDotStyles}>
-                    <NotificationDotIcon />
-                  </span>
-                )}
-              </button>
-            </div>
-            <div css={manuscriptDetailsContainerStyles}>
-              {activeTab === 'manuscripts-and-reports' && (
-                <>
-                  {isActiveManuscript && (
-                    <div css={buttonsContainerStyles}>
-                      <span css={buttonsStyles}>
-                        {isComplianceReviewer && (
-                          <span>
-                            <Button
-                              primary
-                              small
-                              noMargin
-                              onClick={handleShareComplianceReport}
-                              enabled={canSubmitComplianceReport}
-                            >
-                              <span css={buttonStyles}>
-                                {complianceReportIcon}
-                                <span css={buttonTextStyles}>
-                                  Share Compliance Report
-                                </span>
-                              </span>
-                            </Button>
-                          </span>
-                        )}
-                        {hasUpdateAccess && (
-                          <span>
-                            <Tooltip
-                              bottom={rem(6)}
-                              width={rem(296)}
-                              shown={tooltipHoverShown}
-                              textStyles={css({
-                                textAlign: 'center',
-                              })}
-                            >
-                              A compliance report must be shared by an Open
-                              Science team member before submitting a new
-                              version of the manuscript.
-                            </Tooltip>
-
-                            <Button
-                              primary
-                              small
-                              noMargin
-                              onClick={handleResubmitManuscript}
-                              enabled={
-                                !!currentManuscriptVersion?.complianceReport
-                              }
-                            >
-                              <span
-                                css={buttonStyles}
-                                onMouseOver={() => {
-                                  if (
-                                    !currentManuscriptVersion?.complianceReport
-                                  ) {
-                                    setTooltipHoverShown(true);
-                                  }
-                                }}
-                                onMouseOut={() => {
-                                  if (
-                                    !currentManuscriptVersion?.complianceReport
-                                  ) {
-                                    setTooltipHoverShown(false);
-                                  }
-                                }}
-                              >
-                                {resubmitManuscriptIcon}{' '}
-                                <span css={buttonTextStyles}>
-                                  Submit Revised Manuscript
-                                </span>
-                              </span>
-                            </Button>
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  )}
-                  {versions
-                    .slice(0, showMore ? undefined : VERSION_LIMIT)
-                    .map((version, index) => (
-                      <ManuscriptVersionCard
-                        key={index}
-                        version={version}
-                        teamId={teamId}
-                        manuscriptId={id}
-                        isActiveVersion={
-                          isActiveManuscript &&
-                          version.id === currentManuscriptVersion?.id
-                        }
-                        isManuscriptContributor={hasUpdateAccess}
-                        openDiscussionTab={() => {
-                          if (discussionTabRef.current) {
-                            discussionTabRef.current.scrollIntoView({
-                              behavior: 'smooth',
-                            });
-                            setActiveTab('discussions');
-                          }
-                        }}
-                        categories={manuscript?.categories || []}
-                        impact={manuscript?.impact}
-                        showTeamName={showTeamName}
-                        getEditManuscriptHref={resolvedGetEditManuscriptHref}
-                      />
-                    ))}
-                  {versions.length > VERSION_LIMIT && (
-                    <div css={showMoreContainerStyles}>
-                      <Button onClick={() => setShowMore(!showMore)} linkStyle>
-                        {showMore ? `Show less ↑` : `Show more ↓`}
-                      </Button>
-                    </div>
-                  )}
-                </>
-              )}
-              {activeTab === 'discussions' && (
-                <DiscussionsTab
-                  discussions={manuscript?.discussions || []}
-                  manuscriptId={id}
-                  createDiscussion={createDiscussion}
-                  handleFileUpload={handleFileUpload}
-                  onReplyToDiscussion={onReplyToDiscussion}
-                  onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                  canParticipateInDiscussion={
-                    hasUpdateAccess || isComplianceReviewer
-                  }
-                  isActiveManuscript={isActiveManuscript}
-                  showTeamName={showTeamName}
-                />
-              )}
-            </div>
-          </div>
+          <Suspense
+            fallback={
+              <div css={detailLoadingStyles}>
+                <Loading />
+              </div>
+            }
+          >
+            <ManuscriptCardDetail
+              id={id}
+              teamId={teamId}
+              user={user}
+              isComplianceReviewer={isComplianceReviewer}
+              isActiveManuscript={isActiveManuscript}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              createDiscussion={createDiscussion}
+              handleFileUpload={handleFileUpload}
+              useManuscriptById={useManuscriptById}
+              onReplyToDiscussion={onReplyToDiscussion}
+              onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+              showTeamName={showTeamName}
+              getEditManuscriptHref={getEditManuscriptHref}
+              getResubmitManuscriptHref={getResubmitManuscriptHref}
+              getCreateComplianceReportHref={getCreateComplianceReportHref}
+            />
+          </Suspense>
         )}
       </div>
     </>

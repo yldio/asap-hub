@@ -20,6 +20,7 @@ import {
 } from '../../shared-state';
 import {
   useInvalidateTeamById,
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostManuscript,
   usePutManuscript,
@@ -46,6 +47,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   resubmitManuscript = false,
 }) => {
   const invalidateTeam = useInvalidateTeamById(teamId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
 
@@ -72,6 +74,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     invalidateTeam();
+    void invalidateWorkspaceManuscripts();
     void pushFromHere(path);
   };
 

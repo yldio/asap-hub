@@ -12,6 +12,7 @@ import { useParams, useLocation } from 'react-router';
 import {
   useManuscriptById,
   usePostComplianceReport,
+  useInvalidateWorkspaceManuscripts,
 } from '../network/teams/state';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import { useInvalidateProjectById } from './state';
@@ -58,6 +59,7 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
   const { state } = useLocation();
 
   const invalidateProject = useInvalidateProjectById(projectId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
 
@@ -79,6 +81,7 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
         accent: 'successLarge',
       });
       invalidateProject();
+      void invalidateWorkspaceManuscripts();
       void pushFromHere(projectWorkspacePath, { replace: true });
     };
 

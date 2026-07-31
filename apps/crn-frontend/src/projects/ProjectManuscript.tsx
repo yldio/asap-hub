@@ -24,6 +24,7 @@ import {
   usePutManuscript,
   useResubmitManuscript,
   useUploadManuscriptFileViaPresignedUrl,
+  useInvalidateWorkspaceManuscripts,
 } from '../network/teams/state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
@@ -47,6 +48,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   resubmitManuscript = false,
 }) => {
   const invalidateProject = useInvalidateProjectById(projectId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
   const projectDetail = useProjectById(projectId);
@@ -139,6 +141,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
     const path = getWorkspacePath();
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     invalidateProject();
+    void invalidateWorkspaceManuscripts();
     void pushFromHere(path);
   };
 

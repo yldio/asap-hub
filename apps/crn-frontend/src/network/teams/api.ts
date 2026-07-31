@@ -30,6 +30,7 @@ import {
   ManuscriptVersionResponse,
   TeamType,
   TeamStatus,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -473,23 +474,25 @@ export const getManuscriptWorkspaceUrl = async (
   return resp.json();
 };
 
-export const getManuscriptsByIds = async (
-  ids: ReadonlyArray<string>,
+export type WorkspaceManuscriptsParams =
+  | { teamId: string }
+  | { projectId: string };
+
+export const getWorkspaceManuscripts = async (
+  params: WorkspaceManuscriptsParams,
   authorization: string,
-): Promise<ManuscriptResponse[]> => {
-  const resp = await fetch(`${API_BASE_URL}/manuscripts/batch`, {
-    method: 'POST',
+): Promise<WorkspaceManuscriptsResponse> => {
+  const query = new URLSearchParams(params).toString();
+  const resp = await fetch(`${API_BASE_URL}/manuscripts?${query}`, {
     headers: {
-      'content-type': 'application/json',
       authorization,
       ...createSentryHeaders(),
     },
-    body: JSON.stringify({ ids }),
   });
 
   if (!resp.ok) {
     throw new Error(
-      `Failed to fetch manuscripts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to fetch workspace manuscripts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
 

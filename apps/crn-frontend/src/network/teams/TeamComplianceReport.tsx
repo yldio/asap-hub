@@ -11,6 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
 import {
   useInvalidateTeamById,
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostComplianceReport,
 } from './state';
@@ -30,6 +31,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   const { state } = useLocation();
 
   const invalidateTeam = useInvalidateTeamById(teamId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
 
@@ -54,6 +56,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
         accent: 'successLarge',
       });
       invalidateTeam();
+      void invalidateWorkspaceManuscripts();
       void pushFromHere(teamWorkspacePath, { replace: true });
     };
 

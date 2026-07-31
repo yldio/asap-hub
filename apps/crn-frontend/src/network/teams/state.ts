@@ -22,6 +22,7 @@ import {
   ManuscriptWorkspaceUrlResponse,
   ResearchOutputResponse,
   TeamResponse,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
@@ -41,8 +42,9 @@ import {
   downloadFullComplianceDataset,
   getManuscript,
   getManuscriptWorkspaceUrl,
-  getManuscriptsByIds,
   getManuscripts,
+  getWorkspaceManuscripts,
+  WorkspaceManuscriptsParams,
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
   getTeam,
@@ -66,7 +68,9 @@ type ManuscriptWorkspaceUrlParams = {
 
 export const manuscriptQueryKeys = {
   ...createQueryKeys<ManuscriptsOptions>('manuscripts'),
-  batch: (ids: ReadonlyArray<string>) => ['manuscripts', 'batch', ids] as const,
+  workspaceAll: ['manuscripts', 'workspace'] as const,
+  workspace: (params: WorkspaceManuscriptsParams) =>
+    ['manuscripts', 'workspace', params] as const,
   workspaceUrl: (params: ManuscriptWorkspaceUrlParams) =>
     ['manuscripts', 'workspace-url', normalizeListOptions(params)] as const,
 };
@@ -167,37 +171,27 @@ export const useManuscriptWorkspaceUrl = (
   return data ?? undefined;
 };
 
-// Batch hydration: one suspense query per deduplicated id set makes the
-// single getManuscriptsByIds call and fans the results into the manuscript
-// detail keys, so the per-card useManuscriptById reads hit the cache without
-// fetching. With no ids the query is seeded with initialData so it resolves
-// immediately without suspending or hitting the API.
-export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
+export const useWorkspaceManuscripts = (
+  params: WorkspaceManuscriptsParams,
+): WorkspaceManuscriptsResponse => {
   const getAuthorization = useAuthorization();
-  const queryClient = useQueryClient();
-  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
-  useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.batch(deduplicatedIds),
-    queryFn: async () => {
-      if (!deduplicatedIds.length) {
-        return 0;
-      }
-      const manuscripts = await getManuscriptsByIds(
-        deduplicatedIds,
-        await getAuthorization(),
-      );
-      manuscripts.forEach((manuscript) => {
-        queryClient.setQueryData(
-          manuscriptQueryKeys.detail(manuscript.id),
-          manuscript,
-        );
-      });
-      return manuscripts.length;
-    },
-    // With no ids there is nothing to fetch: seed a result so the query is
-    // already resolved and the call site never suspends.
-    ...(deduplicatedIds.length ? {} : { initialData: 0 }),
+  const { data } = useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.workspace(params),
+    queryFn: async () =>
+      getWorkspaceManuscripts(params, await getAuthorization()),
   });
+  return data;
+};
+
+export const useInvalidateWorkspaceManuscripts = () => {
+  const queryClient = useQueryClient();
+  return useCallback(
+    () =>
+      queryClient.invalidateQueries({
+        queryKey: manuscriptQueryKeys.workspaceAll,
+      }),
+    [queryClient],
+  );
 };
 
 // Writes a mutation response into the manuscript detail cache — never
@@ -265,6 +259,7 @@ export const useResubmitManuscript = () => {
 export const usePutManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
+  const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
     mutationFn: async ({
       id,
@@ -283,6 +278,29 @@ export const usePutManuscript = () => {
     },
     onSuccess: (manuscript) => {
       setManuscriptItem(manuscript);
+      // Patch the workspace lists in place rather than refetching — Contentful
+      // has read-after-write lag, so a refetch could serve the old status.
+      queryClient.setQueriesData<WorkspaceManuscriptsResponse>(
+        { queryKey: manuscriptQueryKeys.workspaceAll },
+        (cached) =>
+          cached && {
+            manuscripts: cached.manuscripts.map((item) =>
+              item.id === manuscript.id
+                ? { ...item, status: manuscript.status, title: manuscript.title }
+                : item,
+            ),
+            collaborationManuscripts: cached.collaborationManuscripts.map(
+              (item) =>
+                item.id === manuscript.id
+                  ? {
+                      ...item,
+                      status: manuscript.status,
+                      title: manuscript.title,
+                    }
+                  : item,
+            ),
+          },
+      );
     },
   });
   return (id: string, payload: ManuscriptPutRequest) =>

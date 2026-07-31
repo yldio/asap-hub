@@ -16,6 +16,8 @@ import {
   FetchManuscriptsByTeamIdQueryVariables,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
+  FetchWorkspaceManuscriptsQuery,
+  FetchWorkspaceManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
   FetchManuscriptVersionCountByIdQueryVariables,
   FetchManuscriptVersionsByIdsQuery,
@@ -37,6 +39,7 @@ import {
   FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
   FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
+  FETCH_WORKSPACE_MANUSCRIPTS,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getLinkAsset,
   getLinkAssets,
@@ -69,13 +72,18 @@ import {
   QuickCheckDetails,
   ApcCoverageRequestStatus,
   ResearchOutputDataObject,
+  WorkspaceManuscript,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 import { chunk } from '../../utils/chunk';
 import { getCommaAndString } from '../../utils/text';
 import { EmailNotificationService } from '../email-notification-service';
-import { ManuscriptDataProvider } from '../types';
+import {
+  ManuscriptDataProvider,
+  WorkspaceManuscriptsFilter,
+} from '../types';
 import { parseGraphQLResearchOutput } from './research-output.data-provider';
 
 const MANUSCRIPT_BATCH_SIZE = 30;
@@ -96,13 +104,21 @@ type ManuscriptListProject = NonNullable<ManuscriptListItem['project']>;
 type ManuscriptListTeamItem = NonNullable<
   NonNullable<ManuscriptListItem['teamsCollection']>['items'][number]
 >;
+type WorkspaceManuscriptItem = NonNullable<
+  NonNullable<
+    FetchWorkspaceManuscriptsQuery['manuscriptsCollection']
+  >['items'][number]
+>;
 type ManuscriptTeamItem =
   | ManuscriptListTeamItem
   | NonNullable<
       NonNullable<ManuscriptItem['teamsCollection']>['items'][number]
+    >
+  | NonNullable<
+      NonNullable<WorkspaceManuscriptItem['teamsCollection']>['items'][number]
     >;
 type ManuscriptProjectSource = Pick<
-  ManuscriptListItem | ManuscriptItem,
+  ManuscriptListItem | ManuscriptItem | WorkspaceManuscriptItem,
   'project' | 'teamsCollection'
 >;
 
@@ -153,6 +169,20 @@ function resolveManuscriptProject(
     isTeamBased: true,
   };
 }
+
+const MANUSCRIPT_STATUS_PRIORITY: Record<string, number> = {
+  Compliant: 1,
+  'Closed (other)': 2,
+};
+
+const sortManuscriptsByStatusPriority = <T extends { status?: string }>(
+  manuscripts: T[],
+): T[] =>
+  [...manuscripts].sort(
+    (a, b) =>
+      (MANUSCRIPT_STATUS_PRIORITY[a.status ?? ''] ?? 0) -
+      (MANUSCRIPT_STATUS_PRIORITY[b.status ?? ''] ?? 0),
+  );
 
 export class ManuscriptContentfulDataProvider
   implements ManuscriptDataProvider
@@ -235,6 +265,73 @@ export class ManuscriptContentfulDataProvider
             },
           };
         }),
+    };
+  }
+
+  async fetchWorkspaceManuscripts(
+    filter: WorkspaceManuscriptsFilter,
+  ): Promise<WorkspaceManuscriptsResponse> {
+    const pageSize = 100;
+    const where =
+      'teamId' in filter
+        ? { teams: { sys: { id: filter.teamId } } }
+        : { project: { sys: { id: filter.projectId } } };
+
+    const items: WorkspaceManuscriptItem[] = [];
+    let skip = 0;
+    let total = 0;
+    do {
+      const { manuscriptsCollection } = await this.contentfulClient.request<
+        FetchWorkspaceManuscriptsQuery,
+        FetchWorkspaceManuscriptsQueryVariables
+      >(FETCH_WORKSPACE_MANUSCRIPTS, { limit: pageSize, skip, where });
+
+      const pageItems = manuscriptsCollection?.items ?? [];
+      if (pageItems.length === 0) {
+        break;
+      }
+      total = manuscriptsCollection?.total ?? 0;
+      items.push(
+        ...pageItems.filter((x): x is WorkspaceManuscriptItem => x !== null),
+      );
+      skip += pageSize;
+    } while (skip < total);
+
+    const toWorkspaceManuscript = (
+      manuscript: WorkspaceManuscriptItem,
+    ): WorkspaceManuscript => {
+      const version = manuscript.versionsCollection?.items[0];
+      const project = resolveManuscriptProject(manuscript)?.project;
+      return {
+        id: manuscript.sys.id,
+        title: manuscript.title || '',
+        status: manuscriptMapStatus(manuscript.status) || undefined,
+        versionUID: getManuscriptVersionUID({
+          version: {
+            type: version?.type,
+            count: version?.count,
+            lifecycle: version?.lifecycle,
+          },
+          teamIdCode: project?.projectId || '',
+          grantId: project?.grantId || '',
+          manuscriptCount: manuscript.count || 0,
+        }),
+      };
+    };
+
+    const isTeamOwned = (manuscript: WorkspaceManuscriptItem) =>
+      'teamId' in filter
+        ? manuscript.teamsCollection?.items[0]?.sys.id === filter.teamId &&
+          !manuscript.project
+        : true;
+
+    return {
+      manuscripts: sortManuscriptsByStatusPriority(
+        items.filter(isTeamOwned).map(toWorkspaceManuscript),
+      ),
+      collaborationManuscripts: sortManuscriptsByStatusPriority(
+        items.filter((item) => !isTeamOwned(item)).map(toWorkspaceManuscript),
+      ),
     };
   }
 

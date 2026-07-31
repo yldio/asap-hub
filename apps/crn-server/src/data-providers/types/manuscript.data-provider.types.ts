@@ -8,7 +8,12 @@ import {
   FetchOptions,
   PartialManuscriptResponse,
   ResearchOutputDataObject,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
+
+export type WorkspaceManuscriptsFilter =
+  | { teamId: string }
+  | { projectId: string };
 
 export type ManuscriptDataProvider = Omit<
   DataProvider<
@@ -29,10 +34,9 @@ export type ManuscriptDataProvider = Omit<
     input: ManuscriptResubmitDataObject,
   ) => Promise<void>;
   fetchById(id: string, userId: string): Promise<ManuscriptDataObject | null>;
-  fetchByIds(
-    ids: readonly string[],
-    userId: string,
-  ): Promise<ManuscriptDataObject[]>;
+  fetchWorkspaceManuscripts(
+    filter: WorkspaceManuscriptsFilter,
+  ): Promise<WorkspaceManuscriptsResponse>;
   getResearchOutputLinked(
     manuscriptVersionId: string,
   ): Promise<ResearchOutputDataObject | null>;

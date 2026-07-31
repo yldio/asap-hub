@@ -16,11 +16,13 @@ import {
   ResearchOutputDataObject,
   UserResponse,
   ValidationErrorResponse,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 
 import {
   AssetDataProvider,
   ManuscriptDataProvider,
+  WorkspaceManuscriptsFilter,
 } from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
 import {
@@ -96,11 +98,10 @@ export default class ManuscriptController {
     return { url };
   }
 
-  async fetchByIds(
-    manuscriptIds: ReadonlyArray<string>,
-    userId: string,
-  ): Promise<ManuscriptResponse[]> {
-    return this.manuscriptDataProvider.fetchByIds(manuscriptIds, userId);
+  async fetchWorkspaceManuscripts(
+    filter: WorkspaceManuscriptsFilter,
+  ): Promise<WorkspaceManuscriptsResponse> {
+    return this.manuscriptDataProvider.fetchWorkspaceManuscripts(filter);
   }
 
   async fetch(

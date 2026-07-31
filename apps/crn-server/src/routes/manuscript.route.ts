@@ -6,6 +6,7 @@ import {
   ManuscriptResponse,
   ManuscriptWorkspaceTab,
   ManuscriptWorkspaceUrlResponse,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { RequestHandler, Response, Router } from 'express';
@@ -14,8 +15,8 @@ import multer from 'multer';
 import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateFileUploadFromUrl,
-  validateManuscriptBatchRequestParameters,
   validateManuscriptParameters,
+  validateWorkspaceManuscriptsParameters,
   validateManuscriptPostRequestParameters,
   validateManuscriptPutRequestParameters,
 } from '../validation/manuscript.validation';
@@ -180,19 +181,17 @@ export const manuscriptRouteFactory = (
     res.status(201).json(manuscript);
   });
 
-  manuscriptRoutes.post<unknown, ManuscriptResponse[]>(
-    '/manuscripts/batch',
-    async (req, res: Response<ManuscriptResponse[]>) => {
-      const { body, loggedInUser } = req;
+  manuscriptRoutes.get(
+    '/manuscripts',
+    async (req, res: Response<WorkspaceManuscriptsResponse>) => {
+      const { query, loggedInUser } = req;
 
       if (!loggedInUser) throw Boom.forbidden();
 
-      const { ids } = validateManuscriptBatchRequestParameters(body);
+      const filter = validateWorkspaceManuscriptsParameters(query);
 
-      const result = await manuscriptController.fetchByIds(
-        ids,
-        loggedInUser.id,
-      );
+      const result =
+        await manuscriptController.fetchWorkspaceManuscripts(filter);
 
       res.json(result);
     },

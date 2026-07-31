@@ -12,8 +12,9 @@ type ManuscriptParameters = {
   manuscriptId: string;
 };
 
-type ManuscriptBatchRequest = {
-  ids: string[];
+type WorkspaceManuscriptsParameters = {
+  teamId?: string;
+  projectId?: string;
 };
 
 const manuscriptParametersValidationSchema: JSONSchemaType<ManuscriptParameters> =
@@ -34,27 +35,34 @@ export const validateManuscriptParameters = validateInput(
   },
 );
 
-const manuscriptBatchRequestValidationSchema: JSONSchemaType<ManuscriptBatchRequest> =
+const workspaceManuscriptsParametersValidationSchema: JSONSchemaType<WorkspaceManuscriptsParameters> =
   {
     type: 'object',
     properties: {
-      ids: {
-        type: 'array',
-        items: { type: 'string' },
-        minItems: 1,
-      },
+      teamId: { type: 'string', nullable: true },
+      projectId: { type: 'string', nullable: true },
     },
-    required: ['ids'],
     additionalProperties: false,
   };
 
-export const validateManuscriptBatchRequestParameters = validateInput(
-  manuscriptBatchRequestValidationSchema,
+const validateWorkspaceManuscriptsQuery = validateInput(
+  workspaceManuscriptsParametersValidationSchema,
   {
     skipNull: false,
     coerce: false,
   },
 );
+
+export const validateWorkspaceManuscriptsParameters = (
+  query: Record<string, unknown>,
+): { teamId: string } | { projectId: string } => {
+  const { teamId, projectId } = validateWorkspaceManuscriptsQuery(query);
+
+  if (teamId && !projectId) return { teamId };
+  if (projectId && !teamId) return { projectId };
+
+  throw Boom.badRequest('Provide exactly one of teamId or projectId');
+};
 
 export const validateManuscriptPostRequestParameters = validateInput(
   manuscriptPostRequestSchema,

@@ -129,6 +129,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               </>
             }
             hint="Note: This will not affect the way you login into the Hub."
+            placeholder="Add a different email"
           />
           <LabeledTextField
             type="email"

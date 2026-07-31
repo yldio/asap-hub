@@ -56,6 +56,10 @@ it('renders a text field containing the email', () => {
     />,
   );
   expect(getByLabelText(/contact email/i)).toHaveValue('contact@example.com');
+  expect(getByLabelText(/contact email/i)).toHaveAttribute(
+    'placeholder',
+    'Add a different email',
+  );
 });
 
 it('renders a text field containing the personal email', () => {
@@ -67,6 +71,10 @@ it('renders a text field containing the personal email', () => {
     />,
   );
   expect(getByLabelText(/personal email/i)).toHaveValue('personal@example.com');
+  expect(getByLabelText(/personal email/i)).toHaveAttribute(
+    'placeholder',
+    'Add a personal email',
+  );
 });
 
 it('fires onSave when submitting', async () => {

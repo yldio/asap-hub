@@ -3,24 +3,46 @@
 import { gql } from 'graphql-tag';
 import { discussionContentQueryFragment } from './discussions.queries';
 
-export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID = gql`
-  query FetchManuscriptDiscussionsById($id: String!, $userId: String) {
-    manuscripts(id: $id) {
-      sys {
-        id
-      }
-      discussionsCollection(limit: 10) {
-        total
-        items {
-          ...DiscussionsContent
-          readByCollection(limit: 1, where: { sys: { id: $userId } }) {
-            total
-          }
+export const manuscriptDiscussionsQueryFragment = gql`
+  fragment ManuscriptDiscussionsContent on Manuscripts {
+    sys {
+      id
+    }
+    discussionsCollection(limit: 10) {
+      total
+      items {
+        ...DiscussionsContent
+        readByCollection(limit: 1, where: { sys: { id: $userId } }) {
+          total
         }
       }
     }
   }
   ${discussionContentQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID = gql`
+  query FetchManuscriptDiscussionsById($id: String!, $userId: String) {
+    manuscripts(id: $id) {
+      ...ManuscriptDiscussionsContent
+    }
+  }
+  ${manuscriptDiscussionsQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS = gql`
+  query FetchManuscriptDiscussionsByIds(
+    $where: ManuscriptsFilter
+    $limit: Int
+    $userId: String
+  ) {
+    manuscriptsCollection(where: $where, limit: $limit) {
+      items {
+        ...ManuscriptDiscussionsContent
+      }
+    }
+  }
+  ${manuscriptDiscussionsQueryFragment}
 `;
 // // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
 export const manuscriptProjectQueryFragment = gql`
@@ -86,23 +108,20 @@ export const manuscriptContentQueryFragment = gql`
   ${manuscriptProjectQueryFragment}
 `;
 
-export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!) {
-    manuscripts(id: $id) {
-      ...ManuscriptsContent
-      teamsCollection(limit: 10) {
-        items {
-          sys {
-            id
-          }
-          linkedFrom {
-            projectMembershipCollection(limit: 1) {
-              items {
-                linkedFrom {
-                  projectsCollection(limit: 1) {
-                    items {
-                      ...ManuscriptProject
-                    }
+export const manuscriptTeamsQueryFragment = gql`
+  fragment ManuscriptTeamsContent on Manuscripts {
+    teamsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        linkedFrom {
+          projectMembershipCollection(limit: 1) {
+            items {
+              linkedFrom {
+                projectsCollection(limit: 1) {
+                  items {
+                    ...ManuscriptProject
                   }
                 }
               }
@@ -112,112 +131,285 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
       }
     }
   }
-  ${manuscriptContentQueryFragment}
+  ${manuscriptProjectQueryFragment}
 `;
 
-export const FETCH_MANUSCRIPT_VERSIONS = gql`
-  query FetchManuscriptVersions($id: String!) {
+export const FETCH_MANUSCRIPT_BY_ID = gql`
+  query FetchManuscriptById($id: String!) {
     manuscripts(id: $id) {
-      versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
-        items {
-          sys {
-            id
-            publishedAt
-            firstPublishedAt
-          }
-          type
-          lifecycle
-          description
-          shortDescription
-          count
-          url
-          manuscriptFile {
-            sys {
-              id
-            }
-            fileName
-            url
-          }
-          keyResourceTable {
-            sys {
-              id
-            }
-            fileName
-            url
-          }
-          complianceReportResponse {
-            sys {
-              id
-            }
-            fileName
-            url
-          }
-          additionalFilesCollection(limit: 5) {
+      ...ManuscriptsContent
+      ...ManuscriptTeamsContent
+    }
+  }
+  ${manuscriptContentQueryFragment}
+  ${manuscriptTeamsQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPTS_BY_IDS = gql`
+  query FetchManuscriptsByIds($where: ManuscriptsFilter, $limit: Int) {
+    manuscriptsCollection(where: $where, limit: $limit) {
+      items {
+        ...ManuscriptsContent
+        ...ManuscriptTeamsContent
+      }
+    }
+  }
+  ${manuscriptContentQueryFragment}
+  ${manuscriptTeamsQueryFragment}
+`;
+
+export const manuscriptVersionQueryFragment = gql`
+  fragment ManuscriptVersionContent on ManuscriptVersions {
+    sys {
+      id
+      publishedAt
+      firstPublishedAt
+    }
+    type
+    lifecycle
+    description
+    shortDescription
+    count
+    url
+    manuscriptFile {
+      sys {
+        id
+      }
+      fileName
+      url
+    }
+    keyResourceTable {
+      sys {
+        id
+      }
+      fileName
+      url
+    }
+    complianceReportResponse {
+      sys {
+        id
+      }
+      fileName
+      url
+    }
+    additionalFilesCollection(limit: 5) {
+      items {
+        sys {
+          id
+        }
+        fileName
+        url
+      }
+    }
+    preprintDoi
+    publicationDoi
+    otherDetails
+    acknowledgedGrantNumber
+    acknowledgedGrantNumberDetails
+    asapAffiliationIncluded
+    asapAffiliationIncludedDetails
+    manuscriptLicense
+    manuscriptLicenseDetails
+    datasetsDeposited
+    datasetsDepositedDetails
+    codeDeposited
+    codeDepositedDetails
+    protocolsDeposited
+    protocolsDepositedDetails
+    labMaterialsRegistered
+    labMaterialsRegisteredDetails
+    availabilityStatement
+    availabilityStatementDetails
+    teamsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          projectMembershipCollection(limit: 1) {
             items {
-              sys {
-                id
-              }
-              fileName
-              url
-            }
-          }
-          preprintDoi
-          publicationDoi
-          otherDetails
-          acknowledgedGrantNumber
-          acknowledgedGrantNumberDetails
-          asapAffiliationIncluded
-          asapAffiliationIncludedDetails
-          manuscriptLicense
-          manuscriptLicenseDetails
-          datasetsDeposited
-          datasetsDepositedDetails
-          codeDeposited
-          codeDepositedDetails
-          protocolsDeposited
-          protocolsDepositedDetails
-          labMaterialsRegistered
-          labMaterialsRegisteredDetails
-          availabilityStatement
-          availabilityStatementDetails
-          teamsCollection(limit: 10) {
-            items {
-              sys {
-                id
-              }
-              displayName
-              inactiveSince
               linkedFrom {
-                projectMembershipCollection(limit: 1) {
+                projectsCollection(limit: 1) {
                   items {
-                    linkedFrom {
-                      projectsCollection(limit: 1) {
-                        items {
-                          sys {
-                            id
-                          }
-                          projectType
-                        }
-                      }
+                    sys {
+                      id
                     }
+                    projectType
                   }
                 }
               }
             }
           }
-          labsCollection(limit: 10) {
+        }
+      }
+    }
+    labsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        labPi {
+          sys {
+            id
+          }
+        }
+        name
+      }
+    }
+    createdBy {
+      sys {
+        id
+      }
+      firstName
+      nickname
+      lastName
+      alumniSinceDate
+      avatar {
+        url
+      }
+      teamsCollection(limit: 3) {
+        items {
+          team {
+            sys {
+              id
+            }
+            displayName
+          }
+        }
+      }
+    }
+    updatedBy {
+      sys {
+        id
+      }
+      firstName
+      nickname
+      lastName
+      alumniSinceDate
+      avatar {
+        url
+      }
+      teamsCollection(limit: 3) {
+        items {
+          team {
+            sys {
+              id
+            }
+            displayName
+          }
+        }
+      }
+    }
+    firstAuthorsCollection(limit: 15) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          email
+        }
+        ... on Users {
+          sys {
+            id
+          }
+          avatar {
+            url
+          }
+          firstName
+          lastName
+          nickname
+          email
+          teamsCollection(limit: 3) {
             items {
-              sys {
-                id
-              }
-              labPi {
+              team {
                 sys {
                   id
                 }
               }
-              name
             }
           }
+        }
+      }
+    }
+    additionalAuthorsCollection(limit: 15) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          email
+        }
+        ... on Users {
+          sys {
+            id
+          }
+          avatar {
+            url
+          }
+          firstName
+          lastName
+          nickname
+          email
+          teamsCollection(limit: 3) {
+            items {
+              team {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    correspondingAuthorCollection(limit: 1) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          email
+        }
+        ... on Users {
+          sys {
+            id
+          }
+          avatar {
+            url
+          }
+          firstName
+          lastName
+          nickname
+          email
+          teamsCollection(limit: 3) {
+            items {
+              team {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    linkedFrom {
+      complianceReportsCollection(limit: 1) {
+        items {
+          sys {
+            id
+            firstPublishedAt
+          }
+          url
+          description
           createdBy {
             sys {
               id
@@ -240,165 +432,41 @@ export const FETCH_MANUSCRIPT_VERSIONS = gql`
               }
             }
           }
-          updatedBy {
-            sys {
-              id
-            }
-            firstName
-            nickname
-            lastName
-            alumniSinceDate
-            avatar {
-              url
-            }
-            teamsCollection(limit: 3) {
-              items {
-                team {
-                  sys {
-                    id
-                  }
-                  displayName
-                }
-              }
-            }
-          }
-          firstAuthorsCollection(limit: 15) {
-            items {
-              __typename
-              ... on ExternalAuthors {
-                sys {
-                  id
-                }
-                name
-                email
-              }
-              ... on Users {
-                sys {
-                  id
-                }
-                avatar {
-                  url
-                }
-                firstName
-                lastName
-                nickname
-                email
-                teamsCollection(limit: 3) {
-                  items {
-                    team {
-                      sys {
-                        id
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          additionalAuthorsCollection(limit: 15) {
-            items {
-              __typename
-              ... on ExternalAuthors {
-                sys {
-                  id
-                }
-                name
-                email
-              }
-              ... on Users {
-                sys {
-                  id
-                }
-                avatar {
-                  url
-                }
-                firstName
-                lastName
-                nickname
-                email
-                teamsCollection(limit: 3) {
-                  items {
-                    team {
-                      sys {
-                        id
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          correspondingAuthorCollection(limit: 1) {
-            items {
-              __typename
-              ... on ExternalAuthors {
-                sys {
-                  id
-                }
-                name
-                email
-              }
-              ... on Users {
-                sys {
-                  id
-                }
-                avatar {
-                  url
-                }
-                firstName
-                lastName
-                nickname
-                email
-                teamsCollection(limit: 3) {
-                  items {
-                    team {
-                      sys {
-                        id
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          linkedFrom {
-            complianceReportsCollection(limit: 1) {
-              items {
-                sys {
-                  id
-                  firstPublishedAt
-                }
-                url
-                description
-                createdBy {
-                  sys {
-                    id
-                  }
-                  firstName
-                  nickname
-                  lastName
-                  alumniSinceDate
-                  avatar {
-                    url
-                  }
-                  teamsCollection(limit: 3) {
-                    items {
-                      team {
-                        sys {
-                          id
-                        }
-                        displayName
-                      }
-                    }
-                  }
-                }
-              }
-            }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MANUSCRIPT_VERSIONS = gql`
+  query FetchManuscriptVersions($id: String!) {
+    manuscripts(id: $id) {
+      versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
+        items {
+          ...ManuscriptVersionContent
+        }
+      }
+    }
+  }
+  ${manuscriptVersionQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPT_VERSIONS_BY_IDS = gql`
+  query FetchManuscriptVersionsByIds($where: ManuscriptsFilter, $limit: Int) {
+    manuscriptsCollection(where: $where, limit: $limit) {
+      items {
+        sys {
+          id
+        }
+        versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
+          items {
+            ...ManuscriptVersionContent
           }
         }
       }
     }
   }
+  ${manuscriptVersionQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPTS = gql`

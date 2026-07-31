@@ -70,7 +70,7 @@ import {
   ApcCoverageRequestStatus,
   ResearchOutputDataObject,
 } from '@asap-hub/model';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 import { chunk } from '../../utils/chunk';
 import { getCommaAndString } from '../../utils/text';
@@ -376,28 +376,24 @@ export class ManuscriptContentfulDataProvider
       >(FETCH_MANUSCRIPT_VERSIONS_BY_IDS, { where, limit: batchIds.length });
 
     const discussionsById = new Map(
-      (discussions?.items || [])
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-        .map((item) => [item.sys.id, item.discussionsCollection]),
+      cleanArray(discussions?.items).map((item) => [
+        item.sys.id,
+        item.discussionsCollection,
+      ]),
     );
     const versionsById = new Map(
-      (versions?.items || [])
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-        .map((item) => [item.sys.id, item]),
+      cleanArray(versions?.items).map((item) => [item.sys.id, item]),
     );
 
-    return (manuscriptsCollection?.items || [])
-      .filter((item): item is NonNullable<typeof item> => item !== null)
-      .map((manuscript) =>
-        parseGraphQLManuscript(
-          {
-            ...manuscript,
-            discussionsCollection:
-              discussionsById.get(manuscript.sys.id) ?? null,
-          },
-          versionsById.get(manuscript.sys.id) || {},
-        ),
-      );
+    return cleanArray(manuscriptsCollection?.items).map((manuscript) =>
+      parseGraphQLManuscript(
+        {
+          ...manuscript,
+          discussionsCollection: discussionsById.get(manuscript.sys.id) ?? null,
+        },
+        versionsById.get(manuscript.sys.id) || {},
+      ),
+    );
   }
 
   // The manuscript query only returns each lab's id/name/PI to keep it within
@@ -411,9 +407,7 @@ export class ManuscriptContentfulDataProvider
       new Set(
         manuscripts.flatMap((manuscript) =>
           manuscript.versions.flatMap((version) =>
-            (version.labs || [])
-              .map((lab) => lab.id)
-              .filter((labId): labId is string => !!labId),
+            (version.labs || []).map((lab) => lab.id),
           ),
         ),
       ),
@@ -440,9 +434,7 @@ export class ManuscriptContentfulDataProvider
       manuscript.versions.forEach((version) => {
         (version.labs || []).forEach((lab) => {
           // eslint-disable-next-line no-param-reassign
-          lab.labPITeamIds = lab.id
-            ? labPITeamIdsByLabId.get(lab.id) ?? []
-            : [];
+          lab.labPITeamIds = labPITeamIdsByLabId.get(lab.id) ?? [];
         });
       });
     });
@@ -1132,10 +1124,10 @@ export const parseGraphqlManuscriptVersion = (
       // labPITeamIds is resolved separately (see enrichLabPITeamIds) to avoid
       // deep nesting in this query, which was capping the PI's teams and could
       // push the query over Contentful's complexity limit.
-      labs: version?.labsCollection?.items.map((labItem) => ({
-        id: labItem?.sys.id,
-        name: labItem?.name,
-        labPi: labItem?.labPi?.sys.id,
+      labs: cleanArray(version?.labsCollection?.items).map((labItem) => ({
+        id: labItem.sys.id,
+        name: labItem.name,
+        labPi: labItem.labPi?.sys.id,
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],

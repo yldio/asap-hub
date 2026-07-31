@@ -1482,13 +1482,14 @@ describe('Manuscripts Contentful Data Provider', () => {
           if (
             query === (FETCH_MANUSCRIPT_VERSIONS as unknown as RequestOptions)
           ) {
-            return {
-              manuscripts: {
-                versionsCollection: {
-                  ...getContentfulGraphqlManuscriptVersions(),
-                },
-              },
+            const versionsCollection = getContentfulGraphqlManuscriptVersions();
+            versionsCollection.items[0]!.labsCollection = {
+              items: [
+                null,
+                ...(versionsCollection.items[0]!.labsCollection?.items || []),
+              ],
             };
+            return { manuscripts: { versionsCollection } };
           }
           if (query === (FETCH_LABS as unknown as RequestOptions)) {
             return {

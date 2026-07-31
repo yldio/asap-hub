@@ -6,7 +6,10 @@ import {
   FETCH_LABS,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
+  FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS,
   FETCH_MANUSCRIPT_VERSIONS,
+  FETCH_MANUSCRIPT_VERSIONS_BY_IDS,
+  FETCH_MANUSCRIPTS_BY_IDS,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getContentfulGraphqlClientMockServer,
   pollContentfulGql,
@@ -1479,13 +1482,14 @@ describe('Manuscripts Contentful Data Provider', () => {
           if (
             query === (FETCH_MANUSCRIPT_VERSIONS as unknown as RequestOptions)
           ) {
-            return {
-              manuscripts: {
-                versionsCollection: {
-                  ...getContentfulGraphqlManuscriptVersions(),
-                },
-              },
+            const versionsCollection = getContentfulGraphqlManuscriptVersions();
+            versionsCollection.items[0]!.labsCollection = {
+              items: [
+                null,
+                ...(versionsCollection.items[0]!.labsCollection?.items || []),
+              ],
             };
+            return { manuscripts: { versionsCollection } };
           }
           if (query === (FETCH_LABS as unknown as RequestOptions)) {
             return {
@@ -2123,6 +2127,200 @@ describe('Manuscripts Contentful Data Provider', () => {
           }),
         ]);
       });
+    });
+  });
+
+  describe('Fetch-by-ids', () => {
+    const mockFetchManuscriptsBatch = (
+      manuscripts: ContentfulGraphqlManuscript[],
+    ) => {
+      jest
+        .spyOn(contentfulGraphqlClientMock, 'request')
+        .mockImplementation(async (query) => {
+          if (
+            query === (FETCH_MANUSCRIPTS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return {
+              manuscriptsCollection: {
+                items: manuscripts.map(
+                  ({ discussionsCollection, ...manuscript }) => manuscript,
+                ),
+              },
+            };
+          }
+
+          if (
+            query ===
+            (FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return {
+              manuscriptsCollection: {
+                items: manuscripts.map((manuscript) => ({
+                  sys: { id: manuscript.sys.id },
+                  discussionsCollection:
+                    manuscript.discussionsCollection ?? null,
+                })),
+              },
+            };
+          }
+
+          if (
+            query ===
+            (FETCH_MANUSCRIPT_VERSIONS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return {
+              manuscriptsCollection: {
+                items: manuscripts.map((manuscript) => ({
+                  sys: { id: manuscript.sys.id },
+                  versionsCollection: {
+                    ...getContentfulGraphqlManuscriptVersions(),
+                  },
+                })),
+              },
+            };
+          }
+
+          if (query === (FETCH_LABS as unknown as RequestOptions)) {
+            return {
+              labsCollection: {
+                total: 1,
+                items: [
+                  {
+                    sys: { id: 'lab-1' },
+                    name: 'Lab 1',
+                    labPi: {
+                      sys: { id: 'lab-pi-1' },
+                      teamsCollection: {
+                        items: [
+                          {
+                            inactiveSinceDate: null,
+                            team: {
+                              sys: { id: 'team-1' },
+                              inactiveSince: null,
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            };
+          }
+
+          throw new Error('Unexpected query');
+        });
+    };
+
+    test('fetches manuscripts in one batch and resolves labs once for all of them', async () => {
+      const manuscript1 = getContentfulGraphqlManuscript();
+      const manuscript2 = getContentfulGraphqlManuscript({
+        sys: { id: 'manuscript-id-2' },
+      });
+
+      mockFetchManuscriptsBatch([manuscript1, manuscript2]);
+
+      const result = await manuscriptDataProvider.fetchByIds(
+        ['manuscript-id-1', 'manuscript-id-2'],
+        'user-id-1',
+      );
+
+      expect(result).toHaveLength(2);
+      expect(result.map((manuscript) => manuscript.id)).toEqual([
+        'manuscript-id-1',
+        'manuscript-id-2',
+      ]);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(4);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_LABS,
+        expect.objectContaining({ where: { sys: { id_in: ['lab-1'] } } }),
+      );
+    });
+
+    test('splits ids into multiple chunks when exceeding the batch size', async () => {
+      const ids = Array.from({ length: 31 }, (_, i) => `manuscript-id-${i}`);
+      const manuscripts = ids.map((id) =>
+        getContentfulGraphqlManuscript({ sys: { id } }),
+      );
+
+      mockFetchManuscriptsBatch(manuscripts);
+
+      await manuscriptDataProvider.fetchByIds(ids, 'user-id-1');
+
+      const manuscriptsByIdsCalls = (
+        contentfulGraphqlClientMock.request as jest.Mock
+      ).mock.calls.filter(
+        ([query]) =>
+          query === (FETCH_MANUSCRIPTS_BY_IDS as unknown as RequestOptions),
+      );
+
+      // size of each chunk sent, sorted so the
+      // assertion doesn't depend on which chunk fired first
+      const chunkSizes = manuscriptsByIdsCalls
+        .map((call) => call[1].where.sys.id_in.length)
+        .sort((a: number, b: number) => a - b);
+
+      expect(manuscriptsByIdsCalls).toHaveLength(2);
+      expect(chunkSizes).toEqual([1, 30]);
+    });
+
+    test('omits ids that do not resolve to a manuscript', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      mockFetchManuscriptsBatch([manuscript]);
+
+      const result = await manuscriptDataProvider.fetchByIds(
+        ['manuscript-id-1', 'missing-id'],
+        'user-id-1',
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]!.id).toEqual('manuscript-id-1');
+    });
+
+    test('does not throw when a manuscript has no matching discussions/versions in the batch response', async () => {
+      jest
+        .spyOn(contentfulGraphqlClientMock, 'request')
+        .mockImplementation(async (query) => {
+          if (
+            query === (FETCH_MANUSCRIPTS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return {
+              manuscriptsCollection: {
+                items: [getContentfulGraphqlManuscript()],
+              },
+            };
+          }
+          if (
+            query ===
+            (FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return { manuscriptsCollection: { items: [] } };
+          }
+          if (
+            query ===
+            (FETCH_MANUSCRIPT_VERSIONS_BY_IDS as unknown as RequestOptions)
+          ) {
+            return { manuscriptsCollection: { items: [] } };
+          }
+          throw new Error('Unexpected query');
+        });
+
+      const result = await manuscriptDataProvider.fetchByIds(
+        ['manuscript-id-1'],
+        'user-id-1',
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]!.discussions).toEqual([]);
+      expect(result[0]!.versions).toEqual([]);
+    });
+
+    test('returns an empty array without calling Contentful when given no ids', async () => {
+      const result = await manuscriptDataProvider.fetchByIds([], 'user-id-1');
+
+      expect(result).toEqual([]);
+      expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
     });
   });
 

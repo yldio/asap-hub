@@ -14,6 +14,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
 import {
+  useBatchManuscriptsByIds,
   useIsComplianceReviewer,
   useManuscriptById,
   usePutManuscript,
@@ -36,6 +37,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const project = useProjectById(team.linkedProjectId ?? '');
   const projectTools = project?.tools ?? [];
   const updateManuscript = usePutManuscript();
+  useBatchManuscriptsByIds([
+    ...team.manuscripts,
+    ...(team.collaborationManuscripts ?? []),
+  ]);
 
   const toast = useContext(ToastContext);
 

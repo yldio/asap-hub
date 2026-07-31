@@ -29,6 +29,10 @@ export type ManuscriptDataProvider = Omit<
     input: ManuscriptResubmitDataObject,
   ) => Promise<void>;
   fetchById(id: string, userId: string): Promise<ManuscriptDataObject | null>;
+  fetchByIds(
+    ids: readonly string[],
+    userId: string,
+  ): Promise<ManuscriptDataObject[]>;
   getResearchOutputLinked(
     manuscriptVersionId: string,
   ): Promise<ResearchOutputDataObject | null>;

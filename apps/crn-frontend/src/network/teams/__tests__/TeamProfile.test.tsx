@@ -112,6 +112,7 @@ jest.mock('../../../events/api');
 jest.mock('../state', () => ({
   ...jest.requireActual('../state'),
   useManuscriptById: jest.fn(),
+  useBatchManuscriptsByIds: jest.fn(),
 }));
 
 jest.mock('../../../projects/state', () => ({

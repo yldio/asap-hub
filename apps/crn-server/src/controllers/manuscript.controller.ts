@@ -100,17 +100,7 @@ export default class ManuscriptController {
     manuscriptIds: ReadonlyArray<string>,
     userId: string,
   ): Promise<ManuscriptResponse[]> {
-    const uniqueManuscriptIds = [...new Set(manuscriptIds)];
-
-    const manuscripts = await Promise.all(
-      uniqueManuscriptIds.map((manuscriptId) =>
-        this.manuscriptDataProvider.fetchById(manuscriptId, userId),
-      ),
-    );
-
-    return manuscripts.filter(
-      (manuscript): manuscript is ManuscriptResponse => manuscript !== null,
-    );
+    return this.manuscriptDataProvider.fetchByIds(manuscriptIds, userId);
   }
 
   async fetch(

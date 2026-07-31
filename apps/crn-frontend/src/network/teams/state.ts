@@ -69,7 +69,7 @@ type ManuscriptWorkspaceUrlParams = {
 export const manuscriptQueryKeys = {
   ...createQueryKeys<ManuscriptsOptions>('manuscripts'),
   workspaceAll: ['manuscripts', 'workspace'] as const,
-  workspace: (params: WorkspaceManuscriptsParams) =>
+  workspace: (params: Partial<Record<'teamId' | 'projectId', string>>) =>
     ['manuscripts', 'workspace', params] as const,
   workspaceUrl: (params: ManuscriptWorkspaceUrlParams) =>
     ['manuscripts', 'workspace-url', normalizeListOptions(params)] as const,
@@ -171,14 +171,18 @@ export const useManuscriptWorkspaceUrl = (
   return data ?? undefined;
 };
 
+// `null` means there is nothing to fetch (e.g. a team-based project without a
+// resolved team) — the query resolves to empty lists without hitting the API.
 export const useWorkspaceManuscripts = (
-  params: WorkspaceManuscriptsParams,
+  params: WorkspaceManuscriptsParams | null,
 ): WorkspaceManuscriptsResponse => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.workspace(params),
-    queryFn: async () =>
-      getWorkspaceManuscripts(params, await getAuthorization()),
+    queryKey: manuscriptQueryKeys.workspace(params ?? {}),
+    queryFn: async (): Promise<WorkspaceManuscriptsResponse> =>
+      params
+        ? getWorkspaceManuscripts(params, await getAuthorization())
+        : { manuscripts: [], collaborationManuscripts: [] },
   });
   return data;
 };

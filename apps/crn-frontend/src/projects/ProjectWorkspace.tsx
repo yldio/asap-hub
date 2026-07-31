@@ -8,11 +8,11 @@ import {
   ToolModal,
 } from '@asap-hub/react-components';
 import {
-  useBatchManuscriptsByIds,
   useIsComplianceReviewer,
   useManuscriptById,
   usePutManuscript,
   useUploadManuscriptFileViaPresignedUrl,
+  useWorkspaceManuscripts,
 } from '../network/teams/state';
 import { usePatchProjectById } from './state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
@@ -38,8 +38,11 @@ type ProjectWorkspaceProps = Omit<
   | 'onReplyToDiscussion'
   | 'onMarkDiscussionAsRead'
   | 'onDeleteTool'
+  | 'manuscripts'
+  | 'collaborationManuscripts'
 > & {
   readonly workspaceHref: string;
+  readonly teamId?: string;
   readonly getEditManuscriptHref?: (manuscriptId: string) => string;
   readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
   readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
@@ -47,14 +50,18 @@ type ProjectWorkspaceProps = Omit<
 
 const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
   workspaceHref,
+  teamId,
   ...props
 }) => {
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
-  useBatchManuscriptsByIds([
-    ...props.manuscripts,
-    ...(props.collaborationManuscripts ?? []),
-  ]);
+  const { manuscripts, collaborationManuscripts } = useWorkspaceManuscripts(
+    props.isTeamBased
+      ? teamId
+        ? { teamId }
+        : null
+      : { projectId: props.id },
+  );
   const updateManuscript = usePutManuscript();
   const {
     handleCreateDiscussion,
@@ -99,6 +106,8 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
       )}
       <ProjectProfileWorkspace
         {...props}
+        manuscripts={manuscripts}
+        collaborationManuscripts={collaborationManuscripts}
         setEligibilityReasons={setEligibilityReasons}
         isComplianceReviewer={isComplianceReviewer}
         useManuscriptById={useManuscriptById}

@@ -142,14 +142,6 @@ export type Membership = NonNullable<
   >['items'][number]
 >;
 
-export type ManuscriptItem = NonNullable<
-  NonNullable<
-    NonNullable<
-      NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
-    >['manuscriptsCollection']
-  >['items'][number]
->;
-
 export type ProjectMember = NonNullable<
   NonNullable<
     NonNullable<
@@ -532,7 +524,6 @@ export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
   linkedProject?: TeamProjectItem | null,
 ): TeamDataObject => {
-  const teamId = item.sys.id;
   // TODO: Remove this function once we have migrated all tools to projects
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
@@ -661,48 +652,6 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
-  const sortManuscripts = (manuscripts: ManuscriptItem[]) => {
-    const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
-      Compliant: 1,
-      'Closed (other)': 2,
-    };
-
-    return [...manuscripts].sort((a, b) => {
-      const aPriority =
-        STATUS_PRIORITY[a.status as keyof typeof STATUS_PRIORITY] ?? 0;
-      const bPriority =
-        STATUS_PRIORITY[b.status as keyof typeof STATUS_PRIORITY] ?? 0;
-      return aPriority - bPriority;
-    });
-  };
-
-  const parseManuscripts = () => {
-    const manuscripts = cleanArray(
-      item.linkedFrom?.manuscriptsCollection?.items,
-    );
-
-    const teamManuscripts = manuscripts.filter(
-      (manuscript) =>
-        manuscript.teamsCollection?.items[0]?.sys.id === teamId &&
-        !manuscript.project?.sys.id,
-    );
-
-    const collaborationManuscripts = manuscripts.filter(
-      (manuscript) =>
-        manuscript.teamsCollection?.items[0]?.sys.id !== teamId ||
-        manuscript.project?.sys.id,
-    );
-
-    return {
-      manuscripts: sortManuscripts(teamManuscripts).map(
-        (manuscript) => manuscript.sys.id,
-      ),
-      collaborationManuscripts: sortManuscripts(collaborationManuscripts).map(
-        (manuscript) => manuscript.sys.id,
-      ),
-    };
-  };
-
   const teamStatus = item.inactiveSince ? 'Inactive' : 'Active';
 
   return {
@@ -722,7 +671,6 @@ export const parseContentfulGraphQlTeam = (
     // TODO: Remove this field once we have migrated all tools to projects
     tools,
     supplementGrant: getSupplementGrant(),
-    ...parseManuscripts(),
     projectSummary: linkedProject?.originalGrant ?? undefined,
     members: members.sort(sortMembers),
     pointOfContact: linkedProject?.contactEmail ?? undefined,
@@ -809,7 +757,6 @@ export const parseContentfulGraphQlPublicTeam = (
     // Required fields with minimal defaults
     teamType: 'Discovery Team' as TeamType,
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
-    manuscripts: [],
     labCount: 0,
     labs: [],
   };

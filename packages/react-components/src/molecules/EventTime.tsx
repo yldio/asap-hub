@@ -45,7 +45,7 @@ const recurrentPillStyles = css({
   alignItems: 'center',
   gap: rem(4),
   flexShrink: 0,
-  marginLeft: 'auto',
+  marginLeft: rem(8),
 
   backgroundColor: info100.rgb,
   color: info500.rgb,

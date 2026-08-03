@@ -997,6 +997,8 @@ export enum AttendanceLinkingCollectionsEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -1046,6 +1048,8 @@ export enum AttendanceLinkingCollectionsEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -1618,6 +1622,8 @@ export enum CalendarsLinkingCollectionsEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -1667,6 +1673,8 @@ export enum CalendarsLinkingCollectionsEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -3711,6 +3719,8 @@ export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -3760,6 +3770,8 @@ export enum EventSpeakersLinkingCollectionsEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -3844,6 +3856,7 @@ export type Events = Entry &
     presentation?: Maybe<EventsPresentation>;
     presentationPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
     presentationUpdatedAt?: Maybe<Scalars['DateTime']>;
+    recurring?: Maybe<Scalars['Boolean']>;
     researchTagsCollection?: Maybe<EventsResearchTagsCollection>;
     researchTagsCursorCollection?: Maybe<EventsResearchTagsCursorCollection>;
     speakersCollection?: Maybe<EventsSpeakersCollection>;
@@ -4020,6 +4033,12 @@ export type EventsPresentationPermanentlyUnavailableArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type EventsPresentationUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsRecurringArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -4280,6 +4299,9 @@ export type EventsFilter = {
   presentation_contains?: InputMaybe<Scalars['String']>;
   presentation_exists?: InputMaybe<Scalars['Boolean']>;
   presentation_not_contains?: InputMaybe<Scalars['String']>;
+  recurring?: InputMaybe<Scalars['Boolean']>;
+  recurring_exists?: InputMaybe<Scalars['Boolean']>;
+  recurring_not?: InputMaybe<Scalars['Boolean']>;
   researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   speakers?: InputMaybe<CfEventSpeakersNestedFilter>;
@@ -4630,6 +4652,8 @@ export enum EventsOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -12035,6 +12059,8 @@ export enum PreliminaryDataSharingLinkingCollectionsEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -12084,6 +12110,8 @@ export enum PreliminaryDataSharingLinkingCollectionsEventsCursorCollectionOrder 
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -16909,6 +16937,8 @@ export enum ResearchOutputsRelatedEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -16964,6 +16994,8 @@ export enum ResearchOutputsRelatedEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -17562,6 +17594,8 @@ export enum ResearchTagsLinkingCollectionsEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -17611,6 +17645,8 @@ export enum ResearchTagsLinkingCollectionsEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -20871,6 +20907,8 @@ export enum TutorialsRelatedEventsCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -20926,6 +20964,8 @@ export enum TutorialsRelatedEventsCursorCollectionOrder {
   PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
   PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
   PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  RecurringAsc = 'recurring_ASC',
+  RecurringDesc = 'recurring_DESC',
   StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
   StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -24653,6 +24693,9 @@ export type CfEventsNestedFilter = {
   presentation_contains?: InputMaybe<Scalars['String']>;
   presentation_exists?: InputMaybe<Scalars['Boolean']>;
   presentation_not_contains?: InputMaybe<Scalars['String']>;
+  recurring?: InputMaybe<Scalars['Boolean']>;
+  recurring_exists?: InputMaybe<Scalars['Boolean']>;
+  recurring_not?: InputMaybe<Scalars['Boolean']>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   speakersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   startDate?: InputMaybe<Scalars['DateTime']>;

@@ -533,6 +533,8 @@ enum AttendanceLinkingCollectionsEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -582,6 +584,8 @@ enum AttendanceLinkingCollectionsEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -900,6 +904,8 @@ enum CalendarsLinkingCollectionsEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -949,6 +955,8 @@ enum CalendarsLinkingCollectionsEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -2519,6 +2527,8 @@ enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -2568,6 +2578,8 @@ enum EventSpeakersLinkingCollectionsEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -2651,6 +2663,7 @@ type Events implements Entry & _Node {
   presentation(locale: String, useFallbackLocale: Boolean): EventsPresentation
   presentationPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
   presentationUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  recurring(locale: String, useFallbackLocale: Boolean): Boolean
   researchTagsCollection(limit: Int = 100, locale: String, order: [EventsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): EventsResearchTagsCollection
   researchTagsCursorCollection(limit: Int = 100, locale: String, order: [EventsResearchTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchTagsFilter): EventsResearchTagsCursorCollection
   speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventsSpeakersCollection
@@ -2821,6 +2834,9 @@ input EventsFilter {
   presentation_contains: String
   presentation_exists: Boolean
   presentation_not_contains: String
+  recurring: Boolean
+  recurring_exists: Boolean
+  recurring_not: Boolean
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
   speakers: cfEventSpeakersNestedFilter
@@ -3102,6 +3118,8 @@ enum EventsOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -8123,6 +8141,8 @@ enum PreliminaryDataSharingLinkingCollectionsEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -8172,6 +8192,8 @@ enum PreliminaryDataSharingLinkingCollectionsEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -10416,6 +10438,8 @@ enum ResearchOutputsRelatedEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -10471,6 +10495,8 @@ enum ResearchOutputsRelatedEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -10827,6 +10853,8 @@ enum ResearchTagsLinkingCollectionsEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -10876,6 +10904,8 @@ enum ResearchTagsLinkingCollectionsEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -13210,6 +13240,8 @@ enum TutorialsRelatedEventsCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -13265,6 +13297,8 @@ enum TutorialsRelatedEventsCursorCollectionOrder {
   presentationPermanentlyUnavailable_DESC
   presentationUpdatedAt_ASC
   presentationUpdatedAt_DESC
+  recurring_ASC
+  recurring_DESC
   startDateTimeZone_ASC
   startDateTimeZone_DESC
   startDate_ASC
@@ -15827,6 +15861,9 @@ input cfEventsNestedFilter {
   presentation_contains: String
   presentation_exists: Boolean
   presentation_not_contains: String
+  recurring: Boolean
+  recurring_exists: Boolean
+  recurring_not: Boolean
   researchTagsCollection_exists: Boolean
   speakersCollection_exists: Boolean
   startDate: DateTime

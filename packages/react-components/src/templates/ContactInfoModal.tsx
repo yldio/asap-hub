@@ -92,8 +92,8 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       dirty={newEmail !== email || newPersonalEmail !== personalEmail}
       onSave={async () => {
         await onSave({
-          contactEmail: newEmail || undefined,
-          personalEmail: newPersonalEmail || undefined,
+          contactEmail: newEmail,
+          personalEmail: newPersonalEmail,
           social: {
             twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
             blueSky: formatUserSocial(newBlueSky, 'blueSky') || undefined,

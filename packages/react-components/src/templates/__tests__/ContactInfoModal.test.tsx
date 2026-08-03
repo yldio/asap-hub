@@ -125,6 +125,30 @@ it('fires onSave with the personal email when submitting', async () => {
   );
 });
 
+it('fires onSave with empty emails when they are cleared', async () => {
+  const handleSave = jest.fn();
+  const { getByLabelText, getByText } = renderModal(
+    <ContactInfoModal
+      fallbackEmail="fallback@example.com"
+      email="contact@example.com"
+      personalEmail="personal@example.com"
+      backHref="#"
+      onSave={handleSave}
+    />,
+  );
+
+  await userEvent.clear(getByLabelText(/contact email/i));
+  await userEvent.clear(getByLabelText(/personal email/i));
+  await userEvent.click(getByText(/save/i));
+  expect(handleSave).toHaveBeenLastCalledWith(
+    expect.objectContaining({ contactEmail: '', personalEmail: '' }),
+  );
+
+  await waitFor(() =>
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+  );
+});
+
 it('does not fire onSave when the email is invalid', async () => {
   const handleSave = jest.fn();
   const { getByLabelText, getByText } = renderModal(

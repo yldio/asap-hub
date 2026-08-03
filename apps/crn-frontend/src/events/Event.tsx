@@ -25,12 +25,7 @@ const mapAttendanceTeams = (attendance: EventResponse['attendance'] = []) =>
     teamId: team.id,
     teamName: team.displayName,
     attended,
-    teamType:
-      team.teamType === 'Discovery Team'
-        ? ('discovery' as const)
-        : team.teamType === 'Resource Team'
-          ? ('resource' as const)
-          : undefined,
+    teamType: team.teamType,
     isTeamInactive: !!team.inactiveSince,
   }));
 

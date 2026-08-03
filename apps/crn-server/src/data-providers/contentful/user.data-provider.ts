@@ -1020,13 +1020,15 @@ const parseLeadersToInterestGroups = (
       leader: InterestGroupLeaderItem,
     ) => {
       const group = leader.linkedFrom?.interestGroupsCollection?.items[0];
+      // a lapsed leadership grants no role
+      const role = leader.inactiveSinceDate ? undefined : leader.role;
 
       interestGroups.push({
-        id: group?.sys.id,
-        active: group?.active,
-        name: group?.name,
-        role: leader.role,
-      } as InterestGroupMembership);
+        id: group?.sys.id || '',
+        active: !!group?.active,
+        name: group?.name || '',
+        ...(role ? { role } : {}),
+      });
 
       return interestGroups;
     },
@@ -1036,12 +1038,15 @@ const parseLeadersToInterestGroups = (
 const removeDuplicates = (
   interestGroups: InterestGroupMembership[],
 ): InterestGroupMembership[] => {
-  const duplicates = new Map();
-  return interestGroups.reduce((groups: InterestGroupMembership[], group) => {
-    if (!duplicates.has(group.id)) {
-      duplicates.set(group.id, group);
-      groups.push(group);
+  const byId = new Map<string, InterestGroupMembership>();
+  interestGroups.forEach((group) => {
+    const existing = byId.get(group.id);
+    if (!existing) {
+      byId.set(group.id, group);
+    } else if (!existing.role && group.role) {
+      // a team-derived entry carries no role; keep the leader's
+      byId.set(group.id, { ...existing, role: group.role });
     }
-    return groups;
-  }, []);
+  });
+  return [...byId.values()];
 };

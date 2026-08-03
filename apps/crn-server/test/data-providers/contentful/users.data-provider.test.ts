@@ -24,6 +24,7 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlUser,
   getContentfulGraphqlUserListItem,
+  getInterestGroupLeadersCollection,
   getUserCreateDataObject,
   getUserDataObject,
   getUserListItemDataObject,
@@ -95,6 +96,55 @@ describe('User data provider', () => {
         ],
       };
       expect(result).toEqual(expectation);
+    });
+
+    test('keeps the leader role when the user is also in a team of the same interest group', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          linkedFrom: {
+            interestGroupLeadersCollection: getInterestGroupLeadersCollection({
+              groupId: 'ig-1',
+              groupName: 'interest-group-1',
+            }),
+          },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.interestGroups).toEqual([
+        {
+          active: true,
+          id: 'ig-1',
+          name: 'interest-group-1',
+          role: 'Project Manager',
+        },
+        { active: false, id: 'ig-2', name: 'interest-group-2' },
+      ]);
+    });
+
+    test('drops the leader role when the leadership is inactive', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          linkedFrom: {
+            interestGroupLeadersCollection: getInterestGroupLeadersCollection({
+              inactiveSinceDate: '2023-01-01T00:00:00.000Z',
+            }),
+          },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.interestGroups).toEqual([
+        { active: true, id: 'ig-1', name: 'interest-group-1' },
+        { active: false, id: 'ig-2', name: 'interest-group-2' },
+        {
+          active: true,
+          id: 'interest-group-leader-1',
+          name: 'Interest Group Leader 1',
+        },
+      ]);
     });
 
     test('returns null if user does not exist', async () => {

@@ -17,6 +17,8 @@ import {
   FetchEventsQueryVariables,
   FetchInterestGroupCalendarQuery,
   FetchInterestGroupCalendarQueryVariables,
+  FetchPreviousEventAttendanceQuery,
+  FetchPreviousEventAttendanceQueryVariables,
   FetchWorkingGroupCalendarQuery,
   FetchWorkingGroupCalendarQueryVariables,
   FETCH_EVENTS,
@@ -25,6 +27,7 @@ import {
   FETCH_EVENTS_BY_USER_ID,
   FETCH_EVENT_BY_ID,
   FETCH_INTEREST_GROUP_CALENDAR,
+  FETCH_PREVIOUS_EVENT_ATTENDANCE,
   FETCH_WORKING_GROUP_CALENDAR,
   GraphQLClient,
   patchAndPublish,
@@ -38,9 +41,11 @@ import {
   EventSpeaker,
   EventSpeakerExternalUserData,
   EventSpeakerUserData,
+  EventTeamAttendance,
   EventUpdateDataObject,
   FetchEventsOptions,
   isEventStatus,
+  isTeamType,
   ListEventDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
@@ -94,7 +99,47 @@ export class EventContentfulDataProvider implements EventDataProvider {
       return null;
     }
 
-    return parseGraphQLEvent(events);
+    const event = parseGraphQLEvent(events);
+    const previousEventAttendance =
+      await this.fetchPreviousEventAttendance(events);
+
+    return previousEventAttendance
+      ? { ...event, previousEventAttendance }
+      : event;
+  }
+
+  private async fetchPreviousEventAttendance(item: EventItem) {
+    if (!item.googleId) {
+      return undefined;
+    }
+
+    const baseGoogleId = item.googleId.split('_')[0]!;
+
+    const { eventsCollection } = await this.contentfulClient.request<
+      FetchPreviousEventAttendanceQuery,
+      FetchPreviousEventAttendanceQueryVariables
+    >(FETCH_PREVIOUS_EVENT_ATTENDANCE, {
+      googleId: baseGoogleId,
+      startDate: item.startDate,
+    });
+
+    const previousEvent = eventsCollection?.items[0];
+
+    if (
+      !previousEvent ||
+      previousEvent.sys.id === item.sys.id ||
+      !previousEvent.attendanceCollection ||
+      previousEvent.attendanceCollection.total === 0
+    ) {
+      return undefined;
+    }
+
+    return {
+      teamsTotal: previousEvent.attendanceCollection.total,
+      teamsAttended: previousEvent.attendanceCollection.items.filter(
+        (attendance) => attendance?.attended,
+      ).length,
+    };
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventDataObject> {
@@ -367,6 +412,30 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
     return speakerList;
   }, []);
 
+type AttendanceItem = NonNullable<
+  NonNullable<EventItem['attendanceCollection']>['items'][number]
+>;
+
+export const parseGraphQLAttendance = (
+  attendance: AttendanceItem[],
+): EventTeamAttendance[] =>
+  attendance.reduce<EventTeamAttendance[]>((list, { attended, team }) => {
+    if (!team) {
+      return list;
+    }
+
+    list.push({
+      attended: !!attended,
+      team: {
+        id: team.sys.id,
+        displayName: team.displayName ?? '',
+        teamType: isTeamType(team.teamType) ? team.teamType : undefined,
+        inactiveSince: team.inactiveSince ?? undefined,
+      },
+    });
+    return list;
+  }, []);
+
 export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
   if (!item.calendar) {
     throw new Error(`Event (${item.sys.id}) doesn't have a calendar"`);
@@ -515,6 +584,15 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup,
     interestGroup: group,
+    ...(item.attendanceCollection
+      ? {
+          attendance: parseGraphQLAttendance(
+            item.attendanceCollection.items.filter(
+              (x: AttendanceItem | null): x is AttendanceItem => x !== null,
+            ),
+          ),
+        }
+      : {}),
   };
 };
 

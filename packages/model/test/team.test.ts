@@ -2,6 +2,7 @@ import {
   countActiveUniqueMembers,
   isActiveTeamMember,
   isPIRole,
+  isTeamType,
 } from '../src/team';
 
 describe('isPIRole', () => {
@@ -86,5 +87,21 @@ describe('countActiveUniqueMembers', () => {
         { id: 'user-1', inactiveSinceDate: '2020-01-01T00:00:00Z' },
       ]),
     ).toBe(1);
+  });
+});
+
+describe('isTeamType', () => {
+  test.each(['Discovery Team', 'Resource Team'] as const)(
+    'should return true for "%s"',
+    (type) => {
+      expect(isTeamType(type)).toBe(true);
+    },
+  );
+
+  test('should return false for unknown or non-string values', () => {
+    expect(isTeamType('Unknown Team Type')).toBe(false);
+    expect(isTeamType(undefined)).toBe(false);
+    expect(isTeamType(null)).toBe(false);
+    expect(isTeamType(42)).toBe(false);
   });
 });

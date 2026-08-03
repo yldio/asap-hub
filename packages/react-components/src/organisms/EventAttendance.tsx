@@ -153,26 +153,32 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
       <div css={[contentStyles, hasMoreRows && contentWithFooterStyles]}>
         <div css={headerStyles}>
           <Headline3 noMargin>Attendance</Headline3>
-          <div css={actionsStyles}>
-            <Button
-              small
-              noMargin
-              aria-label="Download attendance"
-              onClick={onExport}
-              overrideStyles={iconButtonStyles}
-            >
-              {ExportIcon}
-            </Button>
-            <Button
-              small
-              noMargin
-              aria-label="Edit attendance"
-              onClick={onEdit}
-              overrideStyles={editIconButtonStyles}
-            >
-              <PencilIcon color={neutral1000.rgb} />
-            </Button>
-          </div>
+          {(onExport || onEdit) && (
+            <div css={actionsStyles}>
+              {onExport && (
+                <Button
+                  small
+                  noMargin
+                  aria-label="Download attendance"
+                  onClick={onExport}
+                  overrideStyles={iconButtonStyles}
+                >
+                  {ExportIcon}
+                </Button>
+              )}
+              {onEdit && (
+                <Button
+                  small
+                  noMargin
+                  aria-label="Edit attendance"
+                  onClick={onEdit}
+                  overrideStyles={editIconButtonStyles}
+                >
+                  <PencilIcon color={neutral1000.rgb} />
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         <div css={metricsStyles}>

@@ -756,27 +756,35 @@ type InterestGroupLeadersCollection = NonNullable<
   NonNullable<NonNullable<FetchUserByIdQuery>['users']>['linkedFrom']
 >['interestGroupLeadersCollection'];
 
-const getInterestGroupLeadersCollection: () => InterestGroupLeadersCollection =
-  () => ({
-    items: [
-      {
-        role: 'Project Manager',
-        linkedFrom: {
-          interestGroupsCollection: {
-            items: [
-              {
-                sys: {
-                  id: 'interest-group-leader-1',
-                },
-                active: true,
-                name: 'Interest Group Leader 1',
+export const getInterestGroupLeadersCollection = ({
+  groupId = 'interest-group-leader-1',
+  groupName = 'Interest Group Leader 1',
+  inactiveSinceDate,
+}: {
+  groupId?: string;
+  groupName?: string;
+  inactiveSinceDate?: string;
+} = {}): InterestGroupLeadersCollection => ({
+  items: [
+    {
+      role: 'Project Manager',
+      inactiveSinceDate: inactiveSinceDate ?? null,
+      linkedFrom: {
+        interestGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: groupId,
               },
-            ],
-          },
+              active: true,
+              name: groupName,
+            },
+          ],
         },
       },
-    ],
-  });
+    },
+  ],
+});
 
 export const getUserContentfulWebhookDetail = (
   id: string,

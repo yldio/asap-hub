@@ -25,6 +25,7 @@ import {
   getEventsByTeamIdGraphqlResponse,
   getEventsByUserIdGraphqlResponse,
   getInterestGroupCalendarResponse,
+  getPreviousEventAttendanceGraphqlResponse,
   getWorkingGroupCalendarResponse,
 } from '../../fixtures/events.fixtures';
 import {
@@ -459,6 +460,114 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual({
         ...getContentfulEventDataObject(),
         lastModifiedDate: '2023-08-31T14:00:00.000Z',
+      });
+    });
+
+    describe('Attendance', () => {
+      test('Should parse attendance and filter out entries with a null team', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result?.attendance).toEqual([
+          {
+            attended: true,
+            team: {
+              id: 'team-id-1',
+              displayName: 'The team one',
+              teamType: 'Discovery Team',
+              inactiveSince: undefined,
+            },
+          },
+          {
+            attended: false,
+            team: {
+              id: 'team-id-2',
+              displayName: 'The team two',
+              teamType: undefined,
+              inactiveSince: '2022-10-24T11:00:00Z',
+            },
+          },
+        ]);
+      });
+
+      test('Should not include attendance on list fetches', async () => {
+        const result = await eventDataProviderMockGraphql.fetch({});
+        expect(result.items[0]).not.toHaveProperty('attendance');
+      });
+
+      describe('previousEventAttendance', () => {
+        const withGoogleId = () => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          contentfulGraphQLResponse.googleId = 'abc123_20260101T100000Z';
+          return contentfulGraphQLResponse;
+        };
+
+        test('Should compute previousEventAttendance from the previous event', async () => {
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce({ events: withGoogleId() })
+            .mockResolvedValueOnce(getPreviousEventAttendanceGraphqlResponse());
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          expect(result?.previousEventAttendance).toEqual({
+            teamsTotal: 3,
+            teamsAttended: 2,
+          });
+        });
+
+        test('Should request the previous event with the base googleId and the event startDate', async () => {
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce({ events: withGoogleId() })
+            .mockResolvedValueOnce(getPreviousEventAttendanceGraphqlResponse());
+
+          await eventDataProvider.fetchById(eventId);
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              googleId: 'abc123',
+              startDate: '2009-12-24T16:20:14.000Z',
+            },
+          );
+        });
+
+        test('Should not request the previous event when there is no googleId', async () => {
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: getContentfulGraphqlEvent(),
+          });
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(1);
+          expect(result?.previousEventAttendance).toBeUndefined();
+        });
+
+        test('Should leave previousEventAttendance undefined when no previous event is found', async () => {
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce({ events: withGoogleId() })
+            .mockResolvedValueOnce({ eventsCollection: { items: [] } });
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          expect(result?.previousEventAttendance).toBeUndefined();
+        });
+
+        test('Should leave previousEventAttendance undefined when the previous event has no attendance', async () => {
+          const response = getPreviousEventAttendanceGraphqlResponse();
+          response.eventsCollection!.items[0]!.attendanceCollection!.total = 0;
+          response.eventsCollection!.items[0]!.attendanceCollection!.items = [];
+
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce({ events: withGoogleId() })
+            .mockResolvedValueOnce(response);
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          expect(result?.previousEventAttendance).toBeUndefined();
+        });
       });
     });
 

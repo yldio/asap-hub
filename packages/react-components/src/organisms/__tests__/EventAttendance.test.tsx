@@ -153,6 +153,29 @@ describe('EventAttendance', () => {
     expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
+  it('hides the header buttons when onExport and onEdit are not provided', () => {
+    const { queryByLabelText } = renderCard();
+
+    expect(queryByLabelText('Download attendance')).not.toBeInTheDocument();
+    expect(queryByLabelText('Edit attendance')).not.toBeInTheDocument();
+  });
+
+  it('shows each header button independently of the other', () => {
+    const { queryByLabelText, rerender } = renderCard({ onExport: jest.fn() });
+
+    expect(queryByLabelText('Download attendance')).toBeVisible();
+    expect(queryByLabelText('Edit attendance')).not.toBeInTheDocument();
+
+    rerender(
+      <StaticRouter location="/">
+        <EventAttendance {...props} onEdit={jest.fn()} />
+      </StaticRouter>,
+    );
+
+    expect(queryByLabelText('Download attendance')).not.toBeInTheDocument();
+    expect(queryByLabelText('Edit attendance')).toBeVisible();
+  });
+
   it('does not show the View More Attendees control for 10 or fewer teams', () => {
     const { queryByText } = renderCard();
     expect(queryByText('View More Attendees')).not.toBeInTheDocument();

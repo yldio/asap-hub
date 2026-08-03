@@ -105,6 +105,7 @@ const props = (): ComponentProps<typeof EventCard> => {
       ? 'http://example.com'
       : undefined,
     hideMeetingLink: boolean('hide meeting Link', false),
+    recurring: boolean('recurring', false),
     meetingMaterials:
       meetingMaterials === 'Yes'
         ? [{ title: 'example', url: 'http://example.com' }]
@@ -152,6 +153,9 @@ export const SpeakersToBeAnnounced = () => (
       numberOfUnknownSpeakers: 3,
     })}
   />
+);
+export const Recurrent = () => (
+  <EventCard {...cardProps({ ...upcoming, recurring: true })} />
 );
 export const WithInactiveTeams = () => (
   <EventCard

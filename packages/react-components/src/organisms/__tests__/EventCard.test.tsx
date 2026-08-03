@@ -30,6 +30,14 @@ it('renders the event tags', () => {
   expect(screen.getByText('MyTag')).toBeVisible();
 });
 
+it('shows the recurrent badge for recurring events only', () => {
+  const { rerender } = render(<EventCard {...props} recurring />);
+  expect(screen.getByText('Recurrent')).toBeVisible();
+
+  rerender(<EventCard {...props} recurring={false} />);
+  expect(screen.queryByText('Recurrent')).not.toBeInTheDocument();
+});
+
 describe('current events', () => {
   it('does not show attachments while event is occurring', () => {
     render(

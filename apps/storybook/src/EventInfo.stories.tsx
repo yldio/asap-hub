@@ -16,6 +16,7 @@ const props = (): ComponentProps<typeof EventInfo> => ({
   tags: [],
   title: text('Title', 'GBA/LRRK2 Convergence workshops'),
   titleLimit: boolean('Title unlimited', false) ? null : undefined,
+  recurring: boolean('Recurrent event', false),
   eventOwner: <div>ASAP Team</div>,
 });
 

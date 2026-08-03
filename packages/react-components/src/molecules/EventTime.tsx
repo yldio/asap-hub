@@ -5,6 +5,7 @@ import { formatDateToTimezone } from '../date';
 import { lead } from '../colors';
 import { rem } from '../pixels';
 import { calendarIcon, clockIcon } from '../icons';
+import { Pill } from '../atoms';
 
 import { Info } from '.';
 
@@ -29,19 +30,40 @@ const iconStyles = css({
   height: 'fit-content',
 });
 
+const dateStyles = css({
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});
+
 const tzStyles = css({
+  paddingLeft: rem(8),
+});
+
+const recurrentStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: rem(8),
+  flexShrink: 0,
+  marginLeft: 'auto',
   paddingLeft: rem(8),
 });
 
 type EventTimeProps = Pick<
   EventResponse,
-  'startDate' | 'startDateTimeZone' | 'endDate' | 'endDateTimeZone'
+  | 'startDate'
+  | 'startDateTimeZone'
+  | 'endDate'
+  | 'endDateTimeZone'
+  | 'recurring'
 >;
 const EventTime: React.FC<EventTimeProps> = ({
   startDate,
   startDateTimeZone,
   endDate,
   endDateTimeZone,
+  recurring,
 }) => {
   const formattedStartDay = formatDateToTimezone(
     startDate,
@@ -67,7 +89,18 @@ const EventTime: React.FC<EventTimeProps> = ({
     <ul css={listStyles}>
       <li css={listItemStyles}>
         <div css={iconStyles}>{calendarIcon}</div>
-        {formattedStartDay}
+        <span css={dateStyles}>{formattedStartDay}</span>
+        {recurring && (
+          <div css={recurrentStyles}>
+            <Pill accent="blue" noMargin>
+              Recurrent
+            </Pill>
+            <Info>
+              This event is part of a recurring series. Each occurrence is
+              listed separately.
+            </Info>
+          </div>
+        )}
       </li>
       <li css={listItemStyles}>
         <div css={iconStyles}>{clockIcon}</div>

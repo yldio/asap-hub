@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 
 import {
-  Avatar,
   Button,
   Card,
   GradientProgressBar,
@@ -15,7 +14,6 @@ import {
 } from '../atoms';
 import { lead, neutral1000, steel } from '../colors';
 import {
-  alumniBadgeIcon,
   chevronDownIcon,
   chevronUpIcon,
   ExportIcon,
@@ -33,16 +31,16 @@ import {
   metricValueStyles,
   metricWheelStyles,
 } from '../molecules/shared-metric-card-styles';
+import SpeakerUserRow, {
+  externalNameStyles,
+} from '../molecules/SpeakerUserRow';
 import { rem, tabletScreen } from '../pixels';
 
-import {
-  defaultVisibleTeams,
-  EventTeamType,
-  teamIcon,
-} from './shared-event-card';
+import { defaultVisibleTeams, teamIcon } from './shared-event-card';
 import {
   actionsStyles,
   cellStyles,
+  chevronButtonStyles,
   contentStyles,
   contentWithFooterStyles,
   editIconButtonStyles,
@@ -59,6 +57,10 @@ import {
   teamInfoStyles,
   viewMoreStyles,
 } from './shared-event-card-styles';
+import { SpeakerGroup } from './speaker-group';
+
+type SpeakerTeamGroup = Extract<SpeakerGroup, { variant: 'team' }>;
+type SpeakerExternalGroup = Extract<SpeakerGroup, { variant: 'external' }>;
 
 const mobileQuery = `@media (max-width: ${tabletScreen.min}px)`;
 
@@ -101,16 +103,6 @@ const leadTextStyles = css({
   color: lead.rgb,
 });
 
-const chevronButtonStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 0,
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-});
-
 const membersListStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -132,23 +124,6 @@ const memberRowStyles = css({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-});
-
-const memberMainStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
-const memberAvatarStyles = css({
-  width: rem(24),
-  height: rem(24),
-  flexShrink: 0,
-});
-
-const alumniStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
 });
 
 const MetricCard: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -189,39 +164,10 @@ const FindingsMetric: React.FC<{
   </MetricCard>
 );
 
-export type EventSpeakerMember = {
-  id: string;
-  displayName: string;
-  firstName?: string;
-  lastName?: string;
-  avatarUrl?: string;
-  role: string;
-  isAlumni?: boolean;
-};
-
-export type EventSpeakerTeamType = EventTeamType;
-
-export type EventSpeakerTeamRow = {
-  teamId: string;
-  teamName: string;
-  teamType?: EventSpeakerTeamType;
-  isTeamInactive?: boolean;
-  sharedPreliminaryFindings: boolean;
-  members: EventSpeakerMember[];
-};
-
-export type EventSpeakerExternalMember = {
-  name: string;
-};
-
-export type EventSpeakerExternalRow = {
-  sharedPreliminaryFindings: boolean;
-  members: EventSpeakerExternalMember[];
-};
-
 type EventSpeakersProps = {
-  teams: EventSpeakerTeamRow[];
-  externalUsers?: EventSpeakerExternalRow;
+  // Shared with EditEventSpeakersModal: the same SpeakerGroup[] can feed both
+  // this card and the modal, and the modal's onSave writes straight back.
+  groups?: SpeakerGroup[];
   hasFinished?: boolean;
   onExport?: () => void;
   onEdit?: () => void;
@@ -297,8 +243,6 @@ const SpeakerRow: React.FC<{
   );
 };
 
-// Reports whether an element's content overflows it horizontally, tracking
-// layout and content changes via ResizeObserver.
 const useHorizontalOverflow = () => {
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [overflowing, setOverflowing] = useState(false);
@@ -322,8 +266,7 @@ const editorEmptyMessage = (hasFinished: boolean): string =>
     : 'Add the speakers for this event. Marking who shared preliminary findings becomes available after the event.';
 
 const EventSpeakers: React.FC<EventSpeakersProps> = ({
-  teams,
-  externalUsers,
+  groups = [],
   hasFinished = false,
   onExport,
   onEdit,
@@ -337,12 +280,19 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
 
   const showFindings = hasFinished;
 
-  const externalCount = externalUsers?.members.length ?? 0;
+  const teamGroups = groups.filter(
+    (group): group is SpeakerTeamGroup =>
+      group.variant === 'team' && group.users.length > 0,
+  );
+  const externalGroup = groups.find(
+    (group): group is SpeakerExternalGroup =>
+      group.variant === 'external' && group.users.length > 0,
+  );
+
+  const externalCount = externalGroup?.users.length ?? 0;
   const hasExternal = externalCount > 0;
 
-  const teamsWithSpeakers = teams.filter((team) => team.members.length > 0);
-
-  if (teamsWithSpeakers.length === 0 && !hasExternal) {
+  if (teamGroups.length === 0 && !hasExternal) {
     return (
       <Card>
         <div css={emptyStateStyles}>
@@ -377,23 +327,23 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
       return next;
     });
 
-  const teamMemberCount = teamsWithSpeakers.reduce(
-    (total, team) => total + team.members.length,
+  const teamMemberCount = teamGroups.reduce(
+    (total, group) => total + group.users.length,
     0,
   );
-  const teamsShared = teamsWithSpeakers.filter(
-    (team) => team.sharedPreliminaryFindings,
+  const teamsShared = teamGroups.filter(
+    (group) => group.preliminaryFindingsShared,
   ).length;
   const totalSpeakers = teamMemberCount + externalCount;
-  const teamsTotal = teamsWithSpeakers.length;
+  const teamsTotal = teamGroups.length;
   const findingsPercentage =
     teamsTotal > 0 ? Math.round((teamsShared / teamsTotal) * 100) : 0;
 
   const totalRows = teamsTotal + (hasExternal ? 1 : 0);
   const hasMoreRows = totalRows > defaultVisibleTeams;
   const visibleTeams = showAll
-    ? teamsWithSpeakers
-    : teamsWithSpeakers.slice(0, defaultVisibleTeams - (hasExternal ? 1 : 0));
+    ? teamGroups
+    : teamGroups.slice(0, defaultVisibleTeams - (hasExternal ? 1 : 0));
   const showExternalRow = hasExternal && (showAll || !hasMoreRows);
 
   const lastRowBottomPadding = hasMoreRows ? rem(32) : 0;
@@ -485,35 +435,36 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
               </thead>
             )}
 
-            {visibleTeams.map((team, index) => {
+            {visibleTeams.map((group, index) => {
               const bottomOverride = lastRowPadding(
                 index === visibleTeams.length - 1,
               );
               return (
                 <SpeakerRow
-                  key={team.teamId}
-                  label={team.teamName}
-                  sharedPreliminaryFindings={team.sharedPreliminaryFindings}
+                  key={group.id}
+                  label={group.teamName}
+                  sharedPreliminaryFindings={group.preliminaryFindingsShared}
                   showFindings={showFindings}
-                  expanded={expandedRows.has(team.teamId)}
-                  onToggle={() => toggleRow(team.teamId)}
+                  expanded={expandedRows.has(group.id)}
+                  onToggle={() => toggleRow(group.id)}
                   collapsedBottomPadding={bottomOverride}
                   info={
                     <>
-                      {teamIcon(team.teamType)}
+                      {teamIcon(group.teamType)}
                       <Link
                         href={
-                          network({}).teams({}).team({ teamId: team.teamId }).$
+                          network({}).teams({}).team({ teamId: group.id }).$
                         }
                       >
-                        {team.teamName}
+                        {group.teamName}
                       </Link>
-                      {team.isTeamInactive && <InactiveBadgeIcon />}
-                      <span css={leadTextStyles}>({team.members.length})</span>
+                      {group.isTeamInactive && <InactiveBadgeIcon />}
+                      <span css={leadTextStyles}>({group.users.length})</span>
                     </>
                   }
                 >
-                  <ul
+                  <div
+                    role="list"
                     css={[
                       membersListStyles,
                       bottomOverride !== undefined && {
@@ -521,43 +472,26 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                       },
                     ]}
                   >
-                    {team.members.map((member) => (
-                      <li key={member.id} css={memberRowStyles}>
-                        <span css={memberMainStyles}>
-                          <span css={memberAvatarStyles}>
-                            <Avatar
-                              firstName={member.firstName}
-                              lastName={member.lastName}
-                              imageUrl={member.avatarUrl}
-                            />
-                          </span>
-                          <Link
-                            href={
-                              network({}).users({}).user({ userId: member.id })
-                                .$
-                            }
-                          >
-                            {member.displayName}
-                          </Link>
-                          {member.isAlumni && (
-                            <span css={alumniStyles}>{alumniBadgeIcon}</span>
-                          )}
-                        </span>
-                        <Pill accent="gray" noMargin>
-                          {member.role}
-                        </Pill>
-                      </li>
+                    {group.users.map((member) => (
+                      <SpeakerUserRow
+                        key={member.id}
+                        displayName={member.displayName}
+                        avatarUrl={member.avatarUrl}
+                        userId={member.id}
+                        roles={member.roles}
+                        isAlumni={member.isAlumni}
+                      />
                     ))}
-                  </ul>
+                  </div>
                 </SpeakerRow>
               );
             })}
 
-            {showExternalRow && externalUsers && (
+            {showExternalRow && externalGroup && (
               <SpeakerRow
                 label="External Users"
                 sharedPreliminaryFindings={
-                  externalUsers.sharedPreliminaryFindings
+                  externalGroup.preliminaryFindingsShared
                 }
                 showFindings={showFindings}
                 expanded={expandedRows.has('external')}
@@ -576,9 +510,9 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                     { paddingBottom: lastRowBottomPadding },
                   ]}
                 >
-                  {externalUsers.members.map((member, index) => (
-                    <li key={`external-${index}`} css={memberRowStyles}>
-                      <span css={leadTextStyles}>{member.name}</span>
+                  {externalGroup.users.map((member) => (
+                    <li key={member.id} css={memberRowStyles}>
+                      <span css={externalNameStyles}>{member.displayName}</span>
                       <Pill accent="gray" noMargin>
                         Guest
                       </Pill>

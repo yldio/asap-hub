@@ -1,14 +1,20 @@
 import {
+  EditEventSpeakersModal,
   EventSpeakers,
-  EventSpeakerTeamRow,
-  EventSpeakerExternalRow,
+} from '@asap-hub/react-components';
+import type {
+  SpeakerGroup,
+  SpeakerSearchOption,
 } from '@asap-hub/react-components';
 import { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { StaticRouter } from 'react-router';
 
 import { CenterDecorator } from './layout';
 
 const noop = () => undefined;
+
+type SpeakerTeamGroup = Extract<SpeakerGroup, { variant: 'team' }>;
 
 const roles = ['Data Manager', 'Multiple roles', 'Lead PI', 'Project Manager'];
 
@@ -17,9 +23,10 @@ const buildTeams = (
   membersPerTeam: number,
   teamsSharingFindings: number,
   hasInactiveTeam: boolean,
-): EventSpeakerTeamRow[] =>
+): SpeakerTeamGroup[] =>
   Array.from({ length: numberOfTeams }, (_, teamIndex) => ({
-    teamId: `team-${teamIndex}`,
+    id: `team-${teamIndex}`,
+    variant: 'team',
     teamName: `Team ${teamIndex + 1}`,
     teamType:
       teamIndex % 2 === 0
@@ -27,26 +34,27 @@ const buildTeams = (
         : ('Resource Team' as const),
     isTeamInactive: hasInactiveTeam && teamIndex === 2,
     // The first N teams share findings — drives the preliminary-findings %.
-    sharedPreliminaryFindings: teamIndex < teamsSharingFindings,
-    members: Array.from({ length: membersPerTeam }, (_m, memberIndex) => ({
+    preliminaryFindingsShared: teamIndex < teamsSharingFindings,
+    users: Array.from({ length: membersPerTeam }, (_m, memberIndex) => ({
       id: `user-${teamIndex}-${memberIndex}`,
-      firstName: 'John',
-      lastName: 'Doe',
       displayName: `John Doe ${teamIndex + 1}.${memberIndex + 1}`,
-      role: roles[memberIndex % roles.length] as string,
+      roles: [roles[memberIndex % roles.length] as string],
       isAlumni: memberIndex === 1,
     })),
   }));
 
-const buildExternalUsers = (
+const buildExternalGroup = (
   numberOfExternalUsers: number,
   externalSharedFindings: boolean,
-): EventSpeakerExternalRow | undefined =>
+): SpeakerGroup | undefined =>
   numberOfExternalUsers > 0
     ? {
-        sharedPreliminaryFindings: externalSharedFindings,
-        members: Array.from({ length: numberOfExternalUsers }, (_, index) => ({
-          name: `External user ${index + 1}`,
+        id: 'external',
+        variant: 'external',
+        preliminaryFindingsShared: externalSharedFindings,
+        users: Array.from({ length: numberOfExternalUsers }, (_, index) => ({
+          id: `ext-${index}`,
+          displayName: `External user ${index + 1}`,
         })),
       }
     : undefined;
@@ -126,13 +134,13 @@ const meta: Meta<ControlArgs> = {
     if (longTeamNameExample && teams[0]) {
       teams[0] = { ...teams[0], teamName: 'Sundaravadivelu' };
     }
+    const externalGroup = buildExternalGroup(
+      numberOfExternalUsers,
+      externalSharedFindings,
+    );
     return (
       <EventSpeakers
-        teams={teams}
-        externalUsers={buildExternalUsers(
-          numberOfExternalUsers,
-          externalSharedFindings,
-        )}
+        groups={externalGroup ? [...teams, externalGroup] : teams}
         hasFinished={hasFinished}
         onEdit={isEditor ? noop : undefined}
         onExport={isEditor ? noop : undefined}
@@ -203,4 +211,101 @@ export const EmptyEditorPast: Story = {
 
 export const EmptyReadOnly: Story = {
   args: { ...EmptyEditorUpcoming.args, isEditor: false },
+};
+
+// End-to-end wiring: the card and the edit modal share one SpeakerGroup[] —
+// open the pencil, add/remove speakers or toggle findings, and Save to see the
+// card refresh. onSave writes the modal's result straight back, no adapter.
+const editAndSaveInitial: SpeakerGroup[] = [
+  {
+    id: 'team-1',
+    variant: 'team',
+    teamName: 'Aguzzi',
+    teamType: 'Discovery Team',
+    preliminaryFindingsShared: true,
+    users: [
+      { id: 'user-1', displayName: 'Jane Doe', roles: ['Lead PI'] },
+      { id: 'user-2', displayName: 'John Smith', roles: ['Data Manager'] },
+    ],
+  },
+  {
+    id: 'team-2',
+    variant: 'team',
+    teamName: 'Herzog',
+    teamType: 'Resource Team',
+    preliminaryFindingsShared: false,
+    users: [
+      {
+        id: 'user-3',
+        displayName: 'Priya Patel',
+        roles: ['Project Manager', 'Data Manager'],
+      },
+    ],
+  },
+  {
+    id: 'external',
+    variant: 'external',
+    preliminaryFindingsShared: false,
+    users: [{ id: 'ext-1', displayName: 'Sam Rivera' }],
+  },
+];
+
+const editAndSaveSearchResults: SpeakerSearchOption[] = [
+  {
+    value: 'user-jordan',
+    label: 'Jordan Lee',
+    user: {
+      userId: 'user-jordan',
+      displayName: 'Jordan Lee',
+      teamOptions: [
+        { teamId: 'team-3', teamName: 'Chen', role: 'Data Manager' },
+      ],
+    },
+  },
+  {
+    value: 'user-alex',
+    label: 'Alex Kim',
+    user: {
+      userId: 'user-alex',
+      displayName: 'Alex Kim',
+      teamOptions: [
+        { teamId: 'team-1', teamName: 'Aguzzi', role: 'Project Manager' },
+        { teamId: 'team-3', teamName: 'Chen', role: 'Trainee' },
+      ],
+    },
+  },
+];
+
+const loadEditAndSaveSearchOptions = async (inputValue: string) =>
+  editAndSaveSearchResults.filter((option) =>
+    option.label.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+
+export const EditAndSave: Story = {
+  render: () => {
+    const [groups, setGroups] = useState<SpeakerGroup[]>(editAndSaveInitial);
+    const [isEditing, setIsEditing] = useState(false);
+
+    return (
+      <>
+        <EventSpeakers
+          groups={groups}
+          hasFinished
+          onExport={noop}
+          onEdit={() => setIsEditing(true)}
+        />
+        {isEditing && (
+          <EditEventSpeakersModal
+            groups={groups}
+            loadSearchOptions={loadEditAndSaveSearchOptions}
+            onSave={(updated) => {
+              setGroups(updated);
+              setIsEditing(false);
+            }}
+            onDismiss={() => setIsEditing(false)}
+          />
+        )}
+      </>
+    );
+  },
 };

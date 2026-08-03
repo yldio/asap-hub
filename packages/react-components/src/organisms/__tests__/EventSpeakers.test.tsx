@@ -2,10 +2,8 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
 
-import EventSpeakers, {
-  EventSpeakerTeamRow,
-  EventSpeakerExternalRow,
-} from '../EventSpeakers';
+import EventSpeakers from '../EventSpeakers';
+import { SpeakerGroup, SpeakerGroupUser } from '../speaker-group';
 
 // jsdom has no ResizeObserver and does no layout.
 globalThis.ResizeObserver = jest.fn(() => ({
@@ -27,57 +25,67 @@ const mockTableOverflow = (scrollWidth: number, clientWidth: number) => {
 
 afterEach(() => mockTableOverflow(0, 0));
 
-const makeMembers = (teamIndex: number, count: number) =>
+const makeUsers = (teamIndex: number, count: number): SpeakerGroupUser[] =>
   Array.from({ length: count }, (_, index) => ({
     id: `user-${teamIndex}-${index}`,
-    firstName: 'John',
-    lastName: 'Doe',
     displayName: `John Doe ${teamIndex}-${index}`,
-    role: 'Data Manager',
+    roles: ['Data Manager'],
     isAlumni: index === 0,
   }));
 
-const teams: EventSpeakerTeamRow[] = [
+const teamGroups: SpeakerGroup[] = [
   {
-    teamId: 'team-0',
+    id: 'team-0',
+    variant: 'team',
     teamName: 'Team Alpha',
     teamType: 'Discovery Team',
-    sharedPreliminaryFindings: true,
+    preliminaryFindingsShared: true,
     isTeamInactive: true,
-    members: makeMembers(0, 2),
+    users: makeUsers(0, 2),
   },
   {
-    teamId: 'team-1',
+    id: 'team-1',
+    variant: 'team',
     teamName: 'Team Beta',
     teamType: 'Resource Team',
-    sharedPreliminaryFindings: false,
-    members: makeMembers(1, 1),
+    preliminaryFindingsShared: false,
+    users: makeUsers(1, 1),
   },
 ];
 
-const externalUsers: EventSpeakerExternalRow = {
-  sharedPreliminaryFindings: false,
-  members: [{ name: 'External user 1' }],
+const externalGroup: SpeakerGroup = {
+  id: 'external',
+  variant: 'external',
+  preliminaryFindingsShared: false,
+  users: [{ id: 'ext-1', displayName: 'External user 1' }],
 };
+
+const groups: SpeakerGroup[] = [...teamGroups, externalGroup];
 
 const renderCard = (
   props: Partial<React.ComponentProps<typeof EventSpeakers>> = {},
 ) =>
   render(
     <StaticRouter location="/">
-      <EventSpeakers
-        teams={teams}
-        externalUsers={externalUsers}
-        hasFinished
-        {...props}
-      />
+      <EventSpeakers groups={groups} hasFinished {...props} />
     </StaticRouter>,
   );
 
 describe('EventSpeakers', () => {
   describe('empty state', () => {
     it('Should show the read-only message for a non-editor', () => {
-      const { getByText } = renderCard({ teams: [], externalUsers: undefined });
+      const { getByText } = renderCard({ groups: [] });
+      expect(
+        getByText('No speakers have been added for this event yet.'),
+      ).toBeVisible();
+    });
+
+    it('Should default to the empty state when groups are omitted', () => {
+      const { getByText } = render(
+        <StaticRouter location="/">
+          <EventSpeakers />
+        </StaticRouter>,
+      );
       expect(
         getByText('No speakers have been added for this event yet.'),
       ).toBeVisible();
@@ -85,8 +93,7 @@ describe('EventSpeakers', () => {
 
     it('Should prompt an editor to add speakers for an upcoming event', () => {
       const { getByText, getByRole } = renderCard({
-        teams: [],
-        externalUsers: undefined,
+        groups: [],
         hasFinished: false,
         onAddSpeaker: jest.fn(),
       });
@@ -98,8 +105,7 @@ describe('EventSpeakers', () => {
 
     it('Should prompt an editor to add presenters for a past event', () => {
       const { getByText } = renderCard({
-        teams: [],
-        externalUsers: undefined,
+        groups: [],
         hasFinished: true,
         onAddSpeaker: jest.fn(),
       });
@@ -111,8 +117,7 @@ describe('EventSpeakers', () => {
     it('Should fire onAddSpeaker from the empty-state button', async () => {
       const onAddSpeaker = jest.fn();
       const { getByRole } = renderCard({
-        teams: [],
-        externalUsers: undefined,
+        groups: [],
         onAddSpeaker,
       });
       await userEvent.click(getByRole('button', { name: /add speakers/i }));
@@ -181,7 +186,7 @@ describe('EventSpeakers', () => {
     it('Should default to hiding findings when hasFinished is not provided', () => {
       const { queryByText } = render(
         <StaticRouter location="/">
-          <EventSpeakers teams={teams} externalUsers={externalUsers} />
+          <EventSpeakers groups={groups} />
         </StaticRouter>,
       );
       expect(queryByText('Preliminary findings')).not.toBeInTheDocument();
@@ -232,16 +237,16 @@ describe('EventSpeakers', () => {
   describe('teams without speakers', () => {
     it('Should hide teams that have no speakers and exclude them from the findings count', () => {
       const { queryByRole, getByText } = renderCard({
-        teams: [
-          ...teams,
+        groups: [
+          ...teamGroups,
           {
-            teamId: 'team-empty',
+            id: 'team-empty',
+            variant: 'team',
             teamName: 'Empty Team',
-            sharedPreliminaryFindings: true,
-            members: [],
+            preliminaryFindingsShared: true,
+            users: [],
           },
         ],
-        externalUsers: undefined,
       });
       expect(
         queryByRole('link', { name: 'Empty Team' }),
@@ -253,7 +258,7 @@ describe('EventSpeakers', () => {
 
   describe('external-only event', () => {
     it('Should render with zero-team findings when there are only external users', () => {
-      const { getByText } = renderCard({ teams: [] });
+      const { getByText } = renderCard({ groups: [externalGroup] });
       expect(getByText('0%')).toBeVisible();
       expect(getByText('0 of 0 teams')).toBeVisible();
       expect(getByText('External Users')).toBeVisible();
@@ -296,20 +301,20 @@ describe('EventSpeakers', () => {
   });
 
   describe('overflow', () => {
-    const manyTeams: EventSpeakerTeamRow[] = Array.from(
+    const manyTeamGroups: SpeakerGroup[] = Array.from(
       { length: 14 },
       (_, index) => ({
-        teamId: `team-${index}`,
+        id: `team-${index}`,
+        variant: 'team',
         teamName: `Team ${index + 1}`,
-        sharedPreliminaryFindings: true,
-        members: makeMembers(index, 1),
+        preliminaryFindingsShared: true,
+        users: makeUsers(index, 1),
       }),
     );
 
     it('Should not render the footer with 10 or fewer rows', () => {
       const { queryByRole } = renderCard({
-        teams: manyTeams.slice(0, 10),
-        externalUsers: undefined,
+        groups: manyTeamGroups.slice(0, 10),
       });
       expect(
         queryByRole('button', { name: /view more speakers/i }),
@@ -318,8 +323,7 @@ describe('EventSpeakers', () => {
 
     it('Should reveal the remaining rows on View More', async () => {
       const { getByRole, queryByRole } = renderCard({
-        teams: manyTeams,
-        externalUsers: undefined,
+        groups: manyTeamGroups,
       });
       expect(
         queryByRole('button', { name: 'Expand Team 14' }),
@@ -337,8 +341,7 @@ describe('EventSpeakers', () => {
 
     it('Should collapse the extra rows again on View Less', async () => {
       const { getByRole, queryByRole } = renderCard({
-        teams: manyTeams,
-        externalUsers: undefined,
+        groups: manyTeamGroups,
       });
       await userEvent.click(
         getByRole('button', { name: /view more speakers/i }),
@@ -356,8 +359,7 @@ describe('EventSpeakers', () => {
 
     it('Should still expand the last visible team above the footer', async () => {
       const { getByRole, getByText } = renderCard({
-        teams: manyTeams,
-        externalUsers: undefined,
+        groups: manyTeamGroups,
       });
       // Team 10 is the last visible row while the footer is shown.
       await userEvent.click(getByRole('button', { name: 'Expand Team 10' }));

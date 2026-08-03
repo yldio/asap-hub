@@ -527,6 +527,42 @@ describe('usePutManuscript', () => {
       collaborationManuscripts: [],
     });
   });
+
+  it('patches the matching item in the collaboration manuscripts list', async () => {
+    (updateManuscript as jest.Mock).mockResolvedValue({
+      id: manuscriptId,
+      title: 'Renamed',
+      status: 'Addendum Required',
+    });
+
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(manuscriptQueryKeys.workspace({ teamId }), {
+      manuscripts: [],
+      collaborationManuscripts: [
+        { id: manuscriptId, title: 'Old', status: 'Waiting for Report' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+    });
+
+    const { result } = renderHook(() => usePutManuscript(), {
+      wrapper: createWrapper(queryClient),
+    });
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, { status: 'Addendum Required' });
+    });
+
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.workspace({ teamId })),
+    ).toEqual({
+      manuscripts: [],
+      collaborationManuscripts: [
+        { id: manuscriptId, title: 'Renamed', status: 'Addendum Required' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+    });
+  });
 });
 
 describe('useManuscripts', () => {

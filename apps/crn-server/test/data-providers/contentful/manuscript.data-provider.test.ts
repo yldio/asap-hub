@@ -1538,6 +1538,33 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result.manuscripts).toHaveLength(150);
     });
 
+    test('Should stop paginating when a page returns no items', async () => {
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce({
+          manuscriptsCollection: {
+            total: 150,
+            items: Array.from({ length: 100 }, (_, index) =>
+              getWorkspaceManuscriptItem({
+                sys: { id: `manuscript-id-${index}` },
+              }),
+            ),
+          },
+        })
+        .mockResolvedValueOnce({
+          manuscriptsCollection: {
+            total: 150,
+            items: [],
+          },
+        });
+
+      const result = await manuscriptDataProvider.fetchWorkspaceManuscripts({
+        teamId: 'team-1',
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
+      expect(result.manuscripts).toHaveLength(100);
+    });
+
     test('Should separate team manuscripts from collaboration manuscripts', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscriptsCollection: {

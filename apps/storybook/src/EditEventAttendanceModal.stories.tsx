@@ -5,6 +5,13 @@ import { StaticRouter } from 'react-router';
 const meta: Meta<typeof EditEventAttendanceModal> = {
   title: 'Organisms / Events / Edit Attendance Modal',
   component: EditEventAttendanceModal,
+  argTypes: {
+    loadSearchOptions: { control: false },
+    onSelectInterestGroup: { control: false },
+    onUploadList: { control: false },
+    onSave: { control: false },
+    onDismiss: { control: false },
+  },
   decorators: [
     (Story) => (
       <StaticRouter location="/">
@@ -83,6 +90,12 @@ const teams = Array.from({ length: 6 }, (_, index) => ({
   teamType: teamTypes[index % 2],
 }));
 
+// Simulate a round-trip so the Download loading spinner is visible.
+const delay = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
 const commonArgs = {
   interestGroups,
   loadSearchOptions,
@@ -100,14 +113,13 @@ const commonArgs = {
       teamType: 'Resource Team' as const,
     },
   ],
-  onUploadList: async () => [
-    {
-      teamId: 'uploaded-1',
-      teamName: 'Uploaded Team',
-      attended: true,
-      teamType: 'Resource Team' as const,
-    },
-  ],
+  // Present only so the "Upload a list" button renders; the full upload flow is
+  // demonstrated in the Attendance > Edit and Save story, not here.
+  onUploadList: async () => ({
+    matched: [],
+    alreadyInCount: 0,
+    unmatched: [],
+  }),
   onSave: () => undefined,
   onDismiss: () => undefined,
 };
@@ -126,12 +138,24 @@ export const EditAttendance: Story = {
   },
 };
 
-export const NoOptionalSections: Story = {
+export const PostUpload: Story = {
   args: {
-    loadSearchOptions,
-    onSave: () => undefined,
-    onDismiss: () => undefined,
+    ...commonArgs,
     teams,
+    sourceLists: [
+      {
+        id: 'file-1',
+        filename: 'attendees-day-1.csv',
+        addedDate: '12/03/2025',
+        onDownload: () => delay(1000),
+      },
+      {
+        id: 'file-2',
+        filename: 'attendees-day-2.xlsx',
+        addedDate: '13/03/2025',
+        onDownload: () => delay(1000),
+      },
+    ],
   },
 };
 

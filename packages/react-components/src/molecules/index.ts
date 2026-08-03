@@ -13,6 +13,7 @@ export { default as CollaboratingMembers } from './CollaboratingMembers';
 export { default as CollaboratingTeams } from './CollaboratingTeams';
 export { default as Collapsible } from './Collapsible';
 export { default as ComplianceControls } from './ComplianceControls';
+export { default as ConfirmableModalFooter } from './ConfirmableModalFooter';
 export { default as CtaCard } from './CtaCard';
 export { default as CtaContactSection } from './CtaContactSection';
 export { default as DropdownButton } from './DropdownButton';

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
@@ -59,9 +59,13 @@ const onSelectInterestGroup = jest.fn(async (interestGroupId: string) => {
   ];
 });
 
-const onUploadList = jest.fn(async () => [
-  { teamId: 'uploaded-1', teamName: 'Uploaded Team', attended: true },
-]);
+const onUploadList = jest.fn(async () => ({
+  matched: [
+    { teamId: 'uploaded-1', teamName: 'Uploaded Team', attended: true },
+  ],
+  alreadyInCount: 0,
+  unmatched: [],
+}));
 
 const onSave = jest.fn();
 const onDismiss = jest.fn();
@@ -395,8 +399,37 @@ describe('EditEventAttendanceModal', () => {
     ).toBeInTheDocument();
   });
 
-  it('Should add teams uploaded from a list', async () => {
+  it('Should open the upload list modal when the upload button is clicked', async () => {
+    renderModal({ teams: [] });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /Upload a List/ }),
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'Upload a list' }),
+    ).toBeInTheDocument();
+  });
+
+  it('Should return from the upload modal when the back arrow is clicked', async () => {
+    renderModal({ teams: [] });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /Upload a List/ }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+    expect(
+      screen.getByRole('heading', { name: 'Add Attendance' }),
+    ).toBeInTheDocument();
+  });
+
+  it('Should add uploaded teams and record the source list when confirmed', async () => {
     const { container } = renderModal({ teams: [] });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /Upload a List/ }),
+    );
 
     const fileInput = container.querySelector('input[type="file"]');
     await userEvent.upload(
@@ -405,37 +438,116 @@ describe('EditEventAttendanceModal', () => {
     );
 
     expect(onUploadList).toHaveBeenCalled();
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add Attendees' }),
+    );
+
     expect(
       await screen.findByRole('link', { name: 'Uploaded Team' }),
     ).toBeInTheDocument();
+    expect(screen.getByText('Source lists')).toBeInTheDocument();
+    expect(screen.getByText('• 1 File')).toBeInTheDocument();
+    expect(screen.getByText('teams.csv')).toBeInTheDocument();
   });
 
-  it('Should ignore an upload with no file selected', () => {
-    const { container } = renderModal({ teams: [] });
-
-    const fileInput = container.querySelector('input[type="file"]');
-    fireEvent.change(fileInput as HTMLInputElement, {
-      target: { files: [] },
+  it('Should pluralise the source list count for multiple files', () => {
+    renderModal({
+      sourceLists: [
+        { id: 'file-1', filename: 'day-1.csv' },
+        { id: 'file-2', filename: 'day-2.xlsx' },
+      ],
     });
 
-    expect(onUploadList).not.toHaveBeenCalled();
+    expect(screen.getByText('• 2 Files')).toBeInTheDocument();
   });
 
-  it('Should open the file picker when the upload button is clicked', async () => {
-    const { container } = renderModal({ teams: [] });
-
-    const fileInput = container.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
+  it('Should download a recorded source list file', async () => {
+    const createObjectURL = jest.fn(() => 'blob:url');
+    const revokeObjectURL = jest.fn();
+    Object.defineProperty(URL, 'createObjectURL', {
+      value: createObjectURL,
+      configurable: true,
+    });
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      value: revokeObjectURL,
+      configurable: true,
+    });
     const clickSpy = jest
-      .spyOn(fileInput, 'click')
+      .spyOn(HTMLAnchorElement.prototype, 'click')
       .mockImplementation(() => {});
 
+    const { container } = renderModal({ teams: [] });
     await userEvent.click(
-      screen.getByRole('button', { name: /Upload a list/ }),
+      screen.getByRole('button', { name: /Upload a List/ }),
+    );
+    await userEvent.upload(
+      container.querySelector('input[type="file"]') as HTMLInputElement,
+      new File(['team'], 'teams.csv', { type: 'text/csv' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add Attendees' }),
     );
 
+    await userEvent.click(screen.getByRole('button', { name: 'Download' }));
+
+    expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
+    // The object URL is revoked on a deferred timer so the download can start.
+    await waitFor(() => expect(revokeObjectURL).toHaveBeenCalled());
+    clickSpy.mockRestore();
+  });
+
+  it('Should disable the download button while downloading', async () => {
+    // A single stable promise so resolving it always settles the one the
+    // component awaits, regardless of how many times onDownload is invoked.
+    let resolveDownload: () => void = () => undefined;
+    const downloadPromise = new Promise<void>((resolve) => {
+      resolveDownload = resolve;
+    });
+    const onDownload = jest.fn(() => downloadPromise);
+    renderModal({
+      teams,
+      sourceLists: [
+        {
+          id: 'file-1',
+          filename: 'attendees.csv',
+          addedDate: '01/01/2025',
+          onDownload,
+        },
+      ],
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Download' }));
+
+    expect(onDownload).toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Download' })).toBeDisabled();
+
+    await act(async () => {
+      resolveDownload();
+    });
+    expect(screen.getByRole('button', { name: 'Download' })).toBeEnabled();
+  });
+
+  it('Should re-enable the download button when the download fails', async () => {
+    const onDownload = jest.fn().mockRejectedValue(new Error('nope'));
+    renderModal({
+      teams,
+      sourceLists: [
+        {
+          id: 'file-1',
+          filename: 'attendees.csv',
+          addedDate: '01/01/2025',
+          onDownload,
+        },
+      ],
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Download' }));
+
+    expect(onDownload).toHaveBeenCalled();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Download' })).toBeEnabled(),
+    );
   });
 
   it('Should not add a team that is already in the list', async () => {
@@ -547,7 +659,9 @@ describe('EditEventAttendanceModal', () => {
     expect(
       screen.queryByRole('button', { name: /Alpha Group/ }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Upload a list')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Upload a List/ }),
+    ).not.toBeInTheDocument();
   });
 
   it('Should hide the group pills when there are no interest groups', () => {

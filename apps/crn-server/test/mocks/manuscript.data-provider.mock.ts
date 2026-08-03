@@ -2,7 +2,6 @@ import { ManuscriptDataProvider } from '../../src/data-providers/types';
 
 export const manuscriptDataProviderMock = {
   fetchById: jest.fn(),
-  fetchByIds: jest.fn(),
   fetch: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),

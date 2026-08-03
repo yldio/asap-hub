@@ -29,21 +29,6 @@ export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID = gql`
   }
   ${manuscriptDiscussionsQueryFragment}
 `;
-
-export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS = gql`
-  query FetchManuscriptDiscussionsByIds(
-    $where: ManuscriptsFilter
-    $limit: Int
-    $userId: String
-  ) {
-    manuscriptsCollection(where: $where, limit: $limit) {
-      items {
-        ...ManuscriptDiscussionsContent
-      }
-    }
-  }
-  ${manuscriptDiscussionsQueryFragment}
-`;
 // // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
 export const manuscriptProjectQueryFragment = gql`
   fragment ManuscriptProject on Projects {
@@ -139,19 +124,6 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
     manuscripts(id: $id) {
       ...ManuscriptsContent
       ...ManuscriptTeamsContent
-    }
-  }
-  ${manuscriptContentQueryFragment}
-  ${manuscriptTeamsQueryFragment}
-`;
-
-export const FETCH_MANUSCRIPTS_BY_IDS = gql`
-  query FetchManuscriptsByIds($where: ManuscriptsFilter, $limit: Int) {
-    manuscriptsCollection(where: $where, limit: $limit) {
-      items {
-        ...ManuscriptsContent
-        ...ManuscriptTeamsContent
-      }
     }
   }
   ${manuscriptContentQueryFragment}
@@ -444,24 +416,6 @@ export const FETCH_MANUSCRIPT_VERSIONS = gql`
       versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
         items {
           ...ManuscriptVersionContent
-        }
-      }
-    }
-  }
-  ${manuscriptVersionQueryFragment}
-`;
-
-export const FETCH_MANUSCRIPT_VERSIONS_BY_IDS = gql`
-  query FetchManuscriptVersionsByIds($where: ManuscriptsFilter, $limit: Int) {
-    manuscriptsCollection(where: $where, limit: $limit) {
-      items {
-        sys {
-          id
-        }
-        versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
-          items {
-            ...ManuscriptVersionContent
-          }
         }
       }
     }

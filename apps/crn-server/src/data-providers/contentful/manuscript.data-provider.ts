@@ -1,4 +1,3 @@
-import { mapLimit } from 'async';
 import {
   addLocaleToFields,
   Environment,
@@ -6,10 +5,6 @@ import {
   FetchManuscriptByIdQueryVariables,
   FetchManuscriptDiscussionsByIdQuery,
   FetchManuscriptDiscussionsByIdQueryVariables,
-  FetchManuscriptDiscussionsByIdsQuery,
-  FetchManuscriptDiscussionsByIdsQueryVariables,
-  FetchManuscriptsByIdsQuery,
-  FetchManuscriptsByIdsQueryVariables,
   FetchManuscriptsByProjectIdQuery,
   FetchManuscriptsByProjectIdQueryVariables,
   FetchManuscriptsByTeamIdQuery,
@@ -20,8 +15,6 @@ import {
   FetchWorkspaceManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
   FetchManuscriptVersionCountByIdQueryVariables,
-  FetchManuscriptVersionsByIdsQuery,
-  FetchManuscriptVersionsByIdsQueryVariables,
   FetchManuscriptVersionsQuery,
   FetchManuscriptVersionsQueryVariables,
   FetchResearchOutputByManuscriptVersionIdQuery,
@@ -30,14 +23,11 @@ import {
   FetchLabsQueryVariables,
   FETCH_LABS,
   FETCH_MANUSCRIPTS,
-  FETCH_MANUSCRIPTS_BY_IDS,
   FETCH_MANUSCRIPTS_BY_PROJECT_ID,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_VERSIONS,
-  FETCH_MANUSCRIPT_VERSIONS_BY_IDS,
   FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
-  FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
   FETCH_WORKSPACE_MANUSCRIPTS,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
@@ -77,14 +67,10 @@ import {
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
-import { chunk } from '../../utils/chunk';
 import { getCommaAndString } from '../../utils/text';
 import { EmailNotificationService } from '../email-notification-service';
 import { ManuscriptDataProvider, WorkspaceManuscriptsFilter } from '../types';
 import { parseGraphQLResearchOutput } from './research-output.data-provider';
-
-const MANUSCRIPT_BATCH_SIZE = 30;
-const MANUSCRIPT_BATCH_CONCURRENCY = 2;
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ManuscriptItemWithDiscussions = ManuscriptItem & {
@@ -411,81 +397,6 @@ export class ManuscriptContentfulDataProvider
     }
 
     return manuscript;
-  }
-
-  async fetchByIds(
-    manuscriptIds: readonly string[],
-    userId: string,
-  ): Promise<ManuscriptDataObject[]> {
-    const uniqueIds = [...new Set(manuscriptIds)];
-
-    if (uniqueIds.length === 0) {
-      return [];
-    }
-
-    const batches = chunk(uniqueIds, MANUSCRIPT_BATCH_SIZE);
-
-    const batchResults = await mapLimit<string[], ManuscriptDataObject[]>(
-      batches,
-      MANUSCRIPT_BATCH_CONCURRENCY,
-      async (batchIds: string[]) =>
-        this.fetchManuscriptsBatch(batchIds, userId),
-    );
-
-    const manuscripts = batchResults.flat();
-
-    await this.enrichLabPITeamIds(manuscripts);
-
-    return manuscripts;
-  }
-
-  private async fetchManuscriptsBatch(
-    batchIds: string[],
-    userId: string,
-  ): Promise<ManuscriptDataObject[]> {
-    const where = { sys: { id_in: batchIds } };
-
-    const [{ manuscriptsCollection }, { manuscriptsCollection: discussions }] =
-      await Promise.all([
-        this.contentfulClient.request<
-          FetchManuscriptsByIdsQuery,
-          FetchManuscriptsByIdsQueryVariables
-        >(FETCH_MANUSCRIPTS_BY_IDS, { where, limit: batchIds.length }),
-        this.contentfulClient.request<
-          FetchManuscriptDiscussionsByIdsQuery,
-          FetchManuscriptDiscussionsByIdsQueryVariables
-        >(FETCH_MANUSCRIPT_DISCUSSIONS_BY_IDS, {
-          where,
-          limit: batchIds.length,
-          userId,
-        }),
-      ]);
-
-    const { manuscriptsCollection: versions } =
-      await this.contentfulClient.request<
-        FetchManuscriptVersionsByIdsQuery,
-        FetchManuscriptVersionsByIdsQueryVariables
-      >(FETCH_MANUSCRIPT_VERSIONS_BY_IDS, { where, limit: batchIds.length });
-
-    const discussionsById = new Map(
-      cleanArray(discussions?.items).map((item) => [
-        item.sys.id,
-        item.discussionsCollection,
-      ]),
-    );
-    const versionsById = new Map(
-      cleanArray(versions?.items).map((item) => [item.sys.id, item]),
-    );
-
-    return cleanArray(manuscriptsCollection?.items).map((manuscript) =>
-      parseGraphQLManuscript(
-        {
-          ...manuscript,
-          discussionsCollection: discussionsById.get(manuscript.sys.id) ?? null,
-        },
-        versionsById.get(manuscript.sys.id) || {},
-      ),
-    );
   }
 
   // The manuscript query only returns each lab's id/name/PI to keep it within

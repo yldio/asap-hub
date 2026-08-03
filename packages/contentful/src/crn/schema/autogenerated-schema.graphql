@@ -1715,6 +1715,8 @@ enum DiscoverMembersCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -1802,6 +1804,8 @@ enum DiscoverMembersCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -1901,6 +1905,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -1988,6 +1994,8 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -2217,6 +2225,8 @@ enum DiscussionsReadByCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -2304,6 +2314,8 @@ enum DiscussionsReadByCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -5135,170 +5147,6 @@ input LabMembershipFilter {
 type LabMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
   entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
-  usersCollection(limit: Int = 100, locale: String, order: [LabMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
-  usersCursorCollection(limit: Int = 100, locale: String, order: [LabMembershipLinkingCollectionsUsersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): UsersCursorCollection
-}
-
-enum LabMembershipLinkingCollectionsUsersCollectionOrder {
-  activeCampaignCreatedAt_ASC
-  activeCampaignCreatedAt_DESC
-  activeCampaignId_ASC
-  activeCampaignId_DESC
-  alumniLastUpdated_ASC
-  alumniLastUpdated_DESC
-  alumniLocation_ASC
-  alumniLocation_DESC
-  alumniSinceDate_ASC
-  alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
-  city_ASC
-  city_DESC
-  contactEmail_ASC
-  contactEmail_DESC
-  country_ASC
-  country_DESC
-  createdDate_ASC
-  createdDate_DESC
-  degree_ASC
-  degree_DESC
-  dismissedGettingStarted_ASC
-  dismissedGettingStarted_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  institution_ASC
-  institution_DESC
-  lastName_ASC
-  lastName_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  middleName_ASC
-  middleName_DESC
-  nickname_ASC
-  nickname_DESC
-  onboarded_ASC
-  onboarded_DESC
-  openScienceTeamMember_ASC
-  openScienceTeamMember_DESC
-  orcidLastModifiedDate_ASC
-  orcidLastModifiedDate_DESC
-  orcidLastSyncDate_ASC
-  orcidLastSyncDate_DESC
-  orcid_ASC
-  orcid_DESC
-  personalEmail_ASC
-  personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  role_ASC
-  role_DESC
-  stateOrProvince_ASC
-  stateOrProvince_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
-}
-
-enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
-  activeCampaignCreatedAt_ASC
-  activeCampaignCreatedAt_DESC
-  activeCampaignId_ASC
-  activeCampaignId_DESC
-  alumniLastUpdated_ASC
-  alumniLastUpdated_DESC
-  alumniLocation_ASC
-  alumniLocation_DESC
-  alumniSinceDate_ASC
-  alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
-  city_ASC
-  city_DESC
-  contactEmail_ASC
-  contactEmail_DESC
-  country_ASC
-  country_DESC
-  createdDate_ASC
-  createdDate_DESC
-  degree_ASC
-  degree_DESC
-  dismissedGettingStarted_ASC
-  dismissedGettingStarted_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  institution_ASC
-  institution_DESC
-  lastName_ASC
-  lastName_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  middleName_ASC
-  middleName_DESC
-  nickname_ASC
-  nickname_DESC
-  onboarded_ASC
-  onboarded_DESC
-  openScienceTeamMember_ASC
-  openScienceTeamMember_DESC
-  orcidLastModifiedDate_ASC
-  orcidLastModifiedDate_DESC
-  orcidLastSyncDate_ASC
-  orcidLastSyncDate_DESC
-  orcid_ASC
-  orcid_DESC
-  personalEmail_ASC
-  personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  role_ASC
-  role_DESC
-  stateOrProvince_ASC
-  stateOrProvince_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum LabMembershipOrder {
@@ -5605,6 +5453,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -5686,6 +5536,8 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -6627,6 +6479,8 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -6714,6 +6568,8 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -8805,6 +8661,8 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -8892,6 +8750,8 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -11193,6 +11053,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -11274,6 +11136,8 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -11987,6 +11851,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -12068,6 +11934,8 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -13513,6 +13381,7 @@ type Users implements Entry & _Node {
   _id: ID!
   activeCampaignCreatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   activeCampaignId(locale: String, useFallbackLocale: Boolean): String
+  admin(locale: String, useFallbackLocale: Boolean): Boolean
   adminNotes(locale: String, useFallbackLocale: Boolean): String
   alumniLastUpdated(locale: String, useFallbackLocale: Boolean): DateTime
   alumniLocation(locale: String, useFallbackLocale: Boolean): String
@@ -13543,8 +13412,6 @@ type Users implements Entry & _Node {
   linkedIn(locale: String, useFallbackLocale: Boolean): String
   middleName(locale: String, useFallbackLocale: Boolean): String
   nickname(locale: String, useFallbackLocale: Boolean): String
-  oldLabsCollection(limit: Int = 100, locale: String, order: [UsersOldLabsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LabMembershipFilter): UsersOldLabsCollection
-  oldLabsCursorCollection(limit: Int = 100, locale: String, order: [UsersOldLabsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: LabMembershipFilter): UsersOldLabsCursorCollection
   onboarded(locale: String, useFallbackLocale: Boolean): Boolean
   openScienceTeamMember(locale: String, useFallbackLocale: Boolean): Boolean
   orcid(locale: String, useFallbackLocale: Boolean): String
@@ -13602,6 +13469,7 @@ input UsersFilter {
   activeCampaignId_not: String
   activeCampaignId_not_contains: String
   activeCampaignId_not_in: [String]
+  admin: Boolean
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean
@@ -13609,6 +13477,8 @@ input UsersFilter {
   adminNotes_not: String
   adminNotes_not_contains: String
   adminNotes_not_in: [String]
+  admin_exists: Boolean
+  admin_not: Boolean
   alumniLastUpdated: DateTime
   alumniLastUpdated_exists: Boolean
   alumniLastUpdated_gt: DateTime
@@ -13782,8 +13652,6 @@ input UsersFilter {
   nickname_not: String
   nickname_not_contains: String
   nickname_not_in: [String]
-  oldLabs: cfLabMembershipNestedFilter
-  oldLabsCollection_exists: Boolean
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
@@ -14677,50 +14545,13 @@ enum UsersLinkingCollectionsWorkingGroupMembersCursorCollectionOrder {
   sys_publishedVersion_DESC
 }
 
-type UsersOldLabsCollection {
-  items: [LabMembership]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum UsersOldLabsCollectionOrder {
-  role_ASC
-  role_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-type UsersOldLabsCursorCollection {
-  items: [LabMembership]!
-  limit: Int!
-  pages: CursorPages!
-}
-
-enum UsersOldLabsCursorCollectionOrder {
-  role_ASC
-  role_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
 enum UsersOrder {
   activeCampaignCreatedAt_ASC
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  admin_ASC
+  admin_DESC
   alumniLastUpdated_ASC
   alumniLastUpdated_DESC
   alumniLocation_ASC
@@ -16036,21 +15867,6 @@ input cfInterestGroupsTeamsNestedFilter {
   team_exists: Boolean
 }
 
-input cfLabMembershipNestedFilter {
-  AND: [cfLabMembershipNestedFilter]
-  OR: [cfLabMembershipNestedFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  lab_exists: Boolean
-  role: String
-  role_contains: String
-  role_exists: Boolean
-  role_in: [String]
-  role_not: String
-  role_not_contains: String
-  role_not_in: [String]
-  sys: SysFilter
-}
-
 input cfLabsNestedFilter {
   AND: [cfLabsNestedFilter]
   OR: [cfLabsNestedFilter]
@@ -17135,6 +16951,7 @@ input cfUsersNestedFilter {
   activeCampaignId_not: String
   activeCampaignId_not_contains: String
   activeCampaignId_not_in: [String]
+  admin: Boolean
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean
@@ -17142,6 +16959,8 @@ input cfUsersNestedFilter {
   adminNotes_not: String
   adminNotes_not_contains: String
   adminNotes_not_in: [String]
+  admin_exists: Boolean
+  admin_not: Boolean
   alumniLastUpdated: DateTime
   alumniLastUpdated_exists: Boolean
   alumniLastUpdated_gt: DateTime
@@ -17314,7 +17133,6 @@ input cfUsersNestedFilter {
   nickname_not: String
   nickname_not_contains: String
   nickname_not_in: [String]
-  oldLabsCollection_exists: Boolean
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean

@@ -22,6 +22,12 @@ import { getEvent } from '../api';
 
 jest.mock('../api');
 
+globalThis.ResizeObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+})) as unknown as typeof ResizeObserver;
+
 const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;

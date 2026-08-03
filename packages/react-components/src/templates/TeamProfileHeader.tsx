@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
 import { lead, pine } from '../colors';
 import {
@@ -24,7 +24,11 @@ import {
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
-import { getCounterString, getProjectRoute } from '../utils';
+import {
+  getCounterString,
+  getProjectRoute,
+  getTeamMembersByStatus,
+} from '../utils';
 import PageInfoContainer from './PageInfoContainer';
 
 const titleStyle = css({
@@ -154,7 +158,6 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
   displayName,
-  inactiveSince,
   members,
   pointOfContact,
   tools,
@@ -190,11 +193,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
     ResearchOutputPermissionsContext,
   );
 
-  const isActive = !inactiveSince;
+  const isActive = teamStatus === 'Active';
 
-  const uniqueMembers = members.filter(
-    (member, index) =>
-      members.findIndex(({ id: memberId }) => memberId === member.id) === index,
+  const { activeMembers } = useMemo(
+    () => getTeamMembersByStatus(members, !isActive),
+    [members, isActive],
   );
 
   return (
@@ -248,7 +251,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         >
           {teamStatus === 'Active' && (
             <UserAvatarList
-              members={uniqueMembers}
+              members={activeMembers}
               fullListRoute={`${route.about({}).$}#${teamListElementId}`}
             />
           )}

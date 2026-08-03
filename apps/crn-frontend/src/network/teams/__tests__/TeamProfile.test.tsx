@@ -789,6 +789,7 @@ it('does not allow navigating to the upcoming events tab when team is inactive',
   await renderPage({
     ...createTeamResponse(),
     inactiveSince: '2022-09-30T09:00:00Z',
+    teamStatus: 'Inactive',
   });
 
   expect(

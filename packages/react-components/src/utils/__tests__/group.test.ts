@@ -3,6 +3,7 @@ import {
   groupUserTeamsByTeamId,
   groupTeamMembersByUserId,
   groupProjectMembersByUserId,
+  getTeamMembersByStatus,
 } from '../group';
 
 describe('groupUserTeamsByTeamId', () => {
@@ -351,6 +352,66 @@ describe('groupTeamMembersByUserId', () => {
     ];
     const result = groupTeamMembersByUserId(members);
     expect(result[0]!.alumniSinceDate).toBe('2024-01-01');
+  });
+});
+
+describe('getTeamMembersByStatus', () => {
+  it('splits active and past members by alumni/inactive date', () => {
+    const members: TeamMember[] = [
+      { ...baseMember, id: 'active' },
+      { ...baseMember, id: 'alumni', alumniSinceDate: '2024-01-01' },
+      { ...baseMember, id: 'inactive', inactiveSinceDate: '2024-01-01' },
+    ];
+    const { activeMembers, pastMembers } = getTeamMembersByStatus(
+      members,
+      false,
+    );
+    expect(activeMembers.map((m) => m.id)).toEqual(['active']);
+    expect(pastMembers.map((m) => m.id)).toEqual(['alumni', 'inactive']);
+  });
+
+  it('treats every member as past when the team is inactive', () => {
+    const members: TeamMember[] = [
+      { ...baseMember, id: 'u1' },
+      { ...baseMember, id: 'u2' },
+    ];
+    const { activeMembers, pastMembers } = getTeamMembersByStatus(
+      members,
+      true,
+    );
+    expect(activeMembers).toEqual([]);
+    expect(pastMembers.map((m) => m.id)).toEqual(['u1', 'u2']);
+  });
+
+  it('keeps a user in active and out of past when they have both an active and an inactive membership', () => {
+    const members: TeamMember[] = [
+      { ...baseMember, role: 'Lead PI (Core Leadership)' },
+      {
+        ...baseMember,
+        role: 'Project Manager',
+        inactiveSinceDate: '2024-01-01',
+      },
+    ];
+    const { activeMembers, pastMembers } = getTeamMembersByStatus(
+      members,
+      false,
+    );
+    expect(activeMembers.map((m) => m.id)).toEqual(['u1']);
+    expect(pastMembers).toEqual([]);
+  });
+
+  it('ignores null and undefined member entries', () => {
+    const members = [
+      { ...baseMember, id: 'active' },
+      null,
+      undefined,
+    ] as ReadonlyArray<TeamMember | null | undefined>;
+    const { activeMembers, pastMembers } = getTeamMembersByStatus(
+      members,
+      false,
+    );
+    expect(activeMembers.map((m) => m.id)).toEqual(['active']);
+    expect(pastMembers).toEqual([]);
   });
 });
 

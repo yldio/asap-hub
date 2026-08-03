@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { TeamEvent } from '@asap-hub/model';
+import { countActiveUniqueMembers, TeamEvent } from '@asap-hub/model';
 import { EventBridgeHandler, TeamPayload } from '@asap-hub/server-common';
 import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
@@ -53,7 +53,7 @@ export const indexTeamHandler =
             teamType,
             teamStatus,
             statusRank,
-            memberCount: team.members.length,
+            memberCount: countActiveUniqueMembers(team.members),
             _tags: team.tags.map(({ name }) => name),
             researchTheme,
             resourceType,

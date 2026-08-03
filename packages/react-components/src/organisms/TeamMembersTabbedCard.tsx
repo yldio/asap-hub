@@ -4,11 +4,7 @@ import React, { ComponentProps, useMemo } from 'react';
 import { rem, tabletScreen } from '../pixels';
 import { LabsList, MembersList, RolesList, TabbedCard } from '../molecules';
 import { fern } from '../colors';
-import {
-  groupTeamMembersByUserId,
-  GroupedTeamMember,
-  splitListBy,
-} from '../utils';
+import { getTeamMembersByStatus, GroupedTeamMember } from '../utils';
 import { Paragraph } from '../atoms';
 
 const containerStyles = css({
@@ -41,21 +37,10 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   members,
   isTeamInactive,
 }) => {
-  const { activeMembers, pastMembers } = useMemo(() => {
-    const [rawPast, rawActive] = splitListBy(
-      [...members],
-      (member) =>
-        isTeamInactive ||
-        !!member?.alumniSinceDate ||
-        !!member?.inactiveSinceDate,
-    );
-    const active = groupTeamMembersByUserId(rawActive);
-    const activeIdSet = new Set(active.map((m) => m.id));
-    const past = groupTeamMembersByUserId(rawPast).filter(
-      (m) => !activeIdSet.has(m.id),
-    );
-    return { activeMembers: active, pastMembers: past };
-  }, [members, isTeamInactive]);
+  const { activeMembers, pastMembers } = useMemo(
+    () => getTeamMembersByStatus(members, isTeamInactive),
+    [members, isTeamInactive],
+  );
 
   return (
     <TabbedCard
@@ -64,10 +49,8 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
       activeTabIndex={isTeamInactive ? 1 : 0}
       tabs={[
         {
-          tabTitle: `Active Team Members (${
-            isTeamInactive ? 0 : activeMembers.length
-          })`,
-          items: isTeamInactive ? [] : activeMembers,
+          tabTitle: `Active Team Members (${activeMembers.length})`,
+          items: activeMembers,
           truncateFrom: 8,
           disabled: isTeamInactive,
           empty: (

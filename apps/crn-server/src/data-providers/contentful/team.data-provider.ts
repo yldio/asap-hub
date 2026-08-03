@@ -41,6 +41,7 @@ import {
   TeamTool,
   TeamType,
   TeamUpdateDataObject,
+  countActiveUniqueMembers,
   isPIRole,
   teamStatusRank,
   getLatestUserAward,
@@ -375,16 +376,17 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 export const parseContentfulGraphQlTeamListItem = (
   item: TeamItem,
 ): TeamListItemDataObject => {
-  const [numberOfMembers, labIds]: [number, Set<string>] = (
-    item.linkedFrom?.teamMembershipCollection?.items || []
-  ).reduce(
-    ([memberCount, labIdsSet], membership: Membership | null) => {
+  const [members, labIds]: [
+    Array<Pick<TeamMember, 'id' | 'alumniSinceDate' | 'inactiveSinceDate'>>,
+    Set<string>,
+  ] = (item.linkedFrom?.teamMembershipCollection?.items || []).reduce(
+    ([memberList, labIdsSet], membership: Membership | null) => {
       if (
         !membership ||
         !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
         !membership.role
       ) {
-        return [memberCount, labIdsSet];
+        return [memberList, labIdsSet];
       }
 
       const user = membership.linkedFrom?.usersCollection?.items[0];
@@ -399,9 +401,22 @@ export const parseContentfulGraphQlTeamListItem = (
         memberLabIds?.forEach((labId) => labIdsSet.add(labId));
       }
 
-      return [memberCount + 1, labIdsSet];
+      if (userId) {
+        memberList.push({
+          id: userId,
+          alumniSinceDate: user?.alumniSinceDate ?? undefined,
+          inactiveSinceDate: membership.inactiveSinceDate ?? undefined,
+        });
+      }
+
+      return [memberList, labIdsSet];
     },
-    [0, new Set() as Set<string>],
+    [
+      [] as Array<
+        Pick<TeamMember, 'id' | 'alumniSinceDate' | 'inactiveSinceDate'>
+      >,
+      new Set() as Set<string>,
+    ],
   );
 
   const linkedProject =
@@ -420,7 +435,7 @@ export const parseContentfulGraphQlTeamListItem = (
     linkedProjectId: linkedProject?.sys.id ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
-    memberCount: numberOfMembers,
+    memberCount: countActiveUniqueMembers(members),
     labCount: labIds.size,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
@@ -600,7 +615,7 @@ export const parseContentfulGraphQlTeam = (
           email: email ?? '',
           role: (role as TeamRole) ?? '',
           inactiveSinceDate: inactiveSinceDate ?? undefined,
-          alumniSinceDate,
+          alumniSinceDate: alumniSinceDate ?? undefined,
           avatarUrl: avatar?.url ?? undefined,
           displayName: parseUserDisplayName(
             firstName ?? '',

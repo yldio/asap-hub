@@ -24,6 +24,7 @@ export interface BasicEvent {
   description?: string;
   status: EventStatus;
   hidden?: boolean;
+  recurring?: boolean;
   lastModifiedDate: string;
   thumbnail?: string;
   googleId?: string;

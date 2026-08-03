@@ -111,6 +111,7 @@ export type EventCreateDataObject = Pick<
   | 'endDateTimeZone'
   | 'status'
   | 'hideMeetingLink'
+  | 'recurring'
 > & {
   googleId: string;
   calendar: string;

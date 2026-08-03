@@ -25,6 +25,16 @@ export { default as EntityCard } from './EntityCard';
 export { default as EventAbout } from './EventAbout';
 export { default as EditEventAttendanceModal } from './EditEventAttendanceModal';
 export type { AttendanceSearchOption } from './EditEventAttendanceModal';
+export { default as EditEventSpeakersModal } from './EditEventSpeakersModal';
+export type {
+  SpeakerSearchOption,
+  SpeakerTeamOption,
+} from './EditEventSpeakersModal';
+export type {
+  SpeakerGroup,
+  SpeakerGroupExternalUser,
+  SpeakerGroupUser,
+} from './speaker-group';
 export { default as EventAttendance } from './EventAttendance';
 export type {
   EventAttendanceTeam,
@@ -43,12 +53,6 @@ export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';
 export { default as EventSearch } from './EventSearch';
 export { default as EventSpeakers } from './EventSpeakers';
-export type {
-  EventSpeakerTeamRow,
-  EventSpeakerExternalRow,
-  EventSpeakerExternalMember,
-  EventSpeakerMember,
-} from './EventSpeakers';
 export { default as ExportAnalyticsModal } from './ExportAnalyticsModal';
 export { default as Filter } from './Filter';
 export { default as Form } from './Form';

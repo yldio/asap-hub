@@ -33,6 +33,7 @@ export { default as Paragraph } from './Paragraph';
 export { default as Pill } from './Pill';
 export { default as PillSelector } from './PillSelector';
 export { default as RadioButton } from './RadioButton';
+export { default as SpeakerRoleBadge } from './SpeakerRoleBadge';
 export { default as Spinner } from './Spinner';
 export { default as Subtitle } from './Subtitle';
 export { default as Switch } from './Switch';

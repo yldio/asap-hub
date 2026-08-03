@@ -166,6 +166,7 @@ export {
   DeliverablesCard,
   DiscussionModal,
   EditEventAttendanceModal,
+  EditEventSpeakersModal,
   EditModal,
   EmailPasswordSignin,
   EventAbout,
@@ -402,13 +403,14 @@ export type {
   UploadListSuggestion,
   UploadListUnmatchedTeam,
   UploadListSourceFile,
+  SpeakerGroup,
+  SpeakerGroupExternalUser,
+  SpeakerGroupUser,
+  SpeakerSearchOption,
+  SpeakerTeamOption,
   UserCollaborationMetric,
   TeamCollaborationMetric,
   ResearchOutputConfirmModalType,
-  EventSpeakerTeamRow,
-  EventSpeakerExternalRow,
-  EventSpeakerExternalMember,
-  EventSpeakerMember,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
 export type {

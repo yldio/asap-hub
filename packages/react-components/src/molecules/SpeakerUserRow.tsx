@@ -1,0 +1,135 @@
+import { network } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+
+import { Avatar, Button, Link, SpeakerRoleBadge } from '../atoms';
+import { lead } from '../colors';
+import { alumniBadgeIcon, binIcon } from '../icons';
+import { deleteButtonStyles } from '../organisms/EditEventAttendanceModal';
+import { mobileScreen, rem } from '../pixels';
+import { splitDisplayName } from '../utils/user';
+
+export const flexRowGap8Styles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+// [user info block, flex-grow] + [optional delete button]. When a delete
+// button is present it bottom-aligns on mobile against the (now two-line)
+// user info block, per Figma; read-only rows (no delete) keep the default
+// top alignment.
+const rowStyles = css(flexRowGap8Styles);
+
+const rowWithRemoveStyles = css([
+  flexRowGap8Styles,
+  {
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      alignItems: 'flex-end',
+    },
+  },
+]);
+
+// Desktop: a plain row, so topRowStyles + the role badge sit inline. Mobile:
+// stacks into two lines — avatar+name on top, role badge below — matching
+// Figma's "User Name" column layout.
+const userInfoStyles = css([
+  flexRowGap8Styles,
+  {
+    flexGrow: 1,
+    minWidth: 0,
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+]);
+
+const topRowStyles = flexRowGap8Styles;
+
+export const avatar24Styles = css({
+  margin: 0,
+  flexShrink: 0,
+  width: rem(24),
+  height: rem(24),
+});
+
+// No truncation, matching the team name policy — a name wider than the card
+// just scrolls (overflowX: auto on groupsCardStyles). Color comes from
+// Link's default (fern) for team members.
+const nameStyles = css({
+  display: 'block',
+  whiteSpace: 'nowrap',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    // Figma's "Caption/C1" mobile type scale, matching the team name.
+    fontSize: rem(14),
+    lineHeight: rem(16),
+    fontWeight: 400,
+  },
+});
+
+export const externalNameStyles = css([nameStyles, { color: lead.rgb }]);
+
+const alumniStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+});
+
+// deleteButtonStyles only resets Button's base flexGrow:1 inside the mobile
+// query; in this flex row (userInfo grows) the button would otherwise stretch
+// on desktop, so pin flexGrow:0 at every width.
+const removeButtonStyles = css([deleteButtonStyles, { flexGrow: 0 }]);
+
+type SpeakerUserRowProps = {
+  readonly displayName: string;
+  readonly avatarUrl?: string;
+  readonly roles?: string[];
+  readonly userId?: string;
+  readonly isAlumni?: boolean;
+  readonly onRemove?: () => void;
+};
+
+const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
+  displayName,
+  avatarUrl,
+  roles,
+  userId,
+  isAlumni,
+  onRemove,
+}) => {
+  const { firstName, lastName } = splitDisplayName(displayName);
+  return (
+    <div css={onRemove ? rowWithRemoveStyles : rowStyles} role="listitem">
+      <div css={userInfoStyles}>
+        <span css={topRowStyles}>
+          <Avatar
+            firstName={firstName}
+            lastName={lastName}
+            imageUrl={avatarUrl}
+            overrideStyles={avatar24Styles}
+          />
+          {userId ? (
+            <Link href={network({}).users({}).user({ userId }).$}>
+              <span css={nameStyles}>{displayName}</span>
+            </Link>
+          ) : (
+            <span css={externalNameStyles}>{displayName}</span>
+          )}
+          {isAlumni && <span css={alumniStyles}>{alumniBadgeIcon}</span>}
+        </span>
+        {roles && <SpeakerRoleBadge roles={roles} />}
+      </div>
+      {onRemove && (
+        <Button
+          noMargin
+          aria-label={`Remove ${displayName}`}
+          onClick={onRemove}
+          overrideStyles={removeButtonStyles}
+        >
+          {binIcon}
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export default SpeakerUserRow;

@@ -238,14 +238,11 @@ export class UserContentfulDataProvider implements UserDataProvider {
         id: options.filter.labId,
       });
 
-      const labMembershipCollection = labs?.linkedFrom?.labMembershipCollection;
-      return labMembershipCollection
+      const usersCollection = labs?.linkedFrom?.usersCollection;
+      return usersCollection
         ? {
-            total: labMembershipCollection.total,
-            items: labMembershipCollection.items.map(
-              (labMembership) =>
-                labMembership?.linkedFrom?.usersCollection?.items[0],
-            ),
+            total: usersCollection.total,
+            items: usersCollection.items,
           }
         : { total: 0, items: [] };
     }

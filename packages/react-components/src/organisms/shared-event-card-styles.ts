@@ -33,6 +33,9 @@ export const iconButtonStyles = css({
     borderColor: tin.rgb,
   },
   [`@media (max-width: ${mobileScreen.max}px)`]: {
+    // Button re-asserts flexGrow:1 at this breakpoint; re-declare it so the
+    // fixed 40px icon button doesn't stretch.
+    flexGrow: 0,
     minWidth: rem(40),
   },
 });
@@ -88,6 +91,16 @@ export const teamInfoStyles = css({
   gap: rem(8),
   minWidth: 0,
 });
+
+// Keep a team row on one line so a long name scrolls the table rather than
+// wrapping the name or shrinking the icons.
+export const teamInfoNoWrapStyles = css({
+  whiteSpace: 'nowrap',
+  '> svg': { flexShrink: 0 },
+});
+
+// Breathing room below the table for the horizontal scrollbar when it appears.
+export const horizontalScrollGutter = css({ paddingBottom: rem(8) });
 
 export const tableWrapperStyles = css({
   marginTop: rem(40),

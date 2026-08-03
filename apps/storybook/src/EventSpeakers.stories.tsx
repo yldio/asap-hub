@@ -22,7 +22,9 @@ const buildTeams = (
     teamId: `team-${teamIndex}`,
     teamName: `Team ${teamIndex + 1}`,
     teamType:
-      teamIndex % 2 === 0 ? ('discovery' as const) : ('resource' as const),
+      teamIndex % 2 === 0
+        ? ('Discovery Team' as const)
+        : ('Resource Team' as const),
     isTeamInactive: hasInactiveTeam && teamIndex === 2,
     // The first N teams share findings — drives the preliminary-findings %.
     sharedPreliminaryFindings: teamIndex < teamsSharingFindings,

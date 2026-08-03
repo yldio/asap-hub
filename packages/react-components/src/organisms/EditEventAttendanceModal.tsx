@@ -35,11 +35,9 @@ import {
 import { Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { noop } from '../utils';
-import {
-  EventAttendanceTeam,
-  iconButtonStyles,
-  teamIcon,
-} from './EventAttendance';
+import { EventAttendanceTeam } from './EventAttendance';
+import { teamIcon } from './shared-event-card';
+import { iconButtonStyles } from './shared-event-card-styles';
 
 export type AttendanceSearchOption = MultiSelectOptionsType &
   (

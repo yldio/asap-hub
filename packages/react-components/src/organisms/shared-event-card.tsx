@@ -1,14 +1,16 @@
+import { TeamType } from '@asap-hub/model';
+
 import { DiscoveryTeamIcon, ResourceTeamIcon, TeamIcon } from '../icons';
 
 export const defaultVisibleTeams = 10;
 
-export type EventTeamType = 'discovery' | 'resource';
+export type EventTeamType = TeamType;
 
 export const teamIcon = (teamType?: EventTeamType) => {
   switch (teamType) {
-    case 'discovery':
+    case 'Discovery Team':
       return <DiscoveryTeamIcon />;
-    case 'resource':
+    case 'Resource Team':
       return <ResourceTeamIcon />;
     default:
       return <TeamIcon />;

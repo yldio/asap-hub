@@ -41,7 +41,7 @@ const teams: EventSpeakerTeamRow[] = [
   {
     teamId: 'team-0',
     teamName: 'Team Alpha',
-    teamType: 'discovery',
+    teamType: 'Discovery Team',
     sharedPreliminaryFindings: true,
     isTeamInactive: true,
     members: makeMembers(0, 2),
@@ -49,7 +49,7 @@ const teams: EventSpeakerTeamRow[] = [
   {
     teamId: 'team-1',
     teamName: 'Team Beta',
-    teamType: 'resource',
+    teamType: 'Resource Team',
     sharedPreliminaryFindings: false,
     members: makeMembers(1, 1),
   },

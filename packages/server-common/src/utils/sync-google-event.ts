@@ -94,7 +94,7 @@ export const syncEventFactory =
       }
 
       const hidden = newEvent.status === 'Cancelled';
-      if (isCRNEventController(eventsController)) {
+      if (isCRNEvent) {
         const crnEventToCreate = {
           ...newEvent,
           hidden,

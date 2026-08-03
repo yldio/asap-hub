@@ -2,10 +2,9 @@ import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
 
 import { formatDateToTimezone } from '../date';
-import { lead } from '../colors';
+import { info100, info500, lead } from '../colors';
 import { rem } from '../pixels';
-import { calendarIcon, clockIcon } from '../icons';
-import { Pill } from '../atoms';
+import { calendarIcon, clockIcon, infoInfoIcon } from '../icons';
 
 import { Info } from '.';
 
@@ -40,14 +39,39 @@ const tzStyles = css({
   paddingLeft: rem(8),
 });
 
-const recurrentStyles = css({
+const recurrentPillStyles = css({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: rem(8),
+  gap: rem(4),
   flexShrink: 0,
   marginLeft: 'auto',
-  paddingLeft: rem(8),
+
+  backgroundColor: info100.rgb,
+  color: info500.rgb,
+  borderRadius: rem(36),
+  padding: `${rem(4)} ${rem(8)} ${rem(4)} ${rem(16)}`,
+
+  button: {
+    display: 'flex',
+    alignItems: 'center',
+    position: 'relative',
+
+    // stretch the tooltip positioner across the button so the
+    // bubble centers on the icon instead of the button's left edge
+    '> span:first-of-type': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+    },
+  },
+
+  svg: {
+    width: rem(16),
+    height: rem(16),
+    display: 'block',
+  },
 });
 
 type EventTimeProps = Pick<
@@ -91,15 +115,13 @@ const EventTime: React.FC<EventTimeProps> = ({
         <div css={iconStyles}>{calendarIcon}</div>
         <span css={dateStyles}>{formattedStartDay}</span>
         {recurring && (
-          <div css={recurrentStyles}>
-            <Pill accent="blue" noMargin>
-              Recurrent
-            </Pill>
-            <Info>
+          <span css={recurrentPillStyles}>
+            <small>Recurrent</small>
+            <Info icon={infoInfoIcon}>
               This event is part of a recurring series. Each occurrence is
               listed separately.
             </Info>
-          </div>
+          </span>
         )}
       </li>
       <li css={listItemStyles}>

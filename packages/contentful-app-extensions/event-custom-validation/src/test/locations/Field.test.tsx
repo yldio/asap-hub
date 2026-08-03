@@ -9,6 +9,8 @@ import Field, {
   DUPLICATE_SPEAKERS_MESSAGE,
   EMPTY_SPEAKER_MESSAGE,
   EXTERNAL_AUTHOR_WITH_TEAM_MESSAGE,
+  TEAM_WITHOUT_USER_MESSAGE,
+  INTERNAL_USER_WITHOUT_TEAM_MESSAGE,
 } from '../../locations/Field';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
@@ -277,6 +279,115 @@ describe('Field component', () => {
       expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
       expect(screen.getByText(EMPTY_SPEAKER_MESSAGE)).toBeInTheDocument();
       expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
+    });
+  });
+
+  it('displays error message when there is a team without a user', async () => {
+    const baseSdk = mockBaseSdk();
+    const testSdk = {
+      ...baseSdk,
+      cma: {
+        entry: {
+          ...baseSdk.cma.entry,
+          getMany: jest.fn(() =>
+            Promise.resolve({
+              items: [
+                {
+                  fields: {
+                    team: { 'en-US': { sys: { id: 'team-1' } } },
+                    user: null,
+                  },
+                },
+              ],
+            }),
+          ),
+        },
+      },
+    } as unknown as jest.Mocked<FieldExtensionSDK>;
+    (useSDK as jest.Mock).mockReturnValue(testSdk);
+
+    render(<Field />);
+    await waitFor(() => {
+      expect(screen.getByText(TEAM_WITHOUT_USER_MESSAGE)).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
+      expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
+    });
+  });
+
+  it('displays error message when there is an internal user without a team', async () => {
+    const baseSdk = mockBaseSdk();
+    const testSdk = {
+      ...baseSdk,
+      cma: {
+        entry: {
+          ...baseSdk.cma.entry,
+          getMany: jest.fn(() =>
+            Promise.resolve({
+              items: [
+                {
+                  fields: {
+                    team: null,
+                    user: { 'en-US': { sys: { id: 'user-1' } } },
+                  },
+                },
+              ],
+            }),
+          ),
+        },
+      },
+    } as unknown as jest.Mocked<FieldExtensionSDK>;
+    (useSDK as jest.Mock).mockReturnValue(testSdk);
+
+    render(<Field />);
+    await waitFor(() => {
+      expect(
+        screen.getByText(INTERNAL_USER_WITHOUT_TEAM_MESSAGE),
+      ).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
+      expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
+    });
+  });
+
+  it('accepts an external user without a team', async () => {
+    const baseSdk = mockBaseSdk();
+    const testSdk = {
+      ...baseSdk,
+      cma: {
+        entry: {
+          getMany: jest.fn(() =>
+            Promise.resolve({
+              items: [
+                {
+                  fields: {
+                    team: null,
+                    user: { 'en-US': { sys: { id: 'external-user-1' } } },
+                  },
+                },
+              ],
+            }),
+          ),
+          get: jest.fn(() =>
+            Promise.resolve({
+              sys: {
+                contentType: {
+                  sys: {
+                    id: 'externalAuthors',
+                  },
+                },
+              },
+            }),
+          ),
+        },
+      },
+    } as unknown as jest.Mocked<FieldExtensionSDK>;
+    (useSDK as jest.Mock).mockReturnValue(testSdk);
+
+    render(<Field />);
+    await waitFor(() => {
+      expect(screen.getByText(VALID_ENTRY_MESSAGE)).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('true');
+      expect(screen.queryByText(TEAM_WITHOUT_USER_MESSAGE)).toBeNull();
+      expect(screen.queryByText(INTERNAL_USER_WITHOUT_TEAM_MESSAGE)).toBeNull();
     });
   });
 

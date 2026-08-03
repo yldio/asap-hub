@@ -5,16 +5,6 @@ import { EventSpeaker } from '@asap-hub/model';
 import { createEventResponse } from '@asap-hub/fixtures';
 import SpeakerList from '../SpeakerList';
 
-const mockIsEnabled = jest.fn().mockReturnValue(false);
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
-beforeEach(() => {
-  mockIsEnabled.mockReturnValue(false);
-});
-
 const gridLabels = ['Speakers', 'Team', 'Speaker', 'Role'];
 const team = {
   id: 'team-id-1',
@@ -80,8 +70,7 @@ describe('When rendering the speaker list', () => {
       ]);
     });
 
-    it('Renders a user without a team when the flag is enabled', async () => {
-      mockIsEnabled.mockReturnValue(true);
+    it('Renders a user without a team', async () => {
       const event = {
         ...createEventResponse(),
         speakers: [{ user: { ...user } }],
@@ -94,19 +83,6 @@ describe('When rendering the speaker list', () => {
       ).toEqual(['Adam Brown']);
       // both the team and the role columns show a dash
       expect(screen.getAllByText('—')).toHaveLength(2);
-    });
-
-    it('Hides a user without a team when the flag is disabled', async () => {
-      const event = {
-        ...createEventResponse(),
-        speakers: [{ user: { ...user } }, announcedSpeaker],
-      };
-
-      render(<SpeakerList {...event} />);
-
-      expect(
-        screen.getAllByRole('link').map(({ textContent }) => textContent),
-      ).toEqual(['The team one', 'Adam Brown']);
     });
 
     it('Renders an alumni badge for alumni user', async () => {

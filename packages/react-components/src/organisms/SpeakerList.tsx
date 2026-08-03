@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { EventSpeaker } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { useState } from 'react';
 import { Headline3, Headline4, Avatar, Link, Button } from '../atoms';
@@ -147,19 +146,9 @@ interface SpeakerListProps {
   readonly endDate: string;
 }
 
-const SpeakerList: React.FC<SpeakerListProps> = ({
-  speakers: allSpeakers,
-  endDate,
-}) => {
+const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
   const [expanded, setExpanded] = useState(false);
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
-  const { isEnabled } = useFlags();
-
-  const speakers = isEnabled('EVENT_SPEAKERS_NO_TEAM')
-    ? allSpeakers
-    : allSpeakers.filter(
-        (speaker) => 'team' in speaker || 'externalUser' in speaker,
-      );
 
   const userToBeAnnounced = hasEnded
     ? 'Speaker was not announced'

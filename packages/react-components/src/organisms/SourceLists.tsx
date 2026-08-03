@@ -123,6 +123,9 @@ const SourceLists: React.FC<SourceListsProps> = ({ files }) => {
       setDownloadingFileId(file.id);
       try {
         await file.onDownload();
+      } catch {
+        // The caller surfaces the error; the row only needs to re-enable so the
+        // user can retry instead of staying stuck on "downloading".
       } finally {
         setDownloadingFileId(null);
       }

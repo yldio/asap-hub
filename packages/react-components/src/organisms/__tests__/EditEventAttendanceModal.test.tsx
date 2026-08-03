@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
@@ -498,13 +498,13 @@ describe('EditEventAttendanceModal', () => {
   });
 
   it('Should disable the download button while downloading', async () => {
+    // A single stable promise so resolving it always settles the one the
+    // component awaits, regardless of how many times onDownload is invoked.
     let resolveDownload: () => void = () => undefined;
-    const onDownload = jest.fn(
-      () =>
-        new Promise<void>((resolve) => {
-          resolveDownload = resolve;
-        }),
-    );
+    const downloadPromise = new Promise<void>((resolve) => {
+      resolveDownload = resolve;
+    });
+    const onDownload = jest.fn(() => downloadPromise);
     renderModal({
       teams,
       sourceLists: [
@@ -522,7 +522,29 @@ describe('EditEventAttendanceModal', () => {
     expect(onDownload).toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Download' })).toBeDisabled();
 
-    resolveDownload();
+    await act(async () => {
+      resolveDownload();
+    });
+    expect(screen.getByRole('button', { name: 'Download' })).toBeEnabled();
+  });
+
+  it('Should re-enable the download button when the download fails', async () => {
+    const onDownload = jest.fn().mockRejectedValue(new Error('nope'));
+    renderModal({
+      teams,
+      sourceLists: [
+        {
+          id: 'file-1',
+          filename: 'attendees.csv',
+          addedDate: '01/01/2025',
+          onDownload,
+        },
+      ],
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Download' }));
+
+    expect(onDownload).toHaveBeenCalled();
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Download' })).toBeEnabled(),
     );

@@ -1,11 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { fern, info500, iris, steel } from '../colors';
+import { steel } from '../colors';
 import { rem } from '../pixels';
 import { clampPercentage } from '../utils';
 
-const findingsRampStops = `${iris.hex} 30.25%, ${info500.hex} 51.91%, #1491B2 66.74%, #299C86 79.82%, ${fern.hex} 90.01%`;
-
-const findingsGradient = `linear-gradient(90deg, ${findingsRampStops})`;
+import { findingsConicRamp } from './findingsGradient';
 
 const WHEEL_SIZE = 74;
 const WHEEL_STROKE = 9;
@@ -13,9 +11,6 @@ const WHEEL_STROKE = 9;
 // tiny blur band and antialias instead of showing a jagged spoke/ring.
 // https://codepen.io/mandymichael/pen/oNNdKzW
 const EDGE_BLUR = 0.6;
-
-// Green sits near 100% then blends back to purple at the seam so the ring loops.
-const findingsConicRamp = `conic-gradient(from 0deg, ${findingsRampStops}, ${iris.hex} 100%)`;
 
 const wheelRingMask = `radial-gradient(farthest-side, transparent calc(100% - ${rem(
   WHEEL_STROKE,
@@ -36,11 +31,19 @@ const capStyles = (fraction: number) => {
   };
 };
 
-export const ProgressWheel: React.FC<{
+type GradientProgressWheelProps = {
   percentage: number;
   label?: string;
-}> = ({ percentage, label }) => {
+};
+
+const GradientProgressWheel: React.FC<GradientProgressWheelProps> = ({
+  percentage,
+  label,
+}) => {
   const value = clampPercentage(percentage);
+  const arcMask = `conic-gradient(from 0deg, #000 0 ${value}%, transparent ${
+    value + EDGE_BLUR
+  }% 100%)`;
   return (
     <div
       role="progressbar"
@@ -52,23 +55,34 @@ export const ProgressWheel: React.FC<{
         position: 'relative',
         width: rem(WHEEL_SIZE),
         height: rem(WHEEL_SIZE),
+        // Ring shape applied once here so the grey track and the coloured arc
+        // underneath are both clipped to the same band.
+        WebkitMaskImage: wheelRingMask,
+        maskImage: wheelRingMask,
       }}
     >
+      {/* Continuous grey track so the unfilled part reads as a full round ring
+          and there is no colour at all at 0%. */}
       <div
         css={{
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          // At 0% the blur band is dropped so the ramp seam can't peek through.
-          background: `conic-gradient(from 0deg, transparent 0 ${value}%, ${
-            steel.rgb
-          } ${value > 0 ? value + EDGE_BLUR : 0}% 100%), ${findingsConicRamp}`,
-          WebkitMaskImage: wheelRingMask,
-          maskImage: wheelRingMask,
+          background: steel.rgb,
         }}
       />
       {value > 0 && (
         <>
+          <div
+            css={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '50%',
+              background: findingsConicRamp,
+              WebkitMaskImage: arcMask,
+              maskImage: arcMask,
+            }}
+          />
           <div css={capStyles(0)} />
           <div css={capStyles(value / 100)} />
         </>
@@ -77,37 +91,4 @@ export const ProgressWheel: React.FC<{
   );
 };
 
-export const ProgressBar: React.FC<{ percentage: number; label?: string }> = ({
-  percentage,
-  label,
-}) => {
-  const value = clampPercentage(percentage);
-  return (
-    <div
-      css={{
-        width: '100%',
-        height: rem(8),
-        borderRadius: rem(4),
-        backgroundColor: steel.rgb,
-        overflow: 'hidden',
-      }}
-      role="progressbar"
-      aria-label={label}
-      aria-valuenow={value}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
-      <div
-        css={{
-          height: '100%',
-          borderRadius: rem(4),
-          background: findingsGradient,
-          // Reveal only the 0→value slice so the tip colour tracks the value.
-          backgroundSize: `${value > 0 ? 10000 / value : 100}% 100%`,
-          backgroundRepeat: 'no-repeat',
-        }}
-        style={{ width: `${value}%` }}
-      />
-    </div>
-  );
-};
+export default GradientProgressWheel;

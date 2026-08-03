@@ -23,7 +23,13 @@ export { default as EditUserModal } from './EditUserModal';
 export { default as EligibilityModal } from './EligibilityModal';
 export { default as EntityCard } from './EntityCard';
 export { default as EventAbout } from './EventAbout';
+export { default as EditEventAttendanceModal } from './EditEventAttendanceModal';
+export type { AttendanceSearchOption } from './EditEventAttendanceModal';
 export { default as EventAttendance } from './EventAttendance';
+export type {
+  EventAttendanceTeam,
+  EventAttendanceTeamType,
+} from './EventAttendance';
 export { default as EventCard } from './EventCard';
 export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';

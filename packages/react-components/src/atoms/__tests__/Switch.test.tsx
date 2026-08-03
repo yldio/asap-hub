@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 
-import { color } from '../../colors';
+import { color, error500 } from '../../colors';
 import Switch from '../Switch';
 
 const props: ComponentProps<typeof Switch> = {
@@ -62,6 +62,13 @@ describe('Switch', () => {
     await userEvent.click(switchElement);
 
     expect(mockOnClick).not.toHaveBeenCalled();
+  });
+
+  it('paints the off state red when uncheckedColor is error', () => {
+    render(<Switch {...props} uncheckedColor="error" />);
+
+    const switchElement = screen.getByRole('checkbox');
+    expect(getComputedStyle(switchElement).backgroundColor).toBe(error500.rgb);
   });
 
   it('uses ThemeProvider theme primaryColor', () => {

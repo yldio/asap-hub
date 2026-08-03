@@ -36,7 +36,9 @@ const tooltipStyles = css({
     borderTop: `${triangleHeight}px solid ${space.rgb}`,
     bottom: 0,
     right: '50%',
-    marginRight: `-${triangleHeight / 2}px`,
+    // the triangle is 2 * triangleHeight wide, so pull it right by half
+    // its width to center its tip on the bubble midline
+    marginRight: `-${triangleHeight}px`,
   },
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {

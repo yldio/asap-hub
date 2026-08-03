@@ -55,6 +55,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             <ContactInfoModal
               {...user}
               email={user.contactEmail}
+              personalEmail={user.personalEmail}
               fallbackEmail={user.email}
               backHref={backHref}
               onSave={patchUser}

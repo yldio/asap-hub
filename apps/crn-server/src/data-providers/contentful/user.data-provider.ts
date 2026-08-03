@@ -698,6 +698,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
           researchThemeName !== undefined,
       ),
     contactEmail: item.contactEmail ?? undefined,
+    personalEmail: item.personalEmail ?? undefined,
     firstName: item.firstName ?? '',
     middleName: item.middleName || undefined,
     lastName: item.lastName ?? '',

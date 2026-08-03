@@ -98,6 +98,7 @@ export interface UserDataObject extends Invitee {
   alumniSinceDate?: string;
   connections?: Connection[];
   contactEmail?: string;
+  personalEmail?: string;
   createdDate: string;
   degree?: UserDegree;
   dismissedGettingStarted?: boolean;
@@ -230,6 +231,7 @@ export type UserCreateDataObject = {
   city?: string;
   connections?: Connection[];
   contactEmail?: string;
+  personalEmail?: string;
   country?: string;
   degree?: UserDegree | '';
   dismissedGettingStarted?: boolean;

@@ -45,7 +45,8 @@ const mainStyles = css({
   gap: rem(32),
   boxSizing: 'border-box',
   maxWidth: '100%',
-  overflow: 'hidden',
+  // clip only horizontally so upward-opening tooltips are not cropped
+  overflowX: 'clip',
 });
 const pageControlsStyles = css({
   justifySelf: 'center',

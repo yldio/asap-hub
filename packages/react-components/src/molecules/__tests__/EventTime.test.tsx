@@ -95,14 +95,14 @@ describe('the recurrent badge', () => {
     endDateTimeZone: 'UTC',
   };
 
-  it('is shown with an explanatory tooltip for recurring events', async () => {
-    const { getByText, getAllByTitle, getByRole } = render(
-      <EventTime {...props} recurring />,
-    );
-    expect(getByText('Recurrent')).toBeVisible();
+  it('is shown with a non-interactive info icon for recurring events', () => {
+    const { getByText } = render(<EventTime {...props} recurring />);
+    const badge = getByText('Recurrent');
+    expect(badge).toBeVisible();
 
-    await userEvent.click(getAllByTitle(/info/i)[0]!);
-    expect(getByRole('tooltip')).toHaveTextContent(/recurring series/i);
+    const pill = badge.parentElement!;
+    expect(pill.querySelector('svg')).toBeInTheDocument();
+    expect(pill.querySelector('button')).toBeNull();
   });
 
   it('is not shown for non-recurring events', () => {

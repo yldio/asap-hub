@@ -52,21 +52,6 @@ const recurrentPillStyles = css({
   borderRadius: rem(36),
   padding: `${rem(4)} ${rem(8)} ${rem(4)} ${rem(16)}`,
 
-  button: {
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-
-    // stretch the tooltip positioner across the button so the
-    // bubble centers on the icon instead of the button's left edge
-    '> span:first-of-type': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-    },
-  },
-
   svg: {
     width: rem(16),
     height: rem(16),
@@ -117,10 +102,7 @@ const EventTime: React.FC<EventTimeProps> = ({
         {recurring && (
           <span css={recurrentPillStyles}>
             <small>Recurrent</small>
-            <Info icon={infoInfoIcon}>
-              This event is part of a recurring series. Each occurrence is
-              listed separately.
-            </Info>
+            {infoInfoIcon}
           </span>
         )}
       </li>

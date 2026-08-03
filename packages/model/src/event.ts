@@ -34,6 +34,10 @@ export type EventSpeakerUser = {
   role: string;
 };
 
+export type EventSpeakerUserWithoutTeam = {
+  user: EventSpeakerUserData;
+};
+
 export type EventSpeakerExternalUser = {
   externalUser: EventSpeakerExternalUserData;
 };
@@ -41,6 +45,7 @@ export type EventSpeakerExternalUser = {
 export type EventSpeaker =
   | EventSpeakerTeam
   | EventSpeakerUser
+  | EventSpeakerUserWithoutTeam
   | EventSpeakerExternalUser;
 
 export type EventTeamAttendance = {

@@ -368,6 +368,11 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
     }
 
     if (!team) {
+      if (user?.__typename === 'Users' && user.onboarded === true) {
+        speakerList.push({
+          user: parseEventSpeakerUser(user),
+        });
+      }
       return speakerList;
     }
 

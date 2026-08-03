@@ -478,6 +478,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     hideMeetingLink,
     status,
     hidden,
+    recurring,
     speakersCollection,
   } = item;
 
@@ -555,6 +556,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     hideMeetingLink: hideMeetingLink || false,
     status,
     hidden: hidden || false,
+    recurring: recurring || false,
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     relatedTutorials: (item.linkedFrom?.tutorialsCollection?.items ?? []).map(
       (data) => ({

@@ -1182,5 +1182,14 @@ describe('Events Contentful Data Provider', () => {
         expect.objectContaining({ workingGroups: [] }),
       );
     });
+
+    test('parses the recurring flag and defaults it to false when null', () => {
+      const graphqlEvent = getContentfulGraphqlEvent();
+      graphqlEvent.recurring = true;
+      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(true);
+
+      graphqlEvent.recurring = null;
+      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(false);
+    });
   });
 });

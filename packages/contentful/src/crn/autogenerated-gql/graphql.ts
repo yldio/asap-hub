@@ -28396,6 +28396,7 @@ export type EventsContentFragment = Pick<
   | 'eventLink'
   | 'status'
   | 'hidden'
+  | 'recurring'
   | 'title'
   | 'googleId'
   | 'notesPermanentlyUnavailable'
@@ -28799,6 +28800,7 @@ export type FetchEventByIdQuery = {
       | 'eventLink'
       | 'status'
       | 'hidden'
+      | 'recurring'
       | 'title'
       | 'googleId'
       | 'notesPermanentlyUnavailable'
@@ -29265,6 +29267,7 @@ export type FetchEventsQuery = {
             | 'eventLink'
             | 'status'
             | 'hidden'
+            | 'recurring'
             | 'title'
             | 'googleId'
             | 'notesPermanentlyUnavailable'
@@ -29892,6 +29895,7 @@ export type FetchEventsByUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
+                        | 'recurring'
                         | 'title'
                         | 'googleId'
                         | 'notesPermanentlyUnavailable'
@@ -30618,6 +30622,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
+                        | 'recurring'
                         | 'title'
                         | 'googleId'
                         | 'notesPermanentlyUnavailable'
@@ -31344,6 +31349,7 @@ export type FetchEventsByTeamIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
+                        | 'recurring'
                         | 'title'
                         | 'googleId'
                         | 'notesPermanentlyUnavailable'
@@ -41729,6 +41735,7 @@ export const EventsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'recurring' } },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'googleId' } },
           {

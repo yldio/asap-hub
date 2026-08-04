@@ -25,6 +25,8 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
     canSaveDraft: true,
     showImpactAndCategory: true,
     showChangelogAndVersionHistory: false,
+    showExtraInformationFields: true,
+    showCatalogNumber: false,
   },
   permissions: {
     canEditResearchOutput: true,

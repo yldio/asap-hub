@@ -12,6 +12,8 @@ export default {
 
 const tagSuggestions = ['A53T', 'Activity assay'];
 
+const documentType = select('type', researchOutputDocumentTypes, 'Article');
+
 const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   isSaving: false,
   tags: [],
@@ -23,7 +25,9 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
     value: suggestion,
   })),
   researchTags: researchTagsResponse,
-  documentType: select('type', researchOutputDocumentTypes, 'Article'),
+  documentType,
+  showExtraInformationFields: documentType !== 'Report',
+  showCatalogNumber: documentType === 'Lab Material',
 };
 
 export const Normal = () => (

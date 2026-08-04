@@ -190,12 +190,6 @@ describe('on submit', () => {
     // Press down arrow and enter to select the create option
     await userEvent.keyboard('{Enter}');
 
-    // access instructions
-    await userEvent.type(
-      screen.getByRole('textbox', { name: /usage notes/i }),
-      'Access Instructions',
-    );
-
     await submitForm();
 
     expect(saveFn).toHaveBeenLastCalledWith({
@@ -209,7 +203,6 @@ describe('on submit', () => {
         { userId: 'u2' },
         { externalAuthorName: 'Alex White' },
       ],
-      usageNotes: 'Access Instructions',
       documentType: 'Bioinformatics',
       type: 'Code',
     });

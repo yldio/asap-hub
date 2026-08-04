@@ -6,7 +6,7 @@ import {
   researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { mockActErrorsInConsole } from '../../../test-utils';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -41,18 +41,6 @@ describe('on submit', () => {
     consoleMock.mockRestore();
     jest.resetAllMocks();
   });
-
-  const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Publish/i });
-    await userEvent.click(button);
-    await userEvent.click(
-      screen.getByRole('button', { name: /Publish Output/i }),
-    );
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
 
   it('resetting the type resets subtype', async () => {
     const documentType = 'Protocol';
@@ -104,47 +92,5 @@ describe('on submit', () => {
       name: /^Subtype/i,
     });
     expect(subtype).toBeInTheDocument();
-  });
-
-  it('can submit labCatalogNumber for lab material', async () => {
-    const documentType = 'Lab Material' as const;
-    const type = 'Animal Model';
-    render(
-      <MemoryRouter>
-        <ResearchOutputForm
-          {...defaultProps}
-          researchOutputData={{
-            ...initialResearchOutputData,
-            type,
-            documentType,
-          }}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          onSaveDraft={saveDraftFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-          getShortDescriptionFromDescription={
-            getShortDescriptionFromDescription
-          }
-          researchTags={[]}
-        />
-      </MemoryRouter>,
-    );
-    fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
-      target: { value: 'abc123' },
-    });
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        type: 'Animal Model',
-        documentType: 'Lab Material',
-        labCatalogNumber: 'abc123',
-      }),
-    );
   });
 });

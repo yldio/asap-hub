@@ -87,7 +87,7 @@ describe('a tooltip', () => {
   });
 });
 
-describe('the recurrent badge', () => {
+describe('the recurring badge', () => {
   const props = {
     startDate: new Date('2021-01-25T09:00:00Z').toISOString(),
     startDateTimeZone: 'UTC',
@@ -95,18 +95,13 @@ describe('the recurrent badge', () => {
     endDateTimeZone: 'UTC',
   };
 
-  it('is shown with a non-interactive info icon for recurring events', () => {
+  it('is shown for recurring events', () => {
     const { getByText } = render(<EventTime {...props} recurring />);
-    const badge = getByText('Recurrent');
-    expect(badge).toBeVisible();
-
-    const pill = badge.parentElement!;
-    expect(pill.querySelector('svg')).toBeInTheDocument();
-    expect(pill.querySelector('button')).toBeNull();
+    expect(getByText('Recurring')).toBeVisible();
   });
 
   it('is not shown for non-recurring events', () => {
     const { queryByText } = render(<EventTime {...props} recurring={false} />);
-    expect(queryByText('Recurrent')).not.toBeInTheDocument();
+    expect(queryByText('Recurring')).not.toBeInTheDocument();
   });
 });

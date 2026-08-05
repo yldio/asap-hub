@@ -4,7 +4,7 @@ import { EventResponse } from '@asap-hub/model';
 import { formatDateToTimezone } from '../date';
 import { info100, info500, lead } from '../colors';
 import { rem } from '../pixels';
-import { calendarIcon, clockIcon, infoInfoIcon } from '../icons';
+import { calendarIcon, clockIcon } from '../icons';
 
 import { Info } from '.';
 
@@ -39,24 +39,14 @@ const tzStyles = css({
   paddingLeft: rem(8),
 });
 
-const recurrentPillStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: rem(4),
+const recurringPillStyles = css({
   flexShrink: 0,
   marginLeft: rem(8),
 
   backgroundColor: info100.rgb,
   color: info500.rgb,
   borderRadius: rem(36),
-  padding: `${rem(4)} ${rem(8)} ${rem(4)} ${rem(16)}`,
-
-  svg: {
-    width: rem(16),
-    height: rem(16),
-    display: 'block',
-  },
+  padding: `${rem(4)} ${rem(16)}`,
 });
 
 type EventTimeProps = Pick<
@@ -99,12 +89,7 @@ const EventTime: React.FC<EventTimeProps> = ({
       <li css={listItemStyles}>
         <div css={iconStyles}>{calendarIcon}</div>
         <span css={dateStyles}>{formattedStartDay}</span>
-        {recurring && (
-          <span css={recurrentPillStyles}>
-            <small>Recurrent</small>
-            {infoInfoIcon}
-          </span>
-        )}
+        {recurring && <span css={recurringPillStyles}>Recurring</span>}
       </li>
       <li css={listItemStyles}>
         <div css={iconStyles}>{clockIcon}</div>

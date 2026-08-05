@@ -154,7 +154,7 @@ export const SpeakersToBeAnnounced = () => (
     })}
   />
 );
-export const Recurrent = () => (
+export const Recurring = () => (
   <EventCard {...cardProps({ ...upcoming, recurring: true })} />
 );
 export const WithInactiveTeams = () => (

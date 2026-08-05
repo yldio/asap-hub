@@ -20,7 +20,7 @@ import {
   tin,
 } from '../colors';
 import { crossIcon, plusIcon, searchIcon } from '../icons';
-import { Modal } from '../molecules';
+import { ConfirmableModalFooter, Modal } from '../molecules';
 import PendingSpeakerCard from '../molecules/PendingSpeakerCard';
 import SpeakerTeamRow from '../molecules/SpeakerTeamRow';
 import { avatar24Styles, flexRowGap8Styles } from '../molecules/SpeakerUserRow';
@@ -230,40 +230,6 @@ const emptyStateStyles = css([
 ]);
 
 const emptyStateTitleStyles = css({ fontWeight: 700 });
-
-const footerStyles = (isConfirmingCancel: boolean) =>
-  css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: isConfirmingCancel ? 'space-between' : 'flex-end',
-    gap: rem(24),
-    padding: `${rem(48)} ${rem(24)} ${rem(32)}`,
-    [`@media (max-width: ${mobileScreen.max}px)`]: {
-      flexDirection: 'column',
-      alignItems: 'stretch',
-      paddingTop: rem(56),
-    },
-  });
-
-const footerActionsStyles = css({
-  display: 'flex',
-  gap: rem(24),
-  flexShrink: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexDirection: 'column-reverse',
-  },
-});
-
-const footerButtonStyles = css({
-  width: 'fit-content',
-  flexShrink: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: { width: '100%' },
-});
-
-const discardWarningStyles = css({
-  fontWeight: 'bold',
-  color: neutral1000.rgb,
-});
 
 const findUserGroup = (
   groups: SpeakerGroup[],
@@ -653,60 +619,20 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
         </section>
       </div>
 
-      <footer css={footerStyles(isCancelling)}>
-        {isCancelling && (
-          <span css={discardWarningStyles}>
-            You&apos;ll lose all unsaved changes if you cancel now.
-          </span>
-        )}
-        <div css={footerActionsStyles}>
-          {isCancelling ? (
-            <>
-              <div css={footerButtonStyles}>
-                <Button
-                  fullWidth
-                  noMargin
-                  onClick={() => setIsCancelling(false)}
-                >
-                  Keep Editing
-                </Button>
-              </div>
-              <div css={footerButtonStyles}>
-                <Button warning fullWidth noMargin onClick={onDismiss}>
-                  Discard changes
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div css={footerButtonStyles}>
-                <Button
-                  fullWidth
-                  noMargin
-                  enabled={!isSaving}
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-              </div>
-              <div css={footerButtonStyles}>
-                <Button
-                  primary
-                  fullWidth
-                  noMargin
-                  enabled={saveEnabled}
-                  loading={isSaving}
-                  onClick={() => {
-                    void handleSave();
-                  }}
-                >
-                  Save
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </footer>
+      <ConfirmableModalFooter
+        isConfirming={isCancelling}
+        confirmationMessage="You'll lose all unsaved changes if you cancel now."
+        onKeepEditing={() => setIsCancelling(false)}
+        onDiscard={onDismiss}
+        onCancel={handleCancel}
+        cancelEnabled={!isSaving}
+        confirmLabel="Save"
+        onConfirm={() => {
+          void handleSave();
+        }}
+        confirmEnabled={saveEnabled}
+        confirmLoading={isSaving}
+      />
     </Modal>
   );
 };

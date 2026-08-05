@@ -40,3 +40,19 @@ it('do not shows number of speakers when there are no speakers', () => {
   );
   expect(screen.queryByText(/Speaker/i)).not.toBeInTheDocument();
 });
+
+it('counts speakers that have a user without a team', () => {
+  render(
+    <EventNumberOfSpeakers
+      speakers={[
+        { user: { id: 'user-1', displayName: 'John Doe' } },
+        {
+          team: { id: 'team-1', displayName: 'Team' },
+          user: { id: 'user-2', displayName: 'Jane Doe' },
+          role: 'Genetics',
+        },
+      ]}
+    />,
+  );
+  expect(screen.getByText('2 Speakers')).toBeInTheDocument();
+});

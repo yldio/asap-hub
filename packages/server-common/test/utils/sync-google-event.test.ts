@@ -40,14 +40,13 @@ describe('Sync calendar util hook', () => {
       calendar: calendarId,
       hidden: false,
       hideMeetingLink: false,
+      recurring: false,
     });
   });
 
   test('Should create gp2 event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    jest
-      .spyOn(typeNarrowing, 'isCRNEventController')
-      .mockReturnValueOnce(false);
+    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
 
     await syncEvent(
       getGoogleEvent(),
@@ -71,6 +70,37 @@ describe('Sync calendar util hook', () => {
       hidden: false,
       hideMeetingLink: false,
     });
+  });
+
+  test('Should mark the CRN event as recurring when it belongs to a recurring series', async () => {
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+
+    await syncEvent(
+      { ...getGoogleEvent(), recurringEventId: 'recurring-event-id' },
+      googleCalendarId,
+      calendarId,
+      defaultCalendarTimezone,
+    );
+
+    expect(eventControllerMock.create).toHaveBeenCalledWith(
+      expect.objectContaining({ recurring: true }),
+    );
+  });
+
+  test('Should not send the recurring flag on gp2 events', async () => {
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
+
+    await syncEvent(
+      { ...getGoogleEvent(), recurringEventId: 'recurring-event-id' },
+      googleCalendarId,
+      calendarId,
+      defaultCalendarTimezone,
+    );
+
+    expect(eventControllerMock.create).toHaveBeenCalledWith(
+      expect.not.objectContaining({ recurring: expect.anything() }),
+    );
   });
 
   test('Should update event when it exists', async () => {
@@ -100,6 +130,7 @@ describe('Sync calendar util hook', () => {
       calendar: calendarId,
       hidden: false,
       hideMeetingLink: false,
+      recurring: false,
     });
   });
 
@@ -148,6 +179,7 @@ describe('Sync calendar util hook', () => {
         calendar: 'calendar-id',
         hidden: true,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
 
@@ -182,6 +214,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: true,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
 
@@ -218,6 +251,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: true,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
 
@@ -252,6 +286,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: false,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
 
@@ -286,6 +321,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: false,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
 
@@ -320,6 +356,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: true,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
   });
@@ -351,6 +388,7 @@ describe('Sync calendar util hook', () => {
         calendar: calendarId,
         hidden: false,
         hideMeetingLink: false,
+        recurring: false,
       });
     });
   });
@@ -425,6 +463,7 @@ describe('Sync calendar util hook', () => {
       calendar: calendarId,
       hidden: false,
       hideMeetingLink: false,
+      recurring: false,
     });
   });
 
@@ -458,6 +497,7 @@ describe('Sync calendar util hook', () => {
       calendar: calendarId,
       hidden: false,
       hideMeetingLink: false,
+      recurring: false,
     });
   });
 

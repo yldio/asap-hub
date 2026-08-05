@@ -20,6 +20,7 @@ export const eventsContentQueryFragment = gql`
     eventLink
     status
     hidden
+    recurring
     title
     googleId
     attendanceCollection(limit: 50) @include(if: $singleEvent) {

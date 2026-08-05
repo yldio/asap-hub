@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
 
 import { formatDateToTimezone } from '../date';
-import { lead } from '../colors';
+import { info100, info500, lead } from '../colors';
 import { rem } from '../pixels';
 import { calendarIcon, clockIcon } from '../icons';
 
@@ -29,19 +29,40 @@ const iconStyles = css({
   height: 'fit-content',
 });
 
+const dateStyles = css({
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});
+
 const tzStyles = css({
   paddingLeft: rem(8),
 });
 
+const recurringPillStyles = css({
+  flexShrink: 0,
+  marginLeft: rem(8),
+
+  backgroundColor: info100.rgb,
+  color: info500.rgb,
+  borderRadius: rem(36),
+  padding: `${rem(4)} ${rem(16)}`,
+});
+
 type EventTimeProps = Pick<
   EventResponse,
-  'startDate' | 'startDateTimeZone' | 'endDate' | 'endDateTimeZone'
+  | 'startDate'
+  | 'startDateTimeZone'
+  | 'endDate'
+  | 'endDateTimeZone'
+  | 'recurring'
 >;
 const EventTime: React.FC<EventTimeProps> = ({
   startDate,
   startDateTimeZone,
   endDate,
   endDateTimeZone,
+  recurring,
 }) => {
   const formattedStartDay = formatDateToTimezone(
     startDate,
@@ -67,7 +88,8 @@ const EventTime: React.FC<EventTimeProps> = ({
     <ul css={listStyles}>
       <li css={listItemStyles}>
         <div css={iconStyles}>{calendarIcon}</div>
-        {formattedStartDay}
+        <span css={dateStyles}>{formattedStartDay}</span>
+        {recurring && <span css={recurringPillStyles}>Recurring</span>}
       </li>
       <li css={listItemStyles}>
         <div css={iconStyles}>{clockIcon}</div>

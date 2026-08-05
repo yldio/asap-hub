@@ -791,7 +791,38 @@ describe('Events Contentful Data Provider', () => {
         ]);
       });
 
-      test('Removes the speaker from speakers list when it does not have the team assigned', async () => {
+      test('Should drop the speaker when it has no team and the user is not onboarded', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+
+        contentfulGraphQLResponse.speakersCollection!.items = [
+          {
+            team: null,
+            user: {
+              __typename: 'Users',
+              sys: {
+                id: 'user-id-3',
+              },
+              alumniSinceDate: null,
+              alumniLocation: null,
+              firstName: 'Adam',
+              lastName: 'Brown',
+              onboarded: false,
+              teamsCollection: {
+                items: [],
+              },
+              avatar: null,
+            },
+          },
+        ];
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result!.speakers).toEqual([]);
+      });
+
+      test('Keeps the speaker without a team assigned', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
         (contentfulGraphQLResponse.speakersCollection!.items = [
           {
@@ -831,6 +862,12 @@ describe('Events Contentful Data Provider', () => {
             externalUser: {
               name: 'Jane Doe',
             },
+          },
+          {
+            user: expect.objectContaining({
+              id: 'user-id-3',
+              displayName: 'Adam Brown',
+            }),
           },
         ]);
       });
@@ -1181,6 +1218,15 @@ describe('Events Contentful Data Provider', () => {
       expect(parseGraphQLEvent(graphqlEvent).relatedResearch[0]).toEqual(
         expect.objectContaining({ workingGroups: [] }),
       );
+    });
+
+    test('parses the recurring flag and defaults it to false when null', () => {
+      const graphqlEvent = getContentfulGraphqlEvent();
+      graphqlEvent.recurring = true;
+      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(true);
+
+      graphqlEvent.recurring = null;
+      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(false);
     });
   });
 });

@@ -52,6 +52,8 @@ export const syncEventFactory =
       throw new Error('Invalid organiser');
     }
 
+    const isCRNEvent = isCRNEventController(eventsController);
+
     const newEvent = {
       googleId: googleEvent.id,
       title: googleEvent.summary,
@@ -64,6 +66,10 @@ export const syncEventFactory =
         googleEvent.status.slice(1)) as EventStatus,
       calendar: cmsCalendarId,
       hideMeetingLink: false,
+      // the GP2 content model has no recurring field, so only send it for CRN
+      ...(isCRNEvent
+        ? { recurring: Boolean(googleEvent.recurringEventId) }
+        : {}),
     };
 
     try {
@@ -88,7 +94,7 @@ export const syncEventFactory =
       }
 
       const hidden = newEvent.status === 'Cancelled';
-      if (isCRNEventController(eventsController)) {
+      if (isCRNEvent) {
         const crnEventToCreate = {
           ...newEvent,
           hidden,

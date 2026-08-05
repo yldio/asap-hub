@@ -70,6 +70,21 @@ describe('When rendering the speaker list', () => {
       ]);
     });
 
+    it('Renders a user without a team', async () => {
+      const event = {
+        ...createEventResponse(),
+        speakers: [{ user: { ...user } }],
+      };
+
+      render(<SpeakerList {...event} />);
+
+      expect(
+        screen.getAllByRole('link').map(({ textContent }) => textContent),
+      ).toEqual(['Adam Brown']);
+      // both the team and the role columns show a dash
+      expect(screen.getAllByText('—')).toHaveLength(2);
+    });
+
     it('Renders an alumni badge for alumni user', async () => {
       const event = {
         ...createEventResponse(),

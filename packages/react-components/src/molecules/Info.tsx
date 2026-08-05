@@ -13,10 +13,6 @@ const buttonStyles = css({
   cursor: 'pointer',
 });
 
-const iconStyles = css({
-  display: 'inline-block',
-});
-
 interface InfoProps {
   children: ReactNode;
 }
@@ -53,7 +49,7 @@ const Info: React.FC<InfoProps> = ({ children }) => {
       onClick={() => setTooltipShown((shown) => !shown)}
     >
       <Tooltip shown={tooltipShown}>{children}</Tooltip>
-      <span css={iconStyles}>{infoIcon}</span>
+      <span>{infoIcon}</span>
     </button>
   );
 };

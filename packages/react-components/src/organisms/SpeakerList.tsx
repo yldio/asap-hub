@@ -190,7 +190,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
               </div>
               {'externalUser' in speaker ? (
                 <span>External Speaker</span>
-              ) : (
+              ) : 'team' in speaker ? (
                 <Link
                   href={
                     network({}).teams({}).team({ teamId: speaker.team.id }).$
@@ -205,6 +205,8 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                     )}
                   </>
                 </Link>
+              ) : (
+                <span>—</span>
               )}
             </div>
             <div css={groupStyle}>

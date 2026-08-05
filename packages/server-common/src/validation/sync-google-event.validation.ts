@@ -17,6 +17,7 @@ export type GoogleEvent = NullableOptionalProperties<{
   status: string;
   start: Date;
   end: Date;
+  recurringEventId?: string;
 }>;
 const dateSchema: JSONSchemaType<Date> = {
   type: 'object',
@@ -40,6 +41,7 @@ const googleEventValidationSchema: JSONSchemaType<GoogleEvent> = {
     start: dateSchema,
     end: dateSchema,
     status: { type: 'string' },
+    recurringEventId: { type: 'string', nullable: true },
   },
   required: ['id', 'status'],
 };

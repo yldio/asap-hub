@@ -86,3 +86,22 @@ describe('a tooltip', () => {
     );
   });
 });
+
+describe('the recurring badge', () => {
+  const props = {
+    startDate: new Date('2021-01-25T09:00:00Z').toISOString(),
+    startDateTimeZone: 'UTC',
+    endDate: new Date('2021-01-25T10:00:00Z').toISOString(),
+    endDateTimeZone: 'UTC',
+  };
+
+  it('is shown for recurring events', () => {
+    const { getByText } = render(<EventTime {...props} recurring />);
+    expect(getByText('Recurring')).toBeVisible();
+  });
+
+  it('is not shown for non-recurring events', () => {
+    const { queryByText } = render(<EventTime {...props} recurring={false} />);
+    expect(queryByText('Recurring')).not.toBeInTheDocument();
+  });
+});

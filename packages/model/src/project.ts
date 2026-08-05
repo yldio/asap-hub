@@ -271,6 +271,27 @@ export const projectLeadMemberRoles = [
 
 export const traineeProjectLeadRoles = ['Individual Project - Lead'] as const;
 
+export const traineeProjectMentorRoles = [
+  'Individual Project - Mentor',
+] as const;
+
+/**
+ * Splits Trainee Project members into the two rows the UI renders: trainees
+ * (leads) and mentors. Members holding any other role — including roles
+ * retired from the content model — are excluded from both lists.
+ */
+export const groupTraineeProjectMembers = <T extends { role?: string }>(
+  members: ReadonlyArray<T>,
+): { trainees: T[]; mentors: T[] } => {
+  const hasRoleIn = (roles: ReadonlyArray<string>) => (member: T) =>
+    roles.includes(member.role ?? '');
+
+  return {
+    trainees: members.filter(hasRoleIn(traineeProjectLeadRoles)),
+    mentors: members.filter(hasRoleIn(traineeProjectMentorRoles)),
+  };
+};
+
 /**
  *
  * Determines if a user is a "lead" for a given project, controlling access

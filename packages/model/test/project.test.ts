@@ -3,6 +3,7 @@ import {
   projectTypes,
   isProjectLead,
   isProjectMember,
+  groupTraineeProjectMembers,
   Project,
 } from '../src/project';
 
@@ -436,6 +437,37 @@ describe('Project Model', () => {
 
     it('should return false for empty string', () => {
       expect(isProjectType('')).toBe(false);
+    });
+  });
+
+  describe('groupTraineeProjectMembers', () => {
+    const lead = { id: 'lead-1', role: 'Individual Project - Lead' };
+    const mentor = { id: 'mentor-1', role: 'Individual Project - Mentor' };
+
+    it('should split members into trainees and mentors', () => {
+      expect(groupTraineeProjectMembers([mentor, lead])).toEqual({
+        trainees: [lead],
+        mentors: [mentor],
+      });
+    });
+
+    it('should exclude members holding the retired Key Personnel role', () => {
+      const retired = {
+        id: 'retired-1',
+        role: 'Trainee Project - Key Personnel',
+      };
+
+      expect(groupTraineeProjectMembers([lead, mentor, retired])).toEqual({
+        trainees: [lead],
+        mentors: [mentor],
+      });
+    });
+
+    it('should exclude members without a role', () => {
+      expect(groupTraineeProjectMembers([lead, { id: 'no-role' }])).toEqual({
+        trainees: [lead],
+        mentors: [],
+      });
     });
   });
 });

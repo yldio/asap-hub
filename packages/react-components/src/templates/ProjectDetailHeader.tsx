@@ -1,4 +1,8 @@
-import { ProjectDetail, ProjectMember } from '@asap-hub/model';
+import {
+  groupTraineeProjectMembers,
+  ProjectDetail,
+  ProjectMember,
+} from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -30,7 +34,6 @@ import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
-import { groupTraineeProjectMembers } from '../utils';
 
 const headerStyles = css({
   display: 'flex',

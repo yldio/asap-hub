@@ -70,6 +70,7 @@ import {
   ProjectMilestoneExportRow,
   ProjectMilestonesExportResponse,
   getLatestUserAward,
+  groupTraineeProjectMembers,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -199,27 +200,15 @@ export const parseProjectTeamMember = (
   };
 };
 
-// Process Trainee Project members: filter by valid roles and separate into trainees and mentors
 export const processTraineeProjectMembers = (
   members: ProjectMembershipItem[],
 ): ProjectMember[] => {
   const userMembers = members
     .filter((m) => m.projectMember?.__typename === 'Users')
-    .map((m) => parseProjectUserMember(m))
-    .filter(
-      (m) =>
-        m.role === 'Individual Project - Lead' ||
-        m.role === 'Individual Project - Mentor',
-    );
+    .map((m) => parseProjectUserMember(m));
 
-  const trainees = userMembers.filter(
-    (m) => m.role === 'Individual Project - Lead',
-  );
-  const mentors = userMembers.filter(
-    (m) => m.role === 'Individual Project - Mentor',
-  );
+  const { trainees, mentors } = groupTraineeProjectMembers(userMembers);
 
-  // Members array: trainees first, then mentors (allows multiple of each)
   return [...trainees, ...mentors];
 };
 

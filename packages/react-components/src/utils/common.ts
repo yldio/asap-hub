@@ -110,21 +110,6 @@ export const getResearchOutputAssociationName = (
   return researchOutputData.teams[0]?.displayName || '';
 };
 
-// Group Trainee Project members by role
-// Trainees: "Individual Project - Lead"
-// Mentors: "Individual Project - Mentor"
-export const groupTraineeProjectMembers = <T extends { role?: string }>(
-  members: ReadonlyArray<T>,
-): { trainees: T[]; mentors: T[] } => {
-  const trainees = members.filter(
-    (m) => m.role === 'Individual Project - Lead',
-  );
-  const mentors = members.filter(
-    (m) => m.role === 'Individual Project - Mentor',
-  );
-  return { trainees, mentors };
-};
-
 // Get the active Project Manager from a list of team members
 export const getActiveProjectManager = (
   members: ReadonlyArray<TeamMember>,

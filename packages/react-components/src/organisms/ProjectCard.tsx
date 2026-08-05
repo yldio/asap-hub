@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { css } from '@emotion/react';
 import {
   DiscoveryProject,
+  groupTraineeProjectMembers,
   ResourceProject,
   TraineeProject,
   ProjectStatus,
@@ -25,7 +26,6 @@ import {
   TraineeIcon,
 } from '../icons';
 import { fern, lead } from '../colors';
-import { groupTraineeProjectMembers } from '../utils';
 
 const cardStyles = css({
   padding: `${rem(32)} ${rem(24)}`,

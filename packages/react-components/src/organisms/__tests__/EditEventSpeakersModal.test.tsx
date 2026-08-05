@@ -462,26 +462,6 @@ describe('EditEventSpeakersModal', () => {
     expect(screen.getByText('John Smith')).toBeInTheDocument();
   });
 
-  it('Should hide the search input but keep other controls interactive when disableAdding is set (Past events)', async () => {
-    renderModal({ disableAdding: true });
-
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Mark All Shared' }),
-    ).toBeEnabled();
-
-    await userEvent.click(
-      screen.getByRole('checkbox', {
-        name: 'Team Alpha preliminary findings shared',
-      }),
-    );
-    expect(
-      screen.getByRole('checkbox', {
-        name: 'Team Alpha preliminary findings shared',
-      }),
-    ).not.toBeChecked();
-  });
-
   it('Should close immediately on cancel when nothing has changed', async () => {
     renderModal();
 

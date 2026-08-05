@@ -59,7 +59,6 @@ type EditEventSpeakersModalProps = {
   ) => Promise<SpeakerSearchOption[]>;
   readonly onSave: (groups: SpeakerGroup[]) => void | Promise<void>;
   readonly onDismiss: () => void;
-  readonly disableAdding?: boolean;
 };
 
 const modalStyles = css({ width: '100%' });
@@ -280,7 +279,6 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
   loadSearchOptions,
   onSave,
   onDismiss,
-  disableAdding = false,
 }) => {
   const [speakerGroups, setSpeakerGroups] = useState<SpeakerGroup[]>(() => [
     ...groups,
@@ -495,72 +493,70 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
       </header>
 
       <div css={bodyStyles}>
-        {!disableAdding && (
-          <div css={searchSpacingStyles}>
-            <MultiSelect<SpeakerSearchOption, false>
-              isMulti={false}
-              values={null}
-              noMargin
-              creatable
-              defaultOptions={false}
-              leftIndicator={searchIcon}
-              loadOptions={loadSearchOptions}
-              onChange={handleSelectSearchOption}
-              noOptionsMessage={({ inputValue }) =>
-                `Sorry, no matches for ${inputValue}.`
-              }
-              components={{
-                Placeholder: (placeholderProps) => (
-                  <components.Placeholder {...placeholderProps}>
-                    <span css={[placeholderStyles, hideOnMobileStyles]}>
-                      Search for a person to add…
-                    </span>
-                    <span css={[placeholderStyles, hideOnDesktopStyles]}>
-                      Search for a person…
-                    </span>
-                  </components.Placeholder>
-                ),
-                Menu: (menuProps) =>
-                  menuProps.selectProps.inputValue ? (
-                    <components.Menu {...menuProps} />
-                  ) : null,
-                Option: (optionProps) => {
-                  const option = optionProps.data;
-                  return (
-                    <components.Option {...optionProps}>
-                      <span css={searchOptionStyles}>
+        <div css={searchSpacingStyles}>
+          <MultiSelect<SpeakerSearchOption, false>
+            isMulti={false}
+            values={null}
+            noMargin
+            creatable
+            defaultOptions={false}
+            leftIndicator={searchIcon}
+            loadOptions={loadSearchOptions}
+            onChange={handleSelectSearchOption}
+            noOptionsMessage={({ inputValue }) =>
+              `Sorry, no matches for ${inputValue}.`
+            }
+            components={{
+              Placeholder: (placeholderProps) => (
+                <components.Placeholder {...placeholderProps}>
+                  <span css={[placeholderStyles, hideOnMobileStyles]}>
+                    Search for a person to add…
+                  </span>
+                  <span css={[placeholderStyles, hideOnDesktopStyles]}>
+                    Search for a person…
+                  </span>
+                </components.Placeholder>
+              ),
+              Menu: (menuProps) =>
+                menuProps.selectProps.inputValue ? (
+                  <components.Menu {...menuProps} />
+                ) : null,
+              Option: (optionProps) => {
+                const option = optionProps.data;
+                return (
+                  <components.Option {...optionProps}>
+                    <span css={searchOptionStyles}>
+                      {option.user ? (
+                        <Avatar
+                          {...splitDisplayName(option.user.displayName)}
+                          imageUrl={option.user.avatarUrl}
+                          overrideStyles={avatar24Styles}
+                        />
+                      ) : (
+                        plusIcon
+                      )}
+                      <span
+                        css={
+                          option.user
+                            ? searchUserNameStyles
+                            : searchExternalTextStyles
+                        }
+                      >
                         {option.user ? (
-                          <Avatar
-                            {...splitDisplayName(option.user.displayName)}
-                            imageUrl={option.user.avatarUrl}
-                            overrideStyles={avatar24Styles}
-                          />
+                          option.user.displayName
                         ) : (
-                          plusIcon
+                          <>
+                            <strong>{optionProps.children}</strong> (Non CRN)
+                          </>
                         )}
-                        <span
-                          css={
-                            option.user
-                              ? searchUserNameStyles
-                              : searchExternalTextStyles
-                          }
-                        >
-                          {option.user ? (
-                            option.user.displayName
-                          ) : (
-                            <>
-                              <strong>{optionProps.children}</strong> (Non CRN)
-                            </>
-                          )}
-                        </span>
                       </span>
-                    </components.Option>
-                  );
-                },
-              }}
-            />
-          </div>
-        )}
+                    </span>
+                  </components.Option>
+                );
+              },
+            }}
+          />
+        </div>
 
         <section css={speakersSectionStyles}>
           <div css={speakersHeaderStyles}>

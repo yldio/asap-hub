@@ -269,7 +269,7 @@ export const projectLeadMemberRoles = [
   'Data Manager',
 ] as const;
 
-export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
+export const traineeProjectLeadRoles = ['Individual Project - Lead'] as const;
 
 /**
  *
@@ -279,7 +279,7 @@ export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
  * For team-based projects (Discovery, team-based Resource): checks the user's
  * team role against projectLeadTeamRoles.
  *
- * For Trainee projects: checks if the user has the "Trainee Project - Lead"
+ * For Trainee projects: checks if the user has the "Individual Project - Lead"
  * role in the project's members list.
  *
  * For user-based Resource projects (isTeamBased=false, no teamId): these have

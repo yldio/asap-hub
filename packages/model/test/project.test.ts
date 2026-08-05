@@ -98,7 +98,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Lead',
+            role: 'Individual Project - Lead',
           },
         ],
       };
@@ -113,7 +113,22 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Mentor',
+            role: 'Individual Project - Mentor',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(false);
+    });
+
+    it('returns false for Trainee Project member still holding the retired role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Trainee Project - Lead',
           },
         ],
       };
@@ -128,7 +143,7 @@ describe('Project Model', () => {
           {
             id: 'other-user',
             displayName: 'Other User',
-            role: 'Trainee Project - Lead',
+            role: 'Individual Project - Lead',
           },
         ],
       };
@@ -322,7 +337,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Mentor',
+            role: 'Individual Project - Mentor',
           },
         ],
       };

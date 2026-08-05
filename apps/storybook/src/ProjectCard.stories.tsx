@@ -196,7 +196,7 @@ export const TraineeProjectActive = () => (
         lastName: 'Martinez',
         email: 'david.m@example.com',
         href: '/users/8',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: '7',
@@ -205,7 +205,7 @@ export const TraineeProjectActive = () => (
         lastName: 'Foster',
         email: 'amanda.f@example.com',
         href: '/users/7',
-        role: 'Trainee Project - Mentor',
+        role: 'Individual Project - Mentor',
       },
     ]}
     startDate="2023-07-01"
@@ -229,7 +229,7 @@ export const TraineeProjectComplete = () => (
         lastName: 'Patel',
         email: 'kevin.p@example.com',
         href: '/users/9',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: '11',
@@ -238,7 +238,7 @@ export const TraineeProjectComplete = () => (
         lastName: 'Lee',
         email: 'thomas.l@example.com',
         href: '/users/11',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: '10',
@@ -247,7 +247,7 @@ export const TraineeProjectComplete = () => (
         lastName: 'Gonzalez',
         email: 'maria.g@example.com',
         href: '/users/10',
-        role: 'Trainee Project - Mentor',
+        role: 'Individual Project - Mentor',
       },
     ]}
     startDate="2022-01-01"
@@ -271,7 +271,7 @@ export const TraineeProjectClosed = () => (
         lastName: 'Kim',
         email: 'rachel.k@example.com',
         href: '/users/13',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: '12',
@@ -280,7 +280,7 @@ export const TraineeProjectClosed = () => (
         lastName: 'Anderson',
         email: 'sophie.a@example.com',
         href: '/users/12',
-        role: 'Trainee Project - Mentor',
+        role: 'Individual Project - Mentor',
       },
       {
         id: '124',
@@ -289,7 +289,7 @@ export const TraineeProjectClosed = () => (
         lastName: 'Lead',
         email: 'john.l@example.com',
         href: '/users/124',
-        role: 'Trainee Project - Mentor',
+        role: 'Individual Project - Mentor',
       },
     ]}
     startDate="2020-09-01"
@@ -313,7 +313,7 @@ export const TraineeProjectMultipleTrainersAndTrainees = () => (
         lastName: 'Johnson',
         email: 'alex.j@example.com',
         href: '/users/trainee-1',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: 'trainee-2',
@@ -322,7 +322,7 @@ export const TraineeProjectMultipleTrainersAndTrainees = () => (
         lastName: 'Chen',
         email: 'sam.c@example.com',
         href: '/users/trainee-2',
-        role: 'Trainee Project - Lead',
+        role: 'Individual Project - Lead',
       },
       {
         id: 'mentor-1',
@@ -331,7 +331,7 @@ export const TraineeProjectMultipleTrainersAndTrainees = () => (
         lastName: 'Brown',
         email: 'lisa.b@example.com',
         href: '/users/mentor-1',
-        role: 'Trainee Project - Mentor',
+        role: 'Individual Project - Mentor',
       },
       {
         id: 'mentor-2',
@@ -340,7 +340,7 @@ export const TraineeProjectMultipleTrainersAndTrainees = () => (
         lastName: 'Davis',
         email: 'michael.d@example.com',
         href: '/users/mentor-2',
-        role: 'Trainee Project - Key Personnel',
+        role: 'Individual Project - Mentor',
       },
     ]}
     startDate="2024-01-01"

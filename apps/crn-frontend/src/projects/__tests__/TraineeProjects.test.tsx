@@ -59,14 +59,14 @@ const mockTraineeProject = {
       firstName: 'Morgan',
       lastName: 'Trainee',
       displayName: 'Morgan Trainee',
-      role: 'Trainee Project - Lead',
+      role: 'Individual Project - Lead',
     },
     {
       id: 'trainer-2',
       firstName: 'Taylor',
       lastName: 'Trainer',
       displayName: 'Taylor Trainer',
-      role: 'Trainee Project - Mentor',
+      role: 'Individual Project - Mentor',
     },
   ],
 } as TraineeProject;

@@ -203,29 +203,20 @@ export const parseProjectTeamMember = (
 export const processTraineeProjectMembers = (
   members: ProjectMembershipItem[],
 ): ProjectMember[] => {
-  // Only valid roles for Trainee Projects:
-  // - Trainees: "Trainee Project - Lead"
-  // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
   const userMembers = members
     .filter((m) => m.projectMember?.__typename === 'Users')
     .map((m) => parseProjectUserMember(m))
     .filter(
       (m) =>
-        m.role === 'Trainee Project - Lead' ||
-        m.role === 'Trainee Project - Mentor' ||
-        m.role === 'Trainee Project - Key Personnel',
+        m.role === 'Individual Project - Lead' ||
+        m.role === 'Individual Project - Mentor',
     );
 
-  // Separate members into two lists:
-  // - Trainees: "Trainee Project - Lead"
-  // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
   const trainees = userMembers.filter(
-    (m) => m.role === 'Trainee Project - Lead',
+    (m) => m.role === 'Individual Project - Lead',
   );
   const mentors = userMembers.filter(
-    (m) =>
-      m.role === 'Trainee Project - Mentor' ||
-      m.role === 'Trainee Project - Key Personnel',
+    (m) => m.role === 'Individual Project - Mentor',
   );
 
   // Members array: trainees first, then mentors (allows multiple of each)

@@ -387,7 +387,7 @@ describe('project routes', () => {
             firstName: 'Dana',
             lastName: 'Lopez',
             avatarUrl: undefined,
-            role: 'Trainee Project - Key Personnel',
+            role: 'Individual Project - Mentor',
             email: 'dana@example.com',
             alumniSinceDate: undefined,
           },

@@ -111,16 +111,16 @@ export const getResearchOutputAssociationName = (
 };
 
 // Group Trainee Project members by role
-// Trainees: "Trainee Project - Lead"
-// Mentors: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
+// Trainees: "Individual Project - Lead"
+// Mentors: "Individual Project - Mentor"
 export const groupTraineeProjectMembers = <T extends { role?: string }>(
   members: ReadonlyArray<T>,
 ): { trainees: T[]; mentors: T[] } => {
-  const trainees = members.filter((m) => m.role === 'Trainee Project - Lead');
+  const trainees = members.filter(
+    (m) => m.role === 'Individual Project - Lead',
+  );
   const mentors = members.filter(
-    (m) =>
-      m.role === 'Trainee Project - Mentor' ||
-      m.role === 'Trainee Project - Key Personnel',
+    (m) => m.role === 'Individual Project - Mentor',
   );
   return { trainees, mentors };
 };

@@ -27,7 +27,7 @@ const mockTraineeProject: TraineeProjectDetailType = {
       displayName: 'Taylor Trainer',
       firstName: 'Taylor',
       lastName: 'Trainer',
-      role: 'Trainee Project - Mentor',
+      role: 'Individual Project - Mentor',
     },
   ],
   originalGrant: 'Original Grant',

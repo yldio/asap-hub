@@ -135,6 +135,7 @@ type PendingSpeakerCardProps = {
   readonly avatarUrl?: string;
   readonly userId: string;
   readonly teams: ReadonlyArray<{ teamId: string; teamName: string }>;
+  readonly enabled?: boolean;
   readonly onPickTeam: (teamId: string) => void;
   readonly onDismiss: () => void;
 };
@@ -144,6 +145,7 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
   avatarUrl,
   userId,
   teams,
+  enabled = true,
   onPickTeam,
   onDismiss,
 }) => (
@@ -172,6 +174,7 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
         <Button
           noMargin
           small
+          enabled={enabled}
           aria-label={`Remove ${displayName}`}
           onClick={onDismiss}
           overrideStyles={dismissStyles}
@@ -184,6 +187,7 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
       </Paragraph>
       <PillSelector<string>
         fullWidthOnMobile
+        enabled={enabled}
         overrideStyles={pillStyles}
         options={teams.map((team) => ({
           value: team.teamId,

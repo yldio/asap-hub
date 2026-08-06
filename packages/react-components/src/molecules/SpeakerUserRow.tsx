@@ -85,6 +85,7 @@ type SpeakerUserRowProps = {
   readonly roles?: string[];
   readonly userId?: string;
   readonly isAlumni?: boolean;
+  readonly enabled?: boolean;
   readonly onRemove?: () => void;
 };
 
@@ -94,6 +95,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
   roles,
   userId,
   isAlumni,
+  enabled = true,
   onRemove,
 }) => {
   const { firstName, lastName } = splitDisplayName(displayName);
@@ -121,6 +123,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
       {onRemove && (
         <Button
           noMargin
+          enabled={enabled}
           aria-label={`Remove ${displayName}`}
           onClick={onRemove}
           overrideStyles={removeButtonStyles}

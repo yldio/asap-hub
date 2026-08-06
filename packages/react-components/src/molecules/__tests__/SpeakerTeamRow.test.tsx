@@ -107,6 +107,34 @@ it('renders each team member as a link to their profile and shows an alumni badg
   expect(screen.getByTitle('Alumni Member')).toBeInTheDocument();
 });
 
+it('disables the shared switch and the nested remove buttons when not enabled', () => {
+  render(<SpeakerTeamRow {...defaultProps} expanded enabled={false} />);
+  expect(
+    screen.getByRole('checkbox', {
+      name: 'Team Alpha preliminary findings shared',
+    }),
+  ).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Remove Jane Doe' })).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: 'Remove John Smith' }),
+  ).toBeDisabled();
+});
+
+it('keeps the chevron working when not enabled', () => {
+  const onToggleExpanded = jest.fn();
+  render(
+    <SpeakerTeamRow
+      {...defaultProps}
+      enabled={false}
+      onToggleExpanded={onToggleExpanded}
+    />,
+  );
+  const chevron = screen.getByRole('button', { name: 'Expand Team Alpha' });
+  expect(chevron).toBeEnabled();
+  fireEvent.click(chevron);
+  expect(onToggleExpanded).toHaveBeenCalled();
+});
+
 it('renders the external variant without a team icon and without role badges on nested rows', () => {
   render(
     <SpeakerTeamRow

@@ -124,6 +124,9 @@ type SpeakerTeamRowProps = {
   readonly users: ReadonlyArray<SpeakerTeamRowUser>;
   readonly preliminaryFindingsShared: boolean;
   readonly expanded: boolean;
+  // Expansion stays available while disabled, so the chevron is deliberately
+  // left out of the controls this switches off.
+  readonly enabled?: boolean;
   readonly onToggleExpanded: () => void;
   readonly onToggleShared: () => void;
   readonly onRemoveUser: (userId: string) => void;
@@ -138,6 +141,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
   users,
   preliminaryFindingsShared,
   expanded,
+  enabled = true,
   onToggleExpanded,
   onToggleShared,
   onRemoveUser,
@@ -165,6 +169,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
       <span css={actionsStyles}>
         <Switch
           checked={preliminaryFindingsShared}
+          enabled={enabled}
           uncheckedColor="error"
           ariaLabel={`${label} preliminary findings shared`}
           onClick={onToggleShared}
@@ -190,6 +195,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
             roles={variant === 'team' ? user.roles : undefined}
             userId={variant === 'team' ? user.id : undefined}
             isAlumni={variant === 'team' ? user.isAlumni : undefined}
+            enabled={enabled}
             onRemove={() => onRemoveUser(user.id)}
           />
         ))}

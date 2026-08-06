@@ -22,8 +22,13 @@ import {
   plusIcon,
   tickSmallIcon,
 } from '../icons';
-import { ConfirmableModalFooter, Modal } from '../molecules';
+import {
+  ConfirmableModalFooter,
+  confirmingBodyStyles,
+  Modal,
+} from '../molecules';
 import { rem } from '../pixels';
+import { noop } from '../utils';
 import {
   EventAttendanceTeam,
   EventAttendanceTeamType,
@@ -517,7 +522,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             noMargin
             aria-label="Back"
             enabled={!isSaving}
-            onClick={requestClose}
+            aria-disabled={isCancelling}
+            onClick={isCancelling ? noop : requestClose}
             overrideStyles={css([iconButtonStyles, headerIconStyles])}
           >
             {chevronLeftIcon}
@@ -531,14 +537,15 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
           noMargin
           aria-label="Close"
           enabled={!isSaving}
-          onClick={requestClose}
+          aria-disabled={isCancelling}
+          onClick={isCancelling ? noop : requestClose}
           overrideStyles={css([iconButtonStyles, headerIconStyles])}
         >
           {crossIcon}
         </Button>
       </header>
 
-      <div css={bodyStyles}>
+      <div css={[bodyStyles, isCancelling && confirmingBodyStyles]}>
         <Paragraph noMargin accent="lead">
           Add teams from a list. Matched teams are added and marked attended.
           Teams already added are skipped. CSV or XLSX files only.
@@ -550,6 +557,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               {files.map((file, index) => (
                 <Tag
                   key={`${file.name}-${index}`}
+                  enabled={!isCancelling}
                   onRemove={() => removeFile(index)}
                 >
                   {file.name}
@@ -578,7 +586,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             small
             primary
             noMargin
-            enabled={!isUploading}
+            enabled={!isUploading && !isCancelling}
             loading={isUploading}
             overrideStyles={addButtonStyles}
             onClick={() => uploadInputRef.current?.click()}
@@ -643,6 +651,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                           </span>
                           <Button
                             noMargin
+                            enabled={!isCancelling}
                             aria-label={`Remove ${team.teamName}`}
                             onClick={() => removeMatchedTeam(team.teamId)}
                             overrideStyles={deleteButtonStyles}
@@ -716,6 +725,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                                 <Button
                                   small
                                   noMargin
+                                  enabled={!isCancelling}
                                   overrideStyles={addSuggestionButtonStyles}
                                   onClick={() =>
                                     promoteSuggestion(suggestion.teamId)

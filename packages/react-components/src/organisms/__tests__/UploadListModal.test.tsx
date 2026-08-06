@@ -473,6 +473,102 @@ describe('UploadListModal', () => {
     expect(onBack).not.toHaveBeenCalled();
   });
 
+  const renderConfirming = async () => {
+    renderModal({
+      initialFiles: [makeFile('seeded.csv')],
+      initialResult: uploadResult,
+      initialSectionsOpen: true,
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+  };
+
+  const getHeaderCloseButton = () =>
+    screen
+      .getAllByRole('button', { name: 'Close' })
+      .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
+
+  it('Should block the editing controls while the discard confirmation is showing', async () => {
+    await renderConfirming();
+
+    // The upload "+ Add" and the unmatched-team suggestion "Add" share a name.
+    const addButtons = screen.getAllByRole('button', { name: 'plus Add' });
+    expect(addButtons).toHaveLength(2);
+    addButtons.forEach((button) => expect(button).toBeDisabled());
+    expect(
+      screen.getByRole('button', { name: 'Remove Imaging' }),
+    ).toBeDisabled();
+  });
+
+  it('Should hide the file chip remove control while the discard confirmation is showing', async () => {
+    renderModal({
+      initialFiles: [makeFile('seeded.csv')],
+      initialResult: uploadResult,
+    });
+
+    // Tag renders its remove control as the chip's only nested button.
+    const chip = screen.getByText('seeded.csv').closest('div') as HTMLElement;
+    expect(within(chip).getByRole('button')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.getByText('seeded.csv')).toBeInTheDocument();
+    expect(within(chip).queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('Should keep the result sections expandable while the discard confirmation is showing', async () => {
+    await renderConfirming();
+
+    const matchedHeader = screen.getByRole('button', {
+      name: /will be added and marked if attended/,
+    });
+    expect(matchedHeader).toBeEnabled();
+
+    await userEvent.click(matchedHeader);
+
+    expect(
+      screen.queryByRole('link', { name: 'Imaging' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('Should ignore the back arrow and close (X) while the discard confirmation is showing', async () => {
+    await renderConfirming();
+
+    const backButton = screen.getByRole('button', { name: 'Back' });
+    const closeButton = getHeaderCloseButton();
+    expect(backButton).toHaveAttribute('aria-disabled', 'true');
+    expect(closeButton).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(backButton);
+    await userEvent.click(closeButton);
+
+    expect(
+      screen.getByRole('button', { name: 'Discard changes' }),
+    ).toBeInTheDocument();
+    expect(onBack).not.toHaveBeenCalled();
+  });
+
+  it('Should keep team links navigable while the discard confirmation is showing', async () => {
+    await renderConfirming();
+
+    expect(screen.getByRole('link', { name: 'Imaging' })).toHaveAttribute(
+      'href',
+      expect.stringContaining('m1'),
+    );
+  });
+
+  it('Should restore the editing controls when "Keep Editing" is clicked', async () => {
+    await renderConfirming();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Keep Editing' }));
+
+    screen
+      .getAllByRole('button', { name: 'plus Add' })
+      .forEach((button) => expect(button).toBeEnabled());
+    expect(screen.getByRole('button', { name: 'Remove Imaging' })).toBeEnabled();
+    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+  });
+
   it('Should discard via Cancel and return to the parent', async () => {
     const { container } = renderModal();
     await upload(makeFile('teams.csv'), container);

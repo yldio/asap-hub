@@ -33,5 +33,7 @@ it('disables the team pills and the dismiss button when not enabled', () => {
   render(<PendingSpeakerCard {...defaultProps} enabled={false} />);
   expect(screen.getByRole('button', { name: /Team Alpha/ })).toBeDisabled();
   expect(screen.getByRole('button', { name: /Team Beta/ })).toBeDisabled();
-  expect(screen.getByRole('button', { name: 'Remove Jane Doe' })).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: 'Remove Jane Doe' }),
+  ).toBeDisabled();
 });

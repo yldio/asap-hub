@@ -114,7 +114,9 @@ it('disables the shared switch and the nested remove buttons when not enabled', 
       name: 'Team Alpha preliminary findings shared',
     }),
   ).toBeDisabled();
-  expect(screen.getByRole('button', { name: 'Remove Jane Doe' })).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: 'Remove Jane Doe' }),
+  ).toBeDisabled();
   expect(
     screen.getByRole('button', { name: 'Remove John Smith' }),
   ).toBeDisabled();

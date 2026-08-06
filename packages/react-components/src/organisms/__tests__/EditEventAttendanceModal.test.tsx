@@ -688,7 +688,9 @@ describe('EditEventAttendanceModal', () => {
     // react-select swaps its combobox for a non-interactive dummy input when
     // disabled, so the absence of the combobox is what proves search is blocked.
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Upload a List/ })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: /Upload a List/ }),
+    ).toBeDisabled();
     expect(
       screen.getByRole('button', { name: 'Mark All Attended' }),
     ).toBeDisabled();

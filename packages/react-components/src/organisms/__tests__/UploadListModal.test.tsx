@@ -565,7 +565,9 @@ describe('UploadListModal', () => {
     screen
       .getAllByRole('button', { name: 'plus Add' })
       .forEach((button) => expect(button).toBeEnabled());
-    expect(screen.getByRole('button', { name: 'Remove Imaging' })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Imaging' }),
+    ).toBeEnabled();
     expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
   });
 

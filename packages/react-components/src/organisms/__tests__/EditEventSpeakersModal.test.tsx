@@ -539,9 +539,7 @@ describe('EditEventSpeakersModal', () => {
     // what makes the modal dirty enough to raise the confirmation.
     await startConfirming();
 
-    expect(
-      screen.getByRole('button', { name: /Team Gamma/ }),
-    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Team Gamma/ })).toBeDisabled();
     expect(
       screen.getByRole('button', { name: 'Remove Alex Kim' }),
     ).toBeDisabled();
@@ -586,13 +584,17 @@ describe('EditEventSpeakersModal', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Keep Editing' }));
 
     expect(screen.getByRole('combobox')).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Mark All Shared' })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Mark All Shared' }),
+    ).toBeEnabled();
     expect(
       screen.getByRole('checkbox', {
         name: 'Team Alpha preliminary findings shared',
       }),
     ).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Remove Jane Doe' })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Jane Doe' }),
+    ).toBeEnabled();
     expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
   });
 

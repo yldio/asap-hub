@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 
+import { getModalHeaderCloseButton } from '../../test-utils';
 import EditEventSpeakersModal, {
   SpeakerSearchOption,
 } from '../EditEventSpeakersModal';
@@ -503,11 +504,6 @@ describe('EditEventSpeakersModal', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
   };
 
-  const getHeaderCloseButton = () =>
-    screen
-      .getAllByRole('button', { name: 'Close' })
-      .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
-
   it('Should block the editing controls while the discard confirmation is showing', async () => {
     renderModal();
 
@@ -563,7 +559,7 @@ describe('EditEventSpeakersModal', () => {
 
     await startConfirming();
 
-    const closeButton = getHeaderCloseButton();
+    const closeButton = getModalHeaderCloseButton();
     expect(closeButton).toHaveAttribute('aria-disabled', 'true');
 
     await userEvent.click(closeButton);
@@ -595,7 +591,10 @@ describe('EditEventSpeakersModal', () => {
     expect(
       screen.getByRole('button', { name: 'Remove Jane Doe' }),
     ).toBeEnabled();
-    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+    expect(getModalHeaderCloseButton()).toHaveAttribute(
+      'aria-disabled',
+      'false',
+    );
   });
 
   it('Should return to editing when "Keep Editing" is clicked', async () => {

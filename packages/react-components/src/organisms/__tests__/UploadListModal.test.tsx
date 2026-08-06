@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
+import { getModalHeaderCloseButton } from '../../test-utils';
 import UploadListModal, { UploadListResult } from '../UploadListModal';
 
 const uploadResult: UploadListResult = {
@@ -483,11 +484,6 @@ describe('UploadListModal', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
   };
 
-  const getHeaderCloseButton = () =>
-    screen
-      .getAllByRole('button', { name: 'Close' })
-      .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
-
   it('Should block the editing controls while the discard confirmation is showing', async () => {
     await renderConfirming();
 
@@ -535,7 +531,7 @@ describe('UploadListModal', () => {
     await renderConfirming();
 
     const backButton = screen.getByRole('button', { name: 'Back' });
-    const closeButton = getHeaderCloseButton();
+    const closeButton = getModalHeaderCloseButton();
     expect(backButton).toHaveAttribute('aria-disabled', 'true');
     expect(closeButton).toHaveAttribute('aria-disabled', 'true');
 
@@ -568,7 +564,10 @@ describe('UploadListModal', () => {
     expect(
       screen.getByRole('button', { name: 'Remove Imaging' }),
     ).toBeEnabled();
-    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+    expect(getModalHeaderCloseButton()).toHaveAttribute(
+      'aria-disabled',
+      'false',
+    );
   });
 
   it('Should discard via Cancel and return to the parent', async () => {

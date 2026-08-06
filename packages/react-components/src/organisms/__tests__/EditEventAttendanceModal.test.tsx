@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
+import { getModalHeaderCloseButton } from '../../test-utils';
 import EditEventAttendanceModal from '../EditEventAttendanceModal';
 import { EventAttendanceTeam } from '../EventAttendance';
 
@@ -97,13 +98,6 @@ const startConfirming = async (switchName = 'Team Beta attendance') => {
   await userEvent.click(screen.getByRole('checkbox', { name: switchName }));
   await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 };
-
-const getHeaderCloseButton = () =>
-  // The Modal's Overlay also renders a disabled aria-label="Close" backdrop;
-  // target the enabled header close button.
-  screen
-    .getAllByRole('button', { name: 'Close' })
-    .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
 
 describe('EditEventAttendanceModal', () => {
   it('Should render the "Add Attendance" title and empty prompt with no attendees', () => {
@@ -648,7 +642,7 @@ describe('EditEventAttendanceModal', () => {
     await userEvent.click(
       screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
     );
-    await userEvent.click(getHeaderCloseButton());
+    await userEvent.click(getModalHeaderCloseButton());
 
     expect(
       screen.getByRole('button', { name: 'Discard changes' }),
@@ -746,7 +740,7 @@ describe('EditEventAttendanceModal', () => {
 
     await startConfirming();
 
-    const closeButton = getHeaderCloseButton();
+    const closeButton = getModalHeaderCloseButton();
     expect(closeButton).toHaveAttribute('aria-disabled', 'true');
 
     await userEvent.click(closeButton);
@@ -797,7 +791,10 @@ describe('EditEventAttendanceModal', () => {
     expect(
       screen.getByRole('button', { name: 'Remove Team Alpha' }),
     ).toBeEnabled();
-    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+    expect(getModalHeaderCloseButton()).toHaveAttribute(
+      'aria-disabled',
+      'false',
+    );
 
     const alphaSwitch = screen.getByRole('checkbox', {
       name: 'Team Alpha attendance',

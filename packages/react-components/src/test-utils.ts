@@ -1,9 +1,17 @@
 /* istanbul ignore file */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { screen as domScreen } from '@testing-library/react';
 import { screen } from './pixels';
 
 // For TypeScript to understand the extended matcher
 import '@emotion/jest';
+
+// Modal renders an Overlay that is also labelled "Close" but stays disabled,
+// so the enabled one is the modal header's own close button.
+export const getModalHeaderCloseButton = (): HTMLElement =>
+  domScreen
+    .getAllByRole('button', { name: 'Close' })
+    .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
 
 export const viewportCalc = (
   calcExpression: string,

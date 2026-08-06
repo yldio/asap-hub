@@ -113,6 +113,7 @@ export const useInvalidateTeamById = (id: string) => {
   }, [queryClient, id]);
 };
 
+// An empty id (form in create mode) resolves undefined without hitting the API.
 export const useManuscriptById = (
   id: string,
 ): [
@@ -124,7 +125,11 @@ export const useManuscriptById = (
   const { data } = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.detail(id),
     queryFn: () =>
-      nullOnUndefined(async () => getManuscript(id, await getAuthorization())),
+      id
+        ? nullOnUndefined(async () =>
+            getManuscript(id, await getAuthorization()),
+          )
+        : null,
   });
   const setManuscript = useCallback<
     Dispatch<SetStateAction<ManuscriptResponse | undefined>>

@@ -197,6 +197,14 @@ describe('useManuscriptById', () => {
     await waitFor(() => expect(result.current[0]).toEqual(updated));
   });
 
+  it('resolves undefined without calling the API when the id is empty', async () => {
+    const { result } = renderStateHook(() => useManuscriptById(''));
+
+    await waitFor(() => expect(result.current).toBeTruthy());
+    expect(result.current[0]).toBeUndefined();
+    expect(getManuscript).not.toHaveBeenCalled();
+  });
+
   it('supports functional updates like React state setters', async () => {
     (getManuscript as jest.Mock).mockResolvedValue(manuscriptMock);
 

@@ -10,7 +10,6 @@ import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
 import {
-  useInvalidateTeamById,
   useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostComplianceReport,
@@ -30,7 +29,6 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   const pushFromHere = usePushFromHere();
   const { state } = useLocation();
 
-  const invalidateTeam = useInvalidateTeamById(teamId);
   const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
@@ -55,7 +53,6 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
         type: 'compliance-report',
         accent: 'successLarge',
       });
-      invalidateTeam();
       void invalidateWorkspaceManuscripts();
       void pushFromHere(teamWorkspacePath, { replace: true });
     };

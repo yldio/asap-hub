@@ -102,17 +102,6 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   return data ?? undefined;
 };
 
-// Replaces the refreshTeamState counter bumps in TeamManuscript /
-// TeamComplianceReport: the bump invalidated the team-detail fetch selector,
-// so the team (and its embedded manuscripts) re-fetch (R5).
-export const useInvalidateTeamById = (id: string) => {
-  const queryClient = useQueryClient();
-  return useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    queryClient.invalidateQueries({ queryKey: teamQueryKeys.detail(id) });
-  }, [queryClient, id]);
-};
-
 // An empty id (form in create mode) resolves undefined without hitting the API.
 export const useManuscriptById = (
   id: string,

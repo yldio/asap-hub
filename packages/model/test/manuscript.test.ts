@@ -3,6 +3,8 @@ import {
   manuscriptMapStatus,
   mapManuscriptTypeToSubType,
   mapManuscriptLifecycleToType,
+  manuscriptIdFromVersionRecordId,
+  toManuscriptVersionRecordId,
 } from '../src/manuscript';
 
 describe('Manuscript Model', () => {
@@ -69,6 +71,40 @@ describe('Manuscript Model', () => {
 
     it('should return "Published" for "Other" lifecycle', () => {
       expect(mapManuscriptLifecycleToType('Other')).toEqual('Published');
+    });
+  });
+
+  describe('Version record id', () => {
+    it('should namespace a manuscript id with the record prefix', () => {
+      expect(toManuscriptVersionRecordId('manuscript-1')).toEqual(
+        'mv-manuscript-1',
+      );
+    });
+
+    it('should strip the record prefix back off', () => {
+      expect(manuscriptIdFromVersionRecordId('mv-manuscript-1')).toEqual(
+        'manuscript-1',
+      );
+    });
+
+    it('should round trip a manuscript id', () => {
+      expect(
+        manuscriptIdFromVersionRecordId(
+          toManuscriptVersionRecordId('manuscript-1'),
+        ),
+      ).toEqual('manuscript-1');
+    });
+
+    it('should leave an id without the prefix untouched', () => {
+      expect(manuscriptIdFromVersionRecordId('manuscript-1')).toEqual(
+        'manuscript-1',
+      );
+    });
+
+    it('should only strip the prefix at the start of the id', () => {
+      expect(manuscriptIdFromVersionRecordId('manuscript-mv-1')).toEqual(
+        'manuscript-mv-1',
+      );
     });
   });
 });

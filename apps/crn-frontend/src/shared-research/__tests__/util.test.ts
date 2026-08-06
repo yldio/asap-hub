@@ -1,9 +1,13 @@
 import { RESEARCH_OUTPUT_FLOW_IDS } from '@asap-hub/model';
-import { createManuscriptVersionResponse } from '@asap-hub/fixtures';
+import {
+  createManuscriptVersionResponse,
+  createResearchOutputResponse,
+} from '@asap-hub/fixtures';
 import {
   mapManuscriptVersionToResearchOutput,
   ResolveFlowIdParams,
   resolveResearchOutputFlowId,
+  toResearchOutputVersion,
 } from '../util';
 
 describe('resolveResearchOutputFlowId', () => {
@@ -186,4 +190,38 @@ describe('mapManuscriptVersionToResearchOutput', () => {
       expect(output.publishDate).toBe('2024-05-06T00:00:00.000Z');
     },
   );
+});
+
+describe('toResearchOutputVersion', () => {
+  it('picks the version fields out of an output', () => {
+    const output = {
+      ...createResearchOutputResponse(),
+      id: 'ro-1',
+      title: 'An output',
+      documentType: 'Protocol' as const,
+      type: 'Preprint' as const,
+      link: 'http://example.com',
+      addedDate: '2024-05-06T00:00:00.000Z',
+    };
+
+    expect(toResearchOutputVersion(output)).toEqual({
+      id: 'ro-1',
+      title: 'An output',
+      documentType: 'Protocol',
+      type: 'Preprint',
+      link: 'http://example.com',
+      addedDate: '2024-05-06T00:00:00.000Z',
+    });
+  });
+
+  it('falls back to an empty Article placeholder when there is no output yet', () => {
+    expect(toResearchOutputVersion(undefined)).toEqual({
+      id: '',
+      title: '',
+      documentType: 'Article',
+      type: undefined,
+      link: undefined,
+      addedDate: undefined,
+    });
+  });
 });

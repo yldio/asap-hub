@@ -74,7 +74,10 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     invalidateTeam();
-    void invalidateWorkspaceManuscripts();
+    // edits are patched into the list cache; a refetch could serve stale data
+    if (!manuscriptId || resubmitManuscript) {
+      void invalidateWorkspaceManuscripts();
+    }
     void pushFromHere(path);
   };
 

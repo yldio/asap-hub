@@ -141,7 +141,10 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
     const path = getWorkspacePath();
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     invalidateProject();
-    void invalidateWorkspaceManuscripts();
+    // edits are patched into the list cache; a refetch could serve stale data
+    if (!manuscriptId || resubmitManuscript) {
+      void invalidateWorkspaceManuscripts();
+    }
     void pushFromHere(path);
   };
 

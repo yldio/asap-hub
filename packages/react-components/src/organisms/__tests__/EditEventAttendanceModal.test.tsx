@@ -1,3 +1,4 @@
+import { network } from '@asap-hub/routing';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -91,6 +92,18 @@ const renderModal = (
       />
     </StaticRouter>,
   );
+
+const startConfirming = async (switchName = 'Team Beta attendance') => {
+  await userEvent.click(screen.getByRole('checkbox', { name: switchName }));
+  await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+};
+
+const getHeaderCloseButton = () =>
+  // The Modal's Overlay also renders a disabled aria-label="Close" backdrop;
+  // target the enabled header close button.
+  screen
+    .getAllByRole('button', { name: 'Close' })
+    .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
 
 describe('EditEventAttendanceModal', () => {
   it('Should render the "Add Attendance" title and empty prompt with no attendees', () => {
@@ -635,12 +648,7 @@ describe('EditEventAttendanceModal', () => {
     await userEvent.click(
       screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
     );
-    // The Modal's Overlay also renders a disabled aria-label="Close" backdrop;
-    // target the enabled header close button.
-    const closeButton = screen
-      .getAllByRole('button', { name: 'Close' })
-      .find((button) => !(button as HTMLButtonElement).disabled);
-    await userEvent.click(closeButton as HTMLElement);
+    await userEvent.click(getHeaderCloseButton());
 
     expect(
       screen.getByRole('button', { name: 'Discard changes' }),
@@ -670,6 +678,133 @@ describe('EditEventAttendanceModal', () => {
     expect(
       screen.queryByText("Add teams from this event's groups"),
     ).not.toBeInTheDocument();
+  });
+
+  it('Should block the editing controls while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await startConfirming();
+
+    // react-select swaps its combobox for a non-interactive dummy input when
+    // disabled, so the absence of the combobox is what proves search is blocked.
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Upload a List/ })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Mark All Attended' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Team Alpha' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Team Beta' }),
+    ).toBeDisabled();
+  });
+
+  it('Should block the interest group pills while the discard confirmation is showing', async () => {
+    renderModal({
+      interestGroups: [
+        { id: 'ig1', name: 'Alpha Group' },
+        { id: 'ig2', name: 'Group Two' },
+      ],
+    });
+
+    await startConfirming();
+
+    expect(screen.getByRole('button', { name: /Alpha Group/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Group Two/ })).toBeDisabled();
+  });
+
+  it('Should keep "Show more" working while the discard confirmation is showing', async () => {
+    const manyTeams: EventAttendanceTeam[] = Array.from(
+      { length: 12 },
+      (_, index) => ({
+        teamId: `t${index}`,
+        teamName: `Team ${index}`,
+        attended: true,
+      }),
+    );
+    renderModal({ teams: manyTeams });
+
+    await startConfirming('Team 0 attendance');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Show 2 more' }));
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(12);
+    expect(screen.getByRole('link', { name: 'Team 11' })).toBeInTheDocument();
+  });
+
+  it('Should ignore the close (X) button while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await startConfirming();
+
+    const closeButton = getHeaderCloseButton();
+    expect(closeButton).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(closeButton);
+
+    expect(
+      screen.getByRole('button', { name: 'Discard changes' }),
+    ).toBeInTheDocument();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
+
+  it('Should keep team links navigable while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await startConfirming();
+
+    expect(screen.getByRole('link', { name: 'Team Alpha' })).toHaveAttribute(
+      'href',
+      network({}).teams({}).team({ teamId: 't1' }).$,
+    );
+  });
+
+  it('Should keep source list downloads live while the discard confirmation is showing', async () => {
+    renderModal({
+      sourceLists: [
+        {
+          id: 'file-1',
+          filename: 'attendees.csv',
+          addedDate: '01/01/2025',
+          onDownload: jest.fn(),
+        },
+      ],
+    });
+
+    await startConfirming();
+
+    expect(screen.getByRole('button', { name: 'Download' })).toBeEnabled();
+  });
+
+  it('Should restore the editing controls when "Keep Editing" is clicked', async () => {
+    renderModal();
+
+    await startConfirming();
+    await userEvent.click(screen.getByRole('button', { name: 'Keep Editing' }));
+
+    expect(screen.getByRole('combobox')).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Upload a List/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Alpha Group/ })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Team Alpha' }),
+    ).toBeEnabled();
+    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+
+    const alphaSwitch = screen.getByRole('checkbox', {
+      name: 'Team Alpha attendance',
+    });
+    expect(alphaSwitch).toBeEnabled();
+
+    await userEvent.click(alphaSwitch);
+
+    expect(screen.getByText('1 Attended')).toBeInTheDocument();
   });
 
   it('Should default to an empty list when attendees and groups are omitted', () => {

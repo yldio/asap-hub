@@ -32,7 +32,11 @@ import {
   tickSmallIcon,
   uploadIcon,
 } from '../icons';
-import { ConfirmableModalFooter, Modal } from '../molecules';
+import {
+  ConfirmableModalFooter,
+  confirmingBodyStyles,
+  Modal,
+} from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { noop } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
@@ -610,14 +614,15 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
           noMargin
           aria-label="Close"
           enabled={!isSaving}
-          onClick={handleCancel}
+          aria-disabled={isCancelling}
+          onClick={isCancelling ? noop : handleCancel}
           overrideStyles={iconButtonStyles}
         >
           {crossIcon}
         </Button>
       </header>
 
-      <div css={bodyStyles}>
+      <div css={[bodyStyles, isCancelling && confirmingBodyStyles]}>
         {onSelectInterestGroup && interestGroups.length > 0 && (
           <section css={[sectionStyles, spacingMedium]}>
             <SectionTitle optional>
@@ -630,6 +635,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                   <Button
                     key={group.id}
                     noMargin
+                    enabled={!isCancelling}
                     overrideStyles={css([pillStyles, added && addedPillStyles])}
                     onClick={() => {
                       if (added) {
@@ -660,6 +666,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             isMulti={false}
             values={null}
             noMargin
+            enabled={!isCancelling}
             defaultOptions={false}
             leftIndicator={searchIcon}
             loadOptions={(inputValue) => loadSearchOptions(inputValue)}
@@ -724,6 +731,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             </div>
             <Button
               noMargin
+              enabled={!isCancelling}
               overrideStyles={uploadButtonStyles}
               onClick={() => setShowUploadList(true)}
             >
@@ -752,6 +760,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
               <Button
                 small
                 noMargin
+                enabled={!isCancelling}
                 overrideStyles={markAllButtonStyles}
                 onClick={markAllAttended}
               >
@@ -797,6 +806,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       <span css={attendanceSwitchStyles}>
                         <Switch
                           checked={team.attended}
+                          enabled={!isCancelling}
                           uncheckedColor="error"
                           ariaLabel={`${team.teamName} attendance`}
                           onClick={() => toggleAttended(team.teamId)}
@@ -804,6 +814,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       </span>
                       <Button
                         noMargin
+                        enabled={!isCancelling}
                         aria-label={`Remove ${team.teamName}`}
                         onClick={() => removeTeam(team.teamId)}
                         overrideStyles={deleteButtonStyles}

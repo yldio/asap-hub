@@ -20,11 +20,16 @@ import {
   tin,
 } from '../colors';
 import { crossIcon, plusIcon, searchIcon } from '../icons';
-import { ConfirmableModalFooter, Modal } from '../molecules';
+import {
+  ConfirmableModalFooter,
+  confirmingBodyStyles,
+  Modal,
+} from '../molecules';
 import PendingSpeakerCard from '../molecules/PendingSpeakerCard';
 import SpeakerTeamRow from '../molecules/SpeakerTeamRow';
 import { avatar24Styles, flexRowGap8Styles } from '../molecules/SpeakerUserRow';
 import { mobileScreen, rem } from '../pixels';
+import { noop } from '../utils';
 import { splitDisplayName } from '../utils/user';
 import { EventTeamType } from './shared-event-card';
 import { iconButtonStyles } from './shared-event-card-styles';
@@ -451,19 +456,21 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
           noMargin
           aria-label="Close"
           enabled={!isSaving}
-          onClick={handleCancel}
+          aria-disabled={isCancelling}
+          onClick={isCancelling ? noop : handleCancel}
           overrideStyles={iconButtonStyles}
         >
           {crossIcon}
         </Button>
       </header>
 
-      <div css={bodyStyles}>
+      <div css={[bodyStyles, isCancelling && confirmingBodyStyles]}>
         <div css={searchSpacingStyles}>
           <MultiSelect<SpeakerSearchOption, false>
             isMulti={false}
             values={null}
             noMargin
+            enabled={!isCancelling}
             creatable
             defaultOptions={false}
             leftIndicator={searchIcon}
@@ -541,6 +548,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
               <Button
                 small
                 noMargin
+                enabled={!isCancelling}
                 overrideStyles={markAllSharedButtonStyles}
                 onClick={markAllShared}
               >
@@ -574,6 +582,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
                     avatarUrl={pendingSpeaker.avatarUrl}
                     userId={pendingSpeaker.userId}
                     teams={pendingSpeaker.teamOptions}
+                    enabled={!isCancelling}
                     onPickTeam={(teamId) =>
                       resolvePendingSpeaker(pendingSpeaker, teamId)
                     }
@@ -608,6 +617,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
                     }))}
                     preliminaryFindingsShared={group.preliminaryFindingsShared}
                     expanded={expandedIds.has(group.id)}
+                    enabled={!isCancelling}
                     onToggleExpanded={() => toggleExpanded(group.id)}
                     onToggleShared={() => toggleShared(group.id)}
                     onRemoveUser={(userId) => removeUser(group.id, userId)}

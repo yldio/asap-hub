@@ -494,6 +494,108 @@ describe('EditEventSpeakersModal', () => {
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
+  const startConfirming = async () => {
+    await userEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'Team Alpha preliminary findings shared',
+      }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+  };
+
+  const getHeaderCloseButton = () =>
+    screen
+      .getAllByRole('button', { name: 'Close' })
+      .find((button) => !(button as HTMLButtonElement).disabled) as HTMLElement;
+
+  it('Should block the editing controls while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await startConfirming();
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Mark All Shared' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('checkbox', {
+        name: 'Team Alpha preliminary findings shared',
+      }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Jane Doe' }),
+    ).toBeDisabled();
+  });
+
+  it('Should block the pending speaker card while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await userEvent.type(screen.getByRole('combobox'), 'Alex');
+    await userEvent.click(await screen.findByText('Alex Kim'));
+    // A pending speaker is not itself a change to the groups, so the switch is
+    // what makes the modal dirty enough to raise the confirmation.
+    await startConfirming();
+
+    expect(
+      screen.getByRole('button', { name: /Team Gamma/ }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Remove Alex Kim' }),
+    ).toBeDisabled();
+  });
+
+  it('Should keep the team chevrons working while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await startConfirming();
+
+    const chevron = screen.getByRole('button', { name: 'Expand Team Alpha' });
+    expect(chevron).toBeEnabled();
+
+    await userEvent.click(chevron);
+
+    expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+  });
+
+  it('Should ignore the close (X) button while the discard confirmation is showing', async () => {
+    renderModal();
+
+    await startConfirming();
+
+    const closeButton = getHeaderCloseButton();
+    expect(closeButton).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(closeButton);
+
+    expect(
+      screen.getByRole('button', { name: 'Discard changes' }),
+    ).toBeInTheDocument();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
+
+  it('Should restore the editing controls when "Keep Editing" is clicked', async () => {
+    renderModal();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await startConfirming();
+    await userEvent.click(screen.getByRole('button', { name: 'Keep Editing' }));
+
+    expect(screen.getByRole('combobox')).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Mark All Shared' })).toBeEnabled();
+    expect(
+      screen.getByRole('checkbox', {
+        name: 'Team Alpha preliminary findings shared',
+      }),
+    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Remove Jane Doe' })).toBeEnabled();
+    expect(getHeaderCloseButton()).toHaveAttribute('aria-disabled', 'false');
+  });
+
   it('Should return to editing when "Keep Editing" is clicked', async () => {
     renderModal();
 

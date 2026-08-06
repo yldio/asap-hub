@@ -48,7 +48,7 @@ describe('PillSelector', () => {
     expect(onChange).toHaveBeenCalledWith([]);
   });
 
-  it('does not call onChange when disabled', async () => {
+  it('disables the pills and does not call onChange when disabled', async () => {
     const onChange = jest.fn();
 
     render(
@@ -60,8 +60,17 @@ describe('PillSelector', () => {
       />,
     );
 
+    expect(screen.getByRole('button', { name: 'One' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Two' })).toBeDisabled();
+
     await userEvent.click(screen.getByRole('button', { name: 'One' }));
 
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('leaves the pills enabled by default', () => {
+    render(<PillSelector options={options} value={[]} onChange={jest.fn()} />);
+
+    expect(screen.getByRole('button', { name: 'One' })).toBeEnabled();
   });
 });

@@ -114,6 +114,7 @@ const PillSelector = <V extends string>({
               overrideStyles,
             ]}
             type="button"
+            disabled={!enabled}
             onClick={() => toggle(option.value)}
           >
             {option.icon}

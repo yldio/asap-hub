@@ -1,5 +1,5 @@
 module.exports.description =
-  'Rename the Trainee Project membership roles to Individual Project and remove the Key Personnel role';
+  'Rename the Trainee Project membership roles to Individual Project and fold Key Personnel into Mentor';
 
 const STABLE_ROLES = [
   'Lead PI',
@@ -49,13 +49,13 @@ module.exports.up = (migration) => {
 
   remapRole(migration, OLD_LEAD, NEW_LEAD);
   remapRole(migration, OLD_MENTOR, NEW_MENTOR);
-  remapRole(migration, OLD_KEY_PERSONNEL, null);
+  remapRole(migration, OLD_KEY_PERSONNEL, NEW_MENTOR);
 
   setRoleValidations(migration, [...STABLE_ROLES, ...NEW_PROJECT_ROLES]);
 };
 
-// Only the two renames are reversible: up() clears the role on Key Personnel
-// entries, so the original value is gone and down() cannot restore it.
+// Key Personnel is folded into Mentor by up(), so down() cannot tell an
+// original Mentor from a former Key Personnel — both revert to Mentor.
 module.exports.down = (migration) => {
   setRoleValidations(migration, [...STABLE_ROLES, ...ALL_PROJECT_ROLES]);
 

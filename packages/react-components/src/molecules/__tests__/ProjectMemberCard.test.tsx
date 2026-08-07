@@ -30,13 +30,29 @@ describe('ProjectMemberCard', () => {
     expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
-  it('does not render role when roles is empty', () => {
+  it('renders "No role assigned" in place of the role when roles is empty', () => {
     const memberWithoutRole = { ...mockMember, roles: [] };
     const { container } = render(
       <ProjectMemberCard member={memberWithoutRole} showTeamInfo={false} />,
     );
     expect(container).toHaveTextContent(mockMember.displayName);
     expect(container).not.toHaveTextContent('Principal Investigator');
+    expect(screen.getByText('No role assigned')).toBeVisible();
+  });
+
+  it('italicises "No role assigned" so it reads as missing data', () => {
+    const memberWithoutRole = { ...mockMember, roles: [] };
+    render(
+      <ProjectMemberCard member={memberWithoutRole} showTeamInfo={false} />,
+    );
+    expect(screen.getByText('No role assigned')).toHaveStyle(
+      'font-style: italic',
+    );
+  });
+
+  it('does not render "No role assigned" when the member has a role', () => {
+    render(<ProjectMemberCard member={mockMember} showTeamInfo={false} />);
+    expect(screen.queryByText('No role assigned')).not.toBeInTheDocument();
   });
 
   it('does not show team info when showTeamInfo is false', () => {

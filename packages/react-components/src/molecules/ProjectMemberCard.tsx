@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Link, OverflowBadge } from '../atoms';
 import { rem } from '../pixels';
-import { fern } from '../colors';
+import { fern, lead } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
 import UserAvatar from './UserAvatar';
@@ -42,6 +42,12 @@ const teamInfoStyles = css({
   color: fern.rgb,
 });
 
+const noRoleStyles = css({
+  color: lead.rgb,
+  fontSize: rem(17),
+  fontStyle: 'italic',
+});
+
 type ProjectMemberCardProps = {
   readonly member: GroupedProjectMember;
   /** Whether to show team information (true for trainee, false for resource not team-based) */
@@ -74,8 +80,10 @@ const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({
         <Link href={'#'}>
           <span css={nameStyles}>{member.displayName}</span>
         </Link>
-        {member.roles.length > 0 && (
+        {member.roles.length > 0 ? (
           <RolesList roles={member.roles} maxVisible={2} />
+        ) : (
+          <div css={noRoleStyles}>No role assigned</div>
         )}
         {showTeamInfo && firstTeam && (
           <div css={teamInfoStyles}>

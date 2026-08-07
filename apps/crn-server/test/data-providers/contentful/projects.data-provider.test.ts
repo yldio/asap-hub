@@ -2040,7 +2040,7 @@ describe('parseContentfulAims', () => {
 });
 
 describe('processTraineeProjectMembers', () => {
-  it('filters and orders members correctly: trainees first, then mentors', () => {
+  it('orders members: trainees, then mentors, then those with no role', () => {
     const members: ProjectMembershipItem[] = [
       {
         sys: { id: 'membership-mentor-1' },
@@ -2147,7 +2147,7 @@ describe('processTraineeProjectMembers', () => {
 
     const result = processTraineeProjectMembers(members);
 
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
 
     // Trainees should come first
     expect(result[0]).toMatchObject({
@@ -2165,15 +2165,18 @@ describe('processTraineeProjectMembers', () => {
       role: 'Individual Project - Mentor',
     });
 
-    expect(result).not.toContainEqual(
-      expect.objectContaining({ id: 'user-key-personnel' }),
-    );
-    expect(result).not.toContainEqual(
-      expect.objectContaining({ id: 'user-no-role' }),
-    );
+    // Members with no role come last, so the summary rows stay stable
+    expect(result[3]).toMatchObject({ id: 'user-no-role' });
+    expect(result[3]?.role).toBeUndefined();
+
+    // Teams, and users holding a role that is not a trainee or mentor role,
+    // are not listed on the project
+    for (const id of ['team-support', 'user-key-personnel', 'user-invalid']) {
+      expect(result).not.toContainEqual(expect.objectContaining({ id }));
+    }
   });
 
-  it('returns empty array when no valid members exist', () => {
+  it('returns empty array when the project has no user members', () => {
     const members: ProjectMembershipItem[] = [
       {
         sys: { id: 'membership-team' },
@@ -2184,21 +2187,6 @@ describe('processTraineeProjectMembers', () => {
           displayName: 'Support Team',
           inactiveSince: null,
           researchTheme: null,
-        },
-      },
-      {
-        sys: { id: 'membership-invalid-role' },
-        role: 'Invalid Role',
-        projectMember: {
-          __typename: 'Users',
-          sys: { id: 'user-invalid' },
-          firstName: 'Invalid',
-          nickname: '',
-          lastName: 'Role',
-          email: 'invalid@example.com',
-          onboarded: true,
-          avatar: { url: null },
-          alumniSinceDate: undefined,
         },
       },
     ] as ProjectMembershipItem[];
@@ -2469,7 +2457,7 @@ describe('parseContentfulProjectDetail', () => {
     });
   });
 
-  it('parses Trainee Project detail dropping the retired Key Personnel role', () => {
+  it('parses Trainee Project detail dropping a member whose role was retired', () => {
     const traineeItem = getTraineeProjectDetailGraphqlItem({
       originalGrant: 'Trainee Original Grant',
       proposalId: 'trainee-proposal-1',
@@ -2520,6 +2508,9 @@ describe('parseContentfulProjectDetail', () => {
       id: 'user-trainee',
       role: 'Individual Project - Lead',
     });
+    expect(result.members).not.toContainEqual(
+      expect.objectContaining({ id: 'user-key-personnel' }),
+    );
   });
 
   it('parses Discovery Project detail fallback when no team member exists', () => {

@@ -345,6 +345,30 @@ describe('Project Model', () => {
       expect(isProjectMember('user-1', [], project)).toBe(true);
     });
 
+    it('returns false for a Trainee Project member with no role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [{ id: 'user-1', displayName: 'Test User' }],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
+    });
+
+    it('returns false for a Trainee Project member holding a retired role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Trainee Project - Key Personnel',
+          },
+        ],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
+    });
+
     it('returns false when user is not listed as a member of a Trainee Project', () => {
       const project: Project = {
         ...baseProject,
@@ -448,26 +472,37 @@ describe('Project Model', () => {
       expect(groupTraineeProjectMembers([mentor, lead])).toEqual({
         trainees: [lead],
         mentors: [mentor],
+        unassigned: [],
       });
     });
 
-    it('should exclude members holding the retired Key Personnel role', () => {
-      const retired = {
-        id: 'retired-1',
-        role: 'Trainee Project - Key Personnel',
-      };
+    it('should put a member without a role in unassigned', () => {
+      const noRole = { id: 'no-role' };
 
-      expect(groupTraineeProjectMembers([lead, mentor, retired])).toEqual({
-        trainees: [lead],
-        mentors: [mentor],
-      });
-    });
-
-    it('should exclude members without a role', () => {
-      expect(groupTraineeProjectMembers([lead, { id: 'no-role' }])).toEqual({
+      expect(groupTraineeProjectMembers([lead, noRole])).toEqual({
         trainees: [lead],
         mentors: [],
+        unassigned: [noRole],
       });
     });
+
+    it.each`
+      role
+      ${'Trainee Project - Key Personnel'}
+      ${'Trainee Project - Lead'}
+      ${'Trainee'}
+      ${'Contributor'}
+    `(
+      'should leave a member holding $role out of every group',
+      ({ role }: { role: string }) => {
+        const other = { id: 'other-1', role };
+
+        expect(groupTraineeProjectMembers([lead, other])).toEqual({
+          trainees: [lead],
+          mentors: [],
+          unassigned: [],
+        });
+      },
+    );
   });
 });

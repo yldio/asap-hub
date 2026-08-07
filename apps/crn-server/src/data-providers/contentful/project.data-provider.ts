@@ -207,9 +207,10 @@ export const processTraineeProjectMembers = (
     .filter((m) => m.projectMember?.__typename === 'Users')
     .map((m) => parseProjectUserMember(m));
 
-  const { trainees, mentors } = groupTraineeProjectMembers(userMembers);
+  const { trainees, mentors, unassigned } =
+    groupTraineeProjectMembers(userMembers);
 
-  return [...trainees, ...mentors];
+  return [...trainees, ...mentors, ...unassigned];
 };
 
 // Parse Contentful project to model format

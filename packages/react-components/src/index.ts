@@ -76,6 +76,7 @@ export {
   AssociationList,
   BackLink,
   BannerCard,
+  Breadcrumbs,
   CalendarLink,
   CaptionItem,
   CollaboratingMembers,
@@ -387,6 +388,7 @@ export {
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant, SpinnerProps, SwitchProps } from './atoms';
 export type {
+  BreadcrumbItem,
   ItemType,
   StatusType,
   ReminderEntity,

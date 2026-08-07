@@ -73,6 +73,7 @@ export { default as grantDocument } from './grantDocument';
 export { default as happyFaceIcon } from './happy-face';
 export { default as HashtagIcon } from './hashtag';
 export { default as hidePasswordIcon } from './hide-password';
+export { default as homeIcon } from './home';
 export { default as ImpactIcon } from './impact';
 export { default as InactiveBadgeIcon } from './inactive-badge';
 export { default as infoCircleIcon } from './info-circle';

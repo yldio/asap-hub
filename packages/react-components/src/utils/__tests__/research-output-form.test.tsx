@@ -11,6 +11,7 @@ import {
   getPayload,
   getPostAuthors,
   getPublishDate,
+  getResearchOutputFormDefaultValues,
   ResearchOutputPayload,
   transformResearchOutputResponseToRequest,
 } from '../research-output-form';
@@ -82,6 +83,7 @@ describe('getIdentifierType', () => {
 describe('getResearchOutputPayload', () => {
   it('returns the correct modified value', () => {
     const currentPayload: ResearchOutputPayload = {
+      layImpactStatement: 'Really strong impact',
       identifierType: ResearchOutputIdentifierType.Empty,
       identifier: '',
       documentType: researchOutputDocumentTypes[6],
@@ -138,6 +140,7 @@ describe('getResearchOutputPayload', () => {
 
   it('does not send publishDate when sharing status is not Public', () => {
     const currentPayload: ResearchOutputPayload = {
+      layImpactStatement: 'Really strong impact',
       identifierType: ResearchOutputIdentifierType.Empty,
       identifier: '',
       documentType: researchOutputDocumentTypes[6],
@@ -288,6 +291,63 @@ describe('transformResearchOutputResponseToRequest', () => {
       categories: researchOutputResponse.categories?.map(
         (category) => category.id,
       ),
+    });
+  });
+});
+
+describe('getResearchOutputFormDefaultValues', () => {
+  const getDefaultValues = (
+    researchOutputData: ResearchOutputResponse,
+    isImportedFromManuscript?: boolean,
+  ) =>
+    getResearchOutputFormDefaultValues({
+      researchOutputData,
+      selectedTeams: [],
+      documentType: 'Article',
+      isCreateFlow: false,
+      descriptionMD: '',
+      isImportedFromManuscript,
+    });
+
+  describe('identifier', () => {
+    it('derives the type from the output when not imported from a manuscript', () => {
+      const { identifierType, identifier } = getDefaultValues({
+        ...createResearchOutputResponse(),
+        doi: '',
+        rrid: 'RRID:AB_90',
+        accession: '',
+      });
+
+      expect(identifierType).toEqual(ResearchOutputIdentifierType.RRID);
+      expect(identifier).toEqual('RRID:AB_90');
+    });
+
+    it('uses the doi when imported from a manuscript', () => {
+      const { identifierType, identifier } = getDefaultValues(
+        {
+          ...createResearchOutputResponse(),
+          doi: '10.1234/abc',
+        },
+        true,
+      );
+
+      expect(identifierType).toEqual(ResearchOutputIdentifierType.DOI);
+      expect(identifier).toEqual('10.1234/abc');
+    });
+
+    it('forces DOI with an empty identifier when imported from a manuscript without a doi', () => {
+      const { identifierType, identifier } = getDefaultValues(
+        {
+          ...createResearchOutputResponse(),
+          doi: undefined,
+          rrid: 'RRID:AB_90',
+          accession: '',
+        },
+        true,
+      );
+
+      expect(identifierType).toEqual(ResearchOutputIdentifierType.DOI);
+      expect(identifier).toEqual('');
     });
   });
 });

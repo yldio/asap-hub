@@ -56,8 +56,8 @@ const formControlsThreeButtonsStyles = css({
 });
 
 type ResearchOutputFormActionsProps = {
-  savingAction: 'draft' | 'publish' | null;
   isSaving: boolean;
+  savingAction: 'draft' | 'publish' | null;
   published: boolean;
   showSaveDraftButton: boolean;
   showPublishButton: boolean;
@@ -67,8 +67,8 @@ type ResearchOutputFormActionsProps = {
 };
 
 const ResearchOutputFormActions: React.FC<ResearchOutputFormActionsProps> = ({
-  savingAction,
   isSaving,
+  savingAction,
   published,
   showSaveDraftButton,
   showPublishButton,
@@ -93,11 +93,13 @@ const ResearchOutputFormActions: React.FC<ResearchOutputFormActionsProps> = ({
         {showSaveDraftButton && (
           <Button
             enabled={!isSaving}
-            loading={isSaving && savingAction === 'draft'}
+            loading={savingAction === 'draft'}
             fullWidth
             onClick={onSaveDraft}
             primary={showSaveDraftButton && !showPublishButton}
             noMargin
+            submit
+            preventDefault={false}
           >
             Save Draft
           </Button>
@@ -105,10 +107,11 @@ const ResearchOutputFormActions: React.FC<ResearchOutputFormActionsProps> = ({
         {showPublishButton && (
           <Button
             enabled={!isSaving}
-            loading={isSaving && savingAction === 'publish'}
+            loading={savingAction === 'publish'}
             fullWidth
             primary
             noMargin
+            preventDefault={false}
             onClick={onPublish}
           >
             {published ? 'Save' : 'Publish'}

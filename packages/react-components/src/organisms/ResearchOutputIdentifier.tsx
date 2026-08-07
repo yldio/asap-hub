@@ -4,9 +4,10 @@ import {
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
-import { useCallback, useMemo, ReactElement } from 'react';
+import { useMemo, ReactElement } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
-import { noop } from '../utils';
+import { ResearchOutputFormValues } from '../utils';
 
 type IdentifierType = Array<{
   value: ResearchOutputIdentifierType;
@@ -89,118 +90,110 @@ const getIdentifierInfoMessage = (
     ));
 
 export interface ResearchOutputIdentifierProps {
-  identifier?: string;
-  setIdentifier?: (value: string) => void;
-  identifierType?: ResearchOutputIdentifierType;
-  setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
   documentType: ResearchOutputDocumentType;
   isEditMode?: boolean;
 }
 
+export const getIdentifierValidationRules = (
+  type: ResearchOutputIdentifierType,
+) => {
+  const { errorMessage, regex, required } = identifierMap[type];
+
+  return {
+    required: required && errorMessage ? errorMessage : false,
+    ...(regex && errorMessage
+      ? { pattern: { value: new RegExp(regex), message: errorMessage } }
+      : {}),
+  };
+};
+
 export const ResearchOutputIdentifier: React.FC<
   ResearchOutputIdentifierProps
-> = ({
-  identifierType = ResearchOutputIdentifierType.Empty,
-  setIdentifierType = noop,
-  identifier = '',
-  setIdentifier = noop,
-  documentType,
-}) => {
+> = ({ documentType }) => {
+  const { control, setValue, clearErrors } =
+    useFormContext<ResearchOutputFormValues>();
+
   const identifiers = useMemo(
     () => getIdentifiers(documentType),
     [documentType],
   );
 
   const infoText = getIdentifierInfoMessage(identifiers);
-  const onChangeIdentifierType = useCallback(
-    (newType: ResearchOutputIdentifierType) => {
-      if (
-        newType === undefined ||
-        identifiers.find(
-          (availableIdentifier) => availableIdentifier.value === newType,
-        )
-      ) {
-        setIdentifierType(newType);
-      }
-      setIdentifier('');
-    },
-    [setIdentifierType, identifiers, setIdentifier],
-  );
 
   return (
     <>
-      <LabeledDropdown
-        title="Identifier Type"
-        subtitle={'(required)'}
-        options={identifiers}
-        value={identifierType}
-        onChange={onChangeIdentifierType}
-        placeholder={'Choose an identifier'}
-        getValidationMessage={() => `Please choose an identifier`}
-        required={true}
-        info={infoText}
+      <Controller
+        name="identifierType"
+        control={control}
+        rules={{ required: 'Please choose an identifier.' }}
+        render={({
+          field: { value, onChange, onBlur },
+          fieldState: { error },
+        }) => (
+          <LabeledDropdown
+            title="Identifier Type"
+            subtitle={'(required)'}
+            options={identifiers}
+            value={value ?? ResearchOutputIdentifierType.Empty}
+            onChange={(newType) => {
+              // Clearing the dropdown reports no value at all, and the
+              // identifier belongs to the type that was selected, so it is
+              // dropped whenever the type changes.
+              onChange(newType ?? ResearchOutputIdentifierType.Empty);
+              setValue('identifier', '');
+              // The message that was on screen belonged to the previous type,
+              // so it is dropped instead of revalidated: the new field starts
+              // empty and untouched.
+              clearErrors('identifier');
+            }}
+            required
+            onBlur={onBlur}
+            placeholder={'Choose an identifier'}
+            customValidationMessage={error?.message}
+            info={infoText}
+          />
+        )}
       />
 
-      <TeamCreateOutputIdentifierField
-        type={identifierType}
-        identifier={identifier}
-        setIdentifier={setIdentifier}
-      />
+      <TeamCreateOutputIdentifierField />
     </>
   );
 };
-export interface TeamCreateOutputIdentifierFieldProps {
-  identifier: string;
-  setIdentifier: (value: string) => void;
-  type: ResearchOutputIdentifierType;
-}
-export const TeamCreateOutputIdentifierField: React.FC<
-  TeamCreateOutputIdentifierFieldProps
-> = ({ type, identifier, setIdentifier }) => {
-  const { helpText, placeholder, errorMessage, regex, required } =
-    identifierMap[type];
+
+export const TeamCreateOutputIdentifierField: React.FC = () => {
+  const { control } = useFormContext<ResearchOutputFormValues>();
+  const type = useWatch({ control, name: 'identifierType' });
+
+  if (
+    type !== ResearchOutputIdentifierType.AccessionNumber &&
+    type !== ResearchOutputIdentifierType.DOI &&
+    type !== ResearchOutputIdentifierType.RRID
+  ) {
+    return null;
+  }
+
+  const { helpText, placeholder } = identifierMap[type];
 
   return (
-    <>
-      {type === ResearchOutputIdentifierType.AccessionNumber && (
+    <Controller
+      name="identifier"
+      control={control}
+      rules={getIdentifierValidationRules(type)}
+      render={({
+        field: { value, onChange, onBlur },
+        fieldState: { error },
+      }) => (
         <LabeledTextField
           title={type}
           subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
-          getValidationMessage={() => errorMessage}
-          value={identifier}
-          onChange={setIdentifier}
-          pattern={regex}
-          required={required}
+          value={value ?? ''}
+          onChange={onChange}
+          onBlur={onBlur}
+          customValidationMessage={error?.message}
         />
       )}
-      {type === ResearchOutputIdentifierType.DOI && (
-        <LabeledTextField
-          title={type}
-          subtitle={'(required)'}
-          description={helpText}
-          placeholder={placeholder}
-          getValidationMessage={() => errorMessage}
-          value={identifier}
-          onChange={setIdentifier}
-          pattern={regex}
-          required={required}
-        />
-      )}
-      {type === ResearchOutputIdentifierType.RRID && (
-        <LabeledTextField
-          title={type}
-          subtitle={'(required)'}
-          description={helpText}
-          placeholder={placeholder}
-          getValidationMessage={() => errorMessage}
-          value={identifier}
-          onChange={setIdentifier}
-          pattern={regex}
-          required={required}
-        />
-      )}
-    </>
+    />
   );
 };

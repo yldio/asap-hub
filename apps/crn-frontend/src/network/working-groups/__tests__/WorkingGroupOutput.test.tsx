@@ -80,6 +80,11 @@ const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
 
 const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
 
+const findConfirmModalButton = async (name: RegExp) => {
+  await screen.findByText(/for the whole hub\?/i);
+  return screen.getByRole('button', { name });
+};
+
 const mandatoryFields = async (
   {
     link = 'http://example.com',
@@ -155,7 +160,7 @@ const mandatoryFields = async (
     publish: async () => {
       const button = screen.getByRole('button', { name: /Publish/i });
       await user.click(button);
-      await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await user.click(await findConfirmModalButton(/Publish Output/i));
       await waitFor(
         () => {
           expect(button).not.toBeInTheDocument(); // asserts navigation happened
@@ -191,7 +196,7 @@ const mandatoryFields = async (
     clickPublish: async () => {
       const button = screen.getByRole('button', { name: /Publish/i });
       await user.click(button);
-      await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await user.click(await findConfirmModalButton(/Publish Output/i));
       await waitFor(
         () => {
           expect(button).toBeEnabled();
@@ -533,7 +538,7 @@ it('can publish a new version for an output', async () => {
   });
 
   await user.click(screen.getByRole('button', { name: /Save/i }));
-  const button = screen.getByRole('button', { name: /Publish new version/i });
+  const button = await findConfirmModalButton(/Publish new version/i);
   await user.click(button);
 
   await waitFor(
@@ -580,14 +585,20 @@ it('will show server side validation error for link', async () => {
   await clickPublish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  // Verify error is shown - validation errors trigger the generic error toast
+  // Supported server validation errors land on the field they belong to, so
+  // the form error toast is shown instead of the generic save error one.
   await waitFor(() => {
     expect(
-      screen.queryByText(
-        'There was an error and we were unable to save your changes. Please try again.',
+      screen.getByText(
+        'A Research Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeInTheDocument();
   });
+  expect(
+    screen.getByText(
+      'There are some errors in the form. Please correct the fields below.',
+    ),
+  ).toBeInTheDocument();
 }, 120_000);
 
 it('will toast server side errors for unknown errors', async () => {
@@ -685,7 +696,7 @@ it.each([
     const button = screen.getByRole('button', { name: buttonName });
     await user.click(button);
     if (buttonName === 'Publish') {
-      await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await user.click(await findConfirmModalButton(/Publish Output/i));
     }
     await waitFor(
       () => {

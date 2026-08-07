@@ -1,13 +1,8 @@
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputType,
-  ResearchTagResponse,
-  ValidationErrorResponse,
-} from '@asap-hub/model';
+import { ResearchOutputType, ResearchTagResponse } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
-import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
+import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import { ResearchOutputAvailableActions } from '@asap-hub/react-context';
-import { getAjvErrorForPath } from '../ajv-errors';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { OptionsType } from '../select';
 import { Markdown } from '../atoms';
 import { MultiSelectOptionsType } from '../atoms/MultiSelect';
@@ -20,130 +15,49 @@ import {
   LabeledTextEditor,
   LabeledTextField,
 } from '../molecules';
-import { noop } from '../utils';
+import { noop, ResearchOutputFormValues } from '../utils';
 import ShortDescriptionCard from './ShortDescriptionCard';
 
 type ResearchOutputFormSharingCardProps = Pick<
-  ResearchOutputPostRequest,
-  | 'link'
-  | 'title'
-  | 'descriptionMD'
-  | 'layImpactStatement'
-  | 'shortDescription'
-  | 'changelog'
-  | 'subtype'
-> &
-  Pick<
-    ResearchOutputAvailableActions,
-    'showImpactAndCategory' | 'disableImpactAndCategory'
-  > & {
-    isFormSubmitted: boolean;
-    getImpactSuggestions: (
-      searchQuery: string,
-    ) => Promise<{ label: string; value: string }[]>;
-    impact?: MultiSelectOptionsType;
-    onChangeImpact: (
-      newValue: MultiSelectOptionsType & OptionsType<MultiSelectOptionsType>,
-    ) => void;
-    getCategorySuggestions: ComponentPropsWithRef<
-      typeof LabeledMultiSelect
-    >['loadOptions'];
-    categories: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
-    onChangeCategories: NonNullable<
-      ComponentPropsWithRef<typeof LabeledMultiSelect>['onChange']
-    >;
-    displayChangelog?: boolean;
-    type?: ResearchOutputType | '';
-    onChangeLink: (newValue: string) => void;
-    onChangeTitle: (newValue: string) => void;
-    onChangeDescription: (newValue: string) => void;
-    onChangeShortDescription: (newValue: string) => void;
-    onChangeLayImpactStatement: (newValue: string) => void;
-    onChangeChangelog: (newValue: string) => void;
-    onChangeType: (newValue: ResearchOutputType | '') => void;
-    onChangeSubtype: (newValue: string | '') => void;
-    isSaving: boolean;
-    researchTags: ResearchTagResponse[];
-    serverValidationErrors?: ValidationErrorResponse['data'];
-    clearServerValidationError?: (instancePath: string) => void;
-    typeDescription?: string;
-    urlRequired?: boolean;
-    typeOptions: ResearchOutputType[];
-    getShortDescriptionFromDescription: (
-      description: string,
-    ) => Promise<string>;
-  };
+  ResearchOutputAvailableActions,
+  | 'showImpactAndCategory'
+  | 'disableImpactAndCategory'
+  | 'showChangelogAndVersionHistory'
+> & {
+  getImpactSuggestions: (
+    searchQuery: string,
+  ) => Promise<{ label: string; value: string }[]>;
+  getCategorySuggestions: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['loadOptions'];
+  researchTags: ResearchTagResponse[];
+  urlRequired?: boolean;
+  typeOptions: ResearchOutputType[];
+  getShortDescriptionFromDescription: (description: string) => Promise<string>;
+  isSaving?: boolean;
+};
 
 const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
   showImpactAndCategory,
-  isFormSubmitted,
   disableImpactAndCategory,
+  showChangelogAndVersionHistory: displayChangelog,
   getImpactSuggestions,
-  impact,
-  layImpactStatement,
-  onChangeImpact,
   getCategorySuggestions = noop,
-  categories,
-  onChangeCategories,
-  displayChangelog = false,
-  isSaving,
-  link,
-  title,
-  descriptionMD,
-  shortDescription,
-  changelog,
-  type,
   typeOptions,
-  subtype,
   researchTags,
-  serverValidationErrors = [],
-  typeDescription,
   urlRequired,
   getShortDescriptionFromDescription,
-  clearServerValidationError = noop,
-  onChangeDescription,
-  onChangeShortDescription,
-  onChangeChangelog,
-  onChangeLink,
-  onChangeTitle,
-  onChangeType,
-  onChangeSubtype,
-  onChangeLayImpactStatement,
+  isSaving = false,
 }) => {
-  const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
-  const [titleValidationMessage, setTitleValidationMessage] =
-    useState<string>();
-  const [
-    shortDescriptionValidationMessage,
-    setShortDescriptionValidationMessage,
-  ] = useState<string>();
-  const [changelogValidationMessage, setChangelogValidationMessage] =
-    useState<string>();
-  const [categoryValidationMessage, setCategoryValidationMessage] =
-    useState<string>();
-  const [layImpactValidationMessage, setLayImpactValidationMessage] =
-    useState<string>();
+  const { control, setValue } = useFormContext<ResearchOutputFormValues>();
+  const descriptionMD = useWatch({ control, name: 'descriptionMD' });
 
   const subtypeSuggestions = researchTags.filter(
     (tag) => tag.category === 'Subtype',
   );
 
-  const validateFieldWithCharLimit = (
-    newValue: string,
-    field: string,
-    limit: number,
-    setValidationMessage: (message: string | undefined) => void,
-  ) => {
-    setValidationMessage(
-      newValue.length >= limit
-        ? `The ${field} exceeds the character limit. Please limit it to ${limit} characters.`
-        : newValue.trim().length === 0
-          ? `Please enter a ${field}`
-          : undefined,
-    );
-  };
   const [impactOptions, setImpactOptions] = useState<
     {
       label: string;
@@ -162,265 +76,346 @@ const ResearchOutputFormSharingCard: React.FC<
     void loadImpactOptions();
   }, [showImpactAndCategory, getImpactSuggestions]);
 
-  useEffect(() => {
-    setUrlValidationMessage(
-      getAjvErrorForPath(
-        serverValidationErrors,
-        '/link',
-        'A Research Output with this URL already exists. Please enter a different URL.',
-      ),
-    );
-    setTitleValidationMessage(
-      getAjvErrorForPath(
-        serverValidationErrors,
-        '/title',
-        'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
-      ),
-    );
-  }, [serverValidationErrors]);
-
-  const [impactValidationMessage, setImpactValidationMessage] =
-    useState<string>();
-  const validateImpact = useCallback(() => {
-    setImpactValidationMessage(
-      !impact || (impact.value && impact.value.length === 0)
-        ? 'Please add at least one impact.'
-        : undefined,
-    );
-  }, [impact]);
-
-  useEffect(() => {
-    validateImpact();
-  }, [impact, validateImpact]);
-
-  const validateCategories = useCallback(
-    (newValues: OptionsType<MultiSelectOptionsType>) => {
-      const isValidSelection =
-        ((newValues as OptionsType<MultiSelectOptionsType>) || []).length <= 2;
-
-      setCategoryValidationMessage(
-        isValidSelection
-          ? undefined
-          : 'You can select up to two categories only.',
-      );
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (isFormSubmitted && showImpactAndCategory) {
-      validateImpact();
-    }
-  }, [isFormSubmitted, validateImpact, showImpactAndCategory]);
+  const clearTagFieldsOnTypeChange = () => {
+    setValue('methods', []);
+    setValue('organisms', []);
+    setValue('environments', []);
+    setValue('subtype', '');
+    setValue('keywords', []);
+  };
 
   return (
     <FormCard title="What are you sharing?">
-      <LabeledTextField
-        title="Title"
-        maxLength={350}
-        subtitle="(required)"
-        onChange={(newValue) => {
-          clearServerValidationError('/title');
-          onChangeTitle(newValue);
+      <Controller
+        name="title"
+        control={control}
+        rules={{
+          required: 'Please enter a title.',
+          maxLength: {
+            value: 350,
+            message: 'This title cannot exceed 350 characters.',
+          },
         }}
-        customValidationMessage={titleValidationMessage}
-        getValidationMessage={(validationState) =>
-          validationState.valueMissing || validationState.patternMismatch
-            ? 'Please enter a title'
-            : undefined
-        }
-        value={title}
-        required
-        enabled={!isSaving}
+        render={({
+          field: { value, onChange, onBlur },
+          fieldState: { error },
+        }) => (
+          <LabeledTextField
+            title="Title"
+            subtitle="(required)"
+            maxLength={350}
+            onChange={onChange}
+            customValidationMessage={error?.message}
+            value={value}
+            onBlur={onBlur}
+            enabled={!isSaving}
+          />
+        )}
       />
-      <LabeledTextField
-        title="URL"
-        subtitle={urlRequired ? '(required)' : '(optional)'}
-        required={urlRequired}
-        description="Use the link of your document (for example, google document link)."
-        pattern={urlExpression}
-        onChange={(newValue) => {
-          clearServerValidationError('/link');
-          onChangeLink(newValue);
-        }}
-        customValidationMessage={urlValidationMessage}
-        getValidationMessage={(validationState) =>
-          validationState.valueMissing || validationState.patternMismatch
+      <Controller
+        name="link"
+        control={control}
+        rules={{
+          required: urlRequired
             ? 'Please enter a valid URL, starting with http://'
-            : undefined
-        }
-        value={link ?? ''}
-        enabled={!isSaving}
-        labelIndicator={<GlobeIcon />}
-        placeholder="https://example.com"
+            : false,
+          pattern: {
+            value: new RegExp(urlExpression),
+            message: 'Please enter a valid URL, starting with http://',
+          },
+        }}
+        render={({
+          field: { value, onChange, onBlur },
+          fieldState: { error },
+        }) => (
+          <LabeledTextField
+            title="URL"
+            description="Use the link of your document (for example, google document link)."
+            subtitle={urlRequired ? '(required)' : '(optional)'}
+            placeholder="https://example.com"
+            onChange={onChange}
+            value={value ?? ''}
+            customValidationMessage={error?.message}
+            onBlur={onBlur}
+            enabled={!isSaving}
+            labelIndicator={<GlobeIcon />}
+          />
+        )}
       />
       {!!typeOptions.length && (
-        <LabeledDropdown<ResearchOutputType | ''>
-          title="Type"
-          subtitle="(required)"
-          description={typeDescription}
-          options={typeOptions.map((option) => ({
-            value: option,
-            label: option,
-          }))}
-          onChange={(selectedType) => onChangeType(selectedType)}
-          getValidationMessage={() => 'Please choose a type'}
-          value={type ?? ''}
-          enabled={!isSaving}
-          required
-          noOptionsMessage={(option) =>
-            `Sorry, no types match ${option.inputValue}`
-          }
-          placeholder="Choose a type"
+        <Controller
+          name="type"
+          control={control}
+          rules={{
+            required: 'Please choose a type.',
+          }}
+          render={({
+            field: { value, onChange, onBlur },
+            fieldState: { error },
+          }) => (
+            <LabeledDropdown<ResearchOutputType | ''>
+              title="Type"
+              subtitle="(required)"
+              description="Select the type that matches your output the best."
+              placeholder="Choose a type"
+              required
+              options={typeOptions.map((option) => ({
+                value: option,
+                label: option,
+              }))}
+              onChange={(selectedType) => {
+                onChange(selectedType);
+                clearTagFieldsOnTypeChange();
+              }}
+              onBlur={onBlur}
+              value={value ?? ''}
+              enabled={!isSaving}
+              customValidationMessage={error?.message}
+              noOptionsMessage={(option) =>
+                `Sorry, no types match ${option.inputValue}`
+              }
+            />
+          )}
         />
       )}
       {!!subtypeSuggestions.length && (
-        <LabeledDropdown
-          title="Subtype"
-          subtitle="(required)"
-          description="Select the subtype that matches your output the best."
-          options={subtypeSuggestions.map((sub) => ({
-            label: sub.name,
-            value: sub.name,
-          }))}
-          onChange={(selectedSubtype) => onChangeSubtype(selectedSubtype)}
-          value={subtype ?? ''}
-          required
-          getValidationMessage={() => 'Please choose a subtype'}
-          enabled={!isSaving}
-          placeholder="Select subtype"
+        <Controller
+          name="subtype"
+          control={control}
+          rules={{
+            required: 'Please choose a subtype.',
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <LabeledDropdown
+              title="Subtype"
+              subtitle="(required)"
+              description="Select the subtype that matches your output the best."
+              placeholder="Select subtype"
+              required
+              options={subtypeSuggestions.map((sub) => ({
+                label: sub.name,
+                value: sub.name,
+              }))}
+              // Empty is '' rather than undefined so it matches the default
+              // value and what clearing the field writes. RHF also falls back
+              // to the registered default when a field is set to undefined,
+              // which would leave a stale subtype on screen.
+              onChange={(selectedSubtype) => onChange(selectedSubtype || '')}
+              value={value ?? ''}
+              customValidationMessage={error?.message}
+              enabled={!isSaving}
+            />
+          )}
         />
       )}
-      <LabeledTextEditor
-        title="Description"
-        subtitle="(required)"
-        tip="Add an abstract or a summary that describes this work. You can format your text by using markup language."
-        onChange={onChangeDescription}
-        getValidationMessage={() => 'Please enter a description'}
-        required
-        value={descriptionMD}
-        enabled={!isSaving}
-        info={
-          <Markdown
-            value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
-        `}
-          ></Markdown>
-        }
-        autofocus={false}
-      />
-      <ShortDescriptionCard
-        onChange={(shortDescriptionNewValue) => {
-          onChangeShortDescription(shortDescriptionNewValue);
-          validateFieldWithCharLimit(
-            shortDescriptionNewValue,
-            'short description',
-            250,
-            setShortDescriptionValidationMessage,
-          );
+      <Controller
+        name="descriptionMD"
+        control={control}
+        rules={{
+          required: 'Please enter a description.',
         }}
-        buttonEnabled={descriptionMD.length > 0}
-        enabled={!isSaving}
-        value={shortDescription}
-        tip="Use AI to generate a short description or write your own based on the description field above."
-        getShortDescription={() =>
-          getShortDescriptionFromDescription(descriptionMD)
-        }
-        customValidationMessage={shortDescriptionValidationMessage}
+        render={({
+          field: { value, onChange, onBlur },
+          fieldState: { error },
+        }) => (
+          <LabeledTextEditor
+            title="Description"
+            subtitle="(required)"
+            tip="Add an abstract or a summary that describes this work. You can format your text by using markup language."
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            enabled={!isSaving}
+            customValidationMessage={error?.message}
+            info={
+              <Markdown
+                value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
+        `}
+              ></Markdown>
+            }
+            autofocus={false}
+          />
+        )}
+      />
+      <Controller
+        name="shortDescription"
+        control={control}
+        rules={{
+          required: 'Please enter a short description.',
+          maxLength: {
+            value: 250,
+            message:
+              'The short description exceeds the character limit. Please limit it to 250 characters.',
+          },
+          validate: (value) =>
+            (value ?? '').trim().length > 0 ||
+            'Please enter a short description',
+        }}
+        render={({
+          field: { value, onChange, onBlur },
+          fieldState: { error },
+        }) => (
+          <ShortDescriptionCard
+            onChange={(shortDescriptionNewValue) => {
+              onChange(shortDescriptionNewValue);
+            }}
+            onBlur={onBlur}
+            buttonEnabled={(descriptionMD?.length ?? 0) > 0}
+            enabled={!isSaving}
+            value={value ?? ''}
+            tip="Use AI to generate a short description or write your own based on the description field above."
+            getShortDescription={() =>
+              getShortDescriptionFromDescription(descriptionMD || '')
+            }
+            customValidationMessage={error?.message}
+          />
+        )}
       />
 
       {showImpactAndCategory && (
         <>
-          <LabeledMultiSelect
-            required
-            getValidationMessage={(validationState) =>
-              validationState.valueMissing
-                ? 'Please add at least one category.'
-                : 'You can select up to two categories only.'
-            }
-            title="Category"
-            description="Select up to two options that best describe the scientific category of this output."
-            subtitle="(required)"
-            enabled={!isSaving && !disableImpactAndCategory}
-            placeholder="Start typing..."
-            loadOptions={getCategorySuggestions}
-            onChange={(newValues) => {
-              onChangeCategories(
-                newValues as MultiSelectOptionsType &
-                  OptionsType<MultiSelectOptionsType>,
-              );
-              validateCategories(newValues);
+          <Controller
+            name="categories"
+            control={control}
+            rules={{
+              validate: (value) => {
+                const selectedCategories = value ?? [];
+
+                if (selectedCategories.length === 0)
+                  return 'Please add at least one category.';
+
+                return (
+                  selectedCategories.length <= 2 ||
+                  'You can select up to two categories only.'
+                );
+              },
             }}
-            customValidationMessage={categoryValidationMessage}
-            values={categories as OptionsType<MultiSelectOptionsType>}
-            noOptionsMessage={({ inputValue }) =>
-              `Sorry, no category options match ${inputValue}`
-            }
+            render={({
+              field: { value, onChange, onBlur },
+              fieldState: { error },
+            }) => (
+              <LabeledMultiSelect
+                title="Category"
+                description="Select up to two options that best describe the scientific category of this output."
+                subtitle="(required)"
+                enabled={!isSaving && !disableImpactAndCategory}
+                placeholder="Start typing..."
+                loadOptions={getCategorySuggestions}
+                onChange={(newValues) =>
+                  onChange(
+                    newValues as MultiSelectOptionsType &
+                      OptionsType<MultiSelectOptionsType>,
+                  )
+                }
+                onBlur={onBlur}
+                customValidationMessage={error?.message}
+                values={value as OptionsType<MultiSelectOptionsType>}
+                noOptionsMessage={({ inputValue }) =>
+                  `Sorry, no category options match ${inputValue}`
+                }
+              />
+            )}
           />
-          <LabeledDropdown
-            required
-            getValidationMessage={() => 'Please choose an impact.'}
-            title="Impact"
-            subtitle="(required)"
-            description="Select the option that best describes the impact of this output on the PD field."
-            options={impactOptions}
-            onChange={(e) => {
-              const impactOption = impactOptions.find(
-                (option) => option.value === e,
-              );
-              onChangeImpact(
-                impactOption as MultiSelectOptionsType &
-                  OptionsType<MultiSelectOptionsType>,
-              );
+          <Controller
+            name="impact"
+            control={control}
+            rules={{
+              validate: (value) =>
+                !!value?.value || 'Please add at least one impact.',
             }}
-            onBlur={validateImpact}
-            customValidationMessage={impactValidationMessage}
-            value={impact?.value ?? ''}
-            enabled={!isSaving && !disableImpactAndCategory}
-            noOptionsMessage={(option) =>
-              `Sorry, no impacts match ${option.inputValue}`
-            }
-            placeholder="Choose an impact"
+            render={({
+              field: { value, onChange, onBlur },
+              fieldState: { error },
+            }) => (
+              <LabeledDropdown
+                title="Impact"
+                subtitle="(required)"
+                description="Select the option that best describes the impact of this output on the PD field."
+                placeholder="Choose an impact"
+                required
+                options={impactOptions}
+                onChange={(e) => {
+                  const impactOption = impactOptions.find(
+                    (option) => option.value === e,
+                  );
+                  onChange(
+                    impactOption as MultiSelectOptionsType &
+                      OptionsType<MultiSelectOptionsType>,
+                  );
+                }}
+                onBlur={onBlur}
+                customValidationMessage={error?.message}
+                value={value?.value ?? ''}
+                enabled={!isSaving && !disableImpactAndCategory}
+                noOptionsMessage={(option) =>
+                  `Sorry, no impacts match ${option.inputValue}`
+                }
+              />
+            )}
           />
-          <LabeledTextArea
-            value={layImpactStatement ?? ''}
-            onChange={(layImpactNewValue) => {
-              onChangeLayImpactStatement(layImpactNewValue);
-              validateFieldWithCharLimit(
-                layImpactNewValue,
-                'lay impact statement',
-                100,
-                setLayImpactValidationMessage,
-              );
+          <Controller
+            name="layImpactStatement"
+            control={control}
+            rules={{
+              required: 'Please enter a lay impact statement.',
+              maxLength: {
+                value: 100,
+                message:
+                  'The lay impact statement exceeds the character limit. Please limit it to 100 characters.',
+              },
+              validate: (value) =>
+                (value ?? '').trim().length > 0 ||
+                'Please enter a lay impact statement',
             }}
-            enabled={!isSaving}
-            required
-            title="Lay Impact Statement"
-            subtitle="(required)"
-            tip={
-              'Explain in plain language why this work matters and how it may impact research, patients, or the wider community.'
-            }
-            customValidationMessage={layImpactValidationMessage}
+            render={({
+              field: { value, onChange, onBlur },
+              fieldState: { error },
+            }) => (
+              <LabeledTextArea
+                title="Lay Impact Statement"
+                subtitle="(required)"
+                tip={
+                  'Explain in plain language why this work matters and how it may impact research, patients, or the wider community.'
+                }
+                value={value ?? ''}
+                onChange={onChange}
+                onBlur={onBlur}
+                enabled={!isSaving}
+                customValidationMessage={error?.message}
+              />
+            )}
           />
         </>
       )}
       {displayChangelog && (
-        <LabeledTextArea
-          title="Changelog"
-          subtitle="(required)"
-          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the output."
-          customValidationMessage={changelogValidationMessage}
-          value={changelog ?? ''}
-          onChange={(changelogNewValue) => {
-            onChangeChangelog(changelogNewValue);
-            validateFieldWithCharLimit(
-              changelogNewValue,
-              'changelog',
-              250,
-              setChangelogValidationMessage,
-            );
+        <Controller
+          name="changelog"
+          control={control}
+          rules={{
+            required: 'Please enter a changelog.',
+            maxLength: {
+              value: 250,
+              message:
+                'The changelog exceeds the character limit. Please limit it to 250 characters.',
+            },
+            validate: (value) =>
+              (value ?? '').trim().length > 0 || 'Please enter a changelog',
           }}
-          required
-          enabled={!isSaving}
+          render={({
+            field: { value, onChange, onBlur },
+            fieldState: { error },
+          }) => (
+            <LabeledTextArea
+              title="Changelog"
+              subtitle="(required)"
+              tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the output."
+              customValidationMessage={error?.message}
+              value={value ?? ''}
+              onChange={onChange}
+              onBlur={onBlur}
+              enabled={!isSaving}
+            />
+          )}
         />
       )}
     </FormCard>

@@ -21,15 +21,11 @@ export const useNavigationWarning = ({
   const navigate = useNavigate();
   const { register, requestNavigation } = useNavigationBlocker();
 
-  /**
-   * Track intentional navigations from blockedNavigate to prevent double confirmation
-   */
   const intentionalNavigationRef = useRef(false);
 
-  /**
-   * Track whether we've pushed a dummy history entry
-   */
   const hasDummyEntryRef = useRef(false);
+
+  const dummyEntryHrefRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!shouldBlock) {
@@ -39,7 +35,6 @@ export const useNavigationWarning = ({
     return cleanup;
   }, [shouldBlock, message, register]);
 
-  // Handle browser refresh/close/address-bar navigation
   useEffect(() => {
     if (!shouldBlock) {
       return undefined;
@@ -55,48 +50,31 @@ export const useNavigationWarning = ({
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [shouldBlock, message]);
 
-  // Handle browser back/forward buttons
-  // WARNING: This uses a history manipulation trick that has known quirks:
-  // - Adds extra entries to history stack
-  // - Forward button behavior may be unexpected after canceling
-  // - Does NOT catch programmatic navigate() calls (intentional, use `blockedNavigate` helper for that)
   useEffect(() => {
     if (!shouldBlock) {
       return undefined;
     }
 
     const handlePopstate = () => {
-      // Skip confirmation for intentional navigations from `blockedNavigate`
       if (intentionalNavigationRef.current) {
         intentionalNavigationRef.current = false;
         return;
       }
 
-      // Push a new dummy entry to "undo" the navigation
       window.history.pushState(null, '', window.location.href);
 
       if (!window.confirm(message)) {
-        // User canceled, navigation was already undone by pushState above
         return;
       }
 
-      // Mark as intentional so the next popstate (triggered by history.go)
-      // is skipped. Without this, React Router 7's startTransition keeps the
-      // component mounted during navigation, causing the popstate listener
-      // to fire again and creating an infinite confirm loop.
       intentionalNavigationRef.current = true;
-      window.history.go(-2); // User confirmed, go back the dummy entry plus a additional one.
+      window.history.go(-2);
     };
 
-    // Guard against double push in StrictMode (effect runs twice: mount -> cleanup -> mount,
-    // but the ref persists, preventing duplicate history entries)
     if (!hasDummyEntryRef.current) {
-      // For future travelers: popstate triggers once the navigation has happened, which would
-      // be too late to prevent the navigation from happening.
-      // So, we create a dummy entry to the same URL the user is seeing so that we can catch
-      // the navigation event when they click "Back" or navigate away.
       window.history.pushState(null, '', window.location.href);
       hasDummyEntryRef.current = true;
+      dummyEntryHrefRef.current = window.location.href;
     }
 
     window.addEventListener('popstate', handlePopstate);
@@ -105,27 +83,23 @@ export const useNavigationWarning = ({
 
   useEffect(() => {
     if (!shouldBlock && hasDummyEntryRef.current) {
-      // Clean up dummy history entry when shouldBlock becomes false
-      window.history.back();
+      if (window.location.href === dummyEntryHrefRef.current) {
+        window.history.back();
+      }
       hasDummyEntryRef.current = false;
+      dummyEntryHrefRef.current = null;
     }
   }, [shouldBlock]);
 
-  // Wrapped navigate that checks blocking first
   const blockedNavigate: NavigateFunction = useCallback(
     (to, options?) => {
       if (!requestNavigation()) {
         return;
       }
       if (typeof to === 'number') {
-        // Mark as intentional so popstate handler skips confirmation.
-        // Must be set BEFORE any navigation to prevent double confirm dialog.
         intentionalNavigationRef.current = true;
 
         if (hasDummyEntryRef.current) {
-          // Navigate with offset to account for dummy history entry pushed
-          // by the popstate blocking effect. Since `to` is
-          // usually -1 ("Go back"), this translates to -2 most of the time.
           window.history.go(to - 1);
         } else {
           void navigate(to);

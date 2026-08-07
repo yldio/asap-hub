@@ -1,27 +1,25 @@
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
-import { ComponentProps } from 'react';
 import { mockActErrorsInConsole } from '../../test-utils';
 import ResearchOutputPublishingCard, {
-  getPublishDateValidationMessage,
+  type ResearchOutputPublishingCardProps,
 } from '../ResearchOutputPublishingCard';
+import { renderWithResearchOutputForm } from '../test-utils/research-output-form';
 
-const props: ComponentProps<typeof ResearchOutputPublishingCard> = {
-  asapFunded: 'Not Sure',
-  usedInPublication: 'Not Sure',
-  sharingStatus: 'Network Only',
+const defaultProps: ResearchOutputPublishingCardProps = {
+  disableDateMadePublic: false,
+  disableNonPublicSharingStatus: false,
+  disableUsedInPublication: false,
 };
-
 it.each`
-  field                  | group                       | prop
-  ${'asapFunded'}        | ${/funded by ASAP/i}        | ${'onChangeAsapFunded'}
-  ${'usedInPublication'} | ${/used in a publication/i} | ${'onChangeUsedInPublication'}
-  ${'sharingStatus'}     | ${/sharing status/i}        | ${'onChangeSharingStatus'}
-`('triggers an onchange event for group $field', async ({ group, prop }) => {
-  const onChangeFn = jest.fn();
-  render(
-    <ResearchOutputPublishingCard {...{ ...props, [prop]: onChangeFn }} />,
+  field                  | group                       | expected
+  ${'asapFunded'}        | ${/funded by ASAP/i}        | ${'No'}
+  ${'usedInPublication'} | ${/used in a publication/i} | ${'No'}
+  ${'sharingStatus'}     | ${/sharing status/i}        | ${'Public'}
+`('updates form value for group $field', async ({ field, group, expected }) => {
+  const { methodsRef } = renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
   );
 
   const groupInput = within(
@@ -30,71 +28,76 @@ it.each`
 
   await userEvent.click(groupInput!);
 
-  expect(onChangeFn).toHaveBeenCalled();
+  expect(methodsRef.current?.getValues(field)).toEqual(expected);
 });
 
 it('conditionally shows date published field', async () => {
-  const { rerender } = render(
-    <ResearchOutputPublishingCard {...props} sharingStatus={'Network Only'} />,
+  renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
+    {
+      defaultValues: { sharingStatus: 'Network Only' },
+    },
   );
   expect(screen.queryByLabelText(/date made public/i)).not.toBeInTheDocument();
 
-  rerender(
-    <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
+  await userEvent.click(
+    within(screen.getByRole('group', { name: /sharing status/i })).getByRole(
+      'radio',
+      { name: /Public/i },
+    ),
   );
   expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
 });
 
 it('enables the date made public field when disableDateMadePublic is false', () => {
-  render(
+  renderWithResearchOutputForm(
     <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
+      {...defaultProps}
       disableDateMadePublic={false}
     />,
+    { defaultValues: { sharingStatus: 'Public' } },
   );
   expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
 });
 
 it('disables the date made public field when disableDateMadePublic is true', () => {
-  render(
+  renderWithResearchOutputForm(
     <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
+      {...defaultProps}
       disableDateMadePublic={true}
     />,
+    { defaultValues: { sharingStatus: 'Public' } },
   );
   expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
 });
 
-it('triggers an on change for date published', async () => {
-  const onChangeFn = jest.fn();
-
-  render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      onChangePublishDate={onChangeFn}
-    />,
+it('updates form value for date published', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
+    { defaultValues: { sharingStatus: 'Public' } },
   );
 
   await userEvent.type(
     screen.getByLabelText(/date made public/i),
     '2020-12-02',
   );
-  expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
+  expect(methodsRef.current?.getValues('publishDate')).toEqual(
+    new Date('2020-12-02'),
+  );
 });
 
 it('shows the custom error message for a date in the future', async () => {
   // Suppress act() warnings from TextField's internal async validation state updates
   const consoleMock = mockActErrorsInConsole();
 
-  const { findByText } = render(
-    <ResearchOutputPublishingCard
-      {...props}
-      sharingStatus={'Public'}
-      publishDate={startOfTomorrow()}
-    />,
+  const { findByText } = renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
+    {
+      defaultValues: {
+        sharingStatus: 'Public',
+        publishDate: startOfTomorrow(),
+      },
+    },
   );
   const dateInput = screen.getByLabelText(/date made public/i);
   await userEvent.click(dateInput);
@@ -106,51 +109,17 @@ it('shows the custom error message for a date in the future', async () => {
   consoleMock.mockRestore();
 });
 
-describe('getPublishDateValidationMessage returns', () => {
-  const e: ValidityState = {
-    badInput: false,
-    rangeOverflow: false,
-    rangeUnderflow: false,
-    stepMismatch: false,
-    tooLong: false,
-    tooShort: false,
-    typeMismatch: false,
-    valid: false,
-    valueMissing: false,
-    customError: false,
-    patternMismatch: false,
-  };
-
-  it('a message when the date is in the future', () => {
-    expect(
-      getPublishDateValidationMessage({ ...e, rangeOverflow: true }),
-    ).toEqual('Publish date cannot be greater than today');
-  });
-
-  it('a message when the date is invalid', () => {
-    expect(getPublishDateValidationMessage({ ...e, badInput: true })).toEqual(
-      'Date published should be complete or removed',
-    );
-  });
-
-  it('a message when the date is missing', () => {
-    expect(
-      getPublishDateValidationMessage({ ...e, valueMissing: true }),
-    ).toEqual('Please enter the date made public.');
-  });
-});
-
 it('prompts for the date when editing a public output that has no date', async () => {
-  // Suppress act() warnings from TextField's internal async validation state updates
+  // Suppress act() warnings from DateField's internal async validation state updates
   const consoleMock = mockActErrorsInConsole();
 
-  const { findByText } = render(
-    <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
+  const { findByText } = renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
+    { defaultValues: { sharingStatus: 'Public' } },
   );
 
   const dateInput = screen.getByLabelText(/date made public/i);
   expect(dateInput).toBeEnabled();
-  expect(dateInput).toBeRequired();
   expect(dateInput).toHaveValue('');
 
   await userEvent.click(dateInput);
@@ -159,4 +128,24 @@ it('prompts for the date when editing a public output that has no date', async (
   expect(await findByText(/please enter the date made public/i)).toBeVisible();
 
   consoleMock.mockRestore();
+});
+
+it('stops asking for the date once the sharing status is not public', async () => {
+  const { methodsRef, queryByText } = renderWithResearchOutputForm(
+    <ResearchOutputPublishingCard {...defaultProps} />,
+    { defaultValues: { sharingStatus: 'Public' } },
+  );
+
+  await userEvent.click(screen.getByLabelText(/date made public/i));
+  await userEvent.tab();
+
+  await userEvent.click(
+    within(screen.getByRole('group', { name: /sharing status/i })).getByRole(
+      'radio',
+      { name: /CRN Only/i },
+    ),
+  );
+
+  expect(await methodsRef.current?.trigger()).toBe(true);
+  expect(queryByText(/please enter the date made public/i)).toBeNull();
 });

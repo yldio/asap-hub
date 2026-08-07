@@ -15,6 +15,7 @@ export { default as asapLogoMobile } from './asap-logo-mobile';
 export { default as binIcon } from './bin';
 export { default as bioinformatics } from './bioinformatics';
 export { default as BlueSkyIcon } from './blue-sky';
+export { default as breadcrumbSeparatorIcon } from './breadcrumb-separator';
 export { default as budgetIcon } from './budget';
 export { default as calendarIcon } from './calendar';
 export { default as cardViewIcon } from './card-view';

@@ -77,6 +77,8 @@ export { default as ReminderItem } from './ReminderItem';
 export { default as RolesList } from './RolesList';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
+export { default as SpeakerTeamRow } from './SpeakerTeamRow';
+export { default as SpeakerUserRow } from './SpeakerUserRow';
 export { default as StatusBadge } from './StatusBadge';
 export { default as StatusButton } from './StatusButton';
 export { default as TabbedCard } from './TabbedCard';

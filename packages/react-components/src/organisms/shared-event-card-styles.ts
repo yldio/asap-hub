@@ -122,3 +122,15 @@ export const cellStyles = css({
 });
 
 export const statusCellStyles = css([cellStyles, { lineHeight: 0 }]);
+
+// The accordion expand/collapse toggle, shared by the speaker table rows and
+// the edit-modal team rows.
+export const chevronButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,
+  border: 'none',
+  background: 'none',
+  cursor: 'pointer',
+});

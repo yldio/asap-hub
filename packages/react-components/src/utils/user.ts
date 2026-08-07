@@ -1,3 +1,8 @@
+export const splitDisplayName = (displayName: string) => {
+  const [firstName, ...rest] = displayName.split(' ');
+  return { firstName, lastName: rest.join(' ') };
+};
+
 export const formatUserLocation = (
   city?: string,
   stateOrProvince?: string,

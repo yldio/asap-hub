@@ -12,6 +12,7 @@ import {
   chevronDownIcon,
 } from '../icons';
 import { rem } from '../pixels';
+import { splitDisplayName } from '../utils/user';
 import CollaboratingList, {
   nonMobileQuery,
   ARTICLES_BEFORE_SCROLL,
@@ -140,11 +141,6 @@ const articleTitleGroupStyles = css({
   },
 });
 
-const memberNameParts = (displayName: string) => {
-  const [firstName, ...rest] = displayName.split(' ');
-  return { firstName, lastName: rest.join(' ') };
-};
-
 const MemberTeamInfo = ({ member }: { member: CollaboratingMember }) => {
   if (member.teams.length === 0) {
     return null;
@@ -184,7 +180,7 @@ const CollaboratingMemberRow: React.FC<{ member: CollaboratingMember }> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const articleCount = member.articles.length;
-  const { firstName, lastName } = memberNameParts(member.displayName);
+  const { firstName, lastName } = splitDisplayName(member.displayName);
 
   const toggle = () => setExpanded((v) => !v);
 

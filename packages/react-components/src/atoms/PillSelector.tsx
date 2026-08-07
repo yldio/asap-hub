@@ -1,14 +1,26 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { colors } from '..';
 import { lead, paper, steel, tin } from '../colors';
 import { borderWidth } from '../form';
-import { rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const containerStyles = css({
   padding: rem(6),
   display: 'flex',
   flexWrap: 'wrap',
   gap: rem(8),
+});
+
+// Opt-in: pills span the full row (stacking one per line) instead of
+// sizing to their own text, and the group's own padding drops (at every
+// breakpoint) so it aligns flush with the parent's content width exactly.
+const fullWidthOnMobileContainerStyles = css({
+  padding: 0,
+  [`@media (max-width: ${mobileScreen.max}px)`]: { gap: rem(16) },
+});
+
+const fullWidthOnMobilePillStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: { width: '100%' },
 });
 
 const disabledStyles = css({
@@ -23,6 +35,7 @@ const pillStyles = (selected: boolean, error: boolean) =>
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: rem(8),
 
     borderStyle: 'solid',
     borderWidth: `${borderWidth}px`,
@@ -32,6 +45,11 @@ const pillStyles = (selected: boolean, error: boolean) =>
     userSelect: 'none',
     backgroundColor: selected ? colors.info100.rgba : paper.rgb,
     color: selected ? colors.info500.rgba : lead.rgba,
+    '> svg': {
+      width: rem(24),
+      height: rem(24),
+      flexShrink: 0,
+    },
   });
 
 const hoverStyles = css({
@@ -45,6 +63,7 @@ const hoverStyles = css({
 type PillOption<V extends string> = {
   value: V;
   label: string;
+  icon?: React.ReactNode;
 };
 
 type PillSelectorProps<V extends string> = {
@@ -53,6 +72,8 @@ type PillSelectorProps<V extends string> = {
   onChange: (value: V[]) => void;
   enabled?: boolean;
   error?: boolean;
+  fullWidthOnMobile?: boolean;
+  overrideStyles?: SerializedStyles;
 };
 
 const PillSelector = <V extends string>({
@@ -61,6 +82,8 @@ const PillSelector = <V extends string>({
   onChange,
   enabled = true,
   error = false,
+  fullWidthOnMobile = false,
+  overrideStyles,
 }: PillSelectorProps<V>) => {
   const toggle = (val: V) => {
     if (!enabled) return;
@@ -72,7 +95,12 @@ const PillSelector = <V extends string>({
   };
 
   return (
-    <div css={containerStyles}>
+    <div
+      css={[
+        containerStyles,
+        fullWidthOnMobile && fullWidthOnMobileContainerStyles,
+      ]}
+    >
       {options.map((option) => {
         const selected = value.includes(option.value);
 
@@ -82,10 +110,13 @@ const PillSelector = <V extends string>({
             css={[
               pillStyles(selected, error),
               ...(enabled ? [hoverStyles] : [disabledStyles]),
+              fullWidthOnMobile && fullWidthOnMobilePillStyles,
+              overrideStyles,
             ]}
             type="button"
             onClick={() => toggle(option.value)}
           >
+            {option.icon}
             {option.label}
           </button>
         );

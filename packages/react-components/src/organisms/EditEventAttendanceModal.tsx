@@ -359,7 +359,7 @@ const attendanceSwitchStyles = css({
   paddingRight: rem(24),
 });
 
-const deleteButtonStyles = css({
+export const deleteButtonStyles = css({
   flexShrink: 0,
   display: 'inline-flex',
   alignItems: 'center',

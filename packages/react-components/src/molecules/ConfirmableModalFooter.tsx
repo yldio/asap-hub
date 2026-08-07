@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 
 import { Button } from '../atoms';
 import { neutral1000 } from '../colors';
@@ -10,7 +10,7 @@ const footerStyles = (isConfirming: boolean) =>
     alignItems: 'center',
     justifyContent: isConfirming ? 'space-between' : 'flex-end',
     gap: rem(24),
-    padding: `${rem(48)} ${rem(24)} ${rem(24)}`,
+    padding: `${rem(48)} ${rem(24)} ${rem(32)}`,
     [`@media (max-width: ${mobileScreen.max}px)`]: {
       flexDirection: 'column',
       alignItems: 'stretch',
@@ -58,7 +58,6 @@ type ConfirmableModalFooterProps = {
   onConfirm: () => void;
   confirmEnabled?: boolean;
   confirmLoading?: boolean;
-  overrideStyles?: SerializedStyles;
 };
 
 const ConfirmableModalFooter: React.FC<ConfirmableModalFooterProps> = ({
@@ -72,9 +71,8 @@ const ConfirmableModalFooter: React.FC<ConfirmableModalFooterProps> = ({
   onConfirm,
   confirmEnabled = true,
   confirmLoading = false,
-  overrideStyles,
 }) => (
-  <footer css={[footerStyles(isConfirming), overrideStyles]}>
+  <footer css={footerStyles(isConfirming)}>
     {isConfirming && <span css={warningStyles}>{confirmationMessage}</span>}
     <div css={actionsStyles}>
       {isConfirming ? (

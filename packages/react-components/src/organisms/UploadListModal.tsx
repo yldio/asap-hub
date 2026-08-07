@@ -348,10 +348,6 @@ const unmatchedHelpStyles = css({
   lineHeight: rem(24),
 });
 
-const footerOverrideStyles = css({
-  paddingBottom: rem(32),
-});
-
 const getAllowedExtensions = (accept: string): string[] =>
   accept
     .split(',')
@@ -759,7 +755,6 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
         }}
         confirmEnabled={addEnabled}
         confirmLoading={isSaving}
-        overrideStyles={footerOverrideStyles}
       />
     </Modal>
   );

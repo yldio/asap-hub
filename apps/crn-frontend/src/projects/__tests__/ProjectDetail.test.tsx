@@ -96,15 +96,6 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
-  collaborators: [
-    {
-      id: 'collab-1',
-      displayName: 'Jane Contact',
-      firstName: 'Jane',
-      lastName: 'Contact',
-      email: 'contact@example.com',
-    },
-  ],
   fundedTeam: {
     id: 'team-1',
     displayName: 'Discovery Team',
@@ -126,7 +117,6 @@ const mockDiscoveryProjectNoContact: DiscoveryProjectDetailType = {
   ...mockDiscoveryProject,
   id: 'discovery-no-contact',
   contactEmail: '',
-  collaborators: [],
 };
 
 const mockResourceProject: ResourceProjectDetailType = {
@@ -171,7 +161,6 @@ const mockResourceProjectNoContact: ResourceProjectDetailType = {
   id: 'resource-no-contact',
   contactEmail: '',
   members: [],
-  collaborators: [],
 };
 
 const mockResourceProjectCollabContact: ResourceProjectDetailType = {
@@ -183,17 +172,8 @@ const mockResourceProjectCollabContact: ResourceProjectDetailType = {
       displayName: 'John Member',
       firstName: 'John',
       lastName: 'Member',
-      email: 'other@example.com',
-      role: 'Resource Project - Co-PI',
-    },
-  ],
-  collaborators: [
-    {
-      id: 'collab-1',
-      displayName: 'Jane Collaborator',
-      firstName: 'Jane',
-      lastName: 'Collaborator',
       email: 'contact@example.com',
+      role: 'Resource Project - Co-PI',
     },
   ],
 };
@@ -858,25 +838,6 @@ describe('DiscoveryProjectDetail - specific', () => {
     expect(lastWorkspaceProps.teamId).toBe('team-1');
   });
 
-  it('renders workspace with contact name from collaborators', async () => {
-    const memberUser = {
-      id: 'user-team',
-      projects: [],
-      teams: [{ id: 'team-1', role: 'Project Manager' }],
-      role: 'Grantee',
-    };
-    enable('PROJECT_WORKSPACE');
-    await renderProjectDetail(
-      DiscoveryProjectDetail,
-      'discovery',
-      'discovery-1',
-      memberUser,
-      'workspace',
-    );
-    await screen.findByRole('heading', { name: 'Compliance Review' });
-    expect(lastWorkspaceProps.contactName).toBe('Jane Contact');
-  });
-
   describe('Duplicate Output', () => {
     const teamResponse = createTeamResponse();
     const memberUser = {
@@ -933,7 +894,7 @@ describe('DiscoveryProjectDetail - specific', () => {
 });
 
 describe('ResourceProjectDetail - specific', () => {
-  it('resolves contactName from collaborators when no member matches contactEmail', async () => {
+  it('resolves contactName members when it matches contactEmail', async () => {
     const memberUser = {
       id: 'user-team',
       projects: [],
@@ -949,6 +910,6 @@ describe('ResourceProjectDetail - specific', () => {
       'workspace',
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
-    expect(lastWorkspaceProps.contactName).toBe('Jane Collaborator');
+    expect(lastWorkspaceProps.contactName).toBe('John Member');
   });
 });

@@ -135,6 +135,7 @@ describe('authors', () => {
             firstName: 'Author',
             lastName: 'One',
             displayName: 'Author One',
+            teams: [],
             __meta: {
               type: 'user',
             },
@@ -271,10 +272,10 @@ describe('authors', () => {
   );
 
   it.each`
-    section                     | submittedValue
-    ${/Corresponding Author/}   | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
-    ${/Additional Authors/}     | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
-    ${/First Author Full Name/} | ${{ firstAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
+    section                   | submittedValue
+    ${/Corresponding Author/} | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
+    ${/Additional Authors/}   | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
+    ${/First Author/}         | ${{ firstAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
   `(
     'submits a non existing external author in $section',
     async ({ section, submittedValue }) => {

@@ -103,7 +103,6 @@ const dismissStyles = (enabled = true) =>
   css([
     deleteButtonStyles(enabled),
     {
-      flexGrow: 0,
       marginLeft: 'auto',
       [`@media (max-width: ${mobileScreen.max}px)`]: {
         order: 2,

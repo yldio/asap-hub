@@ -74,9 +74,6 @@ const alumniStyles = css({
   alignItems: 'center',
 });
 
-const removeButtonStyles = (enabled = true) =>
-  css([deleteButtonStyles(enabled), { flexGrow: 0 }]);
-
 type SpeakerUserRowProps = {
   readonly displayName: string;
   readonly avatarUrl?: string;
@@ -124,7 +121,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
           enabled={enabled}
           aria-label={`Remove ${displayName}`}
           onClick={onRemove}
-          overrideStyles={removeButtonStyles(enabled)}
+          overrideStyles={deleteButtonStyles(enabled)}
         >
           {binIcon}
         </Button>

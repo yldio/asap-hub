@@ -137,6 +137,7 @@ export const chevronButtonStyles = css({
 
 export const deleteButtonStyles = (enabled = true) =>
   css({
+    flexGrow: 0,
     flexShrink: 0,
     display: 'inline-flex',
     alignItems: 'center',
@@ -153,7 +154,6 @@ export const deleteButtonStyles = (enabled = true) =>
     color: enabled ? neutral1000.rgb : lead.rgb,
     cursor: enabled ? 'pointer' : 'unset',
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      flexGrow: 0,
       minWidth: rem(24),
     },
     '> svg': {

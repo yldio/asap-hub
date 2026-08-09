@@ -276,9 +276,6 @@ const matchedTeamNameStyles = css({
   fontWeight: 400,
 });
 
-const localDeleteButtonStyles = (enabled = true) =>
-  css([deleteButtonStyles(enabled), { flexGrow: 0 }]);
-
 const unmatchedRowsStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -630,7 +627,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                             enabled={!isCancelling}
                             aria-label={`Remove ${team.teamName}`}
                             onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={localDeleteButtonStyles(
+                            overrideStyles={deleteButtonStyles(
                               !isCancelling,
                             )}
                           >

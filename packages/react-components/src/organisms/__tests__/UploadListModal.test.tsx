@@ -486,4 +486,65 @@ describe('UploadListModal', () => {
 
     expect(onBack).toHaveBeenCalledTimes(1);
   });
+
+  describe('disabled state during cancel confirmation', () => {
+    const enterCancelConfirmation = async () => {
+      const { container } = renderModal({
+        initialFiles: [makeFile('teams.csv')],
+        initialResult: uploadResult,
+        initialSectionsOpen: true,
+      });
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      return container;
+    };
+
+    it('Should disable the file upload Add button', async () => {
+      await enterCancelConfirmation();
+      const allButtons = screen.getAllByRole('button');
+      const uploadAddButton = allButtons.find(
+        (btn) =>
+          (btn as HTMLButtonElement).type === 'submit' &&
+          btn.textContent?.includes('Add'),
+      );
+      expect(uploadAddButton).toBeDisabled();
+    });
+
+    it('Should disable the file input', async () => {
+      const container = await enterCancelConfirmation();
+      const fileInput = container.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
+      expect(fileInput).toBeDisabled();
+    });
+
+    it('Should disable matched team delete buttons', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: 'Remove Imaging' }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable suggestion Add buttons in unmatched section', async () => {
+      await enterCancelConfirmation();
+      const suggestionRow = screen.getByText(/did you mean/).closest('div')!;
+      const addButton = within(suggestionRow).getByRole('button');
+      expect(addButton).toBeDisabled();
+    });
+
+    it('Should keep Tag X button visible but disabled', async () => {
+      await enterCancelConfirmation();
+      const tagButton = screen.getByRole('button', { name: 'Cross' });
+      expect(tagButton).toBeDisabled();
+    });
+
+    it('Should re-enable controls when Keep Editing is clicked', async () => {
+      await enterCancelConfirmation();
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Keep Editing' }),
+      );
+      expect(
+        screen.getByRole('button', { name: 'Remove Imaging' }),
+      ).toBeEnabled();
+    });
+  });
 });

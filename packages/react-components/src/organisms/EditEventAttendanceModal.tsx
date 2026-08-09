@@ -19,6 +19,7 @@ import {
   neutral1000,
   paper,
   pearl,
+  silver,
   steel,
   tin,
 } from '../colors';
@@ -37,7 +38,10 @@ import { mobileScreen, rem } from '../pixels';
 import { noop } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
-import { iconButtonStyles } from './shared-event-card-styles';
+import {
+  deleteButtonStyles,
+  iconButtonStyles,
+} from './shared-event-card-styles';
 import SourceLists from './SourceLists';
 import UploadListModal, {
   UploadListResult,
@@ -153,26 +157,29 @@ const SectionTitle: React.FC<{
 
 const buttonIconGapReset = { '> svg + span': { marginLeft: 0 } } as const;
 
-const uploadButtonStyles = css({
-  alignSelf: 'flex-start',
-  gap: rem(8),
-  padding: `${rem(8)} ${rem(16)}`,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(4),
-  backgroundColor: paper.rgb,
-  color: neutral1000.rgb,
-  maxWidth: 'none',
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexGrow: 0,
-    minWidth: 'auto',
-  },
-  '> svg': {
-    width: rem(24),
-    height: rem(24),
-    stroke: neutral1000.rgb,
-  },
-  ...buttonIconGapReset,
-});
+const uploadButtonStyles = (enabled = true) =>
+  css({
+    alignSelf: 'flex-start',
+    gap: rem(8),
+    padding: `${rem(8)} ${rem(16)}`,
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(4),
+    backgroundColor: enabled ? paper.rgb : silver.rgb,
+    color: enabled ? neutral1000.rgb : lead.rgb,
+    maxWidth: 'none',
+    cursor: enabled ? 'pointer' : 'unset',
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      flexGrow: 0,
+      minWidth: 'auto',
+    },
+    '> svg': {
+      width: rem(24),
+      height: rem(24),
+      stroke: enabled ? neutral1000.rgb : lead.rgb,
+      filter: 'none',
+    },
+    ...buttonIconGapReset,
+  });
 
 const pillRowStyles = (columnCount: number, rowCount: number) =>
   css({
@@ -188,36 +195,43 @@ const pillRowStyles = (columnCount: number, rowCount: number) =>
     },
   });
 
-const pillStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  justifySelf: 'start',
-  maxWidth: 'none',
-  gap: rem(8),
-  padding: `${rem(6)} ${rem(16)}`,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(24),
-  backgroundColor: paper.rgb,
-  color: neutral1000.rgb,
-  fontWeight: 'normal',
-  cursor: 'pointer',
-  '> svg': {
-    width: rem(24),
-    height: rem(24),
-  },
-  ...buttonIconGapReset,
-});
+const pillStyles = (enabled = true) =>
+  css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    justifySelf: 'start',
+    maxWidth: 'none',
+    gap: rem(8),
+    padding: `${rem(6)} ${rem(16)}`,
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(24),
+    backgroundColor: enabled ? paper.rgb : silver.rgb,
+    color: neutral1000.rgb,
+    fontWeight: 'normal',
+    cursor: enabled ? 'pointer' : 'unset',
+    '> svg': {
+      width: rem(24),
+      height: rem(24),
+      ...(enabled
+        ? {}
+        : { fill: neutral1000.rgb, filter: 'none', stroke: 'none' }),
+    },
+    ...buttonIconGapReset,
+  });
 
-const addedPillStyles = css({
-  color: neutral800.rgb,
-  backgroundColor: pearl.rgb,
-  // Recolour only the tick (first icon); the interest-group icon is recoloured
-  // via its own `color` prop to keep its outlined shapes intact.
-  '> svg:first-of-type': {
-    fill: neutral800.rgb,
-  },
-});
+const addedPillStyles = (enabled = true) =>
+  css(
+    enabled
+      ? {
+          color: neutral800.rgb,
+          backgroundColor: pearl.rgb,
+          '> svg:first-of-type': {
+            fill: neutral800.rgb,
+          },
+        }
+      : {},
+  );
 
 const attendeesHeaderStyles = css({
   display: 'flex',
@@ -359,29 +373,6 @@ const attendanceSwitchStyles = css({
   paddingRight: rem(24),
 });
 
-export const deleteButtonStyles = css({
-  flexShrink: 0,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(24),
-  minWidth: rem(24),
-  height: rem(24),
-  minHeight: rem(24),
-  padding: 0,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(4),
-  backgroundColor: paper.rgb,
-  color: neutral1000.rgb,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexGrow: 0,
-    minWidth: rem(24),
-  },
-  '> svg': {
-    width: rem(14.4),
-    height: rem(14.4),
-  },
-});
 
 const searchOptionStyles = css({
   display: 'flex',
@@ -630,7 +621,11 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                   <Button
                     key={group.id}
                     noMargin
-                    overrideStyles={css([pillStyles, added && addedPillStyles])}
+                    enabled={!isCancelling}
+                    overrideStyles={css([
+                      pillStyles(!isCancelling),
+                      added && addedPillStyles(!isCancelling),
+                    ])}
                     onClick={() => {
                       if (added) {
                         removeInterestGroup(group.id);
@@ -645,7 +640,14 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                   >
                     {added ? tickSmallIcon : plusIcon}
                     <InterestGroupsIcon
-                      color={added ? neutral800.rgb : undefined}
+                      color={
+                        isCancelling
+                          ? neutral1000.rgb
+                          : added
+                            ? neutral800.rgb
+                            : undefined
+                      }
+                      filled={isCancelling}
                     />
                     {group.name}
                   </Button>
@@ -660,6 +662,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             isMulti={false}
             values={null}
             noMargin
+            enabled={!isCancelling}
             defaultOptions={false}
             leftIndicator={searchIcon}
             loadOptions={(inputValue) => loadSearchOptions(inputValue)}
@@ -724,7 +727,8 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
             </div>
             <Button
               noMargin
-              overrideStyles={uploadButtonStyles}
+              enabled={!isCancelling}
+              overrideStyles={uploadButtonStyles(!isCancelling)}
               onClick={() => setShowUploadList(true)}
             >
               {uploadIcon}
@@ -752,6 +756,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
               <Button
                 small
                 noMargin
+                enabled={!isCancelling}
                 overrideStyles={markAllButtonStyles}
                 onClick={markAllAttended}
               >
@@ -797,6 +802,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       <span css={attendanceSwitchStyles}>
                         <Switch
                           checked={team.attended}
+                          enabled={!isCancelling}
                           uncheckedColor="error"
                           ariaLabel={`${team.teamName} attendance`}
                           onClick={() => toggleAttended(team.teamId)}
@@ -804,9 +810,10 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       </span>
                       <Button
                         noMargin
+                        enabled={!isCancelling}
                         aria-label={`Remove ${team.teamName}`}
                         onClick={() => removeTeam(team.teamId)}
-                        overrideStyles={deleteButtonStyles}
+                        overrideStyles={deleteButtonStyles(!isCancelling)}
                       >
                         {binIcon}
                       </Button>

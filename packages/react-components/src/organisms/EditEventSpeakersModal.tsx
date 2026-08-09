@@ -464,6 +464,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
             isMulti={false}
             values={null}
             noMargin
+            enabled={!isCancelling}
             creatable
             defaultOptions={false}
             leftIndicator={searchIcon}
@@ -541,6 +542,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
               <Button
                 small
                 noMargin
+                enabled={!isCancelling}
                 overrideStyles={markAllSharedButtonStyles}
                 onClick={markAllShared}
               >
@@ -578,6 +580,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
                       resolvePendingSpeaker(pendingSpeaker, teamId)
                     }
                     onDismiss={() => setPendingSpeaker(null)}
+                    enabled={!isCancelling}
                   />
                 )}
                 {visibleGroups.map((group) => (
@@ -611,6 +614,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
                     onToggleExpanded={() => toggleExpanded(group.id)}
                     onToggleShared={() => toggleShared(group.id)}
                     onRemoveUser={(userId) => removeUser(group.id, userId)}
+                    enabled={!isCancelling}
                   />
                 ))}
               </div>

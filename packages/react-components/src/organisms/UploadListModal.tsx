@@ -9,7 +9,6 @@ import {
   fern,
   lead,
   neutral1000,
-  paper,
   pearl,
   steel,
 } from '../colors';
@@ -23,6 +22,7 @@ import {
   tickSmallIcon,
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
+import { deleteButtonStyles } from './shared-event-card-styles';
 import { rem } from '../pixels';
 import {
   EventAttendanceTeam,
@@ -276,26 +276,8 @@ const matchedTeamNameStyles = css({
   fontWeight: 400,
 });
 
-const deleteButtonStyles = css({
-  flexGrow: 0,
-  flexShrink: 0,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(24),
-  minWidth: rem(24),
-  height: rem(24),
-  minHeight: rem(24),
-  padding: 0,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(4),
-  backgroundColor: paper.rgb,
-  color: neutral1000.rgb,
-  '> svg': {
-    width: rem(14.4),
-    height: rem(14.4),
-  },
-});
+const localDeleteButtonStyles = (enabled = true) =>
+  css([deleteButtonStyles(enabled), { flexGrow: 0 }]);
 
 const unmatchedRowsStyles = css({
   display: 'flex',
@@ -550,6 +532,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               {files.map((file, index) => (
                 <Tag
                   key={`${file.name}-${index}`}
+                  enabled={!isCancelling}
                   onRemove={() => removeFile(index)}
                 >
                   {file.name}
@@ -564,6 +547,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             aria-label="Add a list"
             multiple
             hidden
+            disabled={isCancelling}
             onChange={(event) => {
               const selected = Array.from(event.target.files ?? []);
               if (selected.length > 0) {
@@ -578,7 +562,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             small
             primary
             noMargin
-            enabled={!isUploading}
+            enabled={!isUploading && !isCancelling}
             loading={isUploading}
             overrideStyles={addButtonStyles}
             onClick={() => uploadInputRef.current?.click()}
@@ -643,9 +627,12 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                           </span>
                           <Button
                             noMargin
+                            enabled={!isCancelling}
                             aria-label={`Remove ${team.teamName}`}
                             onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={deleteButtonStyles}
+                            overrideStyles={localDeleteButtonStyles(
+                              !isCancelling,
+                            )}
                           >
                             {binIcon}
                           </Button>
@@ -716,6 +703,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                                 <Button
                                   small
                                   noMargin
+                                  enabled={!isCancelling}
                                   overrideStyles={addSuggestionButtonStyles}
                                   onClick={() =>
                                     promoteSuggestion(suggestion.teamId)

@@ -558,4 +558,48 @@ describe('EditEventSpeakersModal', () => {
       screen.getByRole('heading', { name: 'Add Speakers' }),
     ).toBeInTheDocument();
   });
+
+  describe('disabled state during cancel confirmation', () => {
+    const enterCancelConfirmation = async () => {
+      renderModal();
+      const teamRow = screen.getByRole('listitem');
+      await userEvent.click(
+        within(teamRow).getByRole('checkbox', {
+          name: 'Team Alpha preliminary findings shared',
+        }),
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    };
+
+    it('Should disable the Mark All Shared button', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: 'Mark All Shared' }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable the preliminary findings switch', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('checkbox', {
+          name: 'Team Alpha preliminary findings shared',
+        }),
+      ).toBeDisabled();
+    });
+
+    it('Should re-enable controls when Keep Editing is clicked', async () => {
+      await enterCancelConfirmation();
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Keep Editing' }),
+      );
+      expect(
+        screen.getByRole('button', { name: 'Mark All Shared' }),
+      ).toBeEnabled();
+      expect(
+        screen.getByRole('checkbox', {
+          name: 'Team Alpha preliminary findings shared',
+        }),
+      ).toBeEnabled();
+    });
+  });
 });

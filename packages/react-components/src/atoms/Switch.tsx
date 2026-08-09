@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react';
-import { error500, fern, steel } from '../colors';
+import { error500, fern, neutral800, steel } from '../colors';
 import { noop } from '../utils';
 
 const toggleStyles = (
@@ -38,11 +38,10 @@ const toggleStyles = (
     },
 
     ':disabled': {
-      backgroundColor: steel.rgb,
+      backgroundColor: neutral800.rgb,
       cursor: 'not-allowed',
-      opacity: 0.6,
       '::before': {
-        backgroundColor: steel.rgb,
+        backgroundColor: '#fff',
       },
     },
   });

@@ -1,5 +1,14 @@
 import { css, Theme } from '@emotion/react';
-import { steel, mint, tin, neutral900, paper, pine, charcoal } from '../colors';
+import {
+  steel,
+  mint,
+  neutral900,
+  neutral1000,
+  paper,
+  silver,
+  pine,
+  charcoal,
+} from '../colors';
 import { crossSmallIcon } from '../icons';
 import { rem } from '../pixels';
 import Ellipsis from './Ellipsis';
@@ -43,8 +52,9 @@ const hoverStyles = ({
   });
 
 const disabledStyles = css({
-  borderColor: tin.rgb,
-  color: tin.rgb,
+  backgroundColor: silver.rgb,
+  borderColor: steel.rgb,
+  color: neutral1000.rgb,
 });
 
 const iconStyles = css({
@@ -57,6 +67,13 @@ const iconStyles = css({
     fill: neutral900.rgba,
   },
   cursor: 'pointer',
+});
+
+const iconDisabledStyles = css({
+  cursor: 'not-allowed',
+  svg: {
+    fill: neutral1000.rgb,
+  },
 });
 
 type TagProps = {
@@ -109,13 +126,12 @@ const Tag: React.FC<TagProps> = ({
         ]}
       >
         <Ellipsis>{children}</Ellipsis>
-        {!!onRemove && enabled && (
+        {!!onRemove && (
           <button
-            css={iconStyles}
-            onClick={(event) => {
-              event.preventDefault();
-              onRemove();
-            }}
+            type="button"
+            css={[iconStyles, !enabled && iconDisabledStyles]}
+            disabled={!enabled}
+            onClick={onRemove}
           >
             {crossSmallIcon}
           </button>

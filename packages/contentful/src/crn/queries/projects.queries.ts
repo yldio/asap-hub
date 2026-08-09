@@ -2,44 +2,6 @@
 
 import { gql } from 'graphql-tag';
 
-export const collaboratingMembersResearchOutputContentQueryFragment = gql`
-  fragment CollaboratingMembersResearchOutputContent on ResearchOutputs {
-    sys {
-      id
-    }
-    title
-    documentType
-    type
-    authorsCollection(limit: 20) {
-      items {
-        __typename
-        ... on Users {
-          sys {
-            id
-          }
-          firstName
-          nickname
-          lastName
-          alumniSinceDate
-          avatar {
-            url
-          }
-          teamsCollection(limit: 2) {
-            items {
-              team {
-                sys {
-                  id
-                }
-                displayName
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const projectsContentQueryFragment = gql`
   fragment ProjectsContentData on Projects {
     sys {
@@ -118,14 +80,6 @@ export const projectsContentQueryFragment = gql`
         name
         description
         url
-      }
-    }
-    linkedFrom {
-      researchOutputsCollection(limit: 50, order: sys_firstPublishedAt_DESC) {
-        total
-        items {
-          ...CollaboratingMembersResearchOutputContent
-        }
       }
     }
     membersCollection(limit: 100) {
@@ -208,7 +162,6 @@ export const projectsContentQueryFragment = gql`
       }
     }
   }
-  ${collaboratingMembersResearchOutputContentQueryFragment}
 `;
 
 export const projectsMinimalContentQueryFragment = gql`
@@ -360,29 +313,6 @@ export const FETCH_TEAM_RESEARCH_OUTPUTS = gql`
                 inactiveSince
               }
             }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const FETCH_PROJECT_MEMBER_RESEARCH_OUTPUTS = gql`
-  ${collaboratingMembersResearchOutputContentQueryFragment}
-  query FetchProjectMemberResearchOutputs(
-    $projectId: String!
-    $limit: Int!
-    $skip: Int!
-  ) {
-    projects(id: $projectId) {
-      linkedFrom {
-        researchOutputsCollection(
-          limit: $limit
-          skip: $skip
-          order: sys_firstPublishedAt_DESC
-        ) {
-          items {
-            ...CollaboratingMembersResearchOutputContent
           }
         }
       }

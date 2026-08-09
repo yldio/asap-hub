@@ -1,9 +1,4 @@
-import {
-  CollaboratingMember,
-  CollaboratingTeam,
-  FundedTeam,
-  ProjectMember,
-} from '@asap-hub/model';
+import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
@@ -13,7 +8,6 @@ import {
   TabNav,
   ProjectMembers,
   LinkHeadline,
-  CollaboratingMembers,
   CollaboratingTeams,
 } from '../molecules';
 import { rem } from '../pixels';
@@ -35,6 +29,10 @@ const tabsContainerStyles = css({
 
 const tabContentStyles = css({
   paddingTop: rem(32),
+});
+
+const membersContentStyles = css({
+  paddingTop: rem(20),
 });
 
 const teamSectionStyles = css({
@@ -59,79 +57,43 @@ const teamDescriptionStyles = css({
 type ProjectContributorsProps =
   | {
       fundedTeam: FundedTeam;
-      collaborators?: ReadonlyArray<ProjectMember>;
       collaboratingTeams?: ReadonlyArray<CollaboratingTeam>;
-      collaboratingMembers?: ReadonlyArray<CollaboratingMember>;
       projectMembers?: never;
       showTeamInfo?: never;
     }
   | {
       fundedTeam?: never;
-      collaborators?: never;
       collaboratingTeams?: never;
-      collaboratingMembers?: ReadonlyArray<CollaboratingMember>;
       projectMembers: ReadonlyArray<ProjectMember>;
       /** Show team info (true for trainee, false for resource not team-based) */
       showTeamInfo?: boolean;
     };
 
 export const tabs = ['Funded Team', 'Collaborators'] as const;
-export const memberTabs = ['Project Members', 'Collaborators'] as const;
 
 export type Tabs = (typeof tabs)[number];
-export type MemberTabs = (typeof memberTabs)[number];
 
 const ProjectContributors: React.FC<ProjectContributorsProps> = ({
   fundedTeam,
   collaboratingTeams,
-  collaboratingMembers,
   projectMembers,
   showTeamInfo = false,
 }) => {
   const [activeTab, setActiveTab] = useState<Tabs>('Funded Team');
-  const [activeMemberTab, setActiveMemberTab] =
-    useState<MemberTabs>('Project Members');
 
   if (projectMembers) {
-    const projectMembersCount = new Set(projectMembers.map((m) => m.id)).size;
-    const memberCollaboratorsCount = collaboratingMembers?.length ?? 0;
-
     return (
       <Card padding={false}>
         <div css={cardContentStyles}>
           <Headline3 noMargin>Contributors</Headline3>
           <Paragraph noMargin accent="lead" styles={subtitleStyles}>
-            View the members of this project and the scientists who have
-            co-authored its published articles.
+            View the people contributing to this project.
           </Paragraph>
-
-          <div css={tabsContainerStyles}>
-            <TabNav>
-              <TabButton
-                active={activeMemberTab === 'Project Members'}
-                onClick={() => setActiveMemberTab('Project Members')}
-              >
-                Project Members ({projectMembersCount})
-              </TabButton>
-              <TabButton
-                active={activeMemberTab === 'Collaborators'}
-                onClick={() => setActiveMemberTab('Collaborators')}
-              >
-                Collaborators ({memberCollaboratorsCount})
-              </TabButton>
-            </TabNav>
-          </div>
-          <div css={tabContentStyles}>
-            {activeMemberTab === 'Project Members' ? (
-              <ProjectMembers
-                members={projectMembers}
-                showTeamInfo={showTeamInfo}
-              />
-            ) : (
-              <CollaboratingMembers
-                collaboratingMembers={collaboratingMembers}
-              />
-            )}
+          <div css={membersContentStyles}>
+            <ProjectMembers
+              members={projectMembers}
+              showTeamInfo={showTeamInfo}
+            />
           </div>
         </div>
       </Card>

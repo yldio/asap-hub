@@ -14,10 +14,7 @@ export const discoveryConfig: ProjectDetailConfig = {
   projectTypeKey: 'discovery',
   getRoute: projectRouteByType['Discovery Project'],
   getIsTeamBased: () => true,
-  getContactName: (pd) =>
-    pd.projectType === 'Discovery Project'
-      ? pd.collaborators?.find((m) => m.email === pd.contactEmail)?.displayName
-      : undefined,
+  getContactName: () => undefined,
 };
 
 export const resourceConfig: ProjectDetailConfig = {
@@ -28,8 +25,7 @@ export const resourceConfig: ProjectDetailConfig = {
     pd.projectType === 'Resource Project' ? pd.isTeamBased : true,
   getContactName: (pd) =>
     pd.projectType === 'Resource Project'
-      ? pd.members?.find((m) => m.email === pd.contactEmail)?.displayName ||
-        pd.collaborators?.find((m) => m.email === pd.contactEmail)?.displayName
+      ? pd.members?.find((m) => m.email === pd.contactEmail)?.displayName
       : undefined,
 };
 

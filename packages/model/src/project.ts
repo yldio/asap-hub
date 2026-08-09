@@ -175,10 +175,6 @@ export type BaseProjectDetail = {
   readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
 };
 
-type TeamCollaborators = {
-  readonly collaborators?: ReadonlyArray<ProjectMember>;
-};
-
 export type CollaboratingTeamArticle = {
   readonly id: string;
   readonly title: string;
@@ -197,46 +193,19 @@ type CollaboratingTeams = {
   readonly collaboratingTeams?: ReadonlyArray<CollaboratingTeam>;
 };
 
-export type CollaboratingMemberArticle = {
-  readonly id: string;
-  readonly title: string;
-  readonly type?: ResearchOutputType;
-};
-
-export type CollaboratingMember = {
-  readonly id: string;
-  readonly displayName: string;
-  readonly alumniSinceDate?: string;
-  readonly teams: ReadonlyArray<{
-    readonly id: string;
-    readonly displayName: string;
-  }>;
-  readonly avatarUrl?: string;
-  readonly articles: ReadonlyArray<CollaboratingMemberArticle>;
-};
-
-type CollaboratingMembers = {
-  readonly collaboratingMembers?: ReadonlyArray<CollaboratingMember>;
-};
-
 export type DiscoveryProjectDetail = DiscoveryProject &
   BaseProjectDetail &
-  TeamCollaborators &
   CollaboratingTeams & {
     readonly fundedTeam: FundedTeam;
   };
 
 export type ResourceProjectDetail = ResourceProject &
   BaseProjectDetail &
-  TeamCollaborators &
-  CollaboratingTeams &
-  CollaboratingMembers & {
+  CollaboratingTeams & {
     readonly fundedTeam?: FundedTeam;
   };
 
-export type TraineeProjectDetail = TraineeProject &
-  BaseProjectDetail &
-  CollaboratingMembers;
+export type TraineeProjectDetail = TraineeProject & BaseProjectDetail;
 
 export type ProjectDetail =
   | DiscoveryProjectDetail

@@ -136,7 +136,9 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                   {currentFiles.map((file) => (
                     <div css={uploadedButtonTagStyles} key={file.id}>
                       <Tag
-                        onRemove={() => handleRemove(file.id)}
+                        onRemove={
+                          tagEnabled ? () => handleRemove(file.id) : undefined
+                        }
                         enabled={tagEnabled}
                       >
                         {file.filename}

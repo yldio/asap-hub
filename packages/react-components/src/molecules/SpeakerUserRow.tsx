@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Avatar, Button, Link, SpeakerRoleBadge } from '../atoms';
 import { lead } from '../colors';
 import { alumniBadgeIcon, binIcon } from '../icons';
-import { deleteButtonStyles } from '../organisms/EditEventAttendanceModal';
+import { deleteButtonStyles } from '../organisms/shared-event-card-styles';
 import { mobileScreen, rem } from '../pixels';
 import { splitDisplayName } from '../utils/user';
 
@@ -74,10 +74,8 @@ const alumniStyles = css({
   alignItems: 'center',
 });
 
-// deleteButtonStyles only resets Button's base flexGrow:1 inside the mobile
-// query; in this flex row (userInfo grows) the button would otherwise stretch
-// on desktop, so pin flexGrow:0 at every width.
-const removeButtonStyles = css([deleteButtonStyles, { flexGrow: 0 }]);
+const removeButtonStyles = (enabled = true) =>
+  css([deleteButtonStyles(enabled), { flexGrow: 0 }]);
 
 type SpeakerUserRowProps = {
   readonly displayName: string;
@@ -86,6 +84,7 @@ type SpeakerUserRowProps = {
   readonly userId?: string;
   readonly isAlumni?: boolean;
   readonly onRemove?: () => void;
+  readonly enabled?: boolean;
 };
 
 const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
@@ -95,6 +94,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
   userId,
   isAlumni,
   onRemove,
+  enabled = true,
 }) => {
   const { firstName, lastName } = splitDisplayName(displayName);
   return (
@@ -121,9 +121,10 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
       {onRemove && (
         <Button
           noMargin
+          enabled={enabled}
           aria-label={`Remove ${displayName}`}
           onClick={onRemove}
-          overrideStyles={removeButtonStyles}
+          overrideStyles={removeButtonStyles(enabled)}
         >
           {binIcon}
         </Button>

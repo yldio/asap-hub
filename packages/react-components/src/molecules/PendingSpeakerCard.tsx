@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Avatar, Button, Link, Paragraph, PillSelector } from '../atoms';
 import { fern, neutral1000, warning100, warning900 } from '../colors';
 import { binIcon, plusIcon, WarningIcon } from '../icons';
-import { deleteButtonStyles } from '../organisms/EditEventAttendanceModal';
+import { deleteButtonStyles } from '../organisms/shared-event-card-styles';
 import { mobileScreen, rem } from '../pixels';
 import { splitDisplayName } from '../utils/user';
 import { avatar24Styles } from './SpeakerUserRow';
@@ -99,18 +99,17 @@ const nameStyles = css({
   lineHeight: rem(24),
 });
 
-// Same 24x24 "Secondary" button as SpeakerUserRow's delete button; just add
-// layout positioning.
-const dismissStyles = css([
-  deleteButtonStyles,
-  {
-    flexGrow: 0,
-    marginLeft: 'auto',
-    [`@media (max-width: ${mobileScreen.max}px)`]: {
-      order: 2,
+const dismissStyles = (enabled = true) =>
+  css([
+    deleteButtonStyles(enabled),
+    {
+      flexGrow: 0,
+      marginLeft: 'auto',
+      [`@media (max-width: ${mobileScreen.max}px)`]: {
+        order: 2,
+      },
     },
-  },
-]);
+  ]);
 
 const warningTextStyles = css({
   color: warning900.rgb,
@@ -137,6 +136,7 @@ type PendingSpeakerCardProps = {
   readonly teams: ReadonlyArray<{ teamId: string; teamName: string }>;
   readonly onPickTeam: (teamId: string) => void;
   readonly onDismiss: () => void;
+  readonly enabled?: boolean;
 };
 
 const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
@@ -146,6 +146,7 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
   teams,
   onPickTeam,
   onDismiss,
+  enabled = true,
 }) => (
   <div css={cardStyles} role="status">
     <span css={iconDesktopStyles}>
@@ -172,9 +173,10 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
         <Button
           noMargin
           small
+          enabled={enabled}
           aria-label={`Remove ${displayName}`}
           onClick={onDismiss}
-          overrideStyles={dismissStyles}
+          overrideStyles={dismissStyles(enabled)}
         >
           {binIcon}
         </Button>
@@ -184,6 +186,7 @@ const PendingSpeakerCard: React.FC<PendingSpeakerCardProps> = ({
       </Paragraph>
       <PillSelector<string>
         fullWidthOnMobile
+        enabled={enabled}
         overrideStyles={pillStyles}
         options={teams.map((team) => ({
           value: team.teamId,

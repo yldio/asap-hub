@@ -152,7 +152,6 @@ export const deleteButtonStyles = (enabled = true) =>
     backgroundColor: enabled ? paper.rgb : steel.rgb,
     boxShadow: enabled ? undefined : `0 2px 4px rgba(223, 229, 234, 0.3)`,
     color: enabled ? neutral1000.rgb : lead.rgb,
-    cursor: enabled ? 'pointer' : 'unset',
     [`@media (max-width: ${mobileScreen.max}px)`]: {
       minWidth: rem(24),
     },

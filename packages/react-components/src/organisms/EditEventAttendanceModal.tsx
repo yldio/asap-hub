@@ -164,10 +164,8 @@ const uploadButtonStyles = (enabled = true) =>
     padding: `${rem(8)} ${rem(16)}`,
     border: `1px solid ${steel.rgb}`,
     borderRadius: rem(4),
-    backgroundColor: enabled ? paper.rgb : silver.rgb,
     color: enabled ? neutral1000.rgb : lead.rgb,
     maxWidth: 'none',
-    cursor: enabled ? 'pointer' : 'unset',
     [`@media (max-width: ${mobileScreen.max}px)`]: {
       flexGrow: 0,
       minWidth: 'auto',
@@ -209,7 +207,6 @@ const pillStyles = (enabled = true) =>
     backgroundColor: enabled ? paper.rgb : silver.rgb,
     color: neutral1000.rgb,
     fontWeight: 'normal',
-    cursor: enabled ? 'pointer' : 'unset',
     '> svg': {
       width: rem(24),
       height: rem(24),

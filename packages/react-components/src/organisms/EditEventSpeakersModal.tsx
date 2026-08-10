@@ -16,6 +16,7 @@ import {
   neutral1000,
   pearl,
   pine,
+  silver,
   steel,
   tin,
 } from '../colors';
@@ -185,16 +186,15 @@ const markAllSharedButtonStyles = css({
   },
 });
 
-const cardSurfaceStyles = css({
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
-  backgroundColor: pearl.rgb,
-});
+const cardSurfaceStyles = (enabled = true) =>
+  css({
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(8),
+    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+  });
 
-const groupsCardStyles = css([
-  cardSurfaceStyles,
-  { padding: rem(24), overflowX: 'auto' },
-]);
+const groupsCardStyles = (enabled = true) =>
+  css([cardSurfaceStyles(enabled), { padding: rem(24), overflowX: 'auto' }]);
 
 // "Team" and "Preliminary Findings", mirroring SpeakerTeamRow's row layout
 // below it. `gap` is a floor — space-between still pushes them apart when
@@ -217,17 +217,18 @@ const groupsRowsStyles = css({
   flexDirection: 'column',
 });
 
-const emptyStateStyles = css([
-  cardSurfaceStyles,
-  {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: rem(8),
-    textAlign: 'center',
-    padding: rem(24),
-  },
-]);
+const emptyStateStyles = (enabled = true) =>
+  css([
+    cardSurfaceStyles(enabled),
+    {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: rem(8),
+      textAlign: 'center',
+      padding: rem(24),
+    },
+  ]);
 
 const emptyStateTitleStyles = css({ fontWeight: 700 });
 
@@ -552,7 +553,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
           </div>
 
           {visibleGroups.length === 0 && !pendingSpeaker ? (
-            <div css={emptyStateStyles} role="status">
+            <div css={emptyStateStyles(!isCancelling)} role="status">
               <Paragraph noMargin accent="lead" styles={emptyStateTitleStyles}>
                 Add speakers to this event
               </Paragraph>
@@ -561,7 +562,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
               </Paragraph>
             </div>
           ) : (
-            <div css={groupsCardStyles}>
+            <div css={groupsCardStyles(!isCancelling)}>
               <div css={groupsTableHeaderStyles}>
                 <span>Team</span>
                 <span>

@@ -9,6 +9,8 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
+import { silver } from '../../colors';
+
 import UploadListModal, { UploadListResult } from '../UploadListModal';
 
 const uploadResult: UploadListResult = {
@@ -535,6 +537,16 @@ describe('UploadListModal', () => {
       await enterCancelConfirmation();
       const tagButton = screen.getByRole('button', { name: 'Cross' });
       expect(tagButton).toBeDisabled();
+    });
+
+    it('Should change result card background', async () => {
+      await enterCancelConfirmation();
+      const matchedHeader = screen.getByText(/will be added/);
+      const resultCard =
+        matchedHeader.closest('button')!.parentElement!;
+      expect(resultCard).toHaveStyle({
+        backgroundColor: silver.rgb,
+      });
     });
 
     it('Should re-enable controls when Keep Editing is clicked', async () => {

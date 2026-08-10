@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 
+import { silver } from '../../colors';
 import EditEventSpeakersModal, {
   SpeakerSearchOption,
 } from '../EditEventSpeakersModal';
@@ -585,6 +586,14 @@ describe('EditEventSpeakersModal', () => {
           name: 'Team Alpha preliminary findings shared',
         }),
       ).toBeDisabled();
+    });
+
+    it('Should change speakers card background', async () => {
+      await enterCancelConfirmation();
+      const list = screen.getByRole('list');
+      expect(list.parentElement).toHaveStyle({
+        backgroundColor: silver.rgb,
+      });
     });
 
     it('Should re-enable controls when Keep Editing is clicked', async () => {

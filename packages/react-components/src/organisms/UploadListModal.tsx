@@ -10,6 +10,7 @@ import {
   lead,
   neutral1000,
   pearl,
+  silver,
   steel,
 } from '../colors';
 import {
@@ -181,12 +182,13 @@ const summarySeparatorStyles = css({
   paddingRight: rem(8),
 });
 
-const resultCardStyles = css({
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
-  backgroundColor: pearl.rgb,
-  overflow: 'hidden',
-});
+const resultCardStyles = (enabled = true) =>
+  css({
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(8),
+    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    overflow: 'hidden',
+  });
 
 const sectionHeaderStyles = css({
   display: 'flex',
@@ -586,7 +588,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               <span>{result.alreadyInCount} already in</span>
             </div>
 
-            <div css={resultCardStyles}>
+            <div css={resultCardStyles(!isCancelling)}>
               {matchedTeams.length > 0 && (
                 <>
                   <button

@@ -310,13 +310,14 @@ const emptyAttendeesStyles = css({
   backgroundColor: pearl.rgb,
 });
 
-const attendeesCardStyles = css({
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
-  backgroundColor: pearl.rgb,
-  padding: rem(24),
-  overflowX: 'auto',
-});
+const attendeesCardStyles = (enabled = true) =>
+  css({
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(8),
+    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    padding: rem(24),
+    overflowX: 'auto',
+  });
 
 const attendeesTableHeaderStyles = css({
   display: 'flex',
@@ -772,7 +773,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
               </Paragraph>
             </div>
           ) : (
-            <div css={attendeesCardStyles}>
+            <div css={attendeesCardStyles(!isCancelling)}>
               <div css={attendeesTableHeaderStyles}>
                 <span>Team</span>
                 <span css={attendanceHeaderStyles}>Attendance</span>

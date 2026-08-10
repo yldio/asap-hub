@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
+import { silver } from '../../colors';
 import EditEventAttendanceModal from '../EditEventAttendanceModal';
 import { EventAttendanceTeam } from '../EventAttendance';
 
@@ -739,6 +740,14 @@ describe('EditEventAttendanceModal', () => {
       expect(
         screen.getByRole('button', { name: 'Remove Team Beta' }),
       ).toBeDisabled();
+    });
+
+    it('Should change attendees card background', async () => {
+      await enterCancelConfirmation();
+      const list = screen.getByRole('list');
+      expect(list.parentElement).toHaveStyle({
+        backgroundColor: silver.rgb,
+      });
     });
 
     it('Should re-enable controls when Keep Editing is clicked', async () => {

@@ -28424,6 +28424,15 @@ export type EventsContentFragment = Pick<
       >;
     }
   >;
+  preliminaryDataSharedCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<PreliminaryDataSharing, 'preliminaryDataShared'> & {
+          team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+        }
+      >
+    >;
+  }>;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -29296,6 +29305,15 @@ export type FetchEventsQuery = {
                 >;
               }
             >;
+            preliminaryDataSharedCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<PreliminaryDataSharing, 'preliminaryDataShared'> & {
+                    team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                  }
+                >
+              >;
+            }>;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -41228,6 +41246,76 @@ export const EventsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'inactiveSince' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'preliminaryDataSharedCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'singleEvent' },
+                    },
+                  },
+                ],
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'preliminaryDataShared',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'team' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

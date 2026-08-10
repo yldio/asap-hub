@@ -277,6 +277,24 @@ export const getContentfulGraphqlEvent = (
           },
         ],
       },
+  preliminaryDataSharedCollection: isList
+    ? undefined
+    : {
+        items: [
+          {
+            preliminaryDataShared: true,
+            team: { sys: { id: 'team-id-1' } },
+          },
+          {
+            preliminaryDataShared: false,
+            team: { sys: { id: 'team-id-2' } },
+          },
+          {
+            preliminaryDataShared: true,
+            team: null,
+          },
+        ],
+      },
   calendar: {
     googleCalendarId: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     color: '#125A12' as const,
@@ -457,6 +475,10 @@ export const getContentfulEventDataObject = (
               inactiveSince: '2022-10-24T11:00:00Z',
             },
           },
+        ],
+        preliminaryDataShared: [
+          { team: { id: 'team-id-1' }, shared: true },
+          { team: { id: 'team-id-2' }, shared: false },
         ],
       }),
 });

@@ -708,6 +708,11 @@ describe('EditEventAttendanceModal', () => {
       ).toBeDisabled();
     });
 
+    it('Should disable the search input', async () => {
+      await enterCancelConfirmation();
+      expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    });
+
     it('Should disable the Mark All Attended button', async () => {
       await enterCancelConfirmation();
       expect(

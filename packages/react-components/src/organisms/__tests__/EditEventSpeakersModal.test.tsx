@@ -596,6 +596,41 @@ describe('EditEventSpeakersModal', () => {
       });
     });
 
+    it('Should disable the search input', async () => {
+      await enterCancelConfirmation();
+      expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    });
+
+    it('Should disable delete buttons on speaker rows', async () => {
+      await enterCancelConfirmation();
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Expand Team Alpha' }),
+      );
+      expect(
+        screen.getByRole('button', { name: 'Remove Jane Doe' }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable pending speaker card controls', async () => {
+      renderModal();
+      await userEvent.type(screen.getByRole('combobox'), 'Alex');
+      await userEvent.click(await screen.findByText('Alex Kim'));
+      expect(
+        screen.getByText('Pick a team to finish adding them.'),
+      ).toBeInTheDocument();
+
+      await userEvent.click(
+        within(screen.getByRole('listitem')).getByRole('checkbox', {
+          name: 'Team Alpha preliminary findings shared',
+        }),
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        screen.getByRole('button', { name: 'Remove Alex Kim' }),
+      ).toBeDisabled();
+    });
+
     it('Should re-enable controls when Keep Editing is clicked', async () => {
       await enterCancelConfirmation();
       await userEvent.click(

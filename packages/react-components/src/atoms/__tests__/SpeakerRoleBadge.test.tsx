@@ -1,30 +1,28 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { steel } from '../../colors';
 import SpeakerRoleBadge from '../SpeakerRoleBadge';
 
-it('renders the single role when exactly one role is given', () => {
-  const { getByText } = render(<SpeakerRoleBadge roles={['Lead PI']} />);
-  expect(getByText('Lead PI')).toBeVisible();
+it('Should render the single role when exactly one role is given', () => {
+  render(<SpeakerRoleBadge roles={['Lead PI']} />);
+  expect(screen.getByText('Lead PI')).toBeVisible();
 });
 
-it('renders "Multiple roles" when two or more roles are given', () => {
-  const { getByText } = render(
+it('Should render "Multiple roles" when two or more roles are given', () => {
+  render(
     <SpeakerRoleBadge roles={['Project Manager', 'Data Manager']} />,
   );
-  expect(getByText('Multiple roles')).toBeVisible();
+  expect(screen.getByText('Multiple roles')).toBeVisible();
 });
 
-it('renders "No role" when no roles are given', () => {
-  const { getByText } = render(<SpeakerRoleBadge roles={[]} />);
-  expect(getByText('No role')).toBeVisible();
+it('Should render "No role" when no roles are given', () => {
+  render(<SpeakerRoleBadge roles={[]} />);
+  expect(screen.getByText('No role')).toBeVisible();
 });
 
-it('applies steel background when disabled', () => {
-  const { getByText } = render(
-    <SpeakerRoleBadge roles={['Lead PI']} enabled={false} />,
-  );
-  const pill = getByText('Lead PI').closest('[class*="Pill"]')
-    ?? getByText('Lead PI').parentElement!.parentElement!;
-  expect(pill).toHaveStyle({ backgroundColor: steel.rgb });
+it('Should apply steel background when disabled', () => {
+  render(<SpeakerRoleBadge roles={['Lead PI']} enabled={false} />);
+  const textEl = screen.getByText('Lead PI');
+  const pillSpan = textEl.parentElement?.parentElement;
+  expect(pillSpan).toHaveStyle({ backgroundColor: steel.rgb });
 });

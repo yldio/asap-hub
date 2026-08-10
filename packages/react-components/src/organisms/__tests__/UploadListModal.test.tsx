@@ -528,8 +528,11 @@ describe('UploadListModal', () => {
 
     it('Should disable suggestion Add buttons in unmatched section', async () => {
       await enterCancelConfirmation();
-      const suggestionRow = screen.getByText(/did you mean/).closest('div')!;
-      const addButton = within(suggestionRow).getByRole('button');
+      const suggestionRow = screen.getByText(/did you mean/).closest('div');
+      expect(suggestionRow).not.toBeNull();
+      const addButton = within(suggestionRow as HTMLElement).getByRole(
+        'button',
+      );
       expect(addButton).toBeDisabled();
     });
 
@@ -542,8 +545,8 @@ describe('UploadListModal', () => {
     it('Should change result card background', async () => {
       await enterCancelConfirmation();
       const matchedHeader = screen.getByText(/will be added/);
-      const resultCard =
-        matchedHeader.closest('button')!.parentElement!;
+      const resultCard = matchedHeader.closest('button')?.parentElement;
+      expect(resultCard).not.toBeNull();
       expect(resultCard).toHaveStyle({
         backgroundColor: silver.rgb,
       });

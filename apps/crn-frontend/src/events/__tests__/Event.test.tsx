@@ -11,7 +11,7 @@ import {
 import { events } from '@asap-hub/routing';
 import { disable, enable } from '@asap-hub/flags';
 import { subDays } from 'date-fns';
-import { EventTeamAttendance } from '@asap-hub/model';
+import { EventSpeaker, EventTeamAttendance } from '@asap-hub/model';
 
 import {
   Auth0Provider,
@@ -337,9 +337,113 @@ describe('the NEW_EVENT_PAGE flag', () => {
           { team: { id: 't1', displayName: 'Team One' }, attended: true },
         ],
       });
-      const { findByText, queryByText } = render(<Event />, { wrapper });
-      await findByText('Speakers');
+      const { findAllByText, queryByText } = render(<Event />, { wrapper });
+      await findAllByText('Speakers');
       expect(queryByText('Team One')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('speakers', () => {
+    const pastEndDate = subDays(new Date(), 3).toISOString();
+
+    const teamSpeaker = (
+      teamId: string,
+      teamName: string,
+      userId: string,
+    ): EventSpeaker => ({
+      team: { id: teamId, displayName: teamName },
+      user: { id: userId, displayName: `User ${userId}` },
+      role: 'Chair',
+    });
+
+    beforeEach(() => {
+      enable('NEW_EVENT_PAGE');
+    });
+
+    it('shows preliminary findings and orders shared teams first on a past event', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        speakers: [
+          teamSpeaker('t-alpha', 'Alpha', 'u1'),
+          teamSpeaker('t-zeta', 'Zeta', 'u2'),
+        ],
+        preliminaryDataShared: [
+          { team: { id: 't-alpha' }, shared: false },
+          { team: { id: 't-zeta' }, shared: true },
+        ],
+      });
+      const { findByText, getAllByRole } = render(<Event />, { wrapper });
+      expect(await findByText('Preliminary Findings')).toBeVisible();
+
+      const teamLinks = getAllByRole('link', { name: /^(Alpha|Zeta)$/ });
+      expect(teamLinks.map((link) => link.textContent)).toEqual([
+        'Zeta',
+        'Alpha',
+      ]);
+    });
+
+    it('does not show the preliminary findings column on an upcoming event', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        speakers: [teamSpeaker('t-alpha', 'Alpha', 'u1')],
+      });
+      const { findByText, queryByText } = render(<Event />, { wrapper });
+      expect(await findByText('Alpha')).toBeVisible();
+      expect(queryByText('Preliminary Findings')).not.toBeInTheDocument();
+    });
+
+    it('shows the view more speakers control beyond ten teams', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        speakers: Array.from({ length: 11 }, (_, i) =>
+          teamSpeaker(`team-${i}`, `Team ${i}`, `user-${i}`),
+        ),
+      });
+      const { findByText } = render(<Event />, { wrapper });
+      expect(await findByText('View More Speakers')).toBeVisible();
+    });
+
+    it('shows the non project manager empty state when there are no speakers', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        speakers: [],
+      });
+      const { findByText, queryByText } = render(<Event />, { wrapper });
+      expect(
+        await findByText('No speakers have been added for this event yet.'),
+      ).toBeVisible();
+      expect(queryByText('Add Speakers')).not.toBeInTheDocument();
+    });
+
+    it('shows the project manager empty state copy without an add button', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
+        speakers: [],
+      });
+      const pmWrapper = createWrapper({
+        interestGroups: [
+          {
+            id: 'ig-pm',
+            name: 'Group',
+            active: true,
+            role: 'Project Manager',
+          },
+        ],
+      });
+      const { findByText, queryByText } = render(<Event />, {
+        wrapper: pmWrapper,
+      });
+      expect(
+        await findByText(/Marking who shared preliminary findings/),
+      ).toBeVisible();
+      expect(queryByText('Add Speakers')).not.toBeInTheDocument();
     });
   });
 });

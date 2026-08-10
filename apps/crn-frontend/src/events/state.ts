@@ -6,12 +6,14 @@ import {
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { SpeakerGroup } from '@asap-hub/react-components';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
+import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
 
@@ -23,6 +25,21 @@ export const useEventById = (id: string): EventResponse | undefined => {
       nullOnUndefined(async () => getEvent(id, await getAuthorization())),
   });
   return data ?? undefined;
+};
+
+// Stable module-level reference so react-query memoizes the transform and
+// only re-runs it when the event data changes, not on every render.
+const selectSpeakerGroups = (data: EventResponse | null): SpeakerGroup[] =>
+  data ? mapSpeakersToGroups(data) : [];
+
+export const useEventSpeakerGroups = (id: string): SpeakerGroup[] => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: eventQueryKeys.detail(id),
+    queryFn: () =>
+      nullOnUndefined(async () => getEvent(id, await getAuthorization())),
+    select: selectSpeakerGroups,
+  }).data;
 };
 
 export const useQuietRefreshEventById = (id: string) => {

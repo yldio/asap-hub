@@ -113,7 +113,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
           )}
           {isAlumni && <span css={alumniStyles}>{alumniBadgeIcon}</span>}
         </span>
-        {roles && <SpeakerRoleBadge roles={roles} />}
+        {roles && <SpeakerRoleBadge roles={roles} enabled={enabled} />}
       </div>
       {onRemove && (
         <Button

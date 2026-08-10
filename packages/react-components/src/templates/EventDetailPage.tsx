@@ -58,6 +58,7 @@ type EventDetailPageProps = ComponentProps<typeof EventCard> &
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
     readonly eventAttendance?: ReactNode;
+    readonly eventSpeakers?: ReactNode;
     readonly getIconForDocumentType: (
       documentType: EventResponse['relatedResearch'][number]['documentType'],
     ) => EmotionJSX.Element;
@@ -70,6 +71,7 @@ const EventDetailPage = ({
   calendar,
   eventConversation,
   eventAttendance,
+  eventSpeakers,
   displayCalendar,
   children,
   relatedTutorials,
@@ -107,6 +109,7 @@ const EventDetailPage = ({
               <EventAbout {...props} variant="expandable" />
             </Card>
           )}
+          {eventSpeakers}
           {eventAttendance}
           {(children || displayJoinEvent) && (
             <Card>

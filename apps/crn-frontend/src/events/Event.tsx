@@ -88,13 +88,14 @@ const Event: React.FC = () => {
             displayCalendar={displayCalendar}
             eventConversation={<EventConversation {...event} />}
             eventAttendance={attendance}
-          >
-            <EventSpeakers
-              groups={speakerGroups}
-              hasFinished={hasFinished}
-              isProjectManager={isEventProjectManager}
-            />
-          </EventDetailPage>
+            eventSpeakers={
+              <EventSpeakers
+                groups={speakerGroups}
+                hasFinished={hasFinished}
+                isProjectManager={isEventProjectManager}
+              />
+            }
+          />
         </Frame>
       );
     }

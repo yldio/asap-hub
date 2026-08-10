@@ -22,14 +22,16 @@ import {
   tickSmallIcon,
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
-import { deleteButtonStyles } from './shared-event-card-styles';
 import { rem } from '../pixels';
 import {
   EventAttendanceTeam,
   EventAttendanceTeamType,
 } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
-import { iconButtonStyles } from './shared-event-card-styles';
+import {
+  deleteButtonStyles,
+  iconButtonStyles,
+} from './shared-event-card-styles';
 
 export type UploadListSuggestion = {
   teamId: string;
@@ -627,9 +629,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                             enabled={!isCancelling}
                             aria-label={`Remove ${team.teamName}`}
                             onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={deleteButtonStyles(
-                              !isCancelling,
-                            )}
+                            overrideStyles={deleteButtonStyles(!isCancelling)}
                           >
                             {binIcon}
                           </Button>

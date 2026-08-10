@@ -370,7 +370,6 @@ const attendanceSwitchStyles = css({
   paddingRight: rem(24),
 });
 
-
 const searchOptionStyles = css({
   display: 'flex',
   alignItems: 'center',

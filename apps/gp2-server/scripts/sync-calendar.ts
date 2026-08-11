@@ -18,7 +18,7 @@ const getJWTCredentials = getJWTCredentialsFactory({
 const eventController = new Events(getEventDataProvider(graphQLClient));
 const main = async () => {
   const syncCalendar = syncCalendarFactory(
-    syncEventFactory(eventController, logger),
+    syncEventFactory(eventController, logger, 'gp2'),
     getJWTCredentials,
     logger,
   );

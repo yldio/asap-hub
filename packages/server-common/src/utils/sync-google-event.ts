@@ -9,7 +9,6 @@ import {
   GoogleEvent,
   validateGoogleEvent,
 } from '../validation/sync-google-event.validation';
-import { isCRNEventController } from './type-narrowing';
 import { Logger } from './logger';
 
 export type SyncEvent = (
@@ -39,6 +38,7 @@ export const syncEventFactory =
   (
     eventsController: EventController | gp2.EventController,
     logger: Logger,
+    app: 'crn' | 'gp2',
   ): SyncEvent =>
   async (eventPayload, googleCalendarId, cmsCalendarId, defaultTimezone) => {
     const googleEvent = validateEvent(eventPayload, logger);
@@ -52,7 +52,7 @@ export const syncEventFactory =
       throw new Error('Invalid organiser');
     }
 
-    const isCRNEvent = isCRNEventController(eventsController);
+    const isCRNEvent = app === 'crn';
 
     const newEvent = {
       googleId: googleEvent.id,

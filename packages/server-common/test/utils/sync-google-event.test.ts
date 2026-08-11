@@ -1,6 +1,5 @@
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src';
-import * as typeNarrowing from '../../src/utils/type-narrowing';
 import { getEventResponse } from '../fixtures/events.fixtures';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { loggerMock as logger } from '../mocks/logger.mock';
@@ -9,11 +8,9 @@ describe('Sync calendar util hook', () => {
   const googleCalendarId = 'google-calendar-id';
   const calendarId = 'calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
-  const syncEvent = syncEventFactory(eventControllerMock, logger);
+  const syncEvent = syncEventFactory(eventControllerMock, logger, 'crn');
+  const syncGp2Event = syncEventFactory(eventControllerMock, logger, 'gp2');
 
-  beforeEach(() => {
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(true);
-  });
   afterEach(jest.resetAllMocks);
 
   test('Should create the event when it is not found', async () => {
@@ -46,9 +43,8 @@ describe('Sync calendar util hook', () => {
 
   test('Should create gp2 event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
 
-    await syncEvent(
+    await syncGp2Event(
       getGoogleEvent(),
       googleCalendarId,
       calendarId,
@@ -89,9 +85,8 @@ describe('Sync calendar util hook', () => {
 
   test('Should not send the recurring flag on gp2 events', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
 
-    await syncEvent(
+    await syncGp2Event(
       { ...getGoogleEvent(), recurringEventId: 'recurring-event-id' },
       googleCalendarId,
       calendarId,

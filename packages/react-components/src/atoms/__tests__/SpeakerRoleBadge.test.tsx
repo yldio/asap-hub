@@ -9,9 +9,7 @@ it('Should render the single role when exactly one role is given', () => {
 });
 
 it('Should render "Multiple roles" when two or more roles are given', () => {
-  render(
-    <SpeakerRoleBadge roles={['Project Manager', 'Data Manager']} />,
-  );
+  render(<SpeakerRoleBadge roles={['Project Manager', 'Data Manager']} />);
   expect(screen.getByText('Multiple roles')).toBeVisible();
 });
 

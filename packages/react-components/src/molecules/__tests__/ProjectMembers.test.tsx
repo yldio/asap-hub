@@ -31,14 +31,14 @@ const mockMembers: ProjectMember[] = [
 
 describe('ProjectMembers', () => {
   it('renders all members', () => {
-    render(<ProjectMembers members={mockMembers} showTeamInfo={false} />);
+    render(<ProjectMembers members={mockMembers} />);
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     expect(screen.getByText('Michael Johnson')).toBeInTheDocument();
   });
 
   it('renders member roles', () => {
-    render(<ProjectMembers members={mockMembers} showTeamInfo={false} />);
+    render(<ProjectMembers members={mockMembers} />);
     expect(screen.getByText('Principal Investigator')).toBeInTheDocument();
     expect(screen.getByText('Co-Investigator')).toBeInTheDocument();
     expect(screen.getByText('Research Associate')).toBeInTheDocument();
@@ -56,71 +56,23 @@ describe('ProjectMembers', () => {
     expect(screen.getByText('No role assigned')).toBeVisible();
   });
 
-  it('does not show team info when showTeamInfo is false', () => {
-    const membersWithTeams = mockMembers.map((m) => ({
-      ...m,
-      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-    }));
-    render(<ProjectMembers members={membersWithTeams} showTeamInfo={false} />);
-    expect(screen.queryByText('Alpha Team')).not.toBeInTheDocument();
-  });
-
-  it('shows team name for members when showTeamInfo is true', () => {
-    const membersWithTeams = mockMembers.map((m) => ({
-      ...m,
-      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-    }));
-    render(<ProjectMembers members={membersWithTeams} showTeamInfo={true} />);
-    const teamNames = screen.getAllByText('Alpha Team');
-    expect(teamNames).toHaveLength(mockMembers.length);
-  });
-
-  it('shows additional teams badge for members with multiple teams', () => {
-    const membersWithMultipleTeams = mockMembers.map((m) => ({
-      ...m,
-      teams: [
-        { id: 'team-1', displayName: 'Alpha Team' },
-        { id: 'team-2', displayName: 'Team 2' },
-        { id: 'team-3', displayName: 'Team 3' },
-      ],
-    }));
-    render(
-      <ProjectMembers members={membersWithMultipleTeams} showTeamInfo={true} />,
-    );
-    const badges = screen.getAllByText('+2');
-    expect(badges).toHaveLength(mockMembers.length);
-  });
-
   it('renders empty state with empty array', () => {
-    const { container } = render(
-      <ProjectMembers members={[]} showTeamInfo={false} />,
-    );
+    const { container } = render(<ProjectMembers members={[]} />);
     expect(container.firstChild).toBeEmptyDOMElement();
   });
 
   it('renders single member', () => {
-    render(<ProjectMembers members={[mockMembers[0]!]} showTeamInfo={false} />);
+    render(<ProjectMembers members={[mockMembers[0]!]} />);
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
   });
 
   it('renders all member links correctly', () => {
-    render(<ProjectMembers members={mockMembers} showTeamInfo={false} />);
+    render(<ProjectMembers members={mockMembers} />);
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(mockMembers.length);
-    expect(links[0]).toHaveAttribute('href', '#');
-    expect(links[0]).toHaveAttribute('href', '#');
-    expect(links[0]).toHaveAttribute('href', '#');
-  });
-
-  it('uses default showTeamInfo=false when prop is not provided', () => {
-    const membersWithTeams = mockMembers.map((m) => ({
-      ...m,
-      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-    }));
-    // Don't pass showTeamInfo prop - should default to false
-    render(<ProjectMembers members={membersWithTeams} />);
-    // Team info should not be shown when using default value
-    expect(screen.queryByText('Alpha Team')).not.toBeInTheDocument();
+    expect(links[0]).toHaveAttribute('href', mockMembers[0]!.href);
+    expect(links[1]).toHaveAttribute('href', mockMembers[1]!.href);
+    expect(links[2]).toHaveAttribute('href', mockMembers[2]!.href);
   });
 });

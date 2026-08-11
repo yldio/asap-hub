@@ -16,14 +16,9 @@ const membersListStyles = css({
 
 type ProjectMembersProps = {
   readonly members: ReadonlyArray<ProjectMember>;
-  /** Show team info (true for trainee, false for resource not team-based) */
-  readonly showTeamInfo?: boolean;
 };
 
-const ProjectMembers: React.FC<ProjectMembersProps> = ({
-  members,
-  showTeamInfo = false,
-}) => {
+const ProjectMembers: React.FC<ProjectMembersProps> = ({ members }) => {
   const grouped = useMemo(
     () => groupProjectMembersByUserId(members),
     [members],
@@ -32,11 +27,7 @@ const ProjectMembers: React.FC<ProjectMembersProps> = ({
   return (
     <div css={membersListStyles}>
       {grouped.map((member) => (
-        <ProjectMemberCard
-          key={member.id}
-          member={member}
-          showTeamInfo={showTeamInfo}
-        />
+        <ProjectMemberCard key={member.id} member={member} />
       ))}
     </div>
   );

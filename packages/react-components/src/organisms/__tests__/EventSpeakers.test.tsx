@@ -123,20 +123,6 @@ describe('EventSpeakers', () => {
       await userEvent.click(getByRole('button', { name: /add speakers/i }));
       expect(onAddSpeaker).toHaveBeenCalled();
     });
-
-    it('Should show the editor copy without a button for a project manager', () => {
-      const { getByText, queryByRole } = renderCard({
-        groups: [],
-        hasFinished: true,
-        isProjectManager: true,
-      });
-      expect(
-        getByText(/Add the people who presented at this event/i),
-      ).toBeVisible();
-      expect(
-        queryByRole('button', { name: /add speakers/i }),
-      ).not.toBeInTheDocument();
-    });
   });
 
   describe('metrics', () => {

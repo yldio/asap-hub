@@ -92,7 +92,7 @@ const Event: React.FC = () => {
               <EventSpeakers
                 groups={speakerGroups}
                 hasFinished={hasFinished}
-                isProjectManager={isEventProjectManager}
+                onAddSpeaker={isEventProjectManager ? noop : undefined}
               />
             }
           />

@@ -156,7 +156,6 @@ type EventSpeakersProps = {
   // this card and the modal, and the modal's onSave writes straight back.
   groups?: SpeakerGroup[];
   hasFinished?: boolean;
-  isProjectManager?: boolean;
   onExport?: () => void;
   onEdit?: () => void;
   onAddSpeaker?: () => void;
@@ -256,7 +255,6 @@ const editorEmptyMessage = (hasFinished: boolean): string =>
 const EventSpeakers: React.FC<EventSpeakersProps> = ({
   groups = [],
   hasFinished = false,
-  isProjectManager = false,
   onExport,
   onEdit,
   onAddSpeaker,
@@ -297,9 +295,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
             </>
           ) : (
             <Paragraph noMargin accent="lead">
-              {isProjectManager
-                ? editorEmptyMessage(hasFinished)
-                : 'No speakers have been added for this event yet.'}
+              No speakers have been added for this event yet.
             </Paragraph>
           )}
         </div>

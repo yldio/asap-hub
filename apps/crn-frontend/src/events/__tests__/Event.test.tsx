@@ -420,7 +420,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Add Speakers')).not.toBeInTheDocument();
     });
 
-    it('shows the project manager empty state copy without an add button', async () => {
+    it('shows the editor empty state with an add speakers button for a project manager', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
@@ -437,11 +437,39 @@ describe('the NEW_EVENT_PAGE flag', () => {
           },
         ],
       });
-      const { findByText, queryByText } = render(<Event />, {
+      const { findByText, findByRole } = render(<Event />, {
         wrapper: pmWrapper,
       });
       expect(
         await findByText(/Marking who shared preliminary findings/),
+      ).toBeVisible();
+      expect(
+        await findByRole('button', { name: /add speakers/i }),
+      ).toBeVisible();
+    });
+
+    it('hides the add speakers button for a project manager of an inactive group', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
+        speakers: [],
+      });
+      const pmWrapper = createWrapper({
+        interestGroups: [
+          {
+            id: 'ig-pm',
+            name: 'Group',
+            active: false,
+            role: 'Project Manager',
+          },
+        ],
+      });
+      const { findByText, queryByText } = render(<Event />, {
+        wrapper: pmWrapper,
+      });
+      expect(
+        await findByText('No speakers have been added for this event yet.'),
       ).toBeVisible();
       expect(queryByText('Add Speakers')).not.toBeInTheDocument();
     });

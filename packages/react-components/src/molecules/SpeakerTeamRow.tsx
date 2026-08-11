@@ -127,6 +127,7 @@ type SpeakerTeamRowProps = {
   readonly onToggleExpanded: () => void;
   readonly onToggleShared: () => void;
   readonly onRemoveUser: (userId: string) => void;
+  readonly enabled?: boolean;
 };
 
 const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
@@ -141,6 +142,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
   onToggleExpanded,
   onToggleShared,
   onRemoveUser,
+  enabled = true,
 }) => (
   <div css={wrapperStyles} role="listitem">
     <div css={headerStyles}>
@@ -165,6 +167,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
       <span css={actionsStyles}>
         <Switch
           checked={preliminaryFindingsShared}
+          enabled={enabled}
           uncheckedColor="error"
           ariaLabel={`${label} preliminary findings shared`}
           onClick={onToggleShared}
@@ -191,6 +194,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
             userId={variant === 'team' ? user.id : undefined}
             isAlumni={variant === 'team' ? user.isAlumni : undefined}
             onRemove={() => onRemoveUser(user.id)}
+            enabled={enabled}
           />
         ))}
       </div>

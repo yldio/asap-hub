@@ -1,7 +1,15 @@
+import { css } from '@emotion/react';
+
+import { steel } from '../colors';
 import Pill from './Pill';
+
+const disabledStyles = css({
+  '> span': { backgroundColor: steel.rgb },
+});
 
 type SpeakerRoleBadgeProps = {
   readonly roles: string[];
+  readonly enabled?: boolean;
 };
 
 const displayRole = ([role, ...rest]: string[]): string => {
@@ -14,10 +22,15 @@ const displayRole = ([role, ...rest]: string[]): string => {
   return role;
 };
 
-const SpeakerRoleBadge: React.FC<SpeakerRoleBadgeProps> = ({ roles }) => (
-  <Pill accent="gray" noMargin>
-    {displayRole(roles)}
-  </Pill>
+const SpeakerRoleBadge: React.FC<SpeakerRoleBadgeProps> = ({
+  roles,
+  enabled = true,
+}) => (
+  <span css={!enabled && disabledStyles}>
+    <Pill accent="gray" noMargin>
+      {displayRole(roles)}
+    </Pill>
+  </span>
 );
 
 export default SpeakerRoleBadge;

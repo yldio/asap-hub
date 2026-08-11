@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { charcoal, steel, tin } from '../colors';
+import { charcoal, lead, neutral1000, paper, steel, tin } from '../colors';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
 
 export const contentStyles = css({
@@ -134,3 +134,30 @@ export const chevronButtonStyles = css({
   background: 'none',
   cursor: 'pointer',
 });
+
+export const deleteButtonStyles = (enabled: boolean) =>
+  css({
+    flexGrow: 0,
+    flexShrink: 0,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: rem(24),
+    minWidth: rem(24),
+    height: rem(24),
+    minHeight: rem(24),
+    padding: 0,
+    border: `1px solid ${enabled ? steel.rgb : tin.rgb}`,
+    borderRadius: rem(4),
+    backgroundColor: enabled ? paper.rgb : steel.rgb,
+    boxShadow: enabled ? undefined : `0 2px 4px rgba(223, 229, 234, 0.3)`,
+    color: enabled ? neutral1000.rgb : lead.rgb,
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      minWidth: rem(24),
+    },
+    '> svg': {
+      width: rem(14.4),
+      height: rem(14.4),
+      ...(enabled ? {} : { filter: 'none', stroke: lead.rgb }),
+    },
+  });

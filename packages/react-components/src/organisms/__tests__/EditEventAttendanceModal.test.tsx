@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
 
+import { silver } from '../../colors';
 import EditEventAttendanceModal from '../EditEventAttendanceModal';
 import { EventAttendanceTeam } from '../EventAttendance';
 
@@ -689,5 +690,103 @@ describe('EditEventAttendanceModal', () => {
     expect(
       screen.getByText('Add teams to track attendance'),
     ).toBeInTheDocument();
+  });
+
+  describe('disabled state during cancel confirmation', () => {
+    const enterCancelConfirmation = async () => {
+      renderModal();
+      await userEvent.click(
+        screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    };
+
+    it('Should disable interest group pill buttons', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: /Alpha Group/ }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable the search input', async () => {
+      await enterCancelConfirmation();
+      expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    });
+
+    it('Should disable the Mark All Attended button', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: 'Mark All Attended' }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable the Upload a List button', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: /Upload a List/ }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable attendance switches', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),
+      ).toBeDisabled();
+      expect(
+        screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+      ).toBeDisabled();
+    });
+
+    it('Should disable delete buttons', async () => {
+      await enterCancelConfirmation();
+      expect(
+        screen.getByRole('button', { name: 'Remove Team Alpha' }),
+      ).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: 'Remove Team Beta' }),
+      ).toBeDisabled();
+    });
+
+    it('Should change attendees card background', async () => {
+      await enterCancelConfirmation();
+      const list = screen.getByRole('list');
+      expect(list.parentElement).toHaveStyle({
+        backgroundColor: silver.rgb,
+      });
+    });
+
+    it('Should disable added interest group pill styling', async () => {
+      renderModal();
+      await userEvent.click(
+        screen.getByRole('button', { name: /Alpha Group/ }),
+      );
+      await waitFor(() =>
+        expect(onSelectInterestGroup).toHaveBeenCalledWith('ig1'),
+      );
+      await userEvent.click(
+        screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        screen.getByRole('button', { name: /Alpha Group/ }),
+      ).toBeDisabled();
+    });
+
+    it('Should re-enable controls when Keep Editing is clicked', async () => {
+      await enterCancelConfirmation();
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Keep Editing' }),
+      );
+      expect(
+        screen.getByRole('button', { name: 'Mark All Attended' }),
+      ).toBeEnabled();
+      expect(
+        screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),
+      ).toBeEnabled();
+      expect(
+        screen.getByRole('button', { name: 'Remove Team Alpha' }),
+      ).toBeEnabled();
+    });
   });
 });

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TagList from '../TagList';
-import { tin } from '../../colors';
+import { neutral1000 } from '../../colors';
 
 it('shows all tags by default', () => {
   const { getAllByRole } = render(
@@ -61,7 +61,7 @@ it('disables its tags when disabled', () => {
   const { getByText } = render(<TagList tags={['tag 1']} enabled={false} />);
 
   expect(findParentWithStyle(getByText(/tag 1/i), 'color')?.color).toEqual(
-    tin.rgb,
+    neutral1000.rgb,
   );
 });
 

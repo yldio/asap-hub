@@ -26,6 +26,7 @@ const fullWidthOnMobilePillStyles = css({
 const disabledStyles = css({
   borderColor: tin.rgb,
   color: tin.rgb,
+  cursor: 'not-allowed',
 });
 
 const pillStyles = (selected: boolean, error: boolean) =>
@@ -107,6 +108,7 @@ const PillSelector = <V extends string>({
         return (
           <button
             key={option.value}
+            disabled={!enabled}
             css={[
               pillStyles(selected, error),
               ...(enabled ? [hoverStyles] : [disabledStyles]),

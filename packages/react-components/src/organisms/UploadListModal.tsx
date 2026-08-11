@@ -9,8 +9,8 @@ import {
   fern,
   lead,
   neutral1000,
-  paper,
   pearl,
+  silver,
   steel,
 } from '../colors';
 import {
@@ -29,7 +29,10 @@ import {
   EventAttendanceTeamType,
 } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
-import { iconButtonStyles } from './shared-event-card-styles';
+import {
+  deleteButtonStyles,
+  iconButtonStyles,
+} from './shared-event-card-styles';
 
 export type UploadListSuggestion = {
   teamId: string;
@@ -179,12 +182,13 @@ const summarySeparatorStyles = css({
   paddingRight: rem(8),
 });
 
-const resultCardStyles = css({
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
-  backgroundColor: pearl.rgb,
-  overflow: 'hidden',
-});
+const resultCardStyles = (enabled: boolean) =>
+  css({
+    border: `1px solid ${steel.rgb}`,
+    borderRadius: rem(8),
+    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    overflow: 'hidden',
+  });
 
 const sectionHeaderStyles = css({
   display: 'flex',
@@ -274,27 +278,6 @@ const matchedTeamStyles = css({
 const matchedTeamNameStyles = css({
   color: fern.rgb,
   fontWeight: 400,
-});
-
-const deleteButtonStyles = css({
-  flexGrow: 0,
-  flexShrink: 0,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(24),
-  minWidth: rem(24),
-  height: rem(24),
-  minHeight: rem(24),
-  padding: 0,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(4),
-  backgroundColor: paper.rgb,
-  color: neutral1000.rgb,
-  '> svg': {
-    width: rem(14.4),
-    height: rem(14.4),
-  },
 });
 
 const unmatchedRowsStyles = css({
@@ -550,6 +533,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               {files.map((file, index) => (
                 <Tag
                   key={`${file.name}-${index}`}
+                  enabled={!isCancelling}
                   onRemove={() => removeFile(index)}
                 >
                   {file.name}
@@ -564,6 +548,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             aria-label="Add a list"
             multiple
             hidden
+            disabled={isCancelling}
             onChange={(event) => {
               const selected = Array.from(event.target.files ?? []);
               if (selected.length > 0) {
@@ -578,7 +563,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             small
             primary
             noMargin
-            enabled={!isUploading}
+            enabled={!isUploading && !isCancelling}
             loading={isUploading}
             overrideStyles={addButtonStyles}
             onClick={() => uploadInputRef.current?.click()}
@@ -603,7 +588,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               <span>{result.alreadyInCount} already in</span>
             </div>
 
-            <div css={resultCardStyles}>
+            <div css={resultCardStyles(!isCancelling)}>
               {matchedTeams.length > 0 && (
                 <>
                   <button
@@ -643,9 +628,10 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                           </span>
                           <Button
                             noMargin
+                            enabled={!isCancelling}
                             aria-label={`Remove ${team.teamName}`}
                             onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={deleteButtonStyles}
+                            overrideStyles={deleteButtonStyles(!isCancelling)}
                           >
                             {binIcon}
                           </Button>
@@ -716,6 +702,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                                 <Button
                                   small
                                   noMargin
+                                  enabled={!isCancelling}
                                   overrideStyles={addSuggestionButtonStyles}
                                   onClick={() =>
                                     promoteSuggestion(suggestion.teamId)

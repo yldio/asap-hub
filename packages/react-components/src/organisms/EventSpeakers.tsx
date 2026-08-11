@@ -10,7 +10,6 @@ import {
   Headline3,
   Link,
   Paragraph,
-  Pill,
 } from '../atoms';
 import { lead, neutral1000, steel } from '../colors';
 import {
@@ -31,9 +30,7 @@ import {
   metricValueStyles,
   metricWheelStyles,
 } from '../molecules/shared-metric-card-styles';
-import SpeakerUserRow, {
-  externalNameStyles,
-} from '../molecules/SpeakerUserRow';
+import SpeakerUserRow from '../molecules/SpeakerUserRow';
 import { rem, tabletScreen } from '../pixels';
 
 import { defaultVisibleTeams, teamIcon } from './shared-event-card';
@@ -113,16 +110,6 @@ const membersListStyles = css({
   [mobileQuery]: {
     gap: rem(24),
     paddingLeft: rem(12),
-  },
-});
-
-const memberRowStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-  [mobileQuery]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
   },
 });
 
@@ -504,21 +491,21 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                   </>
                 }
               >
-                <ul
+                <div
+                  role="list"
                   css={[
                     membersListStyles,
                     { paddingBottom: lastRowBottomPadding },
                   ]}
                 >
                   {externalGroup.users.map((member) => (
-                    <li key={member.id} css={memberRowStyles}>
-                      <span css={externalNameStyles}>{member.displayName}</span>
-                      <Pill accent="gray" noMargin>
-                        Guest
-                      </Pill>
-                    </li>
+                    <SpeakerUserRow
+                      key={member.id}
+                      displayName={member.displayName}
+                      isExternal
+                    />
                   ))}
-                </ul>
+                </div>
               </SpeakerRow>
             )}
           </table>

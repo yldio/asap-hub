@@ -1,9 +1,9 @@
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { Avatar, Button, Link, SpeakerRoleBadge } from '../atoms';
+import { Avatar, Button, Link, Pill, SpeakerRoleBadge } from '../atoms';
 import { lead } from '../colors';
-import { alumniBadgeIcon, binIcon } from '../icons';
+import { alumniBadgeIcon, binIcon, userPlaceholderIcon } from '../icons';
 import { deleteButtonStyles } from '../organisms/shared-event-card-styles';
 import { mobileScreen, rem } from '../pixels';
 import { splitDisplayName } from '../utils/user';
@@ -69,6 +69,15 @@ const nameStyles = css({
 
 export const externalNameStyles = css([nameStyles, { color: lead.rgb }]);
 
+const placeholderAvatarStyles = css({
+  display: 'inline-flex',
+  flexShrink: 0,
+  '> svg': {
+    width: rem(24),
+    height: rem(24),
+  },
+});
+
 const alumniStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
@@ -80,6 +89,7 @@ type SpeakerUserRowProps = {
   readonly roles?: string[];
   readonly userId?: string;
   readonly isAlumni?: boolean;
+  readonly isExternal?: boolean;
   readonly onRemove?: () => void;
   readonly enabled?: boolean;
 };
@@ -90,6 +100,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
   roles,
   userId,
   isAlumni,
+  isExternal = false,
   onRemove,
   enabled = true,
 }) => {
@@ -98,12 +109,16 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
     <div css={onRemove ? rowWithRemoveStyles : rowStyles} role="listitem">
       <div css={userInfoStyles}>
         <span css={topRowStyles}>
-          <Avatar
-            firstName={firstName}
-            lastName={lastName}
-            imageUrl={avatarUrl}
-            overrideStyles={avatar24Styles}
-          />
+          {isExternal ? (
+            <span css={placeholderAvatarStyles}>{userPlaceholderIcon}</span>
+          ) : (
+            <Avatar
+              firstName={firstName}
+              lastName={lastName}
+              imageUrl={avatarUrl}
+              overrideStyles={avatar24Styles}
+            />
+          )}
           {userId ? (
             <Link href={network({}).users({}).user({ userId }).$}>
               <span css={nameStyles}>{displayName}</span>
@@ -112,6 +127,11 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
             <span css={externalNameStyles}>{displayName}</span>
           )}
           {isAlumni && <span css={alumniStyles}>{alumniBadgeIcon}</span>}
+          {isExternal && (
+            <Pill accent="gray" noMargin>
+              Non CRN
+            </Pill>
+          )}
         </span>
         {roles && <SpeakerRoleBadge roles={roles} enabled={enabled} />}
       </div>

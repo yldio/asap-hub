@@ -193,6 +193,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
             roles={variant === 'team' ? user.roles : undefined}
             userId={variant === 'team' ? user.id : undefined}
             isAlumni={variant === 'team' ? user.isAlumni : undefined}
+            isExternal={variant === 'external'}
             onRemove={() => onRemoveUser(user.id)}
             enabled={enabled}
           />

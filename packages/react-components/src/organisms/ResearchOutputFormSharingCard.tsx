@@ -185,7 +185,10 @@ const ResearchOutputFormSharingCard: React.FC<
           rules={{
             required: 'Please choose a subtype.',
           }}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
+          render={({
+            field: { value, onChange, onBlur },
+            fieldState: { error },
+          }) => (
             <LabeledDropdown
               title="Subtype"
               subtitle="(required)"
@@ -202,6 +205,7 @@ const ResearchOutputFormSharingCard: React.FC<
               // which would leave a stale subtype on screen.
               onChange={(selectedSubtype) => onChange(selectedSubtype || '')}
               value={value ?? ''}
+              onBlur={onBlur}
               customValidationMessage={error?.message}
               enabled={!isSaving}
             />

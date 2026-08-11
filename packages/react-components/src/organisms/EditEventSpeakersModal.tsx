@@ -186,14 +186,14 @@ const markAllSharedButtonStyles = css({
   },
 });
 
-const cardSurfaceStyles = (enabled = true) =>
+const cardSurfaceStyles = (enabled: boolean) =>
   css({
     border: `1px solid ${steel.rgb}`,
     borderRadius: rem(8),
     backgroundColor: enabled ? pearl.rgb : silver.rgb,
   });
 
-const groupsCardStyles = (enabled = true) =>
+const groupsCardStyles = (enabled: boolean) =>
   css([cardSurfaceStyles(enabled), { padding: rem(24), overflowX: 'auto' }]);
 
 // "Team" and "Preliminary Findings", mirroring SpeakerTeamRow's row layout
@@ -217,7 +217,7 @@ const groupsRowsStyles = css({
   flexDirection: 'column',
 });
 
-const emptyStateStyles = (enabled = true) =>
+const emptyStateStyles = (enabled: boolean) =>
   css([
     cardSurfaceStyles(enabled),
     {

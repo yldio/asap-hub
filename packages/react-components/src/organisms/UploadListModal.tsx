@@ -182,7 +182,7 @@ const summarySeparatorStyles = css({
   paddingRight: rem(8),
 });
 
-const resultCardStyles = (enabled = true) =>
+const resultCardStyles = (enabled: boolean) =>
   css({
     border: `1px solid ${steel.rgb}`,
     borderRadius: rem(8),

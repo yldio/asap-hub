@@ -99,7 +99,7 @@ const nameStyles = css({
   lineHeight: rem(24),
 });
 
-const dismissStyles = (enabled = true) =>
+const dismissStyles = (enabled: boolean) =>
   css([
     deleteButtonStyles(enabled),
     {

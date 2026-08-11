@@ -755,6 +755,24 @@ describe('EditEventAttendanceModal', () => {
       });
     });
 
+    it('Should disable added interest group pill styling', async () => {
+      renderModal();
+      await userEvent.click(
+        screen.getByRole('button', { name: /Alpha Group/ }),
+      );
+      await waitFor(() =>
+        expect(onSelectInterestGroup).toHaveBeenCalledWith('ig1'),
+      );
+      await userEvent.click(
+        screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        screen.getByRole('button', { name: /Alpha Group/ }),
+      ).toBeDisabled();
+    });
+
     it('Should re-enable controls when Keep Editing is clicked', async () => {
       await enterCancelConfirmation();
       await userEvent.click(

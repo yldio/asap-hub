@@ -157,7 +157,7 @@ const SectionTitle: React.FC<{
 
 const buttonIconGapReset = { '> svg + span': { marginLeft: 0 } } as const;
 
-const uploadButtonStyles = (enabled = true) =>
+const uploadButtonStyles = (enabled: boolean) =>
   css({
     alignSelf: 'flex-start',
     gap: rem(8),
@@ -193,7 +193,7 @@ const pillRowStyles = (columnCount: number, rowCount: number) =>
     },
   });
 
-const pillStyles = (enabled = true) =>
+const pillStyles = (enabled: boolean) =>
   css({
     display: 'flex',
     alignItems: 'center',
@@ -217,7 +217,7 @@ const pillStyles = (enabled = true) =>
     ...buttonIconGapReset,
   });
 
-const addedPillStyles = (enabled = true) =>
+const addedPillStyles = (enabled: boolean) =>
   css(
     enabled
       ? {
@@ -310,7 +310,7 @@ const emptyAttendeesStyles = css({
   backgroundColor: pearl.rgb,
 });
 
-const attendeesCardStyles = (enabled = true) =>
+const attendeesCardStyles = (enabled: boolean) =>
   css({
     border: `1px solid ${steel.rgb}`,
     borderRadius: rem(8),

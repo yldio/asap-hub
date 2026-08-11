@@ -135,7 +135,7 @@ export const chevronButtonStyles = css({
   cursor: 'pointer',
 });
 
-export const deleteButtonStyles = (enabled = true) =>
+export const deleteButtonStyles = (enabled: boolean) =>
   css({
     flexGrow: 0,
     flexShrink: 0,

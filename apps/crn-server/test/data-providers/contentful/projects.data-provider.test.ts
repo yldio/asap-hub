@@ -736,7 +736,7 @@ describe('ProjectContentfulDataProvider', () => {
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-1' },
@@ -751,7 +751,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-2' },
@@ -766,7 +766,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-mentor-1' },
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-mentor-1' },
@@ -781,7 +781,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-mentor-2' },
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-mentor-2' },
@@ -817,32 +817,29 @@ describe('ProjectContentfulDataProvider', () => {
       traineeProjectWithMultipleRoles,
     ) as TraineeProject;
 
-    // Members should include all: trainees first, then mentors
-    expect(result.members).toHaveLength(5);
+    expect(result.members).toHaveLength(4);
 
-    // Check trainees (Trainee Project - Lead) are first
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee-1',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-trainee-2',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
 
-    // Check mentors follow (Trainee Project - Mentor and Trainee Project - Key Personnel)
     expect(result.members[2]).toMatchObject({
       id: 'user-mentor-1',
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
     expect(result.members[3]).toMatchObject({
       id: 'user-mentor-2',
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
-    expect(result.members[4]).toMatchObject({
-      id: 'user-key-personnel',
-      role: 'Trainee Project - Key Personnel',
-    });
+
+    expect(result.members).not.toContainEqual(
+      expect.objectContaining({ id: 'user-key-personnel' }),
+    );
   });
 
   it('includes multiple trainees when only trainee roles are present', () => {
@@ -854,7 +851,7 @@ describe('ProjectContentfulDataProvider', () => {
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-primary' },
@@ -869,7 +866,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-secondary' },
@@ -894,11 +891,11 @@ describe('ProjectContentfulDataProvider', () => {
     expect(result.members).toHaveLength(2);
     expect(result.members[0]).toMatchObject({
       id: 'user-primary',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-secondary',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
   });
 
@@ -2043,11 +2040,11 @@ describe('parseContentfulAims', () => {
 });
 
 describe('processTraineeProjectMembers', () => {
-  it('filters and orders members correctly: trainees first, then mentors', () => {
+  it('orders members: trainees, then mentors, then those with no role', () => {
     const members: ProjectMembershipItem[] = [
       {
         sys: { id: 'membership-mentor-1' },
-        role: 'Trainee Project - Mentor',
+        role: 'Independent Project - Mentor',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-mentor-1' },
@@ -2062,7 +2059,7 @@ describe('processTraineeProjectMembers', () => {
       },
       {
         sys: { id: 'membership-trainee-1' },
-        role: 'Trainee Project - Lead',
+        role: 'Independent Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee-1' },
@@ -2092,7 +2089,7 @@ describe('processTraineeProjectMembers', () => {
       },
       {
         sys: { id: 'membership-trainee-2' },
-        role: 'Trainee Project - Lead',
+        role: 'Independent Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee-2' },
@@ -2131,36 +2128,55 @@ describe('processTraineeProjectMembers', () => {
           alumniSinceDate: undefined,
         },
       },
+      {
+        sys: { id: 'membership-no-role' },
+        role: null,
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-no-role' },
+          firstName: 'No',
+          nickname: '',
+          lastName: 'Role',
+          email: 'no-role@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
     ] as ProjectMembershipItem[];
 
     const result = processTraineeProjectMembers(members);
 
-    // Should only include valid roles (Trainee Project - Lead, Mentor, Key Personnel)
-    // Should exclude Teams and invalid roles
     expect(result).toHaveLength(4);
 
     // Trainees should come first
     expect(result[0]).toMatchObject({
       id: 'user-trainee-1',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result[1]).toMatchObject({
       id: 'user-trainee-2',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
 
     // Mentors should come after
     expect(result[2]).toMatchObject({
       id: 'user-mentor-1',
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
-    expect(result[3]).toMatchObject({
-      id: 'user-key-personnel',
-      role: 'Trainee Project - Key Personnel',
-    });
+
+    // Members with no role come last, so the summary rows stay stable
+    expect(result[3]).toMatchObject({ id: 'user-no-role' });
+    expect(result[3]?.role).toBeUndefined();
+
+    // Teams, and users holding a role that is not a trainee or mentor role,
+    // are not listed on the project
+    for (const id of ['team-support', 'user-key-personnel', 'user-invalid']) {
+      expect(result).not.toContainEqual(expect.objectContaining({ id }));
+    }
   });
 
-  it('returns empty array when no valid members exist', () => {
+  it('returns empty array when the project has no user members', () => {
     const members: ProjectMembershipItem[] = [
       {
         sys: { id: 'membership-team' },
@@ -2171,21 +2187,6 @@ describe('processTraineeProjectMembers', () => {
           displayName: 'Support Team',
           inactiveSince: null,
           researchTheme: null,
-        },
-      },
-      {
-        sys: { id: 'membership-invalid-role' },
-        role: 'Invalid Role',
-        projectMember: {
-          __typename: 'Users',
-          sys: { id: 'user-invalid' },
-          firstName: 'Invalid',
-          nickname: '',
-          lastName: 'Role',
-          email: 'invalid@example.com',
-          onboarded: true,
-          avatar: { url: null },
-          alumniSinceDate: undefined,
         },
       },
     ] as ProjectMembershipItem[];
@@ -2356,31 +2357,29 @@ describe('parseContentfulProjectDetail', () => {
     // Verify members are included and ordered correctly: trainees first, then mentors
     expect(result.members).toBeDefined();
     expect(result.members).toHaveLength(2);
-    // Trainee (Trainee Project - Lead) should come first
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
     // Mentor should come after
     expect(result.members[1]).toMatchObject({
       id: 'user-trainer',
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
   });
 
-  it('parses Trainee Project detail with Key Personnel role', () => {
+  it('parses Trainee Project detail dropping a member whose role was retired', () => {
     const traineeItem = getTraineeProjectDetailGraphqlItem({
       originalGrant: 'Trainee Original Grant',
       proposalId: 'trainee-proposal-1',
     });
 
-    // Override members to include Key Personnel
     traineeItem.membersCollection = {
       total: 2,
       items: [
         {
           sys: { id: 'membership-trainee-trainee' },
-          role: 'Trainee Project - Lead',
+          role: 'Independent Project - Lead',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainee' },
@@ -2415,15 +2414,14 @@ describe('parseContentfulProjectDetail', () => {
       traineeItem,
     ) as TraineeProjectDetail;
 
-    expect(result.members).toHaveLength(2);
+    expect(result.members).toHaveLength(1);
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     });
-    expect(result.members[1]).toMatchObject({
-      id: 'user-key-personnel',
-      role: 'Trainee Project - Key Personnel',
-    });
+    expect(result.members).not.toContainEqual(
+      expect.objectContaining({ id: 'user-key-personnel' }),
+    );
   });
 
   it('parses Discovery Project detail fallback when no team member exists', () => {

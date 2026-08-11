@@ -44,6 +44,18 @@ describe('ProjectMembers', () => {
     expect(screen.getByText('Research Associate')).toBeInTheDocument();
   });
 
+  it('renders a member whose role is unset with "No role assigned"', () => {
+    const membersWithOneRoleless: ProjectMember[] = [
+      ...mockMembers,
+      { id: '4', displayName: 'Pat Roleless', href: '/users/pat-roleless' },
+    ];
+    render(
+      <ProjectMembers members={membersWithOneRoleless} showTeamInfo={false} />,
+    );
+    expect(screen.getByText('Pat Roleless')).toBeInTheDocument();
+    expect(screen.getByText('No role assigned')).toBeVisible();
+  });
+
   it('does not show team info when showTeamInfo is false', () => {
     const membersWithTeams = mockMembers.map((m) => ({
       ...m,

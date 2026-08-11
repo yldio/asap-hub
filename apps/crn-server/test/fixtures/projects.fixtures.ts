@@ -288,7 +288,7 @@ export const getTraineeProjectGraphqlItem = (): GraphQLProject => ({
     items: [
       {
         sys: { id: 'membership-trainee-trainer' },
-        role: 'Trainee Project - Mentor',
+        role: 'Independent Project - Mentor',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainer' },
@@ -303,7 +303,7 @@ export const getTraineeProjectGraphqlItem = (): GraphQLProject => ({
       },
       {
         sys: { id: 'membership-trainee-trainee' },
-        role: 'Trainee Project - Lead',
+        role: 'Independent Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee' },
@@ -622,7 +622,7 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
       firstName: 'Dana',
       lastName: 'Lopez',
       avatarUrl: undefined,
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
       email: 'dana@example.com',
       alumniSinceDate: undefined,
     },
@@ -632,7 +632,7 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
       firstName: 'Taylor',
       lastName: 'Mills',
       avatarUrl: undefined,
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
       email: 'taylor@example.com',
       alumniSinceDate: undefined,
     },
@@ -899,7 +899,7 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
       items: [
         {
           sys: { id: 'membership-trainee-trainee' },
-          role: 'Trainee Project - Lead',
+          role: 'Independent Project - Lead',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainee' },
@@ -914,7 +914,7 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
         },
         {
           sys: { id: 'membership-trainee-trainer' },
-          role: 'Trainee Project - Mentor',
+          role: 'Independent Project - Mentor',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainer' },

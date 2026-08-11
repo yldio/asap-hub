@@ -67,7 +67,7 @@ describe('project utils', () => {
       {
         id: 'trainer-1',
         displayName: 'Taylor Trainer',
-        role: 'Trainee Project - Mentor',
+        role: 'Independent Project - Mentor',
       },
     ],
   };

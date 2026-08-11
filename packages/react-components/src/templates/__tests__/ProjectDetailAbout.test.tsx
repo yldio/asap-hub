@@ -182,6 +182,8 @@ describe('ProjectDetailAbout', () => {
       render(<ProjectDetailAbout {...resourceMemberProject} />);
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
+      // Resource Projects share ProjectMemberCard, so the label applies here too
+      expect(screen.getByText('No role assigned')).toBeVisible();
     });
 
     it('does not render Contributors when members is not provided', () => {
@@ -280,7 +282,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Sarah',
             lastName: 'Mentor',
             href: '/users/trainer-1',
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };
@@ -562,7 +564,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Sarah',
             lastName: 'Mentor',
             href: '/users/trainer-1',
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };

@@ -106,7 +106,7 @@ describe('getTeamIcon', () => {
           firstName: 'Trainee',
           lastName: 'Name',
           href: '/users/trainee-1',
-          role: 'Trainee Project - Lead',
+          role: 'Independent Project - Lead',
         },
         {
           id: 'trainer-1',
@@ -114,7 +114,7 @@ describe('getTeamIcon', () => {
           firstName: 'Trainer',
           lastName: 'Name',
           href: '/users/trainer-1',
-          role: 'Trainee Project - Mentor',
+          role: 'Independent Project - Mentor',
         },
       ],
     };
@@ -195,7 +195,7 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Emily',
         lastName: 'Trainee',
         href: '/users/trainee-1',
-        role: 'Trainee Project - Lead',
+        role: 'Independent Project - Lead',
       },
       {
         id: 'trainer-1',
@@ -203,7 +203,7 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Sarah',
         lastName: 'Mentor',
         href: '/users/trainer-1',
-        role: 'Trainee Project - Mentor',
+        role: 'Independent Project - Mentor',
       },
     ],
   };
@@ -628,7 +628,7 @@ describe('ProjectDetailHeader', () => {
             firstName: 'John',
             lastName: 'Mentor',
             href: '/users/mentor-2',
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
           {
             id: 'mentor-3',
@@ -649,7 +649,7 @@ describe('ProjectDetailHeader', () => {
       );
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
       expect(screen.getByText('Dr. John Mentor')).toBeInTheDocument();
-      expect(screen.getByText('Dr. Jane Key')).toBeInTheDocument();
+      expect(screen.queryByText('Dr. Jane Key')).not.toBeInTheDocument();
     });
 
     it('does not render share an output button when project is trainee project and PROJECT_OUTPUTS flag is enabled', () => {

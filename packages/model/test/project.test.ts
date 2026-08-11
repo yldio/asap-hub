@@ -3,6 +3,7 @@ import {
   projectTypes,
   isProjectLead,
   isProjectMember,
+  groupTraineeProjectMembers,
   Project,
 } from '../src/project';
 
@@ -98,7 +99,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
           },
         ],
       };
@@ -113,7 +114,22 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(false);
+    });
+
+    it('returns false for Trainee Project member still holding the retired role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Trainee Project - Lead',
           },
         ],
       };
@@ -128,7 +144,7 @@ describe('Project Model', () => {
           {
             id: 'other-user',
             displayName: 'Other User',
-            role: 'Trainee Project - Lead',
+            role: 'Independent Project - Lead',
           },
         ],
       };
@@ -322,11 +338,35 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Trainee Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };
       expect(isProjectMember('user-1', [], project)).toBe(true);
+    });
+
+    it('returns false for a Trainee Project member with no role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [{ id: 'user-1', displayName: 'Test User' }],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
+    });
+
+    it('returns false for a Trainee Project member holding a retired role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Trainee Project - Key Personnel',
+          },
+        ],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
     });
 
     it('returns false when user is not listed as a member of a Trainee Project', () => {
@@ -422,5 +462,47 @@ describe('Project Model', () => {
     it('should return false for empty string', () => {
       expect(isProjectType('')).toBe(false);
     });
+  });
+
+  describe('groupTraineeProjectMembers', () => {
+    const lead = { id: 'lead-1', role: 'Independent Project - Lead' };
+    const mentor = { id: 'mentor-1', role: 'Independent Project - Mentor' };
+
+    it('should split members into trainees and mentors', () => {
+      expect(groupTraineeProjectMembers([mentor, lead])).toEqual({
+        trainees: [lead],
+        mentors: [mentor],
+        unassigned: [],
+      });
+    });
+
+    it('should put a member without a role in unassigned', () => {
+      const noRole = { id: 'no-role' };
+
+      expect(groupTraineeProjectMembers([lead, noRole])).toEqual({
+        trainees: [lead],
+        mentors: [],
+        unassigned: [noRole],
+      });
+    });
+
+    it.each`
+      role
+      ${'Trainee Project - Key Personnel'}
+      ${'Trainee Project - Lead'}
+      ${'Trainee'}
+      ${'Contributor'}
+    `(
+      'should leave a member holding $role out of every group',
+      ({ role }: { role: string }) => {
+        const other = { id: 'other-1', role };
+
+        expect(groupTraineeProjectMembers([lead, other])).toEqual({
+          trainees: [lead],
+          mentors: [],
+          unassigned: [],
+        });
+      },
+    );
   });
 });

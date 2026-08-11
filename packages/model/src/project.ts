@@ -267,7 +267,33 @@ export const projectLeadMemberRoles = [
   'Data Manager',
 ] as const;
 
-export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
+export const traineeProjectLeadRoles = ['Independent Project - Lead'] as const;
+
+export const traineeProjectMentorRoles = [
+  'Independent Project - Mentor',
+] as const;
+
+/**
+ * Partitions Trainee Project members by role. `trainees` and `mentors` back the
+ * two summary rows on the project header and card; `unassigned` holds members
+ * with no role at all, listed in full member lists as "No role assigned".
+ *
+ * A member holding some other role — one that belongs to another project type,
+ * or one retired from the content model — is in none of the three and stays out
+ * of the project, which is how it behaved before `unassigned` existed.
+ */
+export const groupTraineeProjectMembers = <T extends { role?: string }>(
+  members: ReadonlyArray<T>,
+): { trainees: T[]; mentors: T[]; unassigned: T[] } => {
+  const hasRoleIn = (roles: ReadonlyArray<string>) => (member: T) =>
+    roles.includes(member.role ?? '');
+
+  return {
+    trainees: members.filter(hasRoleIn(traineeProjectLeadRoles)),
+    mentors: members.filter(hasRoleIn(traineeProjectMentorRoles)),
+    unassigned: members.filter((m) => !m.role),
+  };
+};
 
 /**
  *
@@ -277,7 +303,7 @@ export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
  * For team-based projects (Discovery, team-based Resource): checks the user's
  * team role against projectLeadTeamRoles.
  *
- * For Trainee projects: checks if the user has the "Trainee Project - Lead"
+ * For Trainee projects: checks if the user has the "Independent Project - Lead"
  * role in the project's members list.
  *
  * For user-based Resource projects (isTeamBased=false, no teamId): these have
@@ -346,6 +372,13 @@ export const isProjectMember = (
     project.fundedTeam?.id;
   if (fundedTeamId) {
     return userTeams.some((t) => t.id === fundedTeamId);
+  }
+
+  // Trainee members with no recognised role are listed on the project but do
+  // not get member access, which is what they had before they were listed.
+  if (project.projectType === 'Trainee Project') {
+    const { trainees, mentors } = groupTraineeProjectMembers(project.members);
+    return [...trainees, ...mentors].some((m) => m.id === userId);
   }
 
   if ('members' in project && project.members) {

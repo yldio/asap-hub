@@ -86,7 +86,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Martinez',
       email: 'david.m@example.com',
       href: '/users/2',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     },
     {
       id: '3',
@@ -95,7 +95,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'emily.c@example.com',
       href: '/users/3',
-      role: 'Trainee Project - Lead',
+      role: 'Independent Project - Lead',
     },
     {
       id: '1',
@@ -104,7 +104,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Foster',
       email: 'amanda.f@example.com',
       href: '/users/1',
-      role: 'Trainee Project - Mentor',
+      role: 'Independent Project - Mentor',
     },
   ],
 };
@@ -378,7 +378,7 @@ describe('ProjectCard - Trainee Project', () => {
           lastName: 'Mentor',
           email: 'john.m@example.com',
           href: '/users/4',
-          role: 'Trainee Project - Mentor',
+          role: 'Independent Project - Mentor',
         },
         {
           id: '5',
@@ -389,14 +389,23 @@ describe('ProjectCard - Trainee Project', () => {
           href: '/users/5',
           role: 'Trainee Project - Key Personnel',
         },
+        {
+          id: '6',
+          displayName: 'Dr. Pat Roleless',
+          firstName: 'Pat',
+          lastName: 'Roleless',
+          email: 'pat.r@example.com',
+          href: '/users/6',
+        },
       ],
     };
-    const { getByText } = render(
+    const { getByText, queryByText } = render(
       <ProjectCard {...projectWithMultipleMentors} />,
     );
     expect(getByText('Dr. John Mentor')).toBeVisible();
-    expect(getByText('Dr. Jane Key')).toBeVisible();
     expect(getByText('Dr. Amanda Foster')).toBeVisible();
+    expect(queryByText('Dr. Jane Key')).not.toBeInTheDocument();
+    expect(queryByText('Dr. Pat Roleless')).not.toBeInTheDocument();
   });
 });
 

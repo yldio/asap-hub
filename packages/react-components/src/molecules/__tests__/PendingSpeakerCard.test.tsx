@@ -25,9 +25,7 @@ it('Should render the warning message and team pills', () => {
   expect(
     screen.getByRole('button', { name: /Team Alpha/ }),
   ).toBeInTheDocument();
-  expect(
-    screen.getByRole('button', { name: /Team Beta/ }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Team Beta/ })).toBeInTheDocument();
 });
 
 it('Should call onPickTeam when a team pill is clicked', async () => {

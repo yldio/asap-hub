@@ -504,7 +504,6 @@ export const parseContentfulProjectDetail = (
           teamDescription: teamMember.teamDescription || undefined,
         };
 
-
         // Parse collaborating teams from funded team's research outputs
         const resourceResearchOutputItems =
           getResearchOutputItemsFromProjectMember(teamMember);
@@ -530,7 +529,6 @@ export const parseContentfulProjectDetail = (
       const userMembers: ProjectMember[] = members
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
-
 
       return {
         ...baseProject,

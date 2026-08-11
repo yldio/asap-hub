@@ -1,5 +1,5 @@
 module.exports.description =
-  'Rename the Trainee Project membership roles to Individual Project and fold Key Personnel into Mentor';
+  'Rename the Trainee Project membership roles to Independent Project and fold Key Personnel into Mentor';
 
 const STABLE_ROLES = [
   'Lead PI',
@@ -13,9 +13,9 @@ const STABLE_ROLES = [
 ];
 
 const OLD_LEAD = 'Trainee Project - Lead';
-const NEW_LEAD = 'Individual Project - Lead';
+const NEW_LEAD = 'Independent Project - Lead';
 const OLD_MENTOR = 'Trainee Project - Mentor';
-const NEW_MENTOR = 'Individual Project - Mentor';
+const NEW_MENTOR = 'Independent Project - Mentor';
 const OLD_KEY_PERSONNEL = 'Trainee Project - Key Personnel';
 
 const OLD_PROJECT_ROLES = [OLD_LEAD, OLD_MENTOR, OLD_KEY_PERSONNEL];

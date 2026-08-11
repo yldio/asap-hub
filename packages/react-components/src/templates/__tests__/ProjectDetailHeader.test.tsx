@@ -106,7 +106,7 @@ describe('getTeamIcon', () => {
           firstName: 'Trainee',
           lastName: 'Name',
           href: '/users/trainee-1',
-          role: 'Individual Project - Lead',
+          role: 'Independent Project - Lead',
         },
         {
           id: 'trainer-1',
@@ -114,7 +114,7 @@ describe('getTeamIcon', () => {
           firstName: 'Trainer',
           lastName: 'Name',
           href: '/users/trainer-1',
-          role: 'Individual Project - Mentor',
+          role: 'Independent Project - Mentor',
         },
       ],
     };
@@ -195,7 +195,7 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Emily',
         lastName: 'Trainee',
         href: '/users/trainee-1',
-        role: 'Individual Project - Lead',
+        role: 'Independent Project - Lead',
       },
       {
         id: 'trainer-1',
@@ -203,7 +203,7 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Sarah',
         lastName: 'Mentor',
         href: '/users/trainer-1',
-        role: 'Individual Project - Mentor',
+        role: 'Independent Project - Mentor',
       },
     ],
   };
@@ -628,7 +628,7 @@ describe('ProjectDetailHeader', () => {
             firstName: 'John',
             lastName: 'Mentor',
             href: '/users/mentor-2',
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
           {
             id: 'mentor-3',

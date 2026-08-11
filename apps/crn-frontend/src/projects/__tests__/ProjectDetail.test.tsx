@@ -229,7 +229,7 @@ const mockTraineeProject: TraineeProjectDetailType = {
       firstName: 'Taylor',
       lastName: 'Trainer',
       email: 'contact@example.com',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     },
   ],
   originalGrant: 'Original Grant',

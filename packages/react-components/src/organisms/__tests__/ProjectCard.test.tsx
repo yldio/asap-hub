@@ -86,7 +86,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Martinez',
       email: 'david.m@example.com',
       href: '/users/2',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     },
     {
       id: '3',
@@ -95,7 +95,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'emily.c@example.com',
       href: '/users/3',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     },
     {
       id: '1',
@@ -104,7 +104,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Foster',
       email: 'amanda.f@example.com',
       href: '/users/1',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     },
   ],
 };
@@ -378,7 +378,7 @@ describe('ProjectCard - Trainee Project', () => {
           lastName: 'Mentor',
           email: 'john.m@example.com',
           href: '/users/4',
-          role: 'Individual Project - Mentor',
+          role: 'Independent Project - Mentor',
         },
         {
           id: '5',

@@ -269,10 +269,10 @@ export const projectLeadMemberRoles = [
   'Data Manager',
 ] as const;
 
-export const traineeProjectLeadRoles = ['Individual Project - Lead'] as const;
+export const traineeProjectLeadRoles = ['Independent Project - Lead'] as const;
 
 export const traineeProjectMentorRoles = [
-  'Individual Project - Mentor',
+  'Independent Project - Mentor',
 ] as const;
 
 /**
@@ -305,7 +305,7 @@ export const groupTraineeProjectMembers = <T extends { role?: string }>(
  * For team-based projects (Discovery, team-based Resource): checks the user's
  * team role against projectLeadTeamRoles.
  *
- * For Trainee projects: checks if the user has the "Individual Project - Lead"
+ * For Trainee projects: checks if the user has the "Independent Project - Lead"
  * role in the project's members list.
  *
  * For user-based Resource projects (isTeamBased=false, no teamId): these have

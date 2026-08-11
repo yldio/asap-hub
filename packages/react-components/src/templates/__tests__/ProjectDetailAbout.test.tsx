@@ -282,7 +282,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Sarah',
             lastName: 'Mentor',
             href: '/users/trainer-1',
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };
@@ -564,7 +564,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Sarah',
             lastName: 'Mentor',
             href: '/users/trainer-1',
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };

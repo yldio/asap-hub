@@ -71,7 +71,7 @@ const mockTraineeProjectMembers: ReadonlyArray<ProjectMember> = [
     displayName: 'Taylor Trainer',
     firstName: 'Taylor',
     lastName: 'Trainer',
-    role: 'Individual Project - Mentor',
+    role: 'Independent Project - Mentor',
   },
 ];
 

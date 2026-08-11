@@ -99,7 +99,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
           },
         ],
       };
@@ -114,7 +114,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };
@@ -144,7 +144,7 @@ describe('Project Model', () => {
           {
             id: 'other-user',
             displayName: 'Other User',
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
           },
         ],
       };
@@ -338,7 +338,7 @@ describe('Project Model', () => {
           {
             id: 'user-1',
             displayName: 'Test User',
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
           },
         ],
       };
@@ -465,8 +465,8 @@ describe('Project Model', () => {
   });
 
   describe('groupTraineeProjectMembers', () => {
-    const lead = { id: 'lead-1', role: 'Individual Project - Lead' };
-    const mentor = { id: 'mentor-1', role: 'Individual Project - Mentor' };
+    const lead = { id: 'lead-1', role: 'Independent Project - Lead' };
+    const mentor = { id: 'mentor-1', role: 'Independent Project - Mentor' };
 
     it('should split members into trainees and mentors', () => {
       expect(groupTraineeProjectMembers([mentor, lead])).toEqual({

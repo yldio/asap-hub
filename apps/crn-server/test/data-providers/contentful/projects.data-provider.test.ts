@@ -736,7 +736,7 @@ describe('ProjectContentfulDataProvider', () => {
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-1' },
@@ -751,7 +751,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-2' },
@@ -766,7 +766,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-mentor-1' },
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-mentor-1' },
@@ -781,7 +781,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-mentor-2' },
-            role: 'Individual Project - Mentor',
+            role: 'Independent Project - Mentor',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-mentor-2' },
@@ -821,20 +821,20 @@ describe('ProjectContentfulDataProvider', () => {
 
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee-1',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-trainee-2',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
 
     expect(result.members[2]).toMatchObject({
       id: 'user-mentor-1',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
     expect(result.members[3]).toMatchObject({
       id: 'user-mentor-2',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
 
     expect(result.members).not.toContainEqual(
@@ -851,7 +851,7 @@ describe('ProjectContentfulDataProvider', () => {
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-primary' },
@@ -866,7 +866,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Individual Project - Lead',
+            role: 'Independent Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-secondary' },
@@ -891,11 +891,11 @@ describe('ProjectContentfulDataProvider', () => {
     expect(result.members).toHaveLength(2);
     expect(result.members[0]).toMatchObject({
       id: 'user-primary',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-secondary',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
   });
 
@@ -2044,7 +2044,7 @@ describe('processTraineeProjectMembers', () => {
     const members: ProjectMembershipItem[] = [
       {
         sys: { id: 'membership-mentor-1' },
-        role: 'Individual Project - Mentor',
+        role: 'Independent Project - Mentor',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-mentor-1' },
@@ -2059,7 +2059,7 @@ describe('processTraineeProjectMembers', () => {
       },
       {
         sys: { id: 'membership-trainee-1' },
-        role: 'Individual Project - Lead',
+        role: 'Independent Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee-1' },
@@ -2089,7 +2089,7 @@ describe('processTraineeProjectMembers', () => {
       },
       {
         sys: { id: 'membership-trainee-2' },
-        role: 'Individual Project - Lead',
+        role: 'Independent Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee-2' },
@@ -2152,17 +2152,17 @@ describe('processTraineeProjectMembers', () => {
     // Trainees should come first
     expect(result[0]).toMatchObject({
       id: 'user-trainee-1',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result[1]).toMatchObject({
       id: 'user-trainee-2',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
 
     // Mentors should come after
     expect(result[2]).toMatchObject({
       id: 'user-mentor-1',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
 
     // Members with no role come last, so the summary rows stay stable
@@ -2448,12 +2448,12 @@ describe('parseContentfulProjectDetail', () => {
     expect(result.members).toHaveLength(2);
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
     // Mentor should come after
     expect(result.members[1]).toMatchObject({
       id: 'user-trainer',
-      role: 'Individual Project - Mentor',
+      role: 'Independent Project - Mentor',
     });
   });
 
@@ -2468,7 +2468,7 @@ describe('parseContentfulProjectDetail', () => {
       items: [
         {
           sys: { id: 'membership-trainee-trainee' },
-          role: 'Individual Project - Lead',
+          role: 'Independent Project - Lead',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainee' },
@@ -2506,7 +2506,7 @@ describe('parseContentfulProjectDetail', () => {
     expect(result.members).toHaveLength(1);
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee',
-      role: 'Individual Project - Lead',
+      role: 'Independent Project - Lead',
     });
     expect(result.members).not.toContainEqual(
       expect.objectContaining({ id: 'user-key-personnel' }),

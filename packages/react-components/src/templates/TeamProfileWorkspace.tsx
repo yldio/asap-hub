@@ -3,6 +3,7 @@ import {
   ManuscriptFileResponse,
   TeamResponse,
   TeamTool,
+  WorkspaceManuscript,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -104,17 +105,11 @@ const hubStaffCopy = {
 };
 
 type TeamProfileWorkspaceProps = Readonly<
-  Pick<
-    TeamResponse,
-    | 'id'
-    | 'inactiveSince'
-    | 'lastModifiedDate'
-    | 'manuscripts'
-    | 'collaborationManuscripts'
-    | 'members'
-  >
-> &
-  Pick<
+  Pick<TeamResponse, 'id' | 'inactiveSince' | 'lastModifiedDate' | 'members'>
+> & {
+  readonly manuscripts: ReadonlyArray<WorkspaceManuscript>;
+  readonly collaborationManuscripts?: ReadonlyArray<WorkspaceManuscript>;
+} & Pick<
     ComponentProps<typeof ManuscriptCard>,
     'onUpdateManuscript' | 'isComplianceReviewer'
   > &
@@ -241,10 +236,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   {manuscriptSubmissions}
                 </Paragraph>
                 <div>
-                  {manuscripts.map((manuscriptId) => (
-                    <div key={manuscriptId}>
+                  {manuscripts.map((manuscript) => (
+                    <div key={manuscript.id}>
                       <ManuscriptCard
-                        id={manuscriptId}
+                        manuscript={manuscript}
                         user={user}
                         teamId={id}
                         isComplianceReviewer={isComplianceReviewer}
@@ -255,7 +250,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                        {...targetProps(manuscriptId)}
+                        {...targetProps(manuscript.id)}
                       />
                     </div>
                   ))}
@@ -278,10 +273,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   {manuscriptCollaborations}
                 </Paragraph>
                 <div>
-                  {collaborationManuscripts?.map((manuscriptId) => (
-                    <div key={manuscriptId}>
+                  {collaborationManuscripts?.map((manuscript) => (
+                    <div key={manuscript.id}>
                       <ManuscriptCard
-                        id={manuscriptId}
+                        manuscript={manuscript}
                         user={user}
                         teamId={id}
                         isComplianceReviewer={isComplianceReviewer}
@@ -292,7 +287,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                        {...targetProps(manuscriptId)}
+                        {...targetProps(manuscript.id)}
                       />
                     </div>
                   ))}

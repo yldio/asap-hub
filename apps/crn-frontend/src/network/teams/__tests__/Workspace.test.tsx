@@ -14,6 +14,7 @@ import { setCurrentOverrides } from '@asap-hub/flags';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
+  createWorkspaceManuscript,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
@@ -30,10 +31,10 @@ import { updateManuscript, createDiscussion, getManuscript } from '../api';
 
 import Workspace from '../Workspace';
 import {
-  useBatchManuscriptsByIds,
   useManuscriptById,
   useReplyToDiscussion,
   useMarkDiscussionAsRead,
+  useWorkspaceManuscripts,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 import { ManuscriptToastContext } from '../ManuscriptToastProvider';
@@ -54,7 +55,7 @@ jest.mock('../state', () => ({
   useManuscriptById: jest.fn(),
   useReplyToDiscussion: jest.fn(),
   useMarkDiscussionAsRead: jest.fn(),
-  useBatchManuscriptsByIds: jest.fn(),
+  useWorkspaceManuscripts: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -67,7 +68,6 @@ jest.mock('../../../projects/state', () => ({
 }));
 
 const id = '42';
-const manuscriptId = 'manuscript_0';
 
 const renderWithWrapper = (
   children: ReactNode,
@@ -133,6 +133,10 @@ beforeEach(() => {
   (useMarkDiscussionAsRead as jest.Mock).mockImplementation(
     () => mockMarkDiscussionAsRead,
   );
+  (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
+    manuscripts: [createWorkspaceManuscript()],
+    collaborationManuscripts: [],
+  });
   (updateManuscript as jest.Mock).mockResolvedValue({});
   (createDiscussion as jest.Mock).mockResolvedValue({});
   (getManuscript as jest.Mock).mockResolvedValue(
@@ -148,39 +152,10 @@ describe('Manuscript', () => {
     jest.spyOn(console, 'error').mockImplementation();
   });
 
-  it('preloads manuscript ids for the workspace', async () => {
-    renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: ['manuscript_0'],
-          collaborationManuscripts: ['manuscript_1'],
-        }}
-      />,
-      user,
-    );
-
-    await waitFor(() => {
-      expect(useBatchManuscriptsByIds).toHaveBeenCalledWith([
-        'manuscript_0',
-        'manuscript_1',
-      ]);
-    });
-  });
-
   it('status can be changed', async () => {
     setCurrentOverrides({ COMPLIANCE_NOTIFICATION_LIST: '' });
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
       user,
     );
 
@@ -205,14 +180,7 @@ describe('Manuscript', () => {
 
   it('should create discussion', async () => {
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
     await userEvent.click(await screen.findByTestId('collapsible-button'));
     await userEvent.click(screen.getByText('Discussions'));
@@ -280,14 +248,7 @@ describe('Manuscript', () => {
       jest.fn(),
     ]);
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
     await userEvent.click(await screen.findByTestId('collapsible-button'));
     await userEvent.click(screen.getByText('Discussions'));
@@ -377,14 +338,7 @@ describe('Manuscript', () => {
     );
 
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
 
     await userEvent.click(await screen.findByTestId('collapsible-button'));
@@ -752,14 +706,7 @@ describe('error handling for 403 BackendError', () => {
       ),
     );
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
     await userEvent.click(await screen.findByTestId('collapsible-button'));
     await userEvent.click(screen.getByText('Discussions'));
@@ -801,14 +748,7 @@ describe('error handling for 403 BackendError', () => {
       ),
     );
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
     await userEvent.click(await screen.findByTestId('collapsible-button'));
     await userEvent.click(screen.getByText('Discussions'));
@@ -848,14 +788,7 @@ describe('error handling for 403 BackendError', () => {
       ),
     );
     renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [],
-          manuscripts: [manuscriptId],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
     await userEvent.click(await screen.findByTestId('collapsible-button'));
     await userEvent.click(screen.getByText('Discussions'));

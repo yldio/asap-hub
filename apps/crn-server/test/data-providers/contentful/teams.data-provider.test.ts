@@ -13,12 +13,10 @@ import {
   getTeamListItemDataObject,
   getContentfulGraphqlTeamById,
   getContentfulGraphqlTeam,
-  getUnsortedManuscripts,
   getContentfulGraphqlPublicTeam,
   getContentfulGraphqlPublicTeamById,
   getPublicTeamListItemDataObject,
   getContentfulGraphqlTeamProjectById,
-  getContentfulGraphqlManuscripts,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -1411,7 +1409,6 @@ describe('Teams data provider', () => {
           { id: 'tag-1', name: 'Animal resources 1' },
           { id: 'tag-2', name: 'Animal resources 2' },
         ],
-        manuscripts: [],
         labCount: 0,
         labs: [],
       });
@@ -1946,7 +1943,6 @@ describe('Teams data provider', () => {
           researchTheme: 'Test Research Theme',
           teamType: 'Discovery Team',
           lastModifiedDate: '2021-01-01T00:00:00.000Z',
-          manuscripts: [],
           labCount: 0,
           labs: [],
         });
@@ -2018,57 +2014,6 @@ describe('Teams data provider', () => {
       const result = await teamByIdDataProviderMock.fetchById(teamId);
 
       expect(result).toMatchObject(expectedResult);
-    });
-
-    test('should sort manuscripts so that Compliant and Closed (other) are last', async () => {
-      const teamId = 'team-id';
-
-      const team = {
-        ...getContentfulGraphqlTeamById(teamId),
-        linkedFrom: getUnsortedManuscripts(teamId),
-      };
-
-      mockFetchByIdGraphqlResponses(team);
-
-      const result = await teamDataProvider.fetchById(teamId);
-
-      expect(result?.manuscripts).toEqual([
-        'waiting-for-report-manuscript-id',
-        'submit-final-publication-manuscript-id',
-        'compliant-manuscript-id',
-        'closed-manuscript-id',
-      ]);
-    });
-
-    test('should separate team manuscripts from collaboration manuscripts', async () => {
-      const teamId = 'team-id';
-      const collaboratingTeamId = 'collaborating-team-id';
-
-      const [teamManuscript, collaboratingTeamManuscript] =
-        getContentfulGraphqlManuscripts(teamId)!.items;
-      collaboratingTeamManuscript!.teamsCollection!.items[0]!.sys.id =
-        collaboratingTeamId;
-
-      const graphqlTeamById = getContentfulGraphqlTeamById(teamId);
-
-      const team = {
-        ...graphqlTeamById,
-        linkedFrom: {
-          ...graphqlTeamById.linkedFrom,
-          manuscriptsCollection: {
-            items: [teamManuscript, collaboratingTeamManuscript],
-          },
-        },
-      };
-
-      mockFetchByIdGraphqlResponses(team);
-
-      const result = await teamDataProvider.fetchById(teamId);
-
-      expect(result?.manuscripts).toEqual([teamManuscript?.sys.id]);
-      expect(result?.collaborationManuscripts).toEqual([
-        collaboratingTeamManuscript?.sys.id,
-      ]);
     });
 
     test('Should return null when the team is not found', async () => {

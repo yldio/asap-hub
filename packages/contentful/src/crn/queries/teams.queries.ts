@@ -32,26 +32,6 @@ export const FETCH_TEAM_BY_ID = gql`
         }
       }
       linkedFrom {
-        manuscriptsCollection(limit: 100, order: sys_firstPublishedAt_DESC) {
-          items {
-            sys {
-              id
-            }
-            status
-            teamsCollection(limit: 1) {
-              items {
-                sys {
-                  id
-                }
-              }
-            }
-            project {
-              sys {
-                id
-              }
-            }
-          }
-        }
         teamMembershipCollection(limit: 100) {
           items {
             role

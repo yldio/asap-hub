@@ -147,7 +147,10 @@ describe('usePatchUserAvatarById', () => {
       total: 1,
       items: [{ id: 'm-1' }],
     });
-    queryClient.setQueryData(manuscriptQueryKeys.batch(['m-1']), 1);
+    queryClient.setQueryData(manuscriptQueryKeys.workspace({ teamId: 't-1' }), {
+      manuscripts: [],
+      collaborationManuscripts: [],
+    });
     queryClient.setQueryData(projectQueryKeys.detail('p-1'), { id: 'p-1' });
 
     await act(() => result.current('data:image/jpeg;base64,abc'));
@@ -161,7 +164,9 @@ describe('usePatchUserAvatarById', () => {
     expect(isInvalidated(manuscriptQueryKeys.list(manuscriptListOptions))).toBe(
       false,
     );
-    expect(isInvalidated(manuscriptQueryKeys.batch(['m-1']))).toBe(false);
+    expect(
+      isInvalidated(manuscriptQueryKeys.workspace({ teamId: 't-1' })),
+    ).toBe(false);
     expect(isInvalidated(projectQueryKeys.detail('p-1'))).toBe(false);
   });
 });

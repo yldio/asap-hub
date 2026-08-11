@@ -19,7 +19,7 @@ import {
   useImpactSuggestions,
 } from '../../shared-state';
 import {
-  useInvalidateTeamById,
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostManuscript,
   usePutManuscript,
@@ -45,7 +45,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   teamId,
   resubmitManuscript = false,
 }) => {
-  const invalidateTeam = useInvalidateTeamById(teamId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
 
@@ -71,7 +71,10 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const onSuccess = () => {
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setFormType({ type: 'manuscript', accent: 'successLarge' });
-    invalidateTeam();
+    // edits are patched into the list cache; a refetch could serve stale data
+    if (!manuscriptId || resubmitManuscript) {
+      void invalidateWorkspaceManuscripts();
+    }
     void pushFromHere(path);
   };
 

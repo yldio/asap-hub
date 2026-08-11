@@ -15,7 +15,6 @@ const boilerplateProps: Omit<
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
   tags: [],
-  manuscripts: [],
   teamListElementId: '',
   labCount: 15,
   upcomingEventsCount: 0,

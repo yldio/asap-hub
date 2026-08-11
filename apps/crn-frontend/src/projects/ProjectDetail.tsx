@@ -339,10 +339,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                                 id={projectId}
                                 isProjectMember={isMember}
                                 isTeamBased={isTeamBased}
-                                manuscripts={projectDetail.manuscripts ?? []}
-                                collaborationManuscripts={
-                                  projectDetail.collaborationManuscripts ?? []
-                                }
+                                teamId={teamId}
                                 tools={projectDetail.tools ?? []}
                                 lastModifiedDate={new Date().toISOString()}
                                 contactEmail={

@@ -1,4 +1,7 @@
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createWorkspaceManuscript,
+} from '@asap-hub/fixtures';
 import {
   getByRole as getByRoleInContainer,
   getByTestId,
@@ -40,8 +43,14 @@ const useManuscriptByIdMock = jest.fn().mockImplementation((id: string) => [
   jest.fn(),
 ]);
 
+const workspaceManuscripts = [
+  { ...createWorkspaceManuscript(), id: '1', title: 'Nice manuscript' },
+  { ...createWorkspaceManuscript(1), id: '2', title: 'A Good Manuscript' },
+];
+
 const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
+  manuscripts: [],
   setEligibilityReasons: jest.fn(),
   tools: [],
   isComplianceReviewer: false,
@@ -107,7 +116,7 @@ describe('compliance section', () => {
   it('renders compliance section when feature flag is enabled', () => {
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: ['1', '2'],
+      manuscripts: workspaceManuscripts,
     };
 
     const { getByRole, queryByRole } = renderWithRouter(
@@ -127,7 +136,7 @@ describe('compliance section', () => {
   it('renders all manuscript titles', () => {
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: ['1', '2'],
+      manuscripts: workspaceManuscripts,
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace
@@ -143,8 +152,8 @@ describe('compliance section', () => {
   it("should show team's manuscripts and contribution manuscripts in different sections", () => {
     const props: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: ['1'],
-      collaborationManuscripts: ['2'],
+      manuscripts: [workspaceManuscripts[0]!],
+      collaborationManuscripts: [workspaceManuscripts[1]!],
     };
 
     const { container } = renderWithRouter(
@@ -331,7 +340,7 @@ describe('compliance section', () => {
     ];
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: ['1', '2'],
+      manuscripts: workspaceManuscripts,
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace
@@ -451,7 +460,7 @@ describe('compliance section', () => {
     };
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: ['1'],
+      manuscripts: [workspaceManuscripts[0]!],
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace

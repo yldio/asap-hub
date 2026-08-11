@@ -360,90 +360,6 @@ export const parseContentfulProject = (
   }
 };
 
-// Manuscript parsing types and helpers
-type ProjectManuscriptItem = {
-  sys: { id: string };
-  status?: string | null;
-  teamsCollection?: {
-    items: Array<{ sys: { id: string } } | null>;
-  } | null;
-  project?: { sys: { id: string } } | null;
-};
-
-type ProjectMemberWithLinkedManuscripts = NonNullable<
-  ProjectMembershipItem['projectMember']
-> & {
-  linkedFrom?: {
-    manuscriptsCollection?: {
-      items: Array<ProjectManuscriptItem | null>;
-    };
-  };
-};
-
-const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
-  const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
-    Compliant: 1,
-    'Closed (other)': 2,
-  };
-  return [...manuscripts].sort((a, b) => {
-    const aPriority =
-      STATUS_PRIORITY[a.status as keyof typeof STATUS_PRIORITY] ?? 0;
-    const bPriority =
-      STATUS_PRIORITY[b.status as keyof typeof STATUS_PRIORITY] ?? 0;
-    return aPriority - bPriority;
-  });
-};
-
-const getManuscriptItemsFromProjectMember = (
-  projectMember: NonNullable<ProjectMembershipItem['projectMember']>,
-): ProjectManuscriptItem[] => {
-  const memberWithLinkedFrom =
-    projectMember as ProjectMemberWithLinkedManuscripts;
-  return cleanArray(
-    memberWithLinkedFrom.linkedFrom?.manuscriptsCollection?.items,
-  );
-};
-
-const deduplicateProjectManuscripts = (
-  manuscriptItems: ProjectManuscriptItem[],
-): ProjectManuscriptItem[] => {
-  const seen = new Set<string>();
-  return manuscriptItems.filter(({ sys }) => {
-    if (seen.has(sys.id)) return false;
-    seen.add(sys.id);
-    return true;
-  });
-};
-
-const getManuscriptIdsFromProjectLinkedFrom = (item: ProjectItem): string[] => {
-  const items = cleanArray(item.linkedFrom?.manuscriptsCollection?.items);
-  return sortProjectManuscripts(deduplicateProjectManuscripts(items)).map(
-    (m) => m.sys.id,
-  );
-};
-
-const parseProjectManuscripts = (
-  manuscriptItems: ProjectManuscriptItem[],
-  teamId: string,
-) => {
-  const teamManuscripts = manuscriptItems.filter(
-    (manuscript) =>
-      manuscript.teamsCollection?.items[0]?.sys.id === teamId &&
-      !manuscript.project?.sys.id,
-  );
-  const collaborationManuscripts = manuscriptItems.filter(
-    (manuscript) =>
-      manuscript.teamsCollection?.items[0]?.sys.id !== teamId ||
-      manuscript.project?.sys.id,
-  );
-  return {
-    manuscripts: sortProjectManuscripts(teamManuscripts).map((m) => m.sys.id),
-    collaborationManuscripts: sortProjectManuscripts(
-      collaborationManuscripts,
-    ).map((m) => m.sys.id),
-  };
-};
-
 type ProjectResearchOutputWithAuthorsItem = NonNullable<
   NonNullable<
     NonNullable<
@@ -671,11 +587,6 @@ export const parseContentfulProjectDetail = (
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));
 
-        // Parse manuscripts from team's linkedFrom
-        const manuscriptItems = getManuscriptItemsFromProjectMember(teamMember);
-        const { manuscripts, collaborationManuscripts } =
-          parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
-
         // Parse collaborating teams from funded team's research outputs
         const researchOutputItems =
           getResearchOutputItemsFromProjectMember(teamMember);
@@ -692,8 +603,6 @@ export const parseContentfulProjectDetail = (
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           collaboratingTeams:
             collaboratingTeams.length > 0 ? collaboratingTeams : undefined,
-          manuscripts,
-          collaborationManuscripts,
         } as DiscoveryProjectDetail;
       }
 
@@ -723,14 +632,6 @@ export const parseContentfulProjectDetail = (
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));
 
-        // Parse manuscripts from team's linkedFrom
-        const resourceManuscriptItems =
-          getManuscriptItemsFromProjectMember(teamMember);
-        const {
-          manuscripts: resourceManuscripts,
-          collaborationManuscripts: resourceCollaborationManuscripts,
-        } = parseProjectManuscripts(resourceManuscriptItems, teamMember.sys.id);
-
         // Parse collaborating teams from funded team's research outputs
         const resourceResearchOutputItems =
           getResearchOutputItemsFromProjectMember(teamMember);
@@ -750,8 +651,6 @@ export const parseContentfulProjectDetail = (
             resourceCollaboratingTeams.length > 0
               ? resourceCollaboratingTeams
               : undefined,
-          manuscripts: resourceManuscripts,
-          collaborationManuscripts: resourceCollaborationManuscripts,
         } as ResourceProjectDetail;
       }
 
@@ -759,8 +658,6 @@ export const parseContentfulProjectDetail = (
       const userMembers: ProjectMember[] = members
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
-
-      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
       const projectMemberUserIds = new Set(userMembers.map((m) => m.id));
       const projectResearchOutputItems =
@@ -775,7 +672,6 @@ export const parseContentfulProjectDetail = (
         originalGrantProposalId,
         supplementGrant,
         members: userMembers.length > 0 ? userMembers : undefined,
-        manuscripts,
         collaboratingMembers:
           collaboratingMembers.length > 0 ? collaboratingMembers : undefined,
       } as ResourceProjectDetail;
@@ -783,8 +679,6 @@ export const parseContentfulProjectDetail = (
 
     case 'Trainee Project': {
       const allMembers = processTraineeProjectMembers(members);
-      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
-
       const projectMemberUserIds = new Set(allMembers.map((m) => m.id));
       const projectResearchOutputItems =
         getResearchOutputsFromProjectLinkedFrom(item);
@@ -801,7 +695,6 @@ export const parseContentfulProjectDetail = (
         originalGrantProposalId,
         supplementGrant,
         members: allMembers,
-        manuscripts,
       } as TraineeProjectDetail;
     }
 

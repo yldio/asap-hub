@@ -18,26 +18,28 @@ import {
   GetTeamsListOptions,
   getManuscript,
   getManuscripts,
-  getManuscriptsByIds,
+  getWorkspaceManuscripts,
   getTeam,
   markDiscussionAsRead,
   updateDiscussion,
+  updateManuscript,
   uploadManuscriptFileViaPresignedUrl,
 } from '../api';
 import {
   discussionQueryKeys,
   manuscriptQueryKeys,
   teamQueryKeys,
-  useBatchManuscriptsByIds,
   useCreateDiscussion,
   useManuscriptById,
   useManuscripts,
   useMarkDiscussionAsRead,
   usePostPreprintResearchOutput,
+  usePutManuscript,
   useReplyToDiscussion,
   useTeamById,
   useTeams,
   useUploadManuscriptFileViaPresignedUrl,
+  useWorkspaceManuscripts,
 } from '../state';
 
 jest.mock('../api', () => ({
@@ -46,10 +48,11 @@ jest.mock('../api', () => ({
   getAlgoliaTeams: jest.fn(),
   getManuscript: jest.fn(),
   getManuscripts: jest.fn(),
-  getManuscriptsByIds: jest.fn(),
+  getWorkspaceManuscripts: jest.fn(),
   getTeam: jest.fn().mockResolvedValue(undefined),
   markDiscussionAsRead: jest.fn(),
   updateDiscussion: jest.fn(),
+  updateManuscript: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
 
@@ -192,6 +195,14 @@ describe('useManuscriptById', () => {
       result.current[1](updated);
     });
     await waitFor(() => expect(result.current[0]).toEqual(updated));
+  });
+
+  it('resolves undefined without calling the API when the id is empty', async () => {
+    const { result } = renderStateHook(() => useManuscriptById(''));
+
+    await waitFor(() => expect(result.current).toBeTruthy());
+    expect(result.current[0]).toBeUndefined();
+    expect(getManuscript).not.toHaveBeenCalled();
   });
 
   it('supports functional updates like React state setters', async () => {
@@ -451,61 +462,114 @@ describe('useMarkDiscussionAsRead', () => {
   });
 });
 
-describe('useBatchManuscriptsByIds', () => {
-  it('seeds the empty-ids result without fetching, so the query is never pending', async () => {
-    const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
+describe('useWorkspaceManuscripts', () => {
+  it('fetches the workspace manuscripts by teamId', async () => {
+    const response = {
+      manuscripts: [{ id: 'm-1', title: 'One' }],
+      collaborationManuscripts: [{ id: 'm-2', title: 'Two' }],
+    };
+    (getWorkspaceManuscripts as jest.Mock).mockResolvedValue(response);
 
-    await waitFor(() =>
-      expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
-    );
-    expect(getManuscriptsByIds).not.toHaveBeenCalled();
-    expect(
-      queryClient.getQueryState(manuscriptQueryKeys.batch([]))?.fetchStatus,
-    ).toBe('idle');
-  });
-
-  it('skips the API even when the empty-ids query is explicitly refetched', async () => {
-    const { queryClient } = renderStateHook(() => useBatchManuscriptsByIds([]));
-    await waitFor(() =>
-      expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0),
+    const { result } = renderStateHook(() =>
+      useWorkspaceManuscripts({ teamId }),
     );
 
-    await act(() =>
-      queryClient.refetchQueries({ queryKey: manuscriptQueryKeys.batch([]) }),
-    );
-
-    expect(getManuscriptsByIds).not.toHaveBeenCalled();
-    expect(queryClient.getQueryData(manuscriptQueryKeys.batch([]))).toBe(0);
-  });
-
-  it('deduplicates, sorts and hydrates the manuscript detail caches', async () => {
-    const manuscript1 = { id: 'm-1', title: 'One' };
-    const manuscript2 = { id: 'm-2', title: 'Two' };
-    (getManuscriptsByIds as jest.Mock).mockResolvedValue([
-      manuscript1,
-      manuscript2,
-    ]);
-
-    const { queryClient } = renderStateHook(() =>
-      useBatchManuscriptsByIds(['m-2', 'm-1', '', 'm-1']),
-    );
-
-    await waitFor(() => {
-      expect(getManuscriptsByIds).toHaveBeenCalledTimes(1);
-    });
-    expect(getManuscriptsByIds).toHaveBeenCalledWith(
-      ['m-1', 'm-2'],
+    await waitFor(() => expect(result.current).toEqual(response));
+    expect(getWorkspaceManuscripts).toHaveBeenCalledWith(
+      { teamId },
       mockAuthorization,
     );
+  });
 
-    await waitFor(() => {
-      expect(
-        queryClient.getQueryData(manuscriptQueryKeys.detail('m-1')),
-      ).toEqual(manuscript1);
-    });
-    expect(queryClient.getQueryData(manuscriptQueryKeys.detail('m-2'))).toEqual(
-      manuscript2,
+  it('resolves null params to empty lists without calling the API', async () => {
+    const { result, queryClient } = renderStateHook(() =>
+      useWorkspaceManuscripts(null),
     );
+
+    await waitFor(() =>
+      expect(result.current).toEqual({
+        manuscripts: [],
+        collaborationManuscripts: [],
+      }),
+    );
+    expect(getWorkspaceManuscripts).not.toHaveBeenCalled();
+    expect(queryClient.getQueryData(manuscriptQueryKeys.workspace({}))).toEqual(
+      { manuscripts: [], collaborationManuscripts: [] },
+    );
+  });
+});
+
+describe('usePutManuscript', () => {
+  it('patches the status and title of the matching item in cached workspace lists', async () => {
+    (updateManuscript as jest.Mock).mockResolvedValue({
+      id: manuscriptId,
+      title: 'Renamed',
+      status: 'Addendum Required',
+    });
+
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(manuscriptQueryKeys.workspace({ teamId }), {
+      manuscripts: [
+        { id: manuscriptId, title: 'Old', status: 'Waiting for Report' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+      collaborationManuscripts: [],
+    });
+
+    const { result } = renderHook(() => usePutManuscript(), {
+      wrapper: createWrapper(queryClient),
+    });
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, { status: 'Addendum Required' });
+    });
+
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.workspace({ teamId })),
+    ).toEqual({
+      manuscripts: [
+        { id: manuscriptId, title: 'Renamed', status: 'Addendum Required' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+      collaborationManuscripts: [],
+    });
+  });
+
+  it('patches the matching item in the collaboration manuscripts list', async () => {
+    (updateManuscript as jest.Mock).mockResolvedValue({
+      id: manuscriptId,
+      title: 'Renamed',
+      status: 'Addendum Required',
+    });
+
+    const queryClient = createTestQueryClient();
+    queryClient.setQueryData(manuscriptQueryKeys.workspace({ teamId }), {
+      manuscripts: [],
+      collaborationManuscripts: [
+        { id: manuscriptId, title: 'Old', status: 'Waiting for Report' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+    });
+
+    const { result } = renderHook(() => usePutManuscript(), {
+      wrapper: createWrapper(queryClient),
+    });
+    await waitFor(() => expect(result.current).toBeTruthy());
+
+    await act(async () => {
+      await result.current(manuscriptId, { status: 'Addendum Required' });
+    });
+
+    expect(
+      queryClient.getQueryData(manuscriptQueryKeys.workspace({ teamId })),
+    ).toEqual({
+      manuscripts: [],
+      collaborationManuscripts: [
+        { id: manuscriptId, title: 'Renamed', status: 'Addendum Required' },
+        { id: 'manuscript-id-1', title: 'Other', status: 'Compliant' },
+      ],
+    });
   });
 });
 

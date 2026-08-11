@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event';
 import React, { ComponentProps, useState } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { ManuscriptDataObject } from '@asap-hub/model';
+import { createWorkspaceManuscript } from '@asap-hub/fixtures';
 
 import ProjectProfileWorkspace from '../ProjectProfileWorkspace';
 
@@ -90,7 +91,7 @@ describe('ProjectProfileWorkspace', () => {
       const { getByText } = renderWithRouter(
         <ProjectProfileWorkspace
           {...defaultProps}
-          manuscripts={['manuscript-1']}
+          manuscripts={[{ ...createWorkspaceManuscript(), id: 'manuscript-1' }]}
         />,
       );
       expect(
@@ -153,7 +154,9 @@ describe('ProjectProfileWorkspace', () => {
           <ProjectProfileWorkspace
             {...defaultProps}
             isTeamBased={true}
-            manuscripts={['manuscript-1']}
+            manuscripts={[
+              { ...createWorkspaceManuscript(), id: 'manuscript-1' },
+            ]}
           />,
         );
         expect(getByText('Team Submission')).toBeInTheDocument();
@@ -166,7 +169,9 @@ describe('ProjectProfileWorkspace', () => {
             {...defaultProps}
             isTeamBased={true}
             isProjectMember={true}
-            manuscripts={['manuscript-1']}
+            manuscripts={[
+              { ...createWorkspaceManuscript(), id: 'manuscript-1' },
+            ]}
           />,
         );
         expect(
@@ -182,7 +187,9 @@ describe('ProjectProfileWorkspace', () => {
             {...defaultProps}
             isTeamBased={true}
             isProjectMember={true}
-            collaborationManuscripts={['manuscript-2']}
+            collaborationManuscripts={[
+              { ...createWorkspaceManuscript(1), id: 'manuscript-2' },
+            ]}
           />,
         );
         expect(
@@ -211,7 +218,9 @@ describe('ProjectProfileWorkspace', () => {
             {...defaultProps}
             isTeamBased={true}
             isProjectMember={true}
-            manuscripts={['manuscript-1']}
+            manuscripts={[
+              { ...createWorkspaceManuscript(), id: 'manuscript-1' },
+            ]}
             collaborationManuscripts={undefined}
           />,
         );
@@ -244,7 +253,9 @@ describe('ProjectProfileWorkspace', () => {
           <ProjectProfileWorkspace
             {...defaultProps}
             isTeamBased={false}
-            manuscripts={['manuscript-1']}
+            manuscripts={[
+              { ...createWorkspaceManuscript(), id: 'manuscript-1' },
+            ]}
             targetManuscriptId="manuscript-1"
           />,
         );
@@ -257,7 +268,9 @@ describe('ProjectProfileWorkspace', () => {
           <ProjectProfileWorkspace
             {...defaultProps}
             isTeamBased={false}
-            manuscripts={['manuscript-1']}
+            manuscripts={[
+              { ...createWorkspaceManuscript(), id: 'manuscript-1' },
+            ]}
           />,
         );
         expect(getByTestId('project-manuscripts')).toBeInTheDocument();
@@ -594,7 +607,7 @@ describe('ProjectProfileWorkspace', () => {
     renderWithRouter(
       <ProjectProfileWorkspace
         {...defaultProps}
-        manuscripts={['manuscript-1']}
+        manuscripts={[{ ...createWorkspaceManuscript(), id: 'manuscript-1' }]}
         targetManuscriptId="manuscript-1"
       />,
     );
@@ -607,7 +620,9 @@ describe('ProjectProfileWorkspace', () => {
       <ProjectProfileWorkspace
         {...defaultProps}
         manuscripts={[]}
-        collaborationManuscripts={['manuscript-collab-1']}
+        collaborationManuscripts={[
+          { ...createWorkspaceManuscript(1), id: 'manuscript-collab-1' },
+        ]}
         targetManuscriptId="manuscript-collab-1"
       />,
     );

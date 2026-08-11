@@ -36,9 +36,6 @@ export const getContentfulGraphql = (teamById = false, teamId?: string) => ({
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersTeamsCollection: () => getUsersTeamsCollection(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
-  ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
-  ManuscriptsTeamsCollection: () =>
-    getContentfulGraphqlManuscripts()!.items[0]?.teamsCollection,
   ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
   ManuscriptVersionsTeamsCollection: () =>
     getContentfulGraphqlManuscriptVersions(teamId).items[0]?.teamsCollection,
@@ -79,7 +76,6 @@ export const getContentfulGraphqlTeamById = (
     items: [],
   },
   linkedFrom: {
-    manuscriptsCollection: getContentfulGraphqlManuscripts(teamId),
     teamMembershipCollection: {
       items: [
         {
@@ -431,38 +427,6 @@ export const getContentfulGraphqlTeamMemberLabs = () => ({
   ],
 });
 
-export const getContentfulGraphqlManuscripts = (
-  teamId?: string,
-): NonNullable<
-  NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
->['manuscriptsCollection'] => ({
-  items: [
-    {
-      sys: { id: 'manuscript-id-1' },
-      status: 'Compliant',
-      teamsCollection: {
-        items: [
-          {
-            sys: { id: teamId || 'team-id-0' },
-          },
-        ],
-      },
-      project: null,
-    },
-    {
-      sys: { id: 'manuscript-id-2' },
-      teamsCollection: {
-        items: [
-          {
-            sys: { id: teamId || 'team-id-0' },
-          },
-        ],
-      },
-      project: null,
-    },
-  ],
-});
-
 export const getContentfulTeamsGraphqlResponse =
   (): ContentfulFetchTeamsQuery => ({
     teamsCollection: {
@@ -582,7 +546,6 @@ export const getTeamDataObject = (): TeamDataObject => ({
       ],
     },
   ],
-  manuscripts: ['manuscript-id-2', 'manuscript-id-1'],
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   projectStatus: 'Active',
@@ -625,46 +588,6 @@ export const getPublicTeamListItemDataObject =
 export const getListPublicTeamResponse = (): ListPublicTeamResponse => ({
   total: 1,
   items: [getPublicTeamListItemDataObject()],
-});
-
-export const getUnsortedManuscripts = (teamId: string) => ({
-  // Keep this order for testing => should sort manuscripts so that Compliant and Closed (other) are last
-  manuscriptsCollection: {
-    items: [
-      {
-        sys: { id: 'waiting-for-report-manuscript-id' },
-        title: 'First Manuscript',
-        status: 'Waiting for Report',
-        teamsCollection: {
-          items: [{ sys: { id: teamId } }],
-        },
-      },
-      {
-        sys: { id: 'compliant-manuscript-id' },
-        title: 'Second Manuscript',
-        status: 'Compliant',
-        teamsCollection: {
-          items: [{ sys: { id: teamId } }],
-        },
-      },
-      {
-        sys: { id: 'closed-manuscript-id' },
-        title: 'Third Manuscript',
-        status: 'Closed (other)',
-        teamsCollection: {
-          items: [{ sys: { id: teamId } }],
-        },
-      },
-      {
-        sys: { id: 'submit-final-publication-manuscript-id' },
-        title: 'Fourth Manuscript',
-        status: 'Submit Final Publication',
-        teamsCollection: {
-          items: [{ sys: { id: teamId } }],
-        },
-      },
-    ],
-  },
 });
 
 export const getTeamListItemDataObject = (): TeamListItemDataObject => ({

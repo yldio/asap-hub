@@ -2,6 +2,7 @@ import {
   ComplianceReportDataObject,
   ManuscriptResponse,
   PartialManuscriptResponse,
+  WorkspaceManuscript,
 } from '@asap-hub/model';
 
 export const manuscriptAuthor: ManuscriptResponse['versions'][number]['createdBy'] =
@@ -19,6 +20,15 @@ export const manuscriptAuthor: ManuscriptResponse['versions'][number]['createdBy
       },
     ],
   };
+
+export const createWorkspaceManuscript = (
+  itemIndex = 0,
+): WorkspaceManuscript => ({
+  id: `manuscript_${itemIndex}`,
+  title: `Manuscript ${itemIndex + 1}`,
+  status: 'Waiting for Report',
+  versionUID: `WH1-000282-00${itemIndex + 1}-org-G-1`,
+});
 
 export const createManuscriptResponse = (
   itemIndex = 0,

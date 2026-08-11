@@ -20,6 +20,7 @@ jest.mock('../../network/teams/state', () => ({
   usePostManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   useResubmitManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
+  useInvalidateWorkspaceManuscripts: jest.fn(() => jest.fn()),
   useUploadManuscriptFileViaPresignedUrl: jest
     .fn()
     .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),

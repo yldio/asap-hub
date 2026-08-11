@@ -16,6 +16,7 @@ import { projects } from '@asap-hub/routing';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 import { createComplianceReport, getManuscript } from '../../network/teams/api';
+import { manuscriptQueryKeys } from '../../network/teams/state';
 import ProjectComplianceReport from '../ProjectComplianceReport';
 import { projectQueryKeys } from '../state';
 
@@ -220,9 +221,13 @@ it('redirects back to the trainee project workspace path', async () => {
   });
 });
 
-it('on form success sets compliance-report toast, refreshes project state, and navigates to workspace', async () => {
+it('on form success sets compliance-report toast, refreshes the workspace manuscripts, and navigates to workspace', async () => {
   const user = userEvent.setup();
   const { queryClient } = await renderPage();
+  queryClient.setQueryData(manuscriptQueryKeys.workspace({ projectId }), {
+    manuscripts: [],
+    collaborationManuscripts: [],
+  });
 
   await user.type(
     screen.getByRole('textbox', { name: /url/i }),
@@ -269,13 +274,16 @@ it('on form success sets compliance-report toast, refreshes project state, and n
     );
   });
 
-  // success invalidates the project detail query
   await waitFor(() => {
     expect(
-      queryClient.getQueryState(projectQueryKeys.detail(projectId))
+      queryClient.getQueryState(manuscriptQueryKeys.workspace({ projectId }))
         ?.isInvalidated,
     ).toBe(true);
   });
+  expect(
+    queryClient.getQueryState(projectQueryKeys.detail(projectId))
+      ?.isInvalidated,
+  ).toBe(false);
 
   await waitFor(() => {
     expect(currentLocation?.pathname).toBe(

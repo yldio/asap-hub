@@ -24,10 +24,11 @@ import {
   usePutManuscript,
   useResubmitManuscript,
   useUploadManuscriptFileViaPresignedUrl,
+  useInvalidateWorkspaceManuscripts,
 } from '../network/teams/state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { useInvalidateProjectById, useProjectById } from './state';
+import { useProjectById } from './state';
 
 const loadManuscriptForm = () =>
   import(
@@ -46,7 +47,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   projectType,
   resubmitManuscript = false,
 }) => {
-  const invalidateProject = useInvalidateProjectById(projectId);
+  const invalidateWorkspaceManuscripts = useInvalidateWorkspaceManuscripts();
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
   const projectDetail = useProjectById(projectId);
@@ -138,7 +139,10 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   const onSuccess = () => {
     const path = getWorkspacePath();
     setFormType({ type: 'manuscript', accent: 'successLarge' });
-    invalidateProject();
+    // edits are patched into the list cache; a refetch could serve stale data
+    if (!manuscriptId || resubmitManuscript) {
+      void invalidateWorkspaceManuscripts();
+    }
     void pushFromHere(path);
   };
 

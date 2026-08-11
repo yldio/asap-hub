@@ -64,22 +64,30 @@ describe('Manuscript controller', () => {
 
       expect(result).toEqual(getManuscriptResponse());
     });
+  });
 
-    test('Should return the found manuscripts when fetching by ids', async () => {
-      manuscriptDataProviderMock.fetchByIds.mockResolvedValueOnce([
-        getManuscriptDataObject(),
-      ]);
+  describe('Fetch workspace manuscripts method', () => {
+    beforeEach(jest.clearAllMocks);
 
-      const result = await manuscriptController.fetchByIds(
-        ['manuscript-id-1', 'missing-id', 'manuscript-id-1'],
-        'user-id-1',
+    test('Should pass the filter to the data provider and return the result', async () => {
+      const response = {
+        manuscripts: [{ id: 'manuscript-id-1', title: 'Manuscript 1' }],
+        collaborationManuscripts: [
+          { id: 'manuscript-id-2', title: 'Manuscript 2' },
+        ],
+      };
+      manuscriptDataProviderMock.fetchWorkspaceManuscripts.mockResolvedValueOnce(
+        response,
       );
 
-      expect(result).toEqual([getManuscriptResponse()]);
-      expect(manuscriptDataProviderMock.fetchByIds).toHaveBeenCalledWith(
-        ['manuscript-id-1', 'missing-id', 'manuscript-id-1'],
-        'user-id-1',
-      );
+      const result = await manuscriptController.fetchWorkspaceManuscripts({
+        teamId: 'team-id-1',
+      });
+
+      expect(result).toEqual(response);
+      expect(
+        manuscriptDataProviderMock.fetchWorkspaceManuscripts,
+      ).toHaveBeenCalledWith({ teamId: 'team-id-1' });
     });
   });
 

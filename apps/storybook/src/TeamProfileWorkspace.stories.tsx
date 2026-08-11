@@ -14,6 +14,7 @@ export const Normal = () => {
   return (
     <TeamProfileWorkspace
       {...teamResponse}
+      manuscripts={[]}
       members={[
         {
           id: 'pm-id',

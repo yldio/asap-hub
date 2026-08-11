@@ -13,6 +13,7 @@ import {
   createPartialManuscriptResponse,
   createTeamListItemResponse,
   createTeamResponse,
+  createWorkspaceManuscript,
 } from '@asap-hub/fixtures';
 import {
   ComplianceReportPostRequest,
@@ -41,11 +42,11 @@ import {
   getDiscussion,
   getLabs,
   getManuscript,
-  getManuscriptsByIds,
   getManuscripts,
   getManuscriptVersionByManuscriptId,
   getManuscriptVersions,
   getManuscriptWorkspaceUrl,
+  getWorkspaceManuscripts,
   getTeam,
   getTeams,
   GetTeamsListOptions,
@@ -605,34 +606,49 @@ describe('Manuscript', () => {
     });
   });
 
-  describe('POST batch', () => {
-    it('makes an authorized POST request for manuscript ids', async () => {
+  describe('getWorkspaceManuscripts', () => {
+    it('makes an authorized GET request with the teamId query param', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/batch', { ids: ['42', '84'] })
-        .reply(200, []);
+        .get('/manuscripts')
+        .query({ teamId: '42' })
+        .reply(200, { manuscripts: [], collaborationManuscripts: [] });
 
-      await getManuscriptsByIds(['42', '84'], 'Bearer x');
+      await getWorkspaceManuscripts({ teamId: '42' }, 'Bearer x');
       expect(nock.isDone()).toBe(true);
     });
 
-    it('returns successfully fetched manuscripts', async () => {
-      const manuscript = createManuscriptResponse();
+    it('makes a GET request with the projectId query param', async () => {
       nock(API_BASE_URL)
-        .post('/manuscripts/batch', { ids: ['42'] })
-        .reply(200, [manuscript]);
+        .get('/manuscripts')
+        .query({ projectId: 'project-1' })
+        .reply(200, { manuscripts: [], collaborationManuscripts: [] });
 
-      expect(await getManuscriptsByIds(['42'], '')).toEqual([manuscript]);
+      await getWorkspaceManuscripts({ projectId: 'project-1' }, '');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns successfully fetched workspace manuscripts', async () => {
+      const response = {
+        manuscripts: [createWorkspaceManuscript()],
+        collaborationManuscripts: [createWorkspaceManuscript(1)],
+      };
+      nock(API_BASE_URL)
+        .get('/manuscripts')
+        .query({ teamId: '42' })
+        .reply(200, response);
+
+      expect(await getWorkspaceManuscripts({ teamId: '42' }, '')).toEqual(
+        response,
+      );
     });
 
     it('errors for another status', async () => {
-      nock(API_BASE_URL)
-        .post('/manuscripts/batch', { ids: ['42'] })
-        .reply(500);
+      nock(API_BASE_URL).get('/manuscripts').query({ teamId: '42' }).reply(500);
 
       await expect(
-        getManuscriptsByIds(['42'], ''),
+        getWorkspaceManuscripts({ teamId: '42' }, ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Failed to fetch manuscripts. Expected status 2xx. Received status 500."`,
+        `"Failed to fetch workspace manuscripts. Expected status 2xx. Received status 500."`,
       );
     });
   });

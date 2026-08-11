@@ -22,6 +22,7 @@ import {
   ManuscriptWorkspaceUrlResponse,
   ResearchOutputResponse,
   TeamResponse,
+  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
@@ -41,8 +42,9 @@ import {
   downloadFullComplianceDataset,
   getManuscript,
   getManuscriptWorkspaceUrl,
-  getManuscriptsByIds,
   getManuscripts,
+  getWorkspaceManuscripts,
+  WorkspaceManuscriptsParams,
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
   getTeam,
@@ -66,7 +68,9 @@ type ManuscriptWorkspaceUrlParams = {
 
 export const manuscriptQueryKeys = {
   ...createQueryKeys<ManuscriptsOptions>('manuscripts'),
-  batch: (ids: ReadonlyArray<string>) => ['manuscripts', 'batch', ids] as const,
+  workspaceAll: ['manuscripts', 'workspace'] as const,
+  workspace: (params: Partial<Record<'teamId' | 'projectId', string>>) =>
+    ['manuscripts', 'workspace', params] as const,
   workspaceUrl: (params: ManuscriptWorkspaceUrlParams) =>
     ['manuscripts', 'workspace-url', normalizeListOptions(params)] as const,
 };
@@ -98,17 +102,7 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   return data ?? undefined;
 };
 
-// Replaces the refreshTeamState counter bumps in TeamManuscript /
-// TeamComplianceReport: the bump invalidated the team-detail fetch selector,
-// so the team (and its embedded manuscripts) re-fetch (R5).
-export const useInvalidateTeamById = (id: string) => {
-  const queryClient = useQueryClient();
-  return useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    queryClient.invalidateQueries({ queryKey: teamQueryKeys.detail(id) });
-  }, [queryClient, id]);
-};
-
+// An empty id (form in create mode) resolves undefined without hitting the API.
 export const useManuscriptById = (
   id: string,
 ): [
@@ -120,7 +114,11 @@ export const useManuscriptById = (
   const { data } = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.detail(id),
     queryFn: () =>
-      nullOnUndefined(async () => getManuscript(id, await getAuthorization())),
+      id
+        ? nullOnUndefined(async () =>
+            getManuscript(id, await getAuthorization()),
+          )
+        : null,
   });
   const setManuscript = useCallback<
     Dispatch<SetStateAction<ManuscriptResponse | undefined>>
@@ -167,37 +165,31 @@ export const useManuscriptWorkspaceUrl = (
   return data ?? undefined;
 };
 
-// Batch hydration: one suspense query per deduplicated id set makes the
-// single getManuscriptsByIds call and fans the results into the manuscript
-// detail keys, so the per-card useManuscriptById reads hit the cache without
-// fetching. With no ids the query is seeded with initialData so it resolves
-// immediately without suspending or hitting the API.
-export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
+// `null` means there is nothing to fetch (e.g. a team-based project without a
+// resolved team) — the query resolves to empty lists without hitting the API.
+export const useWorkspaceManuscripts = (
+  params: WorkspaceManuscriptsParams | null,
+): WorkspaceManuscriptsResponse => {
   const getAuthorization = useAuthorization();
-  const queryClient = useQueryClient();
-  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
-  useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.batch(deduplicatedIds),
-    queryFn: async () => {
-      if (!deduplicatedIds.length) {
-        return 0;
-      }
-      const manuscripts = await getManuscriptsByIds(
-        deduplicatedIds,
-        await getAuthorization(),
-      );
-      manuscripts.forEach((manuscript) => {
-        queryClient.setQueryData(
-          manuscriptQueryKeys.detail(manuscript.id),
-          manuscript,
-        );
-      });
-      return manuscripts.length;
-    },
-    // With no ids there is nothing to fetch: seed a result so the query is
-    // already resolved and the call site never suspends.
-    ...(deduplicatedIds.length ? {} : { initialData: 0 }),
+  const { data } = useSuspenseQuery({
+    queryKey: manuscriptQueryKeys.workspace(params ?? {}),
+    queryFn: async (): Promise<WorkspaceManuscriptsResponse> =>
+      params
+        ? getWorkspaceManuscripts(params, await getAuthorization())
+        : { manuscripts: [], collaborationManuscripts: [] },
   });
+  return data;
+};
+
+export const useInvalidateWorkspaceManuscripts = () => {
+  const queryClient = useQueryClient();
+  return useCallback(
+    () =>
+      queryClient.invalidateQueries({
+        queryKey: manuscriptQueryKeys.workspaceAll,
+      }),
+    [queryClient],
+  );
 };
 
 // Writes a mutation response into the manuscript detail cache — never
@@ -265,6 +257,7 @@ export const useResubmitManuscript = () => {
 export const usePutManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
+  const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
     mutationFn: async ({
       id,
@@ -283,6 +276,33 @@ export const usePutManuscript = () => {
     },
     onSuccess: (manuscript) => {
       setManuscriptItem(manuscript);
+      // Patch the workspace lists in place rather than refetching — Contentful
+      // has read-after-write lag, so a refetch could serve the old status.
+      queryClient.setQueriesData<WorkspaceManuscriptsResponse>(
+        { queryKey: manuscriptQueryKeys.workspaceAll },
+        (cached) =>
+          cached && {
+            manuscripts: cached.manuscripts.map((item) =>
+              item.id === manuscript.id
+                ? {
+                    ...item,
+                    status: manuscript.status,
+                    title: manuscript.title,
+                  }
+                : item,
+            ),
+            collaborationManuscripts: cached.collaborationManuscripts.map(
+              (item) =>
+                item.id === manuscript.id
+                  ? {
+                      ...item,
+                      status: manuscript.status,
+                      title: manuscript.title,
+                    }
+                  : item,
+            ),
+          },
+      );
     },
   });
   return (id: string, payload: ManuscriptPutRequest) =>

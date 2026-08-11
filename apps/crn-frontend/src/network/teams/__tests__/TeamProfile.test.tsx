@@ -9,6 +9,7 @@ import {
   createTeamManuscriptResponse,
   createTeamResponse,
   createUserResponse,
+  createWorkspaceManuscript,
 } from '@asap-hub/fixtures';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
@@ -35,7 +36,7 @@ import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/a
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { useManuscriptById } from '../state';
+import { useManuscriptById, useWorkspaceManuscripts } from '../state';
 import TeamProfile from '../TeamProfile';
 
 jest.mock('../../../shared-api/impact', () => ({
@@ -112,7 +113,7 @@ jest.mock('../../../events/api');
 jest.mock('../state', () => ({
   ...jest.requireActual('../state'),
   useManuscriptById: jest.fn(),
-  useBatchManuscriptsByIds: jest.fn(),
+  useWorkspaceManuscripts: jest.fn(),
 }));
 
 jest.mock('../../../projects/state', () => ({
@@ -143,6 +144,10 @@ beforeEach(() => {
     createTeamManuscriptResponse(),
     jest.fn(),
   ]);
+  (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
+    manuscripts: [],
+    collaborationManuscripts: [],
+  });
 });
 const renderPage = async (
   teamResponse: TeamResponse = createTeamResponse(),
@@ -681,7 +686,10 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
-    teamResponse.manuscripts = ['manuscript_0'];
+    (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
+      manuscripts: [createWorkspaceManuscript()],
+      collaborationManuscripts: [],
+    });
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 
@@ -714,7 +722,10 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const teamManuscript = createTeamManuscriptResponse();
-    teamResponse.manuscripts = [teamManuscript.id];
+    (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
+      manuscripts: [{ ...createWorkspaceManuscript(), id: teamManuscript.id }],
+      collaborationManuscripts: [],
+    });
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 

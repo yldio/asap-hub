@@ -48,10 +48,6 @@ describe('discoveryConfig', () => {
       displayName: 'Team A',
       teamType: 'Discovery Team',
     },
-    collaborators: [
-      { id: 'user-1', displayName: 'Jane Doe', email: 'jane@example.com' },
-      { id: 'user-2', displayName: 'John Smith', email: 'john@example.com' },
-    ],
   };
 
   it('has projectType "Discovery Project"', () => {
@@ -66,11 +62,7 @@ describe('discoveryConfig', () => {
     expect(discoveryConfig.getIsTeamBased(discoveryProject)).toBe(true);
   });
 
-  it('getContactName returns collaborator displayName matching contactEmail', () => {
-    expect(discoveryConfig.getContactName(discoveryProject)).toBe('Jane Doe');
-  });
-
-  it('getContactName returns undefined when no collaborator matches contactEmail', () => {
+  it('getContactName returns undefined', () => {
     expect(
       discoveryConfig.getContactName({
         ...discoveryProject,
@@ -100,13 +92,6 @@ describe('resourceConfig', () => {
     isTeamBased: true,
     members: [
       { id: 'user-1', displayName: 'Jane Member', email: 'jane@example.com' },
-    ],
-    collaborators: [
-      {
-        id: 'user-2',
-        displayName: 'Jane Collaborator',
-        email: 'jane@example.com',
-      },
     ],
   };
 
@@ -146,15 +131,6 @@ describe('resourceConfig', () => {
 
   it('getContactName returns member displayName matching contactEmail', () => {
     expect(resourceConfig.getContactName(resourceProject)).toBe('Jane Member');
-  });
-
-  it('getContactName falls back to collaborator when no member matches', () => {
-    expect(
-      resourceConfig.getContactName({
-        ...resourceProject,
-        members: [],
-      }),
-    ).toBe('Jane Collaborator');
   });
 
   it('getContactName returns undefined when no match found', () => {

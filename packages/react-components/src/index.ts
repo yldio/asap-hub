@@ -79,7 +79,6 @@ export {
   Breadcrumbs,
   CalendarLink,
   CaptionItem,
-  CollaboratingMembers,
   CollaboratingTeams,
   Collapsible,
   ComplianceControls,

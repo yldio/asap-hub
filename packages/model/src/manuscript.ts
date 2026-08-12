@@ -665,7 +665,7 @@ export const manuscriptVersionSchema = {
     availabilityStatementDetails: { type: 'string', nullable: true },
 
     teams: { type: 'array', items: { type: 'string' } },
-    labs: { type: 'array', minItems: 1, items: { type: 'string' } },
+    labs: { type: 'array', items: { type: 'string' } },
     firstAuthors: {
       type: 'array',
       items: {

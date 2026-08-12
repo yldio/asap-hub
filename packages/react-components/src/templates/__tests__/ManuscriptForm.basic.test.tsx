@@ -229,46 +229,10 @@ describe('Manuscript form', () => {
     });
   });
 
-  it('submits with selectedTeams when projectMemberIds is set and Teams field is unmounted', async () => {
-    const onCreate = jest.fn(() => Promise.resolve());
-    const { findByRole } = await renderManuscriptForm({
-      ...defaultProps,
-      onCreate,
-      projectMemberIds: ['author-1'],
-      title: 'manuscript title',
-      type: 'Original Research',
-      lifecycle: 'Draft Manuscript (prior to Publication)',
-      manuscriptFile: {
-        id: '123',
-        filename: 'test.pdf',
-        url: 'http://example.com/test.pdf',
-      },
-      keyResourceTable: {
-        id: '124',
-        filename: 'test.csv',
-        url: 'http://example.com/test.csv',
-      },
-    });
-
-    await submitForm({ findByRole });
-
-    await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          versions: [
-            expect.objectContaining({
-              teams: ['1'],
-            }),
-          ],
-        }),
-      );
-    });
-  });
-
   describe('contributors section field order', () => {
     const fieldLabels = [
       'Teams',
-      'First Author Full Name',
+      'First Author',
       'Labs',
       'Corresponding Author',
       'Additional Authors',
@@ -299,6 +263,8 @@ describe('Manuscript form', () => {
 
     const projectFlowProps = {
       ...defaultProps,
+      teamId: undefined,
+      projectId: 'project-1',
       projectMemberIds: ['other-member'],
       firstAuthors: [nonProjectAuthor],
     };
@@ -308,7 +274,7 @@ describe('Manuscript form', () => {
 
       expect(getFieldOrder(container)).toEqual([
         'Teams',
-        'First Author Full Name',
+        'First Author',
         'Labs',
         'Corresponding Author',
         'Additional Authors',
@@ -326,57 +292,13 @@ describe('Manuscript form', () => {
       expect(getByText('Teams')).toBeVisible();
     });
 
-    it('project flow: Teams appears last when non-project authors exist', async () => {
+    it('project flow: No labs or teams fields are present', async () => {
       const { container } = await renderManuscriptForm(projectFlowProps);
 
       expect(getFieldOrder(container)).toEqual([
-        'First Author Full Name',
-        'Labs',
+        'First Author',
         'Corresponding Author',
         'Additional Authors',
-        'Teams',
-      ]);
-    });
-
-    it('project flow: Teams hidden when all authors are project members', async () => {
-      const { queryByText } = await renderManuscriptForm({
-        ...defaultProps,
-        projectMemberIds: ['author-1'],
-      });
-
-      expect(queryByText('Teams')).not.toBeInTheDocument();
-    });
-
-    it('project flow: selecting a team triggers cross-field validation', async () => {
-      const { getAllByRole, getByText } =
-        await renderManuscriptForm(projectFlowProps);
-
-      const teamsComboboxes = getAllByRole('combobox', { name: /Teams/i });
-      const teamsCombobox = teamsComboboxes[teamsComboboxes.length - 1]!;
-      await userEvent.type(teamsCombobox, 'Two');
-      await waitFor(() => {
-        expect(getByText('Two Team')).toBeVisible();
-      });
-      await userEvent.click(getByText('Two Team'));
-    });
-
-    it('project flow: Teams shows no-match message', async () => {
-      getTeamSuggestions.mockResolvedValue([]);
-
-      const { getAllByRole, getByText } =
-        await renderManuscriptForm(projectFlowProps);
-
-      const teamsComboboxes = getAllByRole('combobox', { name: /Teams/i });
-      const teamsCombobox = teamsComboboxes[teamsComboboxes.length - 1]!;
-      await userEvent.type(teamsCombobox, 'nonexistent');
-
-      await waitFor(() => {
-        expect(getByText(/Sorry, no teams match nonexistent/)).toBeVisible();
-      });
-
-      getTeamSuggestions.mockResolvedValue([
-        { label: 'One Team', value: '1' },
-        { label: 'Two Team', value: '2' },
       ]);
     });
   });

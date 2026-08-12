@@ -56,7 +56,6 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       {project.projectType === 'Discovery Project' && (
         <ProjectContributors
           fundedTeam={project.fundedTeam}
-          collaborators={project.collaborators}
           collaboratingTeams={project.collaboratingTeams}
         />
       )}
@@ -66,7 +65,6 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
         project.fundedTeam && (
           <ProjectContributors
             fundedTeam={project.fundedTeam}
-            collaborators={project.collaborators}
             collaboratingTeams={project.collaboratingTeams}
           />
         )}
@@ -74,15 +72,11 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       {project.projectType === 'Resource Project' &&
         !project.isTeamBased &&
         project.members && (
-          <ProjectContributors
-            projectMembers={project.members}
-            collaboratingMembers={project.collaboratingMembers}
-          />
+          <ProjectContributors projectMembers={project.members} />
         )}
 
       {project.projectType === 'Trainee Project' && (
         <ProjectContributors
-          collaboratingMembers={project.collaboratingMembers}
           projectMembers={project.members}
           showTeamInfo={true}
         />

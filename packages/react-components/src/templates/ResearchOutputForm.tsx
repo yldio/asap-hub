@@ -39,7 +39,9 @@ import {
   ResearchOutputPublishingCard,
   ResearchOutputRelatedEventsCard,
 } from '../organisms';
-import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
+import ResearchOutputContributorsCard, {
+  AuthorRestriction,
+} from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 import { rem } from '../pixels';
 
@@ -69,6 +71,7 @@ type ResearchOutputFormProps = Pick<
     | 'authorsRequired'
   > & {
     versionAction?: 'create' | 'edit';
+    projectMemberIds?: ReadonlyArray<string>;
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
@@ -140,6 +143,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   tagSuggestions,
   urlRequired = true,
   authorsRequired = false,
+  projectMemberIds,
   typeOptions,
   selectedTeams,
   getLabSuggestions = noop,
@@ -165,6 +169,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const { canPublishResearchOutput } = permissions;
 
   const behavior = getResearchOutputFlowBehavior(flowId);
+
+  const authorRestriction: AuthorRestriction =
+    availableActions.restrictAuthorsToProjectMembers && projectMemberIds
+      ? { kind: 'project-members', memberIds: projectMemberIds }
+      : { kind: 'none' };
 
   const showSaveDraftButton = availableActions.canSaveDraft;
 
@@ -468,6 +477,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               getTeamSuggestions={getTeamSuggestions}
               isEditMode={!!researchOutputData}
               authorsRequired={authorsRequired}
+              showTeamsAndLabs={availableActions.showTeamsAndLabs}
+              authorRestriction={authorRestriction}
             />
             <Controller
               name="relatedResearch"

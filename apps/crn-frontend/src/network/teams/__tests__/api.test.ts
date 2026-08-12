@@ -1007,6 +1007,45 @@ describe('Manuscript', () => {
         }),
       );
     });
+
+    it('can filter by project id', async () => {
+      const projectId = 'project-id-1';
+      await getManuscriptVersions(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: 25,
+        currentPage: 2,
+        projectId,
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript-version'],
+        '',
+        expect.objectContaining({
+          hitsPerPage: 25,
+          page: 2,
+          filters: `project.id:"${projectId}"`,
+        }),
+      );
+    });
+
+    it('filters by project id even when a team id is also given', async () => {
+      const projectId = 'project-id-1';
+      await getManuscriptVersions(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: 25,
+        currentPage: 2,
+        projectId,
+        teamId: 'team-id-1',
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript-version'],
+        '',
+        expect.objectContaining({
+          filters: `project.id:"${projectId}"`,
+        }),
+      );
+    });
   });
 
   describe('uploadManuscriptFile', () => {

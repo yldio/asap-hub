@@ -135,6 +135,11 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
                       linkedFrom {
                         projectsCollection(limit: 1) {
                           items {
+                            sys {
+                              id
+                            }
+                            title
+                            projectType
                             projectId
                             grantId
                           }
@@ -144,6 +149,15 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
                   }
                 }
               }
+            }
+            project {
+              sys {
+                id
+              }
+              title
+              projectType
+              projectId
+              grantId
             }
             impact {
               sys {
@@ -396,6 +410,11 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
                   linkedFrom {
                     projectsCollection(limit: 1) {
                       items {
+                        sys {
+                          id
+                        }
+                        title
+                        projectType
                         projectId
                         grantId
                       }
@@ -405,6 +424,15 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
               }
             }
           }
+        }
+        project {
+          sys {
+            id
+          }
+          title
+          projectType
+          projectId
+          grantId
         }
         impact {
           sys {

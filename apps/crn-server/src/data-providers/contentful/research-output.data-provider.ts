@@ -619,6 +619,7 @@ const prepareInput = (
     subtypeId,
     keywordIds,
     workingGroups,
+    projectId,
     impact,
     categories,
     relatedManuscriptVersion,
@@ -654,6 +655,7 @@ const prepareInput = (
       workingGroups && workingGroups[0]
         ? getLinkEntity(workingGroups[0])
         : null,
+    project: projectId ? getLinkEntity(projectId) : null,
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
     impact: impact ? getLinkEntity(impact) : null,
     categories: categories ? getLinkEntities(categories) : null,

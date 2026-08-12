@@ -145,7 +145,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           {toastNode && <Toast accent="error">{toastNode}</Toast>}
           <ResearchOutputHeader
             documentType={documentType}
-            workingGroupAssociation
+            entityType="working-group"
           />
           {availableActions.showChangelogAndVersionHistory && (
             <OutputVersions

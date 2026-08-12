@@ -45,6 +45,8 @@ export const defaultAvailableActions: ResearchOutputAvailableActions = {
   showChangelogAndVersionHistory: false,
   showExtraInformationFields: true,
   showCatalogNumber: false,
+  showTeamsAndLabs: true,
+  restrictAuthorsToProjectMembers: false,
 };
 
 export const getDefaultProps = (): ComponentProps<

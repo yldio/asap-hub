@@ -1,15 +1,22 @@
+import { ManuscriptVersionRecord } from '@asap-hub/algolia';
 import { ManuscriptsFilter } from '@asap-hub/contentful';
 import {
   DataProvider,
   FetchOptions,
   ListManuscriptVersionExportResponse,
   ManuscriptVersionDataObject,
-  ManuscriptVersionResponse,
 } from '@asap-hub/model';
 
-export type ManuscriptVersionDataProvider = DataProvider<
+export type ManuscriptVersionRecordDataObject = Omit<
   ManuscriptVersionDataObject,
-  ManuscriptVersionResponse,
+  'latestManuscriptVersion'
+> & {
+  latestManuscriptVersion?: ManuscriptVersionRecord;
+};
+
+export type ManuscriptVersionDataProvider = DataProvider<
+  ManuscriptVersionRecordDataObject,
+  ManuscriptVersionRecord,
   FetchOptions<ManuscriptsFilter>
 > & {
   fetchComplianceManuscriptVersions: (

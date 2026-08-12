@@ -49,6 +49,8 @@ export type ResearchOutputAvailableActions = {
   showChangelogAndVersionHistory: boolean;
   showExtraInformationFields: boolean;
   showCatalogNumber: boolean;
+  showTeamsAndLabs: boolean;
+  restrictAuthorsToProjectMembers: boolean;
 };
 
 export const resolveResearchOutputAvailableActions = ({
@@ -89,6 +91,8 @@ export const resolveResearchOutputAvailableActions = ({
       (behavior.isAddVersionFlow || behavior.isEditFlow) && versions.length > 0,
     showExtraInformationFields: documentType !== 'Report',
     showCatalogNumber: documentType === 'Lab Material',
+    showTeamsAndLabs: !behavior.isProjectFlow,
+    restrictAuthorsToProjectMembers: behavior.isProjectFlow,
   };
 };
 

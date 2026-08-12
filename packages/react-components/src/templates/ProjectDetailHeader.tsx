@@ -4,7 +4,7 @@ import {
   ProjectMember,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import { projects } from '@asap-hub/routing';
+import { projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
@@ -150,6 +150,7 @@ type ProjectDetailHeaderProps = ProjectDetail & {
   readonly draftOutputsHref?: string;
   readonly outputsCount?: number;
   readonly draftOutputsCount?: number;
+  readonly canShareOutput?: boolean;
 };
 
 export const getTeamIcon = (project: ProjectDetail) => {
@@ -180,13 +181,12 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     draftOutputsHref,
     outputsCount,
     draftOutputsCount,
+    canShareOutput = false,
   } = project;
   const { isEnabled } = useFlags();
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
-  const route = projects({}).discoveryProjects({}).discoveryProject({
-    projectId: project.id,
-  });
+  const route = projectRouteByType[project.projectType](project.id);
 
   const membersWithHref =
     'members' in project ? project.members?.map(withMemberHref) : undefined;
@@ -271,58 +271,57 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
                 </div>
               )}
 
-              {project.projectType === 'Discovery Project' &&
-                isProjectOutputsEnabled && (
-                  <div css={css({ marginLeft: 'auto' })}>
-                    <DropdownButton
-                      noMargin
-                      buttonChildren={() => (
-                        <span css={dropdownButtonStyling}>
-                          {plusIcon}
-                          Share an Output
-                        </span>
-                      )}
-                      primary
-                    >
-                      {{
-                        item: <>{article} Article</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'article',
-                        }).$,
-                      }}
-                      {{
-                        item: <>{bioinformatics} Bioinformatics</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'bioinformatics',
-                        }).$,
-                      }}
-                      {{
-                        item: <>{crnReportIcon} CRN Report</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'report',
-                        }).$,
-                      }}
-                      {{
-                        item: <>{dataset} Dataset</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'dataset',
-                        }).$,
-                      }}
-                      {{
-                        item: <>{labMaterial} Lab Material</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'lab-material',
-                        }).$,
-                      }}
-                      {{
-                        item: <>{protocol} Protocol</>,
-                        href: route.createOutput({
-                          outputDocumentType: 'protocol',
-                        }).$,
-                      }}
-                    </DropdownButton>
-                  </div>
-                )}
+              {isProjectOutputsEnabled && canShareOutput && (
+                <div css={css({ marginLeft: 'auto' })}>
+                  <DropdownButton
+                    noMargin
+                    buttonChildren={() => (
+                      <span css={dropdownButtonStyling}>
+                        {plusIcon}
+                        Share an Output
+                      </span>
+                    )}
+                    primary
+                  >
+                    {{
+                      item: <>{article} Article</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'article',
+                      }).$,
+                    }}
+                    {{
+                      item: <>{bioinformatics} Bioinformatics</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'bioinformatics',
+                      }).$,
+                    }}
+                    {{
+                      item: <>{crnReportIcon} CRN Report</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'report',
+                      }).$,
+                    }}
+                    {{
+                      item: <>{dataset} Dataset</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'dataset',
+                      }).$,
+                    }}
+                    {{
+                      item: <>{labMaterial} Lab Material</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'lab-material',
+                      }).$,
+                    }}
+                    {{
+                      item: <>{protocol} Protocol</>,
+                      href: route.createOutput({
+                        outputDocumentType: 'protocol',
+                      }).$,
+                    }}
+                  </DropdownButton>
+                </div>
+              )}
             </div>
           )}
 

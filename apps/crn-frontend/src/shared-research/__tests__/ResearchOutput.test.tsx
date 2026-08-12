@@ -17,18 +17,24 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { User } from '@asap-hub/auth';
 
+import type {
+  ResearchOutputResponse,
+  TraineeProjectDetail,
+} from '@asap-hub/model';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import {
   getManuscriptVersionByManuscriptId,
   updateTeamResearchOutput,
 } from '../../network/teams/api';
+import { getProject } from '../../projects/api';
 import { getImpacts } from '../../shared-api/impact';
 
 jest.setTimeout(30000);
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 jest.mock('../../network/working-groups/api');
+jest.mock('../../projects/api');
 jest.mock('../api');
 jest.mock('../../shared-api/impact');
 
@@ -63,11 +69,41 @@ const mockGetManuscriptVersionByManuscriptId =
     typeof getManuscriptVersionByManuscriptId
   >;
 
+const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+
+const projectId = 'project-1';
+
+const project: TraineeProjectDetail = {
+  id: projectId,
+  title: 'Example Project',
+  status: 'Active',
+  statusRank: 1,
+  startDate: '2024-01-01',
+  endDate: '2024-06-01',
+  duration: '5 mos',
+  tags: [],
+  projectType: 'Trainee Project',
+  members: [
+    {
+      id: 'member-1',
+      displayName: 'Taylor Trainer',
+      firstName: 'Taylor',
+      lastName: 'Trainer',
+      email: 'contact@example.com',
+      role: 'Independent Project - Mentor',
+    },
+  ],
+  originalGrant: 'Original Grant',
+  originalGrantProposalId: 'proposal-1',
+  contactEmail: 'contact@example.com',
+};
+
 beforeEach(() => {
   mockGetImpacts.mockResolvedValue({
     total: 0,
     items: [],
   });
+  mockGetProject.mockResolvedValue(project);
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
@@ -198,6 +234,7 @@ describe('a grant document research output', () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Bioinformatics',
+      publishingEntity: 'Team',
       teams: [
         {
           id: 't0',
@@ -347,6 +384,162 @@ describe('a working group research output', () => {
     );
     expect(getByText(/sorry.+page/i)).toBeVisible();
   });
+
+  it('renders the sorry page when the output has no working group id', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      publishingEntity: 'Working Group',
+      workingGroups: undefined,
+    });
+
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        role: 'Staff',
+      },
+    );
+
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+});
+
+describe('a project research output', () => {
+  const projectOutput = {
+    ...createResearchOutputResponse(),
+    id,
+    teams: [],
+    documentType: 'Bioinformatics' as const,
+    publishingEntity: 'Project' as const,
+    workingGroups: undefined,
+    published: false,
+    project: {
+      id: projectId,
+      title: project.title,
+      projectType: 'Trainee Project' as const,
+      projectId: 'TP1',
+    },
+  };
+
+  const projectMember: User = {
+    ...defaultUser,
+    projects: [
+      {
+        id: projectId,
+        title: project.title,
+        projectType: 'Trainee Project',
+        status: 'Active',
+      },
+    ],
+  };
+
+  it('renders the user based output form for a member of the project', async () => {
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      projectMember,
+    );
+
+    expect(
+      screen.getByRole('heading', { name: /Share Project Bioinformatics/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not render the form for non project members', async () => {
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        projects: [
+          {
+            id: 'another-project',
+            title: 'Another Project',
+            projectType: 'Trainee Project',
+            status: 'Active',
+          },
+        ],
+      },
+    );
+
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+
+  it('renders the add version form for the project', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...projectOutput,
+      published: true,
+    });
+
+    await renderComponent(researchOutputRoute.versionResearchOutput({}).$, {
+      ...projectMember,
+      role: 'Staff',
+    });
+
+    expect(
+      screen.getByRole('heading', { name: /Share Project Bioinformatics/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the sorry page when the output is not linked to a project', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...projectOutput,
+      project: undefined,
+    });
+
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...projectMember,
+        role: 'Staff',
+      },
+    );
+
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+});
+
+describe('edit form with missing association data', () => {
+  it('renders the sorry page when a team output has no teams', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      publishingEntity: 'Team',
+      teams: [],
+      workingGroups: undefined,
+    });
+
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        role: 'Staff',
+      },
+    );
+
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+
+  it('renders the sorry page for an unknown entity type', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      publishingEntity: 'Unknown' as ResearchOutputResponse['publishingEntity'],
+    });
+
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        role: 'Staff',
+      },
+    );
+
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
 });
 
 it('renders the 404 page for a missing research output', async () => {
@@ -360,6 +553,7 @@ it('switches a draft research output to in review', async () => {
   mockGetResearchOutput.mockResolvedValue({
     ...researchOutput,
     documentType: 'Article',
+    publishingEntity: 'Team',
     published: false,
     workingGroups: undefined,
   });
@@ -404,6 +598,7 @@ it('switches a in review research output back to draft', async () => {
   mockGetResearchOutput.mockResolvedValue({
     ...researchOutput,
     documentType: 'Article',
+    publishingEntity: 'Team',
     published: false,
     workingGroups: undefined,
     statusChangedBy: { ...defaultUser },
@@ -452,6 +647,7 @@ it('publishes a research output', async () => {
   mockGetResearchOutput.mockResolvedValue({
     ...researchOutput,
     documentType: 'Article',
+    publishingEntity: 'Team',
     published: false,
     workingGroups: undefined,
     statusChangedBy: { ...defaultUser },
@@ -501,6 +697,7 @@ describe('a research output linked to a manuscript', () => {
     mockGetResearchOutput.mockResolvedValue({
       ...researchOutput,
       documentType: 'Article',
+      publishingEntity: 'Team',
       published: true,
       workingGroups: undefined,
       statusChangedBy: { ...defaultUser },
@@ -541,6 +738,7 @@ describe('a research output linked to a manuscript', () => {
     mockGetResearchOutput.mockResolvedValue({
       ...researchOutput,
       documentType: 'Article',
+      publishingEntity: 'Team',
       published: true,
       workingGroups: undefined,
       statusChangedBy: { ...defaultUser },
@@ -577,6 +775,7 @@ describe('a research output linked to a manuscript', () => {
     mockGetResearchOutput.mockResolvedValue({
       ...researchOutput,
       documentType: 'Article',
+      publishingEntity: 'Team',
       published: true,
       workingGroups: undefined,
       statusChangedBy: { ...defaultUser },

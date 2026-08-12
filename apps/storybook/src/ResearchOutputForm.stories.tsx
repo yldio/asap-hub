@@ -23,6 +23,8 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
     disableUsedInPublication: false,
     disableNonPublicSharingStatus: false,
     canSaveDraft: true,
+    showTeamsAndLabs: true,
+    restrictAuthorsToProjectMembers: false,
     showImpactAndCategory: true,
     showChangelogAndVersionHistory: false,
     showExtraInformationFields: true,

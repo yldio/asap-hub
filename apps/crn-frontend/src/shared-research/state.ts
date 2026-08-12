@@ -103,7 +103,7 @@ export const useInvalidateResearchOutputIndex = () => {
 };
 
 export const useCanShareResearchOutput = (
-  association: 'teams' | 'workingGroups',
+  association: 'teams' | 'workingGroups' | 'projects',
   associationIds: string[],
   activeAssociation: boolean,
 ): boolean => {
@@ -117,7 +117,7 @@ export const useCanShareResearchOutput = (
 };
 
 export const useCanDuplicateResearchOutput = (
-  association: 'teams' | 'workingGroups',
+  association: 'teams' | 'workingGroups' | 'projects',
   associationIds: string[],
 ): boolean => {
   const user = useCurrentUserCRN();
@@ -130,7 +130,7 @@ export const useCanDuplicateResearchOutput = (
 };
 
 export const useResearchOutputPermissions = (
-  association: 'teams' | 'workingGroups',
+  association: 'teams' | 'workingGroups' | 'projects',
   associationIds: string[],
   published?: boolean,
   isManuscriptOutput: boolean = false,

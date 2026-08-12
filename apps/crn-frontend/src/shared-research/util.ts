@@ -8,6 +8,7 @@ import {
   ResearchOutputFlowId,
   RESEARCH_OUTPUT_FLOW_IDS,
   ResearchOutputVersion,
+  ResearchOutputEntityType,
 } from '@asap-hub/model';
 
 export const mapManuscriptVersionToResearchOutput = (
@@ -61,8 +62,52 @@ export const mapManuscriptVersionToResearchOutput = (
       : manuscriptVersion.preprintDate,
 });
 
+export type { ResearchOutputEntityType };
+
+type EntityFlowIds = {
+  create: ResearchOutputFlowId;
+  createFromManuscript?: ResearchOutputFlowId;
+  editDraft: ResearchOutputFlowId;
+  editPublished: ResearchOutputFlowId;
+  addVersion: ResearchOutputFlowId;
+  addVersionFromManuscript?: ResearchOutputFlowId;
+  duplicate: ResearchOutputFlowId;
+};
+
+const flowIdsByEntity: Record<ResearchOutputEntityType, EntityFlowIds> = {
+  team: {
+    create: RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_MANUAL,
+    createFromManuscript:
+      RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT,
+    editDraft: RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_DRAFT,
+    editPublished: RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_PUBLISHED,
+    addVersion: RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION,
+    addVersionFromManuscript:
+      RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION_FROM_MANUSCRIPT,
+    duplicate: RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE,
+  },
+  project: {
+    create: RESEARCH_OUTPUT_FLOW_IDS.PROJECT_CREATE_MANUAL,
+    createFromManuscript:
+      RESEARCH_OUTPUT_FLOW_IDS.PROJECT_CREATE_IMPORTED_FROM_MANUSCRIPT,
+    editDraft: RESEARCH_OUTPUT_FLOW_IDS.PROJECT_EDIT_DRAFT,
+    editPublished: RESEARCH_OUTPUT_FLOW_IDS.PROJECT_EDIT_PUBLISHED,
+    addVersion: RESEARCH_OUTPUT_FLOW_IDS.PROJECT_ADD_VERSION,
+    addVersionFromManuscript:
+      RESEARCH_OUTPUT_FLOW_IDS.PROJECT_ADD_VERSION_FROM_MANUSCRIPT,
+    duplicate: RESEARCH_OUTPUT_FLOW_IDS.PROJECT_DUPLICATE,
+  },
+  'working-group': {
+    create: RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE,
+    editDraft: RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_DRAFT,
+    editPublished: RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_PUBLISHED,
+    addVersion: RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_ADD_VERSION,
+    duplicate: RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE,
+  },
+};
+
 export type ResolveFlowIdParams = {
-  entityType: 'team' | 'working-group';
+  entityType: ResearchOutputEntityType;
   versionAction?: 'create' | 'edit';
   published: boolean;
   isImportedFromManuscript?: boolean;
@@ -78,43 +123,29 @@ export const resolveResearchOutputFlowId = ({
   isDuplicate,
   hasResearchOutputId,
 }: ResolveFlowIdParams): ResearchOutputFlowId => {
-  const isTeam = entityType === 'team';
+  const flowIds = flowIdsByEntity[entityType];
 
   if (isDuplicate) {
-    return isTeam
-      ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE
-      : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE;
+    return flowIds.duplicate;
   }
 
   if (versionAction === 'create' && hasResearchOutputId) {
-    if (isTeam && isImportedFromManuscript) {
-      return RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION_FROM_MANUSCRIPT;
+    if (isImportedFromManuscript && flowIds.addVersionFromManuscript) {
+      return flowIds.addVersionFromManuscript;
     }
 
-    return isTeam
-      ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_ADD_VERSION
-      : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_ADD_VERSION;
+    return flowIds.addVersion;
   }
 
   if (versionAction === 'edit' && hasResearchOutputId) {
-    if (published) {
-      return isTeam
-        ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_PUBLISHED
-        : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_PUBLISHED;
-    }
-
-    return isTeam
-      ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_EDIT_DRAFT
-      : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_EDIT_DRAFT;
+    return published ? flowIds.editPublished : flowIds.editDraft;
   }
 
-  if (isTeam && isImportedFromManuscript) {
-    return RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT;
+  if (isImportedFromManuscript && flowIds.createFromManuscript) {
+    return flowIds.createFromManuscript;
   }
 
-  return isTeam
-    ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_CREATE_MANUAL
-    : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE;
+  return flowIds.create;
 };
 
 export const toResearchOutputVersion = (

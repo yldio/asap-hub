@@ -216,6 +216,67 @@ describe.each`
   },
 );
 
+describe('getUserRole - projects', () => {
+  const projectId = 'project-1';
+  const activeMembership = {
+    id: projectId,
+    title: 'A project',
+    projectType: 'Resource Project' as const,
+    status: 'Active',
+  };
+
+  test('returns Staff when user has asap role as staff', () => {
+    expect(
+      getUserRole(
+        { ...user, role: 'Staff', projects: [activeMembership] },
+        'projects',
+        [projectId],
+      ),
+    ).toEqual('Staff');
+  });
+
+  test('returns Member when user is an active project member (no PM elevation)', () => {
+    expect(
+      getUserRole(
+        { ...user, role: 'Grantee', projects: [activeMembership] },
+        'projects',
+        [projectId],
+      ),
+    ).toEqual('Member');
+  });
+
+  test.each(['Completed', 'Closed'])(
+    'returns None when the project membership status is %s',
+    (status) => {
+      expect(
+        getUserRole(
+          {
+            ...user,
+            role: 'Grantee',
+            projects: [{ ...activeMembership, status }],
+          },
+          'projects',
+          [projectId],
+        ),
+      ).toEqual('None');
+    },
+  );
+
+  test('returns None when user does not belong to the project', () => {
+    expect(
+      getUserRole(
+        { ...user, role: 'Grantee', projects: [activeMembership] },
+        'projects',
+        ['other-project'],
+      ),
+    ).toEqual('None');
+  });
+
+  test('returns None when user data is null', () => {
+    expect(getUserRole(null, 'projects', [projectId])).toEqual('None');
+  });
+});
+
 describe('hasShareResearchOutputPermission', () => {
   test.each`
     userRole    | expected

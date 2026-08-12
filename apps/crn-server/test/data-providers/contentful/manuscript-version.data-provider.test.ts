@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Environment,
   getContentfulGraphqlClientMockServer,
@@ -83,6 +84,96 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       expect(result).toEqual({
         items: [],
         total: 0,
+      });
+    });
+
+    test('Should index the project linked directly to the manuscript', async () => {
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        {
+          ...getContentfulManuscript(1),
+          project: {
+            sys: { id: 'user-based-project-id' },
+            title: 'User Based Project',
+            projectType: 'Resource Project',
+            projectId: 'WH2',
+            grantId: '000283',
+          },
+        },
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.project).toEqual({
+        id: 'user-based-project-id',
+        title: 'User Based Project',
+        projectType: 'Resource Project',
+        isTeamBased: false,
+      });
+    });
+
+    test('Should leave the project undefined when the manuscript is only linked to one through its team', async () => {
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        {
+          ...getContentfulManuscript(1),
+          project: null,
+          teamsCollection: { items: [{ sys: { id: 'team-id-1' } }] },
+        },
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.project).toBeUndefined();
+    });
+
+    test('Should omit invalid project types', async () => {
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        {
+          ...getContentfulManuscript(1),
+          title: null,
+          url: null,
+          count: null,
+          impact: { sys: { id: 'impact-1' }, name: null },
+          layImpactStatement: null,
+          categoriesCollection: null,
+          relatedResearchOutput: null,
+          project: {
+            sys: { id: 'project-with-invalid-type' },
+            title: null,
+            projectType: 'Not A Real Type',
+            projectId: null,
+            grantId: null,
+          },
+        },
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.project).toEqual({
+        id: 'project-with-invalid-type',
+        title: '',
+        projectType: undefined,
+        isTeamBased: false,
       });
     });
 

@@ -132,6 +132,7 @@ export default class ResearchOutputController {
       subtypeId: subtype,
       keywordIds: keywords,
       teamIds: normalisedResearchOutputCreateData.teams,
+      projectId: normalisedResearchOutputCreateData.projectId,
       relatedResearchIds: normalisedResearchOutputCreateData.relatedResearch,
       relatedEventIds: normalisedResearchOutputCreateData.relatedEvents,
       title: normalisedResearchOutputCreateData.title,
@@ -242,6 +243,7 @@ export default class ResearchOutputController {
       subtypeId: subtype,
       keywordIds: keywords,
       teamIds: normalisedResearchOutputUpdateData.teams,
+      projectId: normalisedResearchOutputUpdateData.projectId,
       relatedResearchIds: normalisedResearchOutputUpdateData.relatedResearch,
       relatedEventIds: normalisedResearchOutputUpdateData.relatedEvents,
       relatedManuscriptVersion:

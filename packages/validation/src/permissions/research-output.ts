@@ -2,10 +2,16 @@ import {
   UserRole,
   UserResponse,
   UserTeam,
+  UserProjectMembership,
   WorkingGroupMembership,
 } from '@asap-hub/model';
 
-type AssociationType = 'teams' | 'workingGroups';
+type AssociationType = 'teams' | 'workingGroups' | 'projects';
+
+type AssociationMembership =
+  | UserTeam
+  | WorkingGroupMembership
+  | UserProjectMembership;
 
 /**
  * Accepts any user whose teams/working groups carry a single `role` per row.
@@ -16,21 +22,27 @@ type UserInput =
   | (Pick<UserResponse, 'role'> & {
       teams: ReadonlyArray<UserTeam>;
       workingGroups: ReadonlyArray<WorkingGroupMembership>;
+      projects: ReadonlyArray<UserProjectMembership>;
     })
   | null;
 
 export const isStaff = (user: UserInput): boolean => user?.role === 'Staff';
 
 export const isActiveAndBelongsToAssociation = (
-  user: UserTeam | WorkingGroupMembership,
+  user: AssociationMembership,
   association: AssociationType,
   associationIds: string[],
 ): boolean => {
   const belongsToAssociation = associationIds.includes(user.id);
-  const isActive =
-    association === 'teams'
-      ? !('inactiveSinceDate' in user) || user.inactiveSinceDate === undefined
-      : 'active' in user && user.active;
+  let isActive: boolean;
+  if (association === 'teams') {
+    isActive =
+      !('inactiveSinceDate' in user) || user.inactiveSinceDate === undefined;
+  } else if (association === 'projects') {
+    isActive = 'status' in user && user.status === 'Active';
+  } else {
+    isActive = 'active' in user && user.active;
+  }
 
   return belongsToAssociation && isActive;
 };
@@ -42,39 +54,44 @@ const ELEVATED_WORKING_GROUP_ROLES = new Set([
 ]);
 
 export const isProjectManagerAndActive = (
-  user: UserTeam | WorkingGroupMembership,
-  association: AssociationType,
+  user: AssociationMembership,
+  associationType: AssociationType,
   associationIds: string[],
-): boolean =>
-  (association === 'workingGroups'
-    ? ELEVATED_WORKING_GROUP_ROLES.has(user.role)
-    : user.role === 'Project Manager') &&
-  isActiveAndBelongsToAssociation(user, association, associationIds);
+): boolean => {
+  if (associationType === 'projects' || !('role' in user)) {
+    return false;
+  }
+
+  const hasElevatedRole =
+    associationType === 'workingGroups'
+      ? ELEVATED_WORKING_GROUP_ROLES.has(user.role)
+      : user.role === 'Project Manager';
+
+  return (
+    hasElevatedRole &&
+    isActiveAndBelongsToAssociation(user, associationType, associationIds)
+  );
+};
 
 export const getUserRole = (
   user: UserInput,
-  association: AssociationType,
+  associationType: AssociationType,
   associationIds: string[],
 ): UserRole => {
   if (!user) return 'None';
 
   if (isStaff(user)) return 'Staff';
 
-  const isUserActiveProjectManager = user[association].some(
-    (teamOrWorkingGroup) =>
-      isProjectManagerAndActive(
-        teamOrWorkingGroup,
-        association,
-        associationIds,
-      ),
+  const isUserActiveProjectManager = user[associationType].some((membership) =>
+    isProjectManagerAndActive(membership, associationType, associationIds),
   );
 
   if (isUserActiveProjectManager) return 'Staff';
 
-  const isUserActiveMember = user[association].some((teamOrWorkingGroup) =>
+  const isUserActiveMember = user[associationType].some((membership) =>
     isActiveAndBelongsToAssociation(
-      teamOrWorkingGroup,
-      association,
+      membership,
+      associationType,
       associationIds,
     ),
   );

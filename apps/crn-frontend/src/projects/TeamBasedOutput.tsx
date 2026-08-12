@@ -57,7 +57,7 @@ const useParamOutputDocumentType = (
   return outputDocumentType;
 };
 
-type ProjectOutputProps = {
+type TeamBasedOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
@@ -65,7 +65,7 @@ type ProjectOutputProps = {
   isDuplicate?: boolean;
 };
 
-const ProjectOutput: React.FC<ProjectOutputProps> = ({
+const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
   teamId,
   researchOutputData: existingOutput,
   latestManuscriptVersion,
@@ -188,7 +188,7 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
 
   if (showManuscriptOutputFlow) {
     return (
-      <OutputPageShell documentType={documentType}>
+      <OutputPageShell documentType={documentType} entityType="team">
         <ManuscriptOutputSelectionScreen
           teamId={teamId}
           onCreateManually={() => setShowManuscriptOutputFlow(false)}
@@ -203,6 +203,7 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
 
   return (
     <OutputPageShell
+      entityType="team"
       documentType={documentType}
       banner={
         versionAction === 'create' &&
@@ -299,4 +300,4 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
   );
 };
 
-export default ProjectOutput;
+export default TeamBasedOutput;

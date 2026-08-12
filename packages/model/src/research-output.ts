@@ -336,6 +336,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   keywordIds: string[];
   teamIds: string[];
   workingGroups?: string[];
+  projectId?: string;
   relatedResearchIds: string[];
   relatedEventIds: string[];
   impact?: string;
@@ -365,6 +366,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
+  projectId?: string;
   relatedResearchIds: string[];
   relatedEventIds: string[];
   statusChangedById?: string;
@@ -466,6 +468,7 @@ export type ResearchOutputPostRequest = {
   keywords: string[];
   teams: string[];
   workingGroups: string[];
+  projectId?: string;
   relatedResearch: string[];
   relatedManuscriptVersion?: string;
   relatedManuscript?: string;
@@ -522,6 +525,15 @@ export const RESEARCH_OUTPUT_FLOW_IDS = {
   TEAM_ADD_VERSION_FROM_MANUSCRIPT: 'team-add-version-from-manuscript',
   TEAM_DUPLICATE: 'team-duplicate',
 
+  PROJECT_CREATE_MANUAL: 'project-create-manual',
+  PROJECT_CREATE_IMPORTED_FROM_MANUSCRIPT:
+    'project-create-imported-from-manuscript',
+  PROJECT_EDIT_DRAFT: 'project-edit-draft',
+  PROJECT_EDIT_PUBLISHED: 'project-edit-published',
+  PROJECT_ADD_VERSION: 'project-add-version',
+  PROJECT_ADD_VERSION_FROM_MANUSCRIPT: 'project-add-version-from-manuscript',
+  PROJECT_DUPLICATE: 'project-duplicate',
+
   WORKING_GROUP_CREATE: 'working-group-create',
   WORKING_GROUP_EDIT_DRAFT: 'working-group-edit-draft',
   WORKING_GROUP_EDIT_PUBLISHED: 'working-group-edit-published',
@@ -533,7 +545,7 @@ export type ResearchOutputFlowId =
   (typeof RESEARCH_OUTPUT_FLOW_IDS)[keyof typeof RESEARCH_OUTPUT_FLOW_IDS];
 
 export type ResearchOutputFlowDescriptor = {
-  entity: 'team' | 'working-group';
+  entity: 'team' | 'project' | 'working-group';
   action: 'create' | 'edit' | 'add-version' | 'duplicate';
   origin: 'manual' | 'manuscript';
   startsPublished: boolean;
@@ -582,6 +594,48 @@ export const FLOW_DEFINITIONS = {
     origin: 'manual',
     startsPublished: false,
   },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_CREATE_MANUAL]: {
+    entity: 'project',
+    action: 'create',
+    origin: 'manual',
+    startsPublished: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_CREATE_IMPORTED_FROM_MANUSCRIPT]: {
+    entity: 'project',
+    action: 'create',
+    origin: 'manuscript',
+    startsPublished: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_EDIT_DRAFT]: {
+    entity: 'project',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: false,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_EDIT_PUBLISHED]: {
+    entity: 'project',
+    action: 'edit',
+    origin: 'manual',
+    startsPublished: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_ADD_VERSION]: {
+    entity: 'project',
+    action: 'add-version',
+    origin: 'manual',
+    startsPublished: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_ADD_VERSION_FROM_MANUSCRIPT]: {
+    entity: 'project',
+    action: 'add-version',
+    origin: 'manuscript',
+    startsPublished: true,
+  },
+  [RESEARCH_OUTPUT_FLOW_IDS.PROJECT_DUPLICATE]: {
+    entity: 'project',
+    action: 'duplicate',
+    origin: 'manual',
+    startsPublished: false,
+  },
   [RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_CREATE]: {
     entity: 'working-group',
     action: 'create',
@@ -623,6 +677,9 @@ const isCreateFlow = (flow: ResearchOutputFlowDescriptor): boolean =>
 const isEditFlow = (flow: ResearchOutputFlowDescriptor): boolean =>
   flow.action === 'edit';
 
+const isProjectFlow = (flow: ResearchOutputFlowDescriptor): boolean =>
+  flow.entity === 'project';
+
 const isImportedFromManuscript = (
   flow: ResearchOutputFlowDescriptor,
 ): boolean => flow.origin === 'manuscript';
@@ -650,6 +707,7 @@ export type ResearchOutputFlowBehavior = {
   isAddVersionFlow: boolean;
   isCreateFlow: boolean;
   isEditFlow: boolean;
+  isProjectFlow: boolean;
   isImportedFromManuscript: boolean;
   supportsDrafts: boolean;
   requiresAddVersionConfirm: boolean;
@@ -666,6 +724,7 @@ export const getResearchOutputFlowBehavior = (
     isAddVersionFlow: isAddVersionFlow(flow),
     isCreateFlow: isCreateFlow(flow),
     isEditFlow: isEditFlow(flow),
+    isProjectFlow: isProjectFlow(flow),
     isImportedFromManuscript: isImportedFromManuscript(flow),
     supportsDrafts: supportsDrafts(flow),
     requiresAddVersionConfirm: requiresAddVersionConfirm(flow),
@@ -674,3 +733,5 @@ export const getResearchOutputFlowBehavior = (
     publishesOnSave: publishesOnSave(flow),
   };
 };
+
+export type ResearchOutputEntityType = 'team' | 'working-group' | 'project';

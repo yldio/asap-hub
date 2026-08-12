@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Link } from '../atoms';
 import { rem } from '../pixels';
-import { fern } from '../colors';
+import { fern, lead } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
 import UserAvatar from './UserAvatar';
@@ -34,6 +34,12 @@ const nameStyles = css({
   },
 });
 
+const noRoleStyles = css({
+  color: lead.rgb,
+  fontSize: rem(17),
+  fontStyle: 'italic',
+});
+
 type ProjectMemberCardProps = {
   readonly member: GroupedProjectMember;
 };
@@ -56,8 +62,10 @@ const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({ member }) => (
       <Link href={member.href}>
         <span css={nameStyles}>{member.displayName}</span>
       </Link>
-      {member.roles.length > 0 && (
+      {member.roles.length > 0 ? (
         <RolesList roles={member.roles} maxVisible={2} />
+      ) : (
+        <div css={noRoleStyles}>No role assigned</div>
       )}
     </div>
   </div>

@@ -380,6 +380,8 @@ export {
   getIconForDocumentType,
   formatUserLocation,
   considerEndedAfter,
+  getMemberHref,
+  withMemberHref,
   Portal,
   PortalContainer,
   portalContainerId,

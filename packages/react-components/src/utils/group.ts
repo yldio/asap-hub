@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/model';
 
 import { splitListBy } from './common';
+import { getMemberHref } from './project';
 
 const mergeInactiveSinceDate = (
   existing: string | undefined,
@@ -174,7 +175,7 @@ export const groupProjectMembersByUserId = (
         avatarUrl: member.avatarUrl,
         email: member.email,
         alumniSinceDate: member.alumniSinceDate,
-        href: member.href,
+        href: getMemberHref(member.id),
         teams: member.teams ? [...member.teams] : undefined,
         roles: member.role ? [member.role] : [],
         latestAward: member.latestAward,

@@ -4,7 +4,7 @@ import {
   ProjectMember,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import { network, projects } from '@asap-hub/routing';
+import { projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
@@ -32,6 +32,7 @@ import {
 } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
+import { withMemberHref } from '../utils';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
 
@@ -188,12 +189,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
   });
 
   const membersWithHref =
-    'members' in project
-      ? project.members?.map((member: ProjectMember) => ({
-          ...member,
-          href: network({}).users({}).user({ userId: member.id }).$,
-        }))
-      : undefined;
+    'members' in project ? project.members?.map(withMemberHref) : undefined;
 
   return (
     <>

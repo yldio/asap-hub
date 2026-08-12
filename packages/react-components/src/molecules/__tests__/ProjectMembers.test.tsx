@@ -9,7 +9,6 @@ const mockMembers: ProjectMember[] = [
     firstName: 'John',
     lastName: 'Doe',
     role: 'Principal Investigator',
-    href: '/users/john-doe',
   },
   {
     id: '2',
@@ -17,7 +16,6 @@ const mockMembers: ProjectMember[] = [
     firstName: 'Jane',
     lastName: 'Smith',
     role: 'Co-Investigator',
-    href: '/users/jane-smith',
   },
   {
     id: '3',
@@ -25,7 +23,6 @@ const mockMembers: ProjectMember[] = [
     firstName: 'Michael',
     lastName: 'Johnson',
     role: 'Research Associate',
-    href: '/users/michael-johnson',
   },
 ];
 
@@ -65,12 +62,12 @@ describe('ProjectMembers', () => {
     expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
   });
 
-  it('renders all member links correctly', () => {
+  it('renders all member links pointing to their user profile', () => {
     render(<ProjectMembers members={mockMembers} />);
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(mockMembers.length);
-    expect(links[0]).toHaveAttribute('href', mockMembers[0]!.href);
-    expect(links[1]).toHaveAttribute('href', mockMembers[1]!.href);
-    expect(links[2]).toHaveAttribute('href', mockMembers[2]!.href);
+    expect(links[0]).toHaveAttribute('href', '/network/users/1');
+    expect(links[1]).toHaveAttribute('href', '/network/users/2');
+    expect(links[2]).toHaveAttribute('href', '/network/users/3');
   });
 });

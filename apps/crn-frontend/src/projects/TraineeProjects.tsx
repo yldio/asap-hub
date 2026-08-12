@@ -1,13 +1,15 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { ProjectsPage, TraineeProjectsList } from '@asap-hub/react-components';
+import {
+  withMemberHref,
+  ProjectsPage,
+  TraineeProjectsList,
+} from '@asap-hub/react-components';
 import type {
   FetchListFilter,
-  ProjectMember,
   ProjectStatus,
   TraineeProject,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
@@ -35,11 +37,6 @@ type TraineeProjectsListContentProps = {
   currentPage: number;
   pageSize: number;
 };
-
-const withMemberHref = (member: ProjectMember) => ({
-  ...member,
-  href: network({}).users({}).user({ userId: member.id }).$,
-});
 
 const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
   options,

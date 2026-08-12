@@ -1,14 +1,16 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
+import {
+  withMemberHref,
+  ProjectsPage,
+  ResourceProjectsList,
+} from '@asap-hub/react-components';
 import type {
   FetchListFilter,
-  ProjectMember,
   ProjectStatus,
   ResearchThemeType,
   ResourceProject,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
@@ -48,12 +50,6 @@ type ResourceProjectsListContentProps = {
   pageSize: number;
 };
 
-const withMemberHref = (members?: ReadonlyArray<ProjectMember>) =>
-  members?.map((member) => ({
-    ...member,
-    href: network({}).users({}).user({ userId: member.id }).$,
-  }));
-
 const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
   options,
   currentPage,
@@ -68,7 +64,7 @@ const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
           ? project
           : {
               ...project,
-              members: withMemberHref(project.members) ?? project.members,
+              members: project.members?.map(withMemberHref),
             },
       ),
     [projects],

@@ -72,7 +72,7 @@ export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   interestGroup?: Pick<
     InterestGroupResponse,
-    'id' | 'name' | 'active' | 'tools'
+    'id' | 'name' | 'active' | 'tools' | 'thumbnail'
   >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];

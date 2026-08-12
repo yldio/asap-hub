@@ -49,9 +49,7 @@ describe('ProjectMembers', () => {
       ...mockMembers,
       { id: '4', displayName: 'Pat Roleless', href: '/users/pat-roleless' },
     ];
-    render(
-      <ProjectMembers members={membersWithOneRoleless} showTeamInfo={false} />,
-    );
+    render(<ProjectMembers members={membersWithOneRoleless} />);
     expect(screen.getByText('Pat Roleless')).toBeInTheDocument();
     expect(screen.getByText('No role assigned')).toBeVisible();
   });

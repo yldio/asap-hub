@@ -42,16 +42,14 @@ describe('ProjectMemberCard', () => {
 
   it('italicises "No role assigned" so it reads as missing data', () => {
     const memberWithoutRole = { ...mockMember, roles: [] };
-    render(
-      <ProjectMemberCard member={memberWithoutRole} showTeamInfo={false} />,
-    );
+    render(<ProjectMemberCard member={memberWithoutRole} />);
     expect(screen.getByText('No role assigned')).toHaveStyle(
       'font-style: italic',
     );
   });
 
   it('does not render "No role assigned" when the member has a role', () => {
-    render(<ProjectMemberCard member={mockMember} showTeamInfo={false} />);
+    render(<ProjectMemberCard member={mockMember} />);
     expect(screen.queryByText('No role assigned')).not.toBeInTheDocument();
   });
 

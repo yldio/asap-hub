@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Link } from '../atoms';
 import { rem } from '../pixels';
-import { fern, lead } from '../colors';
+import { fern } from '../colors';
 import { GroupedProjectMember } from '../utils';
 import RolesList from './RolesList';
 import UserAvatar from './UserAvatar';

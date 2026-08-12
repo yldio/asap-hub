@@ -67,7 +67,7 @@ const nameStyles = css({
   },
 });
 
-export const externalNameStyles = css([nameStyles, { color: lead.rgb }]);
+const externalNameStyles = css([nameStyles, { color: lead.rgb }]);
 
 const placeholderAvatarStyles = css({
   display: 'inline-flex',

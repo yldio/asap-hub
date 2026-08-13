@@ -55,10 +55,17 @@ const deltaSign: Record<'up' | 'down' | 'none', string> = {
   none: '',
 };
 
+const emptyStackStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: rem(24),
+});
+
 const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
   if (props.variant === 'empty') {
     return (
-      <div css={metricContainerStyles}>
+      <div css={[metricContainerStyles, emptyStackStyles]}>
         <p css={metricLabelStyles}>{props.label}</p>
         <p css={metricLabelStyles}>{props.message}</p>
       </div>

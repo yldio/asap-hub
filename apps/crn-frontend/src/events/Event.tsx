@@ -9,6 +9,7 @@ import {
   getIconForDocumentType,
   NotFoundPage,
   noop,
+  resolveEventThumbnail,
   SpeakerList,
   useDateHasPassed,
   considerEndedAfter,
@@ -105,6 +106,7 @@ const Event: React.FC = () => {
         <PageConstraints>
           <EventPage
             {...event}
+            thumbnail={resolveEventThumbnail(event)}
             hasFinished={hasFinished}
             tags={event.tags.map((tag) => tag.name)}
             backHref={backHref}

@@ -98,6 +98,25 @@ it('renders the speakers list', async () => {
   expect(await findByText('Speakers')).toBeVisible();
 });
 
+it('shows the interest group thumbnail on the legacy event page', async () => {
+  const event = createEventResponse();
+  mockGetEvent.mockResolvedValue({
+    ...event,
+    id,
+    title: 'IG Thumb Event',
+    thumbnail: undefined,
+    interestGroup: {
+      ...event.interestGroup!,
+      thumbnail: 'https://example.com/ig-thumbnail.png',
+    },
+  });
+  const { findByAltText } = render(<Event />, { wrapper });
+  expect(await findByAltText('Thumbnail for "IG Thumb Event"')).toHaveAttribute(
+    'src',
+    'https://example.com/ig-thumbnail.png',
+  );
+});
+
 it('generates the back href', async () => {
   const { findByText } = render(<Event />, { wrapper });
   expect((await findByText(/back/i)).closest('a')).toHaveAttribute(

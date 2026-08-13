@@ -68,11 +68,12 @@ const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
   const { label, value, caption } = props;
 
   if (props.variant === 'delta') {
+    const deltaValue = `${deltaSign[props.direction]}${value}`;
     return (
       <div css={metricContainerStyles}>
         <p css={metricLabelStyles}>{label}</p>
         <div css={deltaRowStyles}>
-          <p css={metricValueStyles}>{`${deltaSign[props.direction]}${value}`}</p>
+          <p css={metricValueStyles}>{deltaValue}</p>
           {props.direction !== 'none' && (
             <span
               css={arrowContainerStyles}

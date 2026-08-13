@@ -79,6 +79,21 @@ describe('compareAttendanceTeams', () => {
     expect(compareAttendanceTeams(a, b)).toBeLessThan(0);
     expect(compareAttendanceTeams(b, a)).toBeGreaterThan(0);
   });
+
+  it('orders numeric-suffixed names naturally (Team 2 before Team 10)', () => {
+    const two: EventAttendanceTeam = {
+      teamId: 't-2',
+      teamName: 'Team 2',
+      attended: true,
+    };
+    const ten: EventAttendanceTeam = {
+      teamId: 't-10',
+      teamName: 'Team 10',
+      attended: true,
+    };
+    expect(compareAttendanceTeams(two, ten)).toBeLessThan(0);
+    expect(compareAttendanceTeams(ten, two)).toBeGreaterThan(0);
+  });
 });
 
 describe('EventAttendance', () => {
@@ -232,13 +247,13 @@ describe('EventAttendance', () => {
     expect(queryByText('View More Attendees')).not.toBeInTheDocument();
   });
 
-  // zero-padded so alphabetical sort order matches numeric order, keeping
-  // Team 10/11/12 as the last three rows once compareAttendanceTeams runs.
+  // Natural (numeric) collation keeps Team 10/11/12 as the last three rows,
+  // so no zero-padding workaround is needed.
   const manyTeams: EventAttendanceTeam[] = Array.from(
     { length: 12 },
     (_, index) => ({
       teamId: `t${index + 1}`,
-      teamName: `Team ${String(index + 1).padStart(2, '0')}`,
+      teamName: `Team ${index + 1}`,
       attended: true,
     }),
   );

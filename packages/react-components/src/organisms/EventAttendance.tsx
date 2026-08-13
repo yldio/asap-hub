@@ -80,15 +80,16 @@ export type EventAttendanceSinceLastEvent = {
   teamsTotal: number;
 };
 
-// Attended teams first, then active before inactive, then alphabetical by
-// name, with teamId as a stable tiebreaker so equal names order deterministically.
+// Attended teams first, then active before inactive, then by name in natural
+// order (numeric collation, so "Team 2" precedes "Team 10"), with teamId as a
+// stable tiebreaker so equal names order deterministically.
 export const compareAttendanceTeams = (
   a: EventAttendanceTeam,
   b: EventAttendanceTeam,
 ): number =>
   Number(b.attended) - Number(a.attended) ||
   Number(!!a.isTeamInactive) - Number(!!b.isTeamInactive) ||
-  a.teamName.localeCompare(b.teamName) ||
+  a.teamName.localeCompare(b.teamName, undefined, { numeric: true }) ||
   a.teamId.localeCompare(b.teamId);
 
 const useHorizontalOverflow = () => {

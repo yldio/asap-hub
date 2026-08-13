@@ -19,7 +19,7 @@ const getJWTCredentials = getJWTCredentialsFactory({
 });
 
 const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events(getEventDataProvider()), logger),
+  syncEventFactory(new Events(getEventDataProvider()), logger, 'crn'),
   getJWTCredentials,
   logger,
 );

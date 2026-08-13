@@ -1,6 +1,6 @@
+import { EventResponse } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src';
-import * as typeNarrowing from '../../src/utils/type-narrowing';
 import { getEventResponse } from '../fixtures/events.fixtures';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { loggerMock as logger } from '../mocks/logger.mock';
@@ -9,78 +9,71 @@ describe('Sync calendar util hook', () => {
   const googleCalendarId = 'google-calendar-id';
   const calendarId = 'calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
-  const syncEvent = syncEventFactory(eventControllerMock, logger);
+  const syncEventWith = (app: 'crn' | 'gp2') => {
+    const sync = syncEventFactory(eventControllerMock, logger, app);
+    return (event: calendarV3.Schema$Event) =>
+      sync(event, googleCalendarId, calendarId, defaultCalendarTimezone);
+  };
+  const syncEvent = syncEventWith('crn');
+  const syncGp2Event = syncEventWith('gp2');
 
-  beforeEach(() => {
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(true);
+  const expectedEvent = (overrides: Record<string, unknown> = {}) => ({
+    googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+    title: 'Event Title',
+    description: 'Event Description',
+    startDate: '2021-02-27T00:00:00.000Z',
+    startDateTimeZone: 'Europe/Lisbon',
+    endDate: '2021-02-28T00:00:00.000Z',
+    endDateTimeZone: 'Europe/Lisbon',
+    status: 'Confirmed',
+    calendar: calendarId,
+    hidden: false,
+    hideMeetingLink: false,
+    recurring: false,
+    ...overrides,
   });
+
+  const existingEventWith = (overrides: Partial<EventResponse> = {}) => ({
+    ...getEventResponse(),
+    id: 'event-id',
+    ...overrides,
+  });
+
+  const cancelledGoogleEvent = () => ({
+    ...getGoogleEvent(),
+    status: 'cancelled',
+  });
+
   afterEach(jest.resetAllMocks);
 
   test('Should create the event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-    await syncEvent(
-      getGoogleEvent(),
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
+    await syncEvent(getGoogleEvent());
 
     expect(eventControllerMock.update).not.toHaveBeenCalled();
     expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.create).toHaveBeenCalledWith({
-      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-      title: 'Event Title',
-      description: 'Event Description',
-      startDate: '2021-02-27T00:00:00.000Z',
-      startDateTimeZone: 'Europe/Lisbon',
-      endDate: '2021-02-28T00:00:00.000Z',
-      endDateTimeZone: 'Europe/Lisbon',
-      status: 'Confirmed',
-      calendar: calendarId,
-      hidden: false,
-      hideMeetingLink: false,
-      recurring: false,
-    });
+    expect(eventControllerMock.create).toHaveBeenCalledWith(expectedEvent());
   });
 
   test('Should create gp2 event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
 
-    await syncEvent(
-      getGoogleEvent(),
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
+    await syncGp2Event(getGoogleEvent());
 
+    const { recurring, ...gp2Event } = expectedEvent();
     expect(eventControllerMock.update).not.toHaveBeenCalled();
     expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.create).toHaveBeenCalledWith({
-      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-      title: 'Event Title',
-      description: 'Event Description',
-      startDate: '2021-02-27T00:00:00.000Z',
-      startDateTimeZone: 'Europe/Lisbon',
-      endDate: '2021-02-28T00:00:00.000Z',
-      endDateTimeZone: 'Europe/Lisbon',
-      status: 'Confirmed',
-      calendar: calendarId,
-      hidden: false,
-      hideMeetingLink: false,
-    });
+    expect(eventControllerMock.create).toHaveBeenCalledWith(gp2Event);
   });
 
   test('Should mark the CRN event as recurring when it belongs to a recurring series', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-    await syncEvent(
-      { ...getGoogleEvent(), recurringEventId: 'recurring-event-id' },
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
+    await syncEvent({
+      ...getGoogleEvent(),
+      recurringEventId: 'recurring-event-id',
+    });
 
     expect(eventControllerMock.create).toHaveBeenCalledWith(
       expect.objectContaining({ recurring: true }),
@@ -89,14 +82,11 @@ describe('Sync calendar util hook', () => {
 
   test('Should not send the recurring flag on gp2 events', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(false);
 
-    await syncEvent(
-      { ...getGoogleEvent(), recurringEventId: 'recurring-event-id' },
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
+    await syncGp2Event({
+      ...getGoogleEvent(),
+      recurringEventId: 'recurring-event-id',
+    });
 
     expect(eventControllerMock.create).toHaveBeenCalledWith(
       expect.not.objectContaining({ recurring: expect.anything() }),
@@ -104,48 +94,25 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should update event when it exists', async () => {
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-      ...getEventResponse(),
-      id: 'event-id',
-    });
-
-    await syncEvent(
-      getGoogleEvent(),
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(
+      existingEventWith(),
     );
+
+    await syncEvent(getGoogleEvent());
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-      title: 'Event Title',
-      description: 'Event Description',
-      startDate: '2021-02-27T00:00:00.000Z',
-      startDateTimeZone: 'Europe/Lisbon',
-      endDate: '2021-02-28T00:00:00.000Z',
-      endDateTimeZone: 'Europe/Lisbon',
-      status: 'Confirmed',
-      calendar: calendarId,
-      hidden: false,
-      hideMeetingLink: false,
-      recurring: false,
-    });
+    expect(eventControllerMock.update).toHaveBeenCalledWith(
+      'event-id',
+      expectedEvent(),
+    );
   });
 
   test('Should NOT update the event if the organiser of the event is different from the current calendar', async () => {
     const googleEvent = getGoogleEvent();
     googleEvent.organizer!.email = 'some-other-organizer';
 
-    await expect(
-      syncEvent(
-        googleEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      ),
-    ).rejects.toThrow('Invalid organiser');
+    await expect(syncEvent(googleEvent)).rejects.toThrow('Invalid organiser');
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).not.toHaveBeenCalled();
@@ -153,397 +120,111 @@ describe('Sync calendar util hook', () => {
 
   describe('Hidden flag', () => {
     test('Should create an event and mark as hidden when the status is cancelled', async () => {
-      const cancelledGoogleEvent = getGoogleEvent();
-      cancelledGoogleEvent.status = 'cancelled';
-
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-      await syncEvent(
-        cancelledGoogleEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
+      await syncEvent(cancelledGoogleEvent());
 
       expect(eventControllerMock.update).not.toHaveBeenCalled();
       expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-      expect(eventControllerMock.create).toHaveBeenCalledWith({
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Cancelled',
-        calendar: 'calendar-id',
-        hidden: true,
-        hideMeetingLink: false,
-        recurring: false,
-      });
-    });
-
-    test('Should update to hidden when the event status changes to cancelled', async () => {
-      const existingEvent = getEventResponse();
-      existingEvent.status = 'Confirmed';
-
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...existingEvent,
-        id: 'event-id',
-      });
-
-      const updatedEvent = getGoogleEvent();
-      updatedEvent.status = 'cancelled';
-
-      await syncEvent(
-        updatedEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
+      expect(eventControllerMock.create).toHaveBeenCalledWith(
+        expectedEvent({ status: 'Cancelled', hidden: true }),
       );
-
-      expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Cancelled',
-        calendar: calendarId,
-        hidden: true,
-        hideMeetingLink: false,
-        recurring: false,
-      });
     });
 
-    test('Should remain hidden when the event status remains cancelled', async () => {
-      const existingEvent = getEventResponse();
-      existingEvent.status = 'Cancelled';
-      existingEvent.hidden = true;
+    test.each`
+      scenario                                   | existing                                      | googleStatus   | expectedStatus | expectedHidden
+      ${'update to hidden when cancelled'}       | ${{ status: 'Confirmed' }}                    | ${'cancelled'} | ${'Cancelled'} | ${true}
+      ${'remain hidden when still cancelled'}    | ${{ status: 'Cancelled', hidden: true }}      | ${'cancelled'} | ${'Cancelled'} | ${true}
+      ${'remain visible when still cancelled'}   | ${{ status: 'Cancelled', hidden: false }}     | ${'cancelled'} | ${'Cancelled'} | ${false}
+      ${'remain visible when hidden is missing'} | ${{ status: 'Cancelled', hidden: undefined }} | ${'cancelled'} | ${'Cancelled'} | ${false}
+      ${'remain hidden on tentative'}            | ${{ status: 'Confirmed', hidden: true }}      | ${'tentative'} | ${'Tentative'} | ${true}
+    `(
+      'Should $scenario',
+      async ({ existing, googleStatus, expectedStatus, expectedHidden }) => {
+        eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(
+          existingEventWith(existing),
+        );
 
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...existingEvent,
+        await syncEvent({ ...getGoogleEvent(), status: googleStatus });
 
-        id: 'event-id',
-      });
-
-      const updatedEvent = getGoogleEvent();
-      updatedEvent.status = 'cancelled';
-
-      await syncEvent(
-        updatedEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
-
-      expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Cancelled',
-        calendar: calendarId,
-        hidden: true,
-        hideMeetingLink: false,
-        recurring: false,
-      });
-    });
-
-    test('Should remain visible (ie not hidden) when the event status remains cancelled', async () => {
-      const existingEvent = getEventResponse();
-      existingEvent.status = 'Cancelled';
-      existingEvent.hidden = false;
-
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...existingEvent,
-        id: 'event-id',
-      });
-
-      const updatedEvent = getGoogleEvent();
-      updatedEvent.status = 'cancelled';
-      await syncEvent(
-        updatedEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
-
-      expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Cancelled',
-        calendar: calendarId,
-        hidden: false,
-        hideMeetingLink: false,
-        recurring: false,
-      });
-    });
-
-    test('Should remain visible (ie not hidden) when the event hidden flag is missing', async () => {
-      const existingEvent = getEventResponse();
-      existingEvent.status = 'Cancelled';
-      delete existingEvent.hidden;
-
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...existingEvent,
-        id: 'event-id',
-      });
-
-      const updatedEvent = getGoogleEvent();
-      updatedEvent.status = 'cancelled';
-      await syncEvent(
-        updatedEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
-
-      expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Cancelled',
-        calendar: calendarId,
-        hidden: false,
-        hideMeetingLink: false,
-        recurring: false,
-      });
-    });
-
-    test('Should remain hidden when the status changes from confirmed to tentative', async () => {
-      const existingEvent = getEventResponse();
-      existingEvent.status = 'Confirmed';
-      existingEvent.hidden = true;
-
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...existingEvent,
-        id: 'event-id',
-      });
-
-      const updatedEvent = getGoogleEvent();
-      updatedEvent.status = 'tentative';
-      await syncEvent(
-        updatedEvent,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
-
-      expect(eventControllerMock.update).toHaveBeenCalledWith('event-id', {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Tentative',
-        calendar: calendarId,
-        hidden: true,
-        hideMeetingLink: false,
-        recurring: false,
-      });
-    });
+        expect(eventControllerMock.update).toHaveBeenCalledWith(
+          'event-id',
+          expectedEvent({ status: expectedStatus, hidden: expectedHidden }),
+        );
+      },
+    );
   });
 
   describe('Hide Meeting Link', () => {
     test('Should create an event and mark the field hideMeetingLink as false', async () => {
-      const event = getGoogleEvent();
-
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-      await syncEvent(
-        event,
-        googleCalendarId,
-        calendarId,
-        defaultCalendarTimezone,
-      );
+      await syncEvent(getGoogleEvent());
 
       expect(eventControllerMock.update).not.toHaveBeenCalled();
       expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-      expect(eventControllerMock.create).toHaveBeenCalledWith({
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Confirmed',
-        calendar: calendarId,
-        hidden: false,
-        hideMeetingLink: false,
-        recurring: false,
-      });
+      expect(eventControllerMock.create).toHaveBeenCalledWith(
+        expectedEvent({ hideMeetingLink: false }),
+      );
     });
   });
 
   describe('Should throw when a remote operation throws', () => {
     test('fetchByGoogleId', async () => {
       eventControllerMock.fetchByGoogleId.mockRejectedValueOnce(new Error());
-      await expect(
-        syncEvent(
-          getGoogleEvent(),
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
+      await expect(syncEvent(getGoogleEvent())).rejects.toThrow();
     });
 
     test('update', async () => {
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-        ...getEventResponse(),
-        id: 'event-id',
-      });
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(
+        existingEventWith(),
+      );
       eventControllerMock.update.mockRejectedValueOnce(new Error());
-      await expect(
-        syncEvent(
-          getGoogleEvent(),
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
+      await expect(syncEvent(getGoogleEvent())).rejects.toThrow();
     });
 
     test('create', async () => {
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
       eventControllerMock.create.mockRejectedValueOnce(new Error());
-      await expect(
-        syncEvent(
-          getGoogleEvent(),
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
+      await expect(syncEvent(getGoogleEvent())).rejects.toThrow();
     });
   });
 
-  test('Should create event - with dateTime', async () => {
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+  test.each`
+    scenario                   | end                                                                        | expectedEndDate               | expectedEndTimeZone
+    ${'with dateTime'}         | ${{ dateTime: '2021-02-27T10:00:00Z', timeZone: 'Europe/London' }}         | ${'2021-02-27T10:00:00.000Z'} | ${'Europe/London'}
+    ${'converts dates to UTC'} | ${{ dateTime: '2040-09-13T13:30:00-04:00', timeZone: 'America/New_York' }} | ${'2040-09-13T17:30:00.000Z'} | ${'America/New_York'}
+  `(
+    'Should create event - $scenario',
+    async ({ end, expectedEndDate, expectedEndTimeZone }) => {
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-    await syncEvent(
-      {
-        ...getGoogleEvent(),
-        end: { dateTime: '2021-02-27T10:00:00Z', timeZone: 'Europe/London' },
-      },
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
+      await syncEvent({ ...getGoogleEvent(), end });
 
-    expect(eventControllerMock.update).not.toHaveBeenCalled();
-    expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.create).toHaveBeenCalledWith({
-      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-      title: 'Event Title',
-      description: 'Event Description',
-      startDate: '2021-02-27T00:00:00.000Z',
-      startDateTimeZone: 'Europe/Lisbon',
-      endDate: '2021-02-27T10:00:00.000Z',
-      endDateTimeZone: 'Europe/London',
-      status: 'Confirmed',
-      calendar: calendarId,
-      hidden: false,
-      hideMeetingLink: false,
-      recurring: false,
-    });
-  });
-
-  test('Should create event - converts dates to UTC', async () => {
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-
-    await syncEvent(
-      {
-        ...getGoogleEvent(),
-        end: {
-          dateTime: '2040-09-13T13:30:00-04:00',
-          timeZone: 'America/New_York',
-        },
-      },
-      googleCalendarId,
-      calendarId,
-      defaultCalendarTimezone,
-    );
-
-    expect(eventControllerMock.update).not.toHaveBeenCalled();
-    expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.create).toHaveBeenCalledWith({
-      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-      title: 'Event Title',
-      description: 'Event Description',
-      startDate: '2021-02-27T00:00:00.000Z',
-      startDateTimeZone: 'Europe/Lisbon',
-      endDate: '2040-09-13T17:30:00.000Z',
-      endDateTimeZone: 'America/New_York',
-      status: 'Confirmed',
-      calendar: calendarId,
-      hidden: false,
-      hideMeetingLink: false,
-      recurring: false,
-    });
-  });
+      expect(eventControllerMock.update).not.toHaveBeenCalled();
+      expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
+      expect(eventControllerMock.create).toHaveBeenCalledWith(
+        expectedEvent({
+          endDate: expectedEndDate,
+          endDateTimeZone: expectedEndTimeZone,
+        }),
+      );
+    },
+  );
 
   describe('Validation test', () => {
-    test('Should reject when validation fails - empty object', async () => {
-      await expect(
-        syncEvent({}, googleCalendarId, calendarId, defaultCalendarTimezone),
-      ).rejects.toThrow();
-    });
-
-    test('Should reject when validation fails - missing fields: id', async () => {
-      await expect(
-        syncEvent(
-          { ...getGoogleEvent(), id: undefined },
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
-    });
-
-    test('Should reject when validation fails - missing dates', async () => {
-      await expect(
-        syncEvent(
-          { ...getGoogleEvent(), start: {}, end: {} },
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
-    });
-
-    test('Should reject when validation fails - bad dates', async () => {
-      await expect(
-        syncEvent(
-          {
-            ...getGoogleEvent(),
-            start: { timeZone: 'notice-no-dates' },
-            end: { timeZone: 'notice-no-dates' },
-          },
-          googleCalendarId,
-          calendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
-    });
+    test.each`
+      scenario                | buildEvent
+      ${'empty object'}       | ${() => ({})}
+      ${'missing fields: id'} | ${() => ({ ...getGoogleEvent(), id: undefined })}
+      ${'missing dates'}      | ${() => ({ ...getGoogleEvent(), start: {}, end: {} })}
+      ${'bad dates'}          | ${() => ({ ...getGoogleEvent(), start: { timeZone: 'notice-no-dates' }, end: { timeZone: 'notice-no-dates' } })}
+    `(
+      'Should reject when validation fails - $scenario',
+      async ({ buildEvent }) => {
+        await expect(syncEvent(buildEvent())).rejects.toThrow();
+      },
+    );
   });
 });
 

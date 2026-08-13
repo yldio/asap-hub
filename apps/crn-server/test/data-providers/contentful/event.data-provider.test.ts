@@ -1082,6 +1082,61 @@ describe('Events Contentful Data Provider', () => {
           },
         });
       });
+
+      it('should map the interest group thumbnail when present', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'ig-linked-from-calendar',
+                },
+                name: 'IG-1',
+                active: true,
+                slack: 'http://www.slack.com/ig1',
+                thumbnail: { url: 'https://example.com/ig-thumbnail.png' },
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.interestGroup!.thumbnail).toEqual(
+          'https://example.com/ig-thumbnail.png',
+        );
+      });
+
+      it('should leave the interest group thumbnail undefined when absent', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'ig-linked-from-calendar',
+                },
+                name: 'IG-1',
+                active: true,
+                slack: 'http://www.slack.com/ig1',
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.interestGroup!.thumbnail).toBeUndefined();
+      });
     });
   });
 

@@ -8,6 +8,7 @@ export const eventMapper = ({
   ...event
 }: EventResponse) => ({
   ...event,
+  thumbnail: interestGroup?.thumbnail ?? event.thumbnail,
   tags: event.tags.map(({ name }) => name),
   hasSpeakersToBeAnnounced: !!(
     speakers.length === 0 ||

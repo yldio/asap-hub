@@ -28744,7 +28744,7 @@ export type EventsContentFragment = Pick<
               Pick<
                 InterestGroups,
                 'name' | 'active' | 'slack' | 'googleDrive'
-              > & { sys: Pick<Sys, 'id'> }
+              > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
             >
           >;
         }>;
@@ -29200,7 +29200,7 @@ export type FetchEventByIdQuery = {
                   Pick<
                     InterestGroups,
                     'name' | 'active' | 'slack' | 'googleDrive'
-                  > & { sys: Pick<Sys, 'id'> }
+                  > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
                 >
               >;
             }>;
@@ -29829,7 +29829,7 @@ export type FetchEventsQuery = {
                         Pick<
                           InterestGroups,
                           'name' | 'active' | 'slack' | 'googleDrive'
-                        > & { sys: Pick<Sys, 'id'> }
+                        > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
                       >
                     >;
                   }>;
@@ -30548,7 +30548,7 @@ export type FetchEventsByUserIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'> }
+                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
                                   >
                                 >;
                               }>;
@@ -31275,7 +31275,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'> }
+                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
                                   >
                                 >;
                               }>;
@@ -32002,7 +32002,7 @@ export type FetchEventsByTeamIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'> }
+                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
                                   >
                                 >;
                               }>;
@@ -42110,6 +42110,19 @@ export const EventsContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'googleDrive',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'thumbnail' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
                                     },
                                   },
                                 ],

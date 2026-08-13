@@ -80,6 +80,17 @@ export type EventAttendanceSinceLastEvent = {
   teamsTotal: number;
 };
 
+// Attended teams first, then active before inactive, then alphabetical by
+// name, with teamId as a stable tiebreaker so equal names order deterministically.
+export const compareAttendanceTeams = (
+  a: EventAttendanceTeam,
+  b: EventAttendanceTeam,
+): number =>
+  Number(b.attended) - Number(a.attended) ||
+  Number(!!a.isTeamInactive) - Number(!!b.isTeamInactive) ||
+  a.teamName.localeCompare(b.teamName) ||
+  a.teamId.localeCompare(b.teamId);
+
 const useHorizontalOverflow = () => {
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [overflowing, setOverflowing] = useState(false);
@@ -119,8 +130,11 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [tableRef, teamsOverflowing] = useHorizontalOverflow();
-  const hasMoreRows = teams.length > defaultVisibleTeams;
-  const visibleTeams = expanded ? teams : teams.slice(0, defaultVisibleTeams);
+  const sortedTeams = [...teams].sort(compareAttendanceTeams);
+  const hasMoreRows = sortedTeams.length > defaultVisibleTeams;
+  const visibleTeams = expanded
+    ? sortedTeams
+    : sortedTeams.slice(0, defaultVisibleTeams);
   const attendancePercentage =
     teamsTotal > 0 ? Math.round((teamsAttended / teamsTotal) * 100) : 0;
 
@@ -184,11 +198,25 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
         <div css={metricsStyles}>
           <EventAttendanceMetric
             variant="progress"
-            label="Attendance"
+            label="This event"
             value={attendancePercentage}
             caption={`${teamsAttended} of ${teamsTotal} teams`}
           />
-          {sinceLastEvent && (
+          {!sinceLastEvent ? (
+            <EventAttendanceMetric
+              variant="empty"
+              label="Since last event"
+              message="No previous event to compare to."
+            />
+          ) : sinceLastEvent.count === 0 ? (
+            <EventAttendanceMetric
+              variant="delta"
+              direction="none"
+              label="Since last event"
+              value={0}
+              caption={`No change from ${sinceLastEvent.teamsAttended} of ${sinceLastEvent.teamsTotal} teams`}
+            />
+          ) : (
             <EventAttendanceMetric
               variant="delta"
               direction={sinceLastEvent.count < 0 ? 'down' : 'up'}

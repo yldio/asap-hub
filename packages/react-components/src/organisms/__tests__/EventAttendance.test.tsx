@@ -3,7 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
 
 import { rem } from '../../pixels';
-import EventAttendance, { EventAttendanceTeam } from '../EventAttendance';
+import EventAttendance, {
+  compareAttendanceTeams,
+  EventAttendanceTeam,
+} from '../EventAttendance';
 
 globalThis.ResizeObserver = jest.fn(() => ({
   observe: jest.fn(),
@@ -61,11 +64,31 @@ const renderCard = (
     </StaticRouter>,
   );
 
+describe('compareAttendanceTeams', () => {
+  it('breaks ties on equal names with a stable teamId order', () => {
+    const a: EventAttendanceTeam = {
+      teamId: 't-a',
+      teamName: 'Same Name',
+      attended: true,
+    };
+    const b: EventAttendanceTeam = {
+      teamId: 't-b',
+      teamName: 'Same Name',
+      attended: true,
+    };
+    expect(compareAttendanceTeams(a, b)).toBeLessThan(0);
+    expect(compareAttendanceTeams(b, a)).toBeGreaterThan(0);
+  });
+});
+
 describe('EventAttendance', () => {
   it('renders the title and both metric cards', () => {
-    const { getAllByText, getByText } = renderCard();
-    // title + progress metric label both read "Attendance"
-    expect(getAllByText('Attendance').length).toBeGreaterThanOrEqual(1);
+    const { getByRole, getByText } = renderCard();
+    // card title is "Attendance"; left metric label is "This event"
+    expect(
+      getByRole('heading', { level: 3, name: 'Attendance' }),
+    ).toBeVisible();
+    expect(getByText('This event')).toBeVisible();
     expect(getByText('72%')).toBeVisible();
     expect(getByText('18 of 25 teams')).toBeVisible();
     expect(getByText('Since last event')).toBeVisible();
@@ -133,12 +156,40 @@ describe('EventAttendance', () => {
     expect(getByText('- 8')).toBeVisible();
   });
 
-  it('omits the Since last event metric when there is nothing to compare', () => {
-    const { queryByText, queryByLabelText } = renderCard({
+  it('shows the no-previous-event empty state when there is nothing to compare', () => {
+    const { getByText, queryByLabelText } = renderCard({
       sinceLastEvent: undefined,
     });
-    expect(queryByText('Since last event')).not.toBeInTheDocument();
+    expect(getByText('Since last event')).toBeVisible();
+    expect(getByText('No previous event to compare to.')).toBeVisible();
     expect(queryByLabelText('Increase')).not.toBeInTheDocument();
+    expect(queryByLabelText('Decrease')).not.toBeInTheDocument();
+  });
+
+  it('shows the no-change empty state when the delta is zero', () => {
+    const { getByText, queryByLabelText } = renderCard({
+      sinceLastEvent: { count: 0, teamsAttended: 18, teamsTotal: 25 },
+    });
+    expect(getByText('No change from 18 of 25 teams')).toBeVisible();
+    expect(queryByLabelText('Increase')).not.toBeInTheDocument();
+    expect(queryByLabelText('Decrease')).not.toBeInTheDocument();
+  });
+
+  it('orders teams: attended first, then active before inactive, then alphabetical', () => {
+    const orderingTeams: EventAttendanceTeam[] = [
+      { teamId: 'a', teamName: 'Zeta', attended: false },
+      { teamId: 'b', teamName: 'Alpha', attended: true, isTeamInactive: true },
+      { teamId: 'c', teamName: 'Beta', attended: true },
+      { teamId: 'd', teamName: 'Gamma', attended: true },
+      { teamId: 'e', teamName: 'Delta', attended: false, isTeamInactive: true },
+    ];
+    const { getAllByRole } = renderCard({
+      teams: orderingTeams,
+      teamsAttended: 3,
+      teamsTotal: 5,
+    });
+    const names = getAllByRole('link').map((link) => link.textContent);
+    expect(names).toEqual(['Beta', 'Gamma', 'Alpha', 'Zeta', 'Delta']);
   });
 
   it('calls onExport and onEdit when the header buttons are clicked', async () => {
@@ -181,11 +232,13 @@ describe('EventAttendance', () => {
     expect(queryByText('View More Attendees')).not.toBeInTheDocument();
   });
 
+  // zero-padded so alphabetical sort order matches numeric order, keeping
+  // Team 10/11/12 as the last three rows once compareAttendanceTeams runs.
   const manyTeams: EventAttendanceTeam[] = Array.from(
     { length: 12 },
     (_, index) => ({
       teamId: `t${index + 1}`,
-      teamName: `Team ${index + 1}`,
+      teamName: `Team ${String(index + 1).padStart(2, '0')}`,
       attended: true,
     }),
   );

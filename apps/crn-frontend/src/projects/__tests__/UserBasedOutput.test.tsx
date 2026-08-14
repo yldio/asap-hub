@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import type {
+  DiscoveryProjectDetail as DiscoveryProjectDetailType,
   ManuscriptVersionResponse,
   ResearchOutputResponse,
   TraineeProjectDetail as TraineeProjectDetailType,
@@ -100,6 +101,33 @@ const mockProject: TraineeProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
+};
+
+// A Discovery project has no `members` field, so the component cannot build a
+// list of project member ids from it.
+const mockProjectWithoutMembers: DiscoveryProjectDetailType = {
+  id: projectId,
+  title: 'Discovery Project 1',
+  status: 'Active',
+  statusRank: 1,
+  startDate: '2024-01-01',
+  endDate: '2024-06-01',
+  duration: '5 mos',
+  tags: [],
+  projectType: 'Discovery Project',
+  researchTheme: 'Theme One',
+  teamName: 'Discovery Team',
+  teamId: 'team-1',
+  originalGrant: 'Original Grant',
+  originalGrantProposalId: 'proposal-1',
+  contactEmail: 'contact@example.com',
+  fundedTeam: {
+    id: 'team-1',
+    displayName: 'Discovery Team',
+    teamType: 'Discovery Team',
+    researchTheme: 'Theme One',
+    teamDescription: 'Team description',
+  },
 };
 
 const projectMembership = {
@@ -324,6 +352,21 @@ describe('UserBasedOutput', () => {
       const error = await screen.findByText(nonMemberAuthorError);
       expect(error).toBeVisible();
       expect(error.textContent).toContain(nonMember.displayName);
+    });
+
+    // This should never happen, it is here to reach code coverage
+    it('does not restrict authors to project members when the project carries no member list', async () => {
+      mockGetProject.mockResolvedValue(mockProjectWithoutMembers);
+
+      await renderPage();
+
+      expect(
+        screen.queryByText(/Only members of this project can be named/i),
+      ).not.toBeInTheDocument();
+
+      await selectAuthorAndSaveDraft();
+
+      expect(screen.queryByText(nonMemberAuthorError)).not.toBeInTheDocument();
     });
 
     it('rejects every author when the project has no members yet', async () => {

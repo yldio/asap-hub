@@ -378,5 +378,6 @@ export function transformResearchOutputResponseToRequest(
     statusChangedById: statusChangedBy ? statusChangedBy.id : undefined,
     impact: impact?.id,
     categories: categories?.map((category) => category.id),
+    projectId: _project?.id ?? undefined,
   };
 }

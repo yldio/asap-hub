@@ -56,7 +56,7 @@ const fetchUsers = async (environment: Environment) => {
 
 const getSocialFields = (user: Entry) =>
   SOCIAL_FIELDS.reduce<Record<string, Record<string, string>>>((acc, field) => {
-    const value = user.fields[field]?.[LOCALE];
+    const value = user.fields?.[field]?.[LOCALE];
     return value === undefined || value === null || value === ''
       ? acc
       : { ...acc, [field]: { [LOCALE]: value } };

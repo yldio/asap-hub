@@ -10,7 +10,10 @@ const environmentId = process.env.CONTENTFUL_ENV_ID!;
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
-const rateLimiter = new RateLimiter({ tokensPerInterval: 10, interval: 5000 });
+// Each user costs up to 3 calls (get, create/update, publish) against
+// Contentful's 10 requests/second CMA limit.
+const rateLimiter = new RateLimiter({ tokensPerInterval: 3, interval: 1000 });
+const BATCH_SIZE = 10;
 
 const LOCALE = 'en-US';
 const LIMIT = 1000;
@@ -68,20 +71,20 @@ const migrateUserSocials = async () => {
 
   const users = await fetchUsers(environment);
 
+  const usersToMigrate = users
+    .map((user) => ({ user, socialFields: getSocialFields(user) }))
+    .filter(({ socialFields }) => Object.keys(socialFields).length > 0);
+
+  const skipped = users.length - usersToMigrate.length;
   let created = 0;
   let updated = 0;
-  let skipped = 0;
+  let processed = 0;
   const failed: string[] = [];
 
-  for (let index = 0; index < users.length; index += 1) {
-    const user = users[index]!;
-    const socialFields = getSocialFields(user);
-
-    if (!Object.keys(socialFields).length) {
-      skipped += 1;
-      continue;
-    }
-
+  const migrateUser = async ({
+    user,
+    socialFields,
+  }: (typeof usersToMigrate)[number]) => {
     const entryId = socialsEntryId(user.sys.id);
     const fields = {
       ...socialFields,
@@ -109,14 +112,21 @@ const migrateUserSocials = async () => {
       }
 
       await socialsEntry.publish();
-
-      console.log(
-        `[${index + 1}/${users.length}] socials for user ${user.sys.id}`,
-      );
     } catch (error) {
       failed.push(user.sys.id);
       console.log(`Error migrating user ${user.sys.id}: ${error}`);
     }
+
+    processed += 1;
+    console.log(
+      `[${processed}/${usersToMigrate.length}] socials for user ${user.sys.id}`,
+    );
+  };
+
+  for (let index = 0; index < usersToMigrate.length; index += BATCH_SIZE) {
+    await Promise.all(
+      usersToMigrate.slice(index, index + BATCH_SIZE).map(migrateUser),
+    );
   }
 
   console.log(

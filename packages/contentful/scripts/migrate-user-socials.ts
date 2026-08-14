@@ -10,10 +10,11 @@ const environmentId = process.env.CONTENTFUL_ENV_ID!;
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
-// Each user costs up to 3 calls (get, create/update, publish) against
-// Contentful's 10 requests/second CMA limit.
-const rateLimiter = new RateLimiter({ tokensPerInterval: 3, interval: 1000 });
-const BATCH_SIZE = 10;
+// Contentful's CMA allows 10 requests/second; each user costs up to 3
+// (get, create/update, publish), so a token here represents one request.
+const rateLimiter = new RateLimiter({ tokensPerInterval: 7, interval: 1000 });
+const REQUESTS_PER_USER = 3;
+const BATCH_SIZE = 5;
 
 const LOCALE = 'en-US';
 const LIMIT = 1000;
@@ -96,7 +97,7 @@ const migrateUserSocials = async () => {
     };
 
     try {
-      await rateLimiter.removeTokens(1);
+      await rateLimiter.removeTokens(REQUESTS_PER_USER);
 
       let socialsEntry: Entry;
       try {

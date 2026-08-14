@@ -129,4 +129,7 @@ const migrateUserSocials = async () => {
   }
 };
 
-migrateUserSocials().catch(console.error);
+migrateUserSocials().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

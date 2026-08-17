@@ -157,7 +157,6 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly pastEventsCount?: number;
   readonly teamDraftOutputsCount?: number;
   readonly isAsapTeam?: boolean;
-  readonly manuscriptsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -173,7 +172,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
   teamDraftOutputsCount,
   isStaff,
-  manuscriptsCount,
   isAsapTeam = false,
   teamStatus,
   teamType,
@@ -224,11 +222,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <TabLink href={route.about({}).$}>About</TabLink>
             {(tools || isStaff) && (
               <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
-            )}
-            {isAsapTeam && isStaff && (
-              <TabLink href={route.compliance({}).$}>
-                Compliance ({manuscriptsCount})
-              </TabLink>
             )}
             <TabLink href={route.outputs({}).$}>
               Outputs ({teamOutputsCount})

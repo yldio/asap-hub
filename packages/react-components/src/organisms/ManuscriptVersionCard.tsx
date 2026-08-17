@@ -99,22 +99,25 @@ const fileDividerStyles = css({
 
 const dividerStyles = css({
   display: 'block',
-  margin: `${rem(21)} 0`,
+  margin: `${rem(20)} 0`,
 });
 
 const quickCheckContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  marginTop: rem(16),
-  marginBottom: rem(16),
-  gap: rem(32),
+  marginTop: rem(20),
+  marginBottom: rem(36),
+  gap: rem(36),
 });
 
 const quickCheckStyles = css({
-  marginTop: rem(16),
   display: 'flex',
   flexDirection: 'column',
   gap: rem(12),
+});
+
+const quickCheckDetailsStyles = css({
+  color: lead.rgb,
 });
 
 const additionalInformationListStyles = css({
@@ -411,17 +414,18 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     {quickCheckDetails.map(({ field, question }) => (
                       <div css={quickCheckStyles} key={field}>
                         <Subtitle noMargin>{question}</Subtitle>
-                        <span>{version[`${field}Details`]}</span>
+                        {version[field] && (
+                          <Pill accent="gray" noMargin>
+                            {version[field]}
+                          </Pill>
+                        )}
+                        <span css={quickCheckDetailsStyles}>
+                          {version[`${field}Details`]}
+                        </span>
                       </div>
                     ))}
                   </div>
-                  <Button
-                    small
-                    noMargin
-                    onClick={openDiscussionTab}
-                    enabled
-                    overrideStyles={css({ marginTop: rem(16) })}
-                  >
+                  <Button small noMargin onClick={openDiscussionTab} enabled>
                     Open Discussion Tab
                   </Button>
                 </>

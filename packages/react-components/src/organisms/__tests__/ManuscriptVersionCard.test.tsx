@@ -122,6 +122,36 @@ it('displays quick checks when present', async () => {
     ).toBeVisible();
   });
 });
+it.each(['No', 'Not applicable'])(
+  'displays the quick check answer %s alongside its details',
+  async (answer) => {
+    const user = userEvent.setup();
+    const { getByText, getByLabelText } = render(
+      <MemoryRouter>
+        <ManuscriptVersionCard
+          {...props}
+          version={{
+            ...baseVersion,
+            asapAffiliationIncluded: answer,
+            asapAffiliationIncludedDetails: 'Some quick check reason',
+          }}
+        />
+      </MemoryRouter>,
+    );
+    await user.click(getByLabelText('Expand Version'));
+
+    await waitFor(() => {
+      expect(
+        getByText(
+          /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
+        ),
+      ).toBeVisible();
+      expect(getByText(answer)).toBeVisible();
+      expect(getByText('Some quick check reason')).toBeVisible();
+    });
+  },
+);
+
 it('displays createdBy as fallback for updatedBy when updatedBy is well defined', async () => {
   const author = {
     id: 'author-id',

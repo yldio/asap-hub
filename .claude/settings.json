@@ -1,4 +1,31 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(yarn typecheck)",
+      "Bash(yarn lint:*)",
+      "Bash(yarn fix:format)",
+      "Bash(yarn lint:format)",
+      "Bash(yarn test:workspace:*)",
+      "Bash(yarn workspaces list:*)",
+      "Bash(yarn contentful:migration:dryrun:*)",
+      "Bash(yarn contentful:migration:count:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(git stash list)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {

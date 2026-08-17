@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { User } from '@asap-hub/auth';
 import {
   createQueryKeys,
@@ -6,12 +7,14 @@ import {
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { SpeakerGroup } from '@asap-hub/react-components';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
+import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
 
@@ -23,6 +26,14 @@ export const useEventById = (id: string): EventResponse | undefined => {
       nullOnUndefined(async () => getEvent(id, await getAuthorization())),
   });
   return data ?? undefined;
+};
+
+// Reuse the existing useEventById query rather than duplicating the
+// queryKey/queryFn; the event reference is stable between data changes, so the
+// memo only re-runs the transform when the event actually changes.
+export const useEventSpeakerGroups = (id: string): SpeakerGroup[] => {
+  const event = useEventById(id);
+  return useMemo(() => (event ? mapSpeakersToGroups(event) : []), [event]);
 };
 
 export const useQuietRefreshEventById = (id: string) => {

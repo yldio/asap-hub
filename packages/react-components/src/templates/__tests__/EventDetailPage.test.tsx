@@ -253,6 +253,13 @@ it('does not render an attendance node when none is passed', () => {
   expect(screen.queryByText('Attendance Card')).not.toBeInTheDocument();
 });
 
+it('renders the speakers node when passed', () => {
+  renderPage(
+    <EventDetailPage {...props} eventSpeakers={<div>Speakers Card</div>} />,
+  );
+  expect(screen.getByText('Speakers Card')).toBeVisible();
+});
+
 it('renders the footer cta only when the event has not finished', () => {
   const { rerender } = renderPage(
     <EventDetailPage {...props} hasFinished={false} />,

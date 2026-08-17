@@ -3,12 +3,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, renderHook, waitFor } from '@testing-library/react';
 import { Component, ReactNode, Suspense } from 'react';
 
+import { createEventResponse } from '@asap-hub/fixtures';
+
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvent, getEvents } from '../api';
 import {
   eventQueryKeys,
   useEventById,
   useEvents,
+  useEventSpeakerGroups,
   useQuietRefreshEventById,
 } from '../state';
 
@@ -84,6 +87,42 @@ describe('useEventById', () => {
       ).toBeNull(),
     );
     expect(result.current).toBeUndefined();
+  });
+});
+
+describe('useEventSpeakerGroups', () => {
+  it('maps the fetched event into speaker groups', async () => {
+    (getEvent as jest.Mock).mockResolvedValue({
+      ...createEventResponse(),
+      speakers: [
+        {
+          team: { id: 't1', displayName: 'Alpha' },
+          user: { id: 'u1', displayName: 'User u1' },
+          role: 'Chair',
+        },
+      ],
+    });
+
+    const { result } = renderStateHook(() => useEventSpeakerGroups('event-id'));
+
+    await waitFor(() => expect(result.current).toHaveLength(1));
+    expect(result.current[0]).toMatchObject({
+      id: 't1',
+      variant: 'team',
+      teamName: 'Alpha',
+      users: [{ id: 'u1', roles: ['Chair'] }],
+    });
+  });
+
+  it('returns an empty array when the event no longer exists', async () => {
+    (getEvent as jest.Mock).mockResolvedValue(undefined);
+
+    const { result } = renderStateHook(() =>
+      useEventSpeakerGroups('missing-event'),
+    );
+
+    await waitFor(() => expect(getEvent).toHaveBeenCalled());
+    expect(result.current).toEqual([]);
   });
 });
 

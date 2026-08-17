@@ -5,6 +5,7 @@ import {
   eventMapper,
   EventOwner,
   EventPage,
+  EventSpeakers,
   getIconForDocumentType,
   NotFoundPage,
   noop,
@@ -18,7 +19,11 @@ import { EventResponse } from '@asap-hub/model';
 import { events, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 
-import { useEventById, useQuietRefreshEventById } from './state';
+import {
+  useEventById,
+  useEventSpeakerGroups,
+  useQuietRefreshEventById,
+} from './state';
 
 const mapAttendanceTeams = (attendance: EventResponse['attendance'] = []) =>
   attendance.map(({ team, attended }) => ({
@@ -32,6 +37,7 @@ const mapAttendanceTeams = (attendance: EventResponse['attendance'] = []) =>
 const Event: React.FC = () => {
   const { eventId } = useRouteParams(events({}).event);
   const event = useEventById(eventId);
+  const speakerGroups = useEventSpeakerGroups(eventId);
   const refreshEvent = useQuietRefreshEventById(eventId);
   const backHref = useBackHref() ?? events({}).$;
   const { isEnabled } = useFlags();
@@ -82,9 +88,14 @@ const Event: React.FC = () => {
             displayCalendar={displayCalendar}
             eventConversation={<EventConversation {...event} />}
             eventAttendance={attendance}
-          >
-            {!!event.speakers.length && <SpeakerList {...event} />}
-          </EventDetailPage>
+            eventSpeakers={
+              <EventSpeakers
+                groups={speakerGroups}
+                hasFinished={hasFinished}
+                onAddSpeaker={isEventProjectManager ? noop : undefined}
+              />
+            }
+          />
         </Frame>
       );
     }

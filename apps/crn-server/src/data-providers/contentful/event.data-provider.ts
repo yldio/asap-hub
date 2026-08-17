@@ -41,6 +41,7 @@ import {
   EventSpeaker,
   EventSpeakerExternalUserData,
   EventSpeakerUserData,
+  EventPreliminaryDataSharing,
   EventTeamAttendance,
   EventUpdateDataObject,
   FetchEventsOptions,
@@ -441,6 +442,28 @@ export const parseGraphQLAttendance = (
     return list;
   }, []);
 
+type PreliminaryDataSharedItem = NonNullable<
+  NonNullable<EventItem['preliminaryDataSharedCollection']>['items'][number]
+>;
+
+export const parseGraphQLPreliminaryDataShared = (
+  items: PreliminaryDataSharedItem[],
+): EventPreliminaryDataSharing[] =>
+  items.reduce<EventPreliminaryDataSharing[]>(
+    (list, { preliminaryDataShared, team }) => {
+      if (!team) {
+        return list;
+      }
+
+      list.push({
+        team: { id: team.sys.id },
+        shared: !!preliminaryDataShared,
+      });
+      return list;
+    },
+    [],
+  );
+
 export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
   if (!item.calendar) {
     throw new Error(`Event (${item.sys.id}) doesn't have a calendar"`);
@@ -596,6 +619,17 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
           attendance: parseGraphQLAttendance(
             item.attendanceCollection.items.filter(
               (x: AttendanceItem | null): x is AttendanceItem => x !== null,
+            ),
+          ),
+        }
+      : {}),
+    ...(item.preliminaryDataSharedCollection
+      ? {
+          preliminaryDataShared: parseGraphQLPreliminaryDataShared(
+            item.preliminaryDataSharedCollection.items.filter(
+              (
+                x: PreliminaryDataSharedItem | null,
+              ): x is PreliminaryDataSharedItem => x !== null,
             ),
           ),
         }

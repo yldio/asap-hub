@@ -571,6 +571,37 @@ describe('Events Contentful Data Provider', () => {
       });
     });
 
+    describe('Preliminary data shared', () => {
+      test('Should parse preliminary data shared and filter out entries with a null team', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result?.preliminaryDataShared).toEqual([
+          { team: { id: 'team-id-1' }, shared: true },
+          { team: { id: 'team-id-2' }, shared: false },
+        ]);
+      });
+
+      test('Should default preliminaryDataShared to an empty array when the collection has no items', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse.preliminaryDataSharedCollection!.items = [];
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result?.preliminaryDataShared).toEqual([]);
+      });
+
+      test('Should not include preliminaryDataShared on list fetches', async () => {
+        const result = await eventDataProviderMockGraphql.fetch({});
+        expect(result.items[0]).not.toHaveProperty('preliminaryDataShared');
+      });
+    });
+
     describe('Event speakers', () => {
       test('Should remove null speakers from the list', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();

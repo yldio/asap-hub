@@ -184,6 +184,7 @@ export interface DiscussionCreatedReminder extends Reminder {
     | 'Discussion Created by Open Science Member'
     | 'Discussion Created by Grantee';
   data: {
+    manuscriptId: ManuscriptDataObject['id'];
     title: ManuscriptDataObject['title'];
     manuscriptTeams: string;
     userTeams: string;
@@ -198,6 +199,7 @@ export interface DiscussionRepliedToReminder extends Reminder {
     | 'Discussion Replied To by Open Science Member'
     | 'Discussion Replied To by Grantee';
   data: {
+    manuscriptId: ManuscriptDataObject['id'];
     title: ManuscriptDataObject['title'];
     manuscriptTeams: string;
     userTeams: string;

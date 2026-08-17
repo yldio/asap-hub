@@ -295,6 +295,9 @@ export const FETCH_TEAM_PROJECT_MANAGER = gql`
 export const manuscriptsCollectionQueryFragment = gql`
   fragment ManuscriptsCollectionContent on ManuscriptsCollection {
     items {
+      sys {
+        id
+      }
       title
       project {
         sys {

@@ -1,17 +1,15 @@
-import { EventResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentPropsWithRef } from 'react';
 import { components } from 'react-select';
 
-import { MultiSelectOptionsType, Pill } from '../atoms';
+import { Pill } from '../atoms';
 import { formatDateToTimezone } from '../date';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { rem } from '../pixels';
 import { getMultiValueStyles } from '../select';
-import { noop } from '../utils';
+import { noop, ResearchOutputRelatedEventsOption } from '../utils';
 
-export type ResearchOutputRelatedEventsOption = Pick<EventResponse, 'endDate'> &
-  MultiSelectOptionsType;
+export type { ResearchOutputRelatedEventsOption };
 
 type ResearchOutputRelatedEventsCardProps = {
   readonly relatedEvents: ComponentPropsWithRef<

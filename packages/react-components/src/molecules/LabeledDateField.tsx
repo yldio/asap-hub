@@ -18,7 +18,7 @@ type LabeledDateFieldProps = {
   readonly onChange?: (newDate: Date | undefined) => void;
 } & Pick<
   ComponentProps<typeof TextField>,
-  'required' | 'customValidationMessage' | 'getValidationMessage'
+  'required' | 'customValidationMessage' | 'getValidationMessage' | 'onBlur'
 >;
 
 const subtitleStyles = css({

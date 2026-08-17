@@ -1,10 +1,10 @@
 import userEvent from '@testing-library/user-event';
 
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputFlowId, ResearchOutputResponse } from '@asap-hub/model';
 import { screen, waitFor } from '@testing-library/react';
 import {
   defaultAvailableActions,
+  initialResearchOutputData,
   renderPrefilledForm,
 } from '../../test-utils/research-output-form';
 import { mockActErrorsInConsole } from '../../../test-utils';
@@ -15,6 +15,7 @@ describe('ResearchOutputForm confirmation modals', () => {
   let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
   beforeEach(() => {
+    jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
 
     consoleMock = mockActErrorsInConsole();
@@ -22,6 +23,7 @@ describe('ResearchOutputForm confirmation modals', () => {
 
   afterEach(() => {
     consoleMock.mockRestore();
+    jest.restoreAllMocks();
     jest.resetAllMocks();
   });
 
@@ -37,7 +39,7 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('is cancelable', async () => {
       renderFormWithSave({
         flowId: 'team-duplicate',
-        researchOutputData: createResearchOutputResponse(),
+        researchOutputData: initialResearchOutputData,
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
@@ -48,27 +50,21 @@ describe('ResearchOutputForm confirmation modals', () => {
       expect(saveFn).not.toHaveBeenCalled();
     });
 
-    it('is dismissed if there are errors on the form', async () => {
+    it('does not show when the form has validation errors', async () => {
       renderFormWithSave({
         flowId: 'team-add-version',
         researchOutputData: {
-          ...createResearchOutputResponse(),
+          ...initialResearchOutputData,
           link: '',
         },
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
-        screen.getByText(/Publish new version for the whole hub?/i),
+        screen.queryByText(/Publish new version for the whole hub?/i),
+      ).toBeNull();
+      expect(
+        await screen.findByText(/Please enter a valid URL/i),
       ).toBeVisible();
-      await userEvent.click(
-        screen.getByRole('button', { name: /Publish new version/i }),
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByText(/Publish new version for the whole hub?/i),
-        ).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
-      });
     });
   });
 
@@ -78,7 +74,7 @@ describe('ResearchOutputForm confirmation modals', () => {
       async (flowId) => {
         renderFormWithSave({
           flowId: flowId as ResearchOutputFlowId,
-          researchOutputData: createResearchOutputResponse(),
+          researchOutputData: initialResearchOutputData,
         });
         await userEvent.click(
           screen.getByRole('button', { name: /Save Draft/i }),
@@ -95,7 +91,7 @@ describe('ResearchOutputForm confirmation modals', () => {
       async (flowId) => {
         renderFormWithSave({
           flowId: flowId as ResearchOutputFlowId,
-          researchOutputData: createResearchOutputResponse(),
+          researchOutputData: initialResearchOutputData,
         });
         await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
         expect(screen.getByText(/Keep the same description/i)).toBeVisible();
@@ -109,7 +105,7 @@ describe('ResearchOutputForm confirmation modals', () => {
       renderFormWithSave({
         flowId: 'team-edit-published',
         availableActions: { ...defaultAvailableActions, canSaveDraft: false },
-        researchOutputData: createResearchOutputResponse(),
+        researchOutputData: initialResearchOutputData,
         published: true,
       });
       await userEvent.click(screen.getByRole('button', { name: /Save/i }));
@@ -119,7 +115,7 @@ describe('ResearchOutputForm confirmation modals', () => {
     it('does not show on a create flow even with an unchanged description', async () => {
       renderFormWithSave({
         flowId: 'team-create-manual',
-        researchOutputData: createResearchOutputResponse(),
+        researchOutputData: initialResearchOutputData,
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
@@ -129,12 +125,11 @@ describe('ResearchOutputForm confirmation modals', () => {
     });
 
     it('will not reappear once dismissed', async () => {
+      saveFn.mockResolvedValue(undefined);
+
       renderFormWithSave({
         flowId: 'team-duplicate',
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
+        researchOutputData: initialResearchOutputData,
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
@@ -143,7 +138,6 @@ describe('ResearchOutputForm confirmation modals', () => {
       );
       await waitFor(() => {
         expect(screen.queryByText(/Keep the same description/i)).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
@@ -183,12 +177,11 @@ describe('ResearchOutputForm confirmation modals', () => {
     });
 
     it('will not reappear once dismissed', async () => {
+      saveFn.mockResolvedValue(undefined);
+
       renderFormWithSave({
         flowId: 'team-add-version',
-        researchOutputData: {
-          ...createResearchOutputResponse(),
-          link: '',
-        },
+        researchOutputData: initialResearchOutputData,
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
@@ -201,7 +194,6 @@ describe('ResearchOutputForm confirmation modals', () => {
         expect(
           screen.queryByText(/Publish new version for the whole hub?/i),
         ).toBeNull();
-        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
       await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
@@ -230,7 +222,7 @@ describe('ResearchOutputForm confirmation modals', () => {
         flowId: 'team-edit-published',
         availableActions: { ...defaultAvailableActions, canSaveDraft: false },
         published: true,
-        researchOutputData: createResearchOutputResponse(),
+        researchOutputData: initialResearchOutputData,
       });
       await userEvent.click(screen.getByRole('button', { name: /Save/i }));
       expect(

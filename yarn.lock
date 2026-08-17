@@ -1945,6 +1945,7 @@ __metadata:
     eslint-plugin-storybook: "npm:^9.1.13"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
+    react-hook-form: "npm:7.53.2"
     react-router: "npm:7.13.0"
     storybook: "npm:^9.1.13"
     storybook-addon-designs: "npm:6.3.1"

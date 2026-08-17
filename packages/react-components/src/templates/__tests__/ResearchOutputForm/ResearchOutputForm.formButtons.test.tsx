@@ -10,12 +10,14 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
-import { getDefaultProps } from '../../test-utils/research-output-form';
+import {
+  getDefaultProps,
+  initialResearchOutputData,
+} from '../../test-utils/research-output-form';
 import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
@@ -30,6 +32,7 @@ describe('form buttons', () => {
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
+    jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
@@ -231,9 +234,6 @@ describe('form buttons', () => {
 
   describe('save loader', () => {
     it('shows a loader on the Save button while a published output is saving', async () => {
-      const reportValidity = jest
-        .spyOn(HTMLFormElement.prototype, 'reportValidity')
-        .mockReturnValue(true);
       saveFn.mockImplementation(
         () =>
           new Promise(() => {
@@ -245,21 +245,21 @@ describe('form buttons', () => {
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         published: true,
-        researchOutputData: createResearchOutputResponse(),
+        documentType: 'Bioinformatics',
+        researchOutputData: initialResearchOutputData,
       });
 
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-      void userEvent.click(screen.getByRole('button', { name: /Save/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Save/i }));
 
+      await waitFor(() => {
+        expect(saveFn).toHaveBeenCalled();
+      });
       expect(await screen.findByRole('progressbar')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
-      reportValidity.mockRestore();
     });
 
     it('shows a loader on the Save Draft button while a draft is saving', async () => {
-      const reportValidity = jest
-        .spyOn(HTMLFormElement.prototype, 'reportValidity')
-        .mockReturnValue(true);
       saveDraftFn.mockImplementation(
         () =>
           new Promise(() => {
@@ -270,15 +270,20 @@ describe('form buttons', () => {
         canEditResearchOutput: true,
         canPublishResearchOutput: false,
         published: false,
-        researchOutputData: createResearchOutputResponse(),
+        documentType: 'Bioinformatics',
+        researchOutputData: initialResearchOutputData,
       });
 
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-      void userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Save Draft/i }),
+      );
 
+      await waitFor(() => {
+        expect(saveDraftFn).toHaveBeenCalled();
+      });
       expect(await screen.findByRole('progressbar')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
-      reportValidity.mockRestore();
     });
   });
 

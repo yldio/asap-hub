@@ -1,7 +1,8 @@
 import { researchTagsResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputExtraInformationCard } from '@asap-hub/react-components';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { select } from './knobs';
 
@@ -15,11 +16,6 @@ const tagSuggestions = ['A53T', 'Activity assay'];
 const documentType = select('type', researchOutputDocumentTypes, 'Article');
 
 const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
-  isSaving: false,
-  tags: [],
-  methods: [],
-  organisms: [],
-  environments: [],
   tagSuggestions: tagSuggestions.map((suggestion) => ({
     label: suggestion,
     value: suggestion,
@@ -30,9 +26,35 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   showCatalogNumber: documentType === 'Lab Material',
 };
 
+const FormWrapper = ({
+  children,
+  keywords = [],
+}: {
+  children: ReactNode;
+  keywords?: string[];
+}) => {
+  const methods = useForm({
+    defaultValues: {
+      keywords,
+      methods: [],
+      organisms: [],
+      environments: [],
+      usageNotes: '',
+      labCatalogNumber: '',
+      identifier: '',
+      identifierType: undefined,
+    },
+  });
+  return <FormProvider {...methods}>{children}</FormProvider>;
+};
+
 export const Normal = () => (
-  <ResearchOutputExtraInformationCard {...commonProps} />
+  <FormWrapper>
+    <ResearchOutputExtraInformationCard {...commonProps} />
+  </FormWrapper>
 );
 export const Filled = () => (
-  <ResearchOutputExtraInformationCard {...commonProps} tags={tagSuggestions} />
+  <FormWrapper keywords={tagSuggestions}>
+    <ResearchOutputExtraInformationCard {...commonProps} />
+  </FormWrapper>
 );

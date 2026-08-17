@@ -1,23 +1,55 @@
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { ResearchOutputIdentifier } from '../ResearchOutputIdentifier';
+import {
+  getIdentifierValidationRules,
+  ResearchOutputIdentifier,
+} from '../ResearchOutputIdentifier';
 import { mockActErrorsInConsole } from '../../test-utils';
+import { renderWithResearchOutputForm } from '../test-utils/research-output-form';
 
 const props: ComponentProps<typeof ResearchOutputIdentifier> = {
   documentType: 'Article',
 };
 
+describe('getIdentifierValidationRules', () => {
+  it('includes a pattern rule when the identifier type has a regex', () => {
+    const rules = getIdentifierValidationRules(
+      ResearchOutputIdentifierType.DOI,
+    );
+
+    expect(rules.pattern).toEqual(
+      expect.objectContaining({
+        value: expect.any(RegExp),
+        message: expect.stringMatching(/valid DOI/i),
+      }),
+    );
+    expect(rules.pattern?.value.test('10.1234/abc')).toBe(true);
+    expect(rules.pattern?.value.test('not-a-doi')).toBe(false);
+  });
+
+  it('omits the pattern rule when the identifier type has no regex', () => {
+    expect(
+      getIdentifierValidationRules(ResearchOutputIdentifierType.None),
+    ).toEqual({ required: false });
+    expect(
+      getIdentifierValidationRules(ResearchOutputIdentifierType.Empty),
+    ).toEqual({ required: false });
+  });
+});
+
 it('should render Identifier', () => {
-  render(<ResearchOutputIdentifier {...props} />);
+  renderWithResearchOutputForm(<ResearchOutputIdentifier {...props} />);
   expect(
     screen.getByRole('combobox', { name: /Identifier Type/i }),
   ).toBeVisible();
 });
 
 it('should render Identifier info with DOI and RRID', async () => {
-  render(<ResearchOutputIdentifier {...props} documentType={'Lab Material'} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} documentType={'Lab Material'} />,
+  );
   const infoButton = screen.getByRole('button', {
     name: /info/i,
   });
@@ -31,7 +63,9 @@ it('should render Identifier info with DOI and RRID', async () => {
 });
 
 it('should render Identifier info with DOI and Accession Number', async () => {
-  render(<ResearchOutputIdentifier {...props} documentType={'Dataset'} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} documentType={'Dataset'} />,
+  );
   const infoButton = screen.getByRole('button', {
     name: /info/i,
   });
@@ -45,13 +79,7 @@ it('should render Identifier info with DOI and Accession Number', async () => {
 });
 
 it('should reset the identifier to a valid value on entering something unknown', async () => {
-  const setIdentifierType = jest.fn();
-  render(
-    <ResearchOutputIdentifier
-      {...props}
-      setIdentifierType={setIdentifierType}
-    />,
-  );
+  renderWithResearchOutputForm(<ResearchOutputIdentifier {...props} />);
   const combobox = screen.getByRole('combobox', { name: /Identifier Type/i });
   await userEvent.type(combobox, 'UNKNOWN');
   await userEvent.type(combobox, '{Enter}');
@@ -65,13 +93,9 @@ it('should reset the identifier to a valid value on entering something unknown',
   ).toHaveValue('');
 });
 
-it('should set the identifier to the selected value', async () => {
-  const setIdentifierType = jest.fn();
-  render(
-    <ResearchOutputIdentifier
-      {...props}
-      setIdentifierType={setIdentifierType}
-    />,
+it('should set the identifier type form value to the selected value', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} />,
   );
   const combobox = screen.getByRole('combobox', { name: /Identifier Type/i });
   await userEvent.type(combobox, 'DOI');
@@ -84,19 +108,77 @@ it('should set the identifier to the selected value', async () => {
   await userEvent.tab();
 
   await waitFor(() => {
-    expect(setIdentifierType).toHaveBeenCalledWith(
+    expect(methodsRef.current?.getValues('identifierType')).toEqual(
       ResearchOutputIdentifierType.DOI,
     );
   });
 });
 
-it('should show an error when field is required but no input is provided', async () => {
-  render(
-    <ResearchOutputIdentifier
-      {...props}
-      identifierType={ResearchOutputIdentifierType.RRID}
-    />,
+it('should show an error when no identifier type is chosen', async () => {
+  const { findByText } = renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} />,
   );
+
+  await userEvent.click(
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
+  );
+  await userEvent.tab();
+
+  expect(await findByText('Please choose an identifier.')).toBeVisible();
+});
+
+it('should show a pattern validation error for an invalid identifier value', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} />,
+    {
+      defaultValues: {
+        identifierType: ResearchOutputIdentifierType.DOI,
+        identifier: '',
+      },
+    },
+  );
+
+  const textbox = screen.getByRole('textbox', { name: /doi/i });
+  await userEvent.clear(textbox);
+  await userEvent.type(textbox, 'not-a-valid-doi');
+  await userEvent.tab();
+
+  expect(await screen.findByText(/Please enter a valid DOI/i)).toBeVisible();
+  expect(methodsRef.current?.getFieldState('identifier').error?.type).toBe(
+    'pattern',
+  );
+});
+
+it('should clear the identifier when the identifier type changes', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
+    <ResearchOutputIdentifier {...props} />,
+    {
+      defaultValues: {
+        identifierType: ResearchOutputIdentifierType.DOI,
+        identifier: '10.1234',
+      },
+    },
+  );
+
+  const combobox = screen.getByRole('combobox', { name: /Identifier Type/i });
+  await userEvent.type(combobox, 'None');
+  await waitFor(() => {
+    expect(screen.getByRole('option', { name: 'None' })).toBeInTheDocument();
+  });
+  await userEvent.type(combobox, '{Enter}');
+
+  await waitFor(() => {
+    expect(methodsRef.current?.getValues('identifier')).toEqual('');
+  });
+  expect(
+    screen.queryByRole('textbox', { name: /doi/i }),
+  ).not.toBeInTheDocument();
+});
+
+it('should show an error when field is required but no input is provided', async () => {
+  renderWithResearchOutputForm(<ResearchOutputIdentifier {...props} />, {
+    defaultValues: { identifierType: ResearchOutputIdentifierType.RRID },
+  });
   const textbox = screen.getByRole('textbox', { name: /rrid/i });
   await userEvent.click(textbox);
   await userEvent.tab();
@@ -125,53 +207,15 @@ describe.each`
   });
 
   it(`shows ${isValid ? 'no ' : ''}error`, async () => {
-    render(
-      <ResearchOutputIdentifier
-        {...props}
-        identifierType={type}
-        identifier={identifier}
-      />,
-    );
+    renderWithResearchOutputForm(<ResearchOutputIdentifier {...props} />, {
+      defaultValues: { identifierType: type, identifier },
+    });
     const textbox = screen.getByRole('textbox', { name });
     await userEvent.click(textbox);
     await userEvent.tab();
+
     await waitFor(() => {
-      // Always call expect unconditionally - use queryByText to get element or null
-      const errorElement = screen.queryByText(error);
-      // Always assert: verify element presence matches isValid expectation
-      // When isValid is true, errorElement should be null
-      // When isValid is false, errorElement should not be null
-      expect(errorElement === null).toBe(isValid);
-      // Always call expect - verify the opposite is also true
-      expect(errorElement !== null).toBe(!isValid);
+      expect(screen.queryByText(error) === null).toBe(isValid);
     });
-    // After waitFor, always call expect for visibility check
-    const errorElementAfterWait: HTMLElement | null = screen.queryByText(error);
-    // Always call expect - verify presence matches expectation
-    expect(errorElementAfterWait === null).toBe(isValid);
-    expect(errorElementAfterWait !== null).not.toBe(isValid);
-    // Always call expect for visibility - when element exists (invalid case), check it's visible
-    // When element doesn't exist (valid case), the visibility check passes trivially
-    expect(
-      isValid ||
-        (errorElementAfterWait !== null && errorElementAfterWait !== undefined),
-    ).toBeTruthy();
-    // Always check visibility - use queryByText result to check visibility when element exists
-    // Structure so expect is always called unconditionally
-    expect(
-      isValid ||
-        (errorElementAfterWait !== null &&
-          errorElementAfterWait !== undefined &&
-          errorElementAfterWait.closest('body') !== null),
-    ).toBeTruthy();
-    // Always assert visibility using the element from queryByText
-    // For valid case: element is null, so closest check is skipped
-    // For invalid case: element exists and should be in the DOM (visible)
-    expect(
-      isValid ||
-        (errorElementAfterWait !== null &&
-          errorElementAfterWait !== undefined &&
-          errorElementAfterWait.isConnected),
-    ).toBeTruthy();
   });
 });

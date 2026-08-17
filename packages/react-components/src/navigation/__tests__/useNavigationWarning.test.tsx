@@ -446,6 +446,38 @@ describe('useNavigationWarning', () => {
       expect(goSpy).not.toHaveBeenCalled();
     });
 
+    it('keeps the redirect when the page navigated away before shouldBlock became false', async () => {
+      const backSpy = jest.spyOn(window.history, 'back');
+      const initialHref = window.location.href;
+
+      const ToggleComponent = () => {
+        const [shouldBlock, setShouldBlock] = useState(true);
+        useNavigationWarning({ shouldBlock });
+        return (
+          <button
+            onClick={() => {
+              window.history.replaceState(null, '', '/shared-research/42');
+              setShouldBlock(false);
+            }}
+          >
+            Save and redirect
+          </button>
+        );
+      };
+
+      renderWithProviders(<ToggleComponent />);
+
+      backSpy.mockClear();
+
+      await userEvent.click(screen.getByText('Save and redirect'));
+
+      await waitFor(() => {
+        expect(backSpy).not.toHaveBeenCalled();
+      });
+
+      window.history.replaceState(null, '', initialHref);
+    });
+
     it('does not call history.back on unmount when shouldBlock is still true', () => {
       const backSpy = jest.spyOn(window.history, 'back');
 

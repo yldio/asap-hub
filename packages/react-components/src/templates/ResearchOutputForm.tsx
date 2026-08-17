@@ -1,10 +1,9 @@
 import {
-  DecisionOption,
   EventResponse,
   getResearchOutputFlowBehavior,
+  isServerValidationError,
   ResearchOutputDocumentType,
   ResearchOutputFlowId,
-  ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchTagResponse,
@@ -12,18 +11,26 @@ import {
 import { css } from '@emotion/react';
 
 import {
+  InnerToastContext,
   ResearchOutputAvailableActions,
   ResearchOutputPermissions,
 } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
-import equal from 'fast-deep-equal';
-import React, { ComponentProps, useEffect, useState } from 'react';
+import React, {
+  ComponentProps,
+  FormEvent,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Controller, FieldPath, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import { MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { useNavigationWarning } from '../navigation';
 import {
-  Form,
   ResearchOutputConfirmModal,
   ResearchOutputConfirmModalType,
   ResearchOutputExtraInformationCard,
@@ -37,22 +44,17 @@ import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelate
 import { rem } from '../pixels';
 
 import {
-  getDecision,
   getIconForDocumentType,
-  getIdentifierType,
-  getOwnRelatedResearchLinks,
   getPayload,
-  getPublishDate,
-  getSharingStatus,
+  getResearchOutputFormDefaultValues,
   noop,
+  ResearchOutputFormValues,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
 import { SeenModalType } from '../organisms/ResearchOutputConfirmModal';
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
-  | 'serverValidationErrors'
-  | 'clearServerValidationError'
   | 'typeOptions'
   | 'urlRequired'
   | 'getShortDescriptionFromDescription'
@@ -76,9 +78,7 @@ type ResearchOutputFormProps = Pick<
     published: boolean;
     documentType: ResearchOutputDocumentType;
     researchTags: ResearchTagResponse[];
-    selectedTeams: NonNullable<
-      ComponentProps<typeof ResearchOutputContributorsCard>['teams']
-    >;
+    selectedTeams: ResearchOutputFormValues['teams'];
     getRelatedResearchSuggestions?: NonNullable<
       ComponentProps<
         typeof ResearchOutputRelatedResearchCard
@@ -101,6 +101,27 @@ const mainStyles = css({
   padding: defaultPageLayoutPaddingStyle,
 });
 
+const serverErrorMessages: Record<
+  string,
+  { name: FieldPath<ResearchOutputFormValues>; message: string }
+> = {
+  '/title': {
+    name: 'title',
+    message:
+      'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
+  },
+  '/link': {
+    name: 'link',
+    message:
+      'A Research Output with this URL already exists. Please enter a different URL.',
+  },
+};
+
+const formErrorMessage =
+  'There are some errors in the form. Please correct the fields below.';
+const saveErrorMessage =
+  'There was an error and we were unable to save your changes. Please try again.';
+
 const contentStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
@@ -108,6 +129,7 @@ const contentStyles = css({
   justifyContent: 'center',
   gridAutoFlow: 'row',
   rowGap: rem(32),
+  margin: 'auto',
 });
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
@@ -129,8 +151,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getRelatedEventSuggestions,
   getShortDescriptionFromDescription,
   researchTags,
-  serverValidationErrors,
-  clearServerValidationError,
   published,
   permissions,
   versionAction,
@@ -138,6 +158,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   flowId,
   availableActions,
 }) => {
+  const toast = useContext(InnerToastContext);
+  const formRef = useRef<HTMLFormElement>(null);
+
   const navigate = useNavigate();
   const { canPublishResearchOutput } = permissions;
 
@@ -147,111 +170,62 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const showPublishButton = !!canPublishResearchOutput;
 
-  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
-    researchOutputData?.type || undefined,
-  );
-  const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
-    researchOutputData?.title || '',
-  );
-  const [impact, setImpact] = useState<
-    | NonNullable<
-        ComponentProps<typeof ResearchOutputFormSharingCard>['impact']
-      >
-    | undefined
-  >(
-    researchOutputData?.impact &&
-      researchOutputData.impact.id &&
-      researchOutputData.impact.name
-      ? {
-          value: researchOutputData.impact.id,
-          label: researchOutputData.impact.name,
-        }
-      : {
-          value: '',
-          label: '',
-        },
-  );
-
-  const [categories, setCategories] = useState<
-    NonNullable<
-      ComponentProps<typeof ResearchOutputFormSharingCard>['categories']
-    >
-  >(
-    researchOutputData?.categories?.map((category) => ({
-      value: category.id,
-      label: category.name,
-    })) || [],
-  );
-
-  const [labCatalogNumber, setLabCatalogNumber] = useState<
-    ResearchOutputPostRequest['labCatalogNumber']
-  >(researchOutputData?.labCatalogNumber || '');
-  const [labs, setLabs] = useState<
-    NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['labs']>
-  >(
-    researchOutputData?.labs.map((lab) => ({
-      value: lab.id,
-      label: lab.name,
-    })) || [],
-  );
-  const [authors, setAuthors] = useState<
-    NonNullable<
-      ComponentProps<typeof ResearchOutputContributorsCard>['authors']
-    >
-  >(
-    researchOutputData?.authors.map((author) => ({
-      author,
-      value: author.id,
-      label: author.displayName,
-    })) || [],
-  );
-
-  const [teams, setTeams] =
-    useState<
-      NonNullable<
-        ComponentProps<typeof ResearchOutputContributorsCard>['teams']
-      >
-    >(selectedTeams);
-
-  const [relatedResearch, setRelatedResearch] = useState<
-    NonNullable<
-      ComponentProps<
-        typeof ResearchOutputRelatedResearchCard
-      >['relatedResearch']
-    >
-  >(getOwnRelatedResearchLinks(researchOutputData?.relatedResearch));
-
-  const [relatedEvents, setRelatedEvents] = useState<
-    NonNullable<
-      ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
-    >
-  >(
-    (researchOutputData?.relatedEvents ?? []).map(
-      ({ title: label, id, endDate }) => ({
-        value: id,
-        label,
-        endDate,
+  const defaultValues = useMemo(
+    () =>
+      getResearchOutputFormDefaultValues({
+        researchOutputData,
+        selectedTeams,
+        versionAction,
+        documentType,
+        isCreateFlow: behavior.isCreateFlow,
+        descriptionMD:
+          researchOutputData?.descriptionMD ||
+          richTextToMarkdown(researchOutputData?.description),
+        isImportedFromManuscript,
       }),
-    ),
+    [
+      researchOutputData,
+      selectedTeams,
+      versionAction,
+      documentType,
+      behavior.isCreateFlow,
+      isImportedFromManuscript,
+    ],
   );
 
-  const [descriptionMD, setDescription] = useState<
-    ResearchOutputPostRequest['descriptionMD']
-  >(
-    researchOutputData?.descriptionMD ||
-      richTextToMarkdown(researchOutputData?.description),
+  const methods = useForm<ResearchOutputFormValues>({
+    mode: 'all',
+    defaultValues,
+  });
+  const {
+    watch,
+    getValues,
+    control,
+    reset,
+    setError,
+    handleSubmit,
+    formState: { isSubmitting, isDirty },
+  } = methods;
+
+  const [savingAction, setSavingAction] = useState<'draft' | 'publish' | null>(
+    null,
   );
-  const [shortDescription, setShortDescription] = useState<
-    ResearchOutputPostRequest['shortDescription']
-  >(researchOutputData?.shortDescription || '');
+  const isSaving = isSubmitting || savingAction !== null;
 
-  const [layImpactStatement, setLayImpactStatement] = useState<
-    ResearchOutputPostRequest['layImpactStatement']
-  >(researchOutputData?.layImpactStatement || '');
+  const { blockedNavigate } = useNavigationWarning({
+    shouldBlock: isDirty || isSaving,
+  });
 
-  const [changelog, setChangelog] = useState<
-    ResearchOutputPostRequest['changelog']
-  >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
+  const handleCancel = () => {
+    if (window.history.length > 1) {
+      void blockedNavigate(-1);
+    } else {
+      void blockedNavigate('/');
+    }
+  };
+
+  const type = watch('type');
+  const descriptionMD = watch('descriptionMD');
 
   const [alreadySeenModals, setAlreadySeenModals] = useState<
     Set<SeenModalType>
@@ -280,362 +254,264 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     return null;
   };
 
-  const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
-    researchOutputData?.link || '',
-  );
-  const [usageNotes, setUsageNotes] = useState<
-    ResearchOutputPostRequest['usageNotes']
-  >(researchOutputData?.usageNotesMD || researchOutputData?.usageNotes || '');
-  const [asapFunded, setAsapFunded] = useState<DecisionOption>(
-    getDecision(researchOutputData?.asapFunded),
-  );
-
-  const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
-    getDecision(
-      researchOutputData?.usedInPublication,
-      behavior.isCreateFlow ? documentType : undefined,
-    ),
-  );
-
-  const [sharingStatus, setSharingStatus] = useState<
-    ResearchOutputPostRequest['sharingStatus']
-  >(
-    getSharingStatus(
-      researchOutputData?.sharingStatus,
-      behavior.isCreateFlow ? documentType : undefined,
-    ),
-  );
-
-  const [publishDate, setPublishDate] = useState<Date | undefined>(
-    getPublishDate(researchOutputData?.publishDate) || undefined,
-  );
-
-  const [identifierType, setIdentifierType] =
-    useState<ResearchOutputIdentifierType>(
-      getIdentifierType(researchOutputData),
-    );
-  const [identifier, setIdentifier] = useState<string>(
-    researchOutputData?.doi ||
-      researchOutputData?.rrid ||
-      researchOutputData?.accession ||
-      '',
-  );
-
-  const [methods, setMethods] = useState<string[]>(
-    researchOutputData?.methods || [],
-  );
-  const [organisms, setOrganisms] = useState<string[]>(
-    researchOutputData?.organisms || [],
-  );
-  const [environments, setEnvironments] = useState<string[]>(
-    researchOutputData?.environments || [],
-  );
-  const [subtype, setSubtype] = useState<string | undefined>(
-    researchOutputData?.subtype,
-  );
-
-  const [keywords, setKeywords] = useState<string[]>(
-    researchOutputData?.keywords || [],
-  );
-
   const filteredResearchTags =
     type !== undefined
       ? researchTags.filter((d) => d.types?.includes(type))
       : [];
 
-  const currentPayload = getPayload({
-    identifierType,
-    identifier,
-    documentType,
-    link,
-    description: researchOutputData?.description || '',
-    descriptionMD,
-    shortDescription,
-    changelog,
-    title,
-    type,
-    authors,
-    labs,
-    teams,
-    relatedResearch,
-    usageNotes,
-    asapFunded,
-    usedInPublication,
-    sharingStatus,
-    publishDate,
-    labCatalogNumber,
-    methods,
-    organisms,
-    environments,
-    subtype,
-    keywords,
-    published,
-    relatedEvents,
-    impact: (impact as MultiSelectOptionsType)?.value,
-    layImpactStatement,
-    categories: (categories as MultiSelectOptionsType[]).map(
-      (category) => category.value,
-    ),
-  });
-  const [remotePayload, setRemotePayload] = useState(currentPayload);
+  const toPayload = (values: ResearchOutputFormValues) =>
+    getPayload({
+      identifierType: values.identifierType,
+      identifier: values.identifier,
+      documentType,
+      link: values.link,
+      description: researchOutputData?.description || '',
+      descriptionMD: values.descriptionMD,
+      shortDescription: values.shortDescription,
+      changelog: values.changelog,
+      title: values.title,
+      type: values.type || '',
+      authors: values.authors,
+      labs: values.labs,
+      teams: values.teams,
+      relatedResearch: values.relatedResearch,
+      usageNotes: values.usageNotes,
+      asapFunded: values.asapFunded,
+      usedInPublication: values.usedInPublication,
+      sharingStatus: values.sharingStatus,
+      publishDate: values.publishDate,
+      labCatalogNumber: values.labCatalogNumber,
+      methods: values.methods,
+      organisms: values.organisms,
+      environments: values.environments,
+      subtype: values.subtype || undefined,
+      keywords: values.keywords,
+      published,
+      relatedEvents: values.relatedEvents,
+      impact: (values.impact as MultiSelectOptionsType)?.value,
+      layImpactStatement: values.layImpactStatement,
+      categories: (values.categories as MultiSelectOptionsType[]).map(
+        (category) => category.value,
+      ),
+    });
 
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const requestedActionRef = useRef<'draft' | 'publish' | null>(null);
 
-  // Tracks which footer button triggered a direct save so only that button shows
-  // its loader — `isSaving` alone is shared across both save buttons.
-  const [savingAction, setSavingAction] = useState<'draft' | 'publish' | null>(
-    null,
-  );
+  const requestAction = (actionType: 'draft' | 'publish') => {
+    requestedActionRef.current = actionType;
+  };
 
-  useEffect(() => {
-    if (isImportedFromManuscript) {
-      setIdentifierType(ResearchOutputIdentifierType.DOI);
-      setIdentifier(researchOutputData?.doi || '');
+  const withSavingAction = async <T,>(
+    actionType: 'draft' | 'publish',
+    run: () => Promise<T>,
+  ) => {
+    setSavingAction(actionType);
+    try {
+      return await run();
+    } finally {
+      setSavingAction(null);
     }
-  }, [isImportedFromManuscript, researchOutputData?.doi]);
+  };
+
+  const navigateToDetailPage = (id: string, successToastType?: string) => {
+    const detailPageUrl = sharedResearch({}).researchOutput({
+      researchOutputId: id,
+    }).$;
+    const locationState = successToastType
+      ? { toast: successToastType }
+      : undefined;
+
+    void navigate(detailPageUrl, {
+      state: locationState,
+    });
+  };
+
+  const handleAction = async (
+    getModal: () => ResearchOutputConfirmModalType,
+    action: () => Promise<void | ResearchOutputResponse>,
+  ) => {
+    const nextModal = getModal();
+
+    if (nextModal) {
+      setModal(nextModal);
+    } else {
+      await action();
+    }
+  };
+
+  const reportFormError = (message: string) => {
+    const scrollableContainer = formRef.current?.closest('main');
+    if (scrollableContainer) {
+      scrollableContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    toast(message);
+  };
+
+  const applyServerValidationErrors = (error: unknown) => {
+    if (!isServerValidationError(error)) return false;
+
+    const fieldErrors = error.validationErrors.flatMap(
+      ({ instancePath }) => serverErrorMessages[instancePath] ?? [],
+    );
+    fieldErrors.forEach(({ name, message }) =>
+      setError(name, { type: 'server', message }),
+    );
+
+    return fieldErrors.length > 0;
+  };
+
+  const persist = async (
+    action: (
+      output: ResearchOutputPostRequest,
+    ) => Promise<ResearchOutputResponse | void>,
+    successToastType?: string,
+  ) => {
+    const values = getValues();
+
+    let researchOutput;
+    try {
+      researchOutput = await action(toPayload(values));
+    } catch (error) {
+      reportFormError(
+        applyServerValidationErrors(error)
+          ? formErrorMessage
+          : saveErrorMessage,
+      );
+      return undefined;
+    }
+
+    if (!researchOutput) {
+      reportFormError(saveErrorMessage);
+      return undefined;
+    }
+
+    reset(values);
+    navigateToDetailPage(researchOutput.id, successToastType);
+
+    return researchOutput;
+  };
+
+  const saveDraft = () =>
+    withSavingAction('draft', () =>
+      persist(
+        onSaveDraft,
+        !researchOutputData?.id ? 'draftCreated' : undefined,
+      ),
+    );
+
+  const save = () =>
+    withSavingAction('publish', () =>
+      persist(onSave, behavior.publishesOnSave ? 'published' : undefined),
+    );
+
+  const handleSaveDraft = () => handleAction(getDraftModal, saveDraft);
+  const handlePublish = () => handleAction(getPublishModal, save);
+
+  const handleInvalid = () => {
+    reportFormError(formErrorMessage);
+  };
+
+  const handleSubmitConfirmation = async () => {
+    if (requestedActionRef.current === 'draft') {
+      await handleSaveDraft();
+    } else if (requestedActionRef.current === 'publish') {
+      await handlePublish();
+    }
+  };
+
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    void handleSubmit(handleSubmitConfirmation, handleInvalid)(event);
+  };
 
   return (
-    <main css={mainStyles}>
-      <Form<ResearchOutputResponse>
-        toastType="inner"
-        serverErrors={serverValidationErrors}
-        dirty={!equal(remotePayload, currentPayload)}
-      >
-        {({
-          isSaving,
-          getWrappedOnSave,
-          setRedirectOnSave,
-          onCancel: handleCancel,
-        }) => {
-          const navigateToDetailPage = (id: string, toast?: string) => {
-            const detailPageUrl = sharedResearch({}).researchOutput({
-              researchOutputId: id,
-            }).$;
-            const locationState = toast ? { toast } : undefined;
-
-            setRedirectOnSave(detailPageUrl, locationState);
-
-            // Force navigation immediately to prevent React 18 batching from
-            // letting useNavigationWarning cleanup interfere with the redirect.
-            // See https://asaphub.atlassian.net/browse/ASAP-1319
-            void navigate(detailPageUrl, {
-              state: locationState,
-            });
-          };
-
-          const handleAction = async (
-            actionType: 'draft' | 'publish',
-            getModal: () => ResearchOutputConfirmModalType,
-            action: () => Promise<void | ResearchOutputResponse>,
-          ) => {
-            setIsFormSubmitted(true);
-
-            const nextModal = getModal();
-
-            if (nextModal) {
-              setModal(nextModal);
-            } else {
-              setSavingAction(actionType);
-              try {
-                await action();
-              } finally {
-                setSavingAction(null);
+    <FormProvider {...methods}>
+      <form ref={formRef} onSubmit={handleFormSubmit} noValidate>
+        <main css={mainStyles}>
+          {modal && (
+            <ResearchOutputConfirmModal
+              modal={modal}
+              onCancel={() => setModal(null)}
+              save={(draftSave) => (draftSave ? saveDraft() : save())}
+              setAlreadySeenModals={setAlreadySeenModals}
+            />
+          )}
+          <div css={contentStyles} data-flow-id={flowId}>
+            <ResearchOutputFormSharingCard
+              isSaving={isSaving}
+              getImpactSuggestions={getImpactSuggestions}
+              getCategorySuggestions={getCategorySuggestions}
+              getShortDescriptionFromDescription={
+                getShortDescriptionFromDescription
               }
-            }
-          };
-
-          const saveDraft = getWrappedOnSave(async () => {
-            const researchOutput = await onSaveDraft(currentPayload);
-            setRemotePayload(currentPayload);
-
-            if (researchOutput) {
-              navigateToDetailPage(
-                researchOutput.id,
-                !researchOutputData?.id ? 'draftCreated' : undefined,
-              );
-            }
-
-            return researchOutput;
-          });
-
-          const save = getWrappedOnSave(async () => {
-            const researchOutput = await onSave(currentPayload);
-            setRemotePayload(currentPayload);
-
-            if (researchOutput) {
-              navigateToDetailPage(
-                researchOutput.id,
-                behavior.publishesOnSave ? 'published' : undefined,
-              );
-            }
-
-            return researchOutput;
-          });
-
-          const handleSaveDraft = () =>
-            handleAction('draft', getDraftModal, saveDraft);
-          const handlePublish = () =>
-            handleAction('publish', getPublishModal, save);
-
-          return (
-            <>
-              {modal && (
-                <ResearchOutputConfirmModal
-                  modal={modal}
-                  onCancel={() => setModal(null)}
-                  save={(draftSave) => (draftSave ? saveDraft() : save())}
-                  setAlreadySeenModals={setAlreadySeenModals}
-                />
-              )}
-              <div css={contentStyles} data-flow-id={flowId}>
-                <ResearchOutputFormSharingCard
-                  disableImpactAndCategory={
-                    availableActions.disableImpactAndCategory
-                  }
-                  showImpactAndCategory={availableActions.showImpactAndCategory}
-                  isFormSubmitted={isFormSubmitted}
-                  displayChangelog={
-                    availableActions.showChangelogAndVersionHistory
-                  }
-                  serverValidationErrors={serverValidationErrors}
-                  clearServerValidationError={clearServerValidationError}
-                  isSaving={isSaving}
-                  descriptionMD={descriptionMD}
-                  onChangeDescription={setDescription}
-                  shortDescription={shortDescription}
-                  onChangeShortDescription={setShortDescription}
-                  changelog={changelog}
-                  onChangeChangelog={setChangelog}
-                  impact={impact}
-                  onChangeImpact={setImpact}
-                  layImpactStatement={layImpactStatement}
-                  onChangeLayImpactStatement={setLayImpactStatement}
-                  categories={categories}
-                  onChangeCategories={setCategories}
-                  getImpactSuggestions={
-                    getImpactSuggestions as (
-                      searchQuery: string,
-                    ) => Promise<{ label: string; value: string }[]>
-                  }
-                  getCategorySuggestions={getCategorySuggestions}
-                  getShortDescriptionFromDescription={
-                    getShortDescriptionFromDescription
-                  }
-                  title={title}
-                  onChangeTitle={setTitle}
-                  link={link}
-                  onChangeLink={setLink}
-                  type={type}
-                  onChangeType={(newType) => {
-                    setType(newType);
-                    setMethods([]);
-                    setOrganisms([]);
-                    setEnvironments([]);
-                    setSubtype(undefined);
-                    setKeywords([]);
-                  }}
-                  subtype={subtype}
-                  onChangeSubtype={setSubtype}
-                  researchTags={filteredResearchTags}
-                  typeOptions={typeOptions}
-                  urlRequired={urlRequired}
-                  typeDescription="Select the type that matches your output the best."
-                />
-                <ResearchOutputPublishingCard
-                  asapFunded={asapFunded}
-                  onChangeAsapFunded={setAsapFunded}
-                  usedInPublication={usedInPublication}
-                  onChangeUsedInPublication={setUsedInPublication}
-                  sharingStatus={sharingStatus}
-                  onChangeSharingStatus={setSharingStatus}
-                  publishDate={publishDate}
-                  onChangePublishDate={(date) =>
-                    setPublishDate(date ? new Date(date) : undefined)
-                  }
-                  disableDateMadePublic={availableActions.disableDateMadePublic}
-                  disableUsedInPublication={
-                    availableActions.disableUsedInPublication
-                  }
-                  disableNonPublicSharingStatus={
-                    availableActions.disableNonPublicSharingStatus
-                  }
-                />
-                <ResearchOutputExtraInformationCard
-                  documentType={documentType}
-                  isSaving={isSaving}
-                  researchTags={filteredResearchTags}
-                  tagSuggestions={tagSuggestions.map((suggestion) => ({
-                    label: suggestion,
-                    value: suggestion,
-                  }))}
-                  tags={keywords}
-                  onChangeTags={setKeywords}
-                  usageNotes={usageNotes}
-                  onChangeUsageNotes={setUsageNotes}
-                  identifier={identifier}
-                  setIdentifier={setIdentifier}
-                  identifierType={identifierType}
-                  setIdentifierType={setIdentifierType}
-                  labCatalogNumber={labCatalogNumber}
-                  onChangeLabCatalogNumber={setLabCatalogNumber}
-                  methods={methods}
-                  onChangeMethods={setMethods}
-                  organisms={organisms}
-                  onChangeOrganisms={setOrganisms}
-                  environments={environments}
-                  onChangeEnvironments={setEnvironments}
-                  showExtraInformationFields={
-                    availableActions.showExtraInformationFields
-                  }
-                  showCatalogNumber={availableActions.showCatalogNumber}
-                />
-                <ResearchOutputContributorsCard
-                  isSaving={isSaving}
-                  labs={labs}
-                  getLabSuggestions={getLabSuggestions}
-                  onChangeLabs={setLabs}
-                  authors={authors}
-                  getAuthorSuggestions={getAuthorSuggestions}
-                  onChangeAuthors={setAuthors}
-                  teams={teams}
-                  onChangeTeams={setTeams}
-                  getTeamSuggestions={getTeamSuggestions}
-                  isEditMode={!!researchOutputData}
-                  authorsRequired={authorsRequired}
-                />
+              researchTags={filteredResearchTags}
+              typeOptions={typeOptions}
+              urlRequired={urlRequired}
+              {...availableActions}
+            />
+            <ResearchOutputPublishingCard {...availableActions} />
+            <ResearchOutputExtraInformationCard
+              isSaving={isSaving}
+              documentType={documentType}
+              researchTags={filteredResearchTags}
+              tagSuggestions={tagSuggestions.map((suggestion) => ({
+                label: suggestion,
+                value: suggestion,
+              }))}
+              {...availableActions}
+            />
+            <ResearchOutputContributorsCard
+              isSaving={isSaving}
+              getLabSuggestions={getLabSuggestions}
+              getAuthorSuggestions={getAuthorSuggestions}
+              getTeamSuggestions={getTeamSuggestions}
+              isEditMode={!!researchOutputData}
+              authorsRequired={authorsRequired}
+            />
+            <Controller
+              name="relatedResearch"
+              control={control}
+              render={({ field: { value, onChange } }) => (
                 <ResearchOutputRelatedResearchCard<
                   EventResponse['relatedResearch']
                 >
                   isSaving={isSaving}
-                  relatedResearch={relatedResearch}
-                  onChangeRelatedResearch={setRelatedResearch}
+                  relatedResearch={value}
+                  onChangeRelatedResearch={onChange}
                   getRelatedResearchSuggestions={getRelatedResearchSuggestions}
                   getIconForDocumentType={getIconForDocumentType}
                   isEditMode={!!researchOutputData}
                 />
+              )}
+            />
+            <Controller
+              name="relatedEvents"
+              control={control}
+              render={({ field: { value, onChange } }) => (
                 <ResearchOutputRelatedEventsCard
                   getRelatedEventSuggestions={getRelatedEventSuggestions}
                   isSaving={isSaving}
-                  relatedEvents={relatedEvents}
-                  onChangeRelatedEvents={setRelatedEvents}
+                  relatedEvents={value}
+                  onChangeRelatedEvents={onChange}
                   isEditMode={!!researchOutputData}
                 />
-                <ResearchOutputFormActions
-                  savingAction={savingAction}
-                  isSaving={isSaving}
-                  published={published}
-                  showSaveDraftButton={showSaveDraftButton}
-                  showPublishButton={showPublishButton}
-                  onCancel={handleCancel}
-                  onSaveDraft={handleSaveDraft}
-                  onPublish={handlePublish}
-                />
-              </div>
-            </>
-          );
-        }}
-      </Form>
-    </main>
+              )}
+            />
+            <ResearchOutputFormActions
+              isSaving={isSaving}
+              savingAction={savingAction}
+              published={published}
+              showSaveDraftButton={showSaveDraftButton}
+              showPublishButton={showPublishButton}
+              onCancel={handleCancel}
+              onSaveDraft={() => requestAction('draft')}
+              onPublish={() => requestAction('publish')}
+            />
+          </div>
+        </main>
+      </form>
+    </FormProvider>
   );
 };
 

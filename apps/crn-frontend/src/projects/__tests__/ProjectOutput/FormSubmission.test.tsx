@@ -56,6 +56,11 @@ const baseResearchOutput: ResearchOutputResponse = {
   labs: [{ id: 'l0', name: 'Example 1' }],
 };
 
+const findConfirmModalButton = async (name: RegExp) => {
+  await screen.findByText(/for the whole hub\?/i);
+  return screen.getByRole('button', { name });
+};
+
 const mandatoryFields = async (
   {
     link = 'http://example.com',
@@ -129,7 +134,7 @@ const mandatoryFields = async (
         });
       } else {
         await user.click(screen.getByRole('button', { name: /Publish/i }));
-        const button = screen.getByRole('button', { name: /Publish Output/i });
+        const button = await findConfirmModalButton(/Publish Output/i);
         await user.click(button);
         await waitFor(() => {
           expect(button).not.toBeInTheDocument();
@@ -157,7 +162,7 @@ const mandatoryFields = async (
         });
       } else {
         await user.click(screen.getByRole('button', { name: /Publish/i }));
-        const button = screen.getByRole('button', { name: /Publish Output/i });
+        const button = await findConfirmModalButton(/Publish Output/i);
         await user.click(button);
         await waitFor(() => {
           expect(button).toBeEnabled(); // asserts user's still in the form
@@ -525,7 +530,7 @@ it('can publish a new version for an output', async () => {
   });
 
   await user.click(screen.getByRole('button', { name: /Save/i }));
-  const button = screen.getByRole('button', { name: /Publish new version/i });
+  const button = await findConfirmModalButton(/Publish new version/i);
   await user.click(button);
 
   await waitFor(() => {

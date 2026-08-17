@@ -1,6 +1,7 @@
 import {
   convertDecisionToBoolean,
   DecisionOption,
+  EventResponse,
   ResearchOutputDataObject,
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
@@ -10,13 +11,10 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-import { ComponentProps, ComponentPropsWithRef } from 'react';
+import { ComponentPropsWithRef } from 'react';
 import { MultiSelectOptionsType } from '../atoms';
 import { OptionsType } from '../select';
-import { ResearchOutputRelatedEventsCard } from '../organisms';
 import AuthorSelect, { AuthorOption } from '../organisms/AuthorSelect';
-import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
-import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 
 export type getTeamState = {
   team: TeamResponse | undefined;
@@ -27,6 +25,9 @@ export type ResearchOutputOption = {
   documentType: string;
   type?: string;
 } & MultiSelectOptionsType;
+
+export type ResearchOutputRelatedEventsOption = Pick<EventResponse, 'endDate'> &
+  MultiSelectOptionsType;
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -120,29 +121,19 @@ export const getOwnRelatedResearchLinks = (
       documentType: research.documentType,
     })) || [];
 
-export type ResearchOutputPayload = {
+export type ResearchOutputFormValues = {
   identifierType: ResearchOutputIdentifierType;
   identifier: string;
-  documentType: ResearchOutputDocumentType;
   link: ResearchOutputPostRequest['link'];
-  description: ResearchOutputPostRequest['description'];
   descriptionMD: ResearchOutputPostRequest['descriptionMD'];
   shortDescription: ResearchOutputPostRequest['shortDescription'];
   changelog: ResearchOutputPostRequest['changelog'];
   title: ResearchOutputPostRequest['title'];
-  type: ResearchOutputPostRequest['type'] | '';
-  authors: NonNullable<
-    ComponentProps<typeof ResearchOutputContributorsCard>['authors']
-  >;
-  labs: NonNullable<
-    ComponentProps<typeof ResearchOutputContributorsCard>['labs']
-  >;
-  teams: NonNullable<
-    ComponentProps<typeof ResearchOutputContributorsCard>['teams']
-  >;
-  relatedResearch: NonNullable<
-    ComponentProps<typeof ResearchOutputRelatedResearchCard>['relatedResearch']
-  >;
+  type: ResearchOutputPostRequest['type'] | '' | undefined;
+  authors: AuthorOption[];
+  labs: MultiSelectOptionsType[];
+  teams: MultiSelectOptionsType[];
+  relatedResearch: ResearchOutputOption[];
   usageNotes: ResearchOutputPostRequest['usageNotes'];
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
@@ -154,16 +145,118 @@ export type ResearchOutputPayload = {
   environments: string[];
   subtype?: string;
   keywords: string[];
+  relatedEvents: ResearchOutputRelatedEventsOption[];
+  impact: MultiSelectOptionsType;
+  layImpactStatement: ResearchOutputPostRequest['layImpactStatement'];
+  categories: MultiSelectOptionsType[];
+};
+
+export type ResearchOutputPayload = Omit<
+  ResearchOutputFormValues,
+  'impact' | 'categories' | 'type'
+> & {
+  documentType: ResearchOutputDocumentType;
+  description: ResearchOutputPostRequest['description'];
+  type: ResearchOutputPostRequest['type'] | '';
   published: boolean;
-  relatedEvents: NonNullable<
-    ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
-  >;
   impact?: string;
-  layImpactStatement?: string;
   categories?: string[];
   relatedManuscriptVersion?: string;
   relatedManuscript?: string;
 };
+
+export const getResearchOutputFormDefaultValues = ({
+  researchOutputData,
+  selectedTeams,
+  versionAction,
+  documentType,
+  isCreateFlow,
+  descriptionMD,
+  isImportedFromManuscript,
+}: {
+  researchOutputData?: ResearchOutputResponse;
+  selectedTeams: ResearchOutputFormValues['teams'];
+  versionAction?: 'create' | 'edit';
+  documentType: ResearchOutputDocumentType;
+  isCreateFlow: boolean;
+  descriptionMD: ResearchOutputFormValues['descriptionMD'];
+  isImportedFromManuscript?: boolean;
+}): ResearchOutputFormValues => ({
+  type: researchOutputData?.type || undefined,
+  title: researchOutputData?.title || '',
+  impact:
+    researchOutputData?.impact?.id && researchOutputData.impact.name
+      ? {
+          value: researchOutputData.impact.id,
+          label: researchOutputData.impact.name,
+        }
+      : {
+          value: '',
+          label: '',
+        },
+  categories:
+    researchOutputData?.categories?.map((category) => ({
+      value: category.id,
+      label: category.name,
+    })) || [],
+  labCatalogNumber: researchOutputData?.labCatalogNumber || '',
+  labs:
+    researchOutputData?.labs.map((lab) => ({
+      value: lab.id,
+      label: lab.name,
+    })) || [],
+  authors:
+    researchOutputData?.authors.map((author) => ({
+      author,
+      value: author.id,
+      label: author.displayName,
+    })) || [],
+  teams: selectedTeams,
+  relatedResearch: getOwnRelatedResearchLinks(
+    researchOutputData?.relatedResearch,
+  ),
+  relatedEvents: (researchOutputData?.relatedEvents ?? []).map(
+    ({ title: label, id, endDate }) => ({
+      value: id,
+      label,
+      endDate,
+    }),
+  ),
+  descriptionMD,
+  shortDescription: researchOutputData?.shortDescription || '',
+  layImpactStatement: researchOutputData?.layImpactStatement || '',
+  changelog:
+    versionAction === 'create' ? '' : researchOutputData?.changelog || '',
+  link: researchOutputData?.link || '',
+  usageNotes:
+    researchOutputData?.usageNotesMD || researchOutputData?.usageNotes || '',
+  asapFunded: getDecision(researchOutputData?.asapFunded),
+  usedInPublication: getDecision(
+    researchOutputData?.usedInPublication,
+    isCreateFlow ? documentType : undefined,
+  ),
+  sharingStatus: getSharingStatus(
+    researchOutputData?.sharingStatus,
+    isCreateFlow ? documentType : undefined,
+  ),
+  publishDate: getPublishDate(researchOutputData?.publishDate) || undefined,
+  // An output imported from a manuscript is always identified by its DOI, even
+  // when the manuscript version does not carry one yet.
+  identifierType: isImportedFromManuscript
+    ? ResearchOutputIdentifierType.DOI
+    : getIdentifierType(researchOutputData),
+  identifier: isImportedFromManuscript
+    ? researchOutputData?.doi || ''
+    : researchOutputData?.doi ||
+      researchOutputData?.rrid ||
+      researchOutputData?.accession ||
+      '',
+  methods: researchOutputData?.methods || [],
+  organisms: researchOutputData?.organisms || [],
+  environments: researchOutputData?.environments || [],
+  subtype: researchOutputData?.subtype ?? '',
+  keywords: researchOutputData?.keywords || [],
+});
 
 export const getPayload = ({
   identifierType,

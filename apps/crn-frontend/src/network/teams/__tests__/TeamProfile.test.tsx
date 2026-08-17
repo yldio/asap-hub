@@ -641,7 +641,7 @@ describe('Duplicate Output', () => {
     );
     await user.type(screen.getByLabelText(/URL/i), 'http://example.com');
     await user.click(screen.getByText(/save draft/i));
-    await user.click(screen.getByText(/keep and/i));
+    await user.click(await screen.findByText(/keep and/i));
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Copy of Example',

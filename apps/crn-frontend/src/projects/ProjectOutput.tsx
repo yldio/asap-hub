@@ -1,10 +1,8 @@
-import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import {
   ManuscriptVersionResponse,
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchOutputVersion,
-  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   Loading,
@@ -13,7 +11,6 @@ import {
   OutputVersions,
   ResearchOutputForm,
   Toast,
-  usePrevious,
 } from '@asap-hub/react-components';
 import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
 import {
@@ -21,7 +18,7 @@ import {
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import OutputPageShell from '../shared-research/OutputPageShell';
 import ManuscriptOutputSelectionScreen from '../shared-research/ManuscriptOutputSelectionScreen';
@@ -36,7 +33,6 @@ import {
 } from '../shared-research/util';
 import { useResearchOutputPermissions } from '../shared-research/state';
 import {
-  handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useCategorySuggestions,
@@ -49,6 +45,7 @@ import {
   useRelatedResearchSuggestions,
   useResearchTags,
   useTeamSuggestions,
+  toServerValidationError,
 } from '../shared-state';
 import { useTeamById } from '../network/teams/state';
 
@@ -83,14 +80,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
     );
 
   const [manuscriptImport, setManuscriptImport] = useState<ManuscriptImport>();
-  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-  const previousErrors = usePrevious(errors);
-
-  useEffect(() => {
-    if (previousErrors && previousErrors.length < errors.length) {
-      window.scrollTo(0, 0);
-    }
-  }, [errors, previousErrors]);
 
   const isNewManuscriptVersion = isAddingVersionOfManuscriptOutput({
     versionAction: versionActionProp,
@@ -256,10 +245,6 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
         getRelatedResearchSuggestions={getRelatedResearchSuggestions}
         getRelatedEventSuggestions={getRelatedEventSuggestions}
         researchTags={researchTags}
-        serverValidationErrors={errors}
-        clearServerValidationError={(instancePath: string) =>
-          setErrors(clearAjvErrorForPath(errors, instancePath))
-        }
         researchOutputData={researchOutput}
         typeOptions={Array.from(researchOutputDocumentTypeToType[documentType])}
         urlRequired={documentType !== 'Lab Material'}
@@ -285,14 +270,14 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
                     : researchOutput.relatedManuscriptVersion,
                 statusChangedById: researchOutput.statusChangedBy?.id,
                 isInReview: researchOutput.isInReview,
-              }).catch(handleError(['/link', '/title'], setErrors))
+              }).catch(toServerValidationError(['/link', '/title']))
             : createResearchOutput({
                 ...output,
                 published: true,
                 relatedManuscriptVersion:
                   researchOutput?.relatedManuscriptVersion,
                 relatedManuscript: researchOutput?.relatedManuscript,
-              }).catch(handleError(['/link', '/title'], setErrors))
+              }).catch(toServerValidationError(['/link', '/title']))
         }
         onSaveDraft={(output) =>
           researchOutput?.id
@@ -301,11 +286,11 @@ const ProjectOutput: React.FC<ProjectOutputProps> = ({
                 published: false,
                 statusChangedById: researchOutput.statusChangedBy?.id,
                 isInReview: researchOutput.isInReview,
-              }).catch(handleError(['/link', '/title'], setErrors))
+              }).catch(toServerValidationError(['/link', '/title']))
             : createResearchOutput({
                 ...output,
                 published: false,
-              }).catch(handleError(['/link', '/title'], setErrors))
+              }).catch(toServerValidationError(['/link', '/title']))
         }
         flowId={flowId}
         availableActions={availableActions}

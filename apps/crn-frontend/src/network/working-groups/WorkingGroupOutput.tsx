@@ -1,9 +1,8 @@
-import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchOutputVersion,
-  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
@@ -22,7 +21,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { resolveResearchOutputFlowId } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
-  handleError,
+  toServerValidationError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useGeneratedContent,
@@ -61,21 +60,15 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const workingGroup = useWorkingGroupById(workingGroupId);
 
-  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-  const previousErrors = usePrevious(errors);
-
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
 
   useEffect(() => {
-    if (
-      toastNode !== previousToast ||
-      (previousErrors && previousErrors?.length < errors.length)
-    ) {
+    if (toastNode !== previousToast) {
       window.scrollTo(0, 0);
     }
-  }, [toastNode, errors.length, previousErrors, previousToast]);
+  }, [toastNode, previousToast]);
 
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();
@@ -184,10 +177,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             }
             getRelatedEventSuggestions={getRelatedEventSuggestions}
             researchTags={researchTags}
-            serverValidationErrors={errors}
-            clearServerValidationError={(instancePath: string) =>
-              setErrors(clearAjvErrorForPath(errors, instancePath))
-            }
             researchOutputData={researchOutputData}
             typeOptions={Array.from(
               researchOutputDocumentTypeToType[documentType],
@@ -210,12 +199,12 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     createVersion: versionAction === 'create',
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
-                  }).catch(handleError(['/link', '/title'], setErrors))
+                  }).catch(toServerValidationError(['/link', '/title']))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
-                  }).catch(handleError(['/link', '/title'], setErrors))
+                  }).catch(toServerValidationError(['/link', '/title']))
             }
             onSaveDraft={(output) =>
               researchOutputData?.id
@@ -225,12 +214,12 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     published: false,
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
-                  }).catch(handleError(['/link', '/title'], setErrors))
+                  }).catch(toServerValidationError(['/link', '/title']))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
-                  }).catch(handleError(['/link', '/title'], setErrors))
+                  }).catch(toServerValidationError(['/link', '/title']))
             }
             flowId={flowId}
             availableActions={availableActions}

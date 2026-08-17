@@ -22,3 +22,18 @@ export const isValidationErrorResponse = (
   error: ErrorResponse,
 ): error is ValidationErrorResponse =>
   error.message.startsWith(VALIDATION_ERROR_MESSAGE);
+
+export class ServerValidationError extends Error {
+  readonly validationErrors: ValidationErrorResponse['data'];
+
+  constructor(validationErrors: ValidationErrorResponse['data']) {
+    super(VALIDATION_ERROR_MESSAGE);
+    this.name = 'ServerValidationError';
+    this.validationErrors = validationErrors;
+  }
+}
+
+export const isServerValidationError = (
+  error: unknown,
+): error is ServerValidationError =>
+  error instanceof Error && error.name === 'ServerValidationError';

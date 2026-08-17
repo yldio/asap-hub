@@ -3,18 +3,14 @@ import {
   researchTagMethodResponse,
   researchTagOrganismResponse,
 } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import ResearchOutputExtraInformationCard from '../ResearchOutputExtraInformationCard';
+import { renderWithResearchOutputForm } from '../test-utils/research-output-form';
 
 const props: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
-  isSaving: false,
   tagSuggestions: [],
-  tags: [],
-  methods: [],
-  organisms: [],
-  environments: [],
   documentType: 'Article',
   researchTags: [],
   showExtraInformationFields: true,
@@ -22,44 +18,45 @@ const props: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
 };
 
 it('should render a tag', async () => {
-  render(<ResearchOutputExtraInformationCard {...props} tags={['example']} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputExtraInformationCard {...props} />,
+    { defaultValues: { keywords: ['example'] } },
+  );
   expect(screen.getByText(/example/i)).toBeVisible();
 });
 
-it('should trigger an onChange event when a tag is selected', async () => {
-  const mockOnChange = jest.fn();
-  render(
+it('should update form value when a tag is selected', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
       tagSuggestions={[{ label: 'Example', value: 'Example' }]}
-      onChangeTags={mockOnChange}
     />,
   );
   await userEvent.click(screen.getByLabelText(/keyword/i));
   await userEvent.click(screen.getByText('Example'));
-  expect(mockOnChange).toHaveBeenCalledWith(['Example']);
+  expect(methodsRef.current?.getValues('keywords')).toEqual(['Example']);
 });
 
-it('should trigger an onChange event when a text is being typed into access instructions', async () => {
-  const mockOnChange = jest.fn();
-  render(
+it('should update form value when a text is being typed into access instructions', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
-      usageNotes="access-instructions-value"
-      onChangeUsageNotes={mockOnChange}
       showExtraInformationFields
     />,
+    { defaultValues: { usageNotes: 'access-instructions-value' } },
   );
 
   expect(screen.getByText('access-instructions-value')).toBeVisible();
 
   const input = screen.getByRole('textbox', { name: /usage notes/i });
   await userEvent.type(input, 't');
-  expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
+  expect(methodsRef.current?.getValues('usageNotes')).toEqual(
+    'access-instructions-valuet',
+  );
 });
 
 it('should show lab catalogue number when showCatalogNumber is true', async () => {
-  const { rerender } = render(
+  const { rerender } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard {...props} showCatalogNumber={false} />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeNull();
@@ -75,7 +72,7 @@ it('should show lab catalogue number when showCatalogNumber is true', async () =
 });
 
 it('should show the identifier section when showExtraInformationFields is true', async () => {
-  const { rerender } = render(
+  const { rerender } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
       showExtraInformationFields={false}
@@ -100,17 +97,17 @@ it('should show the identifier section when showExtraInformationFields is true',
 });
 
 it('should hide methods when there is no suggestions', async () => {
-  render(<ResearchOutputExtraInformationCard {...props} methods={[]} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputExtraInformationCard {...props} />,
+  );
   expect(screen.queryByLabelText(/Methods/i)).toBeNull();
 });
 
-it('should trigger an onChange event when a method is selected', async () => {
-  const mockOnChange = jest.fn();
-  render(
+it('should update form value when a method is selected', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
       researchTags={[researchTagMethodResponse]}
-      onChangeMethods={mockOnChange}
     />,
   );
 
@@ -118,21 +115,21 @@ it('should trigger an onChange event when a method is selected', async () => {
 
   await userEvent.click(screen.getByLabelText(/method/i));
   await userEvent.click(screen.getByText('ELISA'));
-  expect(mockOnChange).toHaveBeenCalledWith(['ELISA']);
+  expect(methodsRef.current?.getValues('methods')).toEqual(['ELISA']);
 });
 
 it('should hide organisms when there is no suggestions', async () => {
-  render(<ResearchOutputExtraInformationCard {...props} organisms={[]} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputExtraInformationCard {...props} />,
+  );
   expect(screen.queryByLabelText(/Organisms/i)).toBeNull();
 });
 
-it('should trigger an onChange event when an organism is selected', async () => {
-  const mockOnChange = jest.fn();
-  render(
+it('should update form value when an organism is selected', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
       researchTags={[researchTagOrganismResponse]}
-      onChangeOrganisms={mockOnChange}
     />,
   );
 
@@ -140,21 +137,21 @@ it('should trigger an onChange event when an organism is selected', async () => 
 
   await userEvent.click(screen.getByLabelText(/organisms/i));
   await userEvent.click(screen.getByText('Rat'));
-  expect(mockOnChange).toHaveBeenCalledWith(['Rat']);
+  expect(methodsRef.current?.getValues('organisms')).toEqual(['Rat']);
 });
 
 it('should hide environments when there is no suggestions', async () => {
-  render(<ResearchOutputExtraInformationCard {...props} environments={[]} />);
+  renderWithResearchOutputForm(
+    <ResearchOutputExtraInformationCard {...props} />,
+  );
   expect(screen.queryByLabelText(/environments/i)).toBeNull();
 });
 
-it('should trigger an onChange event when an environment is selected', async () => {
-  const mockOnChange = jest.fn();
-  render(
+it('should update form value when an environment is selected', async () => {
+  const { methodsRef } = renderWithResearchOutputForm(
     <ResearchOutputExtraInformationCard
       {...props}
       researchTags={[researchTagEnvironmentResponse]}
-      onChangeEnvironments={mockOnChange}
     />,
   );
 
@@ -162,5 +159,5 @@ it('should trigger an onChange event when an environment is selected', async () 
 
   await userEvent.click(screen.getByLabelText(/environments/i));
   await userEvent.click(screen.getByText('In Vitro'));
-  expect(mockOnChange).toHaveBeenCalledWith(['In Vitro']);
+  expect(methodsRef.current?.getValues('environments')).toEqual(['In Vitro']);
 });

@@ -13,7 +13,7 @@ import {
   ResearchThemeResponse,
   ResearchThemeType,
   ResourceTypeResponse,
-  ValidationErrorResponse,
+  ServerValidationError,
 } from '@asap-hub/model';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuthorization } from '../auth/useAuthorization';
@@ -59,20 +59,20 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
   }
 }
 
-export const handleError =
-  (
-    supportedErrors: string[],
-    setErrors: (errors: ValidationErrorResponse['data']) => void,
-  ) =>
-  (error: unknown) => {
+/**
+ * Translates a backend validation response into a `ServerValidationError` so the
+ * form can surface it through the same path as its own field validation.
+ */
+export const toServerValidationError =
+  (supportedErrors: string[]) =>
+  (error: unknown): never => {
     if (error instanceof BackendError) {
       const { response } = error;
       if (
         isValidationErrorResponse(response) &&
         validationErrorsAreSupported(response, supportedErrors)
       ) {
-        setErrors(response.data);
-        return;
+        throw new ServerValidationError(response.data);
       }
     }
     throw error;

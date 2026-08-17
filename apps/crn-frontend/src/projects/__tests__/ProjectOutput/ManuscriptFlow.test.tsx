@@ -232,8 +232,12 @@ const clickImport = async (pill = MANUSCRIPT_PILL) => {
   await user.click(screen.getByRole('button', { name: /import/i }));
 };
 
-const onTheForm = () =>
-  screen.findByRole('heading', { name: 'What are you sharing?' });
+const onTheForm = () => screen.findByText('What are you sharing?');
+
+const findConfirmModalButton = async (name: RegExp) => {
+  await screen.findByText(/for the whole hub\?/i);
+  return screen.getByRole('button', { name });
+};
 
 const versionHistory = () => screen.queryByText('#1');
 
@@ -522,7 +526,7 @@ describe('what reaches the API', () => {
     });
 
     await user.click(screen.getByRole('button', { name: /Publish/i }));
-    await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await user.click(await findConfirmModalButton(/Publish Output/i));
 
     await waitFor(() =>
       expect(mockCreateResearchOutput).toHaveBeenCalledWith(
@@ -584,9 +588,7 @@ describe('what reaches the API', () => {
     });
     await fillPublishableFields();
     await user.click(screen.getByRole('button', { name: /Publish/i }));
-    await user.click(
-      screen.getByRole('button', { name: /Publish new version/i }),
-    );
+    await user.click(await findConfirmModalButton(/Publish new version/i));
 
     await waitFor(() =>
       expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -619,7 +621,7 @@ describe('what reaches the API', () => {
       target: { value: '2022-03-24' },
     });
     await user.click(screen.getByRole('button', { name: /Publish/i }));
-    await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await user.click(await findConfirmModalButton(/Publish Output/i));
 
     await waitFor(() =>
       expect(mockCreateResearchOutput).toHaveBeenCalledWith(
@@ -638,7 +640,9 @@ describe('what reaches the API', () => {
     mockCreateResearchOutput.mockRejectedValueOnce(new Error('server said no'));
     mockGetManuscriptVersions.mockResolvedValue({
       total: 1,
-      items: [preprintVersion()],
+      // Preprints take their date made public from preprintDate, which is
+      // required to publish: without it the form never reaches the server.
+      items: [preprintVersion({ preprintDate: '2024-01-01T00:00:00.000Z' })],
     });
 
     await renderPage();
@@ -648,7 +652,7 @@ describe('what reaches the API', () => {
     const user = userEvent.setup({ delay: null });
 
     await user.click(screen.getByRole('button', { name: /Publish/i }));
-    await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await user.click(await findConfirmModalButton(/Publish Output/i));
 
     expect(
       screen.getByRole('heading', { name: 'What are you sharing?' }),
@@ -720,8 +724,9 @@ describe('data wired into the page', () => {
       screen.getByRole('combobox', { name: /Related Outputs/i }),
     );
 
+    await screen.findByText(/An Unrelated Output/i);
     expect(
-      await screen.findByRole('option', { name: /An Unrelated Output/i }),
+      screen.getByRole('option', { name: /An Unrelated Output/i }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole('option', { name: /Auto Created Preprint/i }),
@@ -786,9 +791,7 @@ describe('adding a version to an output that tracks a manuscript', () => {
       target: { value: 'importing new version' },
     });
     await user.click(screen.getByRole('button', { name: /Save/i }));
-    await user.click(
-      screen.getByRole('button', { name: /Publish new version/i }),
-    );
+    await user.click(await findConfirmModalButton(/Publish new version/i));
 
     await waitFor(() =>
       expect(mockUpdateResearchOutput).toHaveBeenCalledWith(

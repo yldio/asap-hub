@@ -721,7 +721,7 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
     manuscriptsCollection: {
       items: [
         {
-          ...getContentfulReminderManuscriptCollectionItem(),
+          ...getContentfulReminderManuscriptCollectionItem()!,
         },
       ],
     },
@@ -749,7 +749,7 @@ const getReminderMessageCollectionItem = (): NonNullable<
             manuscriptsCollection: {
               items: [
                 {
-                  ...getContentfulReminderManuscriptCollectionItem(),
+                  ...getContentfulReminderManuscriptCollectionItem()!,
                 },
               ],
             },
@@ -813,6 +813,7 @@ export const getDiscussionStartedByGranteeReminder =
     entity: 'Discussion',
     type: 'Discussion Created by Grantee',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
@@ -827,6 +828,7 @@ export const getDiscussionStartedByOpenScienceMemberReminder =
     entity: 'Discussion',
     type: 'Discussion Created by Open Science Member',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
@@ -841,6 +843,7 @@ export const getDiscussionRepliedToByGranteeReminder =
     entity: 'Discussion',
     type: 'Discussion Replied To by Grantee',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
@@ -855,6 +858,7 @@ export const getDiscussionRepliedToByOpenScienceMemberReminder =
     entity: 'Discussion',
     type: 'Discussion Replied To by Open Science Member',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',

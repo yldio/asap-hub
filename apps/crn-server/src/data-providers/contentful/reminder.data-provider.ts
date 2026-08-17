@@ -1492,6 +1492,7 @@ const createDiscussionCreatedReminder = (
         ? 'Discussion Created by Grantee'
         : 'Discussion Created by Open Science Member',
     data: {
+      manuscriptId: manuscript?.sys.id || '',
       title: manuscript?.title || '',
       manuscriptTeams,
       createdBy: `${discussion.message.createdBy.firstName} ${discussion.message.createdBy.lastName}`,
@@ -1531,6 +1532,7 @@ const createDiscussionRepliedToReminder = (
         ? 'Discussion Replied To by Grantee'
         : 'Discussion Replied To by Open Science Member',
     data: {
+      manuscriptId: manuscript?.sys.id || '',
       title: manuscript?.title || '',
       manuscriptTeams,
       userTeams: getTeamNames(userTeams),

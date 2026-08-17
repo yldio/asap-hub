@@ -4,9 +4,10 @@ import {
   createWorkingGroupMembers,
   createWorkingGroupPointOfContact,
 } from '@asap-hub/fixtures';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { dashboard, network } from '@asap-hub/routing';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
 
@@ -25,10 +26,10 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
 };
 
 it('renders the title', () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <WorkingGroupHeader {...baseProps} title="A test group" />,
   );
-  expect(getByText('A test group')).toBeVisible();
+  expect(getByRole('heading', { name: 'A test group' })).toBeVisible();
 });
 
 it('renders CTA when pointOfContact is provided', () => {
@@ -188,4 +189,20 @@ it('renders the provided number of draft research outputs', () => {
     />,
   );
   expect(getByText('Draft Outputs (4)')).toBeVisible();
+});
+
+it('renders breadcrumbs to the working groups list', () => {
+  render(<WorkingGroupHeader {...baseProps} title="A test group" />);
+
+  const breadcrumbs = within(
+    screen.getByRole('navigation', { name: 'breadcrumbs' }),
+  );
+  expect(breadcrumbs.getByRole('link', { name: 'Home' })).toHaveAttribute(
+    'href',
+    dashboard({}).$,
+  );
+  expect(
+    breadcrumbs.getByRole('link', { name: 'Working Groups' }),
+  ).toHaveAttribute('href', network({}).workingGroups({}).$);
+  expect(breadcrumbs.getByText('A test group')).toBeVisible();
 });

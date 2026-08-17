@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { WorkingGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { dashboard, network } from '@asap-hub/routing';
 import { useContext } from 'react';
 
 import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
@@ -16,6 +16,7 @@ import {
 } from '../atoms';
 import { pine } from '../colors';
 import {
+  Breadcrumbs,
   UserAvatarList,
   TabNav,
   DropdownButton,
@@ -169,6 +170,18 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   return (
     <header>
       <PageInfoContainer
+        breadcrumbs={
+          <Breadcrumbs
+            homeHref={dashboard({}).$}
+            items={[
+              {
+                label: 'Working Groups',
+                href: network({}).workingGroups({}).$,
+              },
+              { label: title },
+            ]}
+          />
+        }
         nav={
           <TabNav>
             <TabLink

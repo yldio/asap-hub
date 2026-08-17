@@ -16,12 +16,12 @@ const baseProps: ComponentProps<typeof WorkingGroupPage> = {
   calendars: [],
 };
 it('renders the header', () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <WorkingGroupPage {...baseProps} title="A test group">
       Tab Content
     </WorkingGroupPage>,
   );
-  expect(getByText('A test group')).toBeVisible();
+  expect(getByRole('heading', { name: 'A test group' })).toBeVisible();
 });
 
 it('renders the children', () => {

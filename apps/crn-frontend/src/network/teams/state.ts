@@ -527,12 +527,16 @@ export const useManuscripts = (
 export const useManuscriptVersionSuggestions = () => {
   const algoliaClient = useAlgolia();
 
-  return (searchQuery: string, teamId?: string) =>
+  return (
+    searchQuery: string,
+    association?: { teamId?: string; projectId?: string },
+  ) =>
     getManuscriptVersions(algoliaClient.client, {
       searchQuery,
       currentPage: null,
       pageSize: 100,
-      teamId,
+      teamId: association?.teamId,
+      projectId: association?.projectId,
     }).then(({ items }) => items);
 };
 

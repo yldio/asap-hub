@@ -1,11 +1,14 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
 import { ReactElement } from 'react';
 import { waitFor } from '@testing-library/dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
-import ResearchOutputContributorsCard from '../ResearchOutputContributorsCard';
+import ResearchOutputContributorsCard, {
+  AuthorRestriction,
+  authorsDescription,
+} from '../ResearchOutputContributorsCard';
 import { renderWithResearchOutputForm } from '../test-utils/research-output-form';
 import { ResearchOutputFormValues } from '../../utils';
 
@@ -18,12 +21,135 @@ const renderContributors = (
     options,
   );
 
+const restrictedTo = (...memberIds: string[]): AuthorRestriction => ({
+  kind: 'project-members',
+  memberIds,
+});
+
 it('renders the contributors card form', async () => {
   const { getByText } = renderContributors(<ResearchOutputContributorsCard />);
   expect(getByText(/Who were the contributors/i)).toBeVisible();
 });
 
 describe('Authors Multiselect', () => {
+  it('describes the teams requirement by default', () => {
+    renderContributors(<ResearchOutputContributorsCard />);
+
+    expect(screen.getByText(authorsDescription.default)).toBeVisible();
+    expect(
+      screen.queryByText(authorsDescription.projectMembersOnly),
+    ).not.toBeInTheDocument();
+  });
+
+  it('describes the project membership requirement when authors are restricted to project members', () => {
+    renderContributors(
+      <ResearchOutputContributorsCard
+        authorRestriction={restrictedTo('member-1')}
+      />,
+    );
+
+    expect(
+      screen.getByText(authorsDescription.projectMembersOnly),
+    ).toBeVisible();
+    expect(
+      screen.queryByText(authorsDescription.default),
+    ).not.toBeInTheDocument();
+  });
+
+  it('rejects authors who are not members of the project', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard
+        authorRestriction={restrictedTo('member-1')}
+      />,
+      {
+        defaultValues: {
+          authors: [
+            { label: 'Member One', value: 'member-1' },
+            { label: 'Outsider', value: 'outsider-1' },
+          ],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    const message = screen.getByText(/are not members of this project/i);
+    expect(message).toBeVisible();
+    expect(message.textContent).toContain('Outsider');
+  });
+
+  it('lists every author who is not a project member', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard
+        authorRestriction={restrictedTo('member-1')}
+      />,
+      {
+        defaultValues: {
+          authors: [
+            { label: 'Member One', value: 'member-1' },
+            { label: 'Outsider One', value: 'outsider-1' },
+            { label: 'Outsider Two', value: 'outsider-2' },
+          ],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    const message = screen.getByText(/are not members of this project/i);
+    expect(message.textContent).toContain('Outsider One');
+    expect(message.textContent).toContain('Outsider Two');
+    expect(message.textContent).not.toContain('Member One');
+  });
+
+  it('accepts authors when they are all members of the project', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard
+        authorRestriction={restrictedTo('member-1', 'member-2')}
+      />,
+      {
+        defaultValues: {
+          authors: [
+            { label: 'Member One', value: 'member-1' },
+            { label: 'Member Two', value: 'member-2' },
+          ],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    expect(
+      screen.queryByText(/are not members of this project/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('accepts any author when there is no restriction', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard authorRestriction={{ kind: 'none' }} />,
+      {
+        defaultValues: {
+          authors: [{ label: 'Outsider', value: 'outsider-1' }],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    expect(
+      screen.queryByText(/are not members of this project/i),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(authorsDescription.default)).toBeVisible();
+  });
+
   it('updates authors form value', async () => {
     const getAuthorSuggestions = jest.fn();
     getAuthorSuggestions.mockResolvedValue([

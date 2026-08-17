@@ -119,6 +119,12 @@ const mockDiscoveryProjectNoContact: DiscoveryProjectDetailType = {
   contactEmail: '',
 };
 
+const mockDiscoveryProjectNoTeamId: DiscoveryProjectDetailType = {
+  ...mockDiscoveryProject,
+  id: 'discovery-no-team',
+  teamId: undefined,
+};
+
 const mockResourceProject: ResourceProjectDetailType = {
   id: 'resource-1',
   title: 'Resource Project 1',
@@ -249,6 +255,7 @@ jest.mock('../state', () => ({
     const map: Record<string, unknown> = {
       'discovery-1': mockDiscoveryProject,
       'discovery-no-contact': mockDiscoveryProjectNoContact,
+      'discovery-no-team': mockDiscoveryProjectNoTeamId,
       'discovery-supplement': mockDiscoveryProjectWithSupplement,
       'resource-1': mockResourceProject,
       'resource-no-contact': mockResourceProjectNoContact,
@@ -838,8 +845,20 @@ describe('DiscoveryProjectDetail - specific', () => {
     expect(lastWorkspaceProps.teamId).toBe('team-1');
   });
 
+  it('renders NotFoundPage when creating output for a team-based project without teamId', async () => {
+    enable('PROJECT_OUTPUTS');
+    await renderProjectDetail(
+      DiscoveryProjectDetail,
+      'discovery',
+      'discovery-no-team',
+      teamBasedMemberUser,
+      'create-output/article',
+    );
+    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+  });
+
   describe('Duplicate Output', () => {
-    const teamResponse = createTeamResponse();
+    const teamResponse = { ...createTeamResponse(), id: 'team-1' };
     const memberUser = {
       id: 'user-team',
       projects: [],
@@ -875,6 +894,11 @@ describe('DiscoveryProjectDetail - specific', () => {
         'Copy of Example',
       );
       expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+      expect(
+        screen.getByText(
+          'Add the contributing authors. Each author must have one of their teams listed in the Teams field.',
+        ),
+      ).toBeVisible();
     });
 
     it('will show a page not found if research output does not exist', async () => {
@@ -911,5 +935,83 @@ describe('ResourceProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('John Member');
+  });
+});
+
+describe('TraineeProjectDetail - specific', () => {
+  describe('Duplicate Output', () => {
+    const memberUser = {
+      id: 'trainer-1',
+      projects: [
+        {
+          id: 'trainee-1',
+          title: 'Trainee Project 1',
+          projectType: 'Trainee Project',
+          status: 'Active',
+        },
+      ],
+      teams: [],
+      role: 'Grantee',
+    };
+
+    it('allows duplicating an output owned by the project', async () => {
+      const researchOutput = {
+        ...createResearchOutputResponse(),
+        id: '123',
+        workingGroups: undefined,
+        teams: [],
+        publishingEntity: 'Project' as const,
+        project: {
+          id: 'trainee-1',
+          title: 'Trainee Project 1',
+          projectType: 'Trainee Project' as const,
+        },
+        title: 'Example',
+        link: 'http://example.com',
+      };
+      mockUseResearchOutputById.mockReturnValue(researchOutput);
+
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        TraineeProjectDetail,
+        'trainee',
+        'trainee-1',
+        memberUser,
+        `duplicate/${researchOutput.id}`,
+      );
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+        'Copy of Example',
+      );
+      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+    });
+
+    it('will show a page not found if the output does not belong to the project', async () => {
+      const researchOutput = {
+        ...createResearchOutputResponse(),
+        id: '123',
+        workingGroups: undefined,
+        teams: [
+          {
+            id: 'other-team',
+            displayName: 'Other Team',
+            teamType: 'Discovery Team' as const,
+          },
+        ],
+        publishingEntity: 'Team' as const,
+        project: undefined,
+        title: 'Example',
+      };
+      mockUseResearchOutputById.mockReturnValue(researchOutput);
+
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        TraineeProjectDetail,
+        'trainee',
+        'trainee-1',
+        memberUser,
+        `duplicate/${researchOutput.id}`,
+      );
+      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+    });
   });
 });

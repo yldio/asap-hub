@@ -1,5 +1,8 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputEntityType,
+} from '@asap-hub/model';
 import {
   ResearchOutputHeader,
   Toast,
@@ -10,12 +13,14 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 
 type OutputPageShellProps = {
   documentType: ResearchOutputDocumentType;
+  entityType: ResearchOutputEntityType;
   banner?: ReactNode;
   children: ReactNode;
 };
 
 const OutputPageShell: React.FC<OutputPageShellProps> = ({
   documentType,
+  entityType,
   banner,
   children,
 }) => {
@@ -40,7 +45,7 @@ const OutputPageShell: React.FC<OutputPageShellProps> = ({
         )}
         <ResearchOutputHeader
           documentType={documentType}
-          workingGroupAssociation={false}
+          entityType={entityType}
         />
         {children}
       </InnerToastContext.Provider>

@@ -20,7 +20,6 @@ import {
   WorkingGroupResponse,
   OutputTypeOption,
   PartialManuscriptResponse,
-  ManuscriptVersionResponse,
   ProjectResponse,
 } from '@asap-hub/model';
 import {
@@ -29,6 +28,7 @@ import {
   INTEREST_GROUP_ENTITY_TYPE,
   MANUSCRIPT_ENTITY_TYPE,
   MANUSCRIPT_VERSION_ENTITY_TYPE,
+  ManuscriptVersionRecord,
   NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
   Payload,
   PROJECT_ENTITY_TYPE as CRN_PROJECT_ENTITY_TYPE,
@@ -62,7 +62,7 @@ export type EntityData =
   | UserResponse
   | WorkingGroupResponse
   | PartialManuscriptResponse
-  | ManuscriptVersionResponse;
+  | ManuscriptVersionRecord;
 
 export type EntityResponses = {
   [CRN]: {
@@ -99,7 +99,7 @@ export type EntityResponses = {
       typeof CRN_PROJECT_ENTITY_TYPE
     >;
     [MANUSCRIPT_VERSION_ENTITY_TYPE]: WithMeta<
-      ManuscriptVersionResponse,
+      ManuscriptVersionRecord,
       typeof MANUSCRIPT_VERSION_ENTITY_TYPE
     >;
   };

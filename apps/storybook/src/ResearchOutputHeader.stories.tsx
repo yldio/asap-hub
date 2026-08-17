@@ -1,6 +1,6 @@
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputHeader } from '@asap-hub/react-components';
-import { boolean, select } from './knobs';
+import { select } from './knobs';
 
 export default {
   title: 'Organisms / Research Output Header',
@@ -9,7 +9,11 @@ export default {
 
 export const Normal = () => (
   <ResearchOutputHeader
-    workingGroupAssociation={boolean('Working Group Association', true)}
+    entityType={select(
+      'Choose the entity type',
+      ['team', 'working-group', 'project'],
+      'working-group',
+    )}
     documentType={select(
       'Choose document type',
       researchOutputDocumentTypes,

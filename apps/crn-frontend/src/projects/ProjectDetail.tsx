@@ -21,7 +21,8 @@ import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonPro
 import ProjectWorkspace from './ProjectWorkspace';
 import ProjectOutputs from './ProjectOutputs';
 import type { ProjectDetailConfig } from './projectDetailConfig';
-import ProjectOutput from './ProjectOutput';
+import TeamBasedOutput from './TeamBasedOutput';
+import UserBasedOutput from './UserBasedOutput';
 
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
@@ -96,24 +97,45 @@ const ProjectOutputCounts: FC<
     <>{children({})}</>
   );
 
-const DuplicateOutput: FC = () => {
+const DuplicateOutput: FC<{ projectId: string; teamId?: string }> = ({
+  projectId,
+  teamId,
+}) => {
   const { id } = useParams<{ id: string }>();
   const output = useResearchOutputById(id ?? '');
-  if (output && output.teams[0]?.id) {
+
+  if (!output) {
+    return <NotFoundPage />;
+  }
+
+  const duplicatedOutput = {
+    ...output,
+    id: '',
+    published: false,
+    link: undefined,
+    title: `Copy of ${output.title}`,
+  };
+
+  if (output.project?.id === projectId) {
     return (
-      <ProjectOutput
-        researchOutputData={{
-          ...output,
-          id: '',
-          published: false,
-          link: undefined,
-          title: `Copy of ${output.title}`,
-        }}
+      <UserBasedOutput
+        researchOutputData={duplicatedOutput}
         isDuplicate
-        teamId={output.teams[0].id}
+        projectId={projectId}
       />
     );
   }
+
+  if (teamId && output.teams.some((team) => team.id === teamId)) {
+    return (
+      <TeamBasedOutput
+        researchOutputData={duplicatedOutput}
+        isDuplicate
+        teamId={teamId}
+      />
+    );
+  }
+
   return <NotFoundPage />;
 };
 
@@ -178,6 +200,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const isMemberOrStaff = isMember || user?.role === 'Staff';
   const displayDraftOutputs = isProjectOutputsEnabled && isMemberOrStaff;
+  const canShareOutput = isProjectOutputsEnabled; // The rules are supposed to be implemented on ASAP-1506
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -245,22 +268,32 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             )}
             <Route
               path="create-output/:outputDocumentType"
-              element={
-                isProjectOutputsEnabled && teamId && isTeamBased ? (
+              element={(() => {
+                if (!canShareOutput) {
+                  return <NotFoundPage />;
+                }
+                if (isTeamBased) {
+                  return teamId ? (
+                    <Frame title="Share Output">
+                      <TeamBasedOutput teamId={teamId} />
+                    </Frame>
+                  ) : (
+                    <NotFoundPage />
+                  );
+                }
+                return (
                   <Frame title="Share Output">
-                    <ProjectOutput teamId={teamId} />
+                    <UserBasedOutput projectId={projectId} />
                   </Frame>
-                ) : (
-                  <NotFoundPage />
-                )
-              }
+                );
+              })()}
             />
             <Route
               path="duplicate/:id"
               element={
-                isProjectOutputsEnabled && isTeamBased ? (
+                canShareOutput ? (
                   <Frame title="Duplicate Output">
-                    <DuplicateOutput />
+                    <DuplicateOutput projectId={projectId} teamId={teamId} />
                   </Frame>
                 ) : (
                   <NotFoundPage />
@@ -297,6 +330,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       }
                       outputsCount={publishedOutputsCount}
                       draftOutputsCount={draftOutputsCount}
+                      canShareOutput={canShareOutput}
                     >
                       <Routes>
                         <Route

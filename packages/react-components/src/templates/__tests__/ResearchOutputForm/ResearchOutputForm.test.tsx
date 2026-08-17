@@ -7,6 +7,7 @@ import {
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router';
+import { authorsDescription } from '../../../organisms/ResearchOutputContributorsCard';
 import { createIdentifierField } from '../../../utils/research-output-form';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { defaultProps } from '../../test-utils/research-output-form';
@@ -34,6 +35,75 @@ it('sets authors to required', () => {
   expect(
     screen.getByRole('combobox', { name: /Authors \(required\)/i }),
   ).toBeVisible();
+});
+
+it('passes the project authors restriction down to the contributors card', () => {
+  const { rerender } = render(
+    <StaticRouter location="/">
+      <ResearchOutputForm {...defaultProps} />
+    </StaticRouter>,
+  );
+  expect(screen.getByText(authorsDescription.default)).toBeVisible();
+
+  rerender(
+    <StaticRouter location="/">
+      <ResearchOutputForm
+        {...defaultProps}
+        flowId="project-create-manual"
+        projectMemberIds={['member-1']}
+        availableActions={{
+          ...defaultProps.availableActions,
+          restrictAuthorsToProjectMembers: true,
+        }}
+      />
+    </StaticRouter>,
+  );
+  expect(screen.getByText(authorsDescription.projectMembersOnly)).toBeVisible();
+});
+
+it('leaves authors unrestricted when the project members are unknown', () => {
+  render(
+    <StaticRouter location="/">
+      <ResearchOutputForm
+        {...defaultProps}
+        flowId="project-create-manual"
+        availableActions={{
+          ...defaultProps.availableActions,
+          restrictAuthorsToProjectMembers: true,
+        }}
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.getByText(authorsDescription.default)).toBeVisible();
+});
+
+it('hides the teams and labs fields when the flow does not use them', () => {
+  const teamsField = /Add other teams that contributed to this output/;
+  const labsField = /Add ASAP labs that contributed to this output/;
+
+  const { rerender } = render(
+    <StaticRouter location="/">
+      <ResearchOutputForm {...defaultProps} />
+    </StaticRouter>,
+  );
+  expect(screen.getByText(teamsField)).toBeVisible();
+  expect(screen.getByText(labsField)).toBeVisible();
+
+  rerender(
+    <StaticRouter location="/">
+      <ResearchOutputForm
+        {...defaultProps}
+        flowId="project-create-manual"
+        availableActions={{
+          ...defaultProps.availableActions,
+          showTeamsAndLabs: false,
+        }}
+      />
+    </StaticRouter>,
+  );
+  expect(screen.queryByText(teamsField)).not.toBeInTheDocument();
+  expect(screen.queryByText(labsField)).not.toBeInTheDocument();
 });
 
 describe('createIdentifierField', () => {

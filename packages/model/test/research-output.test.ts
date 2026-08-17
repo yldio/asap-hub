@@ -100,26 +100,34 @@ describe('convertDecisionToBoolean', () => {
 
 describe('getResearchOutputFlowBehavior', () => {
   test.each`
-    flowId                                    | isAddVersionFlow | isCreateFlow | isEditFlow | isImportedFromManuscript | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm | publishesOnSave
-    ${'team-create-manual'}                   | ${false}         | ${true}      | ${false}   | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-create-imported-from-manuscript'} | ${false}         | ${true}      | ${false}   | ${true}                  | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-edit-draft'}                      | ${false}         | ${false}     | ${true}    | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'team-edit-published'}                  | ${false}         | ${false}     | ${true}    | ${false}                 | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
-    ${'team-add-version'}                     | ${true}          | ${false}     | ${false}   | ${false}                 | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'team-add-version-from-manuscript'}     | ${true}          | ${false}     | ${false}   | ${true}                  | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'team-duplicate'}                       | ${false}         | ${false}     | ${false}   | ${false}                 | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
-    ${'working-group-create'}                 | ${false}         | ${true}      | ${false}   | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'working-group-edit-draft'}             | ${false}         | ${false}     | ${true}    | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
-    ${'working-group-edit-published'}         | ${false}         | ${false}     | ${true}    | ${false}                 | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
-    ${'working-group-add-version'}            | ${true}          | ${false}     | ${false}   | ${false}                 | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
-    ${'working-group-duplicate'}              | ${false}         | ${false}     | ${false}   | ${false}                 | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    flowId                                       | isAddVersionFlow | isCreateFlow | isEditFlow | isProjectFlow | isImportedFromManuscript | supportsDrafts | requiresAddVersionConfirm | requiresPublishConfirm | requiresSameDescriptionConfirm | publishesOnSave
+    ${'team-create-manual'}                      | ${false}         | ${true}      | ${false}   | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-create-imported-from-manuscript'}    | ${false}         | ${true}      | ${false}   | ${false}      | ${true}                  | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-draft'}                         | ${false}         | ${false}     | ${true}    | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'team-edit-published'}                     | ${false}         | ${false}     | ${true}    | ${false}      | ${false}                 | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'team-add-version'}                        | ${true}          | ${false}     | ${false}   | ${false}      | ${false}                 | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-add-version-from-manuscript'}        | ${true}          | ${false}     | ${false}   | ${false}      | ${true}                  | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'team-duplicate'}                          | ${false}         | ${false}     | ${false}   | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    ${'project-create-manual'}                   | ${false}         | ${true}      | ${false}   | ${true}       | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'project-create-imported-from-manuscript'} | ${false}         | ${true}      | ${false}   | ${true}       | ${true}                  | ${false}       | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'project-edit-draft'}                      | ${false}         | ${false}     | ${true}    | ${true}       | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'project-edit-published'}                  | ${false}         | ${false}     | ${true}    | ${true}       | ${false}                 | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'project-add-version'}                     | ${true}          | ${false}     | ${false}   | ${true}       | ${false}                 | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'project-add-version-from-manuscript'}     | ${true}          | ${false}     | ${false}   | ${true}       | ${true}                  | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'project-duplicate'}                       | ${false}         | ${false}     | ${false}   | ${true}       | ${false}                 | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
+    ${'working-group-create'}                    | ${false}         | ${true}      | ${false}   | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-draft'}                | ${false}         | ${false}     | ${true}    | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${false}                       | ${true}
+    ${'working-group-edit-published'}            | ${false}         | ${false}     | ${true}    | ${false}      | ${false}                 | ${false}       | ${false}                  | ${false}               | ${false}                       | ${false}
+    ${'working-group-add-version'}               | ${true}          | ${false}     | ${false}   | ${false}      | ${false}                 | ${false}       | ${true}                   | ${false}               | ${false}                       | ${true}
+    ${'working-group-duplicate'}                 | ${false}         | ${false}     | ${false}   | ${false}      | ${false}                 | ${true}        | ${false}                  | ${true}                | ${true}                        | ${true}
   `(
-    '$flowId is add version flow: $isAddVersionFlow, is create flow: $isCreateFlow, is edit flow: $isEditFlow, is imported from manuscript: $isImportedFromManuscript, supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm, publishes on save: $publishesOnSave',
+    '$flowId is add version flow: $isAddVersionFlow, is create flow: $isCreateFlow, is edit flow: $isEditFlow, is project flow: $isProjectFlow, is imported from manuscript: $isImportedFromManuscript, supports drafts: $supportsDrafts, requires add version confirm: $requiresAddVersionConfirm, requires publish confirm: $requiresPublishConfirm, requires same description confirm: $requiresSameDescriptionConfirm, publishes on save: $publishesOnSave',
     ({
       flowId,
       isAddVersionFlow,
       isCreateFlow,
       isEditFlow,
+      isProjectFlow,
       isImportedFromManuscript,
       supportsDrafts,
       requiresAddVersionConfirm,
@@ -131,6 +139,7 @@ describe('getResearchOutputFlowBehavior', () => {
         isAddVersionFlow,
         isCreateFlow,
         isEditFlow,
+        isProjectFlow,
         isImportedFromManuscript,
         supportsDrafts,
         requiresAddVersionConfirm,
@@ -186,6 +195,15 @@ describe('getResearchOutputFlowBehavior', () => {
   });
 
   it('covers every registered flow', () => {
-    expect(Object.keys(FLOW_DEFINITIONS)).toHaveLength(12);
+    expect(Object.keys(FLOW_DEFINITIONS)).toHaveLength(19);
+  });
+
+  it('flags as project flow exactly the flows owned by the project entity', () => {
+    Object.entries(FLOW_DEFINITIONS).forEach(([flowId, flow]) => {
+      const behavior = getResearchOutputFlowBehavior(
+        flowId as keyof typeof FLOW_DEFINITIONS,
+      );
+      expect(behavior.isProjectFlow).toBe(flow.entity === 'project');
+    });
   });
 });

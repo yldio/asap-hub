@@ -15,7 +15,8 @@ import {
 import { decideManuscriptImport, ManuscriptImport } from './manuscript-import';
 
 type ManuscriptOutputSelectionScreenProps = {
-  teamId: string;
+  teamId?: string;
+  projectId?: string;
   onCreateManually: () => void;
   onManuscriptImported: (manuscriptImport: ManuscriptImport) => void;
 };
@@ -26,7 +27,7 @@ type ManuscriptOutputSelectionScreenProps = {
 // the form that follows adds the publication as a new version of it.
 const ManuscriptOutputSelectionScreen: React.FC<
   ManuscriptOutputSelectionScreenProps
-> = ({ teamId, onCreateManually, onManuscriptImported }) => {
+> = ({ teamId, projectId, onCreateManually, onManuscriptImported }) => {
   const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
     'manually' | 'import' | ''
   >('');
@@ -100,7 +101,7 @@ const ManuscriptOutputSelectionScreen: React.FC<
       setSelectedVersion={setSelectedVersion}
       onImportManuscript={handleImportManuscript}
       getManuscriptVersionOptions={(input) =>
-        getManuscriptVersionSuggestions(input, teamId).then(
+        getManuscriptVersionSuggestions(input, { teamId, projectId }).then(
           (versionSuggestions) =>
             versionSuggestions.map((version) => ({
               version,

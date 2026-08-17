@@ -27,7 +27,7 @@ import {
   updateTeamResearchOutput,
 } from '../../../network/teams/api';
 import { getImpacts } from '../../../shared-api/impact';
-import TeamOutput from '../../ProjectOutput';
+import TeamOutput from '../../TeamBasedOutput';
 
 jest.setTimeout(60000);
 jest.mock('../../../network/teams/api');

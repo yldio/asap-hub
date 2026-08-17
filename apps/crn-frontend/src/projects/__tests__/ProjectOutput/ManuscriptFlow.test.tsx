@@ -32,7 +32,7 @@ import {
 import { usePostPreprintResearchOutput } from '../../../network/teams/state';
 import { getImpacts } from '../../../shared-api/impact';
 import { getResearchOutputs } from '../../../shared-research/api';
-import ProjectOutput from '../../ProjectOutput';
+import ProjectOutput from '../../TeamBasedOutput';
 
 jest.mock('../../../network/teams/api');
 jest.mock('../../../network/users/api');

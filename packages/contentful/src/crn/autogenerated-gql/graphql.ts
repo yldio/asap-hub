@@ -33018,7 +33018,15 @@ export type FetchManuscriptVersionByIdQuery = {
                             linkedFrom?: Maybe<{
                               projectsCollection?: Maybe<{
                                 items: Array<
-                                  Maybe<Pick<Projects, 'projectId' | 'grantId'>>
+                                  Maybe<
+                                    Pick<
+                                      Projects,
+                                      | 'title'
+                                      | 'projectType'
+                                      | 'projectId'
+                                      | 'grantId'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
                                 >;
                               }>;
                             }>;
@@ -33029,6 +33037,12 @@ export type FetchManuscriptVersionByIdQuery = {
                   }>
                 >;
               }>;
+              project?: Maybe<
+                Pick<
+                  Projects,
+                  'title' | 'projectType' | 'projectId' | 'grantId'
+                > & { sys: Pick<Sys, 'id'> }
+              >;
               impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
               categoriesCollection?: Maybe<{
                 items: Array<
@@ -33362,7 +33376,15 @@ export type FetchVersionsByManuscriptQuery = {
                           linkedFrom?: Maybe<{
                             projectsCollection?: Maybe<{
                               items: Array<
-                                Maybe<Pick<Projects, 'projectId' | 'grantId'>>
+                                Maybe<
+                                  Pick<
+                                    Projects,
+                                    | 'title'
+                                    | 'projectType'
+                                    | 'projectId'
+                                    | 'grantId'
+                                  > & { sys: Pick<Sys, 'id'> }
+                                >
                               >;
                             }>;
                           }>;
@@ -33373,6 +33395,12 @@ export type FetchVersionsByManuscriptQuery = {
                 }>
               >;
             }>;
+            project?: Maybe<
+              Pick<
+                Projects,
+                'title' | 'projectType' | 'projectId' | 'grantId'
+              > & { sys: Pick<Sys, 'id'> }
+            >;
             impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
             categoriesCollection?: Maybe<{
               items: Array<
@@ -61162,6 +61190,45 @@ export const FetchManuscriptVersionByIdDocument = {
                                                                                                 name: {
                                                                                                   kind: 'Name',
                                                                                                   value:
+                                                                                                    'sys',
+                                                                                                },
+                                                                                                selectionSet:
+                                                                                                  {
+                                                                                                    kind: 'SelectionSet',
+                                                                                                    selections:
+                                                                                                      [
+                                                                                                        {
+                                                                                                          kind: 'Field',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'id',
+                                                                                                          },
+                                                                                                        },
+                                                                                                      ],
+                                                                                                  },
+                                                                                              },
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'title',
+                                                                                                },
+                                                                                              },
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'projectType',
+                                                                                                },
+                                                                                              },
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
                                                                                                     'projectId',
                                                                                                 },
                                                                                               },
@@ -61192,6 +61259,59 @@ export const FetchManuscriptVersionByIdDocument = {
                                                 },
                                               },
                                             ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'project' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'title',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'projectType',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'projectId',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'grantId',
                                           },
                                         },
                                       ],
@@ -62790,6 +62910,45 @@ export const FetchVersionsByManuscriptDocument = {
                                                                             name: {
                                                                               kind: 'Name',
                                                                               value:
+                                                                                'sys',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'id',
+                                                                                      },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'title',
+                                                                            },
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'projectType',
+                                                                            },
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
                                                                                 'projectId',
                                                                             },
                                                                           },
@@ -62821,6 +62980,44 @@ export const FetchVersionsByManuscriptDocument = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'project' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'projectType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'projectId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'grantId' },
                             },
                           ],
                         },

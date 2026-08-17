@@ -501,6 +501,7 @@ export const getWorkspaceManuscripts = async (
 
 export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
   teamId?: string;
+  projectId?: string;
 };
 
 export const getManuscriptVersionByManuscriptId = async (
@@ -517,7 +518,13 @@ export const getManuscriptVersionByManuscriptId = async (
 
 export const getManuscriptVersions = async (
   algoliaClient: AlgoliaClient<'crn'>,
-  { searchQuery, currentPage, pageSize, teamId }: ManuscriptVersionOptions,
+  {
+    searchQuery,
+    currentPage,
+    pageSize,
+    teamId,
+    projectId,
+  }: ManuscriptVersionOptions,
 ): Promise<ListManuscriptVersionResponse> => {
   const result = await algoliaClient.search(
     ['manuscript-version'],
@@ -526,9 +533,11 @@ export const getManuscriptVersions = async (
       page: currentPage ?? undefined,
       hitsPerPage: pageSize ?? undefined,
       restrictSearchableAttributes: ['title', 'manuscriptId'],
-      ...(teamId && {
-        filters: `(teamId:"${teamId}" OR teams.id:"${teamId}")`,
-      }),
+      ...(projectId
+        ? { filters: `project.id:"${projectId}"` }
+        : teamId && {
+            filters: `(teamId:"${teamId}" OR teams.id:"${teamId}")`,
+          }),
     },
   );
 

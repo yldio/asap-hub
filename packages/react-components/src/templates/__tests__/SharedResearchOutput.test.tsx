@@ -1428,3 +1428,149 @@ it('navigates to version creation page if there is a new manuscript version', as
     );
   });
 });
+
+describe('duplicate link', () => {
+  it('links to the project duplicate route for project outputs', () => {
+    const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity="Project"
+          workingGroups={undefined}
+          project={{
+            id: 'project-1',
+            title: 'Trainee Project',
+            projectType: 'Trainee Project',
+          }}
+          teams={[]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(getByTitle('Duplicate').closest('a')).toHaveAttribute(
+      'href',
+      `/projects/trainee/project-1/duplicate/${props.id}`,
+    );
+  });
+
+  it('does not link when a project output is missing routing data', () => {
+    const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity="Project"
+          workingGroups={undefined}
+          project={undefined}
+          teams={[]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(
+      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
+    ).toBeFalsy();
+  });
+
+  it('links to the team duplicate route for team outputs', () => {
+    const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity="Team"
+          workingGroups={undefined}
+          project={undefined}
+          teams={[
+            { id: 'team-1', displayName: 'Team 1', teamType: 'Discovery Team' },
+          ]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(getByTitle('Duplicate').closest('a')).toHaveAttribute(
+      'href',
+      `/network/teams/team-1/duplicate/${props.id}`,
+    );
+  });
+
+  it('does not link when a team output has no teams', () => {
+    const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity="Team"
+          workingGroups={undefined}
+          project={undefined}
+          teams={[]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(
+      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
+    ).toBeFalsy();
+  });
+
+  it('does not link for an unknown publishing entity', () => {
+    const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity={'Unknown' as never}
+          workingGroups={undefined}
+          project={undefined}
+          teams={[]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(
+      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
+    ).toBeFalsy();
+  });
+
+  it('renders output versions when versions are provided', () => {
+    const { getByText } = renderWithRouter(
+      <SharedResearchOutput
+        {...props}
+        documentType="Article"
+        versions={[
+          {
+            id: 'version-1',
+            title: 'Version One',
+            documentType: 'Article',
+            type: 'Published',
+            addedDate: '2024-01-01',
+            link: 'http://example.com/v1',
+          },
+        ]}
+      />,
+    );
+
+    expect(getByText(/#1/)).toBeInTheDocument();
+  });
+});

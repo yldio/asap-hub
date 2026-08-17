@@ -14,21 +14,24 @@ import {
   ManuscriptsFilter,
   ManuscriptVersionsFilter,
 } from '@asap-hub/contentful';
+import { ManuscriptVersionRecord } from '@asap-hub/algolia';
 import {
   FetchOptions,
+  isProjectType,
   ListManuscriptVersionExportResponse,
-  ListManuscriptVersionResponse,
+  ListResponse,
   ManuscriptLifecycle,
   ManuscriptType,
-  ManuscriptVersionDataObject,
   ManuscriptVersionExport,
-  ManuscriptVersionResponse,
   mapManuscriptLifecycleToType,
   toManuscriptVersionRecordId,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
-import { ManuscriptVersionDataProvider } from '../types';
+import {
+  ManuscriptVersionDataProvider,
+  ManuscriptVersionRecordDataObject,
+} from '../types';
 import { LabItem } from './lab.data-provider';
 import { getManuscriptVersionUID } from './manuscript.data-provider';
 
@@ -57,7 +60,7 @@ export class ManuscriptVersionContentfulDataProvider
 
   async fetch(
     options: FetchOptions<ManuscriptsFilter>,
-  ): Promise<ListManuscriptVersionResponse> {
+  ): Promise<ListResponse<ManuscriptVersionRecord>> {
     const { take = 8, skip = 0, filter = {} } = options;
 
     const { manuscriptsCollection } = await this.contentfulClient.request<
@@ -86,7 +89,7 @@ export class ManuscriptVersionContentfulDataProvider
     }
 
     const manuscriptVersions = cleanArray(manuscriptsCollection.items).reduce(
-      (latestVersions: ManuscriptVersionResponse[], manuscript) => {
+      (latestVersions: ManuscriptVersionRecord[], manuscript) => {
         const latestVersion = cleanArray(
           manuscript.versionsCollection?.items,
         )[0];
@@ -107,7 +110,7 @@ export class ManuscriptVersionContentfulDataProvider
     };
   }
 
-  async fetchById(id: string): Promise<ManuscriptVersionDataObject> {
+  async fetchById(id: string): Promise<ManuscriptVersionRecordDataObject> {
     const { manuscriptVersions } = await this.contentfulClient.request<
       FetchManuscriptVersionByIdQuery,
       FetchManuscriptVersionByIdQueryVariables
@@ -254,12 +257,35 @@ const hasLinkedResearchOutput = (
         latestVersion?.linkedFrom?.researchOutputVersionsCollection?.total > 0),
   );
 
+type ManuscriptProject = NonNullable<Manuscript['project']>;
+
+const parseProject = (
+  project?: Pick<ManuscriptProject, 'sys' | 'title' | 'projectType'> | null,
+): ManuscriptVersionRecord['project'] => {
+  const id = project?.sys?.id;
+
+  if (!id) {
+    return undefined;
+  }
+
+  return {
+    id,
+    title: project?.title || '',
+    projectType: isProjectType(project?.projectType)
+      ? project?.projectType
+      : undefined,
+    isTeamBased: false,
+  };
+};
+
 const parseGraphQLManucriptVersion = (
   manuscript: Manuscript,
   latestVersion: ManuscriptVersion | undefined,
-): ManuscriptVersionResponse => {
+): ManuscriptVersionRecord => {
   const team = manuscript?.teamsCollection?.items[0];
-  const project =
+  const project = manuscript?.project;
+  const uidProject =
+    project ??
     team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
       ?.projectsCollection?.items[0];
 
@@ -285,8 +311,8 @@ const parseGraphQLManucriptVersion = (
             count: latestVersion.count,
             lifecycle: latestVersion.lifecycle,
           },
-          teamIdCode: project?.projectId || '',
-          grantId: project?.grantId || '',
+          teamIdCode: uidProject?.projectId || '',
+          grantId: uidProject?.grantId || '',
           manuscriptCount: manuscript?.count || 0,
         })
       : undefined,
@@ -349,6 +375,7 @@ const parseGraphQLManucriptVersion = (
       };
     }),
     teamId: team?.sys.id,
+    project: parseProject(project),
     doi:
       (latestVersion?.lifecycle &&
       mapManuscriptLifecycleToType(

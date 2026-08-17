@@ -954,6 +954,13 @@ describe('resolveResearchOutputAvailableActions', () => {
       'team-add-version': true,
       'team-add-version-from-manuscript': true,
       'team-duplicate': false,
+      'project-create-manual': false,
+      'project-create-imported-from-manuscript': false,
+      'project-edit-draft': true,
+      'project-edit-published': true,
+      'project-add-version': true,
+      'project-add-version-from-manuscript': true,
+      'project-duplicate': false,
       'working-group-create': false,
       'working-group-edit-draft': true,
       'working-group-edit-published': true,
@@ -980,6 +987,55 @@ describe('resolveResearchOutputAvailableActions', () => {
       'is false when flow is %s and there are no versions',
       (flowId) => {
         expect(resolve(flowId, false)).toBe(false);
+      },
+    );
+  });
+
+  describe('restrictAuthorsToProjectMembers', () => {
+    const resolve = (flowId: ResearchOutputFlowId) =>
+      resolveResearchOutputAvailableActions({
+        flowId,
+        permissions: { canShareResearchOutput: true },
+        documentType: 'Article',
+      }).restrictAuthorsToProjectMembers;
+
+    it.each(Object.values(RESEARCH_OUTPUT_FLOW_IDS))(
+      'flow %s resolves to whether it belongs to the project entity',
+      (flowId) => {
+        expect(resolve(flowId)).toBe(flowId.startsWith('project-'));
+      },
+    );
+  });
+
+  describe('showTeamsAndLabs', () => {
+    const resolve = (flowId: ResearchOutputFlowId) =>
+      resolveResearchOutputAvailableActions({
+        flowId,
+        permissions: { canShareResearchOutput: true },
+        documentType: 'Article',
+      }).showTeamsAndLabs;
+
+    it.each(Object.values(RESEARCH_OUTPUT_FLOW_IDS))(
+      'flow %s hides teams and labs exactly when it belongs to the project entity',
+      (flowId) => {
+        expect(resolve(flowId)).toBe(!flowId.startsWith('project-'));
+      },
+    );
+
+    // Both rules describe the same fact - the output belongs to a project
+    // rather than to a team - so they must never disagree for any flow.
+    it.each(Object.values(RESEARCH_OUTPUT_FLOW_IDS))(
+      'flow %s keeps teams and labs visible exactly when authors are unrestricted',
+      (flowId) => {
+        const actions = resolveResearchOutputAvailableActions({
+          flowId,
+          permissions: { canShareResearchOutput: true },
+          documentType: 'Article',
+        });
+
+        expect(actions.showTeamsAndLabs).toBe(
+          !actions.restrictAuthorsToProjectMembers,
+        );
       },
     );
   });

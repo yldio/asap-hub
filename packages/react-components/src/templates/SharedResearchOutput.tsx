@@ -3,7 +3,8 @@ import {
   getVisibleResearchOutputActions,
   ResearchOutputPermissionsContext,
 } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { network, projectRouteByType, sharedResearch } from '@asap-hub/routing';
+import { getResearchOutputEntityType } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -61,6 +62,8 @@ type SharedResearchOutputProps = Pick<
   | 'versions'
   | 'relatedManuscript'
   | 'relatedManuscriptVersion'
+  | 'publishingEntity'
+  | 'project'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -72,6 +75,43 @@ type SharedResearchOutputProps = Pick<
     onPublish?: () => Promise<ResearchOutputResponse | void>;
     checkForNewVersion: () => Promise<boolean>;
   };
+
+const getDuplicateLink = ({
+  id,
+  publishingEntity,
+  workingGroups,
+  teams,
+  project,
+}: Pick<
+  ResearchOutputResponse,
+  'id' | 'publishingEntity' | 'workingGroups' | 'teams' | 'project'
+>) => {
+  switch (getResearchOutputEntityType({ publishingEntity })) {
+    case 'working-group': {
+      const workingGroupId = workingGroups?.[0]?.id;
+      return workingGroupId
+        ? network({})
+            .workingGroups({})
+            .workingGroup({ workingGroupId })
+            .duplicateOutput({ id }).$
+        : undefined;
+    }
+    case 'project': {
+      const projectRoute = project && projectRouteByType[project.projectType];
+      return project?.id && projectRoute
+        ? projectRoute(project.id).duplicateOutput({ id }).$
+        : undefined;
+    }
+    case 'team': {
+      const teamId = teams[0]?.id;
+      return teamId
+        ? network({}).teams({}).team({ teamId }).duplicateOutput({ id }).$
+        : undefined;
+    }
+    default:
+      return undefined;
+  }
+};
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description = '',
@@ -162,22 +202,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     }
   };
 
-  const duplicateLink =
-    props.workingGroups && props.workingGroups[0].id
-      ? network({})
-          .workingGroups({})
-          .workingGroup({
-            workingGroupId: props.workingGroups[0].id,
-          })
-          .duplicateOutput({
-            id,
-          }).$
-      : props.teams[0] && props.teams[0].id
-        ? network({})
-            .teams({})
-            .team({ teamId: props.teams[0].id })
-            .duplicateOutput({ id }).$
-        : undefined;
+  const duplicateLink = getDuplicateLink({ id, ...props });
 
   return (
     <div>

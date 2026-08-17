@@ -13,16 +13,42 @@ import {
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
-import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
+import { getResearchOutputEntityType } from '@asap-hub/validation';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
-import { ManuscriptVersionResponse } from '@asap-hub/model';
+import {
+  ManuscriptVersionResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { Suspense, useEffect, useState } from 'react';
 import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
-import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
+import TeamBasedOutput from '../projects/TeamBasedOutput';
+import UserBasedOutput from '../projects/UserBasedOutput';
 import { usePutResearchOutput } from '../shared-state';
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
+
+const entityAssociation = {
+  'working-group': 'workingGroups',
+  project: 'projects',
+  team: 'teams',
+} as const;
+
+const getAssociationIds = (researchOutputData: ResearchOutputResponse) => {
+  const entityType = getResearchOutputEntityType(researchOutputData);
+
+  switch (entityType) {
+    case 'working-group':
+      return researchOutputData.workingGroups?.map((wg) => wg.id) ?? [];
+    case 'project':
+      return researchOutputData.project?.id
+        ? [researchOutputData.project.id]
+        : [];
+    case 'team':
+    default:
+      return researchOutputData.teams.map((team) => team.id);
+  }
+};
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -61,13 +87,13 @@ const ResearchOutput: React.FC = () => {
 
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
-  const isLinkedToWorkingGroup =
-    researchOutputData && isResearchOutputWorkingGroup(researchOutputData);
-
-  const association = isLinkedToWorkingGroup ? 'workingGroups' : 'teams';
-  const associationIds = isLinkedToWorkingGroup
-    ? researchOutputData?.workingGroups.map((wg) => wg.id) || []
-    : researchOutputData?.teams.map((team) => team.id) || [];
+  const entityType = researchOutputData
+    ? getResearchOutputEntityType(researchOutputData)
+    : 'team';
+  const association = entityAssociation[entityType];
+  const associationIds = researchOutputData
+    ? getAssociationIds(researchOutputData)
+    : [];
 
   const permissions = useResearchOutputPermissions(
     association,
@@ -118,6 +144,49 @@ const ResearchOutput: React.FC = () => {
   };
 
   if (researchOutputData) {
+    const renderOutputForm = (versionAction: 'create' | 'edit') => {
+      switch (entityType) {
+        case 'working-group':
+          return researchOutputData.workingGroups?.[0]?.id ? (
+            <WorkingGroupOutput
+              workingGroupId={researchOutputData.workingGroups[0].id}
+              researchOutputData={researchOutputData}
+              versionAction={versionAction}
+            />
+          ) : (
+            <NotFoundPage />
+          );
+        case 'project':
+          return researchOutputData.project?.id ? (
+            <UserBasedOutput
+              projectId={researchOutputData.project.id}
+              researchOutputData={researchOutputData}
+              latestManuscriptVersion={
+                versionAction === 'create' ? latestManuscriptVersion : undefined
+              }
+              versionAction={versionAction}
+            />
+          ) : (
+            <NotFoundPage />
+          );
+        case 'team':
+          return researchOutputData.teams[0]?.id ? (
+            <TeamBasedOutput
+              teamId={researchOutputData.teams[0].id}
+              researchOutputData={researchOutputData}
+              latestManuscriptVersion={
+                versionAction === 'create' ? latestManuscriptVersion : undefined
+              }
+              versionAction={versionAction}
+            />
+          ) : (
+            <NotFoundPage />
+          );
+        default:
+          return <NotFoundPage />;
+      }
+    };
+
     const renderResearchOutputView = () => (
       <Frame title={researchOutputData.title}>
         {toast === 'published' && <ScrollToTop />}
@@ -162,24 +231,7 @@ const ResearchOutput: React.FC = () => {
                   sharedResearch({}).researchOutput({ researchOutputId })
                     .versionResearchOutput.template
                 }
-                element={
-                  isLinkedToWorkingGroup ? (
-                    <WorkingGroupOutput
-                      workingGroupId={researchOutputData.workingGroups[0]?.id}
-                      researchOutputData={researchOutputData}
-                      versionAction={'create'}
-                    />
-                  ) : (
-                    researchOutputData.teams[0]?.id && (
-                      <TeamOutput
-                        teamId={researchOutputData.teams[0]?.id}
-                        researchOutputData={researchOutputData}
-                        latestManuscriptVersion={latestManuscriptVersion}
-                        versionAction={'create'}
-                      />
-                    )
-                  )
-                }
+                element={renderOutputForm('create')}
               />
             )}
             {permissions.canEditResearchOutput && (
@@ -188,23 +240,7 @@ const ResearchOutput: React.FC = () => {
                   sharedResearch({}).researchOutput({ researchOutputId })
                     .editResearchOutput.template
                 }
-                element={
-                  isLinkedToWorkingGroup ? (
-                    <WorkingGroupOutput
-                      workingGroupId={researchOutputData.workingGroups[0]?.id}
-                      researchOutputData={researchOutputData}
-                      versionAction={'edit'}
-                    />
-                  ) : (
-                    researchOutputData.teams[0]?.id && (
-                      <TeamOutput
-                        teamId={researchOutputData.teams[0].id}
-                        researchOutputData={researchOutputData}
-                        versionAction={'edit'}
-                      />
-                    )
-                  )
-                }
+                element={renderOutputForm('edit')}
               />
             )}
             <Route path="*" element={<NotFoundPage />} />

@@ -29,6 +29,9 @@ export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
 export const MANUSCRIPT_ENTITY_TYPE = 'manuscript';
 export const MANUSCRIPT_VERSION_ENTITY_TYPE = 'manuscript-version';
 
+export type ManuscriptVersionRecord = ManuscriptVersionResponse &
+  Pick<PartialManuscriptResponse, 'project'>;
+
 export type Payload =
   | {
       data: EventResponse;
@@ -79,6 +82,6 @@ export type Payload =
       type: typeof MANUSCRIPT_ENTITY_TYPE;
     }
   | {
-      data: ManuscriptVersionResponse;
+      data: ManuscriptVersionRecord;
       type: typeof MANUSCRIPT_VERSION_ENTITY_TYPE;
     };

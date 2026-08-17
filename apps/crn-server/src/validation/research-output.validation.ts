@@ -189,8 +189,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         },
         nullable: true,
       },
-      teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
+      teams: { type: 'array', items: { type: 'string' } },
       workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
+      projectId: { type: 'string', nullable: true },
       usageNotes: { type: 'string', nullable: true },
       doi: {
         type: 'string',
@@ -225,13 +226,21 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'descriptionMD',
       'title',
       'sharingStatus',
-      'teams',
       'methods',
       'organisms',
       'environments',
       'keywords',
       'published',
     ],
+    if: { required: ['projectId'] },
+    then: {
+      properties: { authors: { type: 'array', minItems: 1 } },
+      required: ['authors'],
+    },
+    else: {
+      properties: { teams: { type: 'array', minItems: 1 } },
+      required: ['teams'],
+    },
     additionalProperties: false,
   } as unknown as JSONSchemaType<ResearchOutputPostRequest>;
 
@@ -330,9 +339,10 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         },
         nullable: true,
       },
-      teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
+      teams: { type: 'array', items: { type: 'string' } },
       statusChangedById: { type: 'string', nullable: true },
       workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
+      projectId: { type: 'string', nullable: true },
       usageNotes: { type: 'string', nullable: true },
       doi: {
         type: 'string',
@@ -373,12 +383,20 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       'descriptionMD',
       'title',
       'sharingStatus',
-      'teams',
       'methods',
       'organisms',
       'environments',
       'keywords',
     ],
+    if: { required: ['projectId'] },
+    then: {
+      properties: { authors: { type: 'array', minItems: 1 } },
+      required: ['authors'],
+    },
+    else: {
+      properties: { teams: { type: 'array', minItems: 1 } },
+      required: ['teams'],
+    },
     additionalProperties: false,
   } as unknown as JSONSchemaType<ResearchOutputPutRequest>;
 

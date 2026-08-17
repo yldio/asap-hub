@@ -3,14 +3,15 @@ import {
   FetchVersionsByManuscriptQuery,
   Projects,
 } from '@asap-hub/contentful';
+import { ManuscriptVersionRecord } from '@asap-hub/algolia';
 import {
   ListManuscriptVersionExportResponse,
-  ListManuscriptVersionResponse,
-  ManuscriptVersionDataObject,
+  ListResponse,
 } from '@asap-hub/model';
+import { ManuscriptVersionRecordDataObject } from '../../src/data-providers/types';
 
 export const getManuscriptVersionsListResponse =
-  (): ListManuscriptVersionResponse => ({
+  (): ListResponse<ManuscriptVersionRecord> => ({
     total: 2,
     items: [
       {
@@ -153,7 +154,7 @@ export const getManuscriptVersionExportResponse =
     ],
   });
 export const getManuscriptVersionDataObject =
-  (): ManuscriptVersionDataObject => ({
+  (): ManuscriptVersionRecordDataObject => ({
     versionFound: true,
     latestManuscriptVersion: {
       id: 'mv-manuscript-id-1',
@@ -417,6 +418,7 @@ export const getContentfulManuscript = (
   count,
   title: `Manuscript ${count}`,
   url: 'http://example.com',
+  project: null,
   impact: {
     sys: {
       id: 'impact-id-1',
@@ -445,6 +447,9 @@ export const getContentfulManuscript = (
                   projectsCollection: {
                     items: [
                       {
+                        sys: { id: 'project-id-1' },
+                        title: 'Project One',
+                        projectType: 'Discovery Project',
                         projectId: 'WH1',
                         grantId: '000282',
                       },
@@ -470,10 +475,17 @@ export const getContentfulManuscriptsCollection =
   });
 
 export const getContentfulManuscriptProjectsCollection = (): {
-  items: Array<Pick<Projects, 'projectId' | 'grantId'>>;
+  items: Array<
+    Pick<Projects, 'projectId' | 'grantId' | 'title' | 'projectType'> & {
+      sys: { id: string };
+    }
+  >;
 } => ({
   items: [
     {
+      sys: { id: 'project-id-1' },
+      title: 'Project One',
+      projectType: 'Discovery Project',
       projectId: 'WH1',
       grantId: '000282',
     },

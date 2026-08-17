@@ -11,6 +11,7 @@ type ProjectDetailPageProps = ProjectDetail & {
   readonly draftOutputsHref?: string;
   readonly outputsCount?: number;
   readonly draftOutputsCount?: number;
+  readonly canShareOutput?: boolean;
   readonly children?: React.ReactNode;
 };
 
@@ -24,6 +25,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   draftOutputsHref,
   outputsCount,
   draftOutputsCount,
+  canShareOutput,
   ...project
 }) => (
   <article>
@@ -37,6 +39,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
       draftOutputsHref={draftOutputsHref}
       outputsCount={outputsCount}
       draftOutputsCount={draftOutputsCount}
+      canShareOutput={canShareOutput}
     />
     <PageConstraints as="main">{children}</PageConstraints>
   </article>

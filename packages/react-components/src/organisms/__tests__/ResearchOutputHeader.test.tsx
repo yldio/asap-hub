@@ -1,62 +1,65 @@
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputEntityType,
+} from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 
 import ResearchOutputHeader from '../ResearchOutputHeader';
 
 it.each<{
   documentType: ResearchOutputDocumentType;
-  workingGroupAssociation: boolean;
+  entityType: ResearchOutputEntityType;
   headingName: RegExp;
   subHeader: RegExp;
 }>([
   {
     documentType: 'Article',
-    workingGroupAssociation: false,
+    entityType: 'team',
     headingName: /Share a Team Article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Protocol',
-    workingGroupAssociation: false,
+    entityType: 'team',
     headingName: /Share a Team Protocol/i,
     subHeader: /Add your protocol/,
   },
   {
     documentType: 'Dataset',
-    workingGroupAssociation: false,
+    entityType: 'team',
     headingName: /Share a Team Dataset/i,
     subHeader: /Add your dataset/,
   },
   {
     documentType: 'Bioinformatics',
-    workingGroupAssociation: false,
+    entityType: 'team',
     headingName: /Share Team Bioinformatics/i,
     subHeader: /Add bioinformatics/,
   },
   {
     documentType: 'Lab Material',
-    workingGroupAssociation: false,
+    entityType: 'team',
     headingName: /Share a Team Lab Material/i,
     subHeader: /Add your lab material/,
   },
   {
     documentType: 'Article',
-    workingGroupAssociation: true,
+    entityType: 'working-group',
     headingName: /Share a Working Group Article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Report',
-    workingGroupAssociation: true,
+    entityType: 'working-group',
     headingName: /Share a Working Group CRN Report/i,
     subHeader: /add your CRN report/,
   },
 ])(
-  'renders the $documentType $association research output',
-  ({ documentType, headingName, subHeader, workingGroupAssociation }) => {
+  'renders the $documentType $entityType research output',
+  ({ documentType, headingName, subHeader, entityType }) => {
     render(
       <ResearchOutputHeader
-        workingGroupAssociation={workingGroupAssociation}
+        entityType={entityType}
         documentType={documentType}
       />,
     );

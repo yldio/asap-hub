@@ -413,6 +413,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
           milestonesHref="/projects/discovery/1/milestones"
+          canShareOutput
         />,
       );
       expect(
@@ -477,7 +478,23 @@ describe('ProjectDetailHeader', () => {
       );
     });
 
-    it('does not render share an output button when project is resource project and PROJECT_OUTPUTS flag is enabled', () => {
+    it('renders share an output button when the user can share an output for a resource project', () => {
+      mockIsEnabled.mockReturnValue(true);
+
+      const { getByRole } = render(
+        <ProjectDetailHeader
+          {...mockResourceTeamProject}
+          aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
+          canShareOutput
+        />,
+      );
+      expect(
+        getByRole('button', { name: /Share an output/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render share an output button when the user cannot share an output', () => {
       mockIsEnabled.mockReturnValue(true);
 
       const { queryByRole } = render(
@@ -652,19 +669,20 @@ describe('ProjectDetailHeader', () => {
       expect(screen.queryByText('Dr. Jane Key')).not.toBeInTheDocument();
     });
 
-    it('does not render share an output button when project is trainee project and PROJECT_OUTPUTS flag is enabled', () => {
+    it('renders share an output button when the user can share an output for a trainee project', () => {
       mockIsEnabled.mockReturnValue(true);
 
-      const { queryByRole } = render(
+      const { getByRole } = render(
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
           milestonesHref="/projects/trainee/1/milestones"
+          canShareOutput
         />,
       );
       expect(
-        queryByRole('button', { name: /Share an output/i }),
-      ).not.toBeInTheDocument();
+        getByRole('button', { name: /Share an output/i }),
+      ).toBeInTheDocument();
     });
   });
 

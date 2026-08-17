@@ -2,6 +2,7 @@ import {
   mapManuscriptLifecycleToType,
   mapManuscriptTypeToSubType,
   ListResearchOutputResponse,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchOutputTeamResponse,
   ResearchOutputWorkingGroupResponse,
@@ -16,6 +17,7 @@ import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import ManuscriptController from '../controllers/manuscript.controller';
 import ResearchOutputController from '../controllers/research-output.controller';
+
 import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
@@ -24,6 +26,27 @@ import {
   validateResearchOutputFetchOptions,
   validateResearchOutputPostPreprintRequestParameters,
 } from '../validation/research-output.validation';
+
+const resolveOutputAssociation = (
+  request: Pick<
+    ResearchOutputPostRequest,
+    'projectId' | 'workingGroups' | 'teams'
+  >,
+):
+  | { association: 'projects'; associationIds: string[] }
+  | { association: 'workingGroups'; associationIds: string[] }
+  | { association: 'teams'; associationIds: string[] } => {
+  if (request.projectId) {
+    return { association: 'projects', associationIds: [request.projectId] };
+  }
+  if (request.workingGroups.length) {
+    return {
+      association: 'workingGroups',
+      associationIds: request.workingGroups,
+    };
+  }
+  return { association: 'teams', associationIds: request.teams };
+};
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
@@ -118,12 +141,13 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    const workingGroupOutput = createRequest.workingGroups.length;
+    const { association, associationIds } =
+      resolveOutputAssociation(createRequest);
 
     const userRole = getUserRole(
       loggedInUser as UserResponse,
-      workingGroupOutput ? 'workingGroups' : 'teams',
-      workingGroupOutput ? createRequest.workingGroups : createRequest.teams,
+      association,
+      associationIds,
     );
 
     const isManuscriptOutput = !!createRequest.relatedManuscriptVersion;
@@ -156,12 +180,13 @@ export const researchOutputRouteFactory = (
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
-      const workingGroupOutput = updateRequest.workingGroups.length;
+      const { association, associationIds } =
+        resolveOutputAssociation(updateRequest);
 
       const userRole = getUserRole(
         loggedInUser as UserResponse,
-        workingGroupOutput ? 'workingGroups' : 'teams',
-        workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
+        association,
+        associationIds,
       );
 
       const isManuscriptOutput = !!updateRequest.relatedManuscriptVersion;
@@ -252,6 +277,7 @@ export const researchOutputRouteFactory = (
       labs: preprintManuscriptVersion.labs?.map((lab) => lab.id) || [],
       authors: authors.map((author) => ({ userId: author })),
       teams: preprintManuscriptVersion.teams?.map((team) => team.id) || [],
+      projectId: manuscript.projectId,
       isInReview: false,
       sharingStatus: 'Public',
       asapFunded: true,

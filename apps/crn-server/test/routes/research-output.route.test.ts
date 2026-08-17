@@ -15,6 +15,7 @@ import {
 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
+import 'express-async-errors';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
@@ -118,7 +119,9 @@ describe('/research-outputs/ route', () => {
         },
       };
 
-      expect(researchOutputControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith(
+        expectedParams,
+      );
     });
 
     describe('Parameter validation', () => {
@@ -190,7 +193,7 @@ describe('/research-outputs/ route', () => {
           includeDrafts: true,
         };
 
-        expect(researchOutputControllerMock.fetch).toBeCalledWith(
+        expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith(
           expectedParams,
         );
       });
@@ -215,7 +218,7 @@ describe('/research-outputs/ route', () => {
           projectId: 'project-id-0',
         });
 
-        expect(researchOutputControllerMock.fetch).toBeCalledWith({
+        expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith({
           take: 15,
           skip: 5,
           filter: {
@@ -316,7 +319,7 @@ describe('/research-outputs/ route', () => {
 
       await supertest(app).get(`/research-outputs/${researchOutputId}`);
 
-      expect(researchOutputControllerMock.fetchById).toBeCalledWith(
+      expect(researchOutputControllerMock.fetchById).toHaveBeenCalledWith(
         researchOutputId,
       );
     });
@@ -630,6 +633,77 @@ describe('/research-outputs/ route', () => {
       );
     });
 
+    describe('Creating a research output from a project', () => {
+      test.each([
+        {
+          publish: false,
+          expected: 201,
+          userRole: 'Grantee',
+          isProjectMember: true,
+        },
+        {
+          publish: true,
+          expected: 403,
+          userRole: 'Grantee',
+          isProjectMember: true,
+        },
+        {
+          publish: true,
+          expected: 201,
+          userRole: 'Staff',
+          isProjectMember: false,
+        },
+        {
+          publish: false,
+          expected: 403,
+          userRole: 'Grantee',
+          isProjectMember: false,
+        },
+        {
+          publish: true,
+          expected: 201,
+          userRole: 'Grantee',
+          isProjectMember: true,
+          relatedManuscriptVersion: 'manuscript-version-id-1',
+        },
+      ])(
+        'Should return $expected when a user has user role: $userRole, is project member: $isProjectMember and tries to publish: $publish',
+        async ({
+          publish,
+          expected,
+          userRole,
+          isProjectMember,
+          relatedManuscriptVersion,
+        }) => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: userRole as Role,
+            projects: isProjectMember
+              ? [
+                  {
+                    id: 'project-1',
+                    title: 'Project 1',
+                    projectType: 'Trainee Project',
+                    status: 'Active',
+                  },
+                ]
+              : [],
+          });
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              teams: [],
+              workingGroups: [],
+              projectId: 'project-1',
+              published: publish,
+              relatedManuscriptVersion,
+            });
+          expect(response.status).toBe(expected);
+        },
+      );
+    });
+
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
       const researchOutput = getResearchOutputPostRequest();
 
@@ -814,7 +888,8 @@ describe('/research-outputs/ route', () => {
                 params: {
                   missingProperty: field,
                 },
-                schemaPath: '#/required',
+                schemaPath:
+                  field === 'teams' ? '#/else/required' : '#/required',
               },
             ],
             error: 'Bad Request',
@@ -1240,13 +1315,7 @@ describe('/research-outputs/ route', () => {
                 url: 'https://example.com/manuscript.csv',
                 id: 'file-table-id',
               },
-              teams: [
-                {
-                  id: 'team-1',
-                  displayName: 'Test 1',
-                  inactiveSince: undefined,
-                },
-              ],
+              teams: [],
               labs: [],
               firstAuthors: [],
               correspondingAuthor: [],
@@ -1274,6 +1343,7 @@ describe('/research-outputs/ route', () => {
           expect.objectContaining({
             authors: [],
             labs: [],
+            teams: [],
           }),
         );
       });
@@ -1590,10 +1660,13 @@ describe('/research-outputs/ route', () => {
           .set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
-        expect(researchOutputControllerMock.update).toBeCalledWith('abc123', {
-          ...researchOutputPutRequest,
-          updatedBy: 'user-id-0',
-        });
+        expect(researchOutputControllerMock.update).toHaveBeenCalledWith(
+          'abc123',
+          {
+            ...researchOutputPutRequest,
+            updatedBy: 'user-id-0',
+          },
+        );
         expect(response.body).toEqual(researchOutputResponse);
       });
 
@@ -2004,7 +2077,8 @@ describe('/research-outputs/ route', () => {
                 params: {
                   missingProperty: field,
                 },
-                schemaPath: '#/required',
+                schemaPath:
+                  field === 'teams' ? '#/else/required' : '#/required',
               },
             ],
             error: 'Bad Request',

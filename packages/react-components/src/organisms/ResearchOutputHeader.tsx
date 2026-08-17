@@ -1,6 +1,9 @@
 import React, { ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputEntityType,
+} from '@asap-hub/model';
 
 import { news } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
@@ -90,49 +93,39 @@ const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
   Presentation: null,
 };
 
-const headerTextMap: Record<
-  'Team' | 'WorkingGroup',
-  Record<ResearchOutputDocumentType, string>
-> = {
-  WorkingGroup: {
-    Article: 'Share a Working Group Article',
-    Bioinformatics: 'Share Working Group Bioinformatics',
-    Dataset: 'Share a Working Group Dataset',
-    Protocol: 'Share a Working Group Protocol',
-    'Lab Material': 'Share a Working Group Lab Material',
-    Report: 'Share a Working Group CRN Report',
-    'Grant Document': 'Share a Working Group Grant Document',
-    Presentation: 'Share a Working Group Presentation',
-  },
-  Team: {
-    Protocol: 'Share a Team Protocol',
-    Dataset: 'Share a Team Dataset',
-    Bioinformatics: 'Share Team Bioinformatics',
-    'Lab Material': 'Share a Team Lab Material',
-    Article: 'Share a Team Article',
-    'Grant Document': 'Share a Team Grant Document',
-    Presentation: 'Share a Team Presentation',
-    Report: 'Share a Team Report',
-  },
+const entityLabelMap: Record<ResearchOutputEntityType, string> = {
+  'working-group': 'Working Group',
+  team: 'Team',
+  project: 'Project',
+};
+
+const getHeaderText = (
+  entityType: ResearchOutputEntityType,
+  documentType: ResearchOutputDocumentType,
+) => {
+  const entityLabel = entityLabelMap[entityType];
+  const documentLabel =
+    documentType === 'Report' && entityType === 'working-group'
+      ? 'CRN Report'
+      : documentType;
+  const article = documentType === 'Bioinformatics' ? '' : 'a ';
+
+  return `Share ${article}${entityLabel} ${documentLabel}`;
 };
 
 type ResearchOutputHeaderProps = {
+  entityType: ResearchOutputEntityType;
   documentType: ResearchOutputDocumentType;
-  workingGroupAssociation: boolean;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
+  entityType,
   documentType,
-  workingGroupAssociation,
 }) => (
   <header css={headerStyles}>
     <div css={contentStyles}>
       <Display styleAsHeading={2}>
-        {
-          headerTextMap[workingGroupAssociation ? 'WorkingGroup' : 'Team'][
-            documentType
-          ]
-        }
+        {getHeaderText(entityType, documentType)}
       </Display>
       <div>
         {subheaderRecord[documentType] && (

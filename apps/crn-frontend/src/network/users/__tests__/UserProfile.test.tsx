@@ -166,7 +166,9 @@ it('renders the personal info', async () => {
     ...createUserResponse(),
     fullDisplayName: 'Someone',
   });
-  expect((await screen.findByText('Someone')).tagName).toBe('H1');
+  expect(
+    (await screen.findByRole('heading', { name: 'Someone' })).tagName,
+  ).toBe('H1');
 });
 
 it('by default renders the research tab', async () => {

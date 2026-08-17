@@ -9,12 +9,12 @@ const boilerplateProps: Omit<
   'children'
 > = createUserResponse();
 it('renders the header', () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <UserProfilePage {...boilerplateProps} fullDisplayName="John Doe">
       Tab Content
     </UserProfilePage>,
   );
-  expect(getByText('John Doe')).toBeVisible();
+  expect(getByRole('heading', { name: 'John Doe' })).toBeVisible();
 });
 
 it('renders the children', () => {

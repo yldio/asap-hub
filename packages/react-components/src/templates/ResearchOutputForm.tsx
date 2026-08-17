@@ -279,7 +279,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       shortDescription: values.shortDescription,
       changelog: values.changelog,
       title: values.title,
-      type: values.type || '',
+      type: values.type,
       authors: values.authors,
       labs: values.labs,
       teams: values.teams,

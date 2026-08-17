@@ -3,7 +3,7 @@ import {
   ResearchOutputPermissionsContext,
   useFlags,
 } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { dashboard, network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext, useMemo } from 'react';
 import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
@@ -22,7 +22,12 @@ import {
   ResourceProjectIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
-import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
+import {
+  Breadcrumbs,
+  DropdownButton,
+  UserAvatarList,
+  TabNav,
+} from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
 import {
   getCounterString,
@@ -195,6 +200,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
 
   const isActive = teamStatus === 'Active';
 
+  const teamListCrumb =
+    teamType === 'Resource Team'
+      ? { label: 'Resource Teams', href: network({}).resourceTeams({}).$ }
+      : { label: 'Discovery Teams', href: network({}).discoveryTeams({}).$ };
+
   const { activeMembers } = useMemo(
     () => getTeamMembersByStatus(members, !isActive),
     [members, isActive],
@@ -203,6 +213,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   return (
     <header>
       <PageInfoContainer
+        breadcrumbs={
+          <Breadcrumbs
+            homeHref={dashboard({}).$}
+            items={[teamListCrumb, { label: displayName }]}
+          />
+        }
         nav={
           <TabNav>
             <TabLink href={route.about({}).$}>About</TabLink>

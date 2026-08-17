@@ -1,7 +1,8 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { dashboard, network } from '@asap-hub/routing';
 import { fireEvent } from '@testing-library/dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
@@ -176,7 +177,9 @@ it('does not display labs if isAsapTeam is true', () => {
 it('renders tabs', () => {
   render(<TeamProfileHeader {...boilerplateProps} />);
   expect(
-    screen.getAllByRole('link').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('link')
+      .map(({ textContent }) => textContent),
   ).toEqual(['About', 'Outputs (0)', 'Upcoming Events (0)', 'Past Events (0)']);
 });
 
@@ -189,7 +192,9 @@ it('does not render upcoming events tab when team is inactive', () => {
     />,
   );
   expect(
-    screen.getAllByRole('link').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('link')
+      .map(({ textContent }) => textContent),
   ).toEqual(['About', 'Outputs (0)', 'Past Events (0)']);
 });
 
@@ -201,7 +206,9 @@ it('renders workspace tabs when tools provided', () => {
     />,
   );
   expect(
-    screen.getAllByRole('link').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('link')
+      .map(({ textContent }) => textContent),
   ).toEqual([
     'About',
     'Team Workspace',
@@ -221,7 +228,9 @@ it('renders compliance tabs when is ASAP team and is staff', () => {
     />,
   );
   expect(
-    screen.getAllByRole('link').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('link')
+      .map(({ textContent }) => textContent),
   ).toEqual([
     'About',
     'Team Workspace',
@@ -409,4 +418,37 @@ it('renders the Resource Project icon for Resource Team', () => {
     />,
   );
   expect(screen.getByTestId('project-icon')).toContainHTML('<svg');
+});
+
+it('renders breadcrumbs to the discovery teams list', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamType="Discovery Team"
+      displayName="John, D"
+    />,
+  );
+
+  const breadcrumbs = within(
+    screen.getByRole('navigation', { name: 'breadcrumbs' }),
+  );
+  expect(breadcrumbs.getByRole('link', { name: 'Home' })).toHaveAttribute(
+    'href',
+    dashboard({}).$,
+  );
+  expect(
+    breadcrumbs.getByRole('link', { name: 'Discovery Teams' }),
+  ).toHaveAttribute('href', network({}).discoveryTeams({}).$);
+  expect(breadcrumbs.getByText('John, D')).toBeVisible();
+});
+
+it('renders breadcrumbs to the resource teams list', () => {
+  render(<TeamProfileHeader {...boilerplateProps} teamType="Resource Team" />);
+
+  const breadcrumbs = within(
+    screen.getByRole('navigation', { name: 'breadcrumbs' }),
+  );
+  expect(
+    breadcrumbs.getByRole('link', { name: 'Resource Teams' }),
+  ).toHaveAttribute('href', network({}).resourceTeams({}).$);
 });

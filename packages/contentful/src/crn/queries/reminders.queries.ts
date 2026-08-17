@@ -36,6 +36,12 @@ export const FETCH_REMINDERS = gql`
             displayName
           }
         }
+        project {
+          sys {
+            id
+          }
+          title
+        }
         assignedUsersCollection(limit: 30) {
           items {
             sys {

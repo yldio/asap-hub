@@ -28886,6 +28886,15 @@ export type FetchEventByIdQuery = {
           >;
         }
       >;
+      preliminaryDataSharedCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<PreliminaryDataSharing, 'preliminaryDataShared'> & {
+              team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
+          >
+        >;
+      }>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -30002,6 +30011,16 @@ export type FetchEventsByUserIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -30738,6 +30757,16 @@ export type FetchEventsByExternalAuthorIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -31474,6 +31503,16 @@ export type FetchEventsByTeamIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -36653,6 +36692,7 @@ export type FetchRemindersQuery = {
               Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
+          project?: Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>;
           assignedUsersCollection?: Maybe<{
             items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
           }>;
@@ -41407,10 +41447,7 @@ export const EventsContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'preliminaryDataShared',
-                        },
+                        name: { kind: 'Name', value: 'preliminaryDataShared' },
                       },
                       {
                         kind: 'Field',
@@ -67201,6 +67238,32 @@ export const FetchRemindersDocument = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'project' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
                             },
                           ],
                         },

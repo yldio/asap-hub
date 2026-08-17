@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router';
 
 import { NoEvents } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
-import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import { EventConstraint } from '@asap-hub/model';
 
@@ -13,7 +13,7 @@ const loadEventsList = () =>
 const EventsList = lazy(loadEventsList);
 
 type RequiredPaths = 'about' | 'upcoming' | 'past';
-type OptionalPaths = 'calendar' | 'outputs' | 'draftOutputs' | 'compliance';
+type OptionalPaths = 'calendar' | 'outputs' | 'draftOutputs';
 
 type ProfileSwitchProps = {
   About: FC;
@@ -26,7 +26,6 @@ type ProfileSwitchProps = {
   DraftOutputs?: ReactElement;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
-  Compliance?: ReactElement;
 };
 
 const ProfileSwitch: FC<ProfileSwitchProps> = ({
@@ -40,7 +39,6 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   paths,
   type,
   DraftOutputs,
-  Compliance,
 }) => {
   const { pathname } = useLocation();
   return (
@@ -70,12 +68,6 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
           <Route
             path={paths.draftOutputs}
             element={<Frame title="Draft Outputs">{DraftOutputs}</Frame>}
-          />
-        )}
-        {Compliance && (
-          <Route
-            path={paths.compliance}
-            element={<SearchFrame title="Compliance">{Compliance}</SearchFrame>}
           />
         )}
         {isActive && (

@@ -267,14 +267,15 @@ describe('EventSpeakers', () => {
 
   describe('external users row', () => {
     it('Should render and expand the external users row', async () => {
-      const { getByRole, getByText, queryByText } = renderCard();
+      const { getByRole, getByText, getByTitle, queryByText } = renderCard();
       expect(getByText('External Users')).toBeVisible();
       expect(queryByText('External user 1')).not.toBeInTheDocument();
       await userEvent.click(
         getByRole('button', { name: 'Expand External Users' }),
       );
       expect(getByText('External user 1')).toBeVisible();
-      expect(getByText('Guest')).toBeVisible();
+      expect(getByText('Non CRN')).toBeVisible();
+      expect(getByTitle('User Placeholder')).toBeInTheDocument();
     });
   });
 

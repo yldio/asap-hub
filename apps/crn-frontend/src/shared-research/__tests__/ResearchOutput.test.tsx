@@ -500,6 +500,65 @@ describe('a project research output', () => {
 
     expect(getByText(/sorry.+page/i)).toBeVisible();
   });
+
+  it('lets a member publish a draft when the project has no lead', async () => {
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+  });
+
+  it('lets the project lead publish a draft', async () => {
+    mockGetProject.mockResolvedValue({
+      ...project,
+      members: [
+        {
+          id: projectMember.id,
+          displayName: 'Lead Member',
+          role: 'Independent Project - Lead',
+        },
+      ],
+    });
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+  });
+
+  it('lets a non-lead member request review but not publish a draft when the project has a lead', async () => {
+    mockGetProject.mockResolvedValue({
+      ...project,
+      members: [
+        {
+          id: 'other-lead',
+          displayName: 'Other Lead',
+          role: 'Independent Project - Lead',
+        },
+        {
+          id: projectMember.id,
+          displayName: 'Member',
+          role: 'Independent Project - Mentor',
+        },
+      ],
+    });
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+    expect(queryByText('Ready for PM Review')).toBeVisible();
+  });
 });
 
 describe('edit form with missing association data', () => {

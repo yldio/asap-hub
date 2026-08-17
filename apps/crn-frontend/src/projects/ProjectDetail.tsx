@@ -200,7 +200,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const isMemberOrStaff = isMember || user?.role === 'Staff';
   const displayDraftOutputs = isProjectOutputsEnabled && isMemberOrStaff;
-  const canShareOutput = isProjectOutputsEnabled; // The rules are supposed to be implemented on ASAP-1506
+  const canShareOutput = isProjectOutputsEnabled && isMember;
 
   return (
     <Frame title={projectDetail.title || ''}>

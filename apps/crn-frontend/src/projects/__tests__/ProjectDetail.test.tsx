@@ -939,6 +939,46 @@ describe('ResourceProjectDetail - specific', () => {
 });
 
 describe('TraineeProjectDetail - specific', () => {
+  describe('Share an Output button', () => {
+    it('is displayed to a project member', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        TraineeProjectDetail,
+        'trainee',
+        'trainee-1',
+        traineeMemberUser,
+      );
+      expect(
+        screen.getByRole('button', { name: /Share an Output/i }),
+      ).toBeVisible();
+    });
+
+    it('is not displayed to a user who is not a project member', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        TraineeProjectDetail,
+        'trainee',
+        'trainee-1',
+        nonMemberUser,
+      );
+      expect(
+        screen.queryByRole('button', { name: /Share an Output/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('blocks the create-output route for a user who is not a project member', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        TraineeProjectDetail,
+        'trainee',
+        'trainee-1',
+        nonMemberUser,
+        'create-output/article',
+      );
+      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+    });
+  });
+
   describe('Duplicate Output', () => {
     const memberUser = {
       id: 'trainer-1',

@@ -9,6 +9,7 @@ import {
   utils,
 } from '@asap-hub/react-components';
 import {
+  ResearchOutputPermissions,
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
@@ -20,13 +21,29 @@ import {
   ManuscriptVersionResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { Suspense, useEffect, useState } from 'react';
+import { ReactNode, Suspense, useEffect, useState } from 'react';
 import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import TeamBasedOutput from '../projects/TeamBasedOutput';
 import UserBasedOutput from '../projects/UserBasedOutput';
+import { useProjectById } from '../projects/state';
 import { usePutResearchOutput } from '../shared-state';
-import { useResearchOutputById, useResearchOutputPermissions } from './state';
+import {
+  useProjectOutputPermissions,
+  useResearchOutputById,
+  useResearchOutputPermissions,
+} from './state';
+
+const ProjectOutputPermissionsGate: React.FC<{
+  projectId: string;
+  basePermissions: ResearchOutputPermissions;
+  children: (permissions: ResearchOutputPermissions) => ReactNode;
+}> = ({ projectId, basePermissions, children }) => {
+  const project = useProjectById(projectId);
+  const permissions = useProjectOutputPermissions(basePermissions, project);
+
+  return <>{children(permissions)}</>;
+};
 
 const entityAssociation = {
   'working-group': 'workingGroups',
@@ -220,12 +237,14 @@ const ResearchOutput: React.FC = () => {
       </Frame>
     );
 
-    return (
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
+    const renderWithPermissions = (
+      resolvedPermissions: ResearchOutputPermissions,
+    ) => (
+      <ResearchOutputPermissionsContext.Provider value={resolvedPermissions}>
         <Suspense key={location.pathname} fallback={<Loading />}>
           <Routes>
             <Route index element={renderResearchOutputView()} />
-            {permissions.canVersionResearchOutput && (
+            {resolvedPermissions.canVersionResearchOutput && (
               <Route
                 path={
                   sharedResearch({}).researchOutput({ researchOutputId })
@@ -234,7 +253,7 @@ const ResearchOutput: React.FC = () => {
                 element={renderOutputForm('create')}
               />
             )}
-            {permissions.canEditResearchOutput && (
+            {resolvedPermissions.canEditResearchOutput && (
               <Route
                 path={
                   sharedResearch({}).researchOutput({ researchOutputId })
@@ -248,6 +267,19 @@ const ResearchOutput: React.FC = () => {
         </Suspense>
       </ResearchOutputPermissionsContext.Provider>
     );
+
+    if (entityType === 'project' && researchOutputData.project?.id) {
+      return (
+        <ProjectOutputPermissionsGate
+          projectId={researchOutputData.project.id}
+          basePermissions={permissions}
+        >
+          {renderWithPermissions}
+        </ProjectOutputPermissionsGate>
+      );
+    }
+
+    return renderWithPermissions(permissions);
   }
   return <NotFoundPage />;
 };

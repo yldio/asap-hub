@@ -65,7 +65,7 @@ interface TabNavProps {
   readonly children: TabNavChildren;
 }
 const TabNav: React.FC<TabNavProps> = ({ children }) => (
-  <nav css={containerStyles}>
+  <nav css={containerStyles} aria-label="tabs">
     <ul css={styles}>
       {(
         (Array.isArray(children)

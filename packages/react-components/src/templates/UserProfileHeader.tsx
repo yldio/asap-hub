@@ -1,6 +1,6 @@
 import { getLatestUserAward, UserResponse } from '@asap-hub/model';
 import { UserProfileContext, useFlags } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { dashboard, network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useCallback, useContext } from 'react';
 import {
@@ -16,7 +16,12 @@ import {
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
-import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
+import {
+  Breadcrumbs,
+  SocialIcons,
+  TabNav,
+  UserProfilePersonalText,
+} from '../molecules';
 import { badgeImageStyles } from '../molecules/AvatarWithBadge';
 import { Toast } from '../organisms';
 import { badgesAnchorId } from '../organisms/UserProfileBadges';
@@ -300,6 +305,15 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
       )}
       <header>
         <PageInfoContainer
+          breadcrumbs={
+            <Breadcrumbs
+              homeHref={dashboard({}).$}
+              items={[
+                { label: 'People', href: network({}).users({}).$ },
+                { label: fullDisplayName },
+              ]}
+            />
+          }
           nav={
             <TabNav>
               <TabLink href={tabRoutes.research({}).$}>Research</TabLink>

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import formatDistance from 'date-fns/formatDistance';
-import { network } from '@asap-hub/routing';
+import { dashboard, network } from '@asap-hub/routing';
 import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
 import { lead } from '../colors';
@@ -13,7 +13,7 @@ import {
   systemCalendarIcon,
   TeamIcon,
 } from '../icons';
-import { CalendarLink, TabNav } from '../molecules';
+import { Breadcrumbs, CalendarLink, TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
 import { createMailTo } from '../mail';
@@ -100,6 +100,18 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   return (
     <header>
       <PageInfoContainer
+        breadcrumbs={
+          <Breadcrumbs
+            homeHref={dashboard({}).$}
+            items={[
+              {
+                label: 'Interest Groups',
+                href: network({}).interestGroups({}).$,
+              },
+              { label: name },
+            ]}
+          />
+        }
         nav={
           <TabNav>
             <TabLink href={route.about({}).$}>About</TabLink>

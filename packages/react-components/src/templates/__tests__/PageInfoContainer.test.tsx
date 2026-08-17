@@ -27,6 +27,23 @@ it('renders with navigation', () => {
   expect(getByText('Navigation Content')).toBeVisible();
 });
 
+it('renders breadcrumbs before the children when provided', () => {
+  const { container, getByText } = render(
+    <PageInfoContainer breadcrumbs={<span>Breadcrumb Content</span>}>
+      <span>Test Content</span>
+    </PageInfoContainer>,
+  );
+  expect(getByText('Breadcrumb Content')).toBeVisible();
+  expect(container.textContent).toBe('Breadcrumb ContentTest Content');
+});
+
+it('does not render a breadcrumbs container when none is provided', () => {
+  const { queryByText } = render(
+    <PageInfoContainer>Test Content</PageInfoContainer>,
+  );
+  expect(queryByText('Breadcrumb Content')).not.toBeInTheDocument();
+});
+
 it('applies container styles', () => {
   const { container } = render(
     <PageInfoContainer>Test Content</PageInfoContainer>,

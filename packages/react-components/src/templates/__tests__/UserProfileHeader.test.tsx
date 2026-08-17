@@ -1,11 +1,11 @@
 import { ComponentProps } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { dashboard, network } from '@asap-hub/routing';
 
 import UserProfileHeader from '../UserProfileHeader';
 
@@ -281,7 +281,9 @@ it('renders the navigation for active and inactive groups', () => {
   );
 
   expect(
-    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('listitem')
+      .map(({ textContent }) => textContent),
   ).toStrictEqual([
     'Research',
     'Background',
@@ -399,4 +401,23 @@ describe('award badge', () => {
       screen.queryByRole('link', { name: /badge/i }),
     ).not.toBeInTheDocument();
   });
+});
+
+it('renders breadcrumbs to the people list', () => {
+  render(
+    <UserProfileHeader {...boilerplateProps} fullDisplayName="Phillip Mars" />,
+  );
+
+  const breadcrumbs = within(
+    screen.getByRole('navigation', { name: 'breadcrumbs' }),
+  );
+  expect(breadcrumbs.getByRole('link', { name: 'Home' })).toHaveAttribute(
+    'href',
+    dashboard({}).$,
+  );
+  expect(breadcrumbs.getByRole('link', { name: 'People' })).toHaveAttribute(
+    'href',
+    network({}).users({}).$,
+  );
+  expect(breadcrumbs.getByText('Phillip Mars')).toBeVisible();
 });

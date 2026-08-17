@@ -16,9 +16,7 @@ const props: ComponentProps<typeof InterestGroupProfilePage> = {
 
 it('renders the header', () => {
   render(<InterestGroupProfilePage {...props} name="My Group" />);
-  expect(screen.getByRole('heading')).toContainElement(
-    screen.getByText('My Group'),
-  );
+  expect(screen.getByRole('heading', { name: 'My Group' })).toBeVisible();
 });
 
 it('renders the children', () => {

@@ -46,6 +46,19 @@ export type ParsedUserData = {
   teams: Array<{ name: string; role: string }>;
 };
 
+/** Fields that live on the linked socials entry rather than on the user. */
+const SOCIAL_FIELD_KEYS = [
+  'website1',
+  'website2',
+  'linkedIn',
+  'researcherId',
+  'twitter',
+  'blueSky',
+  'github',
+  'googleScholar',
+  'researchGate',
+] as const satisfies ReadonlyArray<keyof ParsedUserData>;
+
 /** Parsed CLI flags shared by the import scripts. */
 export type ImportArgs = {
   csvPath: string;
@@ -1029,6 +1042,49 @@ export const createTeamMembership = async (
   return entry.sys.id;
 };
 
+/**
+ * Creates or updates the socials entry holding a user's social links and
+ * returns a link to it, or null when the user has no social values. The entry
+ * id mirrors the one used by the socials migration script so repeated imports
+ * reuse the same entry.
+ */
+export const upsertUserSocials = async (
+  env: Environment,
+  userId: string,
+  data: ParsedUserData,
+  publish: boolean = false,
+): Promise<Link<'Entry'> | null> => {
+  const socialFields: LocalizedFields = {};
+
+  SOCIAL_FIELD_KEYS.forEach((key) => {
+    if (data[key]) {
+      socialFields[key] = loc(data[key]);
+    }
+  });
+
+  if (Object.keys(socialFields).length === 0) {
+    return null;
+  }
+
+  const entryId = `socials-${userId}`;
+  const fields = { ...socialFields, user: loc(createEntryLink(userId)) };
+
+  let entry;
+  try {
+    entry = await env.getEntry(entryId);
+    entry.fields = fields;
+    entry = await entry.update();
+  } catch {
+    entry = await env.createEntryWithId('socials', entryId, { fields });
+  }
+
+  if (publish) {
+    await entry.publish();
+  }
+
+  return createEntryLink(entryId);
+};
+
 /** Uploads a local avatar file to Contentful and returns the asset ID. */
 export const uploadAvatar = async (
   env: Environment,
@@ -1628,34 +1684,6 @@ export const buildUserFields = (
   }
   if (data.institution) {
     fields.institution = loc(data.institution);
-  }
-
-  if (data.website1) {
-    fields.website1 = loc(data.website1);
-  }
-  if (data.website2) {
-    fields.website2 = loc(data.website2);
-  }
-  if (data.linkedIn) {
-    fields.linkedIn = loc(data.linkedIn);
-  }
-  if (data.researcherId) {
-    fields.researcherId = loc(data.researcherId);
-  }
-  if (data.twitter) {
-    fields.twitter = loc(data.twitter);
-  }
-  if (data.github) {
-    fields.github = loc(data.github);
-  }
-  if (data.googleScholar) {
-    fields.googleScholar = loc(data.googleScholar);
-  }
-  if (data.researchGate) {
-    fields.researchGate = loc(data.researchGate);
-  }
-  if (data.blueSky) {
-    fields.blueSky = loc(data.blueSky);
   }
 
   if (data.responsibilities) {

@@ -493,7 +493,10 @@ const cleanUser = ({
         };
       }
       if (key === 'social') {
-        // social links live on the linked socials entry, not the user
+        // social links live on the linked socials entry, not the user. The user
+        // entry is still republished below with no changed fields, which is
+        // what emits the UsersPublished event downstream consumers such as the
+        // ActiveCampaign sync rely on.
         return acc;
       }
       if (key === 'connections') {

@@ -296,6 +296,12 @@ export const manuscriptsCollectionQueryFragment = gql`
   fragment ManuscriptsCollectionContent on ManuscriptsCollection {
     items {
       title
+      project {
+        sys {
+          id
+        }
+        title
+      }
       assignedUsersCollection(limit: 30) {
         items {
           sys {

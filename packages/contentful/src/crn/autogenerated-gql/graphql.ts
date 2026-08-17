@@ -36916,6 +36916,7 @@ export type ManuscriptsCollectionContentFragment = {
   items: Array<
     Maybe<
       Pick<Manuscripts, 'title'> & {
+        project?: Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>;
         assignedUsersCollection?: Maybe<{
           items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
         }>;
@@ -36999,6 +37000,9 @@ export type FetchDiscussionRemindersQuery = {
             items: Array<
               Maybe<
                 Pick<Manuscripts, 'title'> & {
+                  project?: Maybe<
+                    Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }
+                  >;
                   assignedUsersCollection?: Maybe<{
                     items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
                   }>;
@@ -37100,6 +37104,9 @@ export type FetchMessageRemindersQuery = {
                     items: Array<
                       Maybe<
                         Pick<Manuscripts, 'title'> & {
+                          project?: Maybe<
+                            Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }
+                          >;
                           assignedUsersCollection?: Maybe<{
                             items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
                           }>;
@@ -47357,6 +47364,29 @@ export const ManuscriptsCollectionContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'project' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'assignedUsersCollection' },

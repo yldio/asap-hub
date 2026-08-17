@@ -59,14 +59,11 @@ type ProjectContributorsProps =
       fundedTeam: FundedTeam;
       collaboratingTeams?: ReadonlyArray<CollaboratingTeam>;
       projectMembers?: never;
-      showTeamInfo?: never;
     }
   | {
       fundedTeam?: never;
       collaboratingTeams?: never;
       projectMembers: ReadonlyArray<ProjectMember>;
-      /** Show team info (true for trainee, false for resource not team-based) */
-      showTeamInfo?: boolean;
     };
 
 export const tabs = ['Funded Team', 'Collaborators'] as const;
@@ -77,7 +74,6 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
   fundedTeam,
   collaboratingTeams,
   projectMembers,
-  showTeamInfo = false,
 }) => {
   const [activeTab, setActiveTab] = useState<Tabs>('Funded Team');
 
@@ -90,10 +86,7 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
             View the people contributing to this project.
           </Paragraph>
           <div css={membersContentStyles}>
-            <ProjectMembers
-              members={projectMembers}
-              showTeamInfo={showTeamInfo}
-            />
+            <ProjectMembers members={projectMembers} />
           </div>
         </div>
       </Card>

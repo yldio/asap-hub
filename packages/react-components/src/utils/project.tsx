@@ -1,10 +1,20 @@
-import { BaseProject, ProjectType } from '@asap-hub/model';
-import { projects } from '@asap-hub/routing';
+import { BaseProject, ProjectMember, ProjectType } from '@asap-hub/model';
+import { network, projects } from '@asap-hub/routing';
 import {
   DiscoveryProjectIcon,
   ResourceProjectIcon,
   TraineeProjectIcon,
 } from '../icons';
+
+export const getMemberHref = (memberId: string): string =>
+  network({}).users({}).user({ userId: memberId }).$;
+
+export const withMemberHref = (
+  member: ProjectMember,
+): ProjectMember & { href: string } => ({
+  ...member,
+  href: getMemberHref(member.id),
+});
 
 type ProjectConfigParams = {
   projectId: BaseProject['id'];

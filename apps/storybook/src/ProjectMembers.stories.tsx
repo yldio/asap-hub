@@ -39,52 +39,17 @@ const mockMembers: ProjectMember[] = [
   },
 ];
 
-const membersWithSingleTeam: ProjectMember[] = mockMembers.map((m) => ({
-  ...m,
-  teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-}));
-
-const membersWithMultipleTeams: ProjectMember[] = mockMembers.map((m, idx) => ({
-  ...m,
-  teams:
-    idx === 0
-      ? [
-          { id: 'team-1', displayName: 'Alpha Team' },
-          { id: 'team-2', displayName: 'Genomics Lab' },
-          { id: 'team-3', displayName: 'Neuroscience Team' },
-          { id: 'team-4', displayName: 'PD Consortium' },
-        ]
-      : [
-          { id: 'team-1', displayName: 'Alpha Team' },
-          { id: 'team-5', displayName: 'Another Lab' },
-        ],
-}));
-
 // ProjectMembers (List) Stories
 export const ResourceNotTeamBased = () => (
-  <ProjectMembers members={mockMembers} showTeamInfo={false} />
-);
-
-export const TraineeWithTeamInfo = () => (
-  <ProjectMembers members={membersWithSingleTeam} showTeamInfo={true} />
-);
-
-export const TraineeWithTeamInfoAndBadge = () => (
-  <ProjectMembers members={membersWithMultipleTeams} showTeamInfo={true} />
+  <ProjectMembers members={mockMembers} />
 );
 
 export const SingleMember = () => (
-  <ProjectMembers
-    members={[mockMembers[0] as ProjectMember]}
-    showTeamInfo={false}
-  />
+  <ProjectMembers members={[mockMembers[0] as ProjectMember]} />
 );
 
 export const TwoMembers = () => (
-  <ProjectMembers
-    members={mockMembers.slice(0, 2) as ProjectMember[]}
-    showTeamInfo={false}
-  />
+  <ProjectMembers members={mockMembers.slice(0, 2) as ProjectMember[]} />
 );
 
 // ProjectMemberCard (Individual) Stories
@@ -98,41 +63,11 @@ const mockGroupedMember: GroupedProjectMember = {
 };
 
 export const IndividualMemberCard = () => (
-  <ProjectMemberCard member={mockGroupedMember} showTeamInfo={false} />
-);
-
-export const MemberCardWithTeam = () => (
-  <ProjectMemberCard
-    member={{
-      ...mockGroupedMember,
-      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-    }}
-    showTeamInfo={true}
-  />
-);
-
-export const MemberCardWithTeamAndBadge = () => (
-  <ProjectMemberCard
-    member={{
-      ...mockGroupedMember,
-      teams: [
-        { id: 'team-1', displayName: 'Anderson Research Team' },
-        { id: 'team-2', displayName: 'Team 2' },
-        { id: 'team-3', displayName: 'Team 3' },
-        { id: 'team-4', displayName: 'Team 4' },
-        { id: 'team-5', displayName: 'Team 5' },
-        { id: 'team-6', displayName: 'Team 6' },
-      ],
-    }}
-    showTeamInfo={true}
-  />
+  <ProjectMemberCard member={mockGroupedMember} />
 );
 
 export const MemberCardWithoutRole = () => (
-  <ProjectMemberCard
-    member={{ ...mockGroupedMember, roles: [] }}
-    showTeamInfo={false}
-  />
+  <ProjectMemberCard member={{ ...mockGroupedMember, roles: [] }} />
 );
 
 export const MemberCardWithLongRole = () => (
@@ -140,11 +75,7 @@ export const MemberCardWithLongRole = () => (
     member={{
       ...mockGroupedMember,
       roles: ['Senior Research Scientist and Laboratory Director'],
-      teams: [
-        { id: 'team-1', displayName: 'Neuroscience Research Consortium' },
-      ],
     }}
-    showTeamInfo={true}
   />
 );
 
@@ -208,52 +139,13 @@ export const MembersWithMultipleRoles = () => (
         href: '/users/michael-johnson',
       },
     ]}
-    showTeamInfo={false}
-  />
-);
-
-export const TraineeWithMultipleRolesAndTeams = () => (
-  <ProjectMembers
-    members={[
-      {
-        id: '1',
-        displayName: 'Alex Chen',
-        firstName: 'Alex',
-        lastName: 'Chen',
-        role: 'Independent Project - Lead',
-        href: '/users/alex-chen',
-        teams: [
-          { id: 'team-1', displayName: 'Alpha Team' },
-          { id: 'team-2', displayName: 'Genomics Lab' },
-        ],
-      },
-      {
-        id: '1',
-        displayName: 'Alex Chen',
-        firstName: 'Alex',
-        lastName: 'Chen',
-        role: 'Independent Project - Mentor',
-        href: '/users/alex-chen',
-        teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-      },
-      {
-        id: '2',
-        displayName: 'Maria Garcia',
-        firstName: 'Maria',
-        lastName: 'Garcia',
-        role: 'Independent Project - Mentor',
-        href: '/users/maria-garcia',
-        teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
-      },
-    ]}
-    showTeamInfo={true}
   />
 );
 
 export const RealWorldExample = () => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
     <div>
-      <h3>Trainee Project Members (with team info)</h3>
+      <h3>Trainee Project Members</h3>
       <ProjectMembers
         members={[
           {
@@ -263,7 +155,6 @@ export const RealWorldExample = () => (
             lastName: 'Chen',
             role: 'Independent Project - Lead',
             href: '/users/alex-chen',
-            teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
           },
           {
             id: '3',
@@ -272,10 +163,6 @@ export const RealWorldExample = () => (
             lastName: 'Garcia',
             role: 'Independent Project - Lead',
             href: '/users/maria-garcia',
-            teams: [
-              { id: 'team-1', displayName: 'Alpha Team' },
-              { id: 'team-4', displayName: 'Genomics Lab' },
-            ],
           },
           {
             id: '1',
@@ -284,14 +171,8 @@ export const RealWorldExample = () => (
             lastName: 'Martinez',
             role: 'Independent Project - Mentor',
             href: '/users/sarah-martinez',
-            teams: [
-              { id: 'team-1', displayName: 'Alpha Team' },
-              { id: 'team-2', displayName: 'Neuroscience Research' },
-              { id: 'team-3', displayName: 'PD Consortium' },
-            ],
           },
         ]}
-        showTeamInfo={true}
       />
     </div>
 
@@ -324,7 +205,6 @@ export const RealWorldExample = () => (
             href: '/users/david-kim',
           },
         ]}
-        showTeamInfo={false}
       />
     </div>
   </div>

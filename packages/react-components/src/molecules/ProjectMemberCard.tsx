@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Link, OverflowBadge } from '../atoms';
+import { Link } from '../atoms';
 import { rem } from '../pixels';
 import { fern, lead } from '../colors';
 import { GroupedProjectMember } from '../utils';
@@ -34,14 +34,6 @@ const nameStyles = css({
   },
 });
 
-const teamInfoStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-  fontSize: rem(17),
-  color: fern.rgb,
-});
-
 const noRoleStyles = css({
   color: lead.rgb,
   fontSize: rem(17),
@@ -50,52 +42,33 @@ const noRoleStyles = css({
 
 type ProjectMemberCardProps = {
   readonly member: GroupedProjectMember;
-  /** Whether to show team information (true for trainee, false for resource not team-based) */
-  readonly showTeamInfo?: boolean;
 };
 
-const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({
-  member,
-  showTeamInfo = false,
-}) => {
-  const teams = member.teams || [];
-  const firstTeam = teams[0];
-  const additionalTeamsCount = teams.length > 1 ? teams.length - 1 : 0;
-
-  return (
-    <div css={memberCardStyles}>
-      <div css={avatarStyles}>
-        <UserAvatar
-          imageUrl={member.avatarUrl}
-          firstName={member.firstName}
-          lastName={member.lastName}
-          badgeUrl={member.latestAward?.smallIconUrl}
-          badgeAlt={member.latestAward?.name}
-          badgeSize={18}
-          avatarSize={48}
-          overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
-        />
-      </div>
-      <div css={memberInfoStyles}>
-        <Link href={'#'}>
-          <span css={nameStyles}>{member.displayName}</span>
-        </Link>
-        {member.roles.length > 0 ? (
-          <RolesList roles={member.roles} maxVisible={2} />
-        ) : (
-          <div css={noRoleStyles}>No role assigned</div>
-        )}
-        {showTeamInfo && firstTeam && (
-          <div css={teamInfoStyles}>
-            <Link href={'#'}>{firstTeam.displayName}</Link>
-            {additionalTeamsCount > 0 && (
-              <OverflowBadge count={additionalTeamsCount} />
-            )}
-          </div>
-        )}
-      </div>
+const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({ member }) => (
+  <div css={memberCardStyles}>
+    <div css={avatarStyles}>
+      <UserAvatar
+        imageUrl={member.avatarUrl}
+        firstName={member.firstName}
+        lastName={member.lastName}
+        badgeUrl={member.latestAward?.smallIconUrl}
+        badgeAlt={member.latestAward?.name}
+        badgeSize={18}
+        avatarSize={48}
+        overrideBadgeStyles={css({ right: rem(0), bottom: rem(0) })}
+      />
     </div>
-  );
-};
+    <div css={memberInfoStyles}>
+      <Link href={member.href}>
+        <span css={nameStyles}>{member.displayName}</span>
+      </Link>
+      {member.roles.length > 0 ? (
+        <RolesList roles={member.roles} maxVisible={2} />
+      ) : (
+        <div css={noRoleStyles}>No role assigned</div>
+      )}
+    </div>
+  </div>
+);
 
 export default ProjectMemberCard;

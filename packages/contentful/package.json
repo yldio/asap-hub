@@ -11,6 +11,8 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "migrate-user-labs": "ts-node ./scripts/migrate-user-labs.ts",
+    "migrate-user-socials": "ts-node ./scripts/migrate-user-socials.ts",
+    "verify-user-socials": "ts-node ./scripts/verify-user-socials.ts",
     "migrate-assign-users-as-lab-pi": "ts-node ./scripts/assign-users-as-lab-pi.ts",
     "migrate-preprint-versions": "ts-node ./scripts/migrate-research-output-versions.ts",
     "migrate-project-data": "ts-node ./scripts/migrate-project-data.ts",

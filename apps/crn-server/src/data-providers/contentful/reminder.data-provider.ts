@@ -1206,7 +1206,12 @@ const getManuscriptRemindersFromQuery = (
           ) &&
           isAssignedUser
         ) {
-          reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
+          reminders.push(
+            createManuscriptResubmittedReminder(
+              manuscriptItem,
+              includeProjectReminders,
+            ),
+          );
         } else if (
           inLast7Days(manuscriptItem.sys.firstPublishedAt, timezone) &&
           isReminderForDifferentUser(
@@ -1214,7 +1219,12 @@ const getManuscriptRemindersFromQuery = (
             userId,
           )
         ) {
-          reminders.push(createManuscriptCreatedReminder(manuscriptItem));
+          reminders.push(
+            createManuscriptCreatedReminder(
+              manuscriptItem,
+              includeProjectReminders,
+            ),
+          );
         }
 
         return reminders;
@@ -1235,7 +1245,12 @@ const getManuscriptRemindersFromQuery = (
           userId,
         )
       ) {
-        reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
+        reminders.push(
+          createManuscriptResubmittedReminder(
+            manuscriptItem,
+            includeProjectReminders,
+          ),
+        );
       } else if (
         inLast7Days(manuscript.sys.firstPublishedAt, timezone) &&
         isReminderForDifferentUser(
@@ -1250,7 +1265,12 @@ const getManuscriptRemindersFromQuery = (
           (isTeamBasedManuscript(manuscriptItem) &&
             isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
-        reminders.push(createManuscriptCreatedReminder(manuscriptItem));
+        reminders.push(
+          createManuscriptCreatedReminder(
+            manuscriptItem,
+            includeProjectReminders,
+          ),
+        );
       }
 
       if (
@@ -1264,7 +1284,12 @@ const getManuscriptRemindersFromQuery = (
           (isTeamBasedManuscript(manuscriptItem) &&
             isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
-        reminders.push(createManuscriptStatusUpdatedReminder(manuscriptItem));
+        reminders.push(
+          createManuscriptStatusUpdatedReminder(
+            manuscriptItem,
+            includeProjectReminders,
+          ),
+        );
       }
 
       return reminders;
@@ -1316,14 +1341,22 @@ const getDiscussionRemindersFromQuery = (
           isManuscriptContributor
         ) {
           reminders.push(
-            createDiscussionCreatedReminder(discussion, 'Open Science Member'),
+            createDiscussionCreatedReminder(
+              discussion,
+              'Open Science Member',
+              includeProjectReminders,
+            ),
           );
         } else if (
           !isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
           (isManuscriptContributor || isAssignedUser)
         ) {
           reminders.push(
-            createDiscussionCreatedReminder(discussion, 'Grantee'),
+            createDiscussionCreatedReminder(
+              discussion,
+              'Grantee',
+              includeProjectReminders,
+            ),
           );
         }
       }
@@ -1381,13 +1414,23 @@ const getReplyRemindersFromQuery = (
         isManuscriptContributor
       ) {
         reminders.push(
-          createDiscussionRepliedToReminder(message, 'Open Science Member'),
+          createDiscussionRepliedToReminder(
+            message,
+            'Open Science Member',
+            includeProjectReminders,
+          ),
         );
       } else if (
         !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
         (isManuscriptContributor || isAssignedUser)
       ) {
-        reminders.push(createDiscussionRepliedToReminder(message, 'Grantee'));
+        reminders.push(
+          createDiscussionRepliedToReminder(
+            message,
+            'Grantee',
+            includeProjectReminders,
+          ),
+        );
       }
     }
     return reminders;
@@ -1420,17 +1463,74 @@ export const getTeamNames = (
   return '';
 };
 
+type TeamsWithLinkedProject = {
+  items: Maybe<{
+    linkedFrom?: Maybe<{
+      projectMembershipCollection?: Maybe<{
+        items: Maybe<{
+          linkedFrom?: Maybe<{
+            projectsCollection?: Maybe<{
+              items: Maybe<{ title?: Maybe<string> }>[];
+            }>;
+          }>;
+        }>[];
+      }>;
+    }>;
+  }>[];
+};
+
+const getTeamLinkedProjectTitle = (
+  teams: Maybe<TeamsWithLinkedProject> | undefined,
+): string | undefined =>
+  teams?.items[0]?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+    ?.projectsCollection?.items[0]?.title || undefined;
+
 const getManuscriptAssociationName = (
   manuscript: ValidManuscriptItem,
-): string =>
-  isTeamBasedManuscript(manuscript)
-    ? getTeamNames(
-        manuscript.teamsCollection?.items.map((team) => team?.displayName),
-      )
-    : manuscript.project?.title || '';
+  includeProjectReminders: boolean,
+): string => {
+  if (!isTeamBasedManuscript(manuscript)) {
+    return manuscript.project?.title || '';
+  }
+
+  const projectTitle = includeProjectReminders
+    ? getTeamLinkedProjectTitle(manuscript.teamsCollection)
+    : undefined;
+
+  return (
+    projectTitle ||
+    getTeamNames(
+      manuscript.teamsCollection?.items.map((team) => team?.displayName),
+    )
+  );
+};
+
+const getDiscussionManuscriptAssociationName = (
+  manuscript: Maybe<{ project?: Maybe<{ title?: Maybe<string> }> }> | undefined,
+  manuscriptVersion: ManuscriptVersion | undefined,
+  includeProjectReminders: boolean,
+): string => {
+  if (!isTeamBasedManuscriptVersion(manuscriptVersion)) {
+    return manuscript?.project?.title || '';
+  }
+
+  const projectTitle = includeProjectReminders
+    ? getTeamLinkedProjectTitle(manuscriptVersion?.teamsCollection)
+    : undefined;
+
+  return (
+    projectTitle ||
+    getTeamNames(
+      manuscriptVersion?.teamsCollection?.items.map(
+        (teams) => teams?.displayName,
+      ),
+    )
+  );
+};
 
 const createManuscriptCreatedReminder = (
   manuscript: ValidManuscriptItem,
+  includeProjectReminders: boolean,
 ): ManuscriptCreatedReminder => ({
   id: `manuscript-created-${manuscript.sys.id}`,
   entity: 'Manuscript',
@@ -1438,7 +1538,7 @@ const createManuscriptCreatedReminder = (
   data: {
     manuscriptId: manuscript.sys.id,
     title: manuscript.title || '',
-    teams: getManuscriptAssociationName(manuscript),
+    teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
     createdBy: `${manuscript.versionsCollection.items[0]?.createdBy?.firstName} ${manuscript.versionsCollection.items[0]?.createdBy?.lastName}`,
     publishedAt: manuscript.sys.firstPublishedAt,
   },
@@ -1446,6 +1546,7 @@ const createManuscriptCreatedReminder = (
 
 const createManuscriptResubmittedReminder = (
   manuscript: ValidManuscriptItem,
+  includeProjectReminders: boolean,
 ): ManuscriptResubmittedReminder => {
   const manuscriptVersions = manuscript.versionsCollection.items || [];
 
@@ -1458,7 +1559,7 @@ const createManuscriptResubmittedReminder = (
     data: {
       manuscriptId: manuscript.sys.id,
       title: manuscript.title || '',
-      teams: getManuscriptAssociationName(manuscript),
+      teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
       resubmittedBy: `${lastVersion?.createdBy?.firstName} ${lastVersion?.createdBy?.lastName}`,
       resubmittedAt: manuscript.sys.publishedAt,
     },
@@ -1468,21 +1569,18 @@ const createManuscriptResubmittedReminder = (
 const createDiscussionCreatedReminder = (
   discussion: ValidDiscussionItem,
   actor: 'Grantee' | 'Open Science Member',
+  includeProjectReminders: boolean,
 ): DiscussionCreatedReminder => {
   const manuscript = discussion.linkedFrom?.manuscriptsCollection?.items[0];
   const manuscriptVersion = manuscript?.versionsCollection?.items[0];
   const userTeams = discussion.message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
-  const manuscriptTeams = isTeamBasedManuscriptVersion(
+  const manuscriptTeams = getDiscussionManuscriptAssociationName(
+    manuscript,
     manuscriptVersion as ManuscriptVersion,
-  )
-    ? getTeamNames(
-        manuscriptVersion?.teamsCollection?.items.map(
-          (teams) => teams?.displayName,
-        ),
-      )
-    : manuscript?.project?.title || '';
+    includeProjectReminders,
+  );
 
   return {
     id: `discussion-created-${discussion.sys.id}`,
@@ -1505,21 +1603,18 @@ const createDiscussionCreatedReminder = (
 const createDiscussionRepliedToReminder = (
   message: ValidMessageItem,
   actor: 'Grantee' | 'Open Science Member',
+  includeProjectReminders: boolean,
 ): DiscussionRepliedToReminder => {
   const discussion = message.linkedFrom.discussionsCollection.items[0];
 
   const manuscript = discussion?.linkedFrom?.manuscriptsCollection?.items[0];
   const manuscriptVersion = manuscript?.versionsCollection?.items[0];
 
-  const manuscriptTeams = isTeamBasedManuscriptVersion(
+  const manuscriptTeams = getDiscussionManuscriptAssociationName(
+    manuscript,
     manuscriptVersion as ManuscriptVersion,
-  )
-    ? getTeamNames(
-        manuscriptVersion?.teamsCollection?.items.map(
-          (teams) => teams?.displayName,
-        ),
-      )
-    : manuscript?.project?.title || '';
+    includeProjectReminders,
+  );
   const userTeams = message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
@@ -1544,6 +1639,7 @@ const createDiscussionRepliedToReminder = (
 
 const createManuscriptStatusUpdatedReminder = (
   manuscript: ValidManuscriptItem,
+  includeProjectReminders: boolean,
 ): ManuscriptStatusUpdatedReminder => ({
   id: `manuscript-status-updated-${manuscript.sys.id}`,
   entity: 'Manuscript',
@@ -1553,7 +1649,7 @@ const createManuscriptStatusUpdatedReminder = (
     title: manuscript.title || '',
     status: manuscript.status as ManuscriptStatus,
     previousStatus: manuscript.previousStatus as ManuscriptStatus,
-    teams: getManuscriptAssociationName(manuscript),
+    teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
     updatedBy: `${manuscript.statusUpdatedBy?.firstName} ${manuscript.statusUpdatedBy?.lastName}`,
     updatedAt: manuscript.statusUpdatedAt,
   },

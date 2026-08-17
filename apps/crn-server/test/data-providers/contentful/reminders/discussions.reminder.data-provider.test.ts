@@ -620,6 +620,90 @@ describe('Reminders data provider', () => {
       });
     });
 
+    describe('Team-based manuscripts linked to a project', () => {
+      const teamLinkedProject = {
+        projectMembershipCollection: {
+          items: [
+            {
+              linkedFrom: {
+                projectsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'project-id-2',
+                      },
+                      title: 'Team Linked Project',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      };
+
+      const getTeamDiscussionWithLinkedProject = () => {
+        const discussion = getContentfulReminderDiscussionCollectionItem();
+        discussion!.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.teamsCollection =
+          {
+            items: [
+              {
+                sys: {
+                  id: 'reminder-team',
+                },
+                displayName: 'Reminder',
+                linkedFrom: teamLinkedProject,
+              },
+            ],
+          };
+        return discussion;
+      };
+
+      const mockContentfulGraphqlResponse = (discussion: DiscussionItem) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [discussion],
+          },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          messagesCollection: {
+            items: [],
+          },
+        });
+      };
+
+      test('shows the linked project name when includeProjectReminders is enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
+
+        const expectedReminder = getDiscussionStartedByGranteeReminder();
+        expectedReminder.data.manuscriptTeams = 'Team Linked Project';
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+          includeProjectReminders: true,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('shows team names when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
+
+        const expectedReminder = getDiscussionStartedByGranteeReminder();
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+    });
+
     test('getTeamNames returns empty string when no teams provided', async () => {
       expect(getTeamNames(undefined)).toEqual('');
     });

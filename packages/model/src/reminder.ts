@@ -319,6 +319,7 @@ export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 export type FetchRemindersOptions = {
   userId: string;
   timezone: string;
+  includeProjectReminders?: boolean;
 };
 
 export type ReminderResponse = {

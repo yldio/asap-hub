@@ -1085,7 +1085,7 @@ export enum AttendanceOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
 export type AwardType = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -1097,25 +1097,25 @@ export type AwardType = Entry &
     sys: Sys;
   };
 
-/** Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
 export type AwardTypeIconArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
 export type AwardTypeLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
 export type AwardTypeNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
 export type AwardTypeSmallIconArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -2747,8 +2747,6 @@ export enum DiscoverMembersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -2765,18 +2763,12 @@ export enum DiscoverMembersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -2793,10 +2785,6 @@ export enum DiscoverMembersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -2809,12 +2797,6 @@ export enum DiscoverMembersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type DiscoverMembersCursorCollection = {
@@ -2834,8 +2816,6 @@ export enum DiscoverMembersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -2852,18 +2832,12 @@ export enum DiscoverMembersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -2880,10 +2854,6 @@ export enum DiscoverMembersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -2896,12 +2866,6 @@ export enum DiscoverMembersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum DiscoverOrder {
@@ -2933,8 +2897,6 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -2951,18 +2913,12 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -2979,10 +2935,6 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -2995,12 +2947,6 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type DiscoverScientificAdvisoryBoardCursorCollection = {
@@ -3020,8 +2966,6 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -3038,18 +2982,12 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -3066,10 +3004,6 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -3082,12 +3016,6 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
@@ -3359,8 +3287,6 @@ export enum DiscussionsReadByCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -3377,18 +3303,12 @@ export enum DiscussionsReadByCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -3405,10 +3325,6 @@ export enum DiscussionsReadByCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -3421,12 +3337,6 @@ export enum DiscussionsReadByCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type DiscussionsReadByCursorCollection = {
@@ -3446,8 +3356,6 @@ export enum DiscussionsReadByCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -3464,18 +3372,12 @@ export enum DiscussionsReadByCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -3492,10 +3394,6 @@ export enum DiscussionsReadByCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -3508,12 +3406,6 @@ export enum DiscussionsReadByCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type DiscussionsRepliesCollection = {
@@ -5398,7 +5290,7 @@ export enum ExternalAuthorsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalTools = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -5410,24 +5302,24 @@ export type ExternalTools = Entry &
     url?: Maybe<Scalars['String']>;
   };
 
-/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalToolsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalToolsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalToolsNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalToolsUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -7636,8 +7528,6 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -7654,18 +7544,12 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -7682,10 +7566,6 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -7698,12 +7578,6 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -7717,8 +7591,6 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -7735,18 +7607,12 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -7763,10 +7629,6 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -7779,12 +7641,6 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum LabMembershipOrder {
@@ -8230,8 +8086,6 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -8248,18 +8102,12 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -8276,10 +8124,6 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -8292,12 +8136,6 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
@@ -8311,8 +8149,6 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -8329,18 +8165,12 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -8357,10 +8187,6 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -8373,12 +8199,6 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum LabsOrder {
@@ -10012,8 +9832,6 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -10030,18 +9848,12 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -10058,10 +9870,6 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -10074,12 +9882,6 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type ManuscriptsAssignedUsersCursorCollection = {
@@ -10099,8 +9901,6 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -10117,18 +9917,12 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -10145,10 +9939,6 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -10161,12 +9951,6 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type ManuscriptsCategoriesCollection = {
@@ -10658,7 +10442,7 @@ export enum ManuscriptsVersionsCursorCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
 export type Media = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -10668,12 +10452,12 @@ export type Media = Entry &
     url?: Maybe<Scalars['String']>;
   };
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
 export type MediaLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
 export type MediaUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -10908,7 +10692,7 @@ export enum MessagesOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type Migration = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -10919,18 +10703,18 @@ export type Migration = Entry &
     sys: Sys;
   };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationContentTypeIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationStateArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -11347,7 +11131,7 @@ export enum MilestonesRelatedArticlesCursorCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type News = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -11366,42 +11150,42 @@ export type News = Entry &
     title?: Maybe<Scalars['String']>;
   };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsFrequencyArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsPublishDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTagsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -11412,7 +11196,7 @@ export type NewsTagsCollectionArgs = {
   where?: InputMaybe<ResearchTagsFilter>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTagsCursorCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -11424,20 +11208,20 @@ export type NewsTagsCursorCollectionArgs = {
   where?: InputMaybe<ResearchTagsFilter>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsThumbnailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -13102,8 +12886,6 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -13120,18 +12902,12 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -13148,10 +12924,6 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -13164,12 +12936,6 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type ProjectsScientificFacilitatorCursorCollection = {
@@ -13189,8 +12955,6 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -13207,18 +12971,12 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -13235,10 +12993,6 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -13251,12 +13005,6 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type ProjectsToolsCollection = {
@@ -13437,6 +13185,9 @@ export type Query = {
   resourceType?: Maybe<ResourceType>;
   resourceTypeCollection?: Maybe<ResourceTypeCollection>;
   resourceTypeCursorCollection?: Maybe<ResourceTypeCursorCollection>;
+  socials?: Maybe<Socials>;
+  socialsCollection?: Maybe<SocialsCollection>;
+  socialsCursorCollection?: Maybe<SocialsCursorCollection>;
   supplementGrant?: Maybe<SupplementGrant>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
   supplementGrantCursorCollection?: Maybe<SupplementGrantCursorCollection>;
@@ -14675,6 +14426,34 @@ export type QueryResourceTypeCursorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResourceTypeFilter>;
+};
+
+export type QuerySocialsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QuerySocialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<SocialsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<SocialsFilter>;
+};
+
+export type QuerySocialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<SocialsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<SocialsFilter>;
 };
 
 export type QuerySupplementGrantArgs = {
@@ -17970,8 +17749,6 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -17988,18 +17765,12 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -18016,10 +17787,6 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -18032,12 +17799,6 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
@@ -18051,8 +17812,6 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -18069,18 +17828,12 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -18097,10 +17850,6 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -18113,12 +17862,6 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -18518,6 +18261,379 @@ export enum ResourceTypeOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type Socials = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    blueSky?: Maybe<Scalars['String']>;
+    contentfulMetadata: ContentfulMetadata;
+    github?: Maybe<Scalars['String']>;
+    googleScholar?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<SocialsLinkingCollections>;
+    linkedIn?: Maybe<Scalars['String']>;
+    researchGate?: Maybe<Scalars['String']>;
+    researcherId?: Maybe<Scalars['String']>;
+    sys: Sys;
+    twitter?: Maybe<Scalars['String']>;
+    user?: Maybe<Users>;
+    website1?: Maybe<Scalars['String']>;
+    website2?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsBlueSkyArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsGithubArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsGoogleScholarArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsLinkedInArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsResearchGateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsResearcherIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsTwitterArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsWebsite1Args = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
+export type SocialsWebsite2Args = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SocialsCollection = {
+  items: Array<Maybe<Socials>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type SocialsCursorCollection = {
+  items: Array<Maybe<Socials>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export type SocialsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<SocialsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SocialsFilter>>>;
+  blueSky?: InputMaybe<Scalars['String']>;
+  blueSky_contains?: InputMaybe<Scalars['String']>;
+  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
+  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky_not?: InputMaybe<Scalars['String']>;
+  blueSky_not_contains?: InputMaybe<Scalars['String']>;
+  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  github?: InputMaybe<Scalars['String']>;
+  github_contains?: InputMaybe<Scalars['String']>;
+  github_exists?: InputMaybe<Scalars['Boolean']>;
+  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github_not?: InputMaybe<Scalars['String']>;
+  github_not_contains?: InputMaybe<Scalars['String']>;
+  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar?: InputMaybe<Scalars['String']>;
+  googleScholar_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
+  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar_not?: InputMaybe<Scalars['String']>;
+  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn?: InputMaybe<Scalars['String']>;
+  linkedIn_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
+  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn_not?: InputMaybe<Scalars['String']>;
+  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate?: InputMaybe<Scalars['String']>;
+  researchGate_contains?: InputMaybe<Scalars['String']>;
+  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
+  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate_not?: InputMaybe<Scalars['String']>;
+  researchGate_not_contains?: InputMaybe<Scalars['String']>;
+  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId?: InputMaybe<Scalars['String']>;
+  researcherId_contains?: InputMaybe<Scalars['String']>;
+  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
+  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId_not?: InputMaybe<Scalars['String']>;
+  researcherId_not_contains?: InputMaybe<Scalars['String']>;
+  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  twitter?: InputMaybe<Scalars['String']>;
+  twitter_contains?: InputMaybe<Scalars['String']>;
+  twitter_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter_not?: InputMaybe<Scalars['String']>;
+  twitter_not_contains?: InputMaybe<Scalars['String']>;
+  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+  website1?: InputMaybe<Scalars['String']>;
+  website1_contains?: InputMaybe<Scalars['String']>;
+  website1_exists?: InputMaybe<Scalars['Boolean']>;
+  website1_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website1_not?: InputMaybe<Scalars['String']>;
+  website1_not_contains?: InputMaybe<Scalars['String']>;
+  website1_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2?: InputMaybe<Scalars['String']>;
+  website2_contains?: InputMaybe<Scalars['String']>;
+  website2_exists?: InputMaybe<Scalars['Boolean']>;
+  website2_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2_not?: InputMaybe<Scalars['String']>;
+  website2_not_contains?: InputMaybe<Scalars['String']>;
+  website2_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type SocialsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
+  usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
+};
+
+export type SocialsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SocialsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SocialsLinkingCollectionsUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<SocialsLinkingCollectionsUsersCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SocialsLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<SocialsLinkingCollectionsUsersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum SocialsLinkingCollectionsUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum SocialsLinkingCollectionsUsersCursorCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  PersonalEmailAsc = 'personalEmail_ASC',
+  PersonalEmailDesc = 'personalEmail_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum SocialsOrder {
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant) */
@@ -19074,8 +19190,6 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -19092,18 +19206,12 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -19120,10 +19228,6 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -19136,12 +19240,6 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -19155,8 +19253,6 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -19173,18 +19269,12 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -19201,10 +19291,6 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -19217,12 +19303,6 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum TeamMembershipOrder {
@@ -21221,7 +21301,6 @@ export type Users = Entry &
     alumniSinceDate?: Maybe<Scalars['DateTime']>;
     avatar?: Maybe<Asset>;
     biography?: Maybe<Scalars['String']>;
-    blueSky?: Maybe<Scalars['String']>;
     city?: Maybe<Scalars['String']>;
     connections?: Maybe<Array<Maybe<Scalars['String']>>>;
     contactEmail?: Maybe<Scalars['String']>;
@@ -21233,8 +21312,6 @@ export type Users = Entry &
     email?: Maybe<Scalars['String']>;
     expertiseAndResourceDescription?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
-    github?: Maybe<Scalars['String']>;
-    googleScholar?: Maybe<Scalars['String']>;
     institution?: Maybe<Scalars['String']>;
     jobTitle?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<UsersLabsCollection>;
@@ -21242,7 +21319,6 @@ export type Users = Entry &
     lastName?: Maybe<Scalars['String']>;
     lastUpdated?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<UsersLinkingCollections>;
-    linkedIn?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     nickname?: Maybe<Scalars['String']>;
     oldLabsCollection?: Maybe<UsersOldLabsCollection>;
@@ -21256,20 +21332,16 @@ export type Users = Entry &
     personalEmail?: Maybe<Scalars['String']>;
     questions?: Maybe<Scalars['JSON']>;
     reachOut?: Maybe<Scalars['String']>;
-    researchGate?: Maybe<Scalars['String']>;
     researchInterests?: Maybe<Scalars['String']>;
     researchTagsCollection?: Maybe<UsersResearchTagsCollection>;
     researchTagsCursorCollection?: Maybe<UsersResearchTagsCursorCollection>;
-    researcherId?: Maybe<Scalars['String']>;
     responsibilities?: Maybe<Scalars['String']>;
     role?: Maybe<Scalars['String']>;
     stateOrProvince?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<UsersTeamsCollection>;
     teamsCursorCollection?: Maybe<UsersTeamsCursorCollection>;
-    twitter?: Maybe<Scalars['String']>;
-    website1?: Maybe<Scalars['String']>;
-    website2?: Maybe<Scalars['String']>;
+    userSocials?: Maybe<Socials>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -21317,12 +21389,6 @@ export type UsersAvatarArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersBiographyArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersBlueSkyArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -21388,18 +21454,6 @@ export type UsersFirstNameArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersGithubArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersGoogleScholarArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersInstitutionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -21449,12 +21503,6 @@ export type UsersLastUpdatedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersLinkedInArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -21547,12 +21595,6 @@ export type UsersReachOutArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersResearchGateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersResearchInterestsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -21579,12 +21621,6 @@ export type UsersResearchTagsCursorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchTagsFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersResearcherIdArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -21629,21 +21665,11 @@ export type UsersTeamsCursorCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersTwitterArgs = {
+export type UsersUserSocialsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersWebsite1Args = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersWebsite2Args = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<SocialsFilter>;
 };
 
 export type UsersCollection = {
@@ -21722,13 +21748,6 @@ export type UsersFilter = {
   biography_not?: InputMaybe<Scalars['String']>;
   biography_not_contains?: InputMaybe<Scalars['String']>;
   biography_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  blueSky?: InputMaybe<Scalars['String']>;
-  blueSky_contains?: InputMaybe<Scalars['String']>;
-  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
-  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  blueSky_not?: InputMaybe<Scalars['String']>;
-  blueSky_not_contains?: InputMaybe<Scalars['String']>;
-  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   city?: InputMaybe<Scalars['String']>;
   city_contains?: InputMaybe<Scalars['String']>;
   city_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21799,20 +21818,6 @@ export type UsersFilter = {
   firstName_not?: InputMaybe<Scalars['String']>;
   firstName_not_contains?: InputMaybe<Scalars['String']>;
   firstName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  github?: InputMaybe<Scalars['String']>;
-  github_contains?: InputMaybe<Scalars['String']>;
-  github_exists?: InputMaybe<Scalars['Boolean']>;
-  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  github_not?: InputMaybe<Scalars['String']>;
-  github_not_contains?: InputMaybe<Scalars['String']>;
-  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  googleScholar?: InputMaybe<Scalars['String']>;
-  googleScholar_contains?: InputMaybe<Scalars['String']>;
-  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
-  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  googleScholar_not?: InputMaybe<Scalars['String']>;
-  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
-  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   institution?: InputMaybe<Scalars['String']>;
   institution_contains?: InputMaybe<Scalars['String']>;
   institution_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21845,13 +21850,6 @@ export type UsersFilter = {
   lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
   lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
   lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  linkedIn?: InputMaybe<Scalars['String']>;
-  linkedIn_contains?: InputMaybe<Scalars['String']>;
-  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
-  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  linkedIn_not?: InputMaybe<Scalars['String']>;
-  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
-  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   middleName?: InputMaybe<Scalars['String']>;
   middleName_contains?: InputMaybe<Scalars['String']>;
   middleName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21917,13 +21915,6 @@ export type UsersFilter = {
   reachOut_not?: InputMaybe<Scalars['String']>;
   reachOut_not_contains?: InputMaybe<Scalars['String']>;
   reachOut_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchGate?: InputMaybe<Scalars['String']>;
-  researchGate_contains?: InputMaybe<Scalars['String']>;
-  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
-  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchGate_not?: InputMaybe<Scalars['String']>;
-  researchGate_not_contains?: InputMaybe<Scalars['String']>;
-  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchInterests?: InputMaybe<Scalars['String']>;
   researchInterests_contains?: InputMaybe<Scalars['String']>;
   researchInterests_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21933,13 +21924,6 @@ export type UsersFilter = {
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researcherId?: InputMaybe<Scalars['String']>;
-  researcherId_contains?: InputMaybe<Scalars['String']>;
-  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
-  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researcherId_not?: InputMaybe<Scalars['String']>;
-  researcherId_not_contains?: InputMaybe<Scalars['String']>;
-  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   responsibilities?: InputMaybe<Scalars['String']>;
   responsibilities_contains?: InputMaybe<Scalars['String']>;
   responsibilities_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21964,27 +21948,8 @@ export type UsersFilter = {
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamMembershipNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  twitter?: InputMaybe<Scalars['String']>;
-  twitter_contains?: InputMaybe<Scalars['String']>;
-  twitter_exists?: InputMaybe<Scalars['Boolean']>;
-  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  twitter_not?: InputMaybe<Scalars['String']>;
-  twitter_not_contains?: InputMaybe<Scalars['String']>;
-  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website1?: InputMaybe<Scalars['String']>;
-  website1_contains?: InputMaybe<Scalars['String']>;
-  website1_exists?: InputMaybe<Scalars['Boolean']>;
-  website1_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website1_not?: InputMaybe<Scalars['String']>;
-  website1_not_contains?: InputMaybe<Scalars['String']>;
-  website1_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website2?: InputMaybe<Scalars['String']>;
-  website2_contains?: InputMaybe<Scalars['String']>;
-  website2_exists?: InputMaybe<Scalars['Boolean']>;
-  website2_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website2_not?: InputMaybe<Scalars['String']>;
-  website2_not_contains?: InputMaybe<Scalars['String']>;
-  website2_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  userSocials?: InputMaybe<CfSocialsNestedFilter>;
+  userSocials_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersLabsCollection = {
@@ -22055,6 +22020,8 @@ export type UsersLinkingCollections = {
   projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
+  socialsCollection?: Maybe<SocialsCollection>;
+  socialsCursorCollection?: Maybe<SocialsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
@@ -22384,6 +22351,29 @@ export type UsersLinkingCollectionsResearchOutputsCursorCollectionArgs = {
     Array<
       InputMaybe<UsersLinkingCollectionsResearchOutputsCursorCollectionOrder>
     >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsSocialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsSocialsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsSocialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsSocialsCursorCollectionOrder>>
   >;
   pageNext?: InputMaybe<Scalars['String']>;
   pagePrev?: InputMaybe<Scalars['String']>;
@@ -23042,6 +23032,64 @@ export enum UsersLinkingCollectionsResearchOutputsCursorCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum UsersLinkingCollectionsSocialsCollectionOrder {
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
+export enum UsersLinkingCollectionsSocialsCursorCollectionOrder {
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 export enum UsersLinkingCollectionsTutorialsCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
@@ -23214,8 +23262,6 @@ export enum UsersOrder {
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
   AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -23232,18 +23278,12 @@ export enum UsersOrder {
   EmailDesc = 'email_DESC',
   FirstNameAsc = 'firstName_ASC',
   FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LastUpdatedAsc = 'lastUpdated_ASC',
   LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
   MiddleNameAsc = 'middleName_ASC',
   MiddleNameDesc = 'middleName_DESC',
   NicknameAsc = 'nickname_ASC',
@@ -23260,10 +23300,6 @@ export enum UsersOrder {
   OrcidDesc = 'orcid_DESC',
   PersonalEmailAsc = 'personalEmail_ASC',
   PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   StateOrProvinceAsc = 'stateOrProvince_ASC',
@@ -23276,12 +23312,6 @@ export enum UsersOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export type UsersResearchTagsCollection = {
@@ -25797,6 +25827,77 @@ export type CfResourceTypeNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type CfSocialsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfSocialsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfSocialsNestedFilter>>>;
+  blueSky?: InputMaybe<Scalars['String']>;
+  blueSky_contains?: InputMaybe<Scalars['String']>;
+  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
+  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky_not?: InputMaybe<Scalars['String']>;
+  blueSky_not_contains?: InputMaybe<Scalars['String']>;
+  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  github?: InputMaybe<Scalars['String']>;
+  github_contains?: InputMaybe<Scalars['String']>;
+  github_exists?: InputMaybe<Scalars['Boolean']>;
+  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github_not?: InputMaybe<Scalars['String']>;
+  github_not_contains?: InputMaybe<Scalars['String']>;
+  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar?: InputMaybe<Scalars['String']>;
+  googleScholar_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
+  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar_not?: InputMaybe<Scalars['String']>;
+  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn?: InputMaybe<Scalars['String']>;
+  linkedIn_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
+  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn_not?: InputMaybe<Scalars['String']>;
+  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate?: InputMaybe<Scalars['String']>;
+  researchGate_contains?: InputMaybe<Scalars['String']>;
+  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
+  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate_not?: InputMaybe<Scalars['String']>;
+  researchGate_not_contains?: InputMaybe<Scalars['String']>;
+  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId?: InputMaybe<Scalars['String']>;
+  researcherId_contains?: InputMaybe<Scalars['String']>;
+  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
+  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId_not?: InputMaybe<Scalars['String']>;
+  researcherId_not_contains?: InputMaybe<Scalars['String']>;
+  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  twitter?: InputMaybe<Scalars['String']>;
+  twitter_contains?: InputMaybe<Scalars['String']>;
+  twitter_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter_not?: InputMaybe<Scalars['String']>;
+  twitter_not_contains?: InputMaybe<Scalars['String']>;
+  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+  website1?: InputMaybe<Scalars['String']>;
+  website1_contains?: InputMaybe<Scalars['String']>;
+  website1_exists?: InputMaybe<Scalars['Boolean']>;
+  website1_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website1_not?: InputMaybe<Scalars['String']>;
+  website1_not_contains?: InputMaybe<Scalars['String']>;
+  website1_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2?: InputMaybe<Scalars['String']>;
+  website2_contains?: InputMaybe<Scalars['String']>;
+  website2_exists?: InputMaybe<Scalars['Boolean']>;
+  website2_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2_not?: InputMaybe<Scalars['String']>;
+  website2_not_contains?: InputMaybe<Scalars['String']>;
+  website2_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CfSupplementGrantNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfSupplementGrantNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfSupplementGrantNestedFilter>>>;
@@ -26094,13 +26195,6 @@ export type CfUsersNestedFilter = {
   biography_not?: InputMaybe<Scalars['String']>;
   biography_not_contains?: InputMaybe<Scalars['String']>;
   biography_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  blueSky?: InputMaybe<Scalars['String']>;
-  blueSky_contains?: InputMaybe<Scalars['String']>;
-  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
-  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  blueSky_not?: InputMaybe<Scalars['String']>;
-  blueSky_not_contains?: InputMaybe<Scalars['String']>;
-  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   city?: InputMaybe<Scalars['String']>;
   city_contains?: InputMaybe<Scalars['String']>;
   city_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26171,20 +26265,6 @@ export type CfUsersNestedFilter = {
   firstName_not?: InputMaybe<Scalars['String']>;
   firstName_not_contains?: InputMaybe<Scalars['String']>;
   firstName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  github?: InputMaybe<Scalars['String']>;
-  github_contains?: InputMaybe<Scalars['String']>;
-  github_exists?: InputMaybe<Scalars['Boolean']>;
-  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  github_not?: InputMaybe<Scalars['String']>;
-  github_not_contains?: InputMaybe<Scalars['String']>;
-  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  googleScholar?: InputMaybe<Scalars['String']>;
-  googleScholar_contains?: InputMaybe<Scalars['String']>;
-  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
-  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  googleScholar_not?: InputMaybe<Scalars['String']>;
-  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
-  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   institution?: InputMaybe<Scalars['String']>;
   institution_contains?: InputMaybe<Scalars['String']>;
   institution_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26216,13 +26296,6 @@ export type CfUsersNestedFilter = {
   lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
   lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
   lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  linkedIn?: InputMaybe<Scalars['String']>;
-  linkedIn_contains?: InputMaybe<Scalars['String']>;
-  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
-  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  linkedIn_not?: InputMaybe<Scalars['String']>;
-  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
-  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   middleName?: InputMaybe<Scalars['String']>;
   middleName_contains?: InputMaybe<Scalars['String']>;
   middleName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26287,13 +26360,6 @@ export type CfUsersNestedFilter = {
   reachOut_not?: InputMaybe<Scalars['String']>;
   reachOut_not_contains?: InputMaybe<Scalars['String']>;
   reachOut_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchGate?: InputMaybe<Scalars['String']>;
-  researchGate_contains?: InputMaybe<Scalars['String']>;
-  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
-  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchGate_not?: InputMaybe<Scalars['String']>;
-  researchGate_not_contains?: InputMaybe<Scalars['String']>;
-  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchInterests?: InputMaybe<Scalars['String']>;
   researchInterests_contains?: InputMaybe<Scalars['String']>;
   researchInterests_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26302,13 +26368,6 @@ export type CfUsersNestedFilter = {
   researchInterests_not_contains?: InputMaybe<Scalars['String']>;
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researcherId?: InputMaybe<Scalars['String']>;
-  researcherId_contains?: InputMaybe<Scalars['String']>;
-  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
-  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researcherId_not?: InputMaybe<Scalars['String']>;
-  researcherId_not_contains?: InputMaybe<Scalars['String']>;
-  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   responsibilities?: InputMaybe<Scalars['String']>;
   responsibilities_contains?: InputMaybe<Scalars['String']>;
   responsibilities_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26332,27 +26391,7 @@ export type CfUsersNestedFilter = {
   stateOrProvince_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  twitter?: InputMaybe<Scalars['String']>;
-  twitter_contains?: InputMaybe<Scalars['String']>;
-  twitter_exists?: InputMaybe<Scalars['Boolean']>;
-  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  twitter_not?: InputMaybe<Scalars['String']>;
-  twitter_not_contains?: InputMaybe<Scalars['String']>;
-  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website1?: InputMaybe<Scalars['String']>;
-  website1_contains?: InputMaybe<Scalars['String']>;
-  website1_exists?: InputMaybe<Scalars['Boolean']>;
-  website1_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website1_not?: InputMaybe<Scalars['String']>;
-  website1_not_contains?: InputMaybe<Scalars['String']>;
-  website1_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website2?: InputMaybe<Scalars['String']>;
-  website2_contains?: InputMaybe<Scalars['String']>;
-  website2_exists?: InputMaybe<Scalars['Boolean']>;
-  website2_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  website2_not?: InputMaybe<Scalars['String']>;
-  website2_not_contains?: InputMaybe<Scalars['String']>;
-  website2_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  userSocials_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CfWorkingGroupDeliverablesNestedFilter = {
@@ -27770,6 +27809,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ResourceType' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Socials' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'SupplementGrant' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -27961,6 +28003,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ResourceType' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Socials' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'SupplementGrant' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -28136,6 +28181,7 @@ export type FetchDiscoverQuery = {
                     | ({ __typename: 'ResourceType' } & {
                         sys: Pick<Sys, 'id'>;
                       })
+                    | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'SupplementGrant' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -28492,6 +28538,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -28582,6 +28629,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -28672,6 +28720,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -28908,6 +28957,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -29014,6 +29064,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -29120,6 +29171,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -29425,6 +29477,7 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -29579,6 +29632,7 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -29733,6 +29787,7 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -30077,6 +30132,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -30254,6 +30312,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -30429,6 +30490,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResourceType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Socials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -30804,6 +30868,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -30981,6 +31048,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -31156,6 +31226,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResourceType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Socials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -31531,6 +31604,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -31708,6 +31784,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Socials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'SupplementGrant' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -31883,6 +31962,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResourceType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Socials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -33704,6 +33786,9 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                           | ({ __typename: 'ResourceType' } & {
                               sys: Pick<Sys, 'id'>;
                             })
+                          | ({ __typename: 'Socials' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
                           | ({ __typename: 'SupplementGrant' } & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -35097,6 +35182,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -35214,6 +35300,7 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -35390,6 +35477,7 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -35507,6 +35595,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -35662,6 +35751,7 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -37128,6 +37218,7 @@ export type ResearchOutputsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -37426,6 +37517,7 @@ export type FetchResearchOutputByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -37784,6 +37876,7 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -38593,6 +38686,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -38759,6 +38853,7 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -38984,6 +39079,7 @@ export type FetchTutorialsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -39123,15 +39219,6 @@ export type UsersContentFragment = Pick<
   | 'orcidWorks'
   | 'questions'
   | 'expertiseAndResourceDescription'
-  | 'github'
-  | 'googleScholar'
-  | 'linkedIn'
-  | 'researcherId'
-  | 'researchGate'
-  | 'twitter'
-  | 'blueSky'
-  | 'website1'
-  | 'website2'
   | 'role'
   | 'openScienceTeamMember'
   | 'responsibilities'
@@ -39141,6 +39228,20 @@ export type UsersContentFragment = Pick<
   sys: Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+  userSocials?: Maybe<
+    Pick<
+      Socials,
+      | 'github'
+      | 'googleScholar'
+      | 'linkedIn'
+      | 'researcherId'
+      | 'researchGate'
+      | 'twitter'
+      | 'blueSky'
+      | 'website1'
+      | 'website2'
+    >
   >;
   avatar?: Maybe<Pick<Asset, 'url'>>;
   researchTagsCollection?: Maybe<{
@@ -39342,19 +39443,24 @@ export type FetchPublicUsersQuery = {
             | 'firstName'
             | 'lastName'
             | 'institution'
-            | 'website1'
-            | 'website2'
-            | 'linkedIn'
             | 'orcid'
-            | 'researcherId'
-            | 'twitter'
-            | 'blueSky'
-            | 'github'
-            | 'googleScholar'
-            | 'researchGate'
           > & {
             sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
             avatar?: Maybe<Pick<Asset, 'url'>>;
+            userSocials?: Maybe<
+              Pick<
+                Socials,
+                | 'website1'
+                | 'website2'
+                | 'linkedIn'
+                | 'researcherId'
+                | 'twitter'
+                | 'blueSky'
+                | 'github'
+                | 'googleScholar'
+                | 'researchGate'
+              >
+            >;
             researchTagsCollection?: Maybe<{
               items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
             }>;
@@ -39507,15 +39613,6 @@ export type FetchUserByIdQuery = {
       | 'orcidWorks'
       | 'questions'
       | 'expertiseAndResourceDescription'
-      | 'github'
-      | 'googleScholar'
-      | 'linkedIn'
-      | 'researcherId'
-      | 'researchGate'
-      | 'twitter'
-      | 'blueSky'
-      | 'website1'
-      | 'website2'
       | 'role'
       | 'openScienceTeamMember'
       | 'responsibilities'
@@ -39525,6 +39622,20 @@ export type FetchUserByIdQuery = {
       sys: Pick<
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+      userSocials?: Maybe<
+        Pick<
+          Socials,
+          | 'github'
+          | 'googleScholar'
+          | 'linkedIn'
+          | 'researcherId'
+          | 'researchGate'
+          | 'twitter'
+          | 'blueSky'
+          | 'website1'
+          | 'website2'
+        >
       >;
       avatar?: Maybe<Pick<Asset, 'url'>>;
       researchTagsCollection?: Maybe<{
@@ -40270,6 +40381,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -40497,6 +40609,7 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -40780,6 +40893,7 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Socials' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'SupplementGrant' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -49658,15 +49772,33 @@ export const UsersContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'expertiseAndResourceDescription' },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'github' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'googleScholar' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'linkedIn' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'researcherId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'researchGate' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'twitter' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'blueSky' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'userSocials' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'github' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleScholar' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkedIn' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researcherId' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchGate' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'twitter' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blueSky' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           {
             kind: 'Field',
@@ -73040,42 +73172,51 @@ export const FetchPublicUsersDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'institution' },
                       },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website1' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website2' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkedIn' },
-                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'researcherId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'twitter' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'blueSky' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'github' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'googleScholar' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'researchGate' },
+                        name: { kind: 'Name', value: 'userSocials' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'website1' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'website2' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'linkedIn' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'researcherId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'twitter' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'blueSky' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'github' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'googleScholar' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'researchGate' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

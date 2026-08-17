@@ -39,15 +39,17 @@ export const usersContentQueryFragment = gql`
     orcidWorks
     questions
     expertiseAndResourceDescription
-    github
-    googleScholar
-    linkedIn
-    researcherId
-    researchGate
-    twitter
-    blueSky
-    website1
-    website2
+    userSocials {
+      github
+      googleScholar
+      linkedIn
+      researcherId
+      researchGate
+      twitter
+      blueSky
+      website1
+      website2
+    }
     role
     openScienceTeamMember
     responsibilities
@@ -264,16 +266,18 @@ export const FETCH_PUBLIC_USERS = gql`
         firstName
         lastName
         institution
-        website1
-        website2
-        linkedIn
         orcid
-        researcherId
-        twitter
-        blueSky
-        github
-        googleScholar
-        researchGate
+        userSocials {
+          website1
+          website2
+          linkedIn
+          researcherId
+          twitter
+          blueSky
+          github
+          googleScholar
+          researchGate
+        }
         researchTagsCollection(limit: 20) {
           items {
             name

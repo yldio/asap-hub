@@ -23,6 +23,7 @@ import {
 } from '@asap-hub/model';
 
 import {
+  Entry,
   Environment,
   FetchPublicUsersQuery,
   FetchPublicUsersQueryVariables,
@@ -363,10 +364,17 @@ export class UserContentfulDataProvider implements UserDataProvider {
       'alumniLocation' in data ||
       (isAlumni && 'email' in data);
 
+    // linking a newly created socials entry republishes the user, so the local
+    // copy has to be refreshed before it is patched again
+    const userEntry =
+      data.social && (await this.updateSocials(environment, user, data.social))
+        ? await environment.getEntry(id)
+        : user;
+
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
-    const result = await patchMethod(user, {
+    const result = await patchMethod(userEntry, {
       ...fields,
       ...(shouldStampAlumni
         ? { alumniLastUpdated: new Date().toISOString() }
@@ -389,6 +397,63 @@ export class UserContentfulDataProvider implements UserDataProvider {
       return;
     }
     await pollForUpdate(result.sys.publishedVersion);
+  }
+
+  // Social links live on a separate socials entry, so they are written there
+  // rather than on the user. The entry id mirrors the one used by the socials
+  // migration script, which keeps repeated updates idempotent.
+  private async updateSocials(
+    environment: Environment,
+    user: Entry,
+    social: Omit<UserSocialLinks, 'orcid'>,
+  ) {
+    // the frontend only sends the fields which have values defined
+    // so need to default all social keys to null to allow unsetting
+    const fields = {
+      website1: null,
+      website2: null,
+      twitter: null,
+      blueSky: null,
+      linkedIn: null,
+      github: null,
+      researcherId: null,
+      googleScholar: null,
+      researchGate: null,
+      ...social,
+    };
+
+    const linkedId = user.fields.userSocials?.['en-US']?.sys?.id as
+      | string
+      | undefined;
+
+    if (linkedId) {
+      const socialsEntry = await environment.getEntry(linkedId);
+      await patchAndPublish(socialsEntry, fields);
+      return false;
+    }
+
+    const socialsEntry = await environment.createEntryWithId(
+      'socials',
+      `socials-${user.sys.id}`,
+      {
+        fields: Object.entries({
+          ...fields,
+          user: { sys: { type: 'Link', linkType: 'Entry', id: user.sys.id } },
+        }).reduce(
+          (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
+          {},
+        ),
+      },
+    );
+    await socialsEntry.publish();
+
+    await patchAndPublish(user, {
+      userSocials: {
+        sys: { type: 'Link', linkType: 'Entry', id: socialsEntry.sys.id },
+      },
+    });
+
+    return true;
   }
 
   private async deleteAsset(environment: Environment, assetId: string) {
@@ -428,21 +493,8 @@ const cleanUser = ({
         };
       }
       if (key === 'social') {
-        // the frontend only sends the fields which have values defined
-        // so need to default all social keys to null to allow unsetting
-        return {
-          ...acc,
-          website1: null,
-          website2: null,
-          twitter: null,
-          blueSky: null,
-          linkedIn: null,
-          github: null,
-          researcherId: null,
-          googleScholar: null,
-          researchGate: null,
-          ...(value as UserSocialLinks),
-        };
+        // social links live on the linked socials entry, not the user
+        return acc;
       }
       if (key === 'connections') {
         const connections = userToUpdate.connections || [];
@@ -517,6 +569,20 @@ const parseUserProjects = (
 
   return [...teamProjects, ...uniqueDirectProjects];
 };
+
+const parseSocialLinks = (
+  userSocials: UserItem['userSocials'] | PublicUserItem['userSocials'],
+): Omit<UserSocialLinks, 'orcid'> => ({
+  website1: userSocials?.website1 ?? undefined,
+  website2: userSocials?.website2 ?? undefined,
+  linkedIn: userSocials?.linkedIn ?? undefined,
+  researcherId: userSocials?.researcherId ?? undefined,
+  twitter: userSocials?.twitter ?? undefined,
+  blueSky: userSocials?.blueSky ?? undefined,
+  github: userSocials?.github ?? undefined,
+  googleScholar: userSocials?.googleScholar ?? undefined,
+  researchGate: userSocials?.researchGate ?? undefined,
+});
 
 export const parseContentfulGraphQlPublicUsers = (
   item: PublicUserItem,
@@ -604,16 +670,8 @@ export const parseContentfulGraphQlPublicUsers = (
     interestGroups,
     workingGroups,
     social: {
-      website1: item.website1 ?? undefined,
-      website2: item.website2 ?? undefined,
-      linkedIn: item.linkedIn ?? undefined,
+      ...parseSocialLinks(item.userSocials),
       orcid: item.orcid ?? undefined,
-      researcherId: item.researcherId ?? undefined,
-      twitter: item.twitter ?? undefined,
-      blueSky: item.blueSky ?? undefined,
-      github: item.github ?? undefined,
-      googleScholar: item.googleScholar ?? undefined,
-      researchGate: item.researchGate ?? undefined,
     },
   };
 };
@@ -733,16 +791,8 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     labs,
     social: {
-      website1: item.website1 ?? undefined,
-      website2: item.website2 ?? undefined,
-      linkedIn: item.linkedIn ?? undefined,
+      ...parseSocialLinks(item.userSocials),
       orcid: item.orcid ?? undefined,
-      researcherId: item.researcherId ?? undefined,
-      twitter: item.twitter ?? undefined,
-      blueSky: item.blueSky ?? undefined,
-      github: item.github ?? undefined,
-      googleScholar: item.googleScholar ?? undefined,
-      researchGate: item.researchGate ?? undefined,
     },
   };
 };

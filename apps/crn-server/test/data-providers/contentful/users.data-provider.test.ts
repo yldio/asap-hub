@@ -193,12 +193,16 @@ describe('User data provider', () => {
         linkedIn: 'linkedIn',
       };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: getContentfulGraphqlUser(socialProps),
+        users: getContentfulGraphqlUser({ userSocials: socialProps }),
       });
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!.social).toEqual({ ...socialProps, orcid: '123-456-789' });
+      expect(result!.social).toEqual({
+        ...socialProps,
+        blueSky: undefined,
+        orcid: '123-456-789',
+      });
       expect(result).not.toMatchObject(socialProps);
     });
 
@@ -1313,31 +1317,53 @@ describe('User data provider', () => {
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
       });
 
-      test('flattens `social` values', async () => {
+      test('writes `social` values to the linked socials entry', async () => {
+        const socialsEntry = getEntry({});
+        environmentMock.getEntry.mockReset();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(
+            getEntry({
+              userSocials: { 'en-US': { sys: { id: 'socials-123' } } },
+            }),
+          )
+          .mockResolvedValueOnce(socialsEntry);
+
         await userDataProvider.update('123', {
           social: {
             github: 'yldio',
             twitter: 'yldio',
           },
         });
+
         expect(patchAndPublish).toHaveBeenCalledWith(
-          entry,
+          socialsEntry,
           expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
         );
-        expect(patchAndPublish).toHaveBeenCalledWith(
+        expect(patchAndPublish).not.toHaveBeenCalledWith(
           entry,
-          expect.not.objectContaining({ social: expect.anything() }),
+          expect.objectContaining({ github: 'yldio' }),
         );
       });
 
       test('includes undefined `social` values as null to allow unsetting', async () => {
+        const socialsEntry = getEntry({});
+        environmentMock.getEntry.mockReset();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(
+            getEntry({
+              userSocials: { 'en-US': { sys: { id: 'socials-123' } } },
+            }),
+          )
+          .mockResolvedValueOnce(socialsEntry);
+
         await userDataProvider.update('123', {
           social: {
             github: 'yldio',
             twitter: 'yldio',
           },
         });
-        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+
+        expect(patchAndPublish).toHaveBeenCalledWith(socialsEntry, {
           website1: null,
           website2: null,
           googleScholar: null,
@@ -1675,7 +1701,17 @@ describe('User data provider', () => {
 
         expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
       });
-      test('flattens `social` values', async () => {
+      test('writes `social` values to the linked socials entry', async () => {
+        const socialsEntry = getEntry({});
+        environmentMock.getEntry.mockReset();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(
+            getEntry({
+              userSocials: { 'en-US': { sys: { id: 'socials-123' } } },
+            }),
+          )
+          .mockResolvedValueOnce(socialsEntry);
+
         await userDataProvider.update(
           '123',
           {
@@ -1686,38 +1722,15 @@ describe('User data provider', () => {
           },
           { suppressConflict: true },
         );
-        expect(patchAndPublishConflict).toHaveBeenCalledWith(
-          entry,
+
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          socialsEntry,
           expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
         );
-        expect(patchAndPublishConflict).toHaveBeenCalledWith(
+        expect(patchAndPublishConflict).not.toHaveBeenCalledWith(
           entry,
-          expect.not.objectContaining({ social: expect.anything() }),
+          expect.objectContaining({ github: 'yldio' }),
         );
-      });
-
-      test('includes undefined `social` values as null to allow unsetting', async () => {
-        await userDataProvider.update(
-          '123',
-          {
-            social: {
-              github: 'yldio',
-              twitter: 'yldio',
-            },
-          },
-          { suppressConflict: true },
-        );
-        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-          website1: null,
-          website2: null,
-          googleScholar: null,
-          linkedIn: null,
-          researchGate: null,
-          researcherId: null,
-          github: 'yldio',
-          twitter: 'yldio',
-          blueSky: null,
-        });
       });
       test('maps avatar value to a linked resource', async () => {
         await userDataProvider.update(

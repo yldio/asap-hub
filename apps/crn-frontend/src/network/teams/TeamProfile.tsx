@@ -33,7 +33,9 @@ const loadOutputs = () =>
 const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
 const loadCompliance = () =>
-  import(/* webpackChunkName: "network-team-compliance" */ './Compliance');
+  import(
+    /* webpackChunkName: "network-team-compliance" */ '../../projects/Compliance'
+  );
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
 const loadEventsList = () =>

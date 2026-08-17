@@ -24,19 +24,19 @@ import {
 import { useFlags } from '@asap-hub/react-context';
 import { format } from 'date-fns';
 import { ComponentProps, useState } from 'react';
-import { usePagination, usePaginationParams } from '../../hooks';
-import { useAlgolia } from '../../hooks/algolia';
-import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
-import { getManuscripts } from './api';
-import { manuscriptToCSV } from './export';
+import { usePagination, usePaginationParams } from '../hooks';
+import { useAlgolia } from '../hooks/algolia';
+import { useAssignedUsersSuggestions } from '../shared-state/shared-research';
+import { getManuscripts } from '../network/teams/api';
+import { manuscriptToCSV } from '../network/teams/export';
 import {
   useDownloadFullComplianceDataset,
   useIsComplianceReviewer,
   useManuscripts,
   usePutManuscript,
-} from './state';
-import { useComplianceSearch } from './useComplianceSearch';
-import { useManuscriptToast } from './useManuscriptToast';
+} from '../network/teams/state';
+import { useComplianceSearch } from '../network/teams/useComplianceSearch';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 
 type ComplianceListProps = Pick<
   ComponentProps<typeof ComplianceControls>,

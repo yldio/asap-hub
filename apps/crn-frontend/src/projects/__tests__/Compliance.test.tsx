@@ -18,13 +18,13 @@ import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { getPresignedUrl } from '../../../shared-api/files';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { useAlgolia } from '../../../hooks/algolia';
-import { getOpenScienceMembers } from '../../users/api';
-import { getManuscripts, updateManuscript } from '../api';
+import { getPresignedUrl } from '../../shared-api/files';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useAlgolia } from '../../hooks/algolia';
+import { getOpenScienceMembers } from '../../network/users/api';
+import { getManuscripts, updateManuscript } from '../../network/teams/api';
 import Compliance from '../Compliance';
-import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
+import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 const mockIsEnabled = jest.fn();
 
@@ -45,24 +45,24 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 
-jest.mock('../../../hooks/algolia', () => ({
+jest.mock('../../hooks/algolia', () => ({
   useAlgolia: jest.fn(),
 }));
 
-jest.mock('../api', () => ({
-  ...jest.requireActual('../api'),
+jest.mock('../../network/teams/api', () => ({
+  ...jest.requireActual('../../network/teams/api'),
   getOpenScienceMembers: jest.fn(),
   getManuscripts: jest.fn(),
   getPresignedUrl: jest.fn(),
   updateManuscript: jest.fn(),
 }));
 
-jest.mock('../../users/api', () => ({
-  ...jest.requireActual('../../users/api'),
+jest.mock('../../network/users/api', () => ({
+  ...jest.requireActual('../../network/users/api'),
   getOpenScienceMembers: jest.fn(),
 }));
 
-jest.mock('../../../shared-api/files');
+jest.mock('../../shared-api/files');
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream

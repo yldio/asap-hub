@@ -582,6 +582,7 @@ describe('Reminders data provider', () => {
 
     describe('User-based project manuscripts', () => {
       const projectName = 'Genetic Determinants of Progression';
+      const fetchOptions = { timezone, includeProjectReminders: true };
 
       const getExpectedCreatedReminder = (): ManuscriptCreatedReminder => {
         const reminder = getManuscriptCreatedReminder();
@@ -596,9 +597,21 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'first-author-user',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([getExpectedCreatedReminder()]);
+      });
+
+      test('does not return any reminders when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([]);
       });
 
       test('the person who created the manuscript should not see manuscript created reminders', async () => {
@@ -608,7 +621,7 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'user-who-created-manuscript',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([]);
       });
@@ -625,7 +638,7 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'open-science-team-member-user',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([getExpectedCreatedReminder()]);
       });
@@ -648,7 +661,7 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'lab-pi-user',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([]);
       });
@@ -660,7 +673,7 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'unrelated-user',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([]);
       });
@@ -674,7 +687,7 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch({
           userId: 'first-author-user',
-          timezone,
+          ...fetchOptions,
         });
         expect(result.items).toEqual([]);
       });
@@ -724,7 +737,7 @@ describe('Reminders data provider', () => {
 
           const result = await remindersDataProvider.fetch({
             userId: 'additional-author-user',
-            timezone,
+            ...fetchOptions,
           });
           expect(result.items).toEqual([getExpectedResubmittedReminder()]);
         });
@@ -741,7 +754,7 @@ describe('Reminders data provider', () => {
 
           const result = await remindersDataProvider.fetch({
             userId: 'assigned-os-member-id',
-            timezone,
+            ...fetchOptions,
           });
           expect(result.items).toEqual([getExpectedResubmittedReminder()]);
         });
@@ -751,7 +764,7 @@ describe('Reminders data provider', () => {
 
           const result = await remindersDataProvider.fetch({
             userId: 'lab-pi-on-manuscript',
-            timezone,
+            ...fetchOptions,
           });
           expect(result.items).toEqual([]);
         });
@@ -786,7 +799,7 @@ describe('Reminders data provider', () => {
 
           const result = await remindersDataProvider.fetch({
             userId: 'first-author-user',
-            timezone,
+            ...fetchOptions,
           });
           expect(result.items).toEqual(
             expect.arrayContaining([getExpectedStatusUpdatedReminder()]),
@@ -798,7 +811,7 @@ describe('Reminders data provider', () => {
 
           const result = await remindersDataProvider.fetch({
             userId: 'user-who-updated-manuscript-status',
-            timezone,
+            ...fetchOptions,
           });
           expect(result.items).toEqual([]);
         });

@@ -115,7 +115,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   }
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
-    const { timezone, userId } = options;
+    const { timezone, userId, includeProjectReminders = false } = options;
     const eventFilter = getEventFilter(timezone);
     const researchOutputFilter = getResearchOutputFilter(timezone);
     const manuscriptFilter = getManuscriptFilter(timezone);
@@ -252,6 +252,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       user,
       userId,
       timezone,
+      includeProjectReminders,
     );
 
     const discussionReminders = getDiscussionRemindersFromQuery(
@@ -259,12 +260,14 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       user,
       userId,
       timezone,
+      includeProjectReminders,
     );
 
     const repliesReminders = getReplyRemindersFromQuery(
       messagesCollectionItems,
       user,
       userId,
+      includeProjectReminders,
     );
 
     const reminders = [
@@ -1120,6 +1123,10 @@ const isTeamBasedManuscript = (manuscript: ManuscriptItem): boolean =>
   manuscript.teamsCollection.items.length > 0 &&
   !!manuscript.teamsCollection.items[0]?.displayName;
 
+const isTeamBasedManuscriptVersion = (
+  manuscriptVersion: ManuscriptVersion | undefined,
+): boolean => !!manuscriptVersion?.teamsCollection?.items.length;
+
 const isValidManuscriptItem = (
   manuscript: ManuscriptItem,
 ): manuscript is ValidManuscriptItem =>
@@ -1160,6 +1167,7 @@ const getManuscriptRemindersFromQuery = (
   user: User,
   userId: string,
   timezone: string,
+  includeProjectReminders: boolean,
 ): ManuscriptReminder[] => {
   if (!user || !manuscriptsCollectionItems.length) return [];
 
@@ -1168,6 +1176,8 @@ const getManuscriptRemindersFromQuery = (
 
   return manuscriptsCollectionItems.reduce<ManuscriptReminder[]>(
     (reminders, manuscript) => {
+      if (!isTeamBasedManuscript(manuscript) && !includeProjectReminders)
+        return reminders;
       if (!isValidManuscriptItem(manuscript)) return reminders;
       const manuscriptItem = {
         ...manuscript,
@@ -1268,6 +1278,7 @@ const getDiscussionRemindersFromQuery = (
   user: User,
   userId: string,
   timezone: string,
+  includeProjectReminders: boolean,
 ): DiscussionReminder[] => {
   if (!user || !discussionItems.length) return [];
 
@@ -1281,13 +1292,17 @@ const getDiscussionRemindersFromQuery = (
       const manuscript = discussion.linkedFrom?.manuscriptsCollection?.items[0];
       const manuscriptVersion = manuscript?.versionsCollection
         ?.items[0] as ManuscriptVersion;
+      const isTeamBased = isTeamBasedManuscriptVersion(manuscriptVersion);
+      if (!isTeamBased && !includeProjectReminders) return reminders;
+
       const isManuscriptContributor =
         isManuscriptProjectManagerOrLeadPI(
           manuscriptVersion.teamsCollection,
           userProjectManagerOrLeadPITeamIds,
         ) ||
         isManuscriptAuthor(manuscriptVersion, userId) ||
-        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+        (isTeamBased &&
+          isManuscriptLabPI(manuscriptVersion.labsCollection, userId));
       const isAssignedUser = manuscript?.assignedUsersCollection?.items.some(
         (assignedUser) => assignedUser?.sys.id === userId,
       );
@@ -1323,6 +1338,7 @@ const getReplyRemindersFromQuery = (
   messageItems: MessageItem[],
   user: User,
   userId: string,
+  includeProjectReminders: boolean,
 ): DiscussionReminder[] => {
   if (!user || !messageItems.length) return [];
 
@@ -1344,6 +1360,9 @@ const getReplyRemindersFromQuery = (
           ?.manuscriptsCollection?.items[0];
       const manuscriptVersion = manuscript?.versionsCollection
         ?.items[0] as ManuscriptVersion;
+      const isTeamBased = isTeamBasedManuscriptVersion(manuscriptVersion);
+      if (!isTeamBased && !includeProjectReminders) return reminders;
+
       const isAssignedUser = manuscript?.assignedUsersCollection?.items.some(
         (assignedUser) => assignedUser?.sys.id === userId,
       );
@@ -1354,7 +1373,8 @@ const getReplyRemindersFromQuery = (
           userProjectManagerOrLeadPITeamIds,
         ) ||
         isManuscriptAuthor(manuscriptVersion, userId) ||
-        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+        (isTeamBased &&
+          isManuscriptLabPI(manuscriptVersion.labsCollection, userId));
 
       if (
         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
@@ -1454,11 +1474,15 @@ const createDiscussionCreatedReminder = (
   const userTeams = discussion.message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
-  const manuscriptTeams = getTeamNames(
-    manuscriptVersion?.teamsCollection?.items.map(
-      (teams) => teams?.displayName,
-    ),
-  );
+  const manuscriptTeams = isTeamBasedManuscriptVersion(
+    manuscriptVersion as ManuscriptVersion,
+  )
+    ? getTeamNames(
+        manuscriptVersion?.teamsCollection?.items.map(
+          (teams) => teams?.displayName,
+        ),
+      )
+    : manuscript?.project?.title || '';
 
   return {
     id: `discussion-created-${discussion.sys.id}`,
@@ -1486,11 +1510,15 @@ const createDiscussionRepliedToReminder = (
   const manuscript = discussion?.linkedFrom?.manuscriptsCollection?.items[0];
   const manuscriptVersion = manuscript?.versionsCollection?.items[0];
 
-  const manuscriptTeams = getTeamNames(
-    manuscriptVersion?.teamsCollection?.items.map(
-      (teams) => teams?.displayName,
-    ),
-  );
+  const manuscriptTeams = isTeamBasedManuscriptVersion(
+    manuscriptVersion as ManuscriptVersion,
+  )
+    ? getTeamNames(
+        manuscriptVersion?.teamsCollection?.items.map(
+          (teams) => teams?.displayName,
+        ),
+      )
+    : manuscript?.project?.title || '';
   const userTeams = message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );

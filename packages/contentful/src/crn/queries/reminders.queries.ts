@@ -34,6 +34,22 @@ export const FETCH_REMINDERS = gql`
               id
             }
             displayName
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
         project {
@@ -320,6 +336,22 @@ export const manuscriptsCollectionQueryFragment = gql`
                 id
               }
               displayName
+              linkedFrom {
+                projectMembershipCollection(limit: 1) {
+                  items {
+                    linkedFrom {
+                      projectsCollection(limit: 1) {
+                        items {
+                          sys {
+                            id
+                          }
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           firstAuthorsCollection(limit: 10) {

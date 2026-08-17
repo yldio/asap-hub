@@ -36707,7 +36707,30 @@ export type FetchRemindersQuery = {
           >;
           teamsCollection?: Maybe<{
             items: Array<
-              Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+              Maybe<
+                Pick<Teams, 'displayName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  linkedFrom?: Maybe<{
+                    projectMembershipCollection?: Maybe<{
+                      items: Array<
+                        Maybe<{
+                          linkedFrom?: Maybe<{
+                            projectsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Projects, 'title'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >
+                              >;
+                            }>;
+                          }>;
+                        }>
+                      >;
+                    }>;
+                  }>;
+                }
+              >
             >;
           }>;
           project?: Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>;
@@ -36944,7 +36967,30 @@ export type ManuscriptsCollectionContentFragment = {
             Maybe<{
               teamsCollection?: Maybe<{
                 items: Array<
-                  Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+                  Maybe<
+                    Pick<Teams, 'displayName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      linkedFrom?: Maybe<{
+                        projectMembershipCollection?: Maybe<{
+                          items: Array<
+                            Maybe<{
+                              linkedFrom?: Maybe<{
+                                projectsCollection?: Maybe<{
+                                  items: Array<
+                                    Maybe<
+                                      Pick<Projects, 'title'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >
+                                  >;
+                                }>;
+                              }>;
+                            }>
+                          >;
+                        }>;
+                      }>;
+                    }
+                  >
                 >;
               }>;
               firstAuthorsCollection?: Maybe<{
@@ -37034,6 +37080,25 @@ export type FetchDiscussionRemindersQuery = {
                             Maybe<
                               Pick<Teams, 'displayName'> & {
                                 sys: Pick<Sys, 'id'>;
+                                linkedFrom?: Maybe<{
+                                  projectMembershipCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{
+                                        linkedFrom?: Maybe<{
+                                          projectsCollection?: Maybe<{
+                                            items: Array<
+                                              Maybe<
+                                                Pick<Projects, 'title'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >
+                                            >;
+                                          }>;
+                                        }>;
+                                      }>
+                                    >;
+                                  }>;
+                                }>;
                               }
                             >
                           >;
@@ -37139,6 +37204,28 @@ export type FetchMessageRemindersQuery = {
                                     Maybe<
                                       Pick<Teams, 'displayName'> & {
                                         sys: Pick<Sys, 'id'>;
+                                        linkedFrom?: Maybe<{
+                                          projectMembershipCollection?: Maybe<{
+                                            items: Array<
+                                              Maybe<{
+                                                linkedFrom?: Maybe<{
+                                                  projectsCollection?: Maybe<{
+                                                    items: Array<
+                                                      Maybe<
+                                                        Pick<
+                                                          Projects,
+                                                          'title'
+                                                        > & {
+                                                          sys: Pick<Sys, 'id'>;
+                                                        }
+                                                      >
+                                                    >;
+                                                  }>;
+                                                }>;
+                                              }>
+                                            >;
+                                          }>;
+                                        }>;
                                       }
                                     >
                                   >;
@@ -47523,6 +47610,145 @@ export const ManuscriptsCollectionContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'displayName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'linkedFrom',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value:
+                                                    'projectMembershipCollection',
+                                                },
+                                                arguments: [
+                                                  {
+                                                    kind: 'Argument',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'limit',
+                                                    },
+                                                    value: {
+                                                      kind: 'IntValue',
+                                                      value: '1',
+                                                    },
+                                                  },
+                                                ],
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'items',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'linkedFrom',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'projectsCollection',
+                                                                  },
+                                                                  arguments: [
+                                                                    {
+                                                                      kind: 'Argument',
+                                                                      name: {
+                                                                        kind: 'Name',
+                                                                        value:
+                                                                          'limit',
+                                                                      },
+                                                                      value: {
+                                                                        kind: 'IntValue',
+                                                                        value:
+                                                                          '1',
+                                                                      },
+                                                                    },
+                                                                  ],
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'items',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'sys',
+                                                                                      },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'id',
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'title',
+                                                                                      },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
                                           },
                                         },
                                       ],
@@ -67295,6 +67521,138 @@ export const FetchRemindersDocument = {
                                     name: {
                                       kind: 'Name',
                                       value: 'displayName',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value:
+                                              'projectMembershipCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '1',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'linkedFrom',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'projectsCollection',
+                                                            },
+                                                            arguments: [
+                                                              {
+                                                                kind: 'Argument',
+                                                                name: {
+                                                                  kind: 'Name',
+                                                                  value:
+                                                                    'limit',
+                                                                },
+                                                                value: {
+                                                                  kind: 'IntValue',
+                                                                  value: '1',
+                                                                },
+                                                              },
+                                                            ],
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'items',
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'sys',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'id',
+                                                                                      },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'title',
+                                                                            },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
                                     },
                                   },
                                 ],

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
-import { network, searchQueryParam } from '@asap-hub/routing';
-import { render, screen } from '@testing-library/react';
+import { dashboard, network, searchQueryParam } from '@asap-hub/routing';
+import { render, screen, within } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
 import userEvent from '@testing-library/user-event';
 
@@ -115,12 +115,16 @@ it('renders the navigation for active and inactive groups', () => {
     <InterestGroupProfileHeader {...props} active={true} />,
   );
   expect(
-    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('listitem')
+      .map(({ textContent }) => textContent),
   ).toEqual(['About', 'Calendar', 'Upcoming Events (3)', 'Past Events (2)']);
 
   rerender(<InterestGroupProfileHeader {...props} active={false} />);
   expect(
-    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+    within(screen.getByRole('navigation', { name: 'tabs' }))
+      .getAllByRole('listitem')
+      .map(({ textContent }) => textContent),
   ).toEqual(['About', 'Past Events (2)']);
 });
 
@@ -174,4 +178,20 @@ it('displays number of past events', () => {
     </StaticRouter>,
   );
   expect(screen.queryByText('Past Events (12)')).toBeInTheDocument();
+});
+
+it('renders breadcrumbs to the interest groups list', () => {
+  render(<InterestGroupProfileHeader {...props} name="My Group" />);
+
+  const breadcrumbs = within(
+    screen.getByRole('navigation', { name: 'breadcrumbs' }),
+  );
+  expect(breadcrumbs.getByRole('link', { name: 'Home' })).toHaveAttribute(
+    'href',
+    dashboard({}).$,
+  );
+  expect(
+    breadcrumbs.getByRole('link', { name: 'Interest Groups' }),
+  ).toHaveAttribute('href', network({}).interestGroups({}).$);
+  expect(breadcrumbs.getByText('My Group')).toBeVisible();
 });

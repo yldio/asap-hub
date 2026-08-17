@@ -12,8 +12,6 @@ const listStyles = css({
   margin: 0,
   padding: 0,
   listStyle: 'none',
-  fontSize: rem(14),
-  lineHeight: rem(24),
   columnGap: rem(8),
   rowGap: rem(4),
 });
@@ -22,6 +20,10 @@ const itemStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(8),
+});
+
+const labelStyles = css({
+  fontSize: rem(15.5),
 });
 
 const homeStyles = css({
@@ -69,7 +71,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ homeHref, items = [] }) => (
       {items.map(({ label, href }, index) => {
         const isLast = index === items.length - 1;
         return (
-          <li key={`${index}-${label}`} css={itemStyles}>
+          <li key={`${index}-${label}`} css={[itemStyles, labelStyles]}>
             <span css={separatorStyles} aria-hidden="true">
               {breadcrumbSeparatorIcon}
             </span>

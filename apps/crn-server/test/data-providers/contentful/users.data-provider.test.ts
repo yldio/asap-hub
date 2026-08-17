@@ -1348,10 +1348,12 @@ describe('User data provider', () => {
       test('creates and links a socials entry when the user has none', async () => {
         const createdEntry = getEntry({});
         environmentMock.getEntry.mockReset();
-        environmentMock.getEntry
-          .mockResolvedValueOnce(getEntry({}))
-          .mockRejectedValueOnce(new Error('NotFound'))
-          .mockResolvedValueOnce(getEntry({}));
+        environmentMock.getEntry.mockImplementation(async (entryId: string) => {
+          if (entryId === 'socials-entry-id') {
+            throw new Error('NotFound');
+          }
+          return getEntry({});
+        });
         environmentMock.createEntryWithId.mockResolvedValueOnce(createdEntry);
 
         await userDataProvider.update('123', {
@@ -1379,17 +1381,22 @@ describe('User data provider', () => {
         const existingEntry = getEntry({});
         (existingEntry.update as jest.Mock).mockResolvedValue(existingEntry);
         environmentMock.getEntry.mockReset();
-        environmentMock.getEntry
-          .mockResolvedValueOnce(getEntry({}))
-          .mockResolvedValueOnce(existingEntry)
-          .mockResolvedValueOnce(getEntry({}));
+        environmentMock.getEntry.mockImplementation(async (entryId: string) =>
+          entryId === 'socials-entry-id' ? existingEntry : getEntry({}),
+        );
 
         await userDataProvider.update('123', {
           social: { github: 'yldio' },
         });
 
+        expect(environmentMock.getEntry).toHaveBeenCalledWith(
+          'socials-entry-id',
+        );
         expect(environmentMock.createEntryWithId).not.toHaveBeenCalled();
         expect(existingEntry.update).toHaveBeenCalled();
+        expect(existingEntry.fields).toEqual(
+          expect.objectContaining({ github: { 'en-US': 'yldio' } }),
+        );
       });
 
       test('includes undefined `social` values as null to allow unsetting', async () => {

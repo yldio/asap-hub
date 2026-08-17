@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { User } from '@asap-hub/auth';
 import {
   createQueryKeys,
@@ -27,19 +28,12 @@ export const useEventById = (id: string): EventResponse | undefined => {
   return data ?? undefined;
 };
 
-// Stable module-level reference so react-query memoizes the transform and
-// only re-runs it when the event data changes, not on every render.
-const selectSpeakerGroups = (data: EventResponse | null): SpeakerGroup[] =>
-  data ? mapSpeakersToGroups(data) : [];
-
+// Reuse the existing useEventById query rather than duplicating the
+// queryKey/queryFn; the event reference is stable between data changes, so the
+// memo only re-runs the transform when the event actually changes.
 export const useEventSpeakerGroups = (id: string): SpeakerGroup[] => {
-  const getAuthorization = useAuthorization();
-  return useSuspenseQuery({
-    queryKey: eventQueryKeys.detail(id),
-    queryFn: () =>
-      nullOnUndefined(async () => getEvent(id, await getAuthorization())),
-    select: selectSpeakerGroups,
-  }).data;
+  const event = useEventById(id);
+  return useMemo(() => (event ? mapSpeakersToGroups(event) : []), [event]);
 };
 
 export const useQuietRefreshEventById = (id: string) => {

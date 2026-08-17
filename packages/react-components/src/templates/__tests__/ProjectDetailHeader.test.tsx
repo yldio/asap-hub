@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
@@ -763,6 +769,86 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Compliance tab', () => {
+    it('renders Compliance tab with its count when flag is enabled and complianceHref is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          complianceHref="/projects/discovery/1/compliance"
+          manuscriptsCount={3}
+        />,
+      );
+      const complianceLink = screen.getByRole('link', {
+        name: 'Compliance (3)',
+      });
+      expect(complianceLink).toHaveAttribute(
+        'href',
+        '/projects/discovery/1/compliance',
+      );
+    });
+
+    it('renders Compliance tab without a count when manuscriptsCount is not provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          complianceHref="/projects/discovery/1/compliance"
+        />,
+      );
+      expect(
+        screen.getByRole('link', { name: 'Compliance' }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render Compliance tab when complianceHref is not provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          manuscriptsCount={3}
+        />,
+      );
+      expect(screen.queryByText(/Compliance/)).not.toBeInTheDocument();
+    });
+
+    it('renders Compliance tab between the Workspace and Outputs tabs', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          workspaceHref="/projects/discovery/1/workspace"
+          complianceHref="/projects/discovery/1/compliance"
+          manuscriptsCount={3}
+          outputsHref="/projects/discovery/1/outputs"
+          outputsCount={12}
+          draftOutputsHref="/projects/discovery/1/draft-outputs"
+          draftOutputsCount={5}
+        />,
+      );
+      expect(
+        within(screen.getByRole('navigation', { name: 'tabs' }))
+          .getAllByRole('link')
+          .map(({ textContent }) => textContent),
+      ).toEqual([
+        'About',
+        'Milestones',
+        'Workspace',
+        'Compliance (3)',
+        'Outputs (12)',
+        'Draft Outputs (5)',
+      ]);
     });
   });
 

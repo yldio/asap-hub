@@ -146,8 +146,10 @@ type ProjectDetailHeaderProps = ProjectDetail & {
   readonly aboutHref: string;
   readonly workspaceHref?: string;
   readonly milestonesHref: string;
+  readonly complianceHref?: string;
   readonly outputsHref?: string;
   readonly draftOutputsHref?: string;
+  readonly manuscriptsCount?: number;
   readonly outputsCount?: number;
   readonly draftOutputsCount?: number;
   readonly canShareOutput?: boolean;
@@ -177,8 +179,10 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     aboutHref,
     workspaceHref,
     milestonesHref,
+    complianceHref,
     outputsHref,
     draftOutputsHref,
+    manuscriptsCount,
     outputsCount,
     draftOutputsCount,
     canShareOutput = false,
@@ -210,6 +214,12 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
               <TabLink href={milestonesHref}>Milestones</TabLink>
               {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
                 <TabLink href={workspaceHref}>Workspace</TabLink>
+              ) : null}
+              {complianceHref ? (
+                <TabLink href={complianceHref}>
+                  Compliance
+                  {manuscriptsCount !== undefined && ` (${manuscriptsCount})`}
+                </TabLink>
               ) : null}
               {isProjectOutputsEnabled && outputsHref ? (
                 <TabLink href={outputsHref}>

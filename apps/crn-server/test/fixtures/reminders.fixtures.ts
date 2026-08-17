@@ -668,6 +668,22 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   },
 });
 
+export const getContentfulReminderProjectManuscriptCollectionItem =
+  (): NonNullable<
+    FetchRemindersQuery['manuscriptsCollection']
+  >['items'][number] => ({
+    ...getContentfulReminderManuscriptCollectionItem()!,
+    teamsCollection: {
+      items: [],
+    },
+    project: {
+      sys: {
+        id: 'project-id-1',
+      },
+      title: 'Genetic Determinants of Progression',
+    },
+  });
+
 const getDiscussionCreatedByUser = (id: string) => ({
   sys: {
     id,

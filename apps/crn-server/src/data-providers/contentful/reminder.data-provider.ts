@@ -1087,7 +1087,6 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
 
 type ValidManuscriptItem = ManuscriptItem & {
   assignedUsersCollection: { items: { sys: { id: string } }[] };
-  teamsCollection: { items: { displayName: string }[] };
   versionsCollection: {
     items: { createdBy: { firstName: string; lastName: string } }[];
   };
@@ -1116,12 +1115,15 @@ type ValidMessageItem = MessageItem & {
   linkedFrom: { discussionsCollection: { items: ValidDiscussionItem[] } };
 };
 
+const isTeamBasedManuscript = (manuscript: ManuscriptItem): boolean =>
+  !!manuscript.teamsCollection?.items &&
+  manuscript.teamsCollection.items.length > 0 &&
+  !!manuscript.teamsCollection.items[0]?.displayName;
+
 const isValidManuscriptItem = (
   manuscript: ManuscriptItem,
 ): manuscript is ValidManuscriptItem =>
-  !!manuscript.teamsCollection?.items &&
-  manuscript.teamsCollection.items.length > 0 &&
-  !!manuscript.teamsCollection.items[0]?.displayName &&
+  (isTeamBasedManuscript(manuscript) || !!manuscript.project?.title) &&
   !!manuscript.versionsCollection?.items &&
   manuscript.versionsCollection.items.length > 0 &&
   !!manuscript.versionsCollection.items[0]?.createdBy;
@@ -1216,7 +1218,8 @@ const getManuscriptRemindersFromQuery = (
             manuscript.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
           ) ||
-          isManuscriptLabPI(manuscriptLastVersion.labsCollection, userId)) &&
+          (isTeamBasedManuscript(manuscriptItem) &&
+            isManuscriptLabPI(manuscriptLastVersion.labsCollection, userId))) &&
         isReminderForDifferentUser(
           manuscriptLastVersion.createdBy?.sys.id,
           userId,
@@ -1234,7 +1237,8 @@ const getManuscriptRemindersFromQuery = (
             manuscriptItem.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
           ) ||
-          isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
+          (isTeamBasedManuscript(manuscriptItem) &&
+            isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
         reminders.push(createManuscriptCreatedReminder(manuscriptItem));
       }
@@ -1247,7 +1251,8 @@ const getManuscriptRemindersFromQuery = (
             manuscriptItem.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
           ) ||
-          isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
+          (isTeamBasedManuscript(manuscriptItem) &&
+            isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
         reminders.push(createManuscriptStatusUpdatedReminder(manuscriptItem));
       }
@@ -1395,6 +1400,15 @@ export const getTeamNames = (
   return '';
 };
 
+const getManuscriptAssociationName = (
+  manuscript: ValidManuscriptItem,
+): string =>
+  isTeamBasedManuscript(manuscript)
+    ? getTeamNames(
+        manuscript.teamsCollection?.items.map((team) => team?.displayName),
+      )
+    : manuscript.project?.title || '';
+
 const createManuscriptCreatedReminder = (
   manuscript: ValidManuscriptItem,
 ): ManuscriptCreatedReminder => ({
@@ -1404,9 +1418,7 @@ const createManuscriptCreatedReminder = (
   data: {
     manuscriptId: manuscript.sys.id,
     title: manuscript.title || '',
-    teams: getTeamNames(
-      manuscript.teamsCollection.items.map((teams) => teams?.displayName),
-    ),
+    teams: getManuscriptAssociationName(manuscript),
     createdBy: `${manuscript.versionsCollection.items[0]?.createdBy?.firstName} ${manuscript.versionsCollection.items[0]?.createdBy?.lastName}`,
     publishedAt: manuscript.sys.firstPublishedAt,
   },
@@ -1426,9 +1438,7 @@ const createManuscriptResubmittedReminder = (
     data: {
       manuscriptId: manuscript.sys.id,
       title: manuscript.title || '',
-      teams: getTeamNames(
-        manuscript.teamsCollection.items.map((teams) => teams?.displayName),
-      ),
+      teams: getManuscriptAssociationName(manuscript),
       resubmittedBy: `${lastVersion?.createdBy?.firstName} ${lastVersion?.createdBy?.lastName}`,
       resubmittedAt: manuscript.sys.publishedAt,
     },
@@ -1513,9 +1523,7 @@ const createManuscriptStatusUpdatedReminder = (
     title: manuscript.title || '',
     status: manuscript.status as ManuscriptStatus,
     previousStatus: manuscript.previousStatus as ManuscriptStatus,
-    teams: getTeamNames(
-      manuscript.teamsCollection.items.map((teams) => teams?.displayName),
-    ),
+    teams: getManuscriptAssociationName(manuscript),
     updatedBy: `${manuscript.statusUpdatedBy?.firstName} ${manuscript.statusUpdatedBy?.lastName}`,
     updatedAt: manuscript.statusUpdatedAt,
   },

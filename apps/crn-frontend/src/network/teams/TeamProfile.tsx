@@ -17,7 +17,9 @@ import { useManuscripts, useTeamById } from './state';
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
 const loadCompliance = () =>
-  import(/* webpackChunkName: "network-team-compliance" */ './Compliance');
+  import(
+    /* webpackChunkName: "network-team-compliance" */ '../../projects/Compliance'
+  );
 const loadEventsList = () =>
   import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
 

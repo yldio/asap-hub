@@ -58,20 +58,38 @@ const migrateUserSocialsLink = async () => {
   const failed: string[] = [];
 
   const linkUser = async ({ userId, socialsId }: (typeof links)[number]) => {
+    let outcome = 'linked';
     try {
       await rateLimiter.removeTokens(REQUESTS_PER_USER);
 
       const user = await environment.getEntry(userId);
       const wasPublished = Boolean(user.sys.publishedVersion);
+      // a previous run may have saved the link but failed to publish it, so a
+      // published user with pending changes still needs republishing
+      const pendingChanges =
+        user.sys.publishedVersion !== undefined &&
+        user.sys.version >= user.sys.publishedVersion + 2;
+      const linked = user.fields.userSocials?.[LOCALE]?.sys?.id === socialsId;
 
-      if (user.fields.userSocials?.[LOCALE]?.sys?.id === socialsId) {
+      if (linked && !pendingChanges) {
         alreadyLinked += 1;
+        outcome = 'already linked';
       } else {
-        user.fields.userSocials = {
-          [LOCALE]: {
-            sys: { type: 'Link', linkType: 'Entry', id: socialsId },
-          },
-        };
+        // lastUpdated is required, but users created before that field
+        // existed have no value and cannot be republished without one
+        if (!user.fields.lastUpdated) {
+          user.fields.lastUpdated = {
+            [LOCALE]: user.sys.publishedAt ?? user.sys.updatedAt,
+          };
+        }
+
+        if (!linked) {
+          user.fields.userSocials = {
+            [LOCALE]: {
+              sys: { type: 'Link', linkType: 'Entry', id: socialsId },
+            },
+          };
+        }
 
         const saved = await user.update();
 
@@ -85,11 +103,12 @@ const migrateUserSocialsLink = async () => {
       }
     } catch (error) {
       failed.push(userId);
+      outcome = 'failed';
       console.log(`Error linking user ${userId}: ${error}`);
     }
 
     processed += 1;
-    console.log(`[${processed}/${links.length}] linked user ${userId}`);
+    console.log(`[${processed}/${links.length}] ${outcome}: user ${userId}`);
   };
 
   for (let index = 0; index < links.length; index += BATCH_SIZE) {

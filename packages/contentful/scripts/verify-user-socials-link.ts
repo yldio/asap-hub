@@ -38,7 +38,7 @@ const verifyUserSocialsLink = async () => {
   const users = await fetchAll(environment, {
     content_type: 'users',
     'sys.archivedAt[exists]': false,
-    select: 'sys.id,fields.userSocials',
+    select: 'sys,fields.userSocials',
   });
 
   const usersById = new Map(users.map((user) => [user.sys.id, user]));
@@ -47,6 +47,7 @@ const verifyUserSocialsLink = async () => {
   const missingUser: string[] = [];
   const notLinked: string[] = [];
   const wrongLink: string[] = [];
+  const unpublishedLink: string[] = [];
   const sharedSocials: string[] = [];
   const seenSocials = new Map<string, string>();
 
@@ -77,6 +78,17 @@ const verifyUserSocialsLink = async () => {
       return;
     }
 
+    // the link only counts once it is published; a published user with
+    // pending changes means a previous run saved the link but failed to
+    // publish it (drafts are deliberately left as drafts)
+    if (
+      user.sys.publishedVersion &&
+      user.sys.version >= user.sys.publishedVersion + 2
+    ) {
+      unpublishedLink.push(userId);
+      return;
+    }
+
     const previous = seenSocials.get(linkedId);
     if (previous) {
       sharedSocials.push(`${linkedId} shared by ${previous} and ${userId}`);
@@ -104,6 +116,7 @@ const verifyUserSocialsLink = async () => {
   report('socials entries whose user is missing', missingUser);
   report('users missing the userSocials link', notLinked);
   report('users linked to the wrong socials entry', wrongLink);
+  report('users whose link is saved but not published', unpublishedLink);
   report('socials entries shared by several users', sharedSocials);
 
   const failures =
@@ -111,6 +124,7 @@ const verifyUserSocialsLink = async () => {
     missingUser.length +
     notLinked.length +
     wrongLink.length +
+    unpublishedLink.length +
     sharedSocials.length;
 
   if (failures) {

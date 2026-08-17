@@ -432,19 +432,28 @@ export class UserContentfulDataProvider implements UserDataProvider {
       return false;
     }
 
-    const socialsEntry = await environment.createEntryWithId(
-      'socials',
-      `socials-${user.sys.id}`,
-      {
-        fields: Object.entries({
-          ...fields,
-          user: { sys: { type: 'Link', linkType: 'Entry', id: user.sys.id } },
-        }).reduce(
-          (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
-          {},
-        ),
-      },
+    const entryId = `socials-${user.sys.id}`;
+    const entryFields = Object.entries({
+      ...fields,
+      user: { sys: { type: 'Link', linkType: 'Entry', id: user.sys.id } },
+    }).reduce(
+      (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
+      {},
     );
+
+    // the socials migration script creates entries under this same id, so an
+    // entry can already exist for a user that was never linked to it
+    let socialsEntry;
+    try {
+      socialsEntry = await environment.getEntry(entryId);
+      socialsEntry.fields = entryFields;
+      socialsEntry = await socialsEntry.update();
+    } catch {
+      socialsEntry = await environment.createEntryWithId('socials', entryId, {
+        fields: entryFields,
+      });
+    }
+
     await socialsEntry.publish();
 
     await patchAndPublish(user, {

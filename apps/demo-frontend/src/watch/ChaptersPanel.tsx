@@ -12,9 +12,9 @@ const panelStyles = css({
   right: rem(12),
   bottom: '100%',
   marginBottom: rem(8),
-  width: rem(300),
+  width: rem(500),
   maxWidth: 'calc(100% - 24px)',
-  maxHeight: '60%',
+  maxHeight: '70%',
   overflowY: 'auto',
   backgroundColor: 'rgba(20, 20, 20, 0.95)',
   border: `1px solid rgba(255, 255, 255, 0.15)`,
@@ -45,10 +45,12 @@ const rowStyles = css({
   border: 'none',
   borderTop: `1px solid rgba(255, 255, 255, 0.08)`,
   backgroundColor: 'transparent',
-  padding: `${rem(10)} ${rem(14)}`,
+  padding: `${rem(14)} ${rem(18)}`,
   cursor: 'pointer',
   fontFamily: 'inherit',
-  fontSize: rem(14),
+  fontSize: rem(15),
+  fontWeight: 500,
+  lineHeight: 1.4,
   color: paper.rgb,
   ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
 });
@@ -68,16 +70,21 @@ const activeRowStyles = css({
 
 const badgeStyles = css({
   fontSize: rem(12),
+  fontWeight: 'normal',
   fontVariantNumeric: 'tabular-nums',
-  color: 'rgba(255, 255, 255, 0.7)',
-  paddingTop: rem(2),
+  color: 'rgba(255, 255, 255, 0.85)',
+  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  borderRadius: rem(4),
+  padding: `${rem(2)} ${rem(6)}`,
+  alignSelf: 'start',
 });
 
 const lengthStyles = css({
   gridColumn: 1,
-  fontSize: rem(12),
-  color: 'rgba(255, 255, 255, 0.55)',
-  paddingTop: rem(2),
+  fontSize: rem(13),
+  fontWeight: 'normal',
+  color: 'rgba(255, 255, 255, 0.6)',
+  paddingTop: rem(6),
 });
 
 const ChaptersPanel: FC<{

@@ -28,21 +28,21 @@ const frameStyles = css({
 });
 
 const titleStyles = css({
-  maxWidth: rem(180),
+  maxWidth: rem(240),
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  fontSize: rem(12),
+  fontSize: rem(14),
   fontWeight: 'bold',
   color: paper.rgb,
-  textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)',
+  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
 });
 
 const timeStyles = css({
-  fontSize: rem(12),
+  fontSize: rem(13),
   fontVariantNumeric: 'tabular-nums',
-  color: paper.rgb,
-  textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)',
+  color: 'rgba(255, 255, 255, 0.9)',
+  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
 });
 
 const TOOLTIP_WIDTH = 168;

@@ -702,11 +702,11 @@ describe('User data provider', () => {
         });
       });
 
-      test('should return empty result when labMembershipCollection is null', async () => {
+      test('should return empty result when usersCollection is null', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           labs: {
             linkedFrom: {
-              labMembershipCollection: null,
+              usersCollection: null,
             },
           },
         });
@@ -726,17 +726,9 @@ describe('User data provider', () => {
         const labByIdGraphqlResponse = {
           labs: {
             linkedFrom: {
-              labMembershipCollection: {
+              usersCollection: {
                 total: 1,
-                items: [
-                  {
-                    linkedFrom: {
-                      usersCollection: {
-                        items: [contentfulGraphqlUser],
-                      },
-                    },
-                  },
-                ],
+                items: [contentfulGraphqlUser],
               },
             },
           },

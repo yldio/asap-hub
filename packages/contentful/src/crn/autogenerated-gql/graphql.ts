@@ -2741,6 +2741,8 @@ export enum DiscoverMembersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -2828,6 +2830,8 @@ export enum DiscoverMembersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -2927,6 +2931,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -3014,6 +3020,8 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -3353,6 +3361,8 @@ export enum DiscussionsReadByCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -3440,6 +3450,8 @@ export enum DiscussionsReadByCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -7581,8 +7593,6 @@ export type LabMembershipFilter = {
 export type LabMembershipLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   entryCursorCollection?: Maybe<EntryCursorCollection>;
-  usersCollection?: Maybe<UsersCollection>;
-  usersCursorCollection?: Maybe<UsersCursorCollection>;
 };
 
 export type LabMembershipLinkingCollectionsEntryCollectionArgs = {
@@ -7601,191 +7611,6 @@ export type LabMembershipLinkingCollectionsEntryCursorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
-
-export type LabMembershipLinkingCollectionsUsersCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<LabMembershipLinkingCollectionsUsersCollectionOrder>>
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type LabMembershipLinkingCollectionsUsersCursorCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<LabMembershipLinkingCollectionsUsersCursorCollectionOrder>>
-  >;
-  pageNext?: InputMaybe<Scalars['String']>;
-  pagePrev?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
-  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
-  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
-  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
-  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
-  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
-  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
-  AlumniLocationAsc = 'alumniLocation_ASC',
-  AlumniLocationDesc = 'alumniLocation_DESC',
-  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
-  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
-  CityAsc = 'city_ASC',
-  CityDesc = 'city_DESC',
-  ContactEmailAsc = 'contactEmail_ASC',
-  ContactEmailDesc = 'contactEmail_DESC',
-  CountryAsc = 'country_ASC',
-  CountryDesc = 'country_DESC',
-  CreatedDateAsc = 'createdDate_ASC',
-  CreatedDateDesc = 'createdDate_DESC',
-  DegreeAsc = 'degree_ASC',
-  DegreeDesc = 'degree_DESC',
-  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
-  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
-  EmailAsc = 'email_ASC',
-  EmailDesc = 'email_DESC',
-  FirstNameAsc = 'firstName_ASC',
-  FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
-  InstitutionAsc = 'institution_ASC',
-  InstitutionDesc = 'institution_DESC',
-  LastNameAsc = 'lastName_ASC',
-  LastNameDesc = 'lastName_DESC',
-  LastUpdatedAsc = 'lastUpdated_ASC',
-  LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
-  MiddleNameAsc = 'middleName_ASC',
-  MiddleNameDesc = 'middleName_DESC',
-  NicknameAsc = 'nickname_ASC',
-  NicknameDesc = 'nickname_DESC',
-  OnboardedAsc = 'onboarded_ASC',
-  OnboardedDesc = 'onboarded_DESC',
-  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
-  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
-  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
-  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
-  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
-  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
-  OrcidAsc = 'orcid_ASC',
-  OrcidDesc = 'orcid_DESC',
-  PersonalEmailAsc = 'personalEmail_ASC',
-  PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
-  RoleAsc = 'role_ASC',
-  RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
-}
-
-export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
-  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
-  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
-  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
-  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
-  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
-  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
-  AlumniLocationAsc = 'alumniLocation_ASC',
-  AlumniLocationDesc = 'alumniLocation_DESC',
-  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
-  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
-  CityAsc = 'city_ASC',
-  CityDesc = 'city_DESC',
-  ContactEmailAsc = 'contactEmail_ASC',
-  ContactEmailDesc = 'contactEmail_DESC',
-  CountryAsc = 'country_ASC',
-  CountryDesc = 'country_DESC',
-  CreatedDateAsc = 'createdDate_ASC',
-  CreatedDateDesc = 'createdDate_DESC',
-  DegreeAsc = 'degree_ASC',
-  DegreeDesc = 'degree_DESC',
-  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
-  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
-  EmailAsc = 'email_ASC',
-  EmailDesc = 'email_DESC',
-  FirstNameAsc = 'firstName_ASC',
-  FirstNameDesc = 'firstName_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
-  InstitutionAsc = 'institution_ASC',
-  InstitutionDesc = 'institution_DESC',
-  LastNameAsc = 'lastName_ASC',
-  LastNameDesc = 'lastName_DESC',
-  LastUpdatedAsc = 'lastUpdated_ASC',
-  LastUpdatedDesc = 'lastUpdated_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
-  MiddleNameAsc = 'middleName_ASC',
-  MiddleNameDesc = 'middleName_DESC',
-  NicknameAsc = 'nickname_ASC',
-  NicknameDesc = 'nickname_DESC',
-  OnboardedAsc = 'onboarded_ASC',
-  OnboardedDesc = 'onboarded_DESC',
-  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
-  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
-  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
-  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
-  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
-  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
-  OrcidAsc = 'orcid_ASC',
-  OrcidDesc = 'orcid_DESC',
-  PersonalEmailAsc = 'personalEmail_ASC',
-  PersonalEmailDesc = 'personalEmail_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
-  RoleAsc = 'role_ASC',
-  RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
-}
 
 export enum LabMembershipOrder {
   RoleAsc = 'role_ASC',
@@ -8224,6 +8049,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -8305,6 +8132,8 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -10006,6 +9835,8 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -10093,6 +9924,8 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -13096,6 +12929,8 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -13183,6 +13018,8 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -17964,6 +17801,8 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -18045,6 +17884,8 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -19068,6 +18909,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -19149,6 +18992,8 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -21215,6 +21060,7 @@ export type Users = Entry &
     _id: Scalars['ID'];
     activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
     activeCampaignId?: Maybe<Scalars['String']>;
+    admin?: Maybe<Scalars['Boolean']>;
     adminNotes?: Maybe<Scalars['String']>;
     alumniLastUpdated?: Maybe<Scalars['DateTime']>;
     alumniLocation?: Maybe<Scalars['String']>;
@@ -21245,8 +21091,6 @@ export type Users = Entry &
     linkedIn?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     nickname?: Maybe<Scalars['String']>;
-    oldLabsCollection?: Maybe<UsersOldLabsCollection>;
-    oldLabsCursorCollection?: Maybe<UsersOldLabsCursorCollection>;
     onboarded?: Maybe<Scalars['Boolean']>;
     openScienceTeamMember?: Maybe<Scalars['Boolean']>;
     orcid?: Maybe<Scalars['String']>;
@@ -21280,6 +21124,12 @@ export type UsersActiveCampaignCreatedAtArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersActiveCampaignIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersAdminArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -21467,29 +21317,6 @@ export type UsersMiddleNameArgs = {
 export type UsersNicknameArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersOldLabsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<UsersOldLabsCollectionOrder>>>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<LabMembershipFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersOldLabsCursorCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<UsersOldLabsCursorCollectionOrder>>>;
-  pageNext?: InputMaybe<Scalars['String']>;
-  pagePrev?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<LabMembershipFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -21682,6 +21509,7 @@ export type UsersFilter = {
   activeCampaignId_not?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  admin?: InputMaybe<Scalars['Boolean']>;
   adminNotes?: InputMaybe<Scalars['String']>;
   adminNotes_contains?: InputMaybe<Scalars['String']>;
   adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
@@ -21689,6 +21517,8 @@ export type UsersFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  admin_exists?: InputMaybe<Scalars['Boolean']>;
+  admin_not?: InputMaybe<Scalars['Boolean']>;
   alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
   alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
   alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
@@ -21866,8 +21696,6 @@ export type UsersFilter = {
   nickname_not?: InputMaybe<Scalars['String']>;
   nickname_not_contains?: InputMaybe<Scalars['String']>;
   nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  oldLabs?: InputMaybe<CfLabMembershipNestedFilter>;
-  oldLabsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -23164,50 +22992,13 @@ export enum UsersLinkingCollectionsWorkingGroupMembersCursorCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-export type UsersOldLabsCollection = {
-  items: Array<Maybe<LabMembership>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export enum UsersOldLabsCollectionOrder {
-  RoleAsc = 'role_ASC',
-  RoleDesc = 'role_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
-export type UsersOldLabsCursorCollection = {
-  items: Array<Maybe<LabMembership>>;
-  limit: Scalars['Int'];
-  pages: CursorPages;
-};
-
-export enum UsersOldLabsCursorCollectionOrder {
-  RoleAsc = 'role_ASC',
-  RoleDesc = 'role_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
 export enum UsersOrder {
   ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AdminAsc = 'admin_ASC',
+  AdminDesc = 'admin_DESC',
   AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
   AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -24909,21 +24700,6 @@ export type CfInterestGroupsTeamsNestedFilter = {
   team_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type CfLabMembershipNestedFilter = {
-  AND?: InputMaybe<Array<InputMaybe<CfLabMembershipNestedFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<CfLabMembershipNestedFilter>>>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  lab_exists?: InputMaybe<Scalars['Boolean']>;
-  role?: InputMaybe<Scalars['String']>;
-  role_contains?: InputMaybe<Scalars['String']>;
-  role_exists?: InputMaybe<Scalars['Boolean']>;
-  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  role_not?: InputMaybe<Scalars['String']>;
-  role_not_contains?: InputMaybe<Scalars['String']>;
-  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  sys?: InputMaybe<SysFilter>;
-};
-
 export type CfLabsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfLabsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfLabsNestedFilter>>>;
@@ -26054,6 +25830,7 @@ export type CfUsersNestedFilter = {
   activeCampaignId_not?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  admin?: InputMaybe<Scalars['Boolean']>;
   adminNotes?: InputMaybe<Scalars['String']>;
   adminNotes_contains?: InputMaybe<Scalars['String']>;
   adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
@@ -26061,6 +25838,8 @@ export type CfUsersNestedFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  admin_exists?: InputMaybe<Scalars['Boolean']>;
+  admin_not?: InputMaybe<Scalars['Boolean']>;
   alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
   alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
   alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
@@ -26237,7 +26016,6 @@ export type CfUsersNestedFilter = {
   nickname_not?: InputMaybe<Scalars['String']>;
   nickname_not_contains?: InputMaybe<Scalars['String']>;
   nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  oldLabsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -40048,80 +39826,66 @@ export type FetchUsersByLabIdQueryVariables = Exact<{
 export type FetchUsersByLabIdQuery = {
   labs?: Maybe<{
     linkedFrom?: Maybe<{
-      labMembershipCollection?: Maybe<
-        Pick<LabMembershipCollection, 'total'> & {
+      usersCollection?: Maybe<
+        Pick<UsersCollection, 'total'> & {
           items: Array<
-            Maybe<{
-              linkedFrom?: Maybe<{
-                usersCollection?: Maybe<{
+            Maybe<
+              Pick<
+                Users,
+                | 'alumniSinceDate'
+                | 'biography'
+                | 'city'
+                | 'contactEmail'
+                | 'stateOrProvince'
+                | 'country'
+                | 'createdDate'
+                | 'degree'
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastName'
+                | 'middleName'
+                | 'nickname'
+                | 'onboarded'
+                | 'dismissedGettingStarted'
+                | 'role'
+                | 'openScienceTeamMember'
+                | 'orcid'
+              > & {
+                avatar?: Maybe<Pick<Asset, 'url'>>;
+                sys: Pick<Sys, 'id'>;
+                labsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<
-                        Users,
-                        | 'alumniSinceDate'
-                        | 'biography'
-                        | 'city'
-                        | 'contactEmail'
-                        | 'stateOrProvince'
-                        | 'country'
-                        | 'createdDate'
-                        | 'degree'
-                        | 'email'
-                        | 'firstName'
-                        | 'institution'
-                        | 'jobTitle'
-                        | 'lastName'
-                        | 'middleName'
-                        | 'nickname'
-                        | 'onboarded'
-                        | 'dismissedGettingStarted'
-                        | 'role'
-                        | 'openScienceTeamMember'
-                        | 'orcid'
-                      > & {
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                      Pick<Labs, 'name'> & {
                         sys: Pick<Sys, 'id'>;
-                        labsCollection?: Maybe<{
+                        labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                      }
+                    >
+                  >;
+                }>;
+                researchTagsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
+                teamsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<TeamMembership, 'role'> & {
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                        awardsCollection?: Maybe<{
                           items: Array<
                             Maybe<
-                              Pick<Labs, 'name'> & {
-                                sys: Pick<Sys, 'id'>;
-                                labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                              }
-                            >
-                          >;
-                        }>;
-                        researchTagsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              Pick<ResearchTags, 'name'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >
-                          >;
-                        }>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              Pick<TeamMembership, 'role'> & {
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
+                              Pick<Awards, 'date'> & {
+                                awardType?: Maybe<
+                                  Pick<AwardType, 'name'> & {
+                                    icon?: Maybe<Pick<Asset, 'url'>>;
                                   }
                                 >;
-                                awardsCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<Awards, 'date'> & {
-                                        awardType?: Maybe<
-                                          Pick<AwardType, 'name'> & {
-                                            icon?: Maybe<Pick<Asset, 'url'>>;
-                                          }
-                                        >;
-                                      }
-                                    >
-                                  >;
-                                }>;
                               }
                             >
                           >;
@@ -40130,8 +39894,8 @@ export type FetchUsersByLabIdQuery = {
                     >
                   >;
                 }>;
-              }>;
-            }>
+              }
+            >
           >;
         }
       >;
@@ -74376,10 +74140,7 @@ export const FetchUsersByLabIdDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'labMembershipCollection',
-                        },
+                        name: { kind: 'Name', value: 'usersCollection' },
                         arguments: [
                           {
                             kind: 'Argument',
@@ -74412,57 +74173,10 @@ export const FetchUsersByLabIdDocument = {
                                 kind: 'SelectionSet',
                                 selections: [
                                   {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkedFrom' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'usersCollection',
-                                          },
-                                          arguments: [
-                                            {
-                                              kind: 'Argument',
-                                              name: {
-                                                kind: 'Name',
-                                                value: 'limit',
-                                              },
-                                              value: {
-                                                kind: 'IntValue',
-                                                value: '1',
-                                              },
-                                            },
-                                          ],
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'items',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'FragmentSpread',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value:
-                                                          'UserListItemContent',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'UserListItemContent',
                                     },
                                   },
                                 ],

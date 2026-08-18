@@ -32,9 +32,12 @@ export const updateFolderSchema = z
       })
       .optional(),
   })
-  .refine(({ name, parentId }) => name !== undefined || parentId !== undefined, {
-    message: 'name or parentId is required',
-  });
+  .refine(
+    ({ name, parentId }) => name !== undefined || parentId !== undefined,
+    {
+      message: 'name or parentId is required',
+    },
+  );
 
 export const bulkMoveSchema = z.object({
   ids: z.array(z.string().uuid()).min(1).max(100),

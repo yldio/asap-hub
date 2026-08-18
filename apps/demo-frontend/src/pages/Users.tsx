@@ -6,16 +6,15 @@ import { Navigate } from 'react-router';
 import { useDeleteUser, useUpdateUser, useUsers } from '../api/hooks';
 import type { ManagedUser, Role } from '../api/types';
 import { useIsAdmin, useMeContext } from '../auth/MeContext';
-import { Badge, Button, Card, Headline, Modal, Spinner } from '../ui/components';
 import {
-  charcoal,
-  ember,
-  lead,
-  rem,
-  rose,
-  silver,
-  steel,
-} from '../ui/theme';
+  Badge,
+  Button,
+  Card,
+  Headline,
+  Modal,
+  Spinner,
+} from '../ui/components';
+import { charcoal, ember, lead, rem, rose, silver, steel } from '../ui/theme';
 import { formatRecordedAt } from '../utils/time';
 
 const tableStyles = css({

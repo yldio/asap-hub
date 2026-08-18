@@ -127,8 +127,12 @@ export const createApi = (getToken: GetToken) => ({
     (await request<ListResponse<Folder>>('/folders', await getToken())).items,
 
   folderCounts: async (): Promise<FolderCounts> =>
-    (await request<{ counts: FolderCounts }>('/folders/counts', await getToken()))
-      .counts,
+    (
+      await request<{ counts: FolderCounts }>(
+        '/folders/counts',
+        await getToken(),
+      )
+    ).counts,
 
   createFolder: async (name: string, parentId?: string): Promise<Folder> =>
     request<Folder>('/folders', await getToken(), {
@@ -153,9 +157,13 @@ export const createApi = (getToken: GetToken) => ({
     }),
 
   deleteFolder: async (id: string): Promise<void> => {
-    await request<void>(`/folders/${encodeURIComponent(id)}`, await getToken(), {
-      method: 'DELETE',
-    });
+    await request<void>(
+      `/folders/${encodeURIComponent(id)}`,
+      await getToken(),
+      {
+        method: 'DELETE',
+      },
+    );
   },
 
   bulkMoveVideos: async (
@@ -303,10 +311,14 @@ export const createApi = (getToken: GetToken) => ({
     sub: string,
     patch: { role?: Role; status?: UserStatus },
   ): Promise<ManagedUser> =>
-    request<ManagedUser>(`/users/${encodeURIComponent(sub)}`, await getToken(), {
-      method: 'PATCH',
-      body: patch,
-    }),
+    request<ManagedUser>(
+      `/users/${encodeURIComponent(sub)}`,
+      await getToken(),
+      {
+        method: 'PATCH',
+        body: patch,
+      },
+    ),
 
   deleteUser: async (sub: string): Promise<void> => {
     await request<void>(`/users/${encodeURIComponent(sub)}`, await getToken(), {

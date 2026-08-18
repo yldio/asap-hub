@@ -128117,9 +128117,12 @@ var updateFolderSchema = external_exports.object({
   parentId: external_exports.string().min(1).refine((value) => value !== "ROOT", {
     message: "ROOT is not a real folder"
   }).optional()
-}).refine(({ name, parentId }) => name !== void 0 || parentId !== void 0, {
-  message: "name or parentId is required"
-});
+}).refine(
+  ({ name, parentId }) => name !== void 0 || parentId !== void 0,
+  {
+    message: "name or parentId is required"
+  }
+);
 var bulkMoveSchema = external_exports.object({
   ids: external_exports.array(external_exports.string().uuid()).min(1).max(100),
   folderId: external_exports.string().min(1)
@@ -128453,7 +128456,10 @@ var foldersRouter = () => {
             return;
           }
           const movedSubtreeHeight = subtreeIds(id, allFolders).reduce(
-            (tallest, descendantId) => Math.max(tallest, depthOf(descendantId, byId) - depthOf(id, byId)),
+            (tallest, descendantId) => Math.max(
+              tallest,
+              depthOf(descendantId, byId) - depthOf(id, byId)
+            ),
             0
           );
           if (depthOf(parentId, byId) + 1 + movedSubtreeHeight > maxFolderDepth) {

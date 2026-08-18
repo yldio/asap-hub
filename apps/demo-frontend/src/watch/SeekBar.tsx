@@ -54,11 +54,7 @@ const knobStyles = css({
   pointerEvents: 'none',
 });
 
-const progressOf = (
-  seconds: number,
-  start: number,
-  end: number,
-): number => {
+const progressOf = (seconds: number, start: number, end: number): number => {
   const span = end - start;
   if (span <= 0) return seconds >= end ? 1 : 0;
   return Math.min(1, Math.max(0, (seconds - start) / span));
@@ -71,7 +67,9 @@ const SeekBar: FC<{
   readonly bufferedSeconds: number;
   readonly onSeek: (seconds: number) => void;
   readonly onScrubbingChange: (scrubbing: boolean) => void;
-  readonly onHover: (position: { seconds: number; left: number } | null) => void;
+  readonly onHover: (
+    position: { seconds: number; left: number } | null,
+  ) => void;
 }> = ({
   chapters,
   durationSeconds,

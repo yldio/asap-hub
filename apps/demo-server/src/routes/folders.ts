@@ -84,7 +84,10 @@ export const foldersRouter = (): Router => {
     validate(createFolderSchema),
     async (req, res) => {
       const id = uuid();
-      const { name, parentId } = req.body as { name: string; parentId?: string };
+      const { name, parentId } = req.body as {
+        name: string;
+        parentId?: string;
+      };
 
       if (parentId) {
         const { data } = await folderEntity.query.all({}).go({ pages: 'all' });
@@ -155,7 +158,10 @@ export const foldersRouter = (): Router => {
 
           const movedSubtreeHeight = subtreeIds(id, allFolders).reduce(
             (tallest, descendantId) =>
-              Math.max(tallest, depthOf(descendantId, byId) - depthOf(id, byId)),
+              Math.max(
+                tallest,
+                depthOf(descendantId, byId) - depthOf(id, byId),
+              ),
             0,
           );
           if (

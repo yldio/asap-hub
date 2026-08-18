@@ -28,4 +28,9 @@ export const clampTooltip = (
   left: number,
   width: number,
   playerWidth: number,
-): number => clamp(left, width / 2 + 8, Math.max(width / 2 + 8, playerWidth - width / 2 - 8));
+): number =>
+  clamp(
+    left,
+    width / 2 + 8,
+    Math.max(width / 2 + 8, playerWidth - width / 2 - 8),
+  );

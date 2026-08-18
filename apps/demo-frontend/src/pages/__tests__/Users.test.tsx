@@ -43,12 +43,16 @@ it('locks the role select and hides the actions on your own row', async () => {
 
   const self = await rowFor('dana@example.com');
   await waitFor(() => expect(within(self).getByText('(you)')).toBeVisible());
-  expect(within(self).getByLabelText('Role for dana@example.com')).toBeDisabled();
+  expect(
+    within(self).getByLabelText('Role for dana@example.com'),
+  ).toBeDisabled();
   expect(within(self).queryByRole('button', { name: 'Revoke' })).toBeNull();
   expect(within(self).queryByRole('button', { name: 'Delete' })).toBeNull();
 
   const other = await rowFor('jane@example.com');
-  expect(within(other).getByLabelText('Role for jane@example.com')).toBeEnabled();
+  expect(
+    within(other).getByLabelText('Role for jane@example.com'),
+  ).toBeEnabled();
   expect(within(other).getByRole('button', { name: 'Revoke' })).toBeVisible();
 });
 

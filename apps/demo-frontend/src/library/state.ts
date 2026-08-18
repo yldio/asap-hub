@@ -33,7 +33,7 @@ export const useViewMode = (): [ViewMode, (mode: ViewMode) => void] => {
   ];
 };
 
-export const useDebounced = <T,>(value: T, delayMs: number): T => {
+export const useDebounced = <T>(value: T, delayMs: number): T => {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
     const timer = window.setTimeout(() => setDebounced(value), delayMs);

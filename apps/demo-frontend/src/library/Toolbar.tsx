@@ -3,7 +3,17 @@ import { css } from '@emotion/react';
 import { FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router';
 
-import { charcoal, lead, mint, paper, pine, rem, silver, steel, tin } from '../ui/theme';
+import {
+  charcoal,
+  lead,
+  mint,
+  paper,
+  pine,
+  rem,
+  silver,
+  steel,
+  tin,
+} from '../ui/theme';
 import {
   FilterIcon,
   FolderPlusIcon,

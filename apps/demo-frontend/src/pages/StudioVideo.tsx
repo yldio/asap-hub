@@ -609,8 +609,8 @@ const Editor: FC<{
           <span css={keyStyles}>Space</span> play or pause
         </span>
         <span>
-          <span css={keyStyles}>M</span> mark a chapter here (when not typing
-          in a field)
+          <span css={keyStyles}>M</span> mark a chapter here (when not typing in
+          a field)
         </span>
         <span>
           <span css={keyStyles}>&larr; &rarr;</span> nudge 1s

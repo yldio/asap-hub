@@ -19,7 +19,10 @@ export const buildTree = (folders: readonly Folder[]): FolderNode[] => {
   const real = folders.filter(isRealFolder);
   const ids = new Set(real.map(({ id }) => id));
 
-  const childrenOf = (parentId: string | undefined, depth: number): FolderNode[] =>
+  const childrenOf = (
+    parentId: string | undefined,
+    depth: number,
+  ): FolderNode[] =>
     real
       .filter((folder) => {
         const parent =
@@ -31,7 +34,8 @@ export const buildTree = (folders: readonly Folder[]): FolderNode[] => {
       .map((folder) => ({
         folder,
         depth,
-        children: depth + 1 < maxFolderDepth ? childrenOf(folder.id, depth + 1) : [],
+        children:
+          depth + 1 < maxFolderDepth ? childrenOf(folder.id, depth + 1) : [],
       }));
 
   return childrenOf(undefined, 0);

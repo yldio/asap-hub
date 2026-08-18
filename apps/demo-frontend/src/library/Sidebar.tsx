@@ -292,7 +292,9 @@ const readExpanded = (): string[] => {
   try {
     const raw = window.localStorage.getItem(expandedKey);
     const parsed: unknown = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed.filter((id) => typeof id === 'string') : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((id) => typeof id === 'string')
+      : [];
   } catch {
     return [];
   }
@@ -418,7 +420,9 @@ export const Sidebar: FC<{
             onToggle={hasChildren ? () => toggle(folder.id) : undefined}
             isActive={selectedFolder === folder.id}
             droppableId={
-              isCreator && selectedFolder !== folder.id && !isBlockedTarget(folder.id)
+              isCreator &&
+              selectedFolder !== folder.id &&
+              !isBlockedTarget(folder.id)
                 ? folder.id
                 : undefined
             }

@@ -59,6 +59,9 @@ export const pruneSelection = (
   if (ids.length === current.ids.length) return current;
   return {
     ids,
-    anchor: current.anchor && ids.includes(current.anchor) ? current.anchor : undefined,
+    anchor:
+      current.anchor && ids.includes(current.anchor)
+        ? current.anchor
+        : undefined,
   };
 };

@@ -56,7 +56,8 @@ const SeekTooltip: FC<{
   readonly playerWidth: number;
 }> = ({ spriteUrl, cues, chapters, seconds, left, playerWidth }) => {
   const cue = cueAt(cues, seconds);
-  const chapter = chapters.length > 0 ? chapterAt(chapters, seconds) : undefined;
+  const chapter =
+    chapters.length > 0 ? chapterAt(chapters, seconds) : undefined;
   const width = cue?.width ?? TOOLTIP_WIDTH;
 
   return (

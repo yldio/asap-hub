@@ -72,7 +72,16 @@ import {
   ContextMenuSubmenu,
   type MenuPosition,
 } from '../ui/ContextMenu';
-import { charcoal, ember, lead, paper, pine, rem, rose, steel } from '../ui/theme';
+import {
+  charcoal,
+  ember,
+  lead,
+  paper,
+  pine,
+  rem,
+  rose,
+  steel,
+} from '../ui/theme';
 import { folderCount, videoCount } from '../utils/format';
 import {
   applySelection,
@@ -213,8 +222,7 @@ const folderDragPrefix = 'folder:';
 const Home: FC = () => {
   const [searchParams] = useSearchParams();
   const folderParam = searchParams.get('folder') ?? undefined;
-  const selectedFolder =
-    folderParam === rootFolderId ? undefined : folderParam;
+  const selectedFolder = folderParam === rootFolderId ? undefined : folderParam;
   const isCreator = useIsCreator();
   const navigate = useNavigate();
   const api = useApi();
@@ -256,10 +264,7 @@ const Home: FC = () => {
 
   // ROOT is only kept for search, which has to sweep the unfiled videos too
   const searchFolders = useMemo(() => folders.data ?? [], [folders.data]);
-  const folderList = useMemo(
-    () => realFolders(searchFolders),
-    [searchFolders],
-  );
+  const folderList = useMemo(() => realFolders(searchFolders), [searchFolders]);
   const folderNames = useMemo(
     () => new Map(folderList.map(({ id, name }) => [id, name])),
     [folderList],
@@ -491,9 +496,7 @@ const Home: FC = () => {
     [selectedFolder, folderList],
   );
 
-  const currentDepth = selectedFolder
-    ? depthOf(selectedFolder, folderList)
-    : 0;
+  const currentDepth = selectedFolder ? depthOf(selectedFolder, folderList) : 0;
 
   const canCreateHere = currentDepth < maxFolderDepth;
 
@@ -512,9 +515,7 @@ const Home: FC = () => {
 
   const draggingFolderIsTopLevel =
     draggingFolderId !== undefined &&
-    childrenOf(undefined, folderList).some(
-      ({ id }) => id === draggingFolderId,
-    );
+    childrenOf(undefined, folderList).some(({ id }) => id === draggingFolderId);
 
   // Home takes videos (unfile) and folders (detach to top level), unless already there
   const homeDroppableId = !isCreator
@@ -793,7 +794,9 @@ const Home: FC = () => {
                   );
                 }}
               >
-                <span css={{ paddingLeft: rem(depth * 14) }}>{folder.name}</span>
+                <span css={{ paddingLeft: rem(depth * 14) }}>
+                  {folder.name}
+                </span>
               </ContextMenuItem>
             ))}
           </ContextMenuSubmenu>

@@ -21,9 +21,9 @@ describe('buildTree', () => {
     const tree = buildTree(folders);
     expect(tree.map(({ folder }) => folder.id)).toEqual(['a', 'd']);
     expect(tree[0]?.children.map(({ folder }) => folder.id)).toEqual(['b']);
-    expect(tree[0]?.children[0]?.children.map(({ folder }) => folder.id)).toEqual(
-      ['c'],
-    );
+    expect(
+      tree[0]?.children[0]?.children.map(({ folder }) => folder.id),
+    ).toEqual(['c']);
   });
 
   it('assigns increasing depths', () => {

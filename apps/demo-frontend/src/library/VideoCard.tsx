@@ -54,7 +54,11 @@ const selectedShellStyles = css({
   borderColor: pine.rgb,
 });
 
-const gridShellStyles = css({ padding: rem(10), display: 'grid', gap: rem(10) });
+const gridShellStyles = css({
+  padding: rem(10),
+  display: 'grid',
+  gap: rem(10),
+});
 
 const listShellStyles = css({
   padding: rem(10),

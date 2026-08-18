@@ -45,9 +45,7 @@ export const isNotInvited = (error: unknown): boolean =>
   error.code === 'not_invited';
 
 export const isLockedOut = (error: unknown): boolean =>
-  error instanceof ApiError &&
-  error.status === 409 &&
-  (error.code === 'locked' || error.code === 'conflict');
+  error instanceof ApiError && error.status === 409 && error.code === 'locked';
 
 type RequestOptions = {
   method?: string;

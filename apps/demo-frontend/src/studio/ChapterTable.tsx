@@ -72,10 +72,15 @@ const ChapterTable: FC<{
   readonly titleRef: (
     key: string,
   ) => (element: HTMLInputElement | null) => void;
+  readonly endDrafts: Record<string, string>;
+  readonly endInvalid: Record<string, boolean>;
   readonly onSeek: (startMs: number) => void;
   readonly onTimecodeChange: (key: string, value: string) => void;
   readonly onTimecodeFocus: (key: string) => void;
   readonly onTimecodeBlur: (key: string) => void;
+  readonly onEndChange: (key: string, value: string) => void;
+  readonly onEndFocus: (key: string) => void;
+  readonly onEndBlur: (key: string) => void;
   readonly onTitleChange: (key: string, value: string) => void;
   readonly onDelete: (key: string) => void;
 }> = ({
@@ -86,10 +91,15 @@ const ChapterTable: FC<{
   activeKey,
   readOnly,
   titleRef,
+  endDrafts,
+  endInvalid,
   onSeek,
   onTimecodeChange,
   onTimecodeFocus,
   onTimecodeBlur,
+  onEndChange,
+  onEndFocus,
+  onEndBlur,
   onTitleChange,
   onDelete,
 }) => (
@@ -107,6 +117,8 @@ const ChapterTable: FC<{
       {rows.map((row, index) => {
         const endMs = endMsOf(rows, index, durationMs);
         const isInvalid = Boolean(invalid[row.key]);
+        const isEndInvalid = Boolean(endInvalid[row.key]);
+        const isLast = index === rows.length - 1;
         return (
           <tr
             key={row.key}
@@ -151,7 +163,35 @@ const ChapterTable: FC<{
                 }
               />
             </td>
-            <td css={derivedStyles}>{formatDuration(endMs)}</td>
+            <td css={isLast || readOnly ? derivedStyles : undefined}>
+              {isLast || readOnly ? (
+                formatDuration(endMs)
+              ) : (
+                <>
+                  <input
+                    css={[
+                      inputStyles,
+                      timecodeInputStyles,
+                      isEndInvalid && invalidInputStyles,
+                    ]}
+                    type="text"
+                    aria-label={`End time of chapter ${index + 1}`}
+                    aria-invalid={isEndInvalid}
+                    value={endDrafts[row.key] ?? formatDuration(endMs)}
+                    onChange={(event) =>
+                      onEndChange(row.key, event.currentTarget.value)
+                    }
+                    onFocus={() => onEndFocus(row.key)}
+                    onBlur={() => onEndBlur(row.key)}
+                  />
+                  {isEndInvalid && (
+                    <div css={inlineErrorStyles} role="alert">
+                      Must be after the start
+                    </div>
+                  )}
+                </>
+              )}
+            </td>
             <td css={derivedStyles}>
               {formatDuration(Math.max(0, endMs - row.startMs))}
             </td>

@@ -4,6 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { ApiError, isLockedOut } from '../api/client';
+import { useApi } from '../api/ApiProvider';
 import {
   useDeleteVideo,
   useEditableVideo,
@@ -195,6 +196,7 @@ const Editor: FC<{
   readonly access?: VideoAccess;
 }> = ({ video, access }) => {
   const navigate = useNavigate();
+  const api = useApi();
   const folders = useFolders();
   const updateVideo = useUpdateVideo(video.id);
   const publishVideo = usePublishVideo(video.id);
@@ -211,6 +213,8 @@ const Editor: FC<{
   const [folderId, setFolderId] = useState(video.folderId || ROOT_FOLDER);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
+  const [endDrafts, setEndDrafts] = useState<Record<string, string>>({});
+  const [endInvalid, setEndInvalid] = useState<Record<string, boolean>>({});
   const [focusedKey, setFocusedKey] = useState<string>();
   const [pendingFocusKey, setPendingFocusKey] = useState<string>();
   const [currentTime, setCurrentTime] = useState(0);
@@ -234,33 +238,87 @@ const Editor: FC<{
     return key;
   }, [rows, currentTime]);
 
-  const save = useCallback(
-    (nextRows: ChapterRow[], extra: { title?: string; folderId?: string }) => {
+  // one save in flight at a time; an overlapping request would carry a stale
+  // version and 409, and a self-conflict rebases once instead of locking out
+  const inFlightRef = useRef(false);
+  const pendingRef = useRef<{
+    rows: ChapterRow[];
+    extra: { title?: string; folderId?: string };
+  } | null>(null);
+
+  const doSave = useCallback(
+    (
+      payload: {
+        rows: ChapterRow[];
+        extra: { title?: string; folderId?: string };
+      },
+      isRetry: boolean,
+    ) => {
+      const finish = () => {
+        inFlightRef.current = false;
+        const pending = pendingRef.current;
+        pendingRef.current = null;
+        if (pending) doSave(pending, false);
+      };
+      inFlightRef.current = true;
       setSaveState('saving');
       updateVideo.mutate(
         {
-          chapters: toChapters(nextRows),
+          chapters: toChapters(payload.rows),
           version: versionRef.current,
-          ...extra,
+          ...payload.extra,
         },
         {
           onSuccess: (saved) => {
             versionRef.current = saved.version;
             setSaveState('saved');
+            finish();
           },
           onError: (error) => {
+            if (
+              !isRetry &&
+              error instanceof ApiError &&
+              error.status === 409 &&
+              error.code === 'conflict'
+            ) {
+              api
+                .getVideo(video.id)
+                .then((fresh) => {
+                  versionRef.current = fresh.version;
+                  doSave(payload, true);
+                })
+                .catch(() => {
+                  setSaveState('error');
+                  finish();
+                });
+              return;
+            }
             if (isLockedOut(error)) {
               markLost(
                 error instanceof ApiError ? error.holderName : undefined,
               );
+              finish();
               return;
             }
             setSaveState('error');
+            finish();
           },
         },
       );
     },
-    [markLost, updateVideo],
+    [api, markLost, updateVideo, video.id],
+  );
+
+  const save = useCallback(
+    (nextRows: ChapterRow[], extra: { title?: string; folderId?: string }) => {
+      const payload = { rows: nextRows, extra };
+      if (inFlightRef.current) {
+        pendingRef.current = payload;
+        return;
+      }
+      doSave(payload, false);
+    },
+    [doSave],
   );
 
   const scheduleSave = useCallback(
@@ -373,6 +431,50 @@ const Editor: FC<{
     });
     if (invalid[key]) {
       setInvalid((current) => ({ ...current, [key]: false }));
+      return;
+    }
+    setRows((current) => {
+      const next = snapFirstToZero(current);
+      saveNow(next);
+      return next;
+    });
+  };
+
+  // chapters are contiguous, so editing an end time moves the next start
+  const onEndChange = (key: string, value: string) => {
+    setEndDrafts((current) => ({ ...current, [key]: value }));
+    const parsed = parseTimecode(value);
+    const index = rows.findIndex((row) => row.key === key);
+    const row = rows[index];
+    const nextRow = rows[index + 1];
+    const valid =
+      parsed !== undefined &&
+      row !== undefined &&
+      nextRow !== undefined &&
+      parsed > row.startMs &&
+      parsed <= durationMs;
+    setEndInvalid((current) => ({ ...current, [key]: !valid }));
+    if (!valid || parsed === undefined || nextRow === undefined) return;
+    setRows((current) => {
+      const next = current.map((r) =>
+        r.key === nextRow.key ? { ...r, startMs: parsed } : r,
+      );
+      scheduleSave(snapFirstToZero(next), { title, folderId });
+      return next;
+    });
+  };
+
+  const onEndFocus = (key: string) => setFocusedKey(`end:${key}`);
+
+  const onEndBlur = (key: string) => {
+    setFocusedKey(undefined);
+    setEndDrafts((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    if (endInvalid[key]) {
+      setEndInvalid((current) => ({ ...current, [key]: false }));
       return;
     }
     setRows((current) => {
@@ -538,6 +640,11 @@ const Editor: FC<{
           onTimecodeChange={onTimecodeChange}
           onTimecodeFocus={setFocusedKey}
           onTimecodeBlur={onTimecodeBlur}
+          endDrafts={endDrafts}
+          endInvalid={endInvalid}
+          onEndChange={onEndChange}
+          onEndFocus={onEndFocus}
+          onEndBlur={onEndBlur}
           onTitleChange={onTitleChange}
           onDelete={onDeleteRow}
         />

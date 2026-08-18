@@ -1,16 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 
 import { useVideo, useVideoAccess } from '../api/hooks';
 import type { Chapter, Video, VideoAccess } from '../api/types';
 import ChapterList from '../watch/ChapterList';
-import ChapterProgress from '../watch/ChapterProgress';
+import Player from '../watch/Player';
 import SpritePreview from '../watch/SpritePreview';
 import useThumbnails from '../watch/useThumbnails';
 import { Button, Card, Headline, Spinner } from '../ui/components';
-import { charcoal, lead, rem, steel } from '../ui/theme';
+import { lead, rem } from '../ui/theme';
 import { formatDuration, formatRecordedAt } from '../utils/time';
 
 const layoutStyles = css({
@@ -21,20 +21,6 @@ const layoutStyles = css({
   '@media (max-width: 900px)': {
     gridTemplateColumns: '1fr',
   },
-});
-
-const playerFrameStyles = css({
-  backgroundColor: charcoal.rgb,
-  borderRadius: rem(8),
-  overflow: 'hidden',
-  border: `1px solid ${steel.rgb}`,
-});
-
-const videoStyles = css({
-  display: 'block',
-  width: '100%',
-  aspectRatio: '16 / 9',
-  backgroundColor: charcoal.rgb,
 });
 
 const metaStyles = css({
@@ -55,77 +41,41 @@ const statePanelStyles = css({
 
 const previewWrapperStyles = css({ position: 'relative' });
 
-type Preview = { seconds: number; left: number } | null;
-
 const WatchPlayer: FC<{
   readonly video: Video;
   readonly access: VideoAccess;
 }> = ({ video, access }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [searchParams] = useSearchParams();
   const [currentTime, setCurrentTime] = useState(0);
-  const [preview, setPreview] = useState<Preview>(null);
   const [hoveredChapter, setHoveredChapter] = useState<number | null>(null);
   const thumbnails = useThumbnails(access.thumbnailsVttUrl);
+  const seekRef = useRef<(seconds: number) => void>();
 
-  const initialSeconds = Number(searchParams.get('t'));
-  const durationSeconds = video.durationMs / 1000;
+  const parsedStart = Number(searchParams.get('t'));
+  const initialSeconds =
+    Number.isFinite(parsedStart) && parsedStart > 0 ? parsedStart : undefined;
 
-  useEffect(() => {
-    const element = videoRef.current;
-    if (!element || !Number.isFinite(initialSeconds) || initialSeconds <= 0) {
-      return;
-    }
-    element.currentTime = initialSeconds;
-    setCurrentTime(initialSeconds);
-  }, [initialSeconds]);
-
-  const seekTo = useCallback((seconds: number) => {
-    const element = videoRef.current;
-    if (!element) return;
-    element.currentTime = seconds;
-    setCurrentTime(seconds);
+  const registerSeek = useCallback((seek: (seconds: number) => void) => {
+    seekRef.current = seek;
   }, []);
 
   const onSelectChapter = useCallback(
-    (chapter: Chapter) => seekTo(chapter.startMs / 1000),
-    [seekTo],
+    (chapter: Chapter) => seekRef.current?.(chapter.startMs / 1000),
+    [],
   );
 
   return (
     <div css={layoutStyles}>
       <div>
-        <div css={playerFrameStyles}>
-          {' '}
-          <video
-            ref={videoRef}
-            css={videoStyles}
-            controls
-            preload="metadata"
-            src={access.streamUrl}
-            data-testid="demo-video"
-            onTimeUpdate={(event) =>
-              setCurrentTime(event.currentTarget.currentTime)
-            }
-          />
-        </div>
-        <div css={previewWrapperStyles}>
-          <ChapterProgress
-            chapters={video.chapters}
-            durationSeconds={durationSeconds}
-            currentSeconds={currentTime}
-            onSeek={seekTo}
-            onPreview={setPreview}
-          />
-          {preview && (
-            <SpritePreview
-              spriteUrl={access.spriteUrl}
-              cues={thumbnails}
-              seconds={preview.seconds}
-              left={preview.left}
-            />
-          )}
-        </div>
+        <Player
+          access={access}
+          chapters={video.chapters}
+          durationMs={video.durationMs}
+          initialSeconds={initialSeconds}
+          currentSeconds={currentTime}
+          onTimeChange={setCurrentTime}
+          registerSeek={registerSeek}
+        />
         <div css={metaStyles}>
           <span>{formatRecordedAt(video.recordedAt)}</span>
           <span>{formatDuration(video.durationMs)}</span>

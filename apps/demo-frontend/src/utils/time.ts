@@ -11,6 +11,20 @@ export const formatDuration = (milliseconds: number): string => {
     : `${minutes}:${pad(seconds)}`;
 };
 
+export const formatDurationWords = (milliseconds: number): string => {
+  const totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts = [];
+  if (hours > 0) parts.push(`${hours} hr`);
+  if (minutes > 0) parts.push(`${minutes} min`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds} sec`);
+
+  return parts.join(' ');
+};
+
 const timecodePattern = /^(?:(\d+):)?([0-5]?\d):([0-5]\d)$/;
 
 export const parseTimecode = (value: string): number | undefined => {

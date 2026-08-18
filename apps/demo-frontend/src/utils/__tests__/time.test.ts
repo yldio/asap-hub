@@ -1,4 +1,27 @@
-import { formatDuration, formatRecordedAt, parseTimecode } from '../time';
+import {
+  formatDuration,
+  formatDurationWords,
+  formatRecordedAt,
+  parseTimecode,
+} from '../time';
+
+describe('formatDurationWords', () => {
+  it.each`
+    milliseconds | expected
+    ${0}         | ${'0 sec'}
+    ${9000}      | ${'9 sec'}
+    ${253000}    | ${'4 min 13 sec'}
+    ${120000}    | ${'2 min'}
+    ${3600000}   | ${'1 hr'}
+    ${3725000}   | ${'1 hr 2 min 5 sec'}
+  `('formats $milliseconds as $expected', ({ milliseconds, expected }) => {
+    expect(formatDurationWords(milliseconds)).toEqual(expected);
+  });
+
+  it('clamps negative durations to zero', () => {
+    expect(formatDurationWords(-5000)).toEqual('0 sec');
+  });
+});
 
 describe('formatDuration', () => {
   it.each`

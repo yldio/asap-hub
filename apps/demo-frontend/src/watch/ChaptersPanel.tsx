@@ -14,7 +14,9 @@ const panelStyles = css({
   marginBottom: rem(8),
   width: rem(500),
   maxWidth: 'calc(100% - 24px)',
-  maxHeight: '70%',
+  // vh, not %: the percentage would resolve against the control bar, which
+  // collapses the panel to a single row in fullscreen
+  maxHeight: 'min(60vh, 520px)',
   overflowY: 'auto',
   backgroundColor: 'rgba(20, 20, 20, 0.95)',
   border: `1px solid rgba(255, 255, 255, 0.15)`,

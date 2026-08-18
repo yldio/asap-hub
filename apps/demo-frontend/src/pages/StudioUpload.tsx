@@ -229,7 +229,7 @@ const StudioUpload: FC = () => {
                 value={folderId}
                 onChange={(event) => setFolderId(event.currentTarget.value)}
               >
-                <option value={ROOT_FOLDER}>Unfiled</option>
+                <option value={ROOT_FOLDER}>Home</option>
                 {flattenTree(buildTree(folders.data ?? [])).map(
                   ({ folder, depth }) => (
                     <option key={folder.id} value={folder.id}>

@@ -18,7 +18,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import {
@@ -52,6 +52,7 @@ import {
   flattenTree,
   maxFolderDepth,
   pathOf,
+  realFolders,
   subtreeIds,
 } from '../library/tree';
 import {
@@ -211,7 +212,9 @@ const folderDragPrefix = 'folder:';
 
 const Home: FC = () => {
   const [searchParams] = useSearchParams();
-  const selectedFolder = searchParams.get('folder') ?? undefined;
+  const folderParam = searchParams.get('folder') ?? undefined;
+  const selectedFolder =
+    folderParam === rootFolderId ? undefined : folderParam;
   const isCreator = useIsCreator();
   const navigate = useNavigate();
   const api = useApi();
@@ -251,14 +254,19 @@ const Home: FC = () => {
   const debouncedQuery = useDebounced(query, 250).trim();
   const isSearching = debouncedQuery.length > 0;
 
-  const folderList = useMemo(() => folders.data ?? [], [folders.data]);
+  // ROOT is only kept for search, which has to sweep the unfiled videos too
+  const searchFolders = useMemo(() => folders.data ?? [], [folders.data]);
+  const folderList = useMemo(
+    () => realFolders(searchFolders),
+    [searchFolders],
+  );
   const folderNames = useMemo(
     () => new Map(folderList.map(({ id, name }) => [id, name])),
     [folderList],
   );
 
   const search = useSearchResults(
-    folderList,
+    searchFolders,
     isSearching ? debouncedQuery : '',
   );
 
@@ -444,13 +452,14 @@ const Home: FC = () => {
     });
   };
 
-  const moveTargets = useMemo(() => {
-    const unfiled = folderList.find(({ id }) => id === rootFolderId);
-    return [
-      ...(unfiled ? [{ folder: unfiled, depth: 0 }] : []),
-      ...flattenTree(buildTree(folderList)),
-    ].filter(({ folder }) => folder.id !== selectedFolder);
-  }, [folderList, selectedFolder]);
+  const moveTargets = useMemo(
+    () =>
+      [
+        { folder: { id: rootFolderId, name: 'Home' }, depth: 0 },
+        ...flattenTree(buildTree(folderList)),
+      ].filter(({ folder }) => folder.id !== selectedFolder),
+    [folderList, selectedFolder],
+  );
   const singleSelected =
     selectedVideos.length === 1 ? selectedVideos[0] : undefined;
 
@@ -465,23 +474,14 @@ const Home: FC = () => {
     subtreeCounts.videos === 0 &&
     subtreeCounts.folders === 0;
 
-  const totalCount = useMemo(
-    () =>
-      counts.data
-        ? Object.values(counts.data).reduce((sum, value) => sum + value, 0)
-        : undefined,
-    [counts.data],
-  );
+  const unfiledCount = counts.data?.[rootFolderId];
 
   const currentFolderName = selectedFolder
     ? folderNames.get(selectedFolder) ?? 'Folder'
     : 'Home';
 
   const breadcrumbPath = useMemo(
-    () =>
-      selectedFolder && selectedFolder !== rootFolderId
-        ? pathOf(selectedFolder, folderList)
-        : [],
+    () => (selectedFolder ? pathOf(selectedFolder, folderList) : []),
     [selectedFolder, folderList],
   );
 
@@ -491,13 +491,11 @@ const Home: FC = () => {
     [selectedFolder, folderList],
   );
 
-  const currentDepth =
-    selectedFolder && selectedFolder !== rootFolderId
-      ? depthOf(selectedFolder, folderList)
-      : 0;
+  const currentDepth = selectedFolder
+    ? depthOf(selectedFolder, folderList)
+    : 0;
 
-  const canCreateHere =
-    selectedFolder === rootFolderId ? false : currentDepth < maxFolderDepth;
+  const canCreateHere = currentDepth < maxFolderDepth;
 
   const blockedTargetIds = useMemo(
     () =>
@@ -512,27 +510,40 @@ const Home: FC = () => {
     [blockedTargetIds],
   );
 
+  const draggingFolderIsTopLevel =
+    draggingFolderId !== undefined &&
+    childrenOf(undefined, folderList).some(
+      ({ id }) => id === draggingFolderId,
+    );
+
+  // Home takes videos (unfile) and folders (detach to top level), unless already there
+  const homeDroppableId = !isCreator
+    ? undefined
+    : draggingFolderId
+      ? draggingFolderIsTopLevel
+        ? undefined
+        : topLevelParentId
+      : selectedFolder || isSearching
+        ? rootFolderId
+        : undefined;
+
   const folderPathLabel = useCallback(
     (folderId: string) =>
       folderId === rootFolderId
-        ? folderNames.get(rootFolderId)
+        ? 'Home'
         : pathOf(folderId, folderList)
             .map(({ name }) => name)
             .join(' / '),
-    [folderList, folderNames],
+    [folderList],
   );
 
   const createFolderHere = (name: string) =>
-    createFolder.mutate({
-      name,
-      parentId:
-        selectedFolder && selectedFolder !== rootFolderId
-          ? selectedFolder
-          : undefined,
-    });
+    createFolder.mutate({ name, parentId: selectedFolder });
 
   const isLoadingList = isSearching ? search.isLoading : videos.isLoading;
   const isEmpty = !isLoadingList && visibleVideos.length === 0;
+
+  if (folderParam === rootFolderId) return <Navigate to="/" replace />;
 
   return (
     <DndContext
@@ -550,11 +561,10 @@ const Home: FC = () => {
         <Sidebar
           folders={folderList}
           counts={counts.data}
-          totalCount={totalCount}
+          unfiledCount={unfiledCount}
           selectedFolder={selectedFolder}
           isCreator={isCreator}
           isLoading={folders.isLoading}
-          rootFolderId={rootFolderId}
           isCreatingFolder={isCreatingFolder}
           creatingChildOf={creatingChildOf}
           renamingFolderId={renamingFolderId}
@@ -575,7 +585,7 @@ const Home: FC = () => {
             renameFolder.mutate({ id, name });
           }}
           isBlockedTarget={isBlockedTarget}
-          isDraggingFolder={draggingFolderId !== undefined}
+          homeDroppableId={homeDroppableId}
           onFolderContextMenu={onFolderContextMenu}
         />
 
@@ -774,6 +784,7 @@ const Home: FC = () => {
             {moveTargets.map(({ folder, depth }) => (
               <ContextMenuItem
                 key={folder.id}
+                disabled={folder.id === rootFolderId && !selectedFolder}
                 onSelect={() => {
                   setVideoMenu(undefined);
                   bulkMove.mutate(

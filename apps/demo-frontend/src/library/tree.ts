@@ -10,6 +10,10 @@ export type FolderNode = {
 
 const isRealFolder = (folder: Folder): boolean => folder.id !== rootFolderId;
 
+// the API returns a synthetic ROOT folder; Home stands in for it in the UI
+export const realFolders = (folders: readonly Folder[]): Folder[] =>
+  folders.filter(isRealFolder);
+
 // a parentId pointing at a missing or synthetic folder falls back to top level
 export const buildTree = (folders: readonly Folder[]): FolderNode[] => {
   const real = folders.filter(isRealFolder);

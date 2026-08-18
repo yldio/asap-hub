@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { Link } from 'react-router';
 
-import { topLevelParentId, type Folder, type FolderCounts } from '../api/types';
+import type { Folder, FolderCounts } from '../api/types';
 import { Spinner } from '../ui/components';
 import { charcoal, lead, mint, pine, rem, silver, tin } from '../ui/theme';
 import { CaretIcon, FolderIcon, HomeIcon, KebabIcon, PlusIcon } from './icons';
@@ -344,11 +344,10 @@ const useExpandedFolders = (
 export const Sidebar: FC<{
   readonly folders: readonly Folder[];
   readonly counts?: FolderCounts;
-  readonly totalCount?: number;
+  readonly unfiledCount?: number;
   readonly selectedFolder?: string;
   readonly isCreator: boolean;
   readonly isLoading: boolean;
-  readonly rootFolderId: string;
   readonly isCreatingFolder: boolean;
   readonly creatingChildOf?: string;
   readonly renamingFolderId?: string;
@@ -360,18 +359,17 @@ export const Sidebar: FC<{
   readonly onRename: (id: string, name: string) => void;
   readonly onCancelRename: () => void;
   readonly isBlockedTarget: (folderId: string) => boolean;
-  readonly isDraggingFolder: boolean;
+  readonly homeDroppableId?: string;
   readonly onFolderContextMenu: (
     folder: Folder,
   ) => (event: ReactMouseEvent) => void;
 }> = ({
   folders,
   counts,
-  totalCount,
+  unfiledCount,
   selectedFolder,
   isCreator,
   isLoading,
-  rootFolderId,
   isCreatingFolder,
   creatingChildOf,
   renamingFolderId,
@@ -383,12 +381,11 @@ export const Sidebar: FC<{
   onRename,
   onCancelRename,
   isBlockedTarget,
-  isDraggingFolder,
+  homeDroppableId,
   onFolderContextMenu,
 }) => {
   const [expanded, toggle] = useExpandedFolders(folders, selectedFolder);
   const tree = useMemo(() => buildTree(folders), [folders]);
-  const unfiled = folders.find(({ id }) => id === rootFolderId);
 
   const renderNode = ({ folder, depth, children }: FolderNode): ReactNode => {
     const isExpanded = expanded.has(folder.id) || creatingChildOf === folder.id;
@@ -483,29 +480,11 @@ export const Sidebar: FC<{
                 to="/"
                 icon={<HomeIcon />}
                 name="Home"
-                count={totalCount}
+                count={unfiledCount}
                 isActive={!selectedFolder}
-                droppableId={
-                  isCreator && isDraggingFolder ? topLevelParentId : undefined
-                }
+                droppableId={homeDroppableId}
               />
             </li>
-            {unfiled && (
-              <li>
-                <SidebarRow
-                  to={`/?folder=${unfiled.id}`}
-                  icon={<FolderIcon />}
-                  name={unfiled.name}
-                  count={counts?.[unfiled.id]}
-                  isActive={selectedFolder === unfiled.id}
-                  droppableId={
-                    isCreator && selectedFolder !== unfiled.id
-                      ? unfiled.id
-                      : undefined
-                  }
-                />
-              </li>
-            )}
             {tree.map(renderNode)}
           </ul>
         </>

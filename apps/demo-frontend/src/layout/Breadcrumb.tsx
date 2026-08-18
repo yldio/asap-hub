@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useFolders, useVideo } from '../api/hooks';
+import { realFolders } from '../library/tree';
 import { lead, rem, tin } from '../ui/theme';
 
 const navStyles = css({
@@ -37,7 +38,8 @@ const useCrumbs = (): Crumb[] => {
   const folderId = isWatch
     ? video.data?.folderId
     : searchParams.get('folder') ?? undefined;
-  const folder = folders.data?.find(
+  // ROOT has no crumb of its own, "Demos" already is the top level
+  const folder = realFolders(folders.data ?? []).find(
     ({ id: candidate }) => candidate === folderId,
   );
 

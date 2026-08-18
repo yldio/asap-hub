@@ -18,7 +18,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import {
@@ -28,16 +28,32 @@ import {
   useDeleteFolder,
   useFolderCounts,
   useFolders,
+  useMoveFolder,
   useRenameFolder,
   useVideos,
 } from '../api/hooks';
-import { rootFolderId, type Folder, type Video } from '../api/types';
+import {
+  rootFolderId,
+  topLevelParentId,
+  type Folder,
+  type Video,
+} from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import { FolderCard } from '../library/FolderCard';
 import { Sidebar } from '../library/Sidebar';
 import { Toolbar } from '../library/Toolbar';
 import { useSearchResults } from '../library/useSearchResults';
 import { isWatchable, VideoCard } from '../library/VideoCard';
+import {
+  aggregateCount,
+  buildTree,
+  childrenOf,
+  depthOf,
+  flattenTree,
+  maxFolderDepth,
+  pathOf,
+  subtreeIds,
+} from '../library/tree';
 import {
   matchesStatusFilter,
   nextStatusFilter,
@@ -91,6 +107,14 @@ const breadcrumbNameStyles = css({
 });
 
 const summaryStyles = css({ fontSize: rem(14), color: lead.rgb });
+
+const crumbLinkStyles = css({
+  color: lead.rgb,
+  textDecoration: 'none',
+  ':hover': { textDecoration: 'underline' },
+});
+
+const crumbSeparatorStyles = css({ color: steel.rgb, fontWeight: 'normal' });
 
 const sectionLabelStyles = css({
   fontSize: rem(12),
@@ -183,6 +207,8 @@ type VideoMenuState = { position: MenuPosition };
 const folderIdFromDropTarget = (id: string): string =>
   id.startsWith('card-') ? id.slice('card-'.length) : id;
 
+const folderDragPrefix = 'folder:';
+
 const Home: FC = () => {
   const [searchParams] = useSearchParams();
   const selectedFolder = searchParams.get('folder') ?? undefined;
@@ -197,6 +223,7 @@ const Home: FC = () => {
   const createFolder = useCreateFolder();
   const renameFolder = useRenameFolder();
   const deleteFolder = useDeleteFolder();
+  const moveFolder = useMoveFolder();
   const bulkMove = useBulkMoveVideos();
   const bulkDelete = useBulkDeleteVideos();
 
@@ -206,10 +233,15 @@ const Home: FC = () => {
   const [folderMenu, setFolderMenu] = useState<FolderMenuState>();
   const [videoMenu, setVideoMenu] = useState<VideoMenuState>();
   const [folderToDelete, setFolderToDelete] = useState<Folder>();
-  const [folderVideoCount, setFolderVideoCount] = useState<number>();
   const [confirmName, setConfirmName] = useState('');
   const [isDeletingVideos, setIsDeletingVideos] = useState(false);
   const [draggingIds, setDraggingIds] = useState<string[]>([]);
+  const [creatingChildOf, setCreatingChildOf] = useState<string>();
+  const [draggingFolderId, setDraggingFolderId] = useState<string>();
+  const [subtreeCounts, setSubtreeCounts] = useState<{
+    videos: number;
+    folders: number;
+  }>();
 
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortMode>('newest');
@@ -320,41 +352,75 @@ const Home: FC = () => {
     const id = String(event.active.id);
     setVideoMenu(undefined);
     setFolderMenu(undefined);
+
+    if (id.startsWith(folderDragPrefix)) {
+      setDraggingFolderId(id.slice(folderDragPrefix.length));
+      return;
+    }
+
     const next = selectionForContextMenu(selection, id);
     if (next !== selection) setSelection(next);
     draggingIdsRef.current = [...next.ids];
     setDraggingIds(draggingIdsRef.current);
   };
 
-  const onDragEnd = (event: DragEndEvent) => {
-    const ids = draggingIdsRef.current;
+  const resetDrag = () => {
     draggingIdsRef.current = [];
     setDraggingIds([]);
-    const folderId = event.over
+    setDraggingFolderId(undefined);
+  };
+
+  const onDragEnd = (event: DragEndEvent) => {
+    const ids = draggingIdsRef.current;
+    const movedFolderId = draggingFolderId;
+    resetDrag();
+
+    const target = event.over
       ? folderIdFromDropTarget(String(event.over.id))
       : undefined;
-    if (!folderId || ids.length === 0) return;
-    bulkMove.mutate({ ids, folderId }, { onSuccess: clearSelection });
+    if (!target) return;
+
+    if (movedFolderId) {
+      // a folder can never land on itself or inside its own subtree
+      if (
+        target !== topLevelParentId &&
+        subtreeIds(movedFolderId, folderList).includes(target)
+      ) {
+        return;
+      }
+      if (target === rootFolderId) return;
+      moveFolder.mutate({ id: movedFolderId, parentId: target });
+      return;
+    }
+
+    if (ids.length === 0) return;
+    bulkMove.mutate({ ids, folderId: target }, { onSuccess: clearSelection });
   };
 
   const openFolderDeleteModal = useCallback(
     async (folder: Folder) => {
       setFolderToDelete(folder);
       setConfirmName('');
-      setFolderVideoCount(undefined);
+      setSubtreeCounts(undefined);
+      const ids = subtreeIds(folder.id, folderList);
       try {
-        const list = await api.listVideos(folder.id);
-        setFolderVideoCount(list.length);
+        const lists = await Promise.all(
+          ids.map((folderId) => api.listVideos(folderId)),
+        );
+        setSubtreeCounts({
+          videos: lists.reduce((sum, list) => sum + list.length, 0),
+          folders: ids.length - 1,
+        });
       } catch {
-        setFolderVideoCount(undefined);
+        setSubtreeCounts(undefined);
       }
     },
-    [api],
+    [api, folderList],
   );
 
   const closeFolderDeleteModal = () => {
     setFolderToDelete(undefined);
-    setFolderVideoCount(undefined);
+    setSubtreeCounts(undefined);
     setConfirmName('');
   };
 
@@ -378,7 +444,13 @@ const Home: FC = () => {
     });
   };
 
-  const moveTargets = folderList.filter(({ id }) => id !== selectedFolder);
+  const moveTargets = useMemo(() => {
+    const unfiled = folderList.find(({ id }) => id === rootFolderId);
+    return [
+      ...(unfiled ? [{ folder: unfiled, depth: 0 }] : []),
+      ...flattenTree(buildTree(folderList)),
+    ].filter(({ folder }) => folder.id !== selectedFolder);
+  }, [folderList, selectedFolder]);
   const singleSelected =
     selectedVideos.length === 1 ? selectedVideos[0] : undefined;
 
@@ -388,7 +460,10 @@ const Home: FC = () => {
         videoCount(1)
       : videoCount(draggingIds.length);
 
-  const isEmptyFolderDelete = folderVideoCount === 0;
+  const isEmptyFolderDelete =
+    subtreeCounts !== undefined &&
+    subtreeCounts.videos === 0 &&
+    subtreeCounts.folders === 0;
 
   const totalCount = useMemo(
     () =>
@@ -402,7 +477,59 @@ const Home: FC = () => {
     ? folderNames.get(selectedFolder) ?? 'Folder'
     : 'Home';
 
-  const childFolders = folderList.filter(({ id }) => id !== rootFolderId);
+  const breadcrumbPath = useMemo(
+    () =>
+      selectedFolder && selectedFolder !== rootFolderId
+        ? pathOf(selectedFolder, folderList)
+        : [],
+    [selectedFolder, folderList],
+  );
+
+  // top level on Home, the direct subfolders of the folder being viewed otherwise
+  const childFolders = useMemo(
+    () => childrenOf(selectedFolder, folderList),
+    [selectedFolder, folderList],
+  );
+
+  const currentDepth =
+    selectedFolder && selectedFolder !== rootFolderId
+      ? depthOf(selectedFolder, folderList)
+      : 0;
+
+  const canCreateHere =
+    selectedFolder === rootFolderId ? false : currentDepth < maxFolderDepth;
+
+  const blockedTargetIds = useMemo(
+    () =>
+      draggingFolderId
+        ? new Set(subtreeIds(draggingFolderId, folderList))
+        : new Set<string>(),
+    [draggingFolderId, folderList],
+  );
+
+  const isBlockedTarget = useCallback(
+    (folderId: string) => blockedTargetIds.has(folderId),
+    [blockedTargetIds],
+  );
+
+  const folderPathLabel = useCallback(
+    (folderId: string) =>
+      folderId === rootFolderId
+        ? folderNames.get(rootFolderId)
+        : pathOf(folderId, folderList)
+            .map(({ name }) => name)
+            .join(' / '),
+    [folderList, folderNames],
+  );
+
+  const createFolderHere = (name: string) =>
+    createFolder.mutate({
+      name,
+      parentId:
+        selectedFolder && selectedFolder !== rootFolderId
+          ? selectedFolder
+          : undefined,
+    });
 
   const isLoadingList = isSearching ? search.isLoading : videos.isLoading;
   const isEmpty = !isLoadingList && visibleVideos.length === 0;
@@ -412,10 +539,7 @@ const Home: FC = () => {
       sensors={sensors}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onDragCancel={() => {
-        draggingIdsRef.current = [];
-        setDraggingIds([]);
-      }}
+      onDragCancel={resetDrag}
     >
       <div
         css={layoutStyles}
@@ -432,18 +556,26 @@ const Home: FC = () => {
           isLoading={folders.isLoading}
           rootFolderId={rootFolderId}
           isCreatingFolder={isCreatingFolder}
+          creatingChildOf={creatingChildOf}
           renamingFolderId={renamingFolderId}
           onStartCreate={() => setIsCreatingFolder(true)}
           onCancelCreate={() => setIsCreatingFolder(false)}
           onCreate={(name) => {
             setIsCreatingFolder(false);
-            createFolder.mutate(name);
+            createFolder.mutate({ name });
+          }}
+          onCancelCreateChild={() => setCreatingChildOf(undefined)}
+          onCreateChild={(parentId, name) => {
+            setCreatingChildOf(undefined);
+            createFolder.mutate({ name, parentId });
           }}
           onCancelRename={() => setRenamingFolderId(undefined)}
           onRename={(id, name) => {
             setRenamingFolderId(undefined);
             renameFolder.mutate({ id, name });
           }}
+          isBlockedTarget={isBlockedTarget}
+          isDraggingFolder={draggingFolderId !== undefined}
           onFolderContextMenu={onFolderContextMenu}
         />
 
@@ -464,23 +596,49 @@ const Home: FC = () => {
               setStatusFilter(nextStatusFilter(statusFilter))
             }
             isCreator={isCreator}
+            currentLocationName={currentFolderName}
+            canCreateHere={canCreateHere}
+            onCreateFolderHere={createFolderHere}
           />
 
           <div css={breadcrumbStyles}>
             <h2 css={breadcrumbNameStyles}>
-              {isSearching
-                ? `Results for "${debouncedQuery}"`
-                : currentFolderName}
+              {isSearching ? (
+                `Results for "${debouncedQuery}"`
+              ) : breadcrumbPath.length > 1 ? (
+                <span>
+                  <Link to="/" css={crumbLinkStyles}>
+                    Home
+                  </Link>
+                  {breadcrumbPath.map((folder, index) => (
+                    <span key={folder.id}>
+                      <span css={crumbSeparatorStyles}> / </span>
+                      {index === breadcrumbPath.length - 1 ? (
+                        folder.name
+                      ) : (
+                        <Link
+                          to={`/?folder=${folder.id}`}
+                          css={crumbLinkStyles}
+                        >
+                          {folder.name}
+                        </Link>
+                      )}
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                currentFolderName
+              )}
             </h2>
             <span css={summaryStyles}>
               {videoCount(visibleVideos.length)}
               {!isSearching &&
-                !selectedFolder &&
+                childFolders.length > 0 &&
                 ` · ${folderCount(childFolders.length)}`}
             </span>
           </div>
 
-          {!isSearching && !selectedFolder && childFolders.length > 0 && (
+          {!isSearching && childFolders.length > 0 && (
             <>
               <div css={sectionLabelStyles}>Folders</div>
               <div css={folderGridStyles}>
@@ -488,8 +646,13 @@ const Home: FC = () => {
                   <FolderCard
                     key={folder.id}
                     folder={folder}
-                    count={counts.data?.[folder.id]}
-                    isDropTarget={isCreator}
+                    count={
+                      childrenOf(folder.id, folderList).length > 0
+                        ? aggregateCount(folder.id, folderList, counts.data)
+                        : counts.data?.[folder.id]
+                    }
+                    isDropTarget={isCreator && !isBlockedTarget(folder.id)}
+                    isDraggable={isCreator}
                     onContextMenu={
                       isCreator ? onFolderContextMenu(folder) : undefined
                     }
@@ -522,7 +685,7 @@ const Home: FC = () => {
                 isCreator={isCreator}
                 isSelected={selection.ids.includes(video.id)}
                 folderName={
-                  isSearching ? folderNames.get(video.folderId) : undefined
+                  isSearching ? folderPathLabel(video.folderId) : undefined
                 }
                 onSelect={onCardSelect(video.id)}
                 onContextMenu={onCardContextMenu(video.id)}
@@ -534,7 +697,11 @@ const Home: FC = () => {
       </div>
 
       <DragOverlay dropAnimation={null}>
-        {draggingIds.length > 0 ? (
+        {draggingFolderId ? (
+          <div css={dragOverlayStyles}>
+            {folderNames.get(draggingFolderId) ?? 'Folder'}
+          </div>
+        ) : draggingIds.length > 0 ? (
           <div css={dragOverlayStyles}>{dragLabel}</div>
         ) : null}
       </DragOverlay>
@@ -553,6 +720,16 @@ const Home: FC = () => {
           >
             Rename
           </ContextMenuItem>
+          {depthOf(folderMenu.folder.id, folderList) < maxFolderDepth && (
+            <ContextMenuItem
+              onSelect={() => {
+                setCreatingChildOf(folderMenu.folder.id);
+                setFolderMenu(undefined);
+              }}
+            >
+              New subfolder
+            </ContextMenuItem>
+          )}
           <ContextMenuSeparator />
           <ContextMenuItem
             danger
@@ -594,7 +771,7 @@ const Home: FC = () => {
             </ContextMenuItem>
           )}
           <ContextMenuSubmenu label="Move to">
-            {moveTargets.map((folder) => (
+            {moveTargets.map(({ folder, depth }) => (
               <ContextMenuItem
                 key={folder.id}
                 onSelect={() => {
@@ -605,7 +782,7 @@ const Home: FC = () => {
                   );
                 }}
               >
-                {folder.name}
+                <span css={{ paddingLeft: rem(depth * 14) }}>{folder.name}</span>
               </ContextMenuItem>
             ))}
           </ContextMenuSubmenu>
@@ -629,7 +806,7 @@ const Home: FC = () => {
           label={`Delete folder ${folderToDelete.name}`}
           onClose={closeFolderDeleteModal}
         >
-          {folderVideoCount === undefined ? (
+          {subtreeCounts === undefined ? (
             <Spinner label="Checking folder contents" />
           ) : (
             <>
@@ -643,12 +820,16 @@ const Home: FC = () => {
               ) : (
                 <>
                   <p css={dangerBodyStyles}>
-                    This folder contains {videoCount(folderVideoCount)}.
+                    This folder contains {videoCount(subtreeCounts.videos)} and{' '}
+                    {folderCount(subtreeCounts.folders)}.
                   </p>
                   <div css={dangerNoticeStyles}>
-                    All {videoCount(folderVideoCount)} inside &ldquo;
-                    {folderToDelete.name}&rdquo;, including their video files,
-                    will be permanently deleted and cannot be recovered.
+                    {videoCount(subtreeCounts.videos)} and{' '}
+                    {subtreeCounts.folders === 1
+                      ? '1 subfolder'
+                      : `${subtreeCounts.folders} subfolders`}
+                    , including their video files, will be permanently deleted
+                    and cannot be recovered.
                   </div>
                   <label css={{ display: 'block', marginTop: rem(16) }}>
                     <span css={{ fontSize: rem(14), color: lead.rgb }}>

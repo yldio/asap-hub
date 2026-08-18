@@ -16,6 +16,7 @@ import type {
   VideoAccess,
   VideoPatch,
 } from './types';
+import { topLevelParentId } from './types';
 
 export class ApiError extends Error {
   readonly status: number;
@@ -126,16 +127,26 @@ export const createApi = (getToken: GetToken) => ({
     (await request<{ counts: FolderCounts }>('/folders/counts', await getToken()))
       .counts,
 
-  createFolder: async (name: string): Promise<Folder> =>
+  createFolder: async (name: string, parentId?: string): Promise<Folder> =>
     request<Folder>('/folders', await getToken(), {
       method: 'POST',
-      body: { name },
+      body: parentId ? { name, parentId } : { name },
     }),
 
   renameFolder: async (id: string, name: string): Promise<Folder> =>
     request<Folder>(`/folders/${encodeURIComponent(id)}`, await getToken(), {
       method: 'PATCH',
       body: { name },
+    }),
+
+  // parentId defaults to the top-level sentinel so a folder can be detached
+  moveFolder: async (
+    id: string,
+    parentId: string = topLevelParentId,
+  ): Promise<Folder> =>
+    request<Folder>(`/folders/${encodeURIComponent(id)}`, await getToken(), {
+      method: 'PATCH',
+      body: { parentId },
     }),
 
   deleteFolder: async (id: string): Promise<void> => {

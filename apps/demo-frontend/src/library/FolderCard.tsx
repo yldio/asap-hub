@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { useDroppable } from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { FC, MouseEvent as ReactMouseEvent } from 'react';
 import { Link } from 'react-router';
 
@@ -52,19 +52,45 @@ export const FolderCard: FC<{
   readonly folder: Folder;
   readonly count?: number;
   readonly isDropTarget: boolean;
+  readonly isDraggable?: boolean;
   readonly onContextMenu?: (event: ReactMouseEvent) => void;
-}> = ({ folder, count, isDropTarget, onContextMenu }) => {
+}> = ({
+  folder,
+  count,
+  isDropTarget,
+  isDraggable = false,
+  onContextMenu,
+}) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `card-${folder.id}`,
     data: { folderId: folder.id },
     disabled: !isDropTarget,
   });
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+  } = useDraggable({
+    id: `folder:${folder.id}`,
+    disabled: !isDraggable,
+  });
   return (
     <Link
-      ref={setNodeRef}
+      ref={(node: HTMLAnchorElement | null) => {
+        setNodeRef(node);
+        if (isDraggable) setDragRef(node);
+      }}
       to={`/?folder=${folder.id}`}
+      draggable={false}
       onContextMenu={onContextMenu}
-      css={[cardStyles, isDropTarget && isOver && overStyles]}
+      {...(isDraggable ? attributes : {})}
+      {...(isDraggable ? listeners : {})}
+      css={[
+        cardStyles,
+        isDragging && { opacity: 0.4 },
+        isDropTarget && isOver && overStyles,
+      ]}
     >
       <span css={{ display: 'flex', color: lead.rgb }}>
         <FolderIcon size={20} />

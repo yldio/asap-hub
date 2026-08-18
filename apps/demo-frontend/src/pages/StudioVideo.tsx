@@ -35,6 +35,7 @@ import {
   silver,
   steel,
 } from '../ui/theme';
+import { buildTree, flattenTree } from '../library/tree';
 import { formatDuration, parseTimecode } from '../utils/time';
 
 const AUTOSAVE_MS = 1500;
@@ -450,13 +451,13 @@ const Editor: FC<{
           }}
         >
           <option value={ROOT_FOLDER}>Unfiled</option>
-          {(folders.data ?? [])
-            .filter(({ id }) => id !== ROOT_FOLDER)
-            .map((folder) => (
+          {flattenTree(buildTree(folders.data ?? [])).map(
+            ({ folder, depth }) => (
               <option key={folder.id} value={folder.id}>
-                {folder.name}
+                {`${'    '.repeat(depth)}${folder.name}`}
               </option>
-            ))}
+            ),
+          )}
         </select>
       </div>
 

@@ -10,6 +10,7 @@ import { useIsCreator } from '../auth/MeContext';
 import { Button, Card, Headline } from '../ui/components';
 import { charcoal, ember, fern, lead, rem, silver, steel } from '../ui/theme';
 import { planParts, uploadParts } from '../studio/upload';
+import { buildTree, flattenTree } from '../library/tree';
 
 const cardStyles = css({ padding: rem(24), display: 'grid', gap: rem(20) });
 
@@ -229,13 +230,13 @@ const StudioUpload: FC = () => {
                 onChange={(event) => setFolderId(event.currentTarget.value)}
               >
                 <option value={ROOT_FOLDER}>Unfiled</option>
-                {(folders.data ?? [])
-                  .filter(({ id }) => id !== ROOT_FOLDER)
-                  .map((folder) => (
+                {flattenTree(buildTree(folders.data ?? [])).map(
+                  ({ folder, depth }) => (
                     <option key={folder.id} value={folder.id}>
-                      {folder.name}
+                      {`${'    '.repeat(depth)}${folder.name}`}
                     </option>
-                  ))}
+                  ),
+                )}
               </select>
             </label>
 

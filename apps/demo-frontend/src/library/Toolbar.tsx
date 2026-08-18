@@ -1,10 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router';
 
 import { charcoal, lead, mint, paper, pine, rem, silver, steel, tin } from '../ui/theme';
-import { FilterIcon, GridIcon, ListIcon, SearchIcon } from './icons';
+import {
+  FilterIcon,
+  FolderPlusIcon,
+  GridIcon,
+  ListIcon,
+  SearchIcon,
+  UploadIcon,
+} from './icons';
 import {
   sortLabels,
   statusFilterLabels,
@@ -117,6 +124,7 @@ const uploadStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
+  gap: rem(8),
   padding: `${rem(9)} ${rem(20)}`,
   borderRadius: rem(6),
   backgroundColor: pine.rgb,
@@ -127,6 +135,110 @@ const uploadStyles = css({
   whiteSpace: 'nowrap',
   ':hover': { opacity: 0.9 },
 });
+
+const newFolderStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: rem(8),
+  padding: `${rem(9)} ${rem(16)}`,
+  borderRadius: rem(6),
+  border: `1px solid ${steel.rgb}`,
+  backgroundColor: paper.rgb,
+  font: 'inherit',
+  fontSize: rem(14),
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  cursor: 'pointer',
+  whiteSpace: 'nowrap',
+  ':hover:enabled': { backgroundColor: silver.rgb },
+  ':disabled': { color: tin.rgb, cursor: 'default' },
+});
+
+const popoverStyles = css({
+  position: 'absolute',
+  zIndex: 20,
+  top: 'calc(100% + ' + rem(6) + ')',
+  right: 0,
+  width: rem(240),
+  padding: rem(10),
+  borderRadius: rem(8),
+  border: `1px solid ${steel.rgb}`,
+  backgroundColor: paper.rgb,
+  boxShadow: `0 ${rem(4)} ${rem(16)} rgba(0, 0, 0, 0.18)`,
+});
+
+const popoverInputStyles = css({
+  boxSizing: 'border-box',
+  width: '100%',
+  padding: `${rem(8)} ${rem(10)}`,
+  borderRadius: rem(6),
+  border: `1px solid ${pine.rgb}`,
+  font: 'inherit',
+  fontSize: rem(14),
+  color: charcoal.rgb,
+});
+
+const NewFolderButton: FC<{
+  readonly disabled: boolean;
+  readonly locationName: string;
+  readonly onCreate: (name: string) => void;
+}> = ({ disabled, locationName, onCreate }) => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
+
+  const close = () => {
+    setOpen(false);
+    setValue('');
+  };
+
+  return (
+    <div css={{ position: 'relative' }}>
+      <button
+        type="button"
+        css={newFolderStyles}
+        disabled={disabled}
+        title={
+          disabled
+            ? 'This folder is already at the deepest level'
+            : `New folder in ${locationName}`
+        }
+        onClick={() => setOpen((current) => !current)}
+      >
+        <FolderPlusIcon size={15} />
+        New folder
+      </button>
+      {open && !disabled && (
+        <form
+          css={popoverStyles}
+          onSubmit={(event: FormEvent) => {
+            event.preventDefault();
+            const trimmed = value.trim();
+            if (trimmed) onCreate(trimmed);
+            close();
+          }}
+        >
+          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
+          <input
+            autoFocus
+            aria-label={`New folder name in ${locationName}`}
+            placeholder={`New folder in ${locationName}`}
+            css={popoverInputStyles}
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            onBlur={close}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                event.preventDefault();
+                close();
+              }
+            }}
+          />
+        </form>
+      )}
+    </div>
+  );
+};
 
 const sortOptions: SortMode[] = ['newest', 'oldest', 'title'];
 
@@ -140,6 +252,9 @@ export const Toolbar: FC<{
   readonly statusFilter: StatusFilter;
   readonly onStatusFilterClick: () => void;
   readonly isCreator: boolean;
+  readonly currentLocationName: string;
+  readonly canCreateHere: boolean;
+  readonly onCreateFolderHere: (name: string) => void;
 }> = ({
   query,
   onQueryChange,
@@ -150,6 +265,9 @@ export const Toolbar: FC<{
   statusFilter,
   onStatusFilterClick,
   isCreator,
+  currentLocationName,
+  canCreateHere,
+  onCreateFolderHere,
 }) => (
   <div css={barStyles}>
     <div css={searchWrapStyles}>
@@ -212,7 +330,16 @@ export const Toolbar: FC<{
     )}
 
     {isCreator && (
+      <NewFolderButton
+        disabled={!canCreateHere}
+        locationName={currentLocationName}
+        onCreate={onCreateFolderHere}
+      />
+    )}
+
+    {isCreator && (
       <Link to="/studio/upload" css={uploadStyles}>
+        <UploadIcon size={15} />
         Upload
       </Link>
     )}

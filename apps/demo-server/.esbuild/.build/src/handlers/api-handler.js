@@ -123702,6 +123702,8 @@ var folderEntity = new import_electrodb.Entity(
     attributes: {
       id: { type: "string", required: true },
       name: { type: "string", required: true },
+      // plain attribute, not part of any key: the tree is assembled from the flat list
+      parentId: { type: "string" },
       createdAt: { type: "string", required: true }
     },
     indexes: {
@@ -128078,10 +128080,18 @@ var chapterSchema = external_exports.object({
   title: external_exports.string().min(1)
 });
 var createFolderSchema = external_exports.object({
-  name: external_exports.string().min(1).max(120)
+  name: external_exports.string().min(1).max(120),
+  parentId: external_exports.string().min(1).refine((value) => value !== "ROOT", {
+    message: "ROOT is not a real folder"
+  }).optional()
 });
-var renameFolderSchema = external_exports.object({
-  name: external_exports.string().trim().min(1).max(80)
+var updateFolderSchema = external_exports.object({
+  name: external_exports.string().trim().min(1).max(80).optional(),
+  parentId: external_exports.string().min(1).refine((value) => value !== "ROOT", {
+    message: "ROOT is not a real folder"
+  }).optional()
+}).refine(({ name, parentId }) => name !== void 0 || parentId !== void 0, {
+  message: "name or parentId is required"
 });
 var bulkMoveSchema = external_exports.object({
   ids: external_exports.array(external_exports.string().uuid()).min(1).max(100),
@@ -128299,6 +128309,31 @@ var asyncRouter = () => {
 
 // src/routes/folders.ts
 var rootFolderId = "ROOT";
+var maxFolderDepth = 3;
+var topLevelParentId = "TOP";
+var depthOf = (id, byId) => {
+  let depth = 1;
+  let current = byId.get(id);
+  const seen = /* @__PURE__ */ new Set();
+  while (current?.parentId && !seen.has(current.id)) {
+    seen.add(current.id);
+    depth += 1;
+    current = byId.get(current.parentId);
+  }
+  return depth;
+};
+var subtreeIds = (id, folders) => {
+  const ids = [id];
+  for (let index = 0; index < ids.length; index += 1) {
+    const parentId = ids[index];
+    folders.forEach((folder) => {
+      if (folder.parentId === parentId && !ids.includes(folder.id)) {
+        ids.push(folder.id);
+      }
+    });
+  }
+  return ids;
+};
 var foldersRouter = () => {
   const router = asyncRouter();
   router.get("/", async (_req, res) => {
@@ -128306,7 +128341,7 @@ var foldersRouter = () => {
     res.json({
       items: [
         { id: rootFolderId, name: "Unfiled" },
-        ...data2.map(({ id, name }) => ({ id, name }))
+        ...data2.map(({ id, name, parentId }) => ({ id, name, parentId }))
       ]
     });
   });
@@ -128330,29 +128365,72 @@ var foldersRouter = () => {
     validate2(createFolderSchema),
     async (req, res) => {
       const id = v4_default();
-      const { name } = req.body;
-      await folderEntity.create({ id, name, createdAt: (/* @__PURE__ */ new Date()).toISOString() }).go();
-      res.json({ id, name });
+      const { name, parentId } = req.body;
+      if (parentId) {
+        const { data: data2 } = await folderEntity.query.all({}).go({ pages: "all" });
+        const byId = new Map(
+          data2.map((folder) => [folder.id, folder])
+        );
+        if (!byId.has(parentId)) {
+          res.status(404).json({ error: "not_found" });
+          return;
+        }
+        if (depthOf(parentId, byId) >= maxFolderDepth) {
+          res.status(400).json({ error: "max_depth" });
+          return;
+        }
+      }
+      await folderEntity.create({ id, name, parentId, createdAt: (/* @__PURE__ */ new Date()).toISOString() }).go();
+      res.json({ id, name, parentId });
     }
   );
   router.patch(
     "/:id",
     requireCreator,
-    validate2(renameFolderSchema),
+    validate2(updateFolderSchema),
     async (req, res) => {
       const id = pathParam(req, "id");
       if (id === rootFolderId) {
         res.status(400).json({ error: "root_folder" });
         return;
       }
-      const { name } = req.body;
+      const { name, parentId } = req.body;
       const existing = await folderEntity.get({ id }).go();
       if (!existing.data) {
         res.status(404).json({ error: "not_found" });
         return;
       }
-      await folderEntity.put({ ...existing.data, name }).go();
-      res.json({ id, name });
+      const nextName = name ?? existing.data.name;
+      let nextParentId = existing.data.parentId;
+      if (parentId !== void 0) {
+        const { data: allFolders } = await folderEntity.query.all({}).go({ pages: "all" });
+        if (parentId === topLevelParentId) {
+          nextParentId = void 0;
+        } else {
+          const byId = new Map(
+            allFolders.map((folder) => [folder.id, folder])
+          );
+          if (!byId.has(parentId)) {
+            res.status(404).json({ error: "not_found" });
+            return;
+          }
+          if (subtreeIds(id, allFolders).includes(parentId)) {
+            res.status(400).json({ error: "cycle" });
+            return;
+          }
+          const movedSubtreeHeight = subtreeIds(id, allFolders).reduce(
+            (tallest, descendantId) => Math.max(tallest, depthOf(descendantId, byId) - depthOf(id, byId)),
+            0
+          );
+          if (depthOf(parentId, byId) + 1 + movedSubtreeHeight > maxFolderDepth) {
+            res.status(400).json({ error: "max_depth" });
+            return;
+          }
+          nextParentId = parentId;
+        }
+      }
+      await folderEntity.put({ ...existing.data, name: nextName, parentId: nextParentId }).go();
+      res.json({ id, name: nextName, parentId: nextParentId });
     }
   );
   router.delete("/:id", requireCreator, async (req, res) => {
@@ -128366,17 +128444,24 @@ var foldersRouter = () => {
       res.status(404).json({ error: "not_found" });
       return;
     }
-    const { data: videos } = await videoEntity.query.byFolder({ folderId: id }).go({ pages: "all" });
-    await Promise.all(
-      videos.map(async (video) => {
-        try {
-          await deleteVideoCascade(video.id);
-        } catch (error3) {
-          console.error(`failed to delete video ${video.id}`, error3);
-        }
-      })
+    const { data: allFolders } = await folderEntity.query.all({}).go({ pages: "all" });
+    const ids = subtreeIds(id, allFolders).reverse();
+    await ids.reduce(
+      (chain2, folderId) => chain2.then(async () => {
+        const { data: videos } = await videoEntity.query.byFolder({ folderId }).go({ pages: "all" });
+        await Promise.all(
+          videos.map(async (video) => {
+            try {
+              await deleteVideoCascade(video.id);
+            } catch (error3) {
+              console.error(`failed to delete video ${video.id}`, error3);
+            }
+          })
+        );
+        await folderEntity.delete({ id: folderId }).go();
+      }),
+      Promise.resolve()
     );
-    await folderEntity.delete({ id }).go();
     res.status(204).end();
   });
   return router;

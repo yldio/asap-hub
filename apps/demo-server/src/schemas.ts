@@ -9,11 +9,30 @@ export const chapterSchema = z.object({
 
 export const createFolderSchema = z.object({
   name: z.string().min(1).max(120),
+  parentId: z
+    .string()
+    .min(1)
+    .refine((value) => value !== 'ROOT', {
+      message: 'ROOT is not a real folder',
+    })
+    .optional(),
 });
 
-export const renameFolderSchema = z.object({
-  name: z.string().trim().min(1).max(80),
-});
+// parentId 'TOP' moves the folder to the top level; omitting it leaves the parent untouched
+export const updateFolderSchema = z
+  .object({
+    name: z.string().trim().min(1).max(80).optional(),
+    parentId: z
+      .string()
+      .min(1)
+      .refine((value) => value !== 'ROOT', {
+        message: 'ROOT is not a real folder',
+      })
+      .optional(),
+  })
+  .refine(({ name, parentId }) => name !== undefined || parentId !== undefined, {
+    message: 'name or parentId is required',
+  });
 
 export const bulkMoveSchema = z.object({
   ids: z.array(z.string().uuid()).min(1).max(100),

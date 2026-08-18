@@ -2,7 +2,7 @@
 import { css } from '@emotion/react';
 import { useDraggable } from '@dnd-kit/core';
 import { FC, MouseEvent as ReactMouseEvent } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import type { Video } from '../api/types';
 import { Badge } from '../ui/components';
@@ -19,7 +19,7 @@ import {
 } from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import { formatUploadedOn } from '../utils/format';
-import { CameraIcon, DragHandleIcon, TrashIcon } from './icons';
+import { CameraIcon, DragHandleIcon, PencilIcon, TrashIcon } from './icons';
 import { Thumbnail } from './Thumbnail';
 import type { ViewMode } from './state';
 
@@ -147,6 +147,7 @@ export const VideoCard: FC<VideoCardProps> = ({
   onContextMenu,
   onDelete,
 }) => {
+  const navigate = useNavigate();
   const editPath = `/studio/videos/${video.id}`;
   const titlePath =
     isCreator && !isWatchable(video) ? editPath : `/videos/${video.id}`;
@@ -195,8 +196,19 @@ export const VideoCard: FC<VideoCardProps> = ({
         aria-hidden
         title="Drag to a folder to move"
       >
-        <DragHandleIcon size={14} />
+        <DragHandleIcon size={16} />
       </span>
+      <Link
+        to={editPath}
+        aria-label={`Edit ${video.title}`}
+        title="Edit"
+        css={actionButtonStyles}
+        draggable={false}
+        onMouseDown={stop}
+        onClick={stop}
+      >
+        <PencilIcon size={16} />
+      </Link>
       <button
         type="button"
         aria-label={`Delete ${video.title}`}
@@ -207,7 +219,7 @@ export const VideoCard: FC<VideoCardProps> = ({
           onDelete();
         }}
       >
-        <TrashIcon size={14} />
+        <TrashIcon size={16} />
       </button>
     </div>
   );
@@ -228,11 +240,18 @@ export const VideoCard: FC<VideoCardProps> = ({
       onMouseDown={
         isCreator
           ? (event: ReactMouseEvent) => {
-              // shift-click would otherwise paint a text selection across cards
-              if (event.shiftKey) event.preventDefault();
+              // shift-click and the second click of a dblclick paint a text selection
+              if (event.shiftKey || event.detail > 1) event.preventDefault();
             }
           : undefined
       }
+      onDoubleClick={(event: ReactMouseEvent) => {
+        // the inner links and buttons already navigate or act on their own
+        if ((event.target as HTMLElement).closest('a, button')) return;
+        event.preventDefault();
+        event.stopPropagation();
+        void navigate(titlePath);
+      }}
       onClick={isCreator ? onSelect : undefined}
     >
       {hoverActions}

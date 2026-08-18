@@ -10,9 +10,13 @@ export type Me = {
 export type Folder = {
   id: string;
   name: string;
+  parentId?: string;
 };
 
 export const rootFolderId = 'ROOT';
+
+// PATCH /folders/:id sentinel meaning "move to the top level"
+export const topLevelParentId = 'TOP';
 
 export type FolderCounts = Record<string, number>;
 

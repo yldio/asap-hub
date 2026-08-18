@@ -100,6 +100,8 @@ export const folderEntity = new Entity(
     attributes: {
       id: { type: 'string', required: true },
       name: { type: 'string', required: true },
+      // plain attribute, not part of any key: the tree is assembled from the flat list
+      parentId: { type: 'string' },
       createdAt: { type: 'string', required: true },
     },
     indexes: {

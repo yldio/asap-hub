@@ -169,7 +169,8 @@ export const useCreateFolder = () => {
   const api = useApi();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (name: string) => api.createFolder(name),
+    mutationFn: ({ name, parentId }: { name: string; parentId?: string }) =>
+      api.createFolder(name, parentId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['folders'] });
       void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
@@ -192,6 +193,16 @@ export const useRenameFolder = () => {
   return useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) =>
       api.renameFolder(id, name),
+    onSuccess: invalidate,
+  });
+};
+
+export const useMoveFolder = () => {
+  const api = useApi();
+  const invalidate = useInvalidateFoldersAndVideos();
+  return useMutation({
+    mutationFn: ({ id, parentId }: { id: string; parentId?: string }) =>
+      api.moveFolder(id, parentId),
     onSuccess: invalidate,
   });
 };

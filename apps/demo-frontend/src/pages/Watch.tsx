@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { FC, useCallback, useRef, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 
 import { useVideo, useVideoAccess } from '../api/hooks';
 import type { Chapter, Video, VideoAccess } from '../api/types';
+import { useIsCreator } from '../auth/MeContext';
 import ChapterList from '../watch/ChapterList';
 import Player from '../watch/Player';
 import SpritePreview from '../watch/SpritePreview';
@@ -45,6 +46,7 @@ const WatchPlayer: FC<{
   readonly video: Video;
   readonly access: VideoAccess;
 }> = ({ video, access }) => {
+  const isCreator = useIsCreator();
   const [searchParams] = useSearchParams();
   const [currentTime, setCurrentTime] = useState(0);
   const [hoveredChapter, setHoveredChapter] = useState<number | null>(null);
@@ -80,6 +82,14 @@ const WatchPlayer: FC<{
           <span>{formatRecordedAt(video.recordedAt)}</span>
           <span>{formatDuration(video.durationMs)}</span>
           <span>Recorded by {video.createdBy.name}</span>
+          {isCreator && (
+            <Link
+              to={`/studio/videos/${video.id}`}
+              css={{ marginLeft: 'auto', fontWeight: 'bold' }}
+            >
+              Edit demo
+            </Link>
+          )}
         </div>
       </div>
 

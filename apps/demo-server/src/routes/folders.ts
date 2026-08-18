@@ -23,6 +23,29 @@ export const foldersRouter = (): Router => {
     });
   });
 
+  router.get('/counts', async (req, res) => {
+    const { data } = await folderEntity.query.all({}).go({ pages: 'all' });
+    const folderIds = [rootFolderId, ...data.map(({ id }) => id)];
+    const isCreator = req.user?.role === 'creator';
+
+    const entries = await Promise.all(
+      folderIds.map(async (folderId) => {
+        const query = isCreator
+          ? videoEntity.query.byFolder({ folderId })
+          : videoEntity.query
+              .byFolder({ folderId })
+              .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
+        const { data: videos } = await query.go({ pages: 'all' });
+        const visible = isCreator
+          ? videos
+          : videos.filter(({ processingState }) => processingState === 'ready');
+        return [folderId, visible.length] as const;
+      }),
+    );
+
+    res.json({ counts: Object.fromEntries(entries) });
+  });
+
   router.post(
     '/',
     requireCreator,

@@ -147,13 +147,44 @@ const probeHeight = async (input: string): Promise<number> => {
   return code === 0 && Number.isFinite(height) ? height : 0;
 };
 
+const posterOffsetSeconds = (durationMs: number): number =>
+  Math.max(0, (durationMs / 1000) * 0.25);
+
+const extractPoster = async (
+  inputFile: string,
+  posterFile: string,
+  durationMs: number,
+): Promise<boolean> => {
+  try {
+    const { code } = await run('ffmpeg', [
+      '-nostdin',
+      '-y',
+      '-ss',
+      posterOffsetSeconds(durationMs).toFixed(3),
+      '-i',
+      inputFile,
+      '-frames:v',
+      '1',
+      '-vf',
+      'scale=640:-2',
+      '-q:v',
+      '4',
+      posterFile,
+    ]);
+    return code === 0;
+  } catch {
+    return false;
+  }
+};
+
 const encodeWithFfmpeg = async (
   workDir: string,
   inputFile: string,
-): Promise<{ durationMs: number; sprites: boolean }> => {
+): Promise<{ durationMs: number; sprites: boolean; poster: boolean }> => {
   const streamFile = join(workDir, 'stream.mp4');
   const spriteFile = join(workDir, 'sprite.jpg');
   const vttFile = join(workDir, 'thumbnails.vtt');
+  const posterFile = join(workDir, 'thumb.jpg');
 
   const encoded = await run('ffmpeg', [
     '-nostdin',
@@ -214,13 +245,16 @@ const encodeWithFfmpeg = async (
     }
   }
 
-  return { durationMs, sprites };
+  const poster = await extractPoster(streamFile, posterFile, durationMs);
+
+  return { durationMs, sprites, poster };
 };
 
 const uploadArtefacts = async (
   videoId: string,
   workDir: string,
   sprites: boolean,
+  poster: boolean,
 ): Promise<void> => {
   const prefix = mediaPrefix(videoId);
   await putObject(
@@ -240,6 +274,13 @@ const uploadArtefacts = async (
       'text/vtt',
     );
   }
+  if (poster) {
+    await putObject(
+      `${prefix}thumb.jpg`,
+      await fs.readFile(join(workDir, 'thumb.jpg')),
+      'image/jpeg',
+    );
+  }
 };
 
 export const encodeLocally = async (videoId: string): Promise<void> => {
@@ -251,16 +292,18 @@ export const encodeLocally = async (videoId: string): Promise<void> => {
 
     let durationMs = 0;
     let sprites = false;
+    let poster = false;
 
     if ((await hasBinary('ffmpeg')) && (await hasBinary('ffprobe'))) {
       const result = await encodeWithFfmpeg(workDir, inputFile);
       durationMs = result.durationMs;
       sprites = result.sprites;
+      poster = result.poster;
     } else {
       await fs.copyFile(inputFile, join(workDir, 'stream.mp4'));
     }
 
-    await uploadArtefacts(videoId, workDir, sprites);
+    await uploadArtefacts(videoId, workDir, sprites, poster);
 
     await videoEntity
       .patch({ id: videoId })

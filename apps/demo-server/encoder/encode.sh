@@ -106,6 +106,7 @@ INPUT_FILE="${WORK_DIR}/original"
 STREAM_FILE="${WORK_DIR}/stream.mp4"
 SPRITE_FILE="${WORK_DIR}/sprite.jpg"
 VTT_FILE="${WORK_DIR}/thumbnails.vtt"
+THUMB_FILE="${WORK_DIR}/thumb.jpg"
 
 log "start videoId=${VIDEO_ID} key=${S3_OBJECT_KEY} bucket=${BUCKET_NAME}"
 
@@ -152,6 +153,16 @@ run_step "build sprite.jpg" \
   -frames:v 1 \
   -vf "fps=1/${SPRITE_INTERVAL_SECONDS},scale=${SPRITE_TILE_WIDTH}:-2,tile=${COLUMNS}x${ROWS}" \
   -q:v 4 "$SPRITE_FILE"
+
+# poster frame a quarter of the way in; a missing thumbnail must never fail the encode
+POSTER_SECONDS="$(awk -v ms="$DURATION_MS" 'BEGIN { printf "%.3f", (ms / 1000) * 0.25 }')"
+THUMB_OK=1
+run_step "build thumb.jpg at ${POSTER_SECONDS}s" \
+  ffmpeg -nostdin -y -ss "$POSTER_SECONDS" -i "$STREAM_FILE" \
+  -frames:v 1 -vf "scale=640:-2" -q:v 4 "$THUMB_FILE" || THUMB_OK=0
+if [[ "$THUMB_OK" == "0" ]]; then
+  log "WARN could not build thumb.jpg, continuing without a poster frame"
+fi
 
 TILE_HEIGHT="$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$SPRITE_FILE")"
 TILE_HEIGHT="$((TILE_HEIGHT / ROWS))"
@@ -201,6 +212,12 @@ run_step "upload sprite.jpg" \
 run_step "upload thumbnails.vtt" \
   aws_s3 cp "$VTT_FILE" "${MEDIA_PREFIX}/thumbnails.vtt" \
   --content-type text/vtt
+if [[ "$THUMB_OK" == "1" ]]; then
+  run_step "upload thumb.jpg" \
+    aws_s3 cp "$THUMB_FILE" "${MEDIA_PREFIX}/thumb.jpg" \
+    --content-type image/jpeg ||
+    log "WARN could not upload thumb.jpg, continuing"
+fi
 
 run_step "mark VIDEO#${VIDEO_ID} ready" \
   aws_dynamodb update-item \

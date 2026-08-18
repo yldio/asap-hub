@@ -80182,4769 +80182,8 @@ var require_dist_cjs63 = __commonJS({
   }
 });
 
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/auth/httpAuthSchemeProvider.js
-var require_httpAuthSchemeProvider3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/auth/httpAuthSchemeProvider.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.resolveHttpAuthSchemeConfig = exports2.defaultSESHttpAuthSchemeProvider = exports2.defaultSESHttpAuthSchemeParametersProvider = void 0;
-    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
-    var util_middleware_1 = require_dist_cjs4();
-    var defaultSESHttpAuthSchemeParametersProvider = async (config, context, input) => {
-      return {
-        operation: (0, util_middleware_1.getSmithyContext)(context).operation,
-        region: await (0, util_middleware_1.normalizeProvider)(config.region)() || (() => {
-          throw new Error("expected `region` to be configured for `aws.auth#sigv4`");
-        })()
-      };
-    };
-    exports2.defaultSESHttpAuthSchemeParametersProvider = defaultSESHttpAuthSchemeParametersProvider;
-    function createAwsAuthSigv4HttpAuthOption8(authParameters) {
-      return {
-        schemeId: "aws.auth#sigv4",
-        signingProperties: {
-          name: "ses",
-          region: authParameters.region
-        },
-        propertiesExtractor: (config, context) => ({
-          signingProperties: {
-            config,
-            context
-          }
-        })
-      };
-    }
-    var defaultSESHttpAuthSchemeProvider = (authParameters) => {
-      const options = [];
-      switch (authParameters.operation) {
-        default: {
-          options.push(createAwsAuthSigv4HttpAuthOption8(authParameters));
-        }
-      }
-      return options;
-    };
-    exports2.defaultSESHttpAuthSchemeProvider = defaultSESHttpAuthSchemeProvider;
-    var resolveHttpAuthSchemeConfig8 = (config) => {
-      const config_0 = (0, core_1.resolveAwsSdkSigV4Config)(config);
-      return Object.assign(config_0, {
-        authSchemePreference: (0, util_middleware_1.normalizeProvider)(config.authSchemePreference ?? [])
-      });
-    };
-    exports2.resolveHttpAuthSchemeConfig = resolveHttpAuthSchemeConfig8;
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/package.json
-var require_package3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/package.json"(exports2, module2) {
-    module2.exports = {
-      name: "@aws-sdk/client-ses",
-      description: "AWS SDK for JavaScript Ses Client for Node.js, Browser and React Native",
-      version: "3.970.0",
-      scripts: {
-        build: "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
-        "build:cjs": "node ../../scripts/compilation/inline client-ses",
-        "build:es": "tsc -p tsconfig.es.json",
-        "build:include:deps": 'yarn g:turbo run build -F="$npm_package_name"',
-        "build:types": "tsc -p tsconfig.types.json",
-        "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
-        clean: "rimraf ./dist-* && rimraf *.tsbuildinfo",
-        "extract:docs": "api-extractor run --local",
-        "generate:client": "node ../../scripts/generate-clients/single-service --solo ses",
-        "test:e2e": "yarn g:vitest run -c vitest.config.e2e.mts --mode development",
-        "test:e2e:watch": "yarn g:vitest watch -c vitest.config.e2e.mts",
-        "test:index": "tsc --noEmit ./test/index-types.ts && node ./test/index-objects.spec.mjs"
-      },
-      main: "./dist-cjs/index.js",
-      types: "./dist-types/index.d.ts",
-      module: "./dist-es/index.js",
-      sideEffects: false,
-      dependencies: {
-        "@aws-crypto/sha256-browser": "5.2.0",
-        "@aws-crypto/sha256-js": "5.2.0",
-        "@aws-sdk/core": "3.970.0",
-        "@aws-sdk/credential-provider-node": "3.970.0",
-        "@aws-sdk/middleware-host-header": "3.969.0",
-        "@aws-sdk/middleware-logger": "3.969.0",
-        "@aws-sdk/middleware-recursion-detection": "3.969.0",
-        "@aws-sdk/middleware-user-agent": "3.970.0",
-        "@aws-sdk/region-config-resolver": "3.969.0",
-        "@aws-sdk/types": "3.969.0",
-        "@aws-sdk/util-endpoints": "3.970.0",
-        "@aws-sdk/util-user-agent-browser": "3.969.0",
-        "@aws-sdk/util-user-agent-node": "3.970.0",
-        "@smithy/config-resolver": "^4.4.6",
-        "@smithy/core": "^3.20.6",
-        "@smithy/fetch-http-handler": "^5.3.9",
-        "@smithy/hash-node": "^4.2.8",
-        "@smithy/invalid-dependency": "^4.2.8",
-        "@smithy/middleware-content-length": "^4.2.8",
-        "@smithy/middleware-endpoint": "^4.4.7",
-        "@smithy/middleware-retry": "^4.4.23",
-        "@smithy/middleware-serde": "^4.2.9",
-        "@smithy/middleware-stack": "^4.2.8",
-        "@smithy/node-config-provider": "^4.3.8",
-        "@smithy/node-http-handler": "^4.4.8",
-        "@smithy/protocol-http": "^5.3.8",
-        "@smithy/smithy-client": "^4.10.8",
-        "@smithy/types": "^4.12.0",
-        "@smithy/url-parser": "^4.2.8",
-        "@smithy/util-base64": "^4.3.0",
-        "@smithy/util-body-length-browser": "^4.2.0",
-        "@smithy/util-body-length-node": "^4.2.1",
-        "@smithy/util-defaults-mode-browser": "^4.3.22",
-        "@smithy/util-defaults-mode-node": "^4.2.25",
-        "@smithy/util-endpoints": "^3.2.8",
-        "@smithy/util-middleware": "^4.2.8",
-        "@smithy/util-retry": "^4.2.8",
-        "@smithy/util-utf8": "^4.2.0",
-        "@smithy/util-waiter": "^4.2.8",
-        tslib: "^2.6.2"
-      },
-      devDependencies: {
-        "@tsconfig/node20": "20.1.8",
-        "@types/node": "^20.14.8",
-        concurrently: "7.0.0",
-        "downlevel-dts": "0.10.1",
-        rimraf: "5.0.10",
-        typescript: "~5.8.3"
-      },
-      engines: {
-        node: ">=20.0.0"
-      },
-      typesVersions: {
-        "<4.0": {
-          "dist-types/*": [
-            "dist-types/ts3.4/*"
-          ]
-        }
-      },
-      files: [
-        "dist-*/**"
-      ],
-      author: {
-        name: "AWS SDK for JavaScript Team",
-        url: "https://aws.amazon.com/javascript/"
-      },
-      license: "Apache-2.0",
-      browser: {
-        "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.browser"
-      },
-      "react-native": {
-        "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.native"
-      },
-      homepage: "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-ses",
-      repository: {
-        type: "git",
-        url: "https://github.com/aws/aws-sdk-js-v3.git",
-        directory: "clients/client-ses"
-      }
-    };
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/ruleset.js
-var require_ruleset3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/ruleset.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ruleSet = void 0;
-    var s5 = "required";
-    var t4 = "fn";
-    var u4 = "argv";
-    var v5 = "ref";
-    var a8 = true;
-    var b8 = "isSet";
-    var c8 = "booleanEquals";
-    var d8 = "error";
-    var e8 = "endpoint";
-    var f8 = "tree";
-    var g8 = "PartitionResult";
-    var h8 = { [s5]: false, "type": "string" };
-    var i8 = { [s5]: true, "default": false, "type": "boolean" };
-    var j8 = { [v5]: "Endpoint" };
-    var k8 = { [t4]: c8, [u4]: [{ [v5]: "UseFIPS" }, true] };
-    var l6 = { [t4]: c8, [u4]: [{ [v5]: "UseDualStack" }, true] };
-    var m6 = {};
-    var n6 = { [t4]: "getAttr", [u4]: [{ [v5]: g8 }, "supportsFIPS"] };
-    var o6 = { [t4]: c8, [u4]: [true, { [t4]: "getAttr", [u4]: [{ [v5]: g8 }, "supportsDualStack"] }] };
-    var p6 = [k8];
-    var q6 = [l6];
-    var r8 = [{ [v5]: "Region" }];
-    var _data8 = { version: "1.0", parameters: { Region: h8, UseDualStack: i8, UseFIPS: i8, Endpoint: h8 }, rules: [{ conditions: [{ [t4]: b8, [u4]: [j8] }], rules: [{ conditions: p6, error: "Invalid Configuration: FIPS and custom endpoint are not supported", type: d8 }, { conditions: q6, error: "Invalid Configuration: Dualstack and custom endpoint are not supported", type: d8 }, { endpoint: { url: j8, properties: m6, headers: m6 }, type: e8 }], type: f8 }, { conditions: [{ [t4]: b8, [u4]: r8 }], rules: [{ conditions: [{ [t4]: "aws.partition", [u4]: r8, assign: g8 }], rules: [{ conditions: [k8, l6], rules: [{ conditions: [{ [t4]: c8, [u4]: [a8, n6] }, o6], rules: [{ endpoint: { url: "https://email-fips.{Region}.{PartitionResult#dualStackDnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "FIPS and DualStack are enabled, but this partition does not support one or both", type: d8 }], type: f8 }, { conditions: p6, rules: [{ conditions: [{ [t4]: c8, [u4]: [n6, a8] }], rules: [{ endpoint: { url: "https://email-fips.{Region}.{PartitionResult#dnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "FIPS is enabled but this partition does not support FIPS", type: d8 }], type: f8 }, { conditions: q6, rules: [{ conditions: [o6], rules: [{ endpoint: { url: "https://email.{Region}.{PartitionResult#dualStackDnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "DualStack is enabled but this partition does not support DualStack", type: d8 }], type: f8 }, { endpoint: { url: "https://email.{Region}.{PartitionResult#dnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }], type: f8 }, { error: "Invalid Configuration: Missing Region", type: d8 }] };
-    exports2.ruleSet = _data8;
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/endpointResolver.js
-var require_endpointResolver3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/endpointResolver.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.defaultEndpointResolver = void 0;
-    var util_endpoints_1 = require_dist_cjs26();
-    var util_endpoints_2 = require_dist_cjs23();
-    var ruleset_1 = require_ruleset3();
-    var cache8 = new util_endpoints_2.EndpointCache({
-      size: 50,
-      params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
-    });
-    var defaultEndpointResolver8 = (endpointParams, context = {}) => {
-      return cache8.get(endpointParams, () => (0, util_endpoints_2.resolveEndpoint)(ruleset_1.ruleSet, {
-        endpointParams,
-        logger: context.logger
-      }));
-    };
-    exports2.defaultEndpointResolver = defaultEndpointResolver8;
-    util_endpoints_2.customEndpointFunctions.aws = util_endpoints_1.awsEndpointFunctions;
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.shared.js
-var require_runtimeConfig_shared3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.shared.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getRuntimeConfig = void 0;
-    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
-    var protocols_1 = (init_protocols3(), __toCommonJS(protocols_exports3));
-    var smithy_client_1 = require_dist_cjs30();
-    var url_parser_1 = require_dist_cjs25();
-    var util_base64_1 = require_dist_cjs15();
-    var util_utf8_1 = require_dist_cjs14();
-    var httpAuthSchemeProvider_1 = require_httpAuthSchemeProvider3();
-    var endpointResolver_1 = require_endpointResolver3();
-    var getRuntimeConfig15 = (config) => {
-      return {
-        apiVersion: "2010-12-01",
-        base64Decoder: config?.base64Decoder ?? util_base64_1.fromBase64,
-        base64Encoder: config?.base64Encoder ?? util_base64_1.toBase64,
-        disableHostPrefix: config?.disableHostPrefix ?? false,
-        endpointProvider: config?.endpointProvider ?? endpointResolver_1.defaultEndpointResolver,
-        extensions: config?.extensions ?? [],
-        httpAuthSchemeProvider: config?.httpAuthSchemeProvider ?? httpAuthSchemeProvider_1.defaultSESHttpAuthSchemeProvider,
-        httpAuthSchemes: config?.httpAuthSchemes ?? [
-          {
-            schemeId: "aws.auth#sigv4",
-            identityProvider: (ipc) => ipc.getIdentityProvider("aws.auth#sigv4"),
-            signer: new core_1.AwsSdkSigV4Signer()
-          }
-        ],
-        logger: config?.logger ?? new smithy_client_1.NoOpLogger(),
-        protocol: config?.protocol ?? protocols_1.AwsQueryProtocol,
-        protocolSettings: config?.protocolSettings ?? {
-          defaultNamespace: "com.amazonaws.ses",
-          xmlNamespace: "http://ses.amazonaws.com/doc/2010-12-01/",
-          version: "2010-12-01",
-          serviceTarget: "SimpleEmailService"
-        },
-        serviceId: config?.serviceId ?? "SES",
-        urlParser: config?.urlParser ?? url_parser_1.parseUrl,
-        utf8Decoder: config?.utf8Decoder ?? util_utf8_1.fromUtf8,
-        utf8Encoder: config?.utf8Encoder ?? util_utf8_1.toUtf8
-      };
-    };
-    exports2.getRuntimeConfig = getRuntimeConfig15;
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.js
-var require_runtimeConfig3 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getRuntimeConfig = void 0;
-    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports));
-    var package_json_1 = tslib_1.__importDefault(require_package3());
-    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
-    var credential_provider_node_1 = require_dist_cjs57();
-    var util_user_agent_node_1 = require_dist_cjs45();
-    var config_resolver_1 = require_dist_cjs34();
-    var hash_node_1 = require_dist_cjs46();
-    var middleware_retry_1 = require_dist_cjs41();
-    var node_config_provider_1 = require_dist_cjs37();
-    var node_http_handler_1 = require_dist_cjs18();
-    var smithy_client_1 = require_dist_cjs30();
-    var util_body_length_node_1 = require_dist_cjs47();
-    var util_defaults_mode_node_1 = require_dist_cjs48();
-    var util_retry_1 = require_dist_cjs40();
-    var runtimeConfig_shared_1 = require_runtimeConfig_shared3();
-    var getRuntimeConfig15 = (config) => {
-      (0, smithy_client_1.emitWarningIfUnsupportedVersion)(process.version);
-      const defaultsMode = (0, util_defaults_mode_node_1.resolveDefaultsModeConfig)(config);
-      const defaultConfigProvider = () => defaultsMode().then(smithy_client_1.loadConfigsForDefaultMode);
-      const clientSharedValues = (0, runtimeConfig_shared_1.getRuntimeConfig)(config);
-      (0, core_1.emitWarningIfUnsupportedVersion)(process.version);
-      const loaderConfig = {
-        profile: config?.profile,
-        logger: clientSharedValues.logger
-      };
-      return {
-        ...clientSharedValues,
-        ...config,
-        runtime: "node",
-        defaultsMode,
-        authSchemePreference: config?.authSchemePreference ?? (0, node_config_provider_1.loadConfig)(core_1.NODE_AUTH_SCHEME_PREFERENCE_OPTIONS, loaderConfig),
-        bodyLengthChecker: config?.bodyLengthChecker ?? util_body_length_node_1.calculateBodyLength,
-        credentialDefaultProvider: config?.credentialDefaultProvider ?? credential_provider_node_1.defaultProvider,
-        defaultUserAgentProvider: config?.defaultUserAgentProvider ?? (0, util_user_agent_node_1.createDefaultUserAgentProvider)({ serviceId: clientSharedValues.serviceId, clientVersion: package_json_1.default.version }),
-        maxAttempts: config?.maxAttempts ?? (0, node_config_provider_1.loadConfig)(middleware_retry_1.NODE_MAX_ATTEMPT_CONFIG_OPTIONS, config),
-        region: config?.region ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_REGION_CONFIG_OPTIONS, { ...config_resolver_1.NODE_REGION_CONFIG_FILE_OPTIONS, ...loaderConfig }),
-        requestHandler: node_http_handler_1.NodeHttpHandler.create(config?.requestHandler ?? defaultConfigProvider),
-        retryMode: config?.retryMode ?? (0, node_config_provider_1.loadConfig)({
-          ...middleware_retry_1.NODE_RETRY_MODE_CONFIG_OPTIONS,
-          default: async () => (await defaultConfigProvider()).retryMode || util_retry_1.DEFAULT_RETRY_MODE
-        }, config),
-        sha256: config?.sha256 ?? hash_node_1.Hash.bind(null, "sha256"),
-        streamCollector: config?.streamCollector ?? node_http_handler_1.streamCollector,
-        useDualstackEndpoint: config?.useDualstackEndpoint ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
-        useFipsEndpoint: config?.useFipsEndpoint ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
-        userAgentAppId: config?.userAgentAppId ?? (0, node_config_provider_1.loadConfig)(util_user_agent_node_1.NODE_APP_ID_CONFIG_OPTIONS, loaderConfig)
-      };
-    };
-    exports2.getRuntimeConfig = getRuntimeConfig15;
-  }
-});
-
-// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/index.js
-var require_dist_cjs64 = __commonJS({
-  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/index.js"(exports2) {
-    "use strict";
-    var middlewareHostHeader = require_dist_cjs8();
-    var middlewareLogger = require_dist_cjs9();
-    var middlewareRecursionDetection = require_dist_cjs10();
-    var middlewareUserAgent = require_dist_cjs32();
-    var configResolver = require_dist_cjs34();
-    var core = (init_dist_es2(), __toCommonJS(dist_es_exports2));
-    var schema = (init_schema2(), __toCommonJS(schema_exports2));
-    var middlewareContentLength = require_dist_cjs35();
-    var middlewareEndpoint = require_dist_cjs38();
-    var middlewareRetry = require_dist_cjs41();
-    var smithyClient = require_dist_cjs30();
-    var httpAuthSchemeProvider = require_httpAuthSchemeProvider3();
-    var runtimeConfig = require_runtimeConfig3();
-    var regionConfigResolver = require_dist_cjs49();
-    var protocolHttp = require_dist_cjs5();
-    var utilWaiter = require_dist_cjs59();
-    var resolveClientEndpointParameters8 = (options) => {
-      return Object.assign(options, {
-        useDualstackEndpoint: options.useDualstackEndpoint ?? false,
-        useFipsEndpoint: options.useFipsEndpoint ?? false,
-        defaultSigningName: "ses"
-      });
-    };
-    var commonParams8 = {
-      UseFIPS: { type: "builtInParams", name: "useFipsEndpoint" },
-      Endpoint: { type: "builtInParams", name: "endpoint" },
-      Region: { type: "builtInParams", name: "region" },
-      UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" }
-    };
-    var getHttpAuthExtensionConfiguration8 = (runtimeConfig2) => {
-      const _httpAuthSchemes = runtimeConfig2.httpAuthSchemes;
-      let _httpAuthSchemeProvider = runtimeConfig2.httpAuthSchemeProvider;
-      let _credentials = runtimeConfig2.credentials;
-      return {
-        setHttpAuthScheme(httpAuthScheme) {
-          const index = _httpAuthSchemes.findIndex((scheme) => scheme.schemeId === httpAuthScheme.schemeId);
-          if (index === -1) {
-            _httpAuthSchemes.push(httpAuthScheme);
-          } else {
-            _httpAuthSchemes.splice(index, 1, httpAuthScheme);
-          }
-        },
-        httpAuthSchemes() {
-          return _httpAuthSchemes;
-        },
-        setHttpAuthSchemeProvider(httpAuthSchemeProvider2) {
-          _httpAuthSchemeProvider = httpAuthSchemeProvider2;
-        },
-        httpAuthSchemeProvider() {
-          return _httpAuthSchemeProvider;
-        },
-        setCredentials(credentials) {
-          _credentials = credentials;
-        },
-        credentials() {
-          return _credentials;
-        }
-      };
-    };
-    var resolveHttpAuthRuntimeConfig8 = (config) => {
-      return {
-        httpAuthSchemes: config.httpAuthSchemes(),
-        httpAuthSchemeProvider: config.httpAuthSchemeProvider(),
-        credentials: config.credentials()
-      };
-    };
-    var resolveRuntimeExtensions8 = (runtimeConfig2, extensions) => {
-      const extensionConfiguration = Object.assign(regionConfigResolver.getAwsRegionExtensionConfiguration(runtimeConfig2), smithyClient.getDefaultExtensionConfiguration(runtimeConfig2), protocolHttp.getHttpHandlerExtensionConfiguration(runtimeConfig2), getHttpAuthExtensionConfiguration8(runtimeConfig2));
-      extensions.forEach((extension) => extension.configure(extensionConfiguration));
-      return Object.assign(runtimeConfig2, regionConfigResolver.resolveAwsRegionExtensionConfiguration(extensionConfiguration), smithyClient.resolveDefaultRuntimeConfig(extensionConfiguration), protocolHttp.resolveHttpHandlerRuntimeConfig(extensionConfiguration), resolveHttpAuthRuntimeConfig8(extensionConfiguration));
-    };
-    var SESClient2 = class extends smithyClient.Client {
-      config;
-      constructor(...[configuration]) {
-        const _config_0 = runtimeConfig.getRuntimeConfig(configuration || {});
-        super(_config_0);
-        this.initConfig = _config_0;
-        const _config_1 = resolveClientEndpointParameters8(_config_0);
-        const _config_2 = middlewareUserAgent.resolveUserAgentConfig(_config_1);
-        const _config_3 = middlewareRetry.resolveRetryConfig(_config_2);
-        const _config_4 = configResolver.resolveRegionConfig(_config_3);
-        const _config_5 = middlewareHostHeader.resolveHostHeaderConfig(_config_4);
-        const _config_6 = middlewareEndpoint.resolveEndpointConfig(_config_5);
-        const _config_7 = httpAuthSchemeProvider.resolveHttpAuthSchemeConfig(_config_6);
-        const _config_8 = resolveRuntimeExtensions8(_config_7, configuration?.extensions || []);
-        this.config = _config_8;
-        this.middlewareStack.use(schema.getSchemaSerdePlugin(this.config));
-        this.middlewareStack.use(middlewareUserAgent.getUserAgentPlugin(this.config));
-        this.middlewareStack.use(middlewareRetry.getRetryPlugin(this.config));
-        this.middlewareStack.use(middlewareContentLength.getContentLengthPlugin(this.config));
-        this.middlewareStack.use(middlewareHostHeader.getHostHeaderPlugin(this.config));
-        this.middlewareStack.use(middlewareLogger.getLoggerPlugin(this.config));
-        this.middlewareStack.use(middlewareRecursionDetection.getRecursionDetectionPlugin(this.config));
-        this.middlewareStack.use(core.getHttpAuthSchemeEndpointRuleSetPlugin(this.config, {
-          httpAuthSchemeParametersProvider: httpAuthSchemeProvider.defaultSESHttpAuthSchemeParametersProvider,
-          identityProviderConfigProvider: async (config) => new core.DefaultIdentityProviderConfig({
-            "aws.auth#sigv4": config.credentials
-          })
-        }));
-        this.middlewareStack.use(core.getHttpSigningPlugin(this.config));
-      }
-      destroy() {
-        super.destroy();
-      }
-    };
-    var SESServiceException = class _SESServiceException extends smithyClient.ServiceException {
-      constructor(options) {
-        super(options);
-        Object.setPrototypeOf(this, _SESServiceException.prototype);
-      }
-    };
-    var AccountSendingPausedException = class _AccountSendingPausedException extends SESServiceException {
-      name = "AccountSendingPausedException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "AccountSendingPausedException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _AccountSendingPausedException.prototype);
-      }
-    };
-    var AlreadyExistsException = class _AlreadyExistsException extends SESServiceException {
-      name = "AlreadyExistsException";
-      $fault = "client";
-      Name;
-      constructor(opts) {
-        super({
-          name: "AlreadyExistsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _AlreadyExistsException.prototype);
-        this.Name = opts.Name;
-      }
-    };
-    var CannotDeleteException = class _CannotDeleteException extends SESServiceException {
-      name = "CannotDeleteException";
-      $fault = "client";
-      Name;
-      constructor(opts) {
-        super({
-          name: "CannotDeleteException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _CannotDeleteException.prototype);
-        this.Name = opts.Name;
-      }
-    };
-    var LimitExceededException = class _LimitExceededException extends SESServiceException {
-      name = "LimitExceededException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "LimitExceededException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _LimitExceededException.prototype);
-      }
-    };
-    var RuleSetDoesNotExistException = class _RuleSetDoesNotExistException extends SESServiceException {
-      name = "RuleSetDoesNotExistException";
-      $fault = "client";
-      Name;
-      constructor(opts) {
-        super({
-          name: "RuleSetDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _RuleSetDoesNotExistException.prototype);
-        this.Name = opts.Name;
-      }
-    };
-    var ConfigurationSetAlreadyExistsException = class _ConfigurationSetAlreadyExistsException extends SESServiceException {
-      name = "ConfigurationSetAlreadyExistsException";
-      $fault = "client";
-      ConfigurationSetName;
-      constructor(opts) {
-        super({
-          name: "ConfigurationSetAlreadyExistsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _ConfigurationSetAlreadyExistsException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-      }
-    };
-    var ConfigurationSetDoesNotExistException = class _ConfigurationSetDoesNotExistException extends SESServiceException {
-      name = "ConfigurationSetDoesNotExistException";
-      $fault = "client";
-      ConfigurationSetName;
-      constructor(opts) {
-        super({
-          name: "ConfigurationSetDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _ConfigurationSetDoesNotExistException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-      }
-    };
-    var ConfigurationSetSendingPausedException = class _ConfigurationSetSendingPausedException extends SESServiceException {
-      name = "ConfigurationSetSendingPausedException";
-      $fault = "client";
-      ConfigurationSetName;
-      constructor(opts) {
-        super({
-          name: "ConfigurationSetSendingPausedException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _ConfigurationSetSendingPausedException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-      }
-    };
-    var InvalidConfigurationSetException = class _InvalidConfigurationSetException extends SESServiceException {
-      name = "InvalidConfigurationSetException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "InvalidConfigurationSetException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidConfigurationSetException.prototype);
-      }
-    };
-    var EventDestinationAlreadyExistsException = class _EventDestinationAlreadyExistsException extends SESServiceException {
-      name = "EventDestinationAlreadyExistsException";
-      $fault = "client";
-      ConfigurationSetName;
-      EventDestinationName;
-      constructor(opts) {
-        super({
-          name: "EventDestinationAlreadyExistsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _EventDestinationAlreadyExistsException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-        this.EventDestinationName = opts.EventDestinationName;
-      }
-    };
-    var InvalidCloudWatchDestinationException = class _InvalidCloudWatchDestinationException extends SESServiceException {
-      name = "InvalidCloudWatchDestinationException";
-      $fault = "client";
-      ConfigurationSetName;
-      EventDestinationName;
-      constructor(opts) {
-        super({
-          name: "InvalidCloudWatchDestinationException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidCloudWatchDestinationException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-        this.EventDestinationName = opts.EventDestinationName;
-      }
-    };
-    var InvalidFirehoseDestinationException = class _InvalidFirehoseDestinationException extends SESServiceException {
-      name = "InvalidFirehoseDestinationException";
-      $fault = "client";
-      ConfigurationSetName;
-      EventDestinationName;
-      constructor(opts) {
-        super({
-          name: "InvalidFirehoseDestinationException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidFirehoseDestinationException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-        this.EventDestinationName = opts.EventDestinationName;
-      }
-    };
-    var InvalidSNSDestinationException = class _InvalidSNSDestinationException extends SESServiceException {
-      name = "InvalidSNSDestinationException";
-      $fault = "client";
-      ConfigurationSetName;
-      EventDestinationName;
-      constructor(opts) {
-        super({
-          name: "InvalidSNSDestinationException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidSNSDestinationException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-        this.EventDestinationName = opts.EventDestinationName;
-      }
-    };
-    var InvalidTrackingOptionsException = class _InvalidTrackingOptionsException extends SESServiceException {
-      name = "InvalidTrackingOptionsException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "InvalidTrackingOptionsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidTrackingOptionsException.prototype);
-      }
-    };
-    var TrackingOptionsAlreadyExistsException = class _TrackingOptionsAlreadyExistsException extends SESServiceException {
-      name = "TrackingOptionsAlreadyExistsException";
-      $fault = "client";
-      ConfigurationSetName;
-      constructor(opts) {
-        super({
-          name: "TrackingOptionsAlreadyExistsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _TrackingOptionsAlreadyExistsException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-      }
-    };
-    var CustomVerificationEmailInvalidContentException = class _CustomVerificationEmailInvalidContentException extends SESServiceException {
-      name = "CustomVerificationEmailInvalidContentException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "CustomVerificationEmailInvalidContentException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _CustomVerificationEmailInvalidContentException.prototype);
-      }
-    };
-    var CustomVerificationEmailTemplateAlreadyExistsException = class _CustomVerificationEmailTemplateAlreadyExistsException extends SESServiceException {
-      name = "CustomVerificationEmailTemplateAlreadyExistsException";
-      $fault = "client";
-      CustomVerificationEmailTemplateName;
-      constructor(opts) {
-        super({
-          name: "CustomVerificationEmailTemplateAlreadyExistsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _CustomVerificationEmailTemplateAlreadyExistsException.prototype);
-        this.CustomVerificationEmailTemplateName = opts.CustomVerificationEmailTemplateName;
-      }
-    };
-    var FromEmailAddressNotVerifiedException = class _FromEmailAddressNotVerifiedException extends SESServiceException {
-      name = "FromEmailAddressNotVerifiedException";
-      $fault = "client";
-      FromEmailAddress;
-      constructor(opts) {
-        super({
-          name: "FromEmailAddressNotVerifiedException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _FromEmailAddressNotVerifiedException.prototype);
-        this.FromEmailAddress = opts.FromEmailAddress;
-      }
-    };
-    var InvalidLambdaFunctionException = class _InvalidLambdaFunctionException extends SESServiceException {
-      name = "InvalidLambdaFunctionException";
-      $fault = "client";
-      FunctionArn;
-      constructor(opts) {
-        super({
-          name: "InvalidLambdaFunctionException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidLambdaFunctionException.prototype);
-        this.FunctionArn = opts.FunctionArn;
-      }
-    };
-    var InvalidS3ConfigurationException = class _InvalidS3ConfigurationException extends SESServiceException {
-      name = "InvalidS3ConfigurationException";
-      $fault = "client";
-      Bucket;
-      constructor(opts) {
-        super({
-          name: "InvalidS3ConfigurationException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidS3ConfigurationException.prototype);
-        this.Bucket = opts.Bucket;
-      }
-    };
-    var InvalidSnsTopicException = class _InvalidSnsTopicException extends SESServiceException {
-      name = "InvalidSnsTopicException";
-      $fault = "client";
-      Topic;
-      constructor(opts) {
-        super({
-          name: "InvalidSnsTopicException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidSnsTopicException.prototype);
-        this.Topic = opts.Topic;
-      }
-    };
-    var RuleDoesNotExistException = class _RuleDoesNotExistException extends SESServiceException {
-      name = "RuleDoesNotExistException";
-      $fault = "client";
-      Name;
-      constructor(opts) {
-        super({
-          name: "RuleDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _RuleDoesNotExistException.prototype);
-        this.Name = opts.Name;
-      }
-    };
-    var InvalidTemplateException = class _InvalidTemplateException extends SESServiceException {
-      name = "InvalidTemplateException";
-      $fault = "client";
-      TemplateName;
-      constructor(opts) {
-        super({
-          name: "InvalidTemplateException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidTemplateException.prototype);
-        this.TemplateName = opts.TemplateName;
-      }
-    };
-    var CustomVerificationEmailTemplateDoesNotExistException = class _CustomVerificationEmailTemplateDoesNotExistException extends SESServiceException {
-      name = "CustomVerificationEmailTemplateDoesNotExistException";
-      $fault = "client";
-      CustomVerificationEmailTemplateName;
-      constructor(opts) {
-        super({
-          name: "CustomVerificationEmailTemplateDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _CustomVerificationEmailTemplateDoesNotExistException.prototype);
-        this.CustomVerificationEmailTemplateName = opts.CustomVerificationEmailTemplateName;
-      }
-    };
-    var EventDestinationDoesNotExistException = class _EventDestinationDoesNotExistException extends SESServiceException {
-      name = "EventDestinationDoesNotExistException";
-      $fault = "client";
-      ConfigurationSetName;
-      EventDestinationName;
-      constructor(opts) {
-        super({
-          name: "EventDestinationDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _EventDestinationDoesNotExistException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-        this.EventDestinationName = opts.EventDestinationName;
-      }
-    };
-    var TrackingOptionsDoesNotExistException = class _TrackingOptionsDoesNotExistException extends SESServiceException {
-      name = "TrackingOptionsDoesNotExistException";
-      $fault = "client";
-      ConfigurationSetName;
-      constructor(opts) {
-        super({
-          name: "TrackingOptionsDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _TrackingOptionsDoesNotExistException.prototype);
-        this.ConfigurationSetName = opts.ConfigurationSetName;
-      }
-    };
-    var TemplateDoesNotExistException = class _TemplateDoesNotExistException extends SESServiceException {
-      name = "TemplateDoesNotExistException";
-      $fault = "client";
-      TemplateName;
-      constructor(opts) {
-        super({
-          name: "TemplateDoesNotExistException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _TemplateDoesNotExistException.prototype);
-        this.TemplateName = opts.TemplateName;
-      }
-    };
-    var InvalidDeliveryOptionsException = class _InvalidDeliveryOptionsException extends SESServiceException {
-      name = "InvalidDeliveryOptionsException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "InvalidDeliveryOptionsException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidDeliveryOptionsException.prototype);
-      }
-    };
-    var InvalidPolicyException = class _InvalidPolicyException extends SESServiceException {
-      name = "InvalidPolicyException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "InvalidPolicyException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidPolicyException.prototype);
-      }
-    };
-    var InvalidRenderingParameterException = class _InvalidRenderingParameterException extends SESServiceException {
-      name = "InvalidRenderingParameterException";
-      $fault = "client";
-      TemplateName;
-      constructor(opts) {
-        super({
-          name: "InvalidRenderingParameterException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _InvalidRenderingParameterException.prototype);
-        this.TemplateName = opts.TemplateName;
-      }
-    };
-    var MailFromDomainNotVerifiedException = class _MailFromDomainNotVerifiedException extends SESServiceException {
-      name = "MailFromDomainNotVerifiedException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "MailFromDomainNotVerifiedException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _MailFromDomainNotVerifiedException.prototype);
-      }
-    };
-    var MessageRejected = class _MessageRejected extends SESServiceException {
-      name = "MessageRejected";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "MessageRejected",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _MessageRejected.prototype);
-      }
-    };
-    var MissingRenderingAttributeException = class _MissingRenderingAttributeException extends SESServiceException {
-      name = "MissingRenderingAttributeException";
-      $fault = "client";
-      TemplateName;
-      constructor(opts) {
-        super({
-          name: "MissingRenderingAttributeException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _MissingRenderingAttributeException.prototype);
-        this.TemplateName = opts.TemplateName;
-      }
-    };
-    var ProductionAccessNotGrantedException = class _ProductionAccessNotGrantedException extends SESServiceException {
-      name = "ProductionAccessNotGrantedException";
-      $fault = "client";
-      constructor(opts) {
-        super({
-          name: "ProductionAccessNotGrantedException",
-          $fault: "client",
-          ...opts
-        });
-        Object.setPrototypeOf(this, _ProductionAccessNotGrantedException.prototype);
-      }
-    };
-    var _A3 = "After";
-    var _AD = "ArrivalDate";
-    var _AEE = "AlreadyExistsException";
-    var _AHA = "AddHeaderAction";
-    var _ASPE = "AccountSendingPausedException";
-    var _Ac = "Actions";
-    var _Act = "Action";
-    var _B = "Body";
-    var _BA = "BounceAction";
-    var _BAc = "BccAddresses";
-    var _BED = "BulkEmailDestination";
-    var _BEDL = "BulkEmailDestinationList";
-    var _BEDS = "BulkEmailDestinationStatus";
-    var _BEDSL = "BulkEmailDestinationStatusList";
-    var _BN = "BucketName";
-    var _BOMXF = "BehaviorOnMXFailure";
-    var _BRI = "BouncedRecipientInfo";
-    var _BRIL = "BouncedRecipientInfoList";
-    var _BS = "BounceSender";
-    var _BSA = "BounceSenderArn";
-    var _BT = "BounceType";
-    var _BTo = "BounceTopic";
-    var _Bo = "Bounces";
-    var _Bu = "Bucket";
-    var _C3 = "Content";
-    var _CA3 = "ConnectAction";
-    var _CAc = "CcAddresses";
-    var _CCS = "CreateConfigurationSet";
-    var _CCSED = "CreateConfigurationSetEventDestination";
-    var _CCSEDR = "CreateConfigurationSetEventDestinationRequest";
-    var _CCSEDRr = "CreateConfigurationSetEventDestinationResponse";
-    var _CCSR = "CreateConfigurationSetRequest";
-    var _CCSRr = "CreateConfigurationSetResponse";
-    var _CCSTO = "CreateConfigurationSetTrackingOptions";
-    var _CCSTOR = "CreateConfigurationSetTrackingOptionsRequest";
-    var _CCSTORr = "CreateConfigurationSetTrackingOptionsResponse";
-    var _CCVET = "CreateCustomVerificationEmailTemplate";
-    var _CCVETR = "CreateCustomVerificationEmailTemplateRequest";
-    var _CDE = "CannotDeleteException";
-    var _CRD = "CustomRedirectDomain";
-    var _CRF = "CreateReceiptFilter";
-    var _CRFR = "CreateReceiptFilterRequest";
-    var _CRFRr = "CreateReceiptFilterResponse";
-    var _CRR = "CreateReceiptRule";
-    var _CRRR = "CreateReceiptRuleRequest";
-    var _CRRRr = "CreateReceiptRuleResponse";
-    var _CRRS = "CloneReceiptRuleSet";
-    var _CRRSR = "CloneReceiptRuleSetRequest";
-    var _CRRSRl = "CloneReceiptRuleSetResponse";
-    var _CRRSRr = "CreateReceiptRuleSetRequest";
-    var _CRRSRre = "CreateReceiptRuleSetResponse";
-    var _CRRSr = "CreateReceiptRuleSet";
-    var _CS3 = "ConfigurationSet";
-    var _CSAEE = "ConfigurationSetAlreadyExistsException";
-    var _CSAN = "ConfigurationSetAttributeNames";
-    var _CSDNEE = "ConfigurationSetDoesNotExistException";
-    var _CSN = "ConfigurationSetName";
-    var _CSSPE = "ConfigurationSetSendingPausedException";
-    var _CSo = "ConfigurationSets";
-    var _CT3 = "ComplaintTopic";
-    var _CTR3 = "CreateTemplateRequest";
-    var _CTRr3 = "CreateTemplateResponse";
-    var _CTr = "CreatedTimestamp";
-    var _CTre = "CreateTemplate";
-    var _CVEICE = "CustomVerificationEmailInvalidContentException";
-    var _CVET = "CustomVerificationEmailTemplate";
-    var _CVETAEE = "CustomVerificationEmailTemplateAlreadyExistsException";
-    var _CVETDNEE = "CustomVerificationEmailTemplateDoesNotExistException";
-    var _CVETN = "CustomVerificationEmailTemplateName";
-    var _CVETu = "CustomVerificationEmailTemplates";
-    var _CWD = "CloudWatchDestination";
-    var _CWDC = "CloudWatchDimensionConfiguration";
-    var _CWDCl = "CloudWatchDimensionConfigurations";
-    var _Ch = "Charset";
-    var _Ci = "Cidr";
-    var _Co = "Complaints";
-    var _D = "Destination";
-    var _DA = "DkimAttributes";
-    var _DARRS = "DescribeActiveReceiptRuleSet";
-    var _DARRSR = "DescribeActiveReceiptRuleSetRequest";
-    var _DARRSRe = "DescribeActiveReceiptRuleSetResponse";
-    var _DAe = "DeliveryAttempts";
-    var _DC = "DimensionConfigurations";
-    var _DCS = "DeleteConfigurationSet";
-    var _DCSED = "DeleteConfigurationSetEventDestination";
-    var _DCSEDR = "DeleteConfigurationSetEventDestinationRequest";
-    var _DCSEDRe = "DeleteConfigurationSetEventDestinationResponse";
-    var _DCSR = "DeleteConfigurationSetRequest";
-    var _DCSRe = "DeleteConfigurationSetResponse";
-    var _DCSRes = "DescribeConfigurationSetRequest";
-    var _DCSResc = "DescribeConfigurationSetResponse";
-    var _DCSTO = "DeleteConfigurationSetTrackingOptions";
-    var _DCSTOR = "DeleteConfigurationSetTrackingOptionsRequest";
-    var _DCSTORe = "DeleteConfigurationSetTrackingOptionsResponse";
-    var _DCSe = "DescribeConfigurationSet";
-    var _DCVET = "DeleteCustomVerificationEmailTemplate";
-    var _DCVETR = "DeleteCustomVerificationEmailTemplateRequest";
-    var _DCi = "DiagnosticCode";
-    var _DDV = "DefaultDimensionValue";
-    var _DE = "DkimEnabled";
-    var _DI = "DeleteIdentity";
-    var _DIP = "DeleteIdentityPolicy";
-    var _DIPR = "DeleteIdentityPolicyRequest";
-    var _DIPRe = "DeleteIdentityPolicyResponse";
-    var _DIR = "DeleteIdentityRequest";
-    var _DIRe = "DeleteIdentityResponse";
-    var _DN = "DimensionName";
-    var _DO = "DeliveryOptions";
-    var _DRF = "DeleteReceiptFilter";
-    var _DRFR = "DeleteReceiptFilterRequest";
-    var _DRFRe = "DeleteReceiptFilterResponse";
-    var _DRR = "DeleteReceiptRule";
-    var _DRRR = "DeleteReceiptRuleRequest";
-    var _DRRRe = "DeleteReceiptRuleResponse";
-    var _DRRRes = "DescribeReceiptRuleRequest";
-    var _DRRResc = "DescribeReceiptRuleResponse";
-    var _DRRS = "DeleteReceiptRuleSet";
-    var _DRRSR = "DeleteReceiptRuleSetRequest";
-    var _DRRSRe = "DeleteReceiptRuleSetResponse";
-    var _DRRSRes = "DescribeReceiptRuleSetRequest";
-    var _DRRSResc = "DescribeReceiptRuleSetResponse";
-    var _DRRSe = "DescribeReceiptRuleSet";
-    var _DRRe = "DescribeReceiptRule";
-    var _DSARN = "DeliveryStreamARN";
-    var _DT = "DkimTokens";
-    var _DTD = "DefaultTemplateData";
-    var _DTR = "DeleteTemplateRequest";
-    var _DTRe = "DeleteTemplateResponse";
-    var _DTe = "DeliveryTopic";
-    var _DTef = "DefaultTags";
-    var _DTel = "DeleteTemplate";
-    var _DVEA = "DeleteVerifiedEmailAddress";
-    var _DVEAR = "DeleteVerifiedEmailAddressRequest";
-    var _DVS = "DimensionValueSource";
-    var _DVSk = "DkimVerificationStatus";
-    var _Da = "Data";
-    var _De = "Destinations";
-    var _Do = "Domain";
-    var _E3 = "Error";
-    var _EA = "EmailAddress";
-    var _ED = "EventDestination";
-    var _EDAEE = "EventDestinationAlreadyExistsException";
-    var _EDDNEE = "EventDestinationDoesNotExistException";
-    var _EDN = "EventDestinationName";
-    var _EDv = "EventDestinations";
-    var _EF = "ExtensionField";
-    var _EFL = "ExtensionFieldList";
-    var _EFx = "ExtensionFields";
-    var _En = "Enabled";
-    var _Enc = "Encoding";
-    var _Ex = "Explanation";
-    var _F = "Filter";
-    var _FA = "FunctionArn";
-    var _FAr = "FromArn";
-    var _FE = "ForwardingEnabled";
-    var _FEA = "FromEmailAddress";
-    var _FEANVE = "FromEmailAddressNotVerifiedException";
-    var _FN = "FilterName";
-    var _FR = "FinalRecipient";
-    var _FRURL = "FailureRedirectionURL";
-    var _Fi = "Filters";
-    var _GASE = "GetAccountSendingEnabled";
-    var _GASER = "GetAccountSendingEnabledResponse";
-    var _GCVET = "GetCustomVerificationEmailTemplate";
-    var _GCVETR = "GetCustomVerificationEmailTemplateRequest";
-    var _GCVETRe = "GetCustomVerificationEmailTemplateResponse";
-    var _GIDA = "GetIdentityDkimAttributes";
-    var _GIDAR = "GetIdentityDkimAttributesRequest";
-    var _GIDARe = "GetIdentityDkimAttributesResponse";
-    var _GIMFDA = "GetIdentityMailFromDomainAttributes";
-    var _GIMFDAR = "GetIdentityMailFromDomainAttributesRequest";
-    var _GIMFDARe = "GetIdentityMailFromDomainAttributesResponse";
-    var _GINA = "GetIdentityNotificationAttributes";
-    var _GINAR = "GetIdentityNotificationAttributesRequest";
-    var _GINARe = "GetIdentityNotificationAttributesResponse";
-    var _GIP = "GetIdentityPolicies";
-    var _GIPR = "GetIdentityPoliciesRequest";
-    var _GIPRe = "GetIdentityPoliciesResponse";
-    var _GIVA = "GetIdentityVerificationAttributes";
-    var _GIVAR = "GetIdentityVerificationAttributesRequest";
-    var _GIVARe = "GetIdentityVerificationAttributesResponse";
-    var _GSQ = "GetSendQuota";
-    var _GSQR = "GetSendQuotaResponse";
-    var _GSS = "GetSendStatistics";
-    var _GSSR = "GetSendStatisticsResponse";
-    var _GT = "GetTemplate";
-    var _GTR = "GetTemplateRequest";
-    var _GTRe = "GetTemplateResponse";
-    var _H = "Html";
-    var _HIBNE = "HeadersInBounceNotificationsEnabled";
-    var _HICNE = "HeadersInComplaintNotificationsEnabled";
-    var _HIDNE = "HeadersInDeliveryNotificationsEnabled";
-    var _HN = "HeaderName";
-    var _HP = "HtmlPart";
-    var _HV = "HeaderValue";
-    var _I = "Identity";
-    var _IAMRARN = "IAMRoleARN";
-    var _IARN = "InstanceARN";
-    var _ICSE = "InvalidConfigurationSetException";
-    var _ICWDE = "InvalidCloudWatchDestinationException";
-    var _IDA = "IdentityDkimAttributes";
-    var _IDOE = "InvalidDeliveryOptionsException";
-    var _IF = "IpFilter";
-    var _IFDE = "InvalidFirehoseDestinationException";
-    var _ILFE = "InvalidLambdaFunctionException";
-    var _IMFDA = "IdentityMailFromDomainAttributes";
-    var _INA = "IdentityNotificationAttributes";
-    var _IPE = "InvalidPolicyException";
-    var _IRA = "IamRoleArn";
-    var _IRPE = "InvalidRenderingParameterException";
-    var _ISCE = "InvalidS3ConfigurationException";
-    var _ISNSDE = "InvalidSNSDestinationException";
-    var _ISTE = "InvalidSnsTopicException";
-    var _IT3 = "InvocationType";
-    var _ITE = "InvalidTemplateException";
-    var _ITOE = "InvalidTrackingOptionsException";
-    var _ITd = "IdentityType";
-    var _IVA = "IdentityVerificationAttributes";
-    var _Id = "Identities";
-    var _KFD = "KinesisFirehoseDestination";
-    var _KKA = "KmsKeyArn";
-    var _LA = "LambdaAction";
-    var _LAD = "LastAttemptDate";
-    var _LCS = "ListConfigurationSets";
-    var _LCSR = "ListConfigurationSetsRequest";
-    var _LCSRi = "ListConfigurationSetsResponse";
-    var _LCVET = "ListCustomVerificationEmailTemplates";
-    var _LCVETR = "ListCustomVerificationEmailTemplatesRequest";
-    var _LCVETRi = "ListCustomVerificationEmailTemplatesResponse";
-    var _LEE = "LimitExceededException";
-    var _LFS = "LastFreshStart";
-    var _LI = "ListIdentities";
-    var _LIP = "ListIdentityPolicies";
-    var _LIPR = "ListIdentityPoliciesRequest";
-    var _LIPRi = "ListIdentityPoliciesResponse";
-    var _LIR = "ListIdentitiesRequest";
-    var _LIRi = "ListIdentitiesResponse";
-    var _LRF = "ListReceiptFilters";
-    var _LRFR = "ListReceiptFiltersRequest";
-    var _LRFRi = "ListReceiptFiltersResponse";
-    var _LRRS = "ListReceiptRuleSets";
-    var _LRRSR = "ListReceiptRuleSetsRequest";
-    var _LRRSRi = "ListReceiptRuleSetsResponse";
-    var _LT = "ListTemplates";
-    var _LTR = "ListTemplatesRequest";
-    var _LTRi = "ListTemplatesResponse";
-    var _LVEA = "ListVerifiedEmailAddresses";
-    var _LVEAR = "ListVerifiedEmailAddressesResponse";
-    var _M = "Message";
-    var _MD = "MessageDsn";
-    var _MET = "MatchingEventTypes";
-    var _MFD = "MailFromDomain";
-    var _MFDA = "MailFromDomainAttributes";
-    var _MFDNVE = "MailFromDomainNotVerifiedException";
-    var _MFDS = "MailFromDomainStatus";
-    var _MHS = "Max24HourSend";
-    var _MI = "MessageId";
-    var _MIa = "MaxItems";
-    var _MR = "MaxResults";
-    var _MRAE = "MissingRenderingAttributeException";
-    var _MRe = "MessageRejected";
-    var _MSR = "MaxSendRate";
-    var _MT = "MessageTag";
-    var _MTL = "MessageTagList";
-    var _Me = "Metadata";
-    var _N = "Name";
-    var _NA = "NotificationAttributes";
-    var _NT = "NextToken";
-    var _NTo = "NotificationType";
-    var _OA = "OrganizationArn";
-    var _OKP = "ObjectKeyPrefix";
-    var _OMI = "OriginalMessageId";
-    var _ORSN = "OriginalRuleSetName";
-    var _P3 = "Policies";
-    var _PANGE = "ProductionAccessNotGrantedException";
-    var _PCSDO = "PutConfigurationSetDeliveryOptions";
-    var _PCSDOR = "PutConfigurationSetDeliveryOptionsRequest";
-    var _PCSDORu = "PutConfigurationSetDeliveryOptionsResponse";
-    var _PIP = "PutIdentityPolicy";
-    var _PIPR = "PutIdentityPolicyRequest";
-    var _PIPRu = "PutIdentityPolicyResponse";
-    var _PN = "PolicyName";
-    var _PNo = "PolicyNames";
-    var _Po = "Policy";
-    var _R = "Recipient";
-    var _RA3 = "RecipientArn";
-    var _RAL = "ReceiptActionsList";
-    var _RAe = "ReceiptAction";
-    var _RDF = "RecipientDsnFields";
-    var _RDNEE = "RuleDoesNotExistException";
-    var _RF = "ReceiptFilter";
-    var _RFL = "ReceiptFilterList";
-    var _RIF = "ReceiptIpFilter";
-    var _RM = "ReportingMta";
-    var _RME = "ReputationMetricsEnabled";
-    var _RMa = "RawMessage";
-    var _RMe = "RemoteMta";
-    var _RN = "RuleName";
-    var _RNu = "RuleNames";
-    var _RO = "ReputationOptions";
-    var _RP = "ReturnPath";
-    var _RPA = "ReturnPathArn";
-    var _RR = "ReceiptRule";
-    var _RRL = "ReceiptRulesList";
-    var _RRRS = "ReorderReceiptRuleSet";
-    var _RRRSR = "ReorderReceiptRuleSetRequest";
-    var _RRRSRe = "ReorderReceiptRuleSetResponse";
-    var _RRSL = "ReceiptRuleSetsLists";
-    var _RRSM = "ReceiptRuleSetMetadata";
-    var _RS = "RuleSets";
-    var _RSDNEE = "RuleSetDoesNotExistException";
-    var _RSN3 = "RuleSetName";
-    var _RT5 = "ReplacementTags";
-    var _RTA = "ReplyToAddresses";
-    var _RTD = "ReplacementTemplateData";
-    var _RTe = "RenderedTemplate";
-    var _Re = "Recipients";
-    var _Rej = "Rejects";
-    var _Ru = "Rule";
-    var _Rul = "Rules";
-    var _S = "Sender";
-    var _SA = "S3Action";
-    var _SARRS = "SetActiveReceiptRuleSet";
-    var _SARRSR = "SetActiveReceiptRuleSetRequest";
-    var _SARRSRe = "SetActiveReceiptRuleSetResponse";
-    var _SAo = "SourceArn";
-    var _SAt = "StopAction";
-    var _SB = "SendBounce";
-    var _SBR = "SendBounceRequest";
-    var _SBRe = "SendBounceResponse";
-    var _SBTE = "SendBulkTemplatedEmail";
-    var _SBTER = "SendBulkTemplatedEmailRequest";
-    var _SBTERe = "SendBulkTemplatedEmailResponse";
-    var _SC = "StatusCode";
-    var _SCVE = "SendCustomVerificationEmail";
-    var _SCVER = "SendCustomVerificationEmailRequest";
-    var _SCVERe = "SendCustomVerificationEmailResponse";
-    var _SDP = "SendDataPoints";
-    var _SDPL = "SendDataPointList";
-    var _SDPe = "SendDataPoint";
-    var _SE = "ScanEnabled";
-    var _SER = "SendEmailRequest";
-    var _SERe = "SendEmailResponse";
-    var _SEe = "SendingEnabled";
-    var _SEen = "SendEmail";
-    var _SIDE = "SetIdentityDkimEnabled";
-    var _SIDER = "SetIdentityDkimEnabledRequest";
-    var _SIDERe = "SetIdentityDkimEnabledResponse";
-    var _SIFFE = "SetIdentityFeedbackForwardingEnabled";
-    var _SIFFER = "SetIdentityFeedbackForwardingEnabledRequest";
-    var _SIFFERe = "SetIdentityFeedbackForwardingEnabledResponse";
-    var _SIHINE = "SetIdentityHeadersInNotificationsEnabled";
-    var _SIHINER = "SetIdentityHeadersInNotificationsEnabledRequest";
-    var _SIHINERe = "SetIdentityHeadersInNotificationsEnabledResponse";
-    var _SIMFD = "SetIdentityMailFromDomain";
-    var _SIMFDR = "SetIdentityMailFromDomainRequest";
-    var _SIMFDRe = "SetIdentityMailFromDomainResponse";
-    var _SINT = "SetIdentityNotificationTopic";
-    var _SINTR = "SetIdentityNotificationTopicRequest";
-    var _SINTRe = "SetIdentityNotificationTopicResponse";
-    var _SLH = "SentLast24Hours";
-    var _SNSA = "SNSAction";
-    var _SNSD = "SNSDestination";
-    var _SP = "SubjectPart";
-    var _SRC = "SmtpReplyCode";
-    var _SRE = "SendRawEmail";
-    var _SRER = "SendRawEmailRequest";
-    var _SRERe = "SendRawEmailResponse";
-    var _SRRP = "SetReceiptRulePosition";
-    var _SRRPR = "SetReceiptRulePositionRequest";
-    var _SRRPRe = "SetReceiptRulePositionResponse";
-    var _SRURL = "SuccessRedirectionURL";
-    var _ST3 = "SnsTopic";
-    var _STE = "SendTemplatedEmail";
-    var _STER = "SendTemplatedEmailRequest";
-    var _STERe = "SendTemplatedEmailResponse";
-    var _Sc = "Scope";
-    var _So = "Source";
-    var _St = "Status";
-    var _Su = "Subject";
-    var _T3 = "Text";
-    var _TA = "TopicArn";
-    var _TARN = "TopicARN";
-    var _TAe = "TemplateArn";
-    var _TAo = "ToAddresses";
-    var _TC3 = "TemplateContent";
-    var _TD = "TemplateData";
-    var _TDNEE = "TemplateDoesNotExistException";
-    var _TM = "TemplatesMetadata";
-    var _TML = "TemplateMetadataList";
-    var _TMe = "TemplateMetadata";
-    var _TN = "TemplateName";
-    var _TO = "TrackingOptions";
-    var _TOAEE = "TrackingOptionsAlreadyExistsException";
-    var _TODNEE = "TrackingOptionsDoesNotExistException";
-    var _TP = "TlsPolicy";
-    var _TPe = "TextPart";
-    var _TRT = "TestRenderTemplate";
-    var _TRTR = "TestRenderTemplateRequest";
-    var _TRTRe = "TestRenderTemplateResponse";
-    var _TS = "TemplateSubject";
-    var _Ta3 = "Tags";
-    var _Te = "Template";
-    var _Ti = "Timestamp";
-    var _To = "Topic";
-    var _UASE = "UpdateAccountSendingEnabled";
-    var _UASER = "UpdateAccountSendingEnabledRequest";
-    var _UCSED = "UpdateConfigurationSetEventDestination";
-    var _UCSEDR = "UpdateConfigurationSetEventDestinationRequest";
-    var _UCSEDRp = "UpdateConfigurationSetEventDestinationResponse";
-    var _UCSRME = "UpdateConfigurationSetReputationMetricsEnabled";
-    var _UCSRMER = "UpdateConfigurationSetReputationMetricsEnabledRequest";
-    var _UCSSE = "UpdateConfigurationSetSendingEnabled";
-    var _UCSSER = "UpdateConfigurationSetSendingEnabledRequest";
-    var _UCSTO = "UpdateConfigurationSetTrackingOptions";
-    var _UCSTOR = "UpdateConfigurationSetTrackingOptionsRequest";
-    var _UCSTORp = "UpdateConfigurationSetTrackingOptionsResponse";
-    var _UCVET = "UpdateCustomVerificationEmailTemplate";
-    var _UCVETR = "UpdateCustomVerificationEmailTemplateRequest";
-    var _URR = "UpdateReceiptRule";
-    var _URRR = "UpdateReceiptRuleRequest";
-    var _URRRp = "UpdateReceiptRuleResponse";
-    var _UT = "UpdateTemplate";
-    var _UTR = "UpdateTemplateRequest";
-    var _UTRp = "UpdateTemplateResponse";
-    var _V3 = "Value";
-    var _VA = "VerificationAttributes";
-    var _VDD = "VerifyDomainDkim";
-    var _VDDR = "VerifyDomainDkimRequest";
-    var _VDDRe = "VerifyDomainDkimResponse";
-    var _VDI = "VerifyDomainIdentity";
-    var _VDIR = "VerifyDomainIdentityRequest";
-    var _VDIRe = "VerifyDomainIdentityResponse";
-    var _VEA = "VerifiedEmailAddresses";
-    var _VEAR = "VerifyEmailAddressRequest";
-    var _VEAe = "VerifyEmailAddress";
-    var _VEI = "VerifyEmailIdentity";
-    var _VEIR = "VerifyEmailIdentityRequest";
-    var _VEIRe = "VerifyEmailIdentityResponse";
-    var _VS = "VerificationStatus";
-    var _VT = "VerificationToken";
-    var _WA = "WorkmailAction";
-    var _aQE3 = "awsQueryError";
-    var _c8 = "client";
-    var _e8 = "error";
-    var _hE8 = "httpError";
-    var _m6 = "message";
-    var _s8 = "smithy.ts.sdk.synthetic.com.amazonaws.ses";
-    var n08 = "com.amazonaws.ses";
-    var AccountSendingPausedException$ = [
-      -3,
-      n08,
-      _ASPE,
-      { [_aQE3]: [`AccountSendingPausedException`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(AccountSendingPausedException$, AccountSendingPausedException);
-    var AddHeaderAction$ = [
-      3,
-      n08,
-      _AHA,
-      0,
-      [_HN, _HV],
-      [0, 0],
-      2
-    ];
-    var AlreadyExistsException$ = [
-      -3,
-      n08,
-      _AEE,
-      { [_aQE3]: [`AlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_N, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(AlreadyExistsException$, AlreadyExistsException);
-    var Body$ = [
-      3,
-      n08,
-      _B,
-      0,
-      [_T3, _H],
-      [() => Content$, () => Content$]
-    ];
-    var BounceAction$ = [
-      3,
-      n08,
-      _BA,
-      0,
-      [_SRC, _M, _S, _TA, _SC],
-      [0, 0, 0, 0, 0],
-      3
-    ];
-    var BouncedRecipientInfo$ = [
-      3,
-      n08,
-      _BRI,
-      0,
-      [_R, _RA3, _BT, _RDF],
-      [0, 0, 0, () => RecipientDsnFields$],
-      1
-    ];
-    var BulkEmailDestination$ = [
-      3,
-      n08,
-      _BED,
-      0,
-      [_D, _RT5, _RTD],
-      [() => Destination$, () => MessageTagList, 0],
-      1
-    ];
-    var BulkEmailDestinationStatus$ = [
-      3,
-      n08,
-      _BEDS,
-      0,
-      [_St, _E3, _MI],
-      [0, 0, 0]
-    ];
-    var CannotDeleteException$ = [
-      -3,
-      n08,
-      _CDE,
-      { [_aQE3]: [`CannotDelete`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_N, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(CannotDeleteException$, CannotDeleteException);
-    var CloneReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _CRRSR,
-      0,
-      [_RSN3, _ORSN],
-      [0, 0],
-      2
-    ];
-    var CloneReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _CRRSRl,
-      0,
-      [],
-      []
-    ];
-    var CloudWatchDestination$ = [
-      3,
-      n08,
-      _CWD,
-      0,
-      [_DC],
-      [() => CloudWatchDimensionConfigurations],
-      1
-    ];
-    var CloudWatchDimensionConfiguration$ = [
-      3,
-      n08,
-      _CWDC,
-      0,
-      [_DN, _DVS, _DDV],
-      [0, 0, 0],
-      3
-    ];
-    var ConfigurationSet$ = [
-      3,
-      n08,
-      _CS3,
-      0,
-      [_N],
-      [0],
-      1
-    ];
-    var ConfigurationSetAlreadyExistsException$ = [
-      -3,
-      n08,
-      _CSAEE,
-      { [_aQE3]: [`ConfigurationSetAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(ConfigurationSetAlreadyExistsException$, ConfigurationSetAlreadyExistsException);
-    var ConfigurationSetDoesNotExistException$ = [
-      -3,
-      n08,
-      _CSDNEE,
-      { [_aQE3]: [`ConfigurationSetDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(ConfigurationSetDoesNotExistException$, ConfigurationSetDoesNotExistException);
-    var ConfigurationSetSendingPausedException$ = [
-      -3,
-      n08,
-      _CSSPE,
-      { [_aQE3]: [`ConfigurationSetSendingPausedException`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(ConfigurationSetSendingPausedException$, ConfigurationSetSendingPausedException);
-    var ConnectAction$ = [
-      3,
-      n08,
-      _CA3,
-      0,
-      [_IARN, _IAMRARN],
-      [0, 0],
-      2
-    ];
-    var Content$ = [
-      3,
-      n08,
-      _C3,
-      0,
-      [_Da, _Ch],
-      [0, 0],
-      1
-    ];
-    var CreateConfigurationSetEventDestinationRequest$ = [
-      3,
-      n08,
-      _CCSEDR,
-      0,
-      [_CSN, _ED],
-      [0, () => EventDestination$],
-      2
-    ];
-    var CreateConfigurationSetEventDestinationResponse$ = [
-      3,
-      n08,
-      _CCSEDRr,
-      0,
-      [],
-      []
-    ];
-    var CreateConfigurationSetRequest$ = [
-      3,
-      n08,
-      _CCSR,
-      0,
-      [_CS3],
-      [() => ConfigurationSet$],
-      1
-    ];
-    var CreateConfigurationSetResponse$ = [
-      3,
-      n08,
-      _CCSRr,
-      0,
-      [],
-      []
-    ];
-    var CreateConfigurationSetTrackingOptionsRequest$ = [
-      3,
-      n08,
-      _CCSTOR,
-      0,
-      [_CSN, _TO],
-      [0, () => TrackingOptions$],
-      2
-    ];
-    var CreateConfigurationSetTrackingOptionsResponse$ = [
-      3,
-      n08,
-      _CCSTORr,
-      0,
-      [],
-      []
-    ];
-    var CreateCustomVerificationEmailTemplateRequest$ = [
-      3,
-      n08,
-      _CCVETR,
-      0,
-      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
-      [0, 0, 0, 0, 0, 0],
-      6
-    ];
-    var CreateReceiptFilterRequest$ = [
-      3,
-      n08,
-      _CRFR,
-      0,
-      [_F],
-      [() => ReceiptFilter$],
-      1
-    ];
-    var CreateReceiptFilterResponse$ = [
-      3,
-      n08,
-      _CRFRr,
-      0,
-      [],
-      []
-    ];
-    var CreateReceiptRuleRequest$ = [
-      3,
-      n08,
-      _CRRR,
-      0,
-      [_RSN3, _Ru, _A3],
-      [0, () => ReceiptRule$, 0],
-      2
-    ];
-    var CreateReceiptRuleResponse$ = [
-      3,
-      n08,
-      _CRRRr,
-      0,
-      [],
-      []
-    ];
-    var CreateReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _CRRSRr,
-      0,
-      [_RSN3],
-      [0],
-      1
-    ];
-    var CreateReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _CRRSRre,
-      0,
-      [],
-      []
-    ];
-    var CreateTemplateRequest$ = [
-      3,
-      n08,
-      _CTR3,
-      0,
-      [_Te],
-      [() => Template$],
-      1
-    ];
-    var CreateTemplateResponse$ = [
-      3,
-      n08,
-      _CTRr3,
-      0,
-      [],
-      []
-    ];
-    var CustomVerificationEmailInvalidContentException$ = [
-      -3,
-      n08,
-      _CVEICE,
-      { [_aQE3]: [`CustomVerificationEmailInvalidContent`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailInvalidContentException$, CustomVerificationEmailInvalidContentException);
-    var CustomVerificationEmailTemplate$ = [
-      3,
-      n08,
-      _CVET,
-      0,
-      [_TN, _FEA, _TS, _SRURL, _FRURL],
-      [0, 0, 0, 0, 0]
-    ];
-    var CustomVerificationEmailTemplateAlreadyExistsException$ = [
-      -3,
-      n08,
-      _CVETAEE,
-      { [_aQE3]: [`CustomVerificationEmailTemplateAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CVETN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailTemplateAlreadyExistsException$, CustomVerificationEmailTemplateAlreadyExistsException);
-    var CustomVerificationEmailTemplateDoesNotExistException$ = [
-      -3,
-      n08,
-      _CVETDNEE,
-      { [_aQE3]: [`CustomVerificationEmailTemplateDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CVETN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailTemplateDoesNotExistException$, CustomVerificationEmailTemplateDoesNotExistException);
-    var DeleteConfigurationSetEventDestinationRequest$ = [
-      3,
-      n08,
-      _DCSEDR,
-      0,
-      [_CSN, _EDN],
-      [0, 0],
-      2
-    ];
-    var DeleteConfigurationSetEventDestinationResponse$ = [
-      3,
-      n08,
-      _DCSEDRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteConfigurationSetRequest$ = [
-      3,
-      n08,
-      _DCSR,
-      0,
-      [_CSN],
-      [0],
-      1
-    ];
-    var DeleteConfigurationSetResponse$ = [
-      3,
-      n08,
-      _DCSRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteConfigurationSetTrackingOptionsRequest$ = [
-      3,
-      n08,
-      _DCSTOR,
-      0,
-      [_CSN],
-      [0],
-      1
-    ];
-    var DeleteConfigurationSetTrackingOptionsResponse$ = [
-      3,
-      n08,
-      _DCSTORe,
-      0,
-      [],
-      []
-    ];
-    var DeleteCustomVerificationEmailTemplateRequest$ = [
-      3,
-      n08,
-      _DCVETR,
-      0,
-      [_TN],
-      [0],
-      1
-    ];
-    var DeleteIdentityPolicyRequest$ = [
-      3,
-      n08,
-      _DIPR,
-      0,
-      [_I, _PN],
-      [0, 0],
-      2
-    ];
-    var DeleteIdentityPolicyResponse$ = [
-      3,
-      n08,
-      _DIPRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteIdentityRequest$ = [
-      3,
-      n08,
-      _DIR,
-      0,
-      [_I],
-      [0],
-      1
-    ];
-    var DeleteIdentityResponse$ = [
-      3,
-      n08,
-      _DIRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteReceiptFilterRequest$ = [
-      3,
-      n08,
-      _DRFR,
-      0,
-      [_FN],
-      [0],
-      1
-    ];
-    var DeleteReceiptFilterResponse$ = [
-      3,
-      n08,
-      _DRFRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteReceiptRuleRequest$ = [
-      3,
-      n08,
-      _DRRR,
-      0,
-      [_RSN3, _RN],
-      [0, 0],
-      2
-    ];
-    var DeleteReceiptRuleResponse$ = [
-      3,
-      n08,
-      _DRRRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _DRRSR,
-      0,
-      [_RSN3],
-      [0],
-      1
-    ];
-    var DeleteReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _DRRSRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteTemplateRequest$ = [
-      3,
-      n08,
-      _DTR,
-      0,
-      [_TN],
-      [0],
-      1
-    ];
-    var DeleteTemplateResponse$ = [
-      3,
-      n08,
-      _DTRe,
-      0,
-      [],
-      []
-    ];
-    var DeleteVerifiedEmailAddressRequest$ = [
-      3,
-      n08,
-      _DVEAR,
-      0,
-      [_EA],
-      [0],
-      1
-    ];
-    var DeliveryOptions$ = [
-      3,
-      n08,
-      _DO,
-      0,
-      [_TP],
-      [0]
-    ];
-    var DescribeActiveReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _DARRSR,
-      0,
-      [],
-      []
-    ];
-    var DescribeActiveReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _DARRSRe,
-      0,
-      [_Me, _Rul],
-      [() => ReceiptRuleSetMetadata$, () => ReceiptRulesList]
-    ];
-    var DescribeConfigurationSetRequest$ = [
-      3,
-      n08,
-      _DCSRes,
-      0,
-      [_CSN, _CSAN],
-      [0, 64 | 0],
-      1
-    ];
-    var DescribeConfigurationSetResponse$ = [
-      3,
-      n08,
-      _DCSResc,
-      0,
-      [_CS3, _EDv, _TO, _DO, _RO],
-      [() => ConfigurationSet$, () => EventDestinations, () => TrackingOptions$, () => DeliveryOptions$, () => ReputationOptions$]
-    ];
-    var DescribeReceiptRuleRequest$ = [
-      3,
-      n08,
-      _DRRRes,
-      0,
-      [_RSN3, _RN],
-      [0, 0],
-      2
-    ];
-    var DescribeReceiptRuleResponse$ = [
-      3,
-      n08,
-      _DRRResc,
-      0,
-      [_Ru],
-      [() => ReceiptRule$]
-    ];
-    var DescribeReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _DRRSRes,
-      0,
-      [_RSN3],
-      [0],
-      1
-    ];
-    var DescribeReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _DRRSResc,
-      0,
-      [_Me, _Rul],
-      [() => ReceiptRuleSetMetadata$, () => ReceiptRulesList]
-    ];
-    var Destination$ = [
-      3,
-      n08,
-      _D,
-      0,
-      [_TAo, _CAc, _BAc],
-      [64 | 0, 64 | 0, 64 | 0]
-    ];
-    var EventDestination$ = [
-      3,
-      n08,
-      _ED,
-      0,
-      [_N, _MET, _En, _KFD, _CWD, _SNSD],
-      [0, 64 | 0, 2, () => KinesisFirehoseDestination$, () => CloudWatchDestination$, () => SNSDestination$],
-      2
-    ];
-    var EventDestinationAlreadyExistsException$ = [
-      -3,
-      n08,
-      _EDAEE,
-      { [_aQE3]: [`EventDestinationAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _EDN, _m6],
-      [0, 0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(EventDestinationAlreadyExistsException$, EventDestinationAlreadyExistsException);
-    var EventDestinationDoesNotExistException$ = [
-      -3,
-      n08,
-      _EDDNEE,
-      { [_aQE3]: [`EventDestinationDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _EDN, _m6],
-      [0, 0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(EventDestinationDoesNotExistException$, EventDestinationDoesNotExistException);
-    var ExtensionField$ = [
-      3,
-      n08,
-      _EF,
-      0,
-      [_N, _V3],
-      [0, 0],
-      2
-    ];
-    var FromEmailAddressNotVerifiedException$ = [
-      -3,
-      n08,
-      _FEANVE,
-      { [_aQE3]: [`FromEmailAddressNotVerified`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_FEA, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(FromEmailAddressNotVerifiedException$, FromEmailAddressNotVerifiedException);
-    var GetAccountSendingEnabledResponse$ = [
-      3,
-      n08,
-      _GASER,
-      0,
-      [_En],
-      [2]
-    ];
-    var GetCustomVerificationEmailTemplateRequest$ = [
-      3,
-      n08,
-      _GCVETR,
-      0,
-      [_TN],
-      [0],
-      1
-    ];
-    var GetCustomVerificationEmailTemplateResponse$ = [
-      3,
-      n08,
-      _GCVETRe,
-      0,
-      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
-      [0, 0, 0, 0, 0, 0]
-    ];
-    var GetIdentityDkimAttributesRequest$ = [
-      3,
-      n08,
-      _GIDAR,
-      0,
-      [_Id],
-      [64 | 0],
-      1
-    ];
-    var GetIdentityDkimAttributesResponse$ = [
-      3,
-      n08,
-      _GIDARe,
-      0,
-      [_DA],
-      [() => DkimAttributes],
-      1
-    ];
-    var GetIdentityMailFromDomainAttributesRequest$ = [
-      3,
-      n08,
-      _GIMFDAR,
-      0,
-      [_Id],
-      [64 | 0],
-      1
-    ];
-    var GetIdentityMailFromDomainAttributesResponse$ = [
-      3,
-      n08,
-      _GIMFDARe,
-      0,
-      [_MFDA],
-      [() => MailFromDomainAttributes],
-      1
-    ];
-    var GetIdentityNotificationAttributesRequest$ = [
-      3,
-      n08,
-      _GINAR,
-      0,
-      [_Id],
-      [64 | 0],
-      1
-    ];
-    var GetIdentityNotificationAttributesResponse$ = [
-      3,
-      n08,
-      _GINARe,
-      0,
-      [_NA],
-      [() => NotificationAttributes],
-      1
-    ];
-    var GetIdentityPoliciesRequest$ = [
-      3,
-      n08,
-      _GIPR,
-      0,
-      [_I, _PNo],
-      [0, 64 | 0],
-      2
-    ];
-    var GetIdentityPoliciesResponse$ = [
-      3,
-      n08,
-      _GIPRe,
-      0,
-      [_P3],
-      [128 | 0],
-      1
-    ];
-    var GetIdentityVerificationAttributesRequest$ = [
-      3,
-      n08,
-      _GIVAR,
-      0,
-      [_Id],
-      [64 | 0],
-      1
-    ];
-    var GetIdentityVerificationAttributesResponse$ = [
-      3,
-      n08,
-      _GIVARe,
-      0,
-      [_VA],
-      [() => VerificationAttributes],
-      1
-    ];
-    var GetSendQuotaResponse$ = [
-      3,
-      n08,
-      _GSQR,
-      0,
-      [_MHS, _MSR, _SLH],
-      [1, 1, 1]
-    ];
-    var GetSendStatisticsResponse$ = [
-      3,
-      n08,
-      _GSSR,
-      0,
-      [_SDP],
-      [() => SendDataPointList]
-    ];
-    var GetTemplateRequest$ = [
-      3,
-      n08,
-      _GTR,
-      0,
-      [_TN],
-      [0],
-      1
-    ];
-    var GetTemplateResponse$ = [
-      3,
-      n08,
-      _GTRe,
-      0,
-      [_Te],
-      [() => Template$]
-    ];
-    var IdentityDkimAttributes$ = [
-      3,
-      n08,
-      _IDA,
-      0,
-      [_DE, _DVSk, _DT],
-      [2, 0, 64 | 0],
-      2
-    ];
-    var IdentityMailFromDomainAttributes$ = [
-      3,
-      n08,
-      _IMFDA,
-      0,
-      [_MFD, _MFDS, _BOMXF],
-      [0, 0, 0],
-      3
-    ];
-    var IdentityNotificationAttributes$ = [
-      3,
-      n08,
-      _INA,
-      0,
-      [_BTo, _CT3, _DTe, _FE, _HIBNE, _HICNE, _HIDNE],
-      [0, 0, 0, 2, 2, 2, 2],
-      4
-    ];
-    var IdentityVerificationAttributes$ = [
-      3,
-      n08,
-      _IVA,
-      0,
-      [_VS, _VT],
-      [0, 0],
-      1
-    ];
-    var InvalidCloudWatchDestinationException$ = [
-      -3,
-      n08,
-      _ICWDE,
-      { [_aQE3]: [`InvalidCloudWatchDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _EDN, _m6],
-      [0, 0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidCloudWatchDestinationException$, InvalidCloudWatchDestinationException);
-    var InvalidConfigurationSetException$ = [
-      -3,
-      n08,
-      _ICSE,
-      { [_aQE3]: [`InvalidConfigurationSet`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidConfigurationSetException$, InvalidConfigurationSetException);
-    var InvalidDeliveryOptionsException$ = [
-      -3,
-      n08,
-      _IDOE,
-      { [_aQE3]: [`InvalidDeliveryOptions`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidDeliveryOptionsException$, InvalidDeliveryOptionsException);
-    var InvalidFirehoseDestinationException$ = [
-      -3,
-      n08,
-      _IFDE,
-      { [_aQE3]: [`InvalidFirehoseDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _EDN, _m6],
-      [0, 0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidFirehoseDestinationException$, InvalidFirehoseDestinationException);
-    var InvalidLambdaFunctionException$ = [
-      -3,
-      n08,
-      _ILFE,
-      { [_aQE3]: [`InvalidLambdaFunction`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_FA, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidLambdaFunctionException$, InvalidLambdaFunctionException);
-    var InvalidPolicyException$ = [
-      -3,
-      n08,
-      _IPE,
-      { [_aQE3]: [`InvalidPolicy`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidPolicyException$, InvalidPolicyException);
-    var InvalidRenderingParameterException$ = [
-      -3,
-      n08,
-      _IRPE,
-      { [_aQE3]: [`InvalidRenderingParameter`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_TN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidRenderingParameterException$, InvalidRenderingParameterException);
-    var InvalidS3ConfigurationException$ = [
-      -3,
-      n08,
-      _ISCE,
-      { [_aQE3]: [`InvalidS3Configuration`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_Bu, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidS3ConfigurationException$, InvalidS3ConfigurationException);
-    var InvalidSNSDestinationException$ = [
-      -3,
-      n08,
-      _ISNSDE,
-      { [_aQE3]: [`InvalidSNSDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _EDN, _m6],
-      [0, 0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidSNSDestinationException$, InvalidSNSDestinationException);
-    var InvalidSnsTopicException$ = [
-      -3,
-      n08,
-      _ISTE,
-      { [_aQE3]: [`InvalidSnsTopic`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_To, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidSnsTopicException$, InvalidSnsTopicException);
-    var InvalidTemplateException$ = [
-      -3,
-      n08,
-      _ITE,
-      { [_aQE3]: [`InvalidTemplate`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_TN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidTemplateException$, InvalidTemplateException);
-    var InvalidTrackingOptionsException$ = [
-      -3,
-      n08,
-      _ITOE,
-      { [_aQE3]: [`InvalidTrackingOptions`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(InvalidTrackingOptionsException$, InvalidTrackingOptionsException);
-    var KinesisFirehoseDestination$ = [
-      3,
-      n08,
-      _KFD,
-      0,
-      [_IAMRARN, _DSARN],
-      [0, 0],
-      2
-    ];
-    var LambdaAction$ = [
-      3,
-      n08,
-      _LA,
-      0,
-      [_FA, _TA, _IT3],
-      [0, 0, 0],
-      1
-    ];
-    var LimitExceededException$ = [
-      -3,
-      n08,
-      _LEE,
-      { [_aQE3]: [`LimitExceeded`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(LimitExceededException$, LimitExceededException);
-    var ListConfigurationSetsRequest$ = [
-      3,
-      n08,
-      _LCSR,
-      0,
-      [_NT, _MIa],
-      [0, 1]
-    ];
-    var ListConfigurationSetsResponse$ = [
-      3,
-      n08,
-      _LCSRi,
-      0,
-      [_CSo, _NT],
-      [() => ConfigurationSets, 0]
-    ];
-    var ListCustomVerificationEmailTemplatesRequest$ = [
-      3,
-      n08,
-      _LCVETR,
-      0,
-      [_NT, _MR],
-      [0, 1]
-    ];
-    var ListCustomVerificationEmailTemplatesResponse$ = [
-      3,
-      n08,
-      _LCVETRi,
-      0,
-      [_CVETu, _NT],
-      [() => CustomVerificationEmailTemplates, 0]
-    ];
-    var ListIdentitiesRequest$ = [
-      3,
-      n08,
-      _LIR,
-      0,
-      [_ITd, _NT, _MIa],
-      [0, 0, 1]
-    ];
-    var ListIdentitiesResponse$ = [
-      3,
-      n08,
-      _LIRi,
-      0,
-      [_Id, _NT],
-      [64 | 0, 0],
-      1
-    ];
-    var ListIdentityPoliciesRequest$ = [
-      3,
-      n08,
-      _LIPR,
-      0,
-      [_I],
-      [0],
-      1
-    ];
-    var ListIdentityPoliciesResponse$ = [
-      3,
-      n08,
-      _LIPRi,
-      0,
-      [_PNo],
-      [64 | 0],
-      1
-    ];
-    var ListReceiptFiltersRequest$ = [
-      3,
-      n08,
-      _LRFR,
-      0,
-      [],
-      []
-    ];
-    var ListReceiptFiltersResponse$ = [
-      3,
-      n08,
-      _LRFRi,
-      0,
-      [_Fi],
-      [() => ReceiptFilterList]
-    ];
-    var ListReceiptRuleSetsRequest$ = [
-      3,
-      n08,
-      _LRRSR,
-      0,
-      [_NT],
-      [0]
-    ];
-    var ListReceiptRuleSetsResponse$ = [
-      3,
-      n08,
-      _LRRSRi,
-      0,
-      [_RS, _NT],
-      [() => ReceiptRuleSetsLists, 0]
-    ];
-    var ListTemplatesRequest$ = [
-      3,
-      n08,
-      _LTR,
-      0,
-      [_NT, _MIa],
-      [0, 1]
-    ];
-    var ListTemplatesResponse$ = [
-      3,
-      n08,
-      _LTRi,
-      0,
-      [_TM, _NT],
-      [() => TemplateMetadataList, 0]
-    ];
-    var ListVerifiedEmailAddressesResponse$ = [
-      3,
-      n08,
-      _LVEAR,
-      0,
-      [_VEA],
-      [64 | 0]
-    ];
-    var MailFromDomainNotVerifiedException$ = [
-      -3,
-      n08,
-      _MFDNVE,
-      { [_aQE3]: [`MailFromDomainNotVerifiedException`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(MailFromDomainNotVerifiedException$, MailFromDomainNotVerifiedException);
-    var Message$ = [
-      3,
-      n08,
-      _M,
-      0,
-      [_Su, _B],
-      [() => Content$, () => Body$],
-      2
-    ];
-    var MessageDsn$ = [
-      3,
-      n08,
-      _MD,
-      0,
-      [_RM, _AD, _EFx],
-      [0, 4, () => ExtensionFieldList],
-      1
-    ];
-    var MessageRejected$ = [
-      -3,
-      n08,
-      _MRe,
-      { [_aQE3]: [`MessageRejected`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(MessageRejected$, MessageRejected);
-    var MessageTag$ = [
-      3,
-      n08,
-      _MT,
-      0,
-      [_N, _V3],
-      [0, 0],
-      2
-    ];
-    var MissingRenderingAttributeException$ = [
-      -3,
-      n08,
-      _MRAE,
-      { [_aQE3]: [`MissingRenderingAttribute`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_TN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(MissingRenderingAttributeException$, MissingRenderingAttributeException);
-    var ProductionAccessNotGrantedException$ = [
-      -3,
-      n08,
-      _PANGE,
-      { [_aQE3]: [`ProductionAccessNotGranted`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_m6],
-      [0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(ProductionAccessNotGrantedException$, ProductionAccessNotGrantedException);
-    var PutConfigurationSetDeliveryOptionsRequest$ = [
-      3,
-      n08,
-      _PCSDOR,
-      0,
-      [_CSN, _DO],
-      [0, () => DeliveryOptions$],
-      1
-    ];
-    var PutConfigurationSetDeliveryOptionsResponse$ = [
-      3,
-      n08,
-      _PCSDORu,
-      0,
-      [],
-      []
-    ];
-    var PutIdentityPolicyRequest$ = [
-      3,
-      n08,
-      _PIPR,
-      0,
-      [_I, _PN, _Po],
-      [0, 0, 0],
-      3
-    ];
-    var PutIdentityPolicyResponse$ = [
-      3,
-      n08,
-      _PIPRu,
-      0,
-      [],
-      []
-    ];
-    var RawMessage$ = [
-      3,
-      n08,
-      _RMa,
-      0,
-      [_Da],
-      [21],
-      1
-    ];
-    var ReceiptAction$ = [
-      3,
-      n08,
-      _RAe,
-      0,
-      [_SA, _BA, _WA, _LA, _SAt, _AHA, _SNSA, _CA3],
-      [() => S3Action$, () => BounceAction$, () => WorkmailAction$, () => LambdaAction$, () => StopAction$, () => AddHeaderAction$, () => SNSAction$, () => ConnectAction$]
-    ];
-    var ReceiptFilter$ = [
-      3,
-      n08,
-      _RF,
-      0,
-      [_N, _IF],
-      [0, () => ReceiptIpFilter$],
-      2
-    ];
-    var ReceiptIpFilter$ = [
-      3,
-      n08,
-      _RIF,
-      0,
-      [_Po, _Ci],
-      [0, 0],
-      2
-    ];
-    var ReceiptRule$ = [
-      3,
-      n08,
-      _RR,
-      0,
-      [_N, _En, _TP, _Re, _Ac, _SE],
-      [0, 2, 0, 64 | 0, () => ReceiptActionsList, 2],
-      1
-    ];
-    var ReceiptRuleSetMetadata$ = [
-      3,
-      n08,
-      _RRSM,
-      0,
-      [_N, _CTr],
-      [0, 4]
-    ];
-    var RecipientDsnFields$ = [
-      3,
-      n08,
-      _RDF,
-      0,
-      [_Act, _St, _FR, _RMe, _DCi, _LAD, _EFx],
-      [0, 0, 0, 0, 0, 4, () => ExtensionFieldList],
-      2
-    ];
-    var ReorderReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _RRRSR,
-      0,
-      [_RSN3, _RNu],
-      [0, 64 | 0],
-      2
-    ];
-    var ReorderReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _RRRSRe,
-      0,
-      [],
-      []
-    ];
-    var ReputationOptions$ = [
-      3,
-      n08,
-      _RO,
-      0,
-      [_SEe, _RME, _LFS],
-      [2, 2, 4]
-    ];
-    var RuleDoesNotExistException$ = [
-      -3,
-      n08,
-      _RDNEE,
-      { [_aQE3]: [`RuleDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_N, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(RuleDoesNotExistException$, RuleDoesNotExistException);
-    var RuleSetDoesNotExistException$ = [
-      -3,
-      n08,
-      _RSDNEE,
-      { [_aQE3]: [`RuleSetDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_N, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(RuleSetDoesNotExistException$, RuleSetDoesNotExistException);
-    var S3Action$ = [
-      3,
-      n08,
-      _SA,
-      0,
-      [_BN, _TA, _OKP, _KKA, _IRA],
-      [0, 0, 0, 0, 0],
-      1
-    ];
-    var SendBounceRequest$ = [
-      3,
-      n08,
-      _SBR,
-      0,
-      [_OMI, _BS, _BRIL, _Ex, _MD, _BSA],
-      [0, 0, () => BouncedRecipientInfoList, 0, () => MessageDsn$, 0],
-      3
-    ];
-    var SendBounceResponse$ = [
-      3,
-      n08,
-      _SBRe,
-      0,
-      [_MI],
-      [0]
-    ];
-    var SendBulkTemplatedEmailRequest$ = [
-      3,
-      n08,
-      _SBTER,
-      0,
-      [_So, _Te, _DTD, _De, _SAo, _RTA, _RP, _RPA, _CSN, _DTef, _TAe],
-      [0, 0, 0, () => BulkEmailDestinationList, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
-      4
-    ];
-    var SendBulkTemplatedEmailResponse$ = [
-      3,
-      n08,
-      _SBTERe,
-      0,
-      [_St],
-      [() => BulkEmailDestinationStatusList],
-      1
-    ];
-    var SendCustomVerificationEmailRequest$ = [
-      3,
-      n08,
-      _SCVER,
-      0,
-      [_EA, _TN, _CSN],
-      [0, 0, 0],
-      2
-    ];
-    var SendCustomVerificationEmailResponse$ = [
-      3,
-      n08,
-      _SCVERe,
-      0,
-      [_MI],
-      [0]
-    ];
-    var SendDataPoint$ = [
-      3,
-      n08,
-      _SDPe,
-      0,
-      [_Ti, _DAe, _Bo, _Co, _Rej],
-      [4, 1, 1, 1, 1]
-    ];
-    var SendEmailRequest$ = [
-      3,
-      n08,
-      _SER,
-      0,
-      [_So, _D, _M, _RTA, _RP, _SAo, _RPA, _Ta3, _CSN],
-      [0, () => Destination$, () => Message$, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
-      3
-    ];
-    var SendEmailResponse$ = [
-      3,
-      n08,
-      _SERe,
-      0,
-      [_MI],
-      [0],
-      1
-    ];
-    var SendRawEmailRequest$ = [
-      3,
-      n08,
-      _SRER,
-      0,
-      [_RMa, _So, _De, _FAr, _SAo, _RPA, _Ta3, _CSN],
-      [() => RawMessage$, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
-      1
-    ];
-    var SendRawEmailResponse$ = [
-      3,
-      n08,
-      _SRERe,
-      0,
-      [_MI],
-      [0],
-      1
-    ];
-    var SendTemplatedEmailRequest$ = [
-      3,
-      n08,
-      _STER,
-      0,
-      [_So, _D, _Te, _TD, _RTA, _RP, _SAo, _RPA, _Ta3, _CSN, _TAe],
-      [0, () => Destination$, 0, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0, 0],
-      4
-    ];
-    var SendTemplatedEmailResponse$ = [
-      3,
-      n08,
-      _STERe,
-      0,
-      [_MI],
-      [0],
-      1
-    ];
-    var SetActiveReceiptRuleSetRequest$ = [
-      3,
-      n08,
-      _SARRSR,
-      0,
-      [_RSN3],
-      [0]
-    ];
-    var SetActiveReceiptRuleSetResponse$ = [
-      3,
-      n08,
-      _SARRSRe,
-      0,
-      [],
-      []
-    ];
-    var SetIdentityDkimEnabledRequest$ = [
-      3,
-      n08,
-      _SIDER,
-      0,
-      [_I, _DE],
-      [0, 2],
-      2
-    ];
-    var SetIdentityDkimEnabledResponse$ = [
-      3,
-      n08,
-      _SIDERe,
-      0,
-      [],
-      []
-    ];
-    var SetIdentityFeedbackForwardingEnabledRequest$ = [
-      3,
-      n08,
-      _SIFFER,
-      0,
-      [_I, _FE],
-      [0, 2],
-      2
-    ];
-    var SetIdentityFeedbackForwardingEnabledResponse$ = [
-      3,
-      n08,
-      _SIFFERe,
-      0,
-      [],
-      []
-    ];
-    var SetIdentityHeadersInNotificationsEnabledRequest$ = [
-      3,
-      n08,
-      _SIHINER,
-      0,
-      [_I, _NTo, _En],
-      [0, 0, 2],
-      3
-    ];
-    var SetIdentityHeadersInNotificationsEnabledResponse$ = [
-      3,
-      n08,
-      _SIHINERe,
-      0,
-      [],
-      []
-    ];
-    var SetIdentityMailFromDomainRequest$ = [
-      3,
-      n08,
-      _SIMFDR,
-      0,
-      [_I, _MFD, _BOMXF],
-      [0, 0, 0],
-      1
-    ];
-    var SetIdentityMailFromDomainResponse$ = [
-      3,
-      n08,
-      _SIMFDRe,
-      0,
-      [],
-      []
-    ];
-    var SetIdentityNotificationTopicRequest$ = [
-      3,
-      n08,
-      _SINTR,
-      0,
-      [_I, _NTo, _ST3],
-      [0, 0, 0],
-      2
-    ];
-    var SetIdentityNotificationTopicResponse$ = [
-      3,
-      n08,
-      _SINTRe,
-      0,
-      [],
-      []
-    ];
-    var SetReceiptRulePositionRequest$ = [
-      3,
-      n08,
-      _SRRPR,
-      0,
-      [_RSN3, _RN, _A3],
-      [0, 0, 0],
-      2
-    ];
-    var SetReceiptRulePositionResponse$ = [
-      3,
-      n08,
-      _SRRPRe,
-      0,
-      [],
-      []
-    ];
-    var SNSAction$ = [
-      3,
-      n08,
-      _SNSA,
-      0,
-      [_TA, _Enc],
-      [0, 0],
-      1
-    ];
-    var SNSDestination$ = [
-      3,
-      n08,
-      _SNSD,
-      0,
-      [_TARN],
-      [0],
-      1
-    ];
-    var StopAction$ = [
-      3,
-      n08,
-      _SAt,
-      0,
-      [_Sc, _TA],
-      [0, 0],
-      1
-    ];
-    var Template$ = [
-      3,
-      n08,
-      _Te,
-      0,
-      [_TN, _SP, _TPe, _HP],
-      [0, 0, 0, 0],
-      1
-    ];
-    var TemplateDoesNotExistException$ = [
-      -3,
-      n08,
-      _TDNEE,
-      { [_aQE3]: [`TemplateDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_TN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(TemplateDoesNotExistException$, TemplateDoesNotExistException);
-    var TemplateMetadata$ = [
-      3,
-      n08,
-      _TMe,
-      0,
-      [_N, _CTr],
-      [0, 4]
-    ];
-    var TestRenderTemplateRequest$ = [
-      3,
-      n08,
-      _TRTR,
-      0,
-      [_TN, _TD],
-      [0, 0],
-      2
-    ];
-    var TestRenderTemplateResponse$ = [
-      3,
-      n08,
-      _TRTRe,
-      0,
-      [_RTe],
-      [0]
-    ];
-    var TrackingOptions$ = [
-      3,
-      n08,
-      _TO,
-      0,
-      [_CRD],
-      [0]
-    ];
-    var TrackingOptionsAlreadyExistsException$ = [
-      -3,
-      n08,
-      _TOAEE,
-      { [_aQE3]: [`TrackingOptionsAlreadyExistsException`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(TrackingOptionsAlreadyExistsException$, TrackingOptionsAlreadyExistsException);
-    var TrackingOptionsDoesNotExistException$ = [
-      -3,
-      n08,
-      _TODNEE,
-      { [_aQE3]: [`TrackingOptionsDoesNotExistException`, 400], [_e8]: _c8, [_hE8]: 400 },
-      [_CSN, _m6],
-      [0, 0]
-    ];
-    schema.TypeRegistry.for(n08).registerError(TrackingOptionsDoesNotExistException$, TrackingOptionsDoesNotExistException);
-    var UpdateAccountSendingEnabledRequest$ = [
-      3,
-      n08,
-      _UASER,
-      0,
-      [_En],
-      [2]
-    ];
-    var UpdateConfigurationSetEventDestinationRequest$ = [
-      3,
-      n08,
-      _UCSEDR,
-      0,
-      [_CSN, _ED],
-      [0, () => EventDestination$],
-      2
-    ];
-    var UpdateConfigurationSetEventDestinationResponse$ = [
-      3,
-      n08,
-      _UCSEDRp,
-      0,
-      [],
-      []
-    ];
-    var UpdateConfigurationSetReputationMetricsEnabledRequest$ = [
-      3,
-      n08,
-      _UCSRMER,
-      0,
-      [_CSN, _En],
-      [0, 2],
-      2
-    ];
-    var UpdateConfigurationSetSendingEnabledRequest$ = [
-      3,
-      n08,
-      _UCSSER,
-      0,
-      [_CSN, _En],
-      [0, 2],
-      2
-    ];
-    var UpdateConfigurationSetTrackingOptionsRequest$ = [
-      3,
-      n08,
-      _UCSTOR,
-      0,
-      [_CSN, _TO],
-      [0, () => TrackingOptions$],
-      2
-    ];
-    var UpdateConfigurationSetTrackingOptionsResponse$ = [
-      3,
-      n08,
-      _UCSTORp,
-      0,
-      [],
-      []
-    ];
-    var UpdateCustomVerificationEmailTemplateRequest$ = [
-      3,
-      n08,
-      _UCVETR,
-      0,
-      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
-      [0, 0, 0, 0, 0, 0],
-      1
-    ];
-    var UpdateReceiptRuleRequest$ = [
-      3,
-      n08,
-      _URRR,
-      0,
-      [_RSN3, _Ru],
-      [0, () => ReceiptRule$],
-      2
-    ];
-    var UpdateReceiptRuleResponse$ = [
-      3,
-      n08,
-      _URRRp,
-      0,
-      [],
-      []
-    ];
-    var UpdateTemplateRequest$ = [
-      3,
-      n08,
-      _UTR,
-      0,
-      [_Te],
-      [() => Template$],
-      1
-    ];
-    var UpdateTemplateResponse$ = [
-      3,
-      n08,
-      _UTRp,
-      0,
-      [],
-      []
-    ];
-    var VerifyDomainDkimRequest$ = [
-      3,
-      n08,
-      _VDDR,
-      0,
-      [_Do],
-      [0],
-      1
-    ];
-    var VerifyDomainDkimResponse$ = [
-      3,
-      n08,
-      _VDDRe,
-      0,
-      [_DT],
-      [64 | 0],
-      1
-    ];
-    var VerifyDomainIdentityRequest$ = [
-      3,
-      n08,
-      _VDIR,
-      0,
-      [_Do],
-      [0],
-      1
-    ];
-    var VerifyDomainIdentityResponse$ = [
-      3,
-      n08,
-      _VDIRe,
-      0,
-      [_VT],
-      [0],
-      1
-    ];
-    var VerifyEmailAddressRequest$ = [
-      3,
-      n08,
-      _VEAR,
-      0,
-      [_EA],
-      [0],
-      1
-    ];
-    var VerifyEmailIdentityRequest$ = [
-      3,
-      n08,
-      _VEIR,
-      0,
-      [_EA],
-      [0],
-      1
-    ];
-    var VerifyEmailIdentityResponse$ = [
-      3,
-      n08,
-      _VEIRe,
-      0,
-      [],
-      []
-    ];
-    var WorkmailAction$ = [
-      3,
-      n08,
-      _WA,
-      0,
-      [_OA, _TA],
-      [0, 0],
-      1
-    ];
-    var __Unit = "unit";
-    var SESServiceException$ = [-3, _s8, "SESServiceException", 0, [], []];
-    schema.TypeRegistry.for(_s8).registerError(SESServiceException$, SESServiceException);
-    var BouncedRecipientInfoList = [
-      1,
-      n08,
-      _BRIL,
-      0,
-      () => BouncedRecipientInfo$
-    ];
-    var BulkEmailDestinationList = [
-      1,
-      n08,
-      _BEDL,
-      0,
-      () => BulkEmailDestination$
-    ];
-    var BulkEmailDestinationStatusList = [
-      1,
-      n08,
-      _BEDSL,
-      0,
-      () => BulkEmailDestinationStatus$
-    ];
-    var CloudWatchDimensionConfigurations = [
-      1,
-      n08,
-      _CWDCl,
-      0,
-      () => CloudWatchDimensionConfiguration$
-    ];
-    var ConfigurationSets = [
-      1,
-      n08,
-      _CSo,
-      0,
-      () => ConfigurationSet$
-    ];
-    var CustomVerificationEmailTemplates = [
-      1,
-      n08,
-      _CVETu,
-      0,
-      () => CustomVerificationEmailTemplate$
-    ];
-    var EventDestinations = [
-      1,
-      n08,
-      _EDv,
-      0,
-      () => EventDestination$
-    ];
-    var ExtensionFieldList = [
-      1,
-      n08,
-      _EFL,
-      0,
-      () => ExtensionField$
-    ];
-    var MessageTagList = [
-      1,
-      n08,
-      _MTL,
-      0,
-      () => MessageTag$
-    ];
-    var ReceiptActionsList = [
-      1,
-      n08,
-      _RAL,
-      0,
-      () => ReceiptAction$
-    ];
-    var ReceiptFilterList = [
-      1,
-      n08,
-      _RFL,
-      0,
-      () => ReceiptFilter$
-    ];
-    var ReceiptRuleSetsLists = [
-      1,
-      n08,
-      _RRSL,
-      0,
-      () => ReceiptRuleSetMetadata$
-    ];
-    var ReceiptRulesList = [
-      1,
-      n08,
-      _RRL,
-      0,
-      () => ReceiptRule$
-    ];
-    var SendDataPointList = [
-      1,
-      n08,
-      _SDPL,
-      0,
-      () => SendDataPoint$
-    ];
-    var TemplateMetadataList = [
-      1,
-      n08,
-      _TML,
-      0,
-      () => TemplateMetadata$
-    ];
-    var DkimAttributes = [
-      2,
-      n08,
-      _DA,
-      0,
-      0,
-      () => IdentityDkimAttributes$
-    ];
-    var MailFromDomainAttributes = [
-      2,
-      n08,
-      _MFDA,
-      0,
-      0,
-      () => IdentityMailFromDomainAttributes$
-    ];
-    var NotificationAttributes = [
-      2,
-      n08,
-      _NA,
-      0,
-      0,
-      () => IdentityNotificationAttributes$
-    ];
-    var VerificationAttributes = [
-      2,
-      n08,
-      _VA,
-      0,
-      0,
-      () => IdentityVerificationAttributes$
-    ];
-    var CloneReceiptRuleSet$ = [
-      9,
-      n08,
-      _CRRS,
-      0,
-      () => CloneReceiptRuleSetRequest$,
-      () => CloneReceiptRuleSetResponse$
-    ];
-    var CreateConfigurationSet$ = [
-      9,
-      n08,
-      _CCS,
-      0,
-      () => CreateConfigurationSetRequest$,
-      () => CreateConfigurationSetResponse$
-    ];
-    var CreateConfigurationSetEventDestination$ = [
-      9,
-      n08,
-      _CCSED,
-      0,
-      () => CreateConfigurationSetEventDestinationRequest$,
-      () => CreateConfigurationSetEventDestinationResponse$
-    ];
-    var CreateConfigurationSetTrackingOptions$ = [
-      9,
-      n08,
-      _CCSTO,
-      0,
-      () => CreateConfigurationSetTrackingOptionsRequest$,
-      () => CreateConfigurationSetTrackingOptionsResponse$
-    ];
-    var CreateCustomVerificationEmailTemplate$ = [
-      9,
-      n08,
-      _CCVET,
-      0,
-      () => CreateCustomVerificationEmailTemplateRequest$,
-      () => __Unit
-    ];
-    var CreateReceiptFilter$ = [
-      9,
-      n08,
-      _CRF,
-      0,
-      () => CreateReceiptFilterRequest$,
-      () => CreateReceiptFilterResponse$
-    ];
-    var CreateReceiptRule$ = [
-      9,
-      n08,
-      _CRR,
-      0,
-      () => CreateReceiptRuleRequest$,
-      () => CreateReceiptRuleResponse$
-    ];
-    var CreateReceiptRuleSet$ = [
-      9,
-      n08,
-      _CRRSr,
-      0,
-      () => CreateReceiptRuleSetRequest$,
-      () => CreateReceiptRuleSetResponse$
-    ];
-    var CreateTemplate$ = [
-      9,
-      n08,
-      _CTre,
-      0,
-      () => CreateTemplateRequest$,
-      () => CreateTemplateResponse$
-    ];
-    var DeleteConfigurationSet$ = [
-      9,
-      n08,
-      _DCS,
-      0,
-      () => DeleteConfigurationSetRequest$,
-      () => DeleteConfigurationSetResponse$
-    ];
-    var DeleteConfigurationSetEventDestination$ = [
-      9,
-      n08,
-      _DCSED,
-      0,
-      () => DeleteConfigurationSetEventDestinationRequest$,
-      () => DeleteConfigurationSetEventDestinationResponse$
-    ];
-    var DeleteConfigurationSetTrackingOptions$ = [
-      9,
-      n08,
-      _DCSTO,
-      0,
-      () => DeleteConfigurationSetTrackingOptionsRequest$,
-      () => DeleteConfigurationSetTrackingOptionsResponse$
-    ];
-    var DeleteCustomVerificationEmailTemplate$ = [
-      9,
-      n08,
-      _DCVET,
-      0,
-      () => DeleteCustomVerificationEmailTemplateRequest$,
-      () => __Unit
-    ];
-    var DeleteIdentity$ = [
-      9,
-      n08,
-      _DI,
-      0,
-      () => DeleteIdentityRequest$,
-      () => DeleteIdentityResponse$
-    ];
-    var DeleteIdentityPolicy$ = [
-      9,
-      n08,
-      _DIP,
-      0,
-      () => DeleteIdentityPolicyRequest$,
-      () => DeleteIdentityPolicyResponse$
-    ];
-    var DeleteReceiptFilter$ = [
-      9,
-      n08,
-      _DRF,
-      0,
-      () => DeleteReceiptFilterRequest$,
-      () => DeleteReceiptFilterResponse$
-    ];
-    var DeleteReceiptRule$ = [
-      9,
-      n08,
-      _DRR,
-      0,
-      () => DeleteReceiptRuleRequest$,
-      () => DeleteReceiptRuleResponse$
-    ];
-    var DeleteReceiptRuleSet$ = [
-      9,
-      n08,
-      _DRRS,
-      0,
-      () => DeleteReceiptRuleSetRequest$,
-      () => DeleteReceiptRuleSetResponse$
-    ];
-    var DeleteTemplate$ = [
-      9,
-      n08,
-      _DTel,
-      0,
-      () => DeleteTemplateRequest$,
-      () => DeleteTemplateResponse$
-    ];
-    var DeleteVerifiedEmailAddress$ = [
-      9,
-      n08,
-      _DVEA,
-      0,
-      () => DeleteVerifiedEmailAddressRequest$,
-      () => __Unit
-    ];
-    var DescribeActiveReceiptRuleSet$ = [
-      9,
-      n08,
-      _DARRS,
-      0,
-      () => DescribeActiveReceiptRuleSetRequest$,
-      () => DescribeActiveReceiptRuleSetResponse$
-    ];
-    var DescribeConfigurationSet$ = [
-      9,
-      n08,
-      _DCSe,
-      0,
-      () => DescribeConfigurationSetRequest$,
-      () => DescribeConfigurationSetResponse$
-    ];
-    var DescribeReceiptRule$ = [
-      9,
-      n08,
-      _DRRe,
-      0,
-      () => DescribeReceiptRuleRequest$,
-      () => DescribeReceiptRuleResponse$
-    ];
-    var DescribeReceiptRuleSet$ = [
-      9,
-      n08,
-      _DRRSe,
-      0,
-      () => DescribeReceiptRuleSetRequest$,
-      () => DescribeReceiptRuleSetResponse$
-    ];
-    var GetAccountSendingEnabled$ = [
-      9,
-      n08,
-      _GASE,
-      0,
-      () => __Unit,
-      () => GetAccountSendingEnabledResponse$
-    ];
-    var GetCustomVerificationEmailTemplate$ = [
-      9,
-      n08,
-      _GCVET,
-      0,
-      () => GetCustomVerificationEmailTemplateRequest$,
-      () => GetCustomVerificationEmailTemplateResponse$
-    ];
-    var GetIdentityDkimAttributes$ = [
-      9,
-      n08,
-      _GIDA,
-      0,
-      () => GetIdentityDkimAttributesRequest$,
-      () => GetIdentityDkimAttributesResponse$
-    ];
-    var GetIdentityMailFromDomainAttributes$ = [
-      9,
-      n08,
-      _GIMFDA,
-      0,
-      () => GetIdentityMailFromDomainAttributesRequest$,
-      () => GetIdentityMailFromDomainAttributesResponse$
-    ];
-    var GetIdentityNotificationAttributes$ = [
-      9,
-      n08,
-      _GINA,
-      0,
-      () => GetIdentityNotificationAttributesRequest$,
-      () => GetIdentityNotificationAttributesResponse$
-    ];
-    var GetIdentityPolicies$ = [
-      9,
-      n08,
-      _GIP,
-      0,
-      () => GetIdentityPoliciesRequest$,
-      () => GetIdentityPoliciesResponse$
-    ];
-    var GetIdentityVerificationAttributes$ = [
-      9,
-      n08,
-      _GIVA,
-      0,
-      () => GetIdentityVerificationAttributesRequest$,
-      () => GetIdentityVerificationAttributesResponse$
-    ];
-    var GetSendQuota$ = [
-      9,
-      n08,
-      _GSQ,
-      0,
-      () => __Unit,
-      () => GetSendQuotaResponse$
-    ];
-    var GetSendStatistics$ = [
-      9,
-      n08,
-      _GSS,
-      0,
-      () => __Unit,
-      () => GetSendStatisticsResponse$
-    ];
-    var GetTemplate$ = [
-      9,
-      n08,
-      _GT,
-      0,
-      () => GetTemplateRequest$,
-      () => GetTemplateResponse$
-    ];
-    var ListConfigurationSets$ = [
-      9,
-      n08,
-      _LCS,
-      0,
-      () => ListConfigurationSetsRequest$,
-      () => ListConfigurationSetsResponse$
-    ];
-    var ListCustomVerificationEmailTemplates$ = [
-      9,
-      n08,
-      _LCVET,
-      0,
-      () => ListCustomVerificationEmailTemplatesRequest$,
-      () => ListCustomVerificationEmailTemplatesResponse$
-    ];
-    var ListIdentities$ = [
-      9,
-      n08,
-      _LI,
-      0,
-      () => ListIdentitiesRequest$,
-      () => ListIdentitiesResponse$
-    ];
-    var ListIdentityPolicies$ = [
-      9,
-      n08,
-      _LIP,
-      0,
-      () => ListIdentityPoliciesRequest$,
-      () => ListIdentityPoliciesResponse$
-    ];
-    var ListReceiptFilters$ = [
-      9,
-      n08,
-      _LRF,
-      0,
-      () => ListReceiptFiltersRequest$,
-      () => ListReceiptFiltersResponse$
-    ];
-    var ListReceiptRuleSets$ = [
-      9,
-      n08,
-      _LRRS,
-      0,
-      () => ListReceiptRuleSetsRequest$,
-      () => ListReceiptRuleSetsResponse$
-    ];
-    var ListTemplates$ = [
-      9,
-      n08,
-      _LT,
-      0,
-      () => ListTemplatesRequest$,
-      () => ListTemplatesResponse$
-    ];
-    var ListVerifiedEmailAddresses$ = [
-      9,
-      n08,
-      _LVEA,
-      0,
-      () => __Unit,
-      () => ListVerifiedEmailAddressesResponse$
-    ];
-    var PutConfigurationSetDeliveryOptions$ = [
-      9,
-      n08,
-      _PCSDO,
-      0,
-      () => PutConfigurationSetDeliveryOptionsRequest$,
-      () => PutConfigurationSetDeliveryOptionsResponse$
-    ];
-    var PutIdentityPolicy$ = [
-      9,
-      n08,
-      _PIP,
-      0,
-      () => PutIdentityPolicyRequest$,
-      () => PutIdentityPolicyResponse$
-    ];
-    var ReorderReceiptRuleSet$ = [
-      9,
-      n08,
-      _RRRS,
-      0,
-      () => ReorderReceiptRuleSetRequest$,
-      () => ReorderReceiptRuleSetResponse$
-    ];
-    var SendBounce$ = [
-      9,
-      n08,
-      _SB,
-      0,
-      () => SendBounceRequest$,
-      () => SendBounceResponse$
-    ];
-    var SendBulkTemplatedEmail$ = [
-      9,
-      n08,
-      _SBTE,
-      0,
-      () => SendBulkTemplatedEmailRequest$,
-      () => SendBulkTemplatedEmailResponse$
-    ];
-    var SendCustomVerificationEmail$ = [
-      9,
-      n08,
-      _SCVE,
-      0,
-      () => SendCustomVerificationEmailRequest$,
-      () => SendCustomVerificationEmailResponse$
-    ];
-    var SendEmail$ = [
-      9,
-      n08,
-      _SEen,
-      0,
-      () => SendEmailRequest$,
-      () => SendEmailResponse$
-    ];
-    var SendRawEmail$ = [
-      9,
-      n08,
-      _SRE,
-      0,
-      () => SendRawEmailRequest$,
-      () => SendRawEmailResponse$
-    ];
-    var SendTemplatedEmail$ = [
-      9,
-      n08,
-      _STE,
-      0,
-      () => SendTemplatedEmailRequest$,
-      () => SendTemplatedEmailResponse$
-    ];
-    var SetActiveReceiptRuleSet$ = [
-      9,
-      n08,
-      _SARRS,
-      0,
-      () => SetActiveReceiptRuleSetRequest$,
-      () => SetActiveReceiptRuleSetResponse$
-    ];
-    var SetIdentityDkimEnabled$ = [
-      9,
-      n08,
-      _SIDE,
-      0,
-      () => SetIdentityDkimEnabledRequest$,
-      () => SetIdentityDkimEnabledResponse$
-    ];
-    var SetIdentityFeedbackForwardingEnabled$ = [
-      9,
-      n08,
-      _SIFFE,
-      0,
-      () => SetIdentityFeedbackForwardingEnabledRequest$,
-      () => SetIdentityFeedbackForwardingEnabledResponse$
-    ];
-    var SetIdentityHeadersInNotificationsEnabled$ = [
-      9,
-      n08,
-      _SIHINE,
-      0,
-      () => SetIdentityHeadersInNotificationsEnabledRequest$,
-      () => SetIdentityHeadersInNotificationsEnabledResponse$
-    ];
-    var SetIdentityMailFromDomain$ = [
-      9,
-      n08,
-      _SIMFD,
-      0,
-      () => SetIdentityMailFromDomainRequest$,
-      () => SetIdentityMailFromDomainResponse$
-    ];
-    var SetIdentityNotificationTopic$ = [
-      9,
-      n08,
-      _SINT,
-      0,
-      () => SetIdentityNotificationTopicRequest$,
-      () => SetIdentityNotificationTopicResponse$
-    ];
-    var SetReceiptRulePosition$ = [
-      9,
-      n08,
-      _SRRP,
-      0,
-      () => SetReceiptRulePositionRequest$,
-      () => SetReceiptRulePositionResponse$
-    ];
-    var TestRenderTemplate$ = [
-      9,
-      n08,
-      _TRT,
-      0,
-      () => TestRenderTemplateRequest$,
-      () => TestRenderTemplateResponse$
-    ];
-    var UpdateAccountSendingEnabled$ = [
-      9,
-      n08,
-      _UASE,
-      0,
-      () => UpdateAccountSendingEnabledRequest$,
-      () => __Unit
-    ];
-    var UpdateConfigurationSetEventDestination$ = [
-      9,
-      n08,
-      _UCSED,
-      0,
-      () => UpdateConfigurationSetEventDestinationRequest$,
-      () => UpdateConfigurationSetEventDestinationResponse$
-    ];
-    var UpdateConfigurationSetReputationMetricsEnabled$ = [
-      9,
-      n08,
-      _UCSRME,
-      0,
-      () => UpdateConfigurationSetReputationMetricsEnabledRequest$,
-      () => __Unit
-    ];
-    var UpdateConfigurationSetSendingEnabled$ = [
-      9,
-      n08,
-      _UCSSE,
-      0,
-      () => UpdateConfigurationSetSendingEnabledRequest$,
-      () => __Unit
-    ];
-    var UpdateConfigurationSetTrackingOptions$ = [
-      9,
-      n08,
-      _UCSTO,
-      0,
-      () => UpdateConfigurationSetTrackingOptionsRequest$,
-      () => UpdateConfigurationSetTrackingOptionsResponse$
-    ];
-    var UpdateCustomVerificationEmailTemplate$ = [
-      9,
-      n08,
-      _UCVET,
-      0,
-      () => UpdateCustomVerificationEmailTemplateRequest$,
-      () => __Unit
-    ];
-    var UpdateReceiptRule$ = [
-      9,
-      n08,
-      _URR,
-      0,
-      () => UpdateReceiptRuleRequest$,
-      () => UpdateReceiptRuleResponse$
-    ];
-    var UpdateTemplate$ = [
-      9,
-      n08,
-      _UT,
-      0,
-      () => UpdateTemplateRequest$,
-      () => UpdateTemplateResponse$
-    ];
-    var VerifyDomainDkim$ = [
-      9,
-      n08,
-      _VDD,
-      0,
-      () => VerifyDomainDkimRequest$,
-      () => VerifyDomainDkimResponse$
-    ];
-    var VerifyDomainIdentity$ = [
-      9,
-      n08,
-      _VDI,
-      0,
-      () => VerifyDomainIdentityRequest$,
-      () => VerifyDomainIdentityResponse$
-    ];
-    var VerifyEmailAddress$ = [
-      9,
-      n08,
-      _VEAe,
-      0,
-      () => VerifyEmailAddressRequest$,
-      () => __Unit
-    ];
-    var VerifyEmailIdentity$ = [
-      9,
-      n08,
-      _VEI,
-      0,
-      () => VerifyEmailIdentityRequest$,
-      () => VerifyEmailIdentityResponse$
-    ];
-    var CloneReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CloneReceiptRuleSet", {}).n("SESClient", "CloneReceiptRuleSetCommand").sc(CloneReceiptRuleSet$).build() {
-    };
-    var CreateConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateConfigurationSet", {}).n("SESClient", "CreateConfigurationSetCommand").sc(CreateConfigurationSet$).build() {
-    };
-    var CreateConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateConfigurationSetEventDestination", {}).n("SESClient", "CreateConfigurationSetEventDestinationCommand").sc(CreateConfigurationSetEventDestination$).build() {
-    };
-    var CreateConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateConfigurationSetTrackingOptions", {}).n("SESClient", "CreateConfigurationSetTrackingOptionsCommand").sc(CreateConfigurationSetTrackingOptions$).build() {
-    };
-    var CreateCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateCustomVerificationEmailTemplate", {}).n("SESClient", "CreateCustomVerificationEmailTemplateCommand").sc(CreateCustomVerificationEmailTemplate$).build() {
-    };
-    var CreateReceiptFilterCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateReceiptFilter", {}).n("SESClient", "CreateReceiptFilterCommand").sc(CreateReceiptFilter$).build() {
-    };
-    var CreateReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateReceiptRule", {}).n("SESClient", "CreateReceiptRuleCommand").sc(CreateReceiptRule$).build() {
-    };
-    var CreateReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateReceiptRuleSet", {}).n("SESClient", "CreateReceiptRuleSetCommand").sc(CreateReceiptRuleSet$).build() {
-    };
-    var CreateTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "CreateTemplate", {}).n("SESClient", "CreateTemplateCommand").sc(CreateTemplate$).build() {
-    };
-    var DeleteConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteConfigurationSet", {}).n("SESClient", "DeleteConfigurationSetCommand").sc(DeleteConfigurationSet$).build() {
-    };
-    var DeleteConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteConfigurationSetEventDestination", {}).n("SESClient", "DeleteConfigurationSetEventDestinationCommand").sc(DeleteConfigurationSetEventDestination$).build() {
-    };
-    var DeleteConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteConfigurationSetTrackingOptions", {}).n("SESClient", "DeleteConfigurationSetTrackingOptionsCommand").sc(DeleteConfigurationSetTrackingOptions$).build() {
-    };
-    var DeleteCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteCustomVerificationEmailTemplate", {}).n("SESClient", "DeleteCustomVerificationEmailTemplateCommand").sc(DeleteCustomVerificationEmailTemplate$).build() {
-    };
-    var DeleteIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteIdentity", {}).n("SESClient", "DeleteIdentityCommand").sc(DeleteIdentity$).build() {
-    };
-    var DeleteIdentityPolicyCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteIdentityPolicy", {}).n("SESClient", "DeleteIdentityPolicyCommand").sc(DeleteIdentityPolicy$).build() {
-    };
-    var DeleteReceiptFilterCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteReceiptFilter", {}).n("SESClient", "DeleteReceiptFilterCommand").sc(DeleteReceiptFilter$).build() {
-    };
-    var DeleteReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteReceiptRule", {}).n("SESClient", "DeleteReceiptRuleCommand").sc(DeleteReceiptRule$).build() {
-    };
-    var DeleteReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteReceiptRuleSet", {}).n("SESClient", "DeleteReceiptRuleSetCommand").sc(DeleteReceiptRuleSet$).build() {
-    };
-    var DeleteTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteTemplate", {}).n("SESClient", "DeleteTemplateCommand").sc(DeleteTemplate$).build() {
-    };
-    var DeleteVerifiedEmailAddressCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DeleteVerifiedEmailAddress", {}).n("SESClient", "DeleteVerifiedEmailAddressCommand").sc(DeleteVerifiedEmailAddress$).build() {
-    };
-    var DescribeActiveReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DescribeActiveReceiptRuleSet", {}).n("SESClient", "DescribeActiveReceiptRuleSetCommand").sc(DescribeActiveReceiptRuleSet$).build() {
-    };
-    var DescribeConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DescribeConfigurationSet", {}).n("SESClient", "DescribeConfigurationSetCommand").sc(DescribeConfigurationSet$).build() {
-    };
-    var DescribeReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DescribeReceiptRule", {}).n("SESClient", "DescribeReceiptRuleCommand").sc(DescribeReceiptRule$).build() {
-    };
-    var DescribeReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "DescribeReceiptRuleSet", {}).n("SESClient", "DescribeReceiptRuleSetCommand").sc(DescribeReceiptRuleSet$).build() {
-    };
-    var GetAccountSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetAccountSendingEnabled", {}).n("SESClient", "GetAccountSendingEnabledCommand").sc(GetAccountSendingEnabled$).build() {
-    };
-    var GetCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetCustomVerificationEmailTemplate", {}).n("SESClient", "GetCustomVerificationEmailTemplateCommand").sc(GetCustomVerificationEmailTemplate$).build() {
-    };
-    var GetIdentityDkimAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetIdentityDkimAttributes", {}).n("SESClient", "GetIdentityDkimAttributesCommand").sc(GetIdentityDkimAttributes$).build() {
-    };
-    var GetIdentityMailFromDomainAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetIdentityMailFromDomainAttributes", {}).n("SESClient", "GetIdentityMailFromDomainAttributesCommand").sc(GetIdentityMailFromDomainAttributes$).build() {
-    };
-    var GetIdentityNotificationAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetIdentityNotificationAttributes", {}).n("SESClient", "GetIdentityNotificationAttributesCommand").sc(GetIdentityNotificationAttributes$).build() {
-    };
-    var GetIdentityPoliciesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetIdentityPolicies", {}).n("SESClient", "GetIdentityPoliciesCommand").sc(GetIdentityPolicies$).build() {
-    };
-    var GetIdentityVerificationAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetIdentityVerificationAttributes", {}).n("SESClient", "GetIdentityVerificationAttributesCommand").sc(GetIdentityVerificationAttributes$).build() {
-    };
-    var GetSendQuotaCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetSendQuota", {}).n("SESClient", "GetSendQuotaCommand").sc(GetSendQuota$).build() {
-    };
-    var GetSendStatisticsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetSendStatistics", {}).n("SESClient", "GetSendStatisticsCommand").sc(GetSendStatistics$).build() {
-    };
-    var GetTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "GetTemplate", {}).n("SESClient", "GetTemplateCommand").sc(GetTemplate$).build() {
-    };
-    var ListConfigurationSetsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListConfigurationSets", {}).n("SESClient", "ListConfigurationSetsCommand").sc(ListConfigurationSets$).build() {
-    };
-    var ListCustomVerificationEmailTemplatesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListCustomVerificationEmailTemplates", {}).n("SESClient", "ListCustomVerificationEmailTemplatesCommand").sc(ListCustomVerificationEmailTemplates$).build() {
-    };
-    var ListIdentitiesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListIdentities", {}).n("SESClient", "ListIdentitiesCommand").sc(ListIdentities$).build() {
-    };
-    var ListIdentityPoliciesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListIdentityPolicies", {}).n("SESClient", "ListIdentityPoliciesCommand").sc(ListIdentityPolicies$).build() {
-    };
-    var ListReceiptFiltersCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListReceiptFilters", {}).n("SESClient", "ListReceiptFiltersCommand").sc(ListReceiptFilters$).build() {
-    };
-    var ListReceiptRuleSetsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListReceiptRuleSets", {}).n("SESClient", "ListReceiptRuleSetsCommand").sc(ListReceiptRuleSets$).build() {
-    };
-    var ListTemplatesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListTemplates", {}).n("SESClient", "ListTemplatesCommand").sc(ListTemplates$).build() {
-    };
-    var ListVerifiedEmailAddressesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ListVerifiedEmailAddresses", {}).n("SESClient", "ListVerifiedEmailAddressesCommand").sc(ListVerifiedEmailAddresses$).build() {
-    };
-    var PutConfigurationSetDeliveryOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "PutConfigurationSetDeliveryOptions", {}).n("SESClient", "PutConfigurationSetDeliveryOptionsCommand").sc(PutConfigurationSetDeliveryOptions$).build() {
-    };
-    var PutIdentityPolicyCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "PutIdentityPolicy", {}).n("SESClient", "PutIdentityPolicyCommand").sc(PutIdentityPolicy$).build() {
-    };
-    var ReorderReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "ReorderReceiptRuleSet", {}).n("SESClient", "ReorderReceiptRuleSetCommand").sc(ReorderReceiptRuleSet$).build() {
-    };
-    var SendBounceCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendBounce", {}).n("SESClient", "SendBounceCommand").sc(SendBounce$).build() {
-    };
-    var SendBulkTemplatedEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendBulkTemplatedEmail", {}).n("SESClient", "SendBulkTemplatedEmailCommand").sc(SendBulkTemplatedEmail$).build() {
-    };
-    var SendCustomVerificationEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendCustomVerificationEmail", {}).n("SESClient", "SendCustomVerificationEmailCommand").sc(SendCustomVerificationEmail$).build() {
-    };
-    var SendEmailCommand2 = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendEmail", {}).n("SESClient", "SendEmailCommand").sc(SendEmail$).build() {
-    };
-    var SendRawEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendRawEmail", {}).n("SESClient", "SendRawEmailCommand").sc(SendRawEmail$).build() {
-    };
-    var SendTemplatedEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SendTemplatedEmail", {}).n("SESClient", "SendTemplatedEmailCommand").sc(SendTemplatedEmail$).build() {
-    };
-    var SetActiveReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetActiveReceiptRuleSet", {}).n("SESClient", "SetActiveReceiptRuleSetCommand").sc(SetActiveReceiptRuleSet$).build() {
-    };
-    var SetIdentityDkimEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetIdentityDkimEnabled", {}).n("SESClient", "SetIdentityDkimEnabledCommand").sc(SetIdentityDkimEnabled$).build() {
-    };
-    var SetIdentityFeedbackForwardingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetIdentityFeedbackForwardingEnabled", {}).n("SESClient", "SetIdentityFeedbackForwardingEnabledCommand").sc(SetIdentityFeedbackForwardingEnabled$).build() {
-    };
-    var SetIdentityHeadersInNotificationsEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetIdentityHeadersInNotificationsEnabled", {}).n("SESClient", "SetIdentityHeadersInNotificationsEnabledCommand").sc(SetIdentityHeadersInNotificationsEnabled$).build() {
-    };
-    var SetIdentityMailFromDomainCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetIdentityMailFromDomain", {}).n("SESClient", "SetIdentityMailFromDomainCommand").sc(SetIdentityMailFromDomain$).build() {
-    };
-    var SetIdentityNotificationTopicCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetIdentityNotificationTopic", {}).n("SESClient", "SetIdentityNotificationTopicCommand").sc(SetIdentityNotificationTopic$).build() {
-    };
-    var SetReceiptRulePositionCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "SetReceiptRulePosition", {}).n("SESClient", "SetReceiptRulePositionCommand").sc(SetReceiptRulePosition$).build() {
-    };
-    var TestRenderTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "TestRenderTemplate", {}).n("SESClient", "TestRenderTemplateCommand").sc(TestRenderTemplate$).build() {
-    };
-    var UpdateAccountSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateAccountSendingEnabled", {}).n("SESClient", "UpdateAccountSendingEnabledCommand").sc(UpdateAccountSendingEnabled$).build() {
-    };
-    var UpdateConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateConfigurationSetEventDestination", {}).n("SESClient", "UpdateConfigurationSetEventDestinationCommand").sc(UpdateConfigurationSetEventDestination$).build() {
-    };
-    var UpdateConfigurationSetReputationMetricsEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateConfigurationSetReputationMetricsEnabled", {}).n("SESClient", "UpdateConfigurationSetReputationMetricsEnabledCommand").sc(UpdateConfigurationSetReputationMetricsEnabled$).build() {
-    };
-    var UpdateConfigurationSetSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateConfigurationSetSendingEnabled", {}).n("SESClient", "UpdateConfigurationSetSendingEnabledCommand").sc(UpdateConfigurationSetSendingEnabled$).build() {
-    };
-    var UpdateConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateConfigurationSetTrackingOptions", {}).n("SESClient", "UpdateConfigurationSetTrackingOptionsCommand").sc(UpdateConfigurationSetTrackingOptions$).build() {
-    };
-    var UpdateCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateCustomVerificationEmailTemplate", {}).n("SESClient", "UpdateCustomVerificationEmailTemplateCommand").sc(UpdateCustomVerificationEmailTemplate$).build() {
-    };
-    var UpdateReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateReceiptRule", {}).n("SESClient", "UpdateReceiptRuleCommand").sc(UpdateReceiptRule$).build() {
-    };
-    var UpdateTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "UpdateTemplate", {}).n("SESClient", "UpdateTemplateCommand").sc(UpdateTemplate$).build() {
-    };
-    var VerifyDomainDkimCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "VerifyDomainDkim", {}).n("SESClient", "VerifyDomainDkimCommand").sc(VerifyDomainDkim$).build() {
-    };
-    var VerifyDomainIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "VerifyDomainIdentity", {}).n("SESClient", "VerifyDomainIdentityCommand").sc(VerifyDomainIdentity$).build() {
-    };
-    var VerifyEmailAddressCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "VerifyEmailAddress", {}).n("SESClient", "VerifyEmailAddressCommand").sc(VerifyEmailAddress$).build() {
-    };
-    var VerifyEmailIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
-      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
-    }).s("SimpleEmailService", "VerifyEmailIdentity", {}).n("SESClient", "VerifyEmailIdentityCommand").sc(VerifyEmailIdentity$).build() {
-    };
-    var commands8 = {
-      CloneReceiptRuleSetCommand,
-      CreateConfigurationSetCommand,
-      CreateConfigurationSetEventDestinationCommand,
-      CreateConfigurationSetTrackingOptionsCommand,
-      CreateCustomVerificationEmailTemplateCommand,
-      CreateReceiptFilterCommand,
-      CreateReceiptRuleCommand,
-      CreateReceiptRuleSetCommand,
-      CreateTemplateCommand,
-      DeleteConfigurationSetCommand,
-      DeleteConfigurationSetEventDestinationCommand,
-      DeleteConfigurationSetTrackingOptionsCommand,
-      DeleteCustomVerificationEmailTemplateCommand,
-      DeleteIdentityCommand,
-      DeleteIdentityPolicyCommand,
-      DeleteReceiptFilterCommand,
-      DeleteReceiptRuleCommand,
-      DeleteReceiptRuleSetCommand,
-      DeleteTemplateCommand,
-      DeleteVerifiedEmailAddressCommand,
-      DescribeActiveReceiptRuleSetCommand,
-      DescribeConfigurationSetCommand,
-      DescribeReceiptRuleCommand,
-      DescribeReceiptRuleSetCommand,
-      GetAccountSendingEnabledCommand,
-      GetCustomVerificationEmailTemplateCommand,
-      GetIdentityDkimAttributesCommand,
-      GetIdentityMailFromDomainAttributesCommand,
-      GetIdentityNotificationAttributesCommand,
-      GetIdentityPoliciesCommand,
-      GetIdentityVerificationAttributesCommand,
-      GetSendQuotaCommand,
-      GetSendStatisticsCommand,
-      GetTemplateCommand,
-      ListConfigurationSetsCommand,
-      ListCustomVerificationEmailTemplatesCommand,
-      ListIdentitiesCommand,
-      ListIdentityPoliciesCommand,
-      ListReceiptFiltersCommand,
-      ListReceiptRuleSetsCommand,
-      ListTemplatesCommand,
-      ListVerifiedEmailAddressesCommand,
-      PutConfigurationSetDeliveryOptionsCommand,
-      PutIdentityPolicyCommand,
-      ReorderReceiptRuleSetCommand,
-      SendBounceCommand,
-      SendBulkTemplatedEmailCommand,
-      SendCustomVerificationEmailCommand,
-      SendEmailCommand: SendEmailCommand2,
-      SendRawEmailCommand,
-      SendTemplatedEmailCommand,
-      SetActiveReceiptRuleSetCommand,
-      SetIdentityDkimEnabledCommand,
-      SetIdentityFeedbackForwardingEnabledCommand,
-      SetIdentityHeadersInNotificationsEnabledCommand,
-      SetIdentityMailFromDomainCommand,
-      SetIdentityNotificationTopicCommand,
-      SetReceiptRulePositionCommand,
-      TestRenderTemplateCommand,
-      UpdateAccountSendingEnabledCommand,
-      UpdateConfigurationSetEventDestinationCommand,
-      UpdateConfigurationSetReputationMetricsEnabledCommand,
-      UpdateConfigurationSetSendingEnabledCommand,
-      UpdateConfigurationSetTrackingOptionsCommand,
-      UpdateCustomVerificationEmailTemplateCommand,
-      UpdateReceiptRuleCommand,
-      UpdateTemplateCommand,
-      VerifyDomainDkimCommand,
-      VerifyDomainIdentityCommand,
-      VerifyEmailAddressCommand,
-      VerifyEmailIdentityCommand
-    };
-    var SES = class extends SESClient2 {
-    };
-    smithyClient.createAggregatedClient(commands8, SES);
-    var paginateListCustomVerificationEmailTemplates = core.createPaginator(SESClient2, ListCustomVerificationEmailTemplatesCommand, "NextToken", "NextToken", "MaxResults");
-    var paginateListIdentities = core.createPaginator(SESClient2, ListIdentitiesCommand, "NextToken", "NextToken", "MaxItems");
-    var checkState = async (client3, input) => {
-      let reason;
-      try {
-        let result = await client3.send(new GetIdentityVerificationAttributesCommand(input));
-        reason = result;
-        try {
-          const returnComparator = () => {
-            let objectProjection_2 = Object.values(result.VerificationAttributes).map((element_1) => {
-              return element_1.VerificationStatus;
-            });
-            return objectProjection_2;
-          };
-          let allStringEq_4 = returnComparator().length > 0;
-          for (let element_3 of returnComparator()) {
-            allStringEq_4 = allStringEq_4 && element_3 == "Success";
-          }
-          if (allStringEq_4) {
-            return { state: utilWaiter.WaiterState.SUCCESS, reason };
-          }
-        } catch (e8) {
-        }
-      } catch (exception) {
-        reason = exception;
-      }
-      return { state: utilWaiter.WaiterState.RETRY, reason };
-    };
-    var waitForIdentityExists = async (params, input) => {
-      const serviceDefaults = { minDelay: 3, maxDelay: 120 };
-      return utilWaiter.createWaiter({ ...serviceDefaults, ...params }, input, checkState);
-    };
-    var waitUntilIdentityExists = async (params, input) => {
-      const serviceDefaults = { minDelay: 3, maxDelay: 120 };
-      const result = await utilWaiter.createWaiter({ ...serviceDefaults, ...params }, input, checkState);
-      return utilWaiter.checkExceptions(result);
-    };
-    var BehaviorOnMXFailure = {
-      RejectMessage: "RejectMessage",
-      UseDefaultValue: "UseDefaultValue"
-    };
-    var BounceType = {
-      ContentRejected: "ContentRejected",
-      DoesNotExist: "DoesNotExist",
-      ExceededQuota: "ExceededQuota",
-      MessageTooLarge: "MessageTooLarge",
-      TemporaryFailure: "TemporaryFailure",
-      Undefined: "Undefined"
-    };
-    var DsnAction = {
-      DELAYED: "delayed",
-      DELIVERED: "delivered",
-      EXPANDED: "expanded",
-      FAILED: "failed",
-      RELAYED: "relayed"
-    };
-    var BulkEmailStatus = {
-      AccountDailyQuotaExceeded: "AccountDailyQuotaExceeded",
-      AccountSendingPaused: "AccountSendingPaused",
-      AccountSuspended: "AccountSuspended",
-      AccountThrottled: "AccountThrottled",
-      ConfigurationSetDoesNotExist: "ConfigurationSetDoesNotExist",
-      ConfigurationSetSendingPaused: "ConfigurationSetSendingPaused",
-      Failed: "Failed",
-      InvalidParameterValue: "InvalidParameterValue",
-      InvalidSendingPoolName: "InvalidSendingPoolName",
-      MailFromDomainNotVerified: "MailFromDomainNotVerified",
-      MessageRejected: "MessageRejected",
-      Success: "Success",
-      TemplateDoesNotExist: "TemplateDoesNotExist",
-      TransientFailure: "TransientFailure"
-    };
-    var DimensionValueSource = {
-      EMAIL_HEADER: "emailHeader",
-      LINK_TAG: "linkTag",
-      MESSAGE_TAG: "messageTag"
-    };
-    var ConfigurationSetAttribute = {
-      DELIVERY_OPTIONS: "deliveryOptions",
-      EVENT_DESTINATIONS: "eventDestinations",
-      REPUTATION_OPTIONS: "reputationOptions",
-      TRACKING_OPTIONS: "trackingOptions"
-    };
-    var EventType = {
-      BOUNCE: "bounce",
-      CLICK: "click",
-      COMPLAINT: "complaint",
-      DELIVERY: "delivery",
-      OPEN: "open",
-      REJECT: "reject",
-      RENDERING_FAILURE: "renderingFailure",
-      SEND: "send"
-    };
-    var ReceiptFilterPolicy = {
-      Allow: "Allow",
-      Block: "Block"
-    };
-    var InvocationType = {
-      Event: "Event",
-      RequestResponse: "RequestResponse"
-    };
-    var SNSActionEncoding = {
-      Base64: "Base64",
-      UTF8: "UTF-8"
-    };
-    var StopScope = {
-      RULE_SET: "RuleSet"
-    };
-    var TlsPolicy = {
-      Optional: "Optional",
-      Require: "Require"
-    };
-    var CustomMailFromStatus = {
-      Failed: "Failed",
-      Pending: "Pending",
-      Success: "Success",
-      TemporaryFailure: "TemporaryFailure"
-    };
-    var VerificationStatus = {
-      Failed: "Failed",
-      NotStarted: "NotStarted",
-      Pending: "Pending",
-      Success: "Success",
-      TemporaryFailure: "TemporaryFailure"
-    };
-    var IdentityType = {
-      Domain: "Domain",
-      EmailAddress: "EmailAddress"
-    };
-    var NotificationType = {
-      Bounce: "Bounce",
-      Complaint: "Complaint",
-      Delivery: "Delivery"
-    };
-    Object.defineProperty(exports2, "$Command", {
-      enumerable: true,
-      get: function() {
-        return smithyClient.Command;
-      }
-    });
-    Object.defineProperty(exports2, "__Client", {
-      enumerable: true,
-      get: function() {
-        return smithyClient.Client;
-      }
-    });
-    exports2.AccountSendingPausedException = AccountSendingPausedException;
-    exports2.AccountSendingPausedException$ = AccountSendingPausedException$;
-    exports2.AddHeaderAction$ = AddHeaderAction$;
-    exports2.AlreadyExistsException = AlreadyExistsException;
-    exports2.AlreadyExistsException$ = AlreadyExistsException$;
-    exports2.BehaviorOnMXFailure = BehaviorOnMXFailure;
-    exports2.Body$ = Body$;
-    exports2.BounceAction$ = BounceAction$;
-    exports2.BounceType = BounceType;
-    exports2.BouncedRecipientInfo$ = BouncedRecipientInfo$;
-    exports2.BulkEmailDestination$ = BulkEmailDestination$;
-    exports2.BulkEmailDestinationStatus$ = BulkEmailDestinationStatus$;
-    exports2.BulkEmailStatus = BulkEmailStatus;
-    exports2.CannotDeleteException = CannotDeleteException;
-    exports2.CannotDeleteException$ = CannotDeleteException$;
-    exports2.CloneReceiptRuleSet$ = CloneReceiptRuleSet$;
-    exports2.CloneReceiptRuleSetCommand = CloneReceiptRuleSetCommand;
-    exports2.CloneReceiptRuleSetRequest$ = CloneReceiptRuleSetRequest$;
-    exports2.CloneReceiptRuleSetResponse$ = CloneReceiptRuleSetResponse$;
-    exports2.CloudWatchDestination$ = CloudWatchDestination$;
-    exports2.CloudWatchDimensionConfiguration$ = CloudWatchDimensionConfiguration$;
-    exports2.ConfigurationSet$ = ConfigurationSet$;
-    exports2.ConfigurationSetAlreadyExistsException = ConfigurationSetAlreadyExistsException;
-    exports2.ConfigurationSetAlreadyExistsException$ = ConfigurationSetAlreadyExistsException$;
-    exports2.ConfigurationSetAttribute = ConfigurationSetAttribute;
-    exports2.ConfigurationSetDoesNotExistException = ConfigurationSetDoesNotExistException;
-    exports2.ConfigurationSetDoesNotExistException$ = ConfigurationSetDoesNotExistException$;
-    exports2.ConfigurationSetSendingPausedException = ConfigurationSetSendingPausedException;
-    exports2.ConfigurationSetSendingPausedException$ = ConfigurationSetSendingPausedException$;
-    exports2.ConnectAction$ = ConnectAction$;
-    exports2.Content$ = Content$;
-    exports2.CreateConfigurationSet$ = CreateConfigurationSet$;
-    exports2.CreateConfigurationSetCommand = CreateConfigurationSetCommand;
-    exports2.CreateConfigurationSetEventDestination$ = CreateConfigurationSetEventDestination$;
-    exports2.CreateConfigurationSetEventDestinationCommand = CreateConfigurationSetEventDestinationCommand;
-    exports2.CreateConfigurationSetEventDestinationRequest$ = CreateConfigurationSetEventDestinationRequest$;
-    exports2.CreateConfigurationSetEventDestinationResponse$ = CreateConfigurationSetEventDestinationResponse$;
-    exports2.CreateConfigurationSetRequest$ = CreateConfigurationSetRequest$;
-    exports2.CreateConfigurationSetResponse$ = CreateConfigurationSetResponse$;
-    exports2.CreateConfigurationSetTrackingOptions$ = CreateConfigurationSetTrackingOptions$;
-    exports2.CreateConfigurationSetTrackingOptionsCommand = CreateConfigurationSetTrackingOptionsCommand;
-    exports2.CreateConfigurationSetTrackingOptionsRequest$ = CreateConfigurationSetTrackingOptionsRequest$;
-    exports2.CreateConfigurationSetTrackingOptionsResponse$ = CreateConfigurationSetTrackingOptionsResponse$;
-    exports2.CreateCustomVerificationEmailTemplate$ = CreateCustomVerificationEmailTemplate$;
-    exports2.CreateCustomVerificationEmailTemplateCommand = CreateCustomVerificationEmailTemplateCommand;
-    exports2.CreateCustomVerificationEmailTemplateRequest$ = CreateCustomVerificationEmailTemplateRequest$;
-    exports2.CreateReceiptFilter$ = CreateReceiptFilter$;
-    exports2.CreateReceiptFilterCommand = CreateReceiptFilterCommand;
-    exports2.CreateReceiptFilterRequest$ = CreateReceiptFilterRequest$;
-    exports2.CreateReceiptFilterResponse$ = CreateReceiptFilterResponse$;
-    exports2.CreateReceiptRule$ = CreateReceiptRule$;
-    exports2.CreateReceiptRuleCommand = CreateReceiptRuleCommand;
-    exports2.CreateReceiptRuleRequest$ = CreateReceiptRuleRequest$;
-    exports2.CreateReceiptRuleResponse$ = CreateReceiptRuleResponse$;
-    exports2.CreateReceiptRuleSet$ = CreateReceiptRuleSet$;
-    exports2.CreateReceiptRuleSetCommand = CreateReceiptRuleSetCommand;
-    exports2.CreateReceiptRuleSetRequest$ = CreateReceiptRuleSetRequest$;
-    exports2.CreateReceiptRuleSetResponse$ = CreateReceiptRuleSetResponse$;
-    exports2.CreateTemplate$ = CreateTemplate$;
-    exports2.CreateTemplateCommand = CreateTemplateCommand;
-    exports2.CreateTemplateRequest$ = CreateTemplateRequest$;
-    exports2.CreateTemplateResponse$ = CreateTemplateResponse$;
-    exports2.CustomMailFromStatus = CustomMailFromStatus;
-    exports2.CustomVerificationEmailInvalidContentException = CustomVerificationEmailInvalidContentException;
-    exports2.CustomVerificationEmailInvalidContentException$ = CustomVerificationEmailInvalidContentException$;
-    exports2.CustomVerificationEmailTemplate$ = CustomVerificationEmailTemplate$;
-    exports2.CustomVerificationEmailTemplateAlreadyExistsException = CustomVerificationEmailTemplateAlreadyExistsException;
-    exports2.CustomVerificationEmailTemplateAlreadyExistsException$ = CustomVerificationEmailTemplateAlreadyExistsException$;
-    exports2.CustomVerificationEmailTemplateDoesNotExistException = CustomVerificationEmailTemplateDoesNotExistException;
-    exports2.CustomVerificationEmailTemplateDoesNotExistException$ = CustomVerificationEmailTemplateDoesNotExistException$;
-    exports2.DeleteConfigurationSet$ = DeleteConfigurationSet$;
-    exports2.DeleteConfigurationSetCommand = DeleteConfigurationSetCommand;
-    exports2.DeleteConfigurationSetEventDestination$ = DeleteConfigurationSetEventDestination$;
-    exports2.DeleteConfigurationSetEventDestinationCommand = DeleteConfigurationSetEventDestinationCommand;
-    exports2.DeleteConfigurationSetEventDestinationRequest$ = DeleteConfigurationSetEventDestinationRequest$;
-    exports2.DeleteConfigurationSetEventDestinationResponse$ = DeleteConfigurationSetEventDestinationResponse$;
-    exports2.DeleteConfigurationSetRequest$ = DeleteConfigurationSetRequest$;
-    exports2.DeleteConfigurationSetResponse$ = DeleteConfigurationSetResponse$;
-    exports2.DeleteConfigurationSetTrackingOptions$ = DeleteConfigurationSetTrackingOptions$;
-    exports2.DeleteConfigurationSetTrackingOptionsCommand = DeleteConfigurationSetTrackingOptionsCommand;
-    exports2.DeleteConfigurationSetTrackingOptionsRequest$ = DeleteConfigurationSetTrackingOptionsRequest$;
-    exports2.DeleteConfigurationSetTrackingOptionsResponse$ = DeleteConfigurationSetTrackingOptionsResponse$;
-    exports2.DeleteCustomVerificationEmailTemplate$ = DeleteCustomVerificationEmailTemplate$;
-    exports2.DeleteCustomVerificationEmailTemplateCommand = DeleteCustomVerificationEmailTemplateCommand;
-    exports2.DeleteCustomVerificationEmailTemplateRequest$ = DeleteCustomVerificationEmailTemplateRequest$;
-    exports2.DeleteIdentity$ = DeleteIdentity$;
-    exports2.DeleteIdentityCommand = DeleteIdentityCommand;
-    exports2.DeleteIdentityPolicy$ = DeleteIdentityPolicy$;
-    exports2.DeleteIdentityPolicyCommand = DeleteIdentityPolicyCommand;
-    exports2.DeleteIdentityPolicyRequest$ = DeleteIdentityPolicyRequest$;
-    exports2.DeleteIdentityPolicyResponse$ = DeleteIdentityPolicyResponse$;
-    exports2.DeleteIdentityRequest$ = DeleteIdentityRequest$;
-    exports2.DeleteIdentityResponse$ = DeleteIdentityResponse$;
-    exports2.DeleteReceiptFilter$ = DeleteReceiptFilter$;
-    exports2.DeleteReceiptFilterCommand = DeleteReceiptFilterCommand;
-    exports2.DeleteReceiptFilterRequest$ = DeleteReceiptFilterRequest$;
-    exports2.DeleteReceiptFilterResponse$ = DeleteReceiptFilterResponse$;
-    exports2.DeleteReceiptRule$ = DeleteReceiptRule$;
-    exports2.DeleteReceiptRuleCommand = DeleteReceiptRuleCommand;
-    exports2.DeleteReceiptRuleRequest$ = DeleteReceiptRuleRequest$;
-    exports2.DeleteReceiptRuleResponse$ = DeleteReceiptRuleResponse$;
-    exports2.DeleteReceiptRuleSet$ = DeleteReceiptRuleSet$;
-    exports2.DeleteReceiptRuleSetCommand = DeleteReceiptRuleSetCommand;
-    exports2.DeleteReceiptRuleSetRequest$ = DeleteReceiptRuleSetRequest$;
-    exports2.DeleteReceiptRuleSetResponse$ = DeleteReceiptRuleSetResponse$;
-    exports2.DeleteTemplate$ = DeleteTemplate$;
-    exports2.DeleteTemplateCommand = DeleteTemplateCommand;
-    exports2.DeleteTemplateRequest$ = DeleteTemplateRequest$;
-    exports2.DeleteTemplateResponse$ = DeleteTemplateResponse$;
-    exports2.DeleteVerifiedEmailAddress$ = DeleteVerifiedEmailAddress$;
-    exports2.DeleteVerifiedEmailAddressCommand = DeleteVerifiedEmailAddressCommand;
-    exports2.DeleteVerifiedEmailAddressRequest$ = DeleteVerifiedEmailAddressRequest$;
-    exports2.DeliveryOptions$ = DeliveryOptions$;
-    exports2.DescribeActiveReceiptRuleSet$ = DescribeActiveReceiptRuleSet$;
-    exports2.DescribeActiveReceiptRuleSetCommand = DescribeActiveReceiptRuleSetCommand;
-    exports2.DescribeActiveReceiptRuleSetRequest$ = DescribeActiveReceiptRuleSetRequest$;
-    exports2.DescribeActiveReceiptRuleSetResponse$ = DescribeActiveReceiptRuleSetResponse$;
-    exports2.DescribeConfigurationSet$ = DescribeConfigurationSet$;
-    exports2.DescribeConfigurationSetCommand = DescribeConfigurationSetCommand;
-    exports2.DescribeConfigurationSetRequest$ = DescribeConfigurationSetRequest$;
-    exports2.DescribeConfigurationSetResponse$ = DescribeConfigurationSetResponse$;
-    exports2.DescribeReceiptRule$ = DescribeReceiptRule$;
-    exports2.DescribeReceiptRuleCommand = DescribeReceiptRuleCommand;
-    exports2.DescribeReceiptRuleRequest$ = DescribeReceiptRuleRequest$;
-    exports2.DescribeReceiptRuleResponse$ = DescribeReceiptRuleResponse$;
-    exports2.DescribeReceiptRuleSet$ = DescribeReceiptRuleSet$;
-    exports2.DescribeReceiptRuleSetCommand = DescribeReceiptRuleSetCommand;
-    exports2.DescribeReceiptRuleSetRequest$ = DescribeReceiptRuleSetRequest$;
-    exports2.DescribeReceiptRuleSetResponse$ = DescribeReceiptRuleSetResponse$;
-    exports2.Destination$ = Destination$;
-    exports2.DimensionValueSource = DimensionValueSource;
-    exports2.DsnAction = DsnAction;
-    exports2.EventDestination$ = EventDestination$;
-    exports2.EventDestinationAlreadyExistsException = EventDestinationAlreadyExistsException;
-    exports2.EventDestinationAlreadyExistsException$ = EventDestinationAlreadyExistsException$;
-    exports2.EventDestinationDoesNotExistException = EventDestinationDoesNotExistException;
-    exports2.EventDestinationDoesNotExistException$ = EventDestinationDoesNotExistException$;
-    exports2.EventType = EventType;
-    exports2.ExtensionField$ = ExtensionField$;
-    exports2.FromEmailAddressNotVerifiedException = FromEmailAddressNotVerifiedException;
-    exports2.FromEmailAddressNotVerifiedException$ = FromEmailAddressNotVerifiedException$;
-    exports2.GetAccountSendingEnabled$ = GetAccountSendingEnabled$;
-    exports2.GetAccountSendingEnabledCommand = GetAccountSendingEnabledCommand;
-    exports2.GetAccountSendingEnabledResponse$ = GetAccountSendingEnabledResponse$;
-    exports2.GetCustomVerificationEmailTemplate$ = GetCustomVerificationEmailTemplate$;
-    exports2.GetCustomVerificationEmailTemplateCommand = GetCustomVerificationEmailTemplateCommand;
-    exports2.GetCustomVerificationEmailTemplateRequest$ = GetCustomVerificationEmailTemplateRequest$;
-    exports2.GetCustomVerificationEmailTemplateResponse$ = GetCustomVerificationEmailTemplateResponse$;
-    exports2.GetIdentityDkimAttributes$ = GetIdentityDkimAttributes$;
-    exports2.GetIdentityDkimAttributesCommand = GetIdentityDkimAttributesCommand;
-    exports2.GetIdentityDkimAttributesRequest$ = GetIdentityDkimAttributesRequest$;
-    exports2.GetIdentityDkimAttributesResponse$ = GetIdentityDkimAttributesResponse$;
-    exports2.GetIdentityMailFromDomainAttributes$ = GetIdentityMailFromDomainAttributes$;
-    exports2.GetIdentityMailFromDomainAttributesCommand = GetIdentityMailFromDomainAttributesCommand;
-    exports2.GetIdentityMailFromDomainAttributesRequest$ = GetIdentityMailFromDomainAttributesRequest$;
-    exports2.GetIdentityMailFromDomainAttributesResponse$ = GetIdentityMailFromDomainAttributesResponse$;
-    exports2.GetIdentityNotificationAttributes$ = GetIdentityNotificationAttributes$;
-    exports2.GetIdentityNotificationAttributesCommand = GetIdentityNotificationAttributesCommand;
-    exports2.GetIdentityNotificationAttributesRequest$ = GetIdentityNotificationAttributesRequest$;
-    exports2.GetIdentityNotificationAttributesResponse$ = GetIdentityNotificationAttributesResponse$;
-    exports2.GetIdentityPolicies$ = GetIdentityPolicies$;
-    exports2.GetIdentityPoliciesCommand = GetIdentityPoliciesCommand;
-    exports2.GetIdentityPoliciesRequest$ = GetIdentityPoliciesRequest$;
-    exports2.GetIdentityPoliciesResponse$ = GetIdentityPoliciesResponse$;
-    exports2.GetIdentityVerificationAttributes$ = GetIdentityVerificationAttributes$;
-    exports2.GetIdentityVerificationAttributesCommand = GetIdentityVerificationAttributesCommand;
-    exports2.GetIdentityVerificationAttributesRequest$ = GetIdentityVerificationAttributesRequest$;
-    exports2.GetIdentityVerificationAttributesResponse$ = GetIdentityVerificationAttributesResponse$;
-    exports2.GetSendQuota$ = GetSendQuota$;
-    exports2.GetSendQuotaCommand = GetSendQuotaCommand;
-    exports2.GetSendQuotaResponse$ = GetSendQuotaResponse$;
-    exports2.GetSendStatistics$ = GetSendStatistics$;
-    exports2.GetSendStatisticsCommand = GetSendStatisticsCommand;
-    exports2.GetSendStatisticsResponse$ = GetSendStatisticsResponse$;
-    exports2.GetTemplate$ = GetTemplate$;
-    exports2.GetTemplateCommand = GetTemplateCommand;
-    exports2.GetTemplateRequest$ = GetTemplateRequest$;
-    exports2.GetTemplateResponse$ = GetTemplateResponse$;
-    exports2.IdentityDkimAttributes$ = IdentityDkimAttributes$;
-    exports2.IdentityMailFromDomainAttributes$ = IdentityMailFromDomainAttributes$;
-    exports2.IdentityNotificationAttributes$ = IdentityNotificationAttributes$;
-    exports2.IdentityType = IdentityType;
-    exports2.IdentityVerificationAttributes$ = IdentityVerificationAttributes$;
-    exports2.InvalidCloudWatchDestinationException = InvalidCloudWatchDestinationException;
-    exports2.InvalidCloudWatchDestinationException$ = InvalidCloudWatchDestinationException$;
-    exports2.InvalidConfigurationSetException = InvalidConfigurationSetException;
-    exports2.InvalidConfigurationSetException$ = InvalidConfigurationSetException$;
-    exports2.InvalidDeliveryOptionsException = InvalidDeliveryOptionsException;
-    exports2.InvalidDeliveryOptionsException$ = InvalidDeliveryOptionsException$;
-    exports2.InvalidFirehoseDestinationException = InvalidFirehoseDestinationException;
-    exports2.InvalidFirehoseDestinationException$ = InvalidFirehoseDestinationException$;
-    exports2.InvalidLambdaFunctionException = InvalidLambdaFunctionException;
-    exports2.InvalidLambdaFunctionException$ = InvalidLambdaFunctionException$;
-    exports2.InvalidPolicyException = InvalidPolicyException;
-    exports2.InvalidPolicyException$ = InvalidPolicyException$;
-    exports2.InvalidRenderingParameterException = InvalidRenderingParameterException;
-    exports2.InvalidRenderingParameterException$ = InvalidRenderingParameterException$;
-    exports2.InvalidS3ConfigurationException = InvalidS3ConfigurationException;
-    exports2.InvalidS3ConfigurationException$ = InvalidS3ConfigurationException$;
-    exports2.InvalidSNSDestinationException = InvalidSNSDestinationException;
-    exports2.InvalidSNSDestinationException$ = InvalidSNSDestinationException$;
-    exports2.InvalidSnsTopicException = InvalidSnsTopicException;
-    exports2.InvalidSnsTopicException$ = InvalidSnsTopicException$;
-    exports2.InvalidTemplateException = InvalidTemplateException;
-    exports2.InvalidTemplateException$ = InvalidTemplateException$;
-    exports2.InvalidTrackingOptionsException = InvalidTrackingOptionsException;
-    exports2.InvalidTrackingOptionsException$ = InvalidTrackingOptionsException$;
-    exports2.InvocationType = InvocationType;
-    exports2.KinesisFirehoseDestination$ = KinesisFirehoseDestination$;
-    exports2.LambdaAction$ = LambdaAction$;
-    exports2.LimitExceededException = LimitExceededException;
-    exports2.LimitExceededException$ = LimitExceededException$;
-    exports2.ListConfigurationSets$ = ListConfigurationSets$;
-    exports2.ListConfigurationSetsCommand = ListConfigurationSetsCommand;
-    exports2.ListConfigurationSetsRequest$ = ListConfigurationSetsRequest$;
-    exports2.ListConfigurationSetsResponse$ = ListConfigurationSetsResponse$;
-    exports2.ListCustomVerificationEmailTemplates$ = ListCustomVerificationEmailTemplates$;
-    exports2.ListCustomVerificationEmailTemplatesCommand = ListCustomVerificationEmailTemplatesCommand;
-    exports2.ListCustomVerificationEmailTemplatesRequest$ = ListCustomVerificationEmailTemplatesRequest$;
-    exports2.ListCustomVerificationEmailTemplatesResponse$ = ListCustomVerificationEmailTemplatesResponse$;
-    exports2.ListIdentities$ = ListIdentities$;
-    exports2.ListIdentitiesCommand = ListIdentitiesCommand;
-    exports2.ListIdentitiesRequest$ = ListIdentitiesRequest$;
-    exports2.ListIdentitiesResponse$ = ListIdentitiesResponse$;
-    exports2.ListIdentityPolicies$ = ListIdentityPolicies$;
-    exports2.ListIdentityPoliciesCommand = ListIdentityPoliciesCommand;
-    exports2.ListIdentityPoliciesRequest$ = ListIdentityPoliciesRequest$;
-    exports2.ListIdentityPoliciesResponse$ = ListIdentityPoliciesResponse$;
-    exports2.ListReceiptFilters$ = ListReceiptFilters$;
-    exports2.ListReceiptFiltersCommand = ListReceiptFiltersCommand;
-    exports2.ListReceiptFiltersRequest$ = ListReceiptFiltersRequest$;
-    exports2.ListReceiptFiltersResponse$ = ListReceiptFiltersResponse$;
-    exports2.ListReceiptRuleSets$ = ListReceiptRuleSets$;
-    exports2.ListReceiptRuleSetsCommand = ListReceiptRuleSetsCommand;
-    exports2.ListReceiptRuleSetsRequest$ = ListReceiptRuleSetsRequest$;
-    exports2.ListReceiptRuleSetsResponse$ = ListReceiptRuleSetsResponse$;
-    exports2.ListTemplates$ = ListTemplates$;
-    exports2.ListTemplatesCommand = ListTemplatesCommand;
-    exports2.ListTemplatesRequest$ = ListTemplatesRequest$;
-    exports2.ListTemplatesResponse$ = ListTemplatesResponse$;
-    exports2.ListVerifiedEmailAddresses$ = ListVerifiedEmailAddresses$;
-    exports2.ListVerifiedEmailAddressesCommand = ListVerifiedEmailAddressesCommand;
-    exports2.ListVerifiedEmailAddressesResponse$ = ListVerifiedEmailAddressesResponse$;
-    exports2.MailFromDomainNotVerifiedException = MailFromDomainNotVerifiedException;
-    exports2.MailFromDomainNotVerifiedException$ = MailFromDomainNotVerifiedException$;
-    exports2.Message$ = Message$;
-    exports2.MessageDsn$ = MessageDsn$;
-    exports2.MessageRejected = MessageRejected;
-    exports2.MessageRejected$ = MessageRejected$;
-    exports2.MessageTag$ = MessageTag$;
-    exports2.MissingRenderingAttributeException = MissingRenderingAttributeException;
-    exports2.MissingRenderingAttributeException$ = MissingRenderingAttributeException$;
-    exports2.NotificationType = NotificationType;
-    exports2.ProductionAccessNotGrantedException = ProductionAccessNotGrantedException;
-    exports2.ProductionAccessNotGrantedException$ = ProductionAccessNotGrantedException$;
-    exports2.PutConfigurationSetDeliveryOptions$ = PutConfigurationSetDeliveryOptions$;
-    exports2.PutConfigurationSetDeliveryOptionsCommand = PutConfigurationSetDeliveryOptionsCommand;
-    exports2.PutConfigurationSetDeliveryOptionsRequest$ = PutConfigurationSetDeliveryOptionsRequest$;
-    exports2.PutConfigurationSetDeliveryOptionsResponse$ = PutConfigurationSetDeliveryOptionsResponse$;
-    exports2.PutIdentityPolicy$ = PutIdentityPolicy$;
-    exports2.PutIdentityPolicyCommand = PutIdentityPolicyCommand;
-    exports2.PutIdentityPolicyRequest$ = PutIdentityPolicyRequest$;
-    exports2.PutIdentityPolicyResponse$ = PutIdentityPolicyResponse$;
-    exports2.RawMessage$ = RawMessage$;
-    exports2.ReceiptAction$ = ReceiptAction$;
-    exports2.ReceiptFilter$ = ReceiptFilter$;
-    exports2.ReceiptFilterPolicy = ReceiptFilterPolicy;
-    exports2.ReceiptIpFilter$ = ReceiptIpFilter$;
-    exports2.ReceiptRule$ = ReceiptRule$;
-    exports2.ReceiptRuleSetMetadata$ = ReceiptRuleSetMetadata$;
-    exports2.RecipientDsnFields$ = RecipientDsnFields$;
-    exports2.ReorderReceiptRuleSet$ = ReorderReceiptRuleSet$;
-    exports2.ReorderReceiptRuleSetCommand = ReorderReceiptRuleSetCommand;
-    exports2.ReorderReceiptRuleSetRequest$ = ReorderReceiptRuleSetRequest$;
-    exports2.ReorderReceiptRuleSetResponse$ = ReorderReceiptRuleSetResponse$;
-    exports2.ReputationOptions$ = ReputationOptions$;
-    exports2.RuleDoesNotExistException = RuleDoesNotExistException;
-    exports2.RuleDoesNotExistException$ = RuleDoesNotExistException$;
-    exports2.RuleSetDoesNotExistException = RuleSetDoesNotExistException;
-    exports2.RuleSetDoesNotExistException$ = RuleSetDoesNotExistException$;
-    exports2.S3Action$ = S3Action$;
-    exports2.SES = SES;
-    exports2.SESClient = SESClient2;
-    exports2.SESServiceException = SESServiceException;
-    exports2.SESServiceException$ = SESServiceException$;
-    exports2.SNSAction$ = SNSAction$;
-    exports2.SNSActionEncoding = SNSActionEncoding;
-    exports2.SNSDestination$ = SNSDestination$;
-    exports2.SendBounce$ = SendBounce$;
-    exports2.SendBounceCommand = SendBounceCommand;
-    exports2.SendBounceRequest$ = SendBounceRequest$;
-    exports2.SendBounceResponse$ = SendBounceResponse$;
-    exports2.SendBulkTemplatedEmail$ = SendBulkTemplatedEmail$;
-    exports2.SendBulkTemplatedEmailCommand = SendBulkTemplatedEmailCommand;
-    exports2.SendBulkTemplatedEmailRequest$ = SendBulkTemplatedEmailRequest$;
-    exports2.SendBulkTemplatedEmailResponse$ = SendBulkTemplatedEmailResponse$;
-    exports2.SendCustomVerificationEmail$ = SendCustomVerificationEmail$;
-    exports2.SendCustomVerificationEmailCommand = SendCustomVerificationEmailCommand;
-    exports2.SendCustomVerificationEmailRequest$ = SendCustomVerificationEmailRequest$;
-    exports2.SendCustomVerificationEmailResponse$ = SendCustomVerificationEmailResponse$;
-    exports2.SendDataPoint$ = SendDataPoint$;
-    exports2.SendEmail$ = SendEmail$;
-    exports2.SendEmailCommand = SendEmailCommand2;
-    exports2.SendEmailRequest$ = SendEmailRequest$;
-    exports2.SendEmailResponse$ = SendEmailResponse$;
-    exports2.SendRawEmail$ = SendRawEmail$;
-    exports2.SendRawEmailCommand = SendRawEmailCommand;
-    exports2.SendRawEmailRequest$ = SendRawEmailRequest$;
-    exports2.SendRawEmailResponse$ = SendRawEmailResponse$;
-    exports2.SendTemplatedEmail$ = SendTemplatedEmail$;
-    exports2.SendTemplatedEmailCommand = SendTemplatedEmailCommand;
-    exports2.SendTemplatedEmailRequest$ = SendTemplatedEmailRequest$;
-    exports2.SendTemplatedEmailResponse$ = SendTemplatedEmailResponse$;
-    exports2.SetActiveReceiptRuleSet$ = SetActiveReceiptRuleSet$;
-    exports2.SetActiveReceiptRuleSetCommand = SetActiveReceiptRuleSetCommand;
-    exports2.SetActiveReceiptRuleSetRequest$ = SetActiveReceiptRuleSetRequest$;
-    exports2.SetActiveReceiptRuleSetResponse$ = SetActiveReceiptRuleSetResponse$;
-    exports2.SetIdentityDkimEnabled$ = SetIdentityDkimEnabled$;
-    exports2.SetIdentityDkimEnabledCommand = SetIdentityDkimEnabledCommand;
-    exports2.SetIdentityDkimEnabledRequest$ = SetIdentityDkimEnabledRequest$;
-    exports2.SetIdentityDkimEnabledResponse$ = SetIdentityDkimEnabledResponse$;
-    exports2.SetIdentityFeedbackForwardingEnabled$ = SetIdentityFeedbackForwardingEnabled$;
-    exports2.SetIdentityFeedbackForwardingEnabledCommand = SetIdentityFeedbackForwardingEnabledCommand;
-    exports2.SetIdentityFeedbackForwardingEnabledRequest$ = SetIdentityFeedbackForwardingEnabledRequest$;
-    exports2.SetIdentityFeedbackForwardingEnabledResponse$ = SetIdentityFeedbackForwardingEnabledResponse$;
-    exports2.SetIdentityHeadersInNotificationsEnabled$ = SetIdentityHeadersInNotificationsEnabled$;
-    exports2.SetIdentityHeadersInNotificationsEnabledCommand = SetIdentityHeadersInNotificationsEnabledCommand;
-    exports2.SetIdentityHeadersInNotificationsEnabledRequest$ = SetIdentityHeadersInNotificationsEnabledRequest$;
-    exports2.SetIdentityHeadersInNotificationsEnabledResponse$ = SetIdentityHeadersInNotificationsEnabledResponse$;
-    exports2.SetIdentityMailFromDomain$ = SetIdentityMailFromDomain$;
-    exports2.SetIdentityMailFromDomainCommand = SetIdentityMailFromDomainCommand;
-    exports2.SetIdentityMailFromDomainRequest$ = SetIdentityMailFromDomainRequest$;
-    exports2.SetIdentityMailFromDomainResponse$ = SetIdentityMailFromDomainResponse$;
-    exports2.SetIdentityNotificationTopic$ = SetIdentityNotificationTopic$;
-    exports2.SetIdentityNotificationTopicCommand = SetIdentityNotificationTopicCommand;
-    exports2.SetIdentityNotificationTopicRequest$ = SetIdentityNotificationTopicRequest$;
-    exports2.SetIdentityNotificationTopicResponse$ = SetIdentityNotificationTopicResponse$;
-    exports2.SetReceiptRulePosition$ = SetReceiptRulePosition$;
-    exports2.SetReceiptRulePositionCommand = SetReceiptRulePositionCommand;
-    exports2.SetReceiptRulePositionRequest$ = SetReceiptRulePositionRequest$;
-    exports2.SetReceiptRulePositionResponse$ = SetReceiptRulePositionResponse$;
-    exports2.StopAction$ = StopAction$;
-    exports2.StopScope = StopScope;
-    exports2.Template$ = Template$;
-    exports2.TemplateDoesNotExistException = TemplateDoesNotExistException;
-    exports2.TemplateDoesNotExistException$ = TemplateDoesNotExistException$;
-    exports2.TemplateMetadata$ = TemplateMetadata$;
-    exports2.TestRenderTemplate$ = TestRenderTemplate$;
-    exports2.TestRenderTemplateCommand = TestRenderTemplateCommand;
-    exports2.TestRenderTemplateRequest$ = TestRenderTemplateRequest$;
-    exports2.TestRenderTemplateResponse$ = TestRenderTemplateResponse$;
-    exports2.TlsPolicy = TlsPolicy;
-    exports2.TrackingOptions$ = TrackingOptions$;
-    exports2.TrackingOptionsAlreadyExistsException = TrackingOptionsAlreadyExistsException;
-    exports2.TrackingOptionsAlreadyExistsException$ = TrackingOptionsAlreadyExistsException$;
-    exports2.TrackingOptionsDoesNotExistException = TrackingOptionsDoesNotExistException;
-    exports2.TrackingOptionsDoesNotExistException$ = TrackingOptionsDoesNotExistException$;
-    exports2.UpdateAccountSendingEnabled$ = UpdateAccountSendingEnabled$;
-    exports2.UpdateAccountSendingEnabledCommand = UpdateAccountSendingEnabledCommand;
-    exports2.UpdateAccountSendingEnabledRequest$ = UpdateAccountSendingEnabledRequest$;
-    exports2.UpdateConfigurationSetEventDestination$ = UpdateConfigurationSetEventDestination$;
-    exports2.UpdateConfigurationSetEventDestinationCommand = UpdateConfigurationSetEventDestinationCommand;
-    exports2.UpdateConfigurationSetEventDestinationRequest$ = UpdateConfigurationSetEventDestinationRequest$;
-    exports2.UpdateConfigurationSetEventDestinationResponse$ = UpdateConfigurationSetEventDestinationResponse$;
-    exports2.UpdateConfigurationSetReputationMetricsEnabled$ = UpdateConfigurationSetReputationMetricsEnabled$;
-    exports2.UpdateConfigurationSetReputationMetricsEnabledCommand = UpdateConfigurationSetReputationMetricsEnabledCommand;
-    exports2.UpdateConfigurationSetReputationMetricsEnabledRequest$ = UpdateConfigurationSetReputationMetricsEnabledRequest$;
-    exports2.UpdateConfigurationSetSendingEnabled$ = UpdateConfigurationSetSendingEnabled$;
-    exports2.UpdateConfigurationSetSendingEnabledCommand = UpdateConfigurationSetSendingEnabledCommand;
-    exports2.UpdateConfigurationSetSendingEnabledRequest$ = UpdateConfigurationSetSendingEnabledRequest$;
-    exports2.UpdateConfigurationSetTrackingOptions$ = UpdateConfigurationSetTrackingOptions$;
-    exports2.UpdateConfigurationSetTrackingOptionsCommand = UpdateConfigurationSetTrackingOptionsCommand;
-    exports2.UpdateConfigurationSetTrackingOptionsRequest$ = UpdateConfigurationSetTrackingOptionsRequest$;
-    exports2.UpdateConfigurationSetTrackingOptionsResponse$ = UpdateConfigurationSetTrackingOptionsResponse$;
-    exports2.UpdateCustomVerificationEmailTemplate$ = UpdateCustomVerificationEmailTemplate$;
-    exports2.UpdateCustomVerificationEmailTemplateCommand = UpdateCustomVerificationEmailTemplateCommand;
-    exports2.UpdateCustomVerificationEmailTemplateRequest$ = UpdateCustomVerificationEmailTemplateRequest$;
-    exports2.UpdateReceiptRule$ = UpdateReceiptRule$;
-    exports2.UpdateReceiptRuleCommand = UpdateReceiptRuleCommand;
-    exports2.UpdateReceiptRuleRequest$ = UpdateReceiptRuleRequest$;
-    exports2.UpdateReceiptRuleResponse$ = UpdateReceiptRuleResponse$;
-    exports2.UpdateTemplate$ = UpdateTemplate$;
-    exports2.UpdateTemplateCommand = UpdateTemplateCommand;
-    exports2.UpdateTemplateRequest$ = UpdateTemplateRequest$;
-    exports2.UpdateTemplateResponse$ = UpdateTemplateResponse$;
-    exports2.VerificationStatus = VerificationStatus;
-    exports2.VerifyDomainDkim$ = VerifyDomainDkim$;
-    exports2.VerifyDomainDkimCommand = VerifyDomainDkimCommand;
-    exports2.VerifyDomainDkimRequest$ = VerifyDomainDkimRequest$;
-    exports2.VerifyDomainDkimResponse$ = VerifyDomainDkimResponse$;
-    exports2.VerifyDomainIdentity$ = VerifyDomainIdentity$;
-    exports2.VerifyDomainIdentityCommand = VerifyDomainIdentityCommand;
-    exports2.VerifyDomainIdentityRequest$ = VerifyDomainIdentityRequest$;
-    exports2.VerifyDomainIdentityResponse$ = VerifyDomainIdentityResponse$;
-    exports2.VerifyEmailAddress$ = VerifyEmailAddress$;
-    exports2.VerifyEmailAddressCommand = VerifyEmailAddressCommand;
-    exports2.VerifyEmailAddressRequest$ = VerifyEmailAddressRequest$;
-    exports2.VerifyEmailIdentity$ = VerifyEmailIdentity$;
-    exports2.VerifyEmailIdentityCommand = VerifyEmailIdentityCommand;
-    exports2.VerifyEmailIdentityRequest$ = VerifyEmailIdentityRequest$;
-    exports2.VerifyEmailIdentityResponse$ = VerifyEmailIdentityResponse$;
-    exports2.WorkmailAction$ = WorkmailAction$;
-    exports2.paginateListCustomVerificationEmailTemplates = paginateListCustomVerificationEmailTemplates;
-    exports2.paginateListIdentities = paginateListIdentities;
-    exports2.waitForIdentityExists = waitForIdentityExists;
-    exports2.waitUntilIdentityExists = waitUntilIdentityExists;
-  }
-});
-
 // ../../.yarn/cache/@aws-sdk-middleware-expect-continue-npm-3.969.0-6f76e91e95-bf9c8526c8.zip/node_modules/@aws-sdk/middleware-expect-continue/dist-cjs/index.js
-var require_dist_cjs65 = __commonJS({
+var require_dist_cjs64 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-expect-continue-npm-3.969.0-6f76e91e95-bf9c8526c8.zip/node_modules/@aws-sdk/middleware-expect-continue/dist-cjs/index.js"(exports2) {
     "use strict";
     var protocolHttp = require_dist_cjs5();
@@ -84990,7 +80229,7 @@ var require_dist_cjs65 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-is-array-buffer-npm-2.2.0-108320772d-d366743ecc.zip/node_modules/@smithy/is-array-buffer/dist-cjs/index.js
-var require_dist_cjs66 = __commonJS({
+var require_dist_cjs65 = __commonJS({
   "../../.yarn/cache/@smithy-is-array-buffer-npm-2.2.0-108320772d-d366743ecc.zip/node_modules/@smithy/is-array-buffer/dist-cjs/index.js"(exports2, module2) {
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -85020,7 +80259,7 @@ var require_dist_cjs66 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-util-buffer-from-npm-2.2.0-0ef5989125-53253e4e35.zip/node_modules/@smithy/util-buffer-from/dist-cjs/index.js
-var require_dist_cjs67 = __commonJS({
+var require_dist_cjs66 = __commonJS({
   "../../.yarn/cache/@smithy-util-buffer-from-npm-2.2.0-0ef5989125-53253e4e35.zip/node_modules/@smithy/util-buffer-from/dist-cjs/index.js"(exports2, module2) {
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -85046,7 +80285,7 @@ var require_dist_cjs67 = __commonJS({
       fromString: () => fromString2
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_is_array_buffer3 = require_dist_cjs66();
+    var import_is_array_buffer3 = require_dist_cjs65();
     var import_buffer = require("buffer");
     var fromArrayBuffer2 = /* @__PURE__ */ __name((input, offset = 0, length = input.byteLength - offset) => {
       if (!(0, import_is_array_buffer3.isArrayBuffer)(input)) {
@@ -85064,7 +80303,7 @@ var require_dist_cjs67 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-util-utf8-npm-2.3.0-9dcba0d35f-c766ead8da.zip/node_modules/@smithy/util-utf8/dist-cjs/index.js
-var require_dist_cjs68 = __commonJS({
+var require_dist_cjs67 = __commonJS({
   "../../.yarn/cache/@smithy-util-utf8-npm-2.3.0-9dcba0d35f-c766ead8da.zip/node_modules/@smithy/util-utf8/dist-cjs/index.js"(exports2, module2) {
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -85091,7 +80330,7 @@ var require_dist_cjs68 = __commonJS({
       toUtf8: () => toUtf812
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_util_buffer_from = require_dist_cjs67();
+    var import_util_buffer_from = require_dist_cjs66();
     var fromUtf89 = /* @__PURE__ */ __name((input) => {
       const buf2 = (0, import_util_buffer_from.fromString)(input, "utf8");
       return new Uint8Array(buf2.buffer, buf2.byteOffset, buf2.byteLength / Uint8Array.BYTES_PER_ELEMENT);
@@ -85123,7 +80362,7 @@ var require_convertToBuffer = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.convertToBuffer = void 0;
-    var util_utf8_1 = require_dist_cjs68();
+    var util_utf8_1 = require_dist_cjs67();
     var fromUtf89 = typeof Buffer !== "undefined" && Buffer.from ? function(input) {
       return Buffer.from(input, "utf8");
     } : util_utf8_1.fromUtf8;
@@ -85570,7 +80809,7 @@ var require_main2 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-crc64-nvme-npm-3.969.0-37167f7c2c-4fc85ebc58.zip/node_modules/@aws-sdk/crc64-nvme/dist-cjs/index.js
-var require_dist_cjs69 = __commonJS({
+var require_dist_cjs68 = __commonJS({
   "../../.yarn/cache/@aws-sdk-crc64-nvme-npm-3.969.0-37167f7c2c-4fc85ebc58.zip/node_modules/@aws-sdk/crc64-nvme/dist-cjs/index.js"(exports2) {
     "use strict";
     var generateCRC64NVMETable = () => {
@@ -86049,7 +81288,7 @@ var require_getCrc32ChecksumAlgorithmFunction = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-middleware-flexible-checksums-npm-3.970.0-10b738961b-8b7bde6063.zip/node_modules/@aws-sdk/middleware-flexible-checksums/dist-cjs/index.js
-var require_dist_cjs70 = __commonJS({
+var require_dist_cjs69 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-flexible-checksums-npm-3.970.0-10b738961b-8b7bde6063.zip/node_modules/@aws-sdk/middleware-flexible-checksums/dist-cjs/index.js"(exports2) {
     "use strict";
     var core = (init_dist_es3(), __toCommonJS(dist_es_exports3));
@@ -86057,7 +81296,7 @@ var require_dist_cjs70 = __commonJS({
     var utilStream = require_dist_cjs21();
     var isArrayBuffer2 = require_dist_cjs12();
     var crc32c = require_main2();
-    var crc64Nvme = require_dist_cjs69();
+    var crc64Nvme = require_dist_cjs68();
     var getCrc32ChecksumAlgorithmFunction = require_getCrc32ChecksumAlgorithmFunction();
     var utilUtf8 = require_dist_cjs14();
     var utilMiddleware = require_dist_cjs4();
@@ -86453,7 +81692,7 @@ var require_dist_cjs70 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-util-arn-parser-npm-3.968.0-cb348dea52-5e65417386.zip/node_modules/@aws-sdk/util-arn-parser/dist-cjs/index.js
-var require_dist_cjs71 = __commonJS({
+var require_dist_cjs70 = __commonJS({
   "../../.yarn/cache/@aws-sdk-util-arn-parser-npm-3.968.0-cb348dea52-5e65417386.zip/node_modules/@aws-sdk/util-arn-parser/dist-cjs/index.js"(exports2) {
     "use strict";
     var validate3 = (str) => typeof str === "string" && str.indexOf("arn:") === 0 && str.split(":").length >= 6;
@@ -86484,13 +81723,13 @@ var require_dist_cjs71 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-middleware-sdk-s3-npm-3.970.0-f5e0a4406c-cd3496687b.zip/node_modules/@aws-sdk/middleware-sdk-s3/dist-cjs/index.js
-var require_dist_cjs72 = __commonJS({
+var require_dist_cjs71 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-sdk-s3-npm-3.970.0-f5e0a4406c-cd3496687b.zip/node_modules/@aws-sdk/middleware-sdk-s3/dist-cjs/index.js"(exports2) {
     "use strict";
     var protocolHttp = require_dist_cjs5();
     var smithyClient = require_dist_cjs30();
     var utilStream = require_dist_cjs21();
-    var utilArnParser = require_dist_cjs71();
+    var utilArnParser = require_dist_cjs70();
     var signatureV4 = require_dist_cjs28();
     var utilConfigProvider = require_dist_cjs33();
     var core = (init_dist_es3(), __toCommonJS(dist_es_exports3));
@@ -87032,7 +82271,7 @@ var require_dist_cjs72 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-eventstream-serde-config-resolver-npm-4.3.8-19a1cbb384-fbd4b1278c.zip/node_modules/@smithy/eventstream-serde-config-resolver/dist-cjs/index.js
-var require_dist_cjs73 = __commonJS({
+var require_dist_cjs72 = __commonJS({
   "../../.yarn/cache/@smithy-eventstream-serde-config-resolver-npm-4.3.8-19a1cbb384-fbd4b1278c.zip/node_modules/@smithy/eventstream-serde-config-resolver/dist-cjs/index.js"(exports2) {
     "use strict";
     var resolveEventStreamSerdeConfig2 = (input) => Object.assign(input, {
@@ -87043,10 +82282,10 @@ var require_dist_cjs73 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-signature-v4-multi-region-npm-3.970.0-45eb8d0096-27b6a422d9.zip/node_modules/@aws-sdk/signature-v4-multi-region/dist-cjs/index.js
-var require_dist_cjs74 = __commonJS({
+var require_dist_cjs73 = __commonJS({
   "../../.yarn/cache/@aws-sdk-signature-v4-multi-region-npm-3.970.0-45eb8d0096-27b6a422d9.zip/node_modules/@aws-sdk/signature-v4-multi-region/dist-cjs/index.js"(exports2) {
     "use strict";
-    var middlewareSdkS3 = require_dist_cjs72();
+    var middlewareSdkS3 = require_dist_cjs71();
     var signatureV4 = require_dist_cjs28();
     var signatureV4CrtContainer = {
       CrtSignerV4: null
@@ -87141,7 +82380,7 @@ var require_dist_cjs74 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/endpoint/ruleset.js
-var require_ruleset4 = __commonJS({
+var require_ruleset3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/endpoint/ruleset.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -87343,14 +82582,14 @@ var require_ruleset4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/endpoint/endpointResolver.js
-var require_endpointResolver4 = __commonJS({
+var require_endpointResolver3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/endpoint/endpointResolver.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultEndpointResolver = void 0;
     var util_endpoints_1 = require_dist_cjs26();
     var util_endpoints_2 = require_dist_cjs23();
-    var ruleset_1 = require_ruleset4();
+    var ruleset_1 = require_ruleset3();
     var cache8 = new util_endpoints_2.EndpointCache({
       size: 50,
       params: [
@@ -87382,16 +82621,16 @@ var require_endpointResolver4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/auth/httpAuthSchemeProvider.js
-var require_httpAuthSchemeProvider4 = __commonJS({
+var require_httpAuthSchemeProvider3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/auth/httpAuthSchemeProvider.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveHttpAuthSchemeConfig = exports2.defaultS3HttpAuthSchemeProvider = exports2.defaultS3HttpAuthSchemeParametersProvider = void 0;
     var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
-    var signature_v4_multi_region_1 = require_dist_cjs74();
+    var signature_v4_multi_region_1 = require_dist_cjs73();
     var middleware_endpoint_1 = require_dist_cjs38();
     var util_middleware_1 = require_dist_cjs4();
-    var endpointResolver_1 = require_endpointResolver4();
+    var endpointResolver_1 = require_endpointResolver3();
     var createEndpointRuleSetHttpAuthSchemeParametersProvider2 = (defaultHttpAuthSchemeParametersProvider) => async (config, context, input) => {
       if (!input) {
         throw new Error("Could not find `input` for `defaultEndpointRuleSetHttpAuthSchemeParametersProvider`");
@@ -87511,7 +82750,7 @@ var require_httpAuthSchemeProvider4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/package.json
-var require_package4 = __commonJS({
+var require_package3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/package.json"(exports2, module2) {
     module2.exports = {
       name: "@aws-sdk/client-s3",
@@ -87642,11 +82881,11 @@ var require_package4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-middleware-bucket-endpoint-npm-3.969.0-4af08e8b0b-4b8e007316.zip/node_modules/@aws-sdk/middleware-bucket-endpoint/dist-cjs/index.js
-var require_dist_cjs75 = __commonJS({
+var require_dist_cjs74 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-bucket-endpoint-npm-3.969.0-4af08e8b0b-4b8e007316.zip/node_modules/@aws-sdk/middleware-bucket-endpoint/dist-cjs/index.js"(exports2) {
     "use strict";
     var utilConfigProvider = require_dist_cjs33();
-    var utilArnParser = require_dist_cjs71();
+    var utilArnParser = require_dist_cjs70();
     var protocolHttp = require_dist_cjs5();
     var NODE_DISABLE_MULTIREGION_ACCESS_POINT_ENV_NAME = "AWS_S3_DISABLE_MULTIREGION_ACCESS_POINTS";
     var NODE_DISABLE_MULTIREGION_ACCESS_POINT_INI_NAME = "s3_disable_multiregion_access_points";
@@ -87974,7 +83213,7 @@ var require_dist_cjs75 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-eventstream-codec-npm-4.2.8-cea36462e5-45e027b320.zip/node_modules/@smithy/eventstream-codec/dist-cjs/index.js
-var require_dist_cjs76 = __commonJS({
+var require_dist_cjs75 = __commonJS({
   "../../.yarn/cache/@smithy-eventstream-codec-npm-4.2.8-cea36462e5-45e027b320.zip/node_modules/@smithy/eventstream-codec/dist-cjs/index.js"(exports2) {
     "use strict";
     var crc322 = require_main3();
@@ -88358,10 +83597,10 @@ var require_dist_cjs76 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-eventstream-serde-universal-npm-4.2.8-faa79a549a-814366a418.zip/node_modules/@smithy/eventstream-serde-universal/dist-cjs/index.js
-var require_dist_cjs77 = __commonJS({
+var require_dist_cjs76 = __commonJS({
   "../../.yarn/cache/@smithy-eventstream-serde-universal-npm-4.2.8-faa79a549a-814366a418.zip/node_modules/@smithy/eventstream-serde-universal/dist-cjs/index.js"(exports2) {
     "use strict";
-    var eventstreamCodec = require_dist_cjs76();
+    var eventstreamCodec = require_dist_cjs75();
     function getChunkedStream2(source) {
       let currentMessageTotalLength = 0;
       let currentMessagePendingLength = 0;
@@ -88485,10 +83724,10 @@ var require_dist_cjs77 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-eventstream-serde-node-npm-4.2.8-5b9267cbe3-603840ac95.zip/node_modules/@smithy/eventstream-serde-node/dist-cjs/index.js
-var require_dist_cjs78 = __commonJS({
+var require_dist_cjs77 = __commonJS({
   "../../.yarn/cache/@smithy-eventstream-serde-node-npm-4.2.8-5b9267cbe3-603840ac95.zip/node_modules/@smithy/eventstream-serde-node/dist-cjs/index.js"(exports2) {
     "use strict";
-    var eventstreamSerdeUniversal = require_dist_cjs77();
+    var eventstreamSerdeUniversal = require_dist_cjs76();
     var stream = require("stream");
     async function* readabletoIterable(readStream) {
       let streamEnded = false;
@@ -88539,7 +83778,7 @@ var require_dist_cjs78 = __commonJS({
 });
 
 // ../../.yarn/cache/@smithy-hash-stream-node-npm-4.2.8-2d1fd64b11-154583e9f3.zip/node_modules/@smithy/hash-stream-node/dist-cjs/index.js
-var require_dist_cjs79 = __commonJS({
+var require_dist_cjs78 = __commonJS({
   "../../.yarn/cache/@smithy-hash-stream-node-npm-4.2.8-2d1fd64b11-154583e9f3.zip/node_modules/@smithy/hash-stream-node/dist-cjs/index.js"(exports2) {
     "use strict";
     var fs2 = require("fs");
@@ -88606,21 +83845,21 @@ var require_dist_cjs79 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/runtimeConfig.shared.js
-var require_runtimeConfig_shared4 = __commonJS({
+var require_runtimeConfig_shared3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/runtimeConfig.shared.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRuntimeConfig = void 0;
     var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
     var protocols_1 = (init_protocols3(), __toCommonJS(protocols_exports3));
-    var signature_v4_multi_region_1 = require_dist_cjs74();
+    var signature_v4_multi_region_1 = require_dist_cjs73();
     var smithy_client_1 = require_dist_cjs30();
     var url_parser_1 = require_dist_cjs25();
     var util_base64_1 = require_dist_cjs15();
     var util_stream_1 = require_dist_cjs21();
     var util_utf8_1 = require_dist_cjs14();
-    var httpAuthSchemeProvider_1 = require_httpAuthSchemeProvider4();
-    var endpointResolver_1 = require_endpointResolver4();
+    var httpAuthSchemeProvider_1 = require_httpAuthSchemeProvider3();
+    var endpointResolver_1 = require_endpointResolver3();
     var getRuntimeConfig15 = (config) => {
       return {
         apiVersion: "2006-03-01",
@@ -88666,23 +83905,23 @@ var require_runtimeConfig_shared4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/runtimeConfig.js
-var require_runtimeConfig4 = __commonJS({
+var require_runtimeConfig3 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/runtimeConfig.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRuntimeConfig = void 0;
     var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports));
-    var package_json_1 = tslib_1.__importDefault(require_package4());
+    var package_json_1 = tslib_1.__importDefault(require_package3());
     var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
     var credential_provider_node_1 = require_dist_cjs57();
-    var middleware_bucket_endpoint_1 = require_dist_cjs75();
-    var middleware_flexible_checksums_1 = require_dist_cjs70();
-    var middleware_sdk_s3_1 = require_dist_cjs72();
+    var middleware_bucket_endpoint_1 = require_dist_cjs74();
+    var middleware_flexible_checksums_1 = require_dist_cjs69();
+    var middleware_sdk_s3_1 = require_dist_cjs71();
     var util_user_agent_node_1 = require_dist_cjs45();
     var config_resolver_1 = require_dist_cjs34();
-    var eventstream_serde_node_1 = require_dist_cjs78();
+    var eventstream_serde_node_1 = require_dist_cjs77();
     var hash_node_1 = require_dist_cjs46();
-    var hash_stream_node_1 = require_dist_cjs79();
+    var hash_stream_node_1 = require_dist_cjs78();
     var middleware_retry_1 = require_dist_cjs41();
     var node_config_provider_1 = require_dist_cjs37();
     var node_http_handler_1 = require_dist_cjs18();
@@ -88690,7 +83929,7 @@ var require_runtimeConfig4 = __commonJS({
     var util_body_length_node_1 = require_dist_cjs47();
     var util_defaults_mode_node_1 = require_dist_cjs48();
     var util_retry_1 = require_dist_cjs40();
-    var runtimeConfig_shared_1 = require_runtimeConfig_shared4();
+    var runtimeConfig_shared_1 = require_runtimeConfig_shared3();
     var getRuntimeConfig15 = (config) => {
       (0, smithy_client_1.emitWarningIfUnsupportedVersion)(process.version);
       const defaultsMode = (0, util_defaults_mode_node_1.resolveDefaultsModeConfig)(config);
@@ -88738,7 +83977,7 @@ var require_runtimeConfig4 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-middleware-ssec-npm-3.969.0-69c02f46ff-761c9788ed.zip/node_modules/@aws-sdk/middleware-ssec/dist-cjs/index.js
-var require_dist_cjs80 = __commonJS({
+var require_dist_cjs79 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-ssec-npm-3.969.0-69c02f46ff-761c9788ed.zip/node_modules/@aws-sdk/middleware-ssec/dist-cjs/index.js"(exports2) {
     "use strict";
     function ssecMiddleware(options) {
@@ -88810,7 +84049,7 @@ var require_dist_cjs80 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-middleware-location-constraint-npm-3.969.0-db9d011a1d-7910db9e29.zip/node_modules/@aws-sdk/middleware-location-constraint/dist-cjs/index.js
-var require_dist_cjs81 = __commonJS({
+var require_dist_cjs80 = __commonJS({
   "../../.yarn/cache/@aws-sdk-middleware-location-constraint-npm-3.969.0-db9d011a1d-7910db9e29.zip/node_modules/@aws-sdk/middleware-location-constraint/dist-cjs/index.js"(exports2) {
     "use strict";
     function locationConstraintMiddleware(options) {
@@ -88844,30 +84083,30 @@ var require_dist_cjs81 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/index.js
-var require_dist_cjs82 = __commonJS({
+var require_dist_cjs81 = __commonJS({
   "../../.yarn/cache/@aws-sdk-client-s3-npm-3.970.0-a5ee702f18-6c893f9b78.zip/node_modules/@aws-sdk/client-s3/dist-cjs/index.js"(exports2) {
     "use strict";
-    var middlewareExpectContinue = require_dist_cjs65();
-    var middlewareFlexibleChecksums = require_dist_cjs70();
+    var middlewareExpectContinue = require_dist_cjs64();
+    var middlewareFlexibleChecksums = require_dist_cjs69();
     var middlewareHostHeader = require_dist_cjs8();
     var middlewareLogger = require_dist_cjs9();
     var middlewareRecursionDetection = require_dist_cjs10();
-    var middlewareSdkS3 = require_dist_cjs72();
+    var middlewareSdkS3 = require_dist_cjs71();
     var middlewareUserAgent = require_dist_cjs32();
     var configResolver = require_dist_cjs34();
     var core = (init_dist_es2(), __toCommonJS(dist_es_exports2));
     var schema = (init_schema2(), __toCommonJS(schema_exports2));
-    var eventstreamSerdeConfigResolver = require_dist_cjs73();
+    var eventstreamSerdeConfigResolver = require_dist_cjs72();
     var middlewareContentLength = require_dist_cjs35();
     var middlewareEndpoint = require_dist_cjs38();
     var middlewareRetry = require_dist_cjs41();
     var smithyClient = require_dist_cjs30();
-    var httpAuthSchemeProvider = require_httpAuthSchemeProvider4();
-    var runtimeConfig = require_runtimeConfig4();
+    var httpAuthSchemeProvider = require_httpAuthSchemeProvider3();
+    var runtimeConfig = require_runtimeConfig3();
     var regionConfigResolver = require_dist_cjs49();
     var protocolHttp = require_dist_cjs5();
-    var middlewareSsec = require_dist_cjs80();
-    var middlewareLocationConstraint = require_dist_cjs81();
+    var middlewareSsec = require_dist_cjs79();
+    var middlewareLocationConstraint = require_dist_cjs80();
     var utilWaiter = require_dist_cjs59();
     var resolveClientEndpointParameters8 = (options) => {
       return Object.assign(options, {
@@ -96727,7 +91966,7 @@ var require_dist_cjs82 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-util-format-url-npm-3.969.0-cb5e6409fe-b3de6e8753.zip/node_modules/@aws-sdk/util-format-url/dist-cjs/index.js
-var require_dist_cjs83 = __commonJS({
+var require_dist_cjs82 = __commonJS({
   "../../.yarn/cache/@aws-sdk-util-format-url-npm-3.969.0-cb5e6409fe-b3de6e8753.zip/node_modules/@aws-sdk/util-format-url/dist-cjs/index.js"(exports2) {
     "use strict";
     var querystringBuilder = require_dist_cjs17();
@@ -96764,13 +92003,13 @@ var require_dist_cjs83 = __commonJS({
 });
 
 // ../../.yarn/cache/@aws-sdk-s3-request-presigner-npm-3.970.0-93559ead90-7d1175cf0c.zip/node_modules/@aws-sdk/s3-request-presigner/dist-cjs/index.js
-var require_dist_cjs84 = __commonJS({
+var require_dist_cjs83 = __commonJS({
   "../../.yarn/cache/@aws-sdk-s3-request-presigner-npm-3.970.0-93559ead90-7d1175cf0c.zip/node_modules/@aws-sdk/s3-request-presigner/dist-cjs/index.js"(exports2) {
     "use strict";
-    var utilFormatUrl = require_dist_cjs83();
+    var utilFormatUrl = require_dist_cjs82();
     var middlewareEndpoint = require_dist_cjs38();
     var protocolHttp = require_dist_cjs5();
-    var signatureV4MultiRegion = require_dist_cjs74();
+    var signatureV4MultiRegion = require_dist_cjs73();
     var UNSIGNED_PAYLOAD = "UNSIGNED-PAYLOAD";
     var SHA256_HEADER = "X-Amz-Content-Sha256";
     var S3RequestPresigner = class {
@@ -96887,6 +92126,4767 @@ var require_dist_cjs84 = __commonJS({
     };
     exports2.S3RequestPresigner = S3RequestPresigner;
     exports2.getSignedUrl = getSignedUrl2;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/auth/httpAuthSchemeProvider.js
+var require_httpAuthSchemeProvider4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/auth/httpAuthSchemeProvider.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.resolveHttpAuthSchemeConfig = exports2.defaultSESHttpAuthSchemeProvider = exports2.defaultSESHttpAuthSchemeParametersProvider = void 0;
+    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
+    var util_middleware_1 = require_dist_cjs4();
+    var defaultSESHttpAuthSchemeParametersProvider = async (config, context, input) => {
+      return {
+        operation: (0, util_middleware_1.getSmithyContext)(context).operation,
+        region: await (0, util_middleware_1.normalizeProvider)(config.region)() || (() => {
+          throw new Error("expected `region` to be configured for `aws.auth#sigv4`");
+        })()
+      };
+    };
+    exports2.defaultSESHttpAuthSchemeParametersProvider = defaultSESHttpAuthSchemeParametersProvider;
+    function createAwsAuthSigv4HttpAuthOption8(authParameters) {
+      return {
+        schemeId: "aws.auth#sigv4",
+        signingProperties: {
+          name: "ses",
+          region: authParameters.region
+        },
+        propertiesExtractor: (config, context) => ({
+          signingProperties: {
+            config,
+            context
+          }
+        })
+      };
+    }
+    var defaultSESHttpAuthSchemeProvider = (authParameters) => {
+      const options = [];
+      switch (authParameters.operation) {
+        default: {
+          options.push(createAwsAuthSigv4HttpAuthOption8(authParameters));
+        }
+      }
+      return options;
+    };
+    exports2.defaultSESHttpAuthSchemeProvider = defaultSESHttpAuthSchemeProvider;
+    var resolveHttpAuthSchemeConfig8 = (config) => {
+      const config_0 = (0, core_1.resolveAwsSdkSigV4Config)(config);
+      return Object.assign(config_0, {
+        authSchemePreference: (0, util_middleware_1.normalizeProvider)(config.authSchemePreference ?? [])
+      });
+    };
+    exports2.resolveHttpAuthSchemeConfig = resolveHttpAuthSchemeConfig8;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/package.json
+var require_package4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/package.json"(exports2, module2) {
+    module2.exports = {
+      name: "@aws-sdk/client-ses",
+      description: "AWS SDK for JavaScript Ses Client for Node.js, Browser and React Native",
+      version: "3.970.0",
+      scripts: {
+        build: "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+        "build:cjs": "node ../../scripts/compilation/inline client-ses",
+        "build:es": "tsc -p tsconfig.es.json",
+        "build:include:deps": 'yarn g:turbo run build -F="$npm_package_name"',
+        "build:types": "tsc -p tsconfig.types.json",
+        "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+        clean: "rimraf ./dist-* && rimraf *.tsbuildinfo",
+        "extract:docs": "api-extractor run --local",
+        "generate:client": "node ../../scripts/generate-clients/single-service --solo ses",
+        "test:e2e": "yarn g:vitest run -c vitest.config.e2e.mts --mode development",
+        "test:e2e:watch": "yarn g:vitest watch -c vitest.config.e2e.mts",
+        "test:index": "tsc --noEmit ./test/index-types.ts && node ./test/index-objects.spec.mjs"
+      },
+      main: "./dist-cjs/index.js",
+      types: "./dist-types/index.d.ts",
+      module: "./dist-es/index.js",
+      sideEffects: false,
+      dependencies: {
+        "@aws-crypto/sha256-browser": "5.2.0",
+        "@aws-crypto/sha256-js": "5.2.0",
+        "@aws-sdk/core": "3.970.0",
+        "@aws-sdk/credential-provider-node": "3.970.0",
+        "@aws-sdk/middleware-host-header": "3.969.0",
+        "@aws-sdk/middleware-logger": "3.969.0",
+        "@aws-sdk/middleware-recursion-detection": "3.969.0",
+        "@aws-sdk/middleware-user-agent": "3.970.0",
+        "@aws-sdk/region-config-resolver": "3.969.0",
+        "@aws-sdk/types": "3.969.0",
+        "@aws-sdk/util-endpoints": "3.970.0",
+        "@aws-sdk/util-user-agent-browser": "3.969.0",
+        "@aws-sdk/util-user-agent-node": "3.970.0",
+        "@smithy/config-resolver": "^4.4.6",
+        "@smithy/core": "^3.20.6",
+        "@smithy/fetch-http-handler": "^5.3.9",
+        "@smithy/hash-node": "^4.2.8",
+        "@smithy/invalid-dependency": "^4.2.8",
+        "@smithy/middleware-content-length": "^4.2.8",
+        "@smithy/middleware-endpoint": "^4.4.7",
+        "@smithy/middleware-retry": "^4.4.23",
+        "@smithy/middleware-serde": "^4.2.9",
+        "@smithy/middleware-stack": "^4.2.8",
+        "@smithy/node-config-provider": "^4.3.8",
+        "@smithy/node-http-handler": "^4.4.8",
+        "@smithy/protocol-http": "^5.3.8",
+        "@smithy/smithy-client": "^4.10.8",
+        "@smithy/types": "^4.12.0",
+        "@smithy/url-parser": "^4.2.8",
+        "@smithy/util-base64": "^4.3.0",
+        "@smithy/util-body-length-browser": "^4.2.0",
+        "@smithy/util-body-length-node": "^4.2.1",
+        "@smithy/util-defaults-mode-browser": "^4.3.22",
+        "@smithy/util-defaults-mode-node": "^4.2.25",
+        "@smithy/util-endpoints": "^3.2.8",
+        "@smithy/util-middleware": "^4.2.8",
+        "@smithy/util-retry": "^4.2.8",
+        "@smithy/util-utf8": "^4.2.0",
+        "@smithy/util-waiter": "^4.2.8",
+        tslib: "^2.6.2"
+      },
+      devDependencies: {
+        "@tsconfig/node20": "20.1.8",
+        "@types/node": "^20.14.8",
+        concurrently: "7.0.0",
+        "downlevel-dts": "0.10.1",
+        rimraf: "5.0.10",
+        typescript: "~5.8.3"
+      },
+      engines: {
+        node: ">=20.0.0"
+      },
+      typesVersions: {
+        "<4.0": {
+          "dist-types/*": [
+            "dist-types/ts3.4/*"
+          ]
+        }
+      },
+      files: [
+        "dist-*/**"
+      ],
+      author: {
+        name: "AWS SDK for JavaScript Team",
+        url: "https://aws.amazon.com/javascript/"
+      },
+      license: "Apache-2.0",
+      browser: {
+        "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.browser"
+      },
+      "react-native": {
+        "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.native"
+      },
+      homepage: "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-ses",
+      repository: {
+        type: "git",
+        url: "https://github.com/aws/aws-sdk-js-v3.git",
+        directory: "clients/client-ses"
+      }
+    };
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/ruleset.js
+var require_ruleset4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/ruleset.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ruleSet = void 0;
+    var s5 = "required";
+    var t4 = "fn";
+    var u4 = "argv";
+    var v5 = "ref";
+    var a8 = true;
+    var b8 = "isSet";
+    var c8 = "booleanEquals";
+    var d8 = "error";
+    var e8 = "endpoint";
+    var f8 = "tree";
+    var g8 = "PartitionResult";
+    var h8 = { [s5]: false, "type": "string" };
+    var i8 = { [s5]: true, "default": false, "type": "boolean" };
+    var j8 = { [v5]: "Endpoint" };
+    var k8 = { [t4]: c8, [u4]: [{ [v5]: "UseFIPS" }, true] };
+    var l6 = { [t4]: c8, [u4]: [{ [v5]: "UseDualStack" }, true] };
+    var m6 = {};
+    var n6 = { [t4]: "getAttr", [u4]: [{ [v5]: g8 }, "supportsFIPS"] };
+    var o6 = { [t4]: c8, [u4]: [true, { [t4]: "getAttr", [u4]: [{ [v5]: g8 }, "supportsDualStack"] }] };
+    var p6 = [k8];
+    var q6 = [l6];
+    var r8 = [{ [v5]: "Region" }];
+    var _data8 = { version: "1.0", parameters: { Region: h8, UseDualStack: i8, UseFIPS: i8, Endpoint: h8 }, rules: [{ conditions: [{ [t4]: b8, [u4]: [j8] }], rules: [{ conditions: p6, error: "Invalid Configuration: FIPS and custom endpoint are not supported", type: d8 }, { conditions: q6, error: "Invalid Configuration: Dualstack and custom endpoint are not supported", type: d8 }, { endpoint: { url: j8, properties: m6, headers: m6 }, type: e8 }], type: f8 }, { conditions: [{ [t4]: b8, [u4]: r8 }], rules: [{ conditions: [{ [t4]: "aws.partition", [u4]: r8, assign: g8 }], rules: [{ conditions: [k8, l6], rules: [{ conditions: [{ [t4]: c8, [u4]: [a8, n6] }, o6], rules: [{ endpoint: { url: "https://email-fips.{Region}.{PartitionResult#dualStackDnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "FIPS and DualStack are enabled, but this partition does not support one or both", type: d8 }], type: f8 }, { conditions: p6, rules: [{ conditions: [{ [t4]: c8, [u4]: [n6, a8] }], rules: [{ endpoint: { url: "https://email-fips.{Region}.{PartitionResult#dnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "FIPS is enabled but this partition does not support FIPS", type: d8 }], type: f8 }, { conditions: q6, rules: [{ conditions: [o6], rules: [{ endpoint: { url: "https://email.{Region}.{PartitionResult#dualStackDnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }, { error: "DualStack is enabled but this partition does not support DualStack", type: d8 }], type: f8 }, { endpoint: { url: "https://email.{Region}.{PartitionResult#dnsSuffix}", properties: m6, headers: m6 }, type: e8 }], type: f8 }], type: f8 }, { error: "Invalid Configuration: Missing Region", type: d8 }] };
+    exports2.ruleSet = _data8;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/endpointResolver.js
+var require_endpointResolver4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/endpoint/endpointResolver.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.defaultEndpointResolver = void 0;
+    var util_endpoints_1 = require_dist_cjs26();
+    var util_endpoints_2 = require_dist_cjs23();
+    var ruleset_1 = require_ruleset4();
+    var cache8 = new util_endpoints_2.EndpointCache({
+      size: 50,
+      params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
+    });
+    var defaultEndpointResolver8 = (endpointParams, context = {}) => {
+      return cache8.get(endpointParams, () => (0, util_endpoints_2.resolveEndpoint)(ruleset_1.ruleSet, {
+        endpointParams,
+        logger: context.logger
+      }));
+    };
+    exports2.defaultEndpointResolver = defaultEndpointResolver8;
+    util_endpoints_2.customEndpointFunctions.aws = util_endpoints_1.awsEndpointFunctions;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.shared.js
+var require_runtimeConfig_shared4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.shared.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getRuntimeConfig = void 0;
+    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
+    var protocols_1 = (init_protocols3(), __toCommonJS(protocols_exports3));
+    var smithy_client_1 = require_dist_cjs30();
+    var url_parser_1 = require_dist_cjs25();
+    var util_base64_1 = require_dist_cjs15();
+    var util_utf8_1 = require_dist_cjs14();
+    var httpAuthSchemeProvider_1 = require_httpAuthSchemeProvider4();
+    var endpointResolver_1 = require_endpointResolver4();
+    var getRuntimeConfig15 = (config) => {
+      return {
+        apiVersion: "2010-12-01",
+        base64Decoder: config?.base64Decoder ?? util_base64_1.fromBase64,
+        base64Encoder: config?.base64Encoder ?? util_base64_1.toBase64,
+        disableHostPrefix: config?.disableHostPrefix ?? false,
+        endpointProvider: config?.endpointProvider ?? endpointResolver_1.defaultEndpointResolver,
+        extensions: config?.extensions ?? [],
+        httpAuthSchemeProvider: config?.httpAuthSchemeProvider ?? httpAuthSchemeProvider_1.defaultSESHttpAuthSchemeProvider,
+        httpAuthSchemes: config?.httpAuthSchemes ?? [
+          {
+            schemeId: "aws.auth#sigv4",
+            identityProvider: (ipc) => ipc.getIdentityProvider("aws.auth#sigv4"),
+            signer: new core_1.AwsSdkSigV4Signer()
+          }
+        ],
+        logger: config?.logger ?? new smithy_client_1.NoOpLogger(),
+        protocol: config?.protocol ?? protocols_1.AwsQueryProtocol,
+        protocolSettings: config?.protocolSettings ?? {
+          defaultNamespace: "com.amazonaws.ses",
+          xmlNamespace: "http://ses.amazonaws.com/doc/2010-12-01/",
+          version: "2010-12-01",
+          serviceTarget: "SimpleEmailService"
+        },
+        serviceId: config?.serviceId ?? "SES",
+        urlParser: config?.urlParser ?? url_parser_1.parseUrl,
+        utf8Decoder: config?.utf8Decoder ?? util_utf8_1.fromUtf8,
+        utf8Encoder: config?.utf8Encoder ?? util_utf8_1.toUtf8
+      };
+    };
+    exports2.getRuntimeConfig = getRuntimeConfig15;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.js
+var require_runtimeConfig4 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/runtimeConfig.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getRuntimeConfig = void 0;
+    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports));
+    var package_json_1 = tslib_1.__importDefault(require_package4());
+    var core_1 = (init_dist_es3(), __toCommonJS(dist_es_exports3));
+    var credential_provider_node_1 = require_dist_cjs57();
+    var util_user_agent_node_1 = require_dist_cjs45();
+    var config_resolver_1 = require_dist_cjs34();
+    var hash_node_1 = require_dist_cjs46();
+    var middleware_retry_1 = require_dist_cjs41();
+    var node_config_provider_1 = require_dist_cjs37();
+    var node_http_handler_1 = require_dist_cjs18();
+    var smithy_client_1 = require_dist_cjs30();
+    var util_body_length_node_1 = require_dist_cjs47();
+    var util_defaults_mode_node_1 = require_dist_cjs48();
+    var util_retry_1 = require_dist_cjs40();
+    var runtimeConfig_shared_1 = require_runtimeConfig_shared4();
+    var getRuntimeConfig15 = (config) => {
+      (0, smithy_client_1.emitWarningIfUnsupportedVersion)(process.version);
+      const defaultsMode = (0, util_defaults_mode_node_1.resolveDefaultsModeConfig)(config);
+      const defaultConfigProvider = () => defaultsMode().then(smithy_client_1.loadConfigsForDefaultMode);
+      const clientSharedValues = (0, runtimeConfig_shared_1.getRuntimeConfig)(config);
+      (0, core_1.emitWarningIfUnsupportedVersion)(process.version);
+      const loaderConfig = {
+        profile: config?.profile,
+        logger: clientSharedValues.logger
+      };
+      return {
+        ...clientSharedValues,
+        ...config,
+        runtime: "node",
+        defaultsMode,
+        authSchemePreference: config?.authSchemePreference ?? (0, node_config_provider_1.loadConfig)(core_1.NODE_AUTH_SCHEME_PREFERENCE_OPTIONS, loaderConfig),
+        bodyLengthChecker: config?.bodyLengthChecker ?? util_body_length_node_1.calculateBodyLength,
+        credentialDefaultProvider: config?.credentialDefaultProvider ?? credential_provider_node_1.defaultProvider,
+        defaultUserAgentProvider: config?.defaultUserAgentProvider ?? (0, util_user_agent_node_1.createDefaultUserAgentProvider)({ serviceId: clientSharedValues.serviceId, clientVersion: package_json_1.default.version }),
+        maxAttempts: config?.maxAttempts ?? (0, node_config_provider_1.loadConfig)(middleware_retry_1.NODE_MAX_ATTEMPT_CONFIG_OPTIONS, config),
+        region: config?.region ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_REGION_CONFIG_OPTIONS, { ...config_resolver_1.NODE_REGION_CONFIG_FILE_OPTIONS, ...loaderConfig }),
+        requestHandler: node_http_handler_1.NodeHttpHandler.create(config?.requestHandler ?? defaultConfigProvider),
+        retryMode: config?.retryMode ?? (0, node_config_provider_1.loadConfig)({
+          ...middleware_retry_1.NODE_RETRY_MODE_CONFIG_OPTIONS,
+          default: async () => (await defaultConfigProvider()).retryMode || util_retry_1.DEFAULT_RETRY_MODE
+        }, config),
+        sha256: config?.sha256 ?? hash_node_1.Hash.bind(null, "sha256"),
+        streamCollector: config?.streamCollector ?? node_http_handler_1.streamCollector,
+        useDualstackEndpoint: config?.useDualstackEndpoint ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_USE_DUALSTACK_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
+        useFipsEndpoint: config?.useFipsEndpoint ?? (0, node_config_provider_1.loadConfig)(config_resolver_1.NODE_USE_FIPS_ENDPOINT_CONFIG_OPTIONS, loaderConfig),
+        userAgentAppId: config?.userAgentAppId ?? (0, node_config_provider_1.loadConfig)(util_user_agent_node_1.NODE_APP_ID_CONFIG_OPTIONS, loaderConfig)
+      };
+    };
+    exports2.getRuntimeConfig = getRuntimeConfig15;
+  }
+});
+
+// ../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/index.js
+var require_dist_cjs84 = __commonJS({
+  "../../.yarn/cache/@aws-sdk-client-ses-npm-3.970.0-8fa6e4926a-8788caf2b9.zip/node_modules/@aws-sdk/client-ses/dist-cjs/index.js"(exports2) {
+    "use strict";
+    var middlewareHostHeader = require_dist_cjs8();
+    var middlewareLogger = require_dist_cjs9();
+    var middlewareRecursionDetection = require_dist_cjs10();
+    var middlewareUserAgent = require_dist_cjs32();
+    var configResolver = require_dist_cjs34();
+    var core = (init_dist_es2(), __toCommonJS(dist_es_exports2));
+    var schema = (init_schema2(), __toCommonJS(schema_exports2));
+    var middlewareContentLength = require_dist_cjs35();
+    var middlewareEndpoint = require_dist_cjs38();
+    var middlewareRetry = require_dist_cjs41();
+    var smithyClient = require_dist_cjs30();
+    var httpAuthSchemeProvider = require_httpAuthSchemeProvider4();
+    var runtimeConfig = require_runtimeConfig4();
+    var regionConfigResolver = require_dist_cjs49();
+    var protocolHttp = require_dist_cjs5();
+    var utilWaiter = require_dist_cjs59();
+    var resolveClientEndpointParameters8 = (options) => {
+      return Object.assign(options, {
+        useDualstackEndpoint: options.useDualstackEndpoint ?? false,
+        useFipsEndpoint: options.useFipsEndpoint ?? false,
+        defaultSigningName: "ses"
+      });
+    };
+    var commonParams8 = {
+      UseFIPS: { type: "builtInParams", name: "useFipsEndpoint" },
+      Endpoint: { type: "builtInParams", name: "endpoint" },
+      Region: { type: "builtInParams", name: "region" },
+      UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" }
+    };
+    var getHttpAuthExtensionConfiguration8 = (runtimeConfig2) => {
+      const _httpAuthSchemes = runtimeConfig2.httpAuthSchemes;
+      let _httpAuthSchemeProvider = runtimeConfig2.httpAuthSchemeProvider;
+      let _credentials = runtimeConfig2.credentials;
+      return {
+        setHttpAuthScheme(httpAuthScheme) {
+          const index = _httpAuthSchemes.findIndex((scheme) => scheme.schemeId === httpAuthScheme.schemeId);
+          if (index === -1) {
+            _httpAuthSchemes.push(httpAuthScheme);
+          } else {
+            _httpAuthSchemes.splice(index, 1, httpAuthScheme);
+          }
+        },
+        httpAuthSchemes() {
+          return _httpAuthSchemes;
+        },
+        setHttpAuthSchemeProvider(httpAuthSchemeProvider2) {
+          _httpAuthSchemeProvider = httpAuthSchemeProvider2;
+        },
+        httpAuthSchemeProvider() {
+          return _httpAuthSchemeProvider;
+        },
+        setCredentials(credentials) {
+          _credentials = credentials;
+        },
+        credentials() {
+          return _credentials;
+        }
+      };
+    };
+    var resolveHttpAuthRuntimeConfig8 = (config) => {
+      return {
+        httpAuthSchemes: config.httpAuthSchemes(),
+        httpAuthSchemeProvider: config.httpAuthSchemeProvider(),
+        credentials: config.credentials()
+      };
+    };
+    var resolveRuntimeExtensions8 = (runtimeConfig2, extensions) => {
+      const extensionConfiguration = Object.assign(regionConfigResolver.getAwsRegionExtensionConfiguration(runtimeConfig2), smithyClient.getDefaultExtensionConfiguration(runtimeConfig2), protocolHttp.getHttpHandlerExtensionConfiguration(runtimeConfig2), getHttpAuthExtensionConfiguration8(runtimeConfig2));
+      extensions.forEach((extension) => extension.configure(extensionConfiguration));
+      return Object.assign(runtimeConfig2, regionConfigResolver.resolveAwsRegionExtensionConfiguration(extensionConfiguration), smithyClient.resolveDefaultRuntimeConfig(extensionConfiguration), protocolHttp.resolveHttpHandlerRuntimeConfig(extensionConfiguration), resolveHttpAuthRuntimeConfig8(extensionConfiguration));
+    };
+    var SESClient2 = class extends smithyClient.Client {
+      config;
+      constructor(...[configuration]) {
+        const _config_0 = runtimeConfig.getRuntimeConfig(configuration || {});
+        super(_config_0);
+        this.initConfig = _config_0;
+        const _config_1 = resolveClientEndpointParameters8(_config_0);
+        const _config_2 = middlewareUserAgent.resolveUserAgentConfig(_config_1);
+        const _config_3 = middlewareRetry.resolveRetryConfig(_config_2);
+        const _config_4 = configResolver.resolveRegionConfig(_config_3);
+        const _config_5 = middlewareHostHeader.resolveHostHeaderConfig(_config_4);
+        const _config_6 = middlewareEndpoint.resolveEndpointConfig(_config_5);
+        const _config_7 = httpAuthSchemeProvider.resolveHttpAuthSchemeConfig(_config_6);
+        const _config_8 = resolveRuntimeExtensions8(_config_7, configuration?.extensions || []);
+        this.config = _config_8;
+        this.middlewareStack.use(schema.getSchemaSerdePlugin(this.config));
+        this.middlewareStack.use(middlewareUserAgent.getUserAgentPlugin(this.config));
+        this.middlewareStack.use(middlewareRetry.getRetryPlugin(this.config));
+        this.middlewareStack.use(middlewareContentLength.getContentLengthPlugin(this.config));
+        this.middlewareStack.use(middlewareHostHeader.getHostHeaderPlugin(this.config));
+        this.middlewareStack.use(middlewareLogger.getLoggerPlugin(this.config));
+        this.middlewareStack.use(middlewareRecursionDetection.getRecursionDetectionPlugin(this.config));
+        this.middlewareStack.use(core.getHttpAuthSchemeEndpointRuleSetPlugin(this.config, {
+          httpAuthSchemeParametersProvider: httpAuthSchemeProvider.defaultSESHttpAuthSchemeParametersProvider,
+          identityProviderConfigProvider: async (config) => new core.DefaultIdentityProviderConfig({
+            "aws.auth#sigv4": config.credentials
+          })
+        }));
+        this.middlewareStack.use(core.getHttpSigningPlugin(this.config));
+      }
+      destroy() {
+        super.destroy();
+      }
+    };
+    var SESServiceException = class _SESServiceException extends smithyClient.ServiceException {
+      constructor(options) {
+        super(options);
+        Object.setPrototypeOf(this, _SESServiceException.prototype);
+      }
+    };
+    var AccountSendingPausedException = class _AccountSendingPausedException extends SESServiceException {
+      name = "AccountSendingPausedException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "AccountSendingPausedException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _AccountSendingPausedException.prototype);
+      }
+    };
+    var AlreadyExistsException = class _AlreadyExistsException extends SESServiceException {
+      name = "AlreadyExistsException";
+      $fault = "client";
+      Name;
+      constructor(opts) {
+        super({
+          name: "AlreadyExistsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _AlreadyExistsException.prototype);
+        this.Name = opts.Name;
+      }
+    };
+    var CannotDeleteException = class _CannotDeleteException extends SESServiceException {
+      name = "CannotDeleteException";
+      $fault = "client";
+      Name;
+      constructor(opts) {
+        super({
+          name: "CannotDeleteException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _CannotDeleteException.prototype);
+        this.Name = opts.Name;
+      }
+    };
+    var LimitExceededException = class _LimitExceededException extends SESServiceException {
+      name = "LimitExceededException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "LimitExceededException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _LimitExceededException.prototype);
+      }
+    };
+    var RuleSetDoesNotExistException = class _RuleSetDoesNotExistException extends SESServiceException {
+      name = "RuleSetDoesNotExistException";
+      $fault = "client";
+      Name;
+      constructor(opts) {
+        super({
+          name: "RuleSetDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _RuleSetDoesNotExistException.prototype);
+        this.Name = opts.Name;
+      }
+    };
+    var ConfigurationSetAlreadyExistsException = class _ConfigurationSetAlreadyExistsException extends SESServiceException {
+      name = "ConfigurationSetAlreadyExistsException";
+      $fault = "client";
+      ConfigurationSetName;
+      constructor(opts) {
+        super({
+          name: "ConfigurationSetAlreadyExistsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _ConfigurationSetAlreadyExistsException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+      }
+    };
+    var ConfigurationSetDoesNotExistException = class _ConfigurationSetDoesNotExistException extends SESServiceException {
+      name = "ConfigurationSetDoesNotExistException";
+      $fault = "client";
+      ConfigurationSetName;
+      constructor(opts) {
+        super({
+          name: "ConfigurationSetDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _ConfigurationSetDoesNotExistException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+      }
+    };
+    var ConfigurationSetSendingPausedException = class _ConfigurationSetSendingPausedException extends SESServiceException {
+      name = "ConfigurationSetSendingPausedException";
+      $fault = "client";
+      ConfigurationSetName;
+      constructor(opts) {
+        super({
+          name: "ConfigurationSetSendingPausedException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _ConfigurationSetSendingPausedException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+      }
+    };
+    var InvalidConfigurationSetException = class _InvalidConfigurationSetException extends SESServiceException {
+      name = "InvalidConfigurationSetException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "InvalidConfigurationSetException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidConfigurationSetException.prototype);
+      }
+    };
+    var EventDestinationAlreadyExistsException = class _EventDestinationAlreadyExistsException extends SESServiceException {
+      name = "EventDestinationAlreadyExistsException";
+      $fault = "client";
+      ConfigurationSetName;
+      EventDestinationName;
+      constructor(opts) {
+        super({
+          name: "EventDestinationAlreadyExistsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _EventDestinationAlreadyExistsException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+        this.EventDestinationName = opts.EventDestinationName;
+      }
+    };
+    var InvalidCloudWatchDestinationException = class _InvalidCloudWatchDestinationException extends SESServiceException {
+      name = "InvalidCloudWatchDestinationException";
+      $fault = "client";
+      ConfigurationSetName;
+      EventDestinationName;
+      constructor(opts) {
+        super({
+          name: "InvalidCloudWatchDestinationException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidCloudWatchDestinationException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+        this.EventDestinationName = opts.EventDestinationName;
+      }
+    };
+    var InvalidFirehoseDestinationException = class _InvalidFirehoseDestinationException extends SESServiceException {
+      name = "InvalidFirehoseDestinationException";
+      $fault = "client";
+      ConfigurationSetName;
+      EventDestinationName;
+      constructor(opts) {
+        super({
+          name: "InvalidFirehoseDestinationException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidFirehoseDestinationException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+        this.EventDestinationName = opts.EventDestinationName;
+      }
+    };
+    var InvalidSNSDestinationException = class _InvalidSNSDestinationException extends SESServiceException {
+      name = "InvalidSNSDestinationException";
+      $fault = "client";
+      ConfigurationSetName;
+      EventDestinationName;
+      constructor(opts) {
+        super({
+          name: "InvalidSNSDestinationException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidSNSDestinationException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+        this.EventDestinationName = opts.EventDestinationName;
+      }
+    };
+    var InvalidTrackingOptionsException = class _InvalidTrackingOptionsException extends SESServiceException {
+      name = "InvalidTrackingOptionsException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "InvalidTrackingOptionsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidTrackingOptionsException.prototype);
+      }
+    };
+    var TrackingOptionsAlreadyExistsException = class _TrackingOptionsAlreadyExistsException extends SESServiceException {
+      name = "TrackingOptionsAlreadyExistsException";
+      $fault = "client";
+      ConfigurationSetName;
+      constructor(opts) {
+        super({
+          name: "TrackingOptionsAlreadyExistsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _TrackingOptionsAlreadyExistsException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+      }
+    };
+    var CustomVerificationEmailInvalidContentException = class _CustomVerificationEmailInvalidContentException extends SESServiceException {
+      name = "CustomVerificationEmailInvalidContentException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "CustomVerificationEmailInvalidContentException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _CustomVerificationEmailInvalidContentException.prototype);
+      }
+    };
+    var CustomVerificationEmailTemplateAlreadyExistsException = class _CustomVerificationEmailTemplateAlreadyExistsException extends SESServiceException {
+      name = "CustomVerificationEmailTemplateAlreadyExistsException";
+      $fault = "client";
+      CustomVerificationEmailTemplateName;
+      constructor(opts) {
+        super({
+          name: "CustomVerificationEmailTemplateAlreadyExistsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _CustomVerificationEmailTemplateAlreadyExistsException.prototype);
+        this.CustomVerificationEmailTemplateName = opts.CustomVerificationEmailTemplateName;
+      }
+    };
+    var FromEmailAddressNotVerifiedException = class _FromEmailAddressNotVerifiedException extends SESServiceException {
+      name = "FromEmailAddressNotVerifiedException";
+      $fault = "client";
+      FromEmailAddress;
+      constructor(opts) {
+        super({
+          name: "FromEmailAddressNotVerifiedException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _FromEmailAddressNotVerifiedException.prototype);
+        this.FromEmailAddress = opts.FromEmailAddress;
+      }
+    };
+    var InvalidLambdaFunctionException = class _InvalidLambdaFunctionException extends SESServiceException {
+      name = "InvalidLambdaFunctionException";
+      $fault = "client";
+      FunctionArn;
+      constructor(opts) {
+        super({
+          name: "InvalidLambdaFunctionException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidLambdaFunctionException.prototype);
+        this.FunctionArn = opts.FunctionArn;
+      }
+    };
+    var InvalidS3ConfigurationException = class _InvalidS3ConfigurationException extends SESServiceException {
+      name = "InvalidS3ConfigurationException";
+      $fault = "client";
+      Bucket;
+      constructor(opts) {
+        super({
+          name: "InvalidS3ConfigurationException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidS3ConfigurationException.prototype);
+        this.Bucket = opts.Bucket;
+      }
+    };
+    var InvalidSnsTopicException = class _InvalidSnsTopicException extends SESServiceException {
+      name = "InvalidSnsTopicException";
+      $fault = "client";
+      Topic;
+      constructor(opts) {
+        super({
+          name: "InvalidSnsTopicException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidSnsTopicException.prototype);
+        this.Topic = opts.Topic;
+      }
+    };
+    var RuleDoesNotExistException = class _RuleDoesNotExistException extends SESServiceException {
+      name = "RuleDoesNotExistException";
+      $fault = "client";
+      Name;
+      constructor(opts) {
+        super({
+          name: "RuleDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _RuleDoesNotExistException.prototype);
+        this.Name = opts.Name;
+      }
+    };
+    var InvalidTemplateException = class _InvalidTemplateException extends SESServiceException {
+      name = "InvalidTemplateException";
+      $fault = "client";
+      TemplateName;
+      constructor(opts) {
+        super({
+          name: "InvalidTemplateException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidTemplateException.prototype);
+        this.TemplateName = opts.TemplateName;
+      }
+    };
+    var CustomVerificationEmailTemplateDoesNotExistException = class _CustomVerificationEmailTemplateDoesNotExistException extends SESServiceException {
+      name = "CustomVerificationEmailTemplateDoesNotExistException";
+      $fault = "client";
+      CustomVerificationEmailTemplateName;
+      constructor(opts) {
+        super({
+          name: "CustomVerificationEmailTemplateDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _CustomVerificationEmailTemplateDoesNotExistException.prototype);
+        this.CustomVerificationEmailTemplateName = opts.CustomVerificationEmailTemplateName;
+      }
+    };
+    var EventDestinationDoesNotExistException = class _EventDestinationDoesNotExistException extends SESServiceException {
+      name = "EventDestinationDoesNotExistException";
+      $fault = "client";
+      ConfigurationSetName;
+      EventDestinationName;
+      constructor(opts) {
+        super({
+          name: "EventDestinationDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _EventDestinationDoesNotExistException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+        this.EventDestinationName = opts.EventDestinationName;
+      }
+    };
+    var TrackingOptionsDoesNotExistException = class _TrackingOptionsDoesNotExistException extends SESServiceException {
+      name = "TrackingOptionsDoesNotExistException";
+      $fault = "client";
+      ConfigurationSetName;
+      constructor(opts) {
+        super({
+          name: "TrackingOptionsDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _TrackingOptionsDoesNotExistException.prototype);
+        this.ConfigurationSetName = opts.ConfigurationSetName;
+      }
+    };
+    var TemplateDoesNotExistException = class _TemplateDoesNotExistException extends SESServiceException {
+      name = "TemplateDoesNotExistException";
+      $fault = "client";
+      TemplateName;
+      constructor(opts) {
+        super({
+          name: "TemplateDoesNotExistException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _TemplateDoesNotExistException.prototype);
+        this.TemplateName = opts.TemplateName;
+      }
+    };
+    var InvalidDeliveryOptionsException = class _InvalidDeliveryOptionsException extends SESServiceException {
+      name = "InvalidDeliveryOptionsException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "InvalidDeliveryOptionsException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidDeliveryOptionsException.prototype);
+      }
+    };
+    var InvalidPolicyException = class _InvalidPolicyException extends SESServiceException {
+      name = "InvalidPolicyException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "InvalidPolicyException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidPolicyException.prototype);
+      }
+    };
+    var InvalidRenderingParameterException = class _InvalidRenderingParameterException extends SESServiceException {
+      name = "InvalidRenderingParameterException";
+      $fault = "client";
+      TemplateName;
+      constructor(opts) {
+        super({
+          name: "InvalidRenderingParameterException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _InvalidRenderingParameterException.prototype);
+        this.TemplateName = opts.TemplateName;
+      }
+    };
+    var MailFromDomainNotVerifiedException = class _MailFromDomainNotVerifiedException extends SESServiceException {
+      name = "MailFromDomainNotVerifiedException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "MailFromDomainNotVerifiedException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _MailFromDomainNotVerifiedException.prototype);
+      }
+    };
+    var MessageRejected = class _MessageRejected extends SESServiceException {
+      name = "MessageRejected";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "MessageRejected",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _MessageRejected.prototype);
+      }
+    };
+    var MissingRenderingAttributeException = class _MissingRenderingAttributeException extends SESServiceException {
+      name = "MissingRenderingAttributeException";
+      $fault = "client";
+      TemplateName;
+      constructor(opts) {
+        super({
+          name: "MissingRenderingAttributeException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _MissingRenderingAttributeException.prototype);
+        this.TemplateName = opts.TemplateName;
+      }
+    };
+    var ProductionAccessNotGrantedException = class _ProductionAccessNotGrantedException extends SESServiceException {
+      name = "ProductionAccessNotGrantedException";
+      $fault = "client";
+      constructor(opts) {
+        super({
+          name: "ProductionAccessNotGrantedException",
+          $fault: "client",
+          ...opts
+        });
+        Object.setPrototypeOf(this, _ProductionAccessNotGrantedException.prototype);
+      }
+    };
+    var _A3 = "After";
+    var _AD = "ArrivalDate";
+    var _AEE = "AlreadyExistsException";
+    var _AHA = "AddHeaderAction";
+    var _ASPE = "AccountSendingPausedException";
+    var _Ac = "Actions";
+    var _Act = "Action";
+    var _B = "Body";
+    var _BA = "BounceAction";
+    var _BAc = "BccAddresses";
+    var _BED = "BulkEmailDestination";
+    var _BEDL = "BulkEmailDestinationList";
+    var _BEDS = "BulkEmailDestinationStatus";
+    var _BEDSL = "BulkEmailDestinationStatusList";
+    var _BN = "BucketName";
+    var _BOMXF = "BehaviorOnMXFailure";
+    var _BRI = "BouncedRecipientInfo";
+    var _BRIL = "BouncedRecipientInfoList";
+    var _BS = "BounceSender";
+    var _BSA = "BounceSenderArn";
+    var _BT = "BounceType";
+    var _BTo = "BounceTopic";
+    var _Bo = "Bounces";
+    var _Bu = "Bucket";
+    var _C3 = "Content";
+    var _CA3 = "ConnectAction";
+    var _CAc = "CcAddresses";
+    var _CCS = "CreateConfigurationSet";
+    var _CCSED = "CreateConfigurationSetEventDestination";
+    var _CCSEDR = "CreateConfigurationSetEventDestinationRequest";
+    var _CCSEDRr = "CreateConfigurationSetEventDestinationResponse";
+    var _CCSR = "CreateConfigurationSetRequest";
+    var _CCSRr = "CreateConfigurationSetResponse";
+    var _CCSTO = "CreateConfigurationSetTrackingOptions";
+    var _CCSTOR = "CreateConfigurationSetTrackingOptionsRequest";
+    var _CCSTORr = "CreateConfigurationSetTrackingOptionsResponse";
+    var _CCVET = "CreateCustomVerificationEmailTemplate";
+    var _CCVETR = "CreateCustomVerificationEmailTemplateRequest";
+    var _CDE = "CannotDeleteException";
+    var _CRD = "CustomRedirectDomain";
+    var _CRF = "CreateReceiptFilter";
+    var _CRFR = "CreateReceiptFilterRequest";
+    var _CRFRr = "CreateReceiptFilterResponse";
+    var _CRR = "CreateReceiptRule";
+    var _CRRR = "CreateReceiptRuleRequest";
+    var _CRRRr = "CreateReceiptRuleResponse";
+    var _CRRS = "CloneReceiptRuleSet";
+    var _CRRSR = "CloneReceiptRuleSetRequest";
+    var _CRRSRl = "CloneReceiptRuleSetResponse";
+    var _CRRSRr = "CreateReceiptRuleSetRequest";
+    var _CRRSRre = "CreateReceiptRuleSetResponse";
+    var _CRRSr = "CreateReceiptRuleSet";
+    var _CS3 = "ConfigurationSet";
+    var _CSAEE = "ConfigurationSetAlreadyExistsException";
+    var _CSAN = "ConfigurationSetAttributeNames";
+    var _CSDNEE = "ConfigurationSetDoesNotExistException";
+    var _CSN = "ConfigurationSetName";
+    var _CSSPE = "ConfigurationSetSendingPausedException";
+    var _CSo = "ConfigurationSets";
+    var _CT3 = "ComplaintTopic";
+    var _CTR3 = "CreateTemplateRequest";
+    var _CTRr3 = "CreateTemplateResponse";
+    var _CTr = "CreatedTimestamp";
+    var _CTre = "CreateTemplate";
+    var _CVEICE = "CustomVerificationEmailInvalidContentException";
+    var _CVET = "CustomVerificationEmailTemplate";
+    var _CVETAEE = "CustomVerificationEmailTemplateAlreadyExistsException";
+    var _CVETDNEE = "CustomVerificationEmailTemplateDoesNotExistException";
+    var _CVETN = "CustomVerificationEmailTemplateName";
+    var _CVETu = "CustomVerificationEmailTemplates";
+    var _CWD = "CloudWatchDestination";
+    var _CWDC = "CloudWatchDimensionConfiguration";
+    var _CWDCl = "CloudWatchDimensionConfigurations";
+    var _Ch = "Charset";
+    var _Ci = "Cidr";
+    var _Co = "Complaints";
+    var _D = "Destination";
+    var _DA = "DkimAttributes";
+    var _DARRS = "DescribeActiveReceiptRuleSet";
+    var _DARRSR = "DescribeActiveReceiptRuleSetRequest";
+    var _DARRSRe = "DescribeActiveReceiptRuleSetResponse";
+    var _DAe = "DeliveryAttempts";
+    var _DC = "DimensionConfigurations";
+    var _DCS = "DeleteConfigurationSet";
+    var _DCSED = "DeleteConfigurationSetEventDestination";
+    var _DCSEDR = "DeleteConfigurationSetEventDestinationRequest";
+    var _DCSEDRe = "DeleteConfigurationSetEventDestinationResponse";
+    var _DCSR = "DeleteConfigurationSetRequest";
+    var _DCSRe = "DeleteConfigurationSetResponse";
+    var _DCSRes = "DescribeConfigurationSetRequest";
+    var _DCSResc = "DescribeConfigurationSetResponse";
+    var _DCSTO = "DeleteConfigurationSetTrackingOptions";
+    var _DCSTOR = "DeleteConfigurationSetTrackingOptionsRequest";
+    var _DCSTORe = "DeleteConfigurationSetTrackingOptionsResponse";
+    var _DCSe = "DescribeConfigurationSet";
+    var _DCVET = "DeleteCustomVerificationEmailTemplate";
+    var _DCVETR = "DeleteCustomVerificationEmailTemplateRequest";
+    var _DCi = "DiagnosticCode";
+    var _DDV = "DefaultDimensionValue";
+    var _DE = "DkimEnabled";
+    var _DI = "DeleteIdentity";
+    var _DIP = "DeleteIdentityPolicy";
+    var _DIPR = "DeleteIdentityPolicyRequest";
+    var _DIPRe = "DeleteIdentityPolicyResponse";
+    var _DIR = "DeleteIdentityRequest";
+    var _DIRe = "DeleteIdentityResponse";
+    var _DN = "DimensionName";
+    var _DO = "DeliveryOptions";
+    var _DRF = "DeleteReceiptFilter";
+    var _DRFR = "DeleteReceiptFilterRequest";
+    var _DRFRe = "DeleteReceiptFilterResponse";
+    var _DRR = "DeleteReceiptRule";
+    var _DRRR = "DeleteReceiptRuleRequest";
+    var _DRRRe = "DeleteReceiptRuleResponse";
+    var _DRRRes = "DescribeReceiptRuleRequest";
+    var _DRRResc = "DescribeReceiptRuleResponse";
+    var _DRRS = "DeleteReceiptRuleSet";
+    var _DRRSR = "DeleteReceiptRuleSetRequest";
+    var _DRRSRe = "DeleteReceiptRuleSetResponse";
+    var _DRRSRes = "DescribeReceiptRuleSetRequest";
+    var _DRRSResc = "DescribeReceiptRuleSetResponse";
+    var _DRRSe = "DescribeReceiptRuleSet";
+    var _DRRe = "DescribeReceiptRule";
+    var _DSARN = "DeliveryStreamARN";
+    var _DT = "DkimTokens";
+    var _DTD = "DefaultTemplateData";
+    var _DTR = "DeleteTemplateRequest";
+    var _DTRe = "DeleteTemplateResponse";
+    var _DTe = "DeliveryTopic";
+    var _DTef = "DefaultTags";
+    var _DTel = "DeleteTemplate";
+    var _DVEA = "DeleteVerifiedEmailAddress";
+    var _DVEAR = "DeleteVerifiedEmailAddressRequest";
+    var _DVS = "DimensionValueSource";
+    var _DVSk = "DkimVerificationStatus";
+    var _Da = "Data";
+    var _De = "Destinations";
+    var _Do = "Domain";
+    var _E3 = "Error";
+    var _EA = "EmailAddress";
+    var _ED = "EventDestination";
+    var _EDAEE = "EventDestinationAlreadyExistsException";
+    var _EDDNEE = "EventDestinationDoesNotExistException";
+    var _EDN = "EventDestinationName";
+    var _EDv = "EventDestinations";
+    var _EF = "ExtensionField";
+    var _EFL = "ExtensionFieldList";
+    var _EFx = "ExtensionFields";
+    var _En = "Enabled";
+    var _Enc = "Encoding";
+    var _Ex = "Explanation";
+    var _F = "Filter";
+    var _FA = "FunctionArn";
+    var _FAr = "FromArn";
+    var _FE = "ForwardingEnabled";
+    var _FEA = "FromEmailAddress";
+    var _FEANVE = "FromEmailAddressNotVerifiedException";
+    var _FN = "FilterName";
+    var _FR = "FinalRecipient";
+    var _FRURL = "FailureRedirectionURL";
+    var _Fi = "Filters";
+    var _GASE = "GetAccountSendingEnabled";
+    var _GASER = "GetAccountSendingEnabledResponse";
+    var _GCVET = "GetCustomVerificationEmailTemplate";
+    var _GCVETR = "GetCustomVerificationEmailTemplateRequest";
+    var _GCVETRe = "GetCustomVerificationEmailTemplateResponse";
+    var _GIDA = "GetIdentityDkimAttributes";
+    var _GIDAR = "GetIdentityDkimAttributesRequest";
+    var _GIDARe = "GetIdentityDkimAttributesResponse";
+    var _GIMFDA = "GetIdentityMailFromDomainAttributes";
+    var _GIMFDAR = "GetIdentityMailFromDomainAttributesRequest";
+    var _GIMFDARe = "GetIdentityMailFromDomainAttributesResponse";
+    var _GINA = "GetIdentityNotificationAttributes";
+    var _GINAR = "GetIdentityNotificationAttributesRequest";
+    var _GINARe = "GetIdentityNotificationAttributesResponse";
+    var _GIP = "GetIdentityPolicies";
+    var _GIPR = "GetIdentityPoliciesRequest";
+    var _GIPRe = "GetIdentityPoliciesResponse";
+    var _GIVA = "GetIdentityVerificationAttributes";
+    var _GIVAR = "GetIdentityVerificationAttributesRequest";
+    var _GIVARe = "GetIdentityVerificationAttributesResponse";
+    var _GSQ = "GetSendQuota";
+    var _GSQR = "GetSendQuotaResponse";
+    var _GSS = "GetSendStatistics";
+    var _GSSR = "GetSendStatisticsResponse";
+    var _GT = "GetTemplate";
+    var _GTR = "GetTemplateRequest";
+    var _GTRe = "GetTemplateResponse";
+    var _H = "Html";
+    var _HIBNE = "HeadersInBounceNotificationsEnabled";
+    var _HICNE = "HeadersInComplaintNotificationsEnabled";
+    var _HIDNE = "HeadersInDeliveryNotificationsEnabled";
+    var _HN = "HeaderName";
+    var _HP = "HtmlPart";
+    var _HV = "HeaderValue";
+    var _I = "Identity";
+    var _IAMRARN = "IAMRoleARN";
+    var _IARN = "InstanceARN";
+    var _ICSE = "InvalidConfigurationSetException";
+    var _ICWDE = "InvalidCloudWatchDestinationException";
+    var _IDA = "IdentityDkimAttributes";
+    var _IDOE = "InvalidDeliveryOptionsException";
+    var _IF = "IpFilter";
+    var _IFDE = "InvalidFirehoseDestinationException";
+    var _ILFE = "InvalidLambdaFunctionException";
+    var _IMFDA = "IdentityMailFromDomainAttributes";
+    var _INA = "IdentityNotificationAttributes";
+    var _IPE = "InvalidPolicyException";
+    var _IRA = "IamRoleArn";
+    var _IRPE = "InvalidRenderingParameterException";
+    var _ISCE = "InvalidS3ConfigurationException";
+    var _ISNSDE = "InvalidSNSDestinationException";
+    var _ISTE = "InvalidSnsTopicException";
+    var _IT3 = "InvocationType";
+    var _ITE = "InvalidTemplateException";
+    var _ITOE = "InvalidTrackingOptionsException";
+    var _ITd = "IdentityType";
+    var _IVA = "IdentityVerificationAttributes";
+    var _Id = "Identities";
+    var _KFD = "KinesisFirehoseDestination";
+    var _KKA = "KmsKeyArn";
+    var _LA = "LambdaAction";
+    var _LAD = "LastAttemptDate";
+    var _LCS = "ListConfigurationSets";
+    var _LCSR = "ListConfigurationSetsRequest";
+    var _LCSRi = "ListConfigurationSetsResponse";
+    var _LCVET = "ListCustomVerificationEmailTemplates";
+    var _LCVETR = "ListCustomVerificationEmailTemplatesRequest";
+    var _LCVETRi = "ListCustomVerificationEmailTemplatesResponse";
+    var _LEE = "LimitExceededException";
+    var _LFS = "LastFreshStart";
+    var _LI = "ListIdentities";
+    var _LIP = "ListIdentityPolicies";
+    var _LIPR = "ListIdentityPoliciesRequest";
+    var _LIPRi = "ListIdentityPoliciesResponse";
+    var _LIR = "ListIdentitiesRequest";
+    var _LIRi = "ListIdentitiesResponse";
+    var _LRF = "ListReceiptFilters";
+    var _LRFR = "ListReceiptFiltersRequest";
+    var _LRFRi = "ListReceiptFiltersResponse";
+    var _LRRS = "ListReceiptRuleSets";
+    var _LRRSR = "ListReceiptRuleSetsRequest";
+    var _LRRSRi = "ListReceiptRuleSetsResponse";
+    var _LT = "ListTemplates";
+    var _LTR = "ListTemplatesRequest";
+    var _LTRi = "ListTemplatesResponse";
+    var _LVEA = "ListVerifiedEmailAddresses";
+    var _LVEAR = "ListVerifiedEmailAddressesResponse";
+    var _M = "Message";
+    var _MD = "MessageDsn";
+    var _MET = "MatchingEventTypes";
+    var _MFD = "MailFromDomain";
+    var _MFDA = "MailFromDomainAttributes";
+    var _MFDNVE = "MailFromDomainNotVerifiedException";
+    var _MFDS = "MailFromDomainStatus";
+    var _MHS = "Max24HourSend";
+    var _MI = "MessageId";
+    var _MIa = "MaxItems";
+    var _MR = "MaxResults";
+    var _MRAE = "MissingRenderingAttributeException";
+    var _MRe = "MessageRejected";
+    var _MSR = "MaxSendRate";
+    var _MT = "MessageTag";
+    var _MTL = "MessageTagList";
+    var _Me = "Metadata";
+    var _N = "Name";
+    var _NA = "NotificationAttributes";
+    var _NT = "NextToken";
+    var _NTo = "NotificationType";
+    var _OA = "OrganizationArn";
+    var _OKP = "ObjectKeyPrefix";
+    var _OMI = "OriginalMessageId";
+    var _ORSN = "OriginalRuleSetName";
+    var _P3 = "Policies";
+    var _PANGE = "ProductionAccessNotGrantedException";
+    var _PCSDO = "PutConfigurationSetDeliveryOptions";
+    var _PCSDOR = "PutConfigurationSetDeliveryOptionsRequest";
+    var _PCSDORu = "PutConfigurationSetDeliveryOptionsResponse";
+    var _PIP = "PutIdentityPolicy";
+    var _PIPR = "PutIdentityPolicyRequest";
+    var _PIPRu = "PutIdentityPolicyResponse";
+    var _PN = "PolicyName";
+    var _PNo = "PolicyNames";
+    var _Po = "Policy";
+    var _R = "Recipient";
+    var _RA3 = "RecipientArn";
+    var _RAL = "ReceiptActionsList";
+    var _RAe = "ReceiptAction";
+    var _RDF = "RecipientDsnFields";
+    var _RDNEE = "RuleDoesNotExistException";
+    var _RF = "ReceiptFilter";
+    var _RFL = "ReceiptFilterList";
+    var _RIF = "ReceiptIpFilter";
+    var _RM = "ReportingMta";
+    var _RME = "ReputationMetricsEnabled";
+    var _RMa = "RawMessage";
+    var _RMe = "RemoteMta";
+    var _RN = "RuleName";
+    var _RNu = "RuleNames";
+    var _RO = "ReputationOptions";
+    var _RP = "ReturnPath";
+    var _RPA = "ReturnPathArn";
+    var _RR = "ReceiptRule";
+    var _RRL = "ReceiptRulesList";
+    var _RRRS = "ReorderReceiptRuleSet";
+    var _RRRSR = "ReorderReceiptRuleSetRequest";
+    var _RRRSRe = "ReorderReceiptRuleSetResponse";
+    var _RRSL = "ReceiptRuleSetsLists";
+    var _RRSM = "ReceiptRuleSetMetadata";
+    var _RS = "RuleSets";
+    var _RSDNEE = "RuleSetDoesNotExistException";
+    var _RSN3 = "RuleSetName";
+    var _RT5 = "ReplacementTags";
+    var _RTA = "ReplyToAddresses";
+    var _RTD = "ReplacementTemplateData";
+    var _RTe = "RenderedTemplate";
+    var _Re = "Recipients";
+    var _Rej = "Rejects";
+    var _Ru = "Rule";
+    var _Rul = "Rules";
+    var _S = "Sender";
+    var _SA = "S3Action";
+    var _SARRS = "SetActiveReceiptRuleSet";
+    var _SARRSR = "SetActiveReceiptRuleSetRequest";
+    var _SARRSRe = "SetActiveReceiptRuleSetResponse";
+    var _SAo = "SourceArn";
+    var _SAt = "StopAction";
+    var _SB = "SendBounce";
+    var _SBR = "SendBounceRequest";
+    var _SBRe = "SendBounceResponse";
+    var _SBTE = "SendBulkTemplatedEmail";
+    var _SBTER = "SendBulkTemplatedEmailRequest";
+    var _SBTERe = "SendBulkTemplatedEmailResponse";
+    var _SC = "StatusCode";
+    var _SCVE = "SendCustomVerificationEmail";
+    var _SCVER = "SendCustomVerificationEmailRequest";
+    var _SCVERe = "SendCustomVerificationEmailResponse";
+    var _SDP = "SendDataPoints";
+    var _SDPL = "SendDataPointList";
+    var _SDPe = "SendDataPoint";
+    var _SE = "ScanEnabled";
+    var _SER = "SendEmailRequest";
+    var _SERe = "SendEmailResponse";
+    var _SEe = "SendingEnabled";
+    var _SEen = "SendEmail";
+    var _SIDE = "SetIdentityDkimEnabled";
+    var _SIDER = "SetIdentityDkimEnabledRequest";
+    var _SIDERe = "SetIdentityDkimEnabledResponse";
+    var _SIFFE = "SetIdentityFeedbackForwardingEnabled";
+    var _SIFFER = "SetIdentityFeedbackForwardingEnabledRequest";
+    var _SIFFERe = "SetIdentityFeedbackForwardingEnabledResponse";
+    var _SIHINE = "SetIdentityHeadersInNotificationsEnabled";
+    var _SIHINER = "SetIdentityHeadersInNotificationsEnabledRequest";
+    var _SIHINERe = "SetIdentityHeadersInNotificationsEnabledResponse";
+    var _SIMFD = "SetIdentityMailFromDomain";
+    var _SIMFDR = "SetIdentityMailFromDomainRequest";
+    var _SIMFDRe = "SetIdentityMailFromDomainResponse";
+    var _SINT = "SetIdentityNotificationTopic";
+    var _SINTR = "SetIdentityNotificationTopicRequest";
+    var _SINTRe = "SetIdentityNotificationTopicResponse";
+    var _SLH = "SentLast24Hours";
+    var _SNSA = "SNSAction";
+    var _SNSD = "SNSDestination";
+    var _SP = "SubjectPart";
+    var _SRC = "SmtpReplyCode";
+    var _SRE = "SendRawEmail";
+    var _SRER = "SendRawEmailRequest";
+    var _SRERe = "SendRawEmailResponse";
+    var _SRRP = "SetReceiptRulePosition";
+    var _SRRPR = "SetReceiptRulePositionRequest";
+    var _SRRPRe = "SetReceiptRulePositionResponse";
+    var _SRURL = "SuccessRedirectionURL";
+    var _ST3 = "SnsTopic";
+    var _STE = "SendTemplatedEmail";
+    var _STER = "SendTemplatedEmailRequest";
+    var _STERe = "SendTemplatedEmailResponse";
+    var _Sc = "Scope";
+    var _So = "Source";
+    var _St = "Status";
+    var _Su = "Subject";
+    var _T3 = "Text";
+    var _TA = "TopicArn";
+    var _TARN = "TopicARN";
+    var _TAe = "TemplateArn";
+    var _TAo = "ToAddresses";
+    var _TC3 = "TemplateContent";
+    var _TD = "TemplateData";
+    var _TDNEE = "TemplateDoesNotExistException";
+    var _TM = "TemplatesMetadata";
+    var _TML = "TemplateMetadataList";
+    var _TMe = "TemplateMetadata";
+    var _TN = "TemplateName";
+    var _TO = "TrackingOptions";
+    var _TOAEE = "TrackingOptionsAlreadyExistsException";
+    var _TODNEE = "TrackingOptionsDoesNotExistException";
+    var _TP = "TlsPolicy";
+    var _TPe = "TextPart";
+    var _TRT = "TestRenderTemplate";
+    var _TRTR = "TestRenderTemplateRequest";
+    var _TRTRe = "TestRenderTemplateResponse";
+    var _TS = "TemplateSubject";
+    var _Ta3 = "Tags";
+    var _Te = "Template";
+    var _Ti = "Timestamp";
+    var _To = "Topic";
+    var _UASE = "UpdateAccountSendingEnabled";
+    var _UASER = "UpdateAccountSendingEnabledRequest";
+    var _UCSED = "UpdateConfigurationSetEventDestination";
+    var _UCSEDR = "UpdateConfigurationSetEventDestinationRequest";
+    var _UCSEDRp = "UpdateConfigurationSetEventDestinationResponse";
+    var _UCSRME = "UpdateConfigurationSetReputationMetricsEnabled";
+    var _UCSRMER = "UpdateConfigurationSetReputationMetricsEnabledRequest";
+    var _UCSSE = "UpdateConfigurationSetSendingEnabled";
+    var _UCSSER = "UpdateConfigurationSetSendingEnabledRequest";
+    var _UCSTO = "UpdateConfigurationSetTrackingOptions";
+    var _UCSTOR = "UpdateConfigurationSetTrackingOptionsRequest";
+    var _UCSTORp = "UpdateConfigurationSetTrackingOptionsResponse";
+    var _UCVET = "UpdateCustomVerificationEmailTemplate";
+    var _UCVETR = "UpdateCustomVerificationEmailTemplateRequest";
+    var _URR = "UpdateReceiptRule";
+    var _URRR = "UpdateReceiptRuleRequest";
+    var _URRRp = "UpdateReceiptRuleResponse";
+    var _UT = "UpdateTemplate";
+    var _UTR = "UpdateTemplateRequest";
+    var _UTRp = "UpdateTemplateResponse";
+    var _V3 = "Value";
+    var _VA = "VerificationAttributes";
+    var _VDD = "VerifyDomainDkim";
+    var _VDDR = "VerifyDomainDkimRequest";
+    var _VDDRe = "VerifyDomainDkimResponse";
+    var _VDI = "VerifyDomainIdentity";
+    var _VDIR = "VerifyDomainIdentityRequest";
+    var _VDIRe = "VerifyDomainIdentityResponse";
+    var _VEA = "VerifiedEmailAddresses";
+    var _VEAR = "VerifyEmailAddressRequest";
+    var _VEAe = "VerifyEmailAddress";
+    var _VEI = "VerifyEmailIdentity";
+    var _VEIR = "VerifyEmailIdentityRequest";
+    var _VEIRe = "VerifyEmailIdentityResponse";
+    var _VS = "VerificationStatus";
+    var _VT = "VerificationToken";
+    var _WA = "WorkmailAction";
+    var _aQE3 = "awsQueryError";
+    var _c8 = "client";
+    var _e8 = "error";
+    var _hE8 = "httpError";
+    var _m6 = "message";
+    var _s8 = "smithy.ts.sdk.synthetic.com.amazonaws.ses";
+    var n08 = "com.amazonaws.ses";
+    var AccountSendingPausedException$ = [
+      -3,
+      n08,
+      _ASPE,
+      { [_aQE3]: [`AccountSendingPausedException`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(AccountSendingPausedException$, AccountSendingPausedException);
+    var AddHeaderAction$ = [
+      3,
+      n08,
+      _AHA,
+      0,
+      [_HN, _HV],
+      [0, 0],
+      2
+    ];
+    var AlreadyExistsException$ = [
+      -3,
+      n08,
+      _AEE,
+      { [_aQE3]: [`AlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_N, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(AlreadyExistsException$, AlreadyExistsException);
+    var Body$ = [
+      3,
+      n08,
+      _B,
+      0,
+      [_T3, _H],
+      [() => Content$, () => Content$]
+    ];
+    var BounceAction$ = [
+      3,
+      n08,
+      _BA,
+      0,
+      [_SRC, _M, _S, _TA, _SC],
+      [0, 0, 0, 0, 0],
+      3
+    ];
+    var BouncedRecipientInfo$ = [
+      3,
+      n08,
+      _BRI,
+      0,
+      [_R, _RA3, _BT, _RDF],
+      [0, 0, 0, () => RecipientDsnFields$],
+      1
+    ];
+    var BulkEmailDestination$ = [
+      3,
+      n08,
+      _BED,
+      0,
+      [_D, _RT5, _RTD],
+      [() => Destination$, () => MessageTagList, 0],
+      1
+    ];
+    var BulkEmailDestinationStatus$ = [
+      3,
+      n08,
+      _BEDS,
+      0,
+      [_St, _E3, _MI],
+      [0, 0, 0]
+    ];
+    var CannotDeleteException$ = [
+      -3,
+      n08,
+      _CDE,
+      { [_aQE3]: [`CannotDelete`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_N, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(CannotDeleteException$, CannotDeleteException);
+    var CloneReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _CRRSR,
+      0,
+      [_RSN3, _ORSN],
+      [0, 0],
+      2
+    ];
+    var CloneReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _CRRSRl,
+      0,
+      [],
+      []
+    ];
+    var CloudWatchDestination$ = [
+      3,
+      n08,
+      _CWD,
+      0,
+      [_DC],
+      [() => CloudWatchDimensionConfigurations],
+      1
+    ];
+    var CloudWatchDimensionConfiguration$ = [
+      3,
+      n08,
+      _CWDC,
+      0,
+      [_DN, _DVS, _DDV],
+      [0, 0, 0],
+      3
+    ];
+    var ConfigurationSet$ = [
+      3,
+      n08,
+      _CS3,
+      0,
+      [_N],
+      [0],
+      1
+    ];
+    var ConfigurationSetAlreadyExistsException$ = [
+      -3,
+      n08,
+      _CSAEE,
+      { [_aQE3]: [`ConfigurationSetAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(ConfigurationSetAlreadyExistsException$, ConfigurationSetAlreadyExistsException);
+    var ConfigurationSetDoesNotExistException$ = [
+      -3,
+      n08,
+      _CSDNEE,
+      { [_aQE3]: [`ConfigurationSetDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(ConfigurationSetDoesNotExistException$, ConfigurationSetDoesNotExistException);
+    var ConfigurationSetSendingPausedException$ = [
+      -3,
+      n08,
+      _CSSPE,
+      { [_aQE3]: [`ConfigurationSetSendingPausedException`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(ConfigurationSetSendingPausedException$, ConfigurationSetSendingPausedException);
+    var ConnectAction$ = [
+      3,
+      n08,
+      _CA3,
+      0,
+      [_IARN, _IAMRARN],
+      [0, 0],
+      2
+    ];
+    var Content$ = [
+      3,
+      n08,
+      _C3,
+      0,
+      [_Da, _Ch],
+      [0, 0],
+      1
+    ];
+    var CreateConfigurationSetEventDestinationRequest$ = [
+      3,
+      n08,
+      _CCSEDR,
+      0,
+      [_CSN, _ED],
+      [0, () => EventDestination$],
+      2
+    ];
+    var CreateConfigurationSetEventDestinationResponse$ = [
+      3,
+      n08,
+      _CCSEDRr,
+      0,
+      [],
+      []
+    ];
+    var CreateConfigurationSetRequest$ = [
+      3,
+      n08,
+      _CCSR,
+      0,
+      [_CS3],
+      [() => ConfigurationSet$],
+      1
+    ];
+    var CreateConfigurationSetResponse$ = [
+      3,
+      n08,
+      _CCSRr,
+      0,
+      [],
+      []
+    ];
+    var CreateConfigurationSetTrackingOptionsRequest$ = [
+      3,
+      n08,
+      _CCSTOR,
+      0,
+      [_CSN, _TO],
+      [0, () => TrackingOptions$],
+      2
+    ];
+    var CreateConfigurationSetTrackingOptionsResponse$ = [
+      3,
+      n08,
+      _CCSTORr,
+      0,
+      [],
+      []
+    ];
+    var CreateCustomVerificationEmailTemplateRequest$ = [
+      3,
+      n08,
+      _CCVETR,
+      0,
+      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
+      [0, 0, 0, 0, 0, 0],
+      6
+    ];
+    var CreateReceiptFilterRequest$ = [
+      3,
+      n08,
+      _CRFR,
+      0,
+      [_F],
+      [() => ReceiptFilter$],
+      1
+    ];
+    var CreateReceiptFilterResponse$ = [
+      3,
+      n08,
+      _CRFRr,
+      0,
+      [],
+      []
+    ];
+    var CreateReceiptRuleRequest$ = [
+      3,
+      n08,
+      _CRRR,
+      0,
+      [_RSN3, _Ru, _A3],
+      [0, () => ReceiptRule$, 0],
+      2
+    ];
+    var CreateReceiptRuleResponse$ = [
+      3,
+      n08,
+      _CRRRr,
+      0,
+      [],
+      []
+    ];
+    var CreateReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _CRRSRr,
+      0,
+      [_RSN3],
+      [0],
+      1
+    ];
+    var CreateReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _CRRSRre,
+      0,
+      [],
+      []
+    ];
+    var CreateTemplateRequest$ = [
+      3,
+      n08,
+      _CTR3,
+      0,
+      [_Te],
+      [() => Template$],
+      1
+    ];
+    var CreateTemplateResponse$ = [
+      3,
+      n08,
+      _CTRr3,
+      0,
+      [],
+      []
+    ];
+    var CustomVerificationEmailInvalidContentException$ = [
+      -3,
+      n08,
+      _CVEICE,
+      { [_aQE3]: [`CustomVerificationEmailInvalidContent`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailInvalidContentException$, CustomVerificationEmailInvalidContentException);
+    var CustomVerificationEmailTemplate$ = [
+      3,
+      n08,
+      _CVET,
+      0,
+      [_TN, _FEA, _TS, _SRURL, _FRURL],
+      [0, 0, 0, 0, 0]
+    ];
+    var CustomVerificationEmailTemplateAlreadyExistsException$ = [
+      -3,
+      n08,
+      _CVETAEE,
+      { [_aQE3]: [`CustomVerificationEmailTemplateAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CVETN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailTemplateAlreadyExistsException$, CustomVerificationEmailTemplateAlreadyExistsException);
+    var CustomVerificationEmailTemplateDoesNotExistException$ = [
+      -3,
+      n08,
+      _CVETDNEE,
+      { [_aQE3]: [`CustomVerificationEmailTemplateDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CVETN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(CustomVerificationEmailTemplateDoesNotExistException$, CustomVerificationEmailTemplateDoesNotExistException);
+    var DeleteConfigurationSetEventDestinationRequest$ = [
+      3,
+      n08,
+      _DCSEDR,
+      0,
+      [_CSN, _EDN],
+      [0, 0],
+      2
+    ];
+    var DeleteConfigurationSetEventDestinationResponse$ = [
+      3,
+      n08,
+      _DCSEDRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteConfigurationSetRequest$ = [
+      3,
+      n08,
+      _DCSR,
+      0,
+      [_CSN],
+      [0],
+      1
+    ];
+    var DeleteConfigurationSetResponse$ = [
+      3,
+      n08,
+      _DCSRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteConfigurationSetTrackingOptionsRequest$ = [
+      3,
+      n08,
+      _DCSTOR,
+      0,
+      [_CSN],
+      [0],
+      1
+    ];
+    var DeleteConfigurationSetTrackingOptionsResponse$ = [
+      3,
+      n08,
+      _DCSTORe,
+      0,
+      [],
+      []
+    ];
+    var DeleteCustomVerificationEmailTemplateRequest$ = [
+      3,
+      n08,
+      _DCVETR,
+      0,
+      [_TN],
+      [0],
+      1
+    ];
+    var DeleteIdentityPolicyRequest$ = [
+      3,
+      n08,
+      _DIPR,
+      0,
+      [_I, _PN],
+      [0, 0],
+      2
+    ];
+    var DeleteIdentityPolicyResponse$ = [
+      3,
+      n08,
+      _DIPRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteIdentityRequest$ = [
+      3,
+      n08,
+      _DIR,
+      0,
+      [_I],
+      [0],
+      1
+    ];
+    var DeleteIdentityResponse$ = [
+      3,
+      n08,
+      _DIRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteReceiptFilterRequest$ = [
+      3,
+      n08,
+      _DRFR,
+      0,
+      [_FN],
+      [0],
+      1
+    ];
+    var DeleteReceiptFilterResponse$ = [
+      3,
+      n08,
+      _DRFRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteReceiptRuleRequest$ = [
+      3,
+      n08,
+      _DRRR,
+      0,
+      [_RSN3, _RN],
+      [0, 0],
+      2
+    ];
+    var DeleteReceiptRuleResponse$ = [
+      3,
+      n08,
+      _DRRRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _DRRSR,
+      0,
+      [_RSN3],
+      [0],
+      1
+    ];
+    var DeleteReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _DRRSRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteTemplateRequest$ = [
+      3,
+      n08,
+      _DTR,
+      0,
+      [_TN],
+      [0],
+      1
+    ];
+    var DeleteTemplateResponse$ = [
+      3,
+      n08,
+      _DTRe,
+      0,
+      [],
+      []
+    ];
+    var DeleteVerifiedEmailAddressRequest$ = [
+      3,
+      n08,
+      _DVEAR,
+      0,
+      [_EA],
+      [0],
+      1
+    ];
+    var DeliveryOptions$ = [
+      3,
+      n08,
+      _DO,
+      0,
+      [_TP],
+      [0]
+    ];
+    var DescribeActiveReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _DARRSR,
+      0,
+      [],
+      []
+    ];
+    var DescribeActiveReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _DARRSRe,
+      0,
+      [_Me, _Rul],
+      [() => ReceiptRuleSetMetadata$, () => ReceiptRulesList]
+    ];
+    var DescribeConfigurationSetRequest$ = [
+      3,
+      n08,
+      _DCSRes,
+      0,
+      [_CSN, _CSAN],
+      [0, 64 | 0],
+      1
+    ];
+    var DescribeConfigurationSetResponse$ = [
+      3,
+      n08,
+      _DCSResc,
+      0,
+      [_CS3, _EDv, _TO, _DO, _RO],
+      [() => ConfigurationSet$, () => EventDestinations, () => TrackingOptions$, () => DeliveryOptions$, () => ReputationOptions$]
+    ];
+    var DescribeReceiptRuleRequest$ = [
+      3,
+      n08,
+      _DRRRes,
+      0,
+      [_RSN3, _RN],
+      [0, 0],
+      2
+    ];
+    var DescribeReceiptRuleResponse$ = [
+      3,
+      n08,
+      _DRRResc,
+      0,
+      [_Ru],
+      [() => ReceiptRule$]
+    ];
+    var DescribeReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _DRRSRes,
+      0,
+      [_RSN3],
+      [0],
+      1
+    ];
+    var DescribeReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _DRRSResc,
+      0,
+      [_Me, _Rul],
+      [() => ReceiptRuleSetMetadata$, () => ReceiptRulesList]
+    ];
+    var Destination$ = [
+      3,
+      n08,
+      _D,
+      0,
+      [_TAo, _CAc, _BAc],
+      [64 | 0, 64 | 0, 64 | 0]
+    ];
+    var EventDestination$ = [
+      3,
+      n08,
+      _ED,
+      0,
+      [_N, _MET, _En, _KFD, _CWD, _SNSD],
+      [0, 64 | 0, 2, () => KinesisFirehoseDestination$, () => CloudWatchDestination$, () => SNSDestination$],
+      2
+    ];
+    var EventDestinationAlreadyExistsException$ = [
+      -3,
+      n08,
+      _EDAEE,
+      { [_aQE3]: [`EventDestinationAlreadyExists`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _EDN, _m6],
+      [0, 0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(EventDestinationAlreadyExistsException$, EventDestinationAlreadyExistsException);
+    var EventDestinationDoesNotExistException$ = [
+      -3,
+      n08,
+      _EDDNEE,
+      { [_aQE3]: [`EventDestinationDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _EDN, _m6],
+      [0, 0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(EventDestinationDoesNotExistException$, EventDestinationDoesNotExistException);
+    var ExtensionField$ = [
+      3,
+      n08,
+      _EF,
+      0,
+      [_N, _V3],
+      [0, 0],
+      2
+    ];
+    var FromEmailAddressNotVerifiedException$ = [
+      -3,
+      n08,
+      _FEANVE,
+      { [_aQE3]: [`FromEmailAddressNotVerified`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_FEA, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(FromEmailAddressNotVerifiedException$, FromEmailAddressNotVerifiedException);
+    var GetAccountSendingEnabledResponse$ = [
+      3,
+      n08,
+      _GASER,
+      0,
+      [_En],
+      [2]
+    ];
+    var GetCustomVerificationEmailTemplateRequest$ = [
+      3,
+      n08,
+      _GCVETR,
+      0,
+      [_TN],
+      [0],
+      1
+    ];
+    var GetCustomVerificationEmailTemplateResponse$ = [
+      3,
+      n08,
+      _GCVETRe,
+      0,
+      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
+      [0, 0, 0, 0, 0, 0]
+    ];
+    var GetIdentityDkimAttributesRequest$ = [
+      3,
+      n08,
+      _GIDAR,
+      0,
+      [_Id],
+      [64 | 0],
+      1
+    ];
+    var GetIdentityDkimAttributesResponse$ = [
+      3,
+      n08,
+      _GIDARe,
+      0,
+      [_DA],
+      [() => DkimAttributes],
+      1
+    ];
+    var GetIdentityMailFromDomainAttributesRequest$ = [
+      3,
+      n08,
+      _GIMFDAR,
+      0,
+      [_Id],
+      [64 | 0],
+      1
+    ];
+    var GetIdentityMailFromDomainAttributesResponse$ = [
+      3,
+      n08,
+      _GIMFDARe,
+      0,
+      [_MFDA],
+      [() => MailFromDomainAttributes],
+      1
+    ];
+    var GetIdentityNotificationAttributesRequest$ = [
+      3,
+      n08,
+      _GINAR,
+      0,
+      [_Id],
+      [64 | 0],
+      1
+    ];
+    var GetIdentityNotificationAttributesResponse$ = [
+      3,
+      n08,
+      _GINARe,
+      0,
+      [_NA],
+      [() => NotificationAttributes],
+      1
+    ];
+    var GetIdentityPoliciesRequest$ = [
+      3,
+      n08,
+      _GIPR,
+      0,
+      [_I, _PNo],
+      [0, 64 | 0],
+      2
+    ];
+    var GetIdentityPoliciesResponse$ = [
+      3,
+      n08,
+      _GIPRe,
+      0,
+      [_P3],
+      [128 | 0],
+      1
+    ];
+    var GetIdentityVerificationAttributesRequest$ = [
+      3,
+      n08,
+      _GIVAR,
+      0,
+      [_Id],
+      [64 | 0],
+      1
+    ];
+    var GetIdentityVerificationAttributesResponse$ = [
+      3,
+      n08,
+      _GIVARe,
+      0,
+      [_VA],
+      [() => VerificationAttributes],
+      1
+    ];
+    var GetSendQuotaResponse$ = [
+      3,
+      n08,
+      _GSQR,
+      0,
+      [_MHS, _MSR, _SLH],
+      [1, 1, 1]
+    ];
+    var GetSendStatisticsResponse$ = [
+      3,
+      n08,
+      _GSSR,
+      0,
+      [_SDP],
+      [() => SendDataPointList]
+    ];
+    var GetTemplateRequest$ = [
+      3,
+      n08,
+      _GTR,
+      0,
+      [_TN],
+      [0],
+      1
+    ];
+    var GetTemplateResponse$ = [
+      3,
+      n08,
+      _GTRe,
+      0,
+      [_Te],
+      [() => Template$]
+    ];
+    var IdentityDkimAttributes$ = [
+      3,
+      n08,
+      _IDA,
+      0,
+      [_DE, _DVSk, _DT],
+      [2, 0, 64 | 0],
+      2
+    ];
+    var IdentityMailFromDomainAttributes$ = [
+      3,
+      n08,
+      _IMFDA,
+      0,
+      [_MFD, _MFDS, _BOMXF],
+      [0, 0, 0],
+      3
+    ];
+    var IdentityNotificationAttributes$ = [
+      3,
+      n08,
+      _INA,
+      0,
+      [_BTo, _CT3, _DTe, _FE, _HIBNE, _HICNE, _HIDNE],
+      [0, 0, 0, 2, 2, 2, 2],
+      4
+    ];
+    var IdentityVerificationAttributes$ = [
+      3,
+      n08,
+      _IVA,
+      0,
+      [_VS, _VT],
+      [0, 0],
+      1
+    ];
+    var InvalidCloudWatchDestinationException$ = [
+      -3,
+      n08,
+      _ICWDE,
+      { [_aQE3]: [`InvalidCloudWatchDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _EDN, _m6],
+      [0, 0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidCloudWatchDestinationException$, InvalidCloudWatchDestinationException);
+    var InvalidConfigurationSetException$ = [
+      -3,
+      n08,
+      _ICSE,
+      { [_aQE3]: [`InvalidConfigurationSet`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidConfigurationSetException$, InvalidConfigurationSetException);
+    var InvalidDeliveryOptionsException$ = [
+      -3,
+      n08,
+      _IDOE,
+      { [_aQE3]: [`InvalidDeliveryOptions`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidDeliveryOptionsException$, InvalidDeliveryOptionsException);
+    var InvalidFirehoseDestinationException$ = [
+      -3,
+      n08,
+      _IFDE,
+      { [_aQE3]: [`InvalidFirehoseDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _EDN, _m6],
+      [0, 0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidFirehoseDestinationException$, InvalidFirehoseDestinationException);
+    var InvalidLambdaFunctionException$ = [
+      -3,
+      n08,
+      _ILFE,
+      { [_aQE3]: [`InvalidLambdaFunction`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_FA, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidLambdaFunctionException$, InvalidLambdaFunctionException);
+    var InvalidPolicyException$ = [
+      -3,
+      n08,
+      _IPE,
+      { [_aQE3]: [`InvalidPolicy`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidPolicyException$, InvalidPolicyException);
+    var InvalidRenderingParameterException$ = [
+      -3,
+      n08,
+      _IRPE,
+      { [_aQE3]: [`InvalidRenderingParameter`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_TN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidRenderingParameterException$, InvalidRenderingParameterException);
+    var InvalidS3ConfigurationException$ = [
+      -3,
+      n08,
+      _ISCE,
+      { [_aQE3]: [`InvalidS3Configuration`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_Bu, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidS3ConfigurationException$, InvalidS3ConfigurationException);
+    var InvalidSNSDestinationException$ = [
+      -3,
+      n08,
+      _ISNSDE,
+      { [_aQE3]: [`InvalidSNSDestination`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _EDN, _m6],
+      [0, 0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidSNSDestinationException$, InvalidSNSDestinationException);
+    var InvalidSnsTopicException$ = [
+      -3,
+      n08,
+      _ISTE,
+      { [_aQE3]: [`InvalidSnsTopic`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_To, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidSnsTopicException$, InvalidSnsTopicException);
+    var InvalidTemplateException$ = [
+      -3,
+      n08,
+      _ITE,
+      { [_aQE3]: [`InvalidTemplate`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_TN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidTemplateException$, InvalidTemplateException);
+    var InvalidTrackingOptionsException$ = [
+      -3,
+      n08,
+      _ITOE,
+      { [_aQE3]: [`InvalidTrackingOptions`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(InvalidTrackingOptionsException$, InvalidTrackingOptionsException);
+    var KinesisFirehoseDestination$ = [
+      3,
+      n08,
+      _KFD,
+      0,
+      [_IAMRARN, _DSARN],
+      [0, 0],
+      2
+    ];
+    var LambdaAction$ = [
+      3,
+      n08,
+      _LA,
+      0,
+      [_FA, _TA, _IT3],
+      [0, 0, 0],
+      1
+    ];
+    var LimitExceededException$ = [
+      -3,
+      n08,
+      _LEE,
+      { [_aQE3]: [`LimitExceeded`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(LimitExceededException$, LimitExceededException);
+    var ListConfigurationSetsRequest$ = [
+      3,
+      n08,
+      _LCSR,
+      0,
+      [_NT, _MIa],
+      [0, 1]
+    ];
+    var ListConfigurationSetsResponse$ = [
+      3,
+      n08,
+      _LCSRi,
+      0,
+      [_CSo, _NT],
+      [() => ConfigurationSets, 0]
+    ];
+    var ListCustomVerificationEmailTemplatesRequest$ = [
+      3,
+      n08,
+      _LCVETR,
+      0,
+      [_NT, _MR],
+      [0, 1]
+    ];
+    var ListCustomVerificationEmailTemplatesResponse$ = [
+      3,
+      n08,
+      _LCVETRi,
+      0,
+      [_CVETu, _NT],
+      [() => CustomVerificationEmailTemplates, 0]
+    ];
+    var ListIdentitiesRequest$ = [
+      3,
+      n08,
+      _LIR,
+      0,
+      [_ITd, _NT, _MIa],
+      [0, 0, 1]
+    ];
+    var ListIdentitiesResponse$ = [
+      3,
+      n08,
+      _LIRi,
+      0,
+      [_Id, _NT],
+      [64 | 0, 0],
+      1
+    ];
+    var ListIdentityPoliciesRequest$ = [
+      3,
+      n08,
+      _LIPR,
+      0,
+      [_I],
+      [0],
+      1
+    ];
+    var ListIdentityPoliciesResponse$ = [
+      3,
+      n08,
+      _LIPRi,
+      0,
+      [_PNo],
+      [64 | 0],
+      1
+    ];
+    var ListReceiptFiltersRequest$ = [
+      3,
+      n08,
+      _LRFR,
+      0,
+      [],
+      []
+    ];
+    var ListReceiptFiltersResponse$ = [
+      3,
+      n08,
+      _LRFRi,
+      0,
+      [_Fi],
+      [() => ReceiptFilterList]
+    ];
+    var ListReceiptRuleSetsRequest$ = [
+      3,
+      n08,
+      _LRRSR,
+      0,
+      [_NT],
+      [0]
+    ];
+    var ListReceiptRuleSetsResponse$ = [
+      3,
+      n08,
+      _LRRSRi,
+      0,
+      [_RS, _NT],
+      [() => ReceiptRuleSetsLists, 0]
+    ];
+    var ListTemplatesRequest$ = [
+      3,
+      n08,
+      _LTR,
+      0,
+      [_NT, _MIa],
+      [0, 1]
+    ];
+    var ListTemplatesResponse$ = [
+      3,
+      n08,
+      _LTRi,
+      0,
+      [_TM, _NT],
+      [() => TemplateMetadataList, 0]
+    ];
+    var ListVerifiedEmailAddressesResponse$ = [
+      3,
+      n08,
+      _LVEAR,
+      0,
+      [_VEA],
+      [64 | 0]
+    ];
+    var MailFromDomainNotVerifiedException$ = [
+      -3,
+      n08,
+      _MFDNVE,
+      { [_aQE3]: [`MailFromDomainNotVerifiedException`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(MailFromDomainNotVerifiedException$, MailFromDomainNotVerifiedException);
+    var Message$ = [
+      3,
+      n08,
+      _M,
+      0,
+      [_Su, _B],
+      [() => Content$, () => Body$],
+      2
+    ];
+    var MessageDsn$ = [
+      3,
+      n08,
+      _MD,
+      0,
+      [_RM, _AD, _EFx],
+      [0, 4, () => ExtensionFieldList],
+      1
+    ];
+    var MessageRejected$ = [
+      -3,
+      n08,
+      _MRe,
+      { [_aQE3]: [`MessageRejected`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(MessageRejected$, MessageRejected);
+    var MessageTag$ = [
+      3,
+      n08,
+      _MT,
+      0,
+      [_N, _V3],
+      [0, 0],
+      2
+    ];
+    var MissingRenderingAttributeException$ = [
+      -3,
+      n08,
+      _MRAE,
+      { [_aQE3]: [`MissingRenderingAttribute`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_TN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(MissingRenderingAttributeException$, MissingRenderingAttributeException);
+    var ProductionAccessNotGrantedException$ = [
+      -3,
+      n08,
+      _PANGE,
+      { [_aQE3]: [`ProductionAccessNotGranted`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_m6],
+      [0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(ProductionAccessNotGrantedException$, ProductionAccessNotGrantedException);
+    var PutConfigurationSetDeliveryOptionsRequest$ = [
+      3,
+      n08,
+      _PCSDOR,
+      0,
+      [_CSN, _DO],
+      [0, () => DeliveryOptions$],
+      1
+    ];
+    var PutConfigurationSetDeliveryOptionsResponse$ = [
+      3,
+      n08,
+      _PCSDORu,
+      0,
+      [],
+      []
+    ];
+    var PutIdentityPolicyRequest$ = [
+      3,
+      n08,
+      _PIPR,
+      0,
+      [_I, _PN, _Po],
+      [0, 0, 0],
+      3
+    ];
+    var PutIdentityPolicyResponse$ = [
+      3,
+      n08,
+      _PIPRu,
+      0,
+      [],
+      []
+    ];
+    var RawMessage$ = [
+      3,
+      n08,
+      _RMa,
+      0,
+      [_Da],
+      [21],
+      1
+    ];
+    var ReceiptAction$ = [
+      3,
+      n08,
+      _RAe,
+      0,
+      [_SA, _BA, _WA, _LA, _SAt, _AHA, _SNSA, _CA3],
+      [() => S3Action$, () => BounceAction$, () => WorkmailAction$, () => LambdaAction$, () => StopAction$, () => AddHeaderAction$, () => SNSAction$, () => ConnectAction$]
+    ];
+    var ReceiptFilter$ = [
+      3,
+      n08,
+      _RF,
+      0,
+      [_N, _IF],
+      [0, () => ReceiptIpFilter$],
+      2
+    ];
+    var ReceiptIpFilter$ = [
+      3,
+      n08,
+      _RIF,
+      0,
+      [_Po, _Ci],
+      [0, 0],
+      2
+    ];
+    var ReceiptRule$ = [
+      3,
+      n08,
+      _RR,
+      0,
+      [_N, _En, _TP, _Re, _Ac, _SE],
+      [0, 2, 0, 64 | 0, () => ReceiptActionsList, 2],
+      1
+    ];
+    var ReceiptRuleSetMetadata$ = [
+      3,
+      n08,
+      _RRSM,
+      0,
+      [_N, _CTr],
+      [0, 4]
+    ];
+    var RecipientDsnFields$ = [
+      3,
+      n08,
+      _RDF,
+      0,
+      [_Act, _St, _FR, _RMe, _DCi, _LAD, _EFx],
+      [0, 0, 0, 0, 0, 4, () => ExtensionFieldList],
+      2
+    ];
+    var ReorderReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _RRRSR,
+      0,
+      [_RSN3, _RNu],
+      [0, 64 | 0],
+      2
+    ];
+    var ReorderReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _RRRSRe,
+      0,
+      [],
+      []
+    ];
+    var ReputationOptions$ = [
+      3,
+      n08,
+      _RO,
+      0,
+      [_SEe, _RME, _LFS],
+      [2, 2, 4]
+    ];
+    var RuleDoesNotExistException$ = [
+      -3,
+      n08,
+      _RDNEE,
+      { [_aQE3]: [`RuleDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_N, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(RuleDoesNotExistException$, RuleDoesNotExistException);
+    var RuleSetDoesNotExistException$ = [
+      -3,
+      n08,
+      _RSDNEE,
+      { [_aQE3]: [`RuleSetDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_N, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(RuleSetDoesNotExistException$, RuleSetDoesNotExistException);
+    var S3Action$ = [
+      3,
+      n08,
+      _SA,
+      0,
+      [_BN, _TA, _OKP, _KKA, _IRA],
+      [0, 0, 0, 0, 0],
+      1
+    ];
+    var SendBounceRequest$ = [
+      3,
+      n08,
+      _SBR,
+      0,
+      [_OMI, _BS, _BRIL, _Ex, _MD, _BSA],
+      [0, 0, () => BouncedRecipientInfoList, 0, () => MessageDsn$, 0],
+      3
+    ];
+    var SendBounceResponse$ = [
+      3,
+      n08,
+      _SBRe,
+      0,
+      [_MI],
+      [0]
+    ];
+    var SendBulkTemplatedEmailRequest$ = [
+      3,
+      n08,
+      _SBTER,
+      0,
+      [_So, _Te, _DTD, _De, _SAo, _RTA, _RP, _RPA, _CSN, _DTef, _TAe],
+      [0, 0, 0, () => BulkEmailDestinationList, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
+      4
+    ];
+    var SendBulkTemplatedEmailResponse$ = [
+      3,
+      n08,
+      _SBTERe,
+      0,
+      [_St],
+      [() => BulkEmailDestinationStatusList],
+      1
+    ];
+    var SendCustomVerificationEmailRequest$ = [
+      3,
+      n08,
+      _SCVER,
+      0,
+      [_EA, _TN, _CSN],
+      [0, 0, 0],
+      2
+    ];
+    var SendCustomVerificationEmailResponse$ = [
+      3,
+      n08,
+      _SCVERe,
+      0,
+      [_MI],
+      [0]
+    ];
+    var SendDataPoint$ = [
+      3,
+      n08,
+      _SDPe,
+      0,
+      [_Ti, _DAe, _Bo, _Co, _Rej],
+      [4, 1, 1, 1, 1]
+    ];
+    var SendEmailRequest$ = [
+      3,
+      n08,
+      _SER,
+      0,
+      [_So, _D, _M, _RTA, _RP, _SAo, _RPA, _Ta3, _CSN],
+      [0, () => Destination$, () => Message$, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
+      3
+    ];
+    var SendEmailResponse$ = [
+      3,
+      n08,
+      _SERe,
+      0,
+      [_MI],
+      [0],
+      1
+    ];
+    var SendRawEmailRequest$ = [
+      3,
+      n08,
+      _SRER,
+      0,
+      [_RMa, _So, _De, _FAr, _SAo, _RPA, _Ta3, _CSN],
+      [() => RawMessage$, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0],
+      1
+    ];
+    var SendRawEmailResponse$ = [
+      3,
+      n08,
+      _SRERe,
+      0,
+      [_MI],
+      [0],
+      1
+    ];
+    var SendTemplatedEmailRequest$ = [
+      3,
+      n08,
+      _STER,
+      0,
+      [_So, _D, _Te, _TD, _RTA, _RP, _SAo, _RPA, _Ta3, _CSN, _TAe],
+      [0, () => Destination$, 0, 0, 64 | 0, 0, 0, 0, () => MessageTagList, 0, 0],
+      4
+    ];
+    var SendTemplatedEmailResponse$ = [
+      3,
+      n08,
+      _STERe,
+      0,
+      [_MI],
+      [0],
+      1
+    ];
+    var SetActiveReceiptRuleSetRequest$ = [
+      3,
+      n08,
+      _SARRSR,
+      0,
+      [_RSN3],
+      [0]
+    ];
+    var SetActiveReceiptRuleSetResponse$ = [
+      3,
+      n08,
+      _SARRSRe,
+      0,
+      [],
+      []
+    ];
+    var SetIdentityDkimEnabledRequest$ = [
+      3,
+      n08,
+      _SIDER,
+      0,
+      [_I, _DE],
+      [0, 2],
+      2
+    ];
+    var SetIdentityDkimEnabledResponse$ = [
+      3,
+      n08,
+      _SIDERe,
+      0,
+      [],
+      []
+    ];
+    var SetIdentityFeedbackForwardingEnabledRequest$ = [
+      3,
+      n08,
+      _SIFFER,
+      0,
+      [_I, _FE],
+      [0, 2],
+      2
+    ];
+    var SetIdentityFeedbackForwardingEnabledResponse$ = [
+      3,
+      n08,
+      _SIFFERe,
+      0,
+      [],
+      []
+    ];
+    var SetIdentityHeadersInNotificationsEnabledRequest$ = [
+      3,
+      n08,
+      _SIHINER,
+      0,
+      [_I, _NTo, _En],
+      [0, 0, 2],
+      3
+    ];
+    var SetIdentityHeadersInNotificationsEnabledResponse$ = [
+      3,
+      n08,
+      _SIHINERe,
+      0,
+      [],
+      []
+    ];
+    var SetIdentityMailFromDomainRequest$ = [
+      3,
+      n08,
+      _SIMFDR,
+      0,
+      [_I, _MFD, _BOMXF],
+      [0, 0, 0],
+      1
+    ];
+    var SetIdentityMailFromDomainResponse$ = [
+      3,
+      n08,
+      _SIMFDRe,
+      0,
+      [],
+      []
+    ];
+    var SetIdentityNotificationTopicRequest$ = [
+      3,
+      n08,
+      _SINTR,
+      0,
+      [_I, _NTo, _ST3],
+      [0, 0, 0],
+      2
+    ];
+    var SetIdentityNotificationTopicResponse$ = [
+      3,
+      n08,
+      _SINTRe,
+      0,
+      [],
+      []
+    ];
+    var SetReceiptRulePositionRequest$ = [
+      3,
+      n08,
+      _SRRPR,
+      0,
+      [_RSN3, _RN, _A3],
+      [0, 0, 0],
+      2
+    ];
+    var SetReceiptRulePositionResponse$ = [
+      3,
+      n08,
+      _SRRPRe,
+      0,
+      [],
+      []
+    ];
+    var SNSAction$ = [
+      3,
+      n08,
+      _SNSA,
+      0,
+      [_TA, _Enc],
+      [0, 0],
+      1
+    ];
+    var SNSDestination$ = [
+      3,
+      n08,
+      _SNSD,
+      0,
+      [_TARN],
+      [0],
+      1
+    ];
+    var StopAction$ = [
+      3,
+      n08,
+      _SAt,
+      0,
+      [_Sc, _TA],
+      [0, 0],
+      1
+    ];
+    var Template$ = [
+      3,
+      n08,
+      _Te,
+      0,
+      [_TN, _SP, _TPe, _HP],
+      [0, 0, 0, 0],
+      1
+    ];
+    var TemplateDoesNotExistException$ = [
+      -3,
+      n08,
+      _TDNEE,
+      { [_aQE3]: [`TemplateDoesNotExist`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_TN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(TemplateDoesNotExistException$, TemplateDoesNotExistException);
+    var TemplateMetadata$ = [
+      3,
+      n08,
+      _TMe,
+      0,
+      [_N, _CTr],
+      [0, 4]
+    ];
+    var TestRenderTemplateRequest$ = [
+      3,
+      n08,
+      _TRTR,
+      0,
+      [_TN, _TD],
+      [0, 0],
+      2
+    ];
+    var TestRenderTemplateResponse$ = [
+      3,
+      n08,
+      _TRTRe,
+      0,
+      [_RTe],
+      [0]
+    ];
+    var TrackingOptions$ = [
+      3,
+      n08,
+      _TO,
+      0,
+      [_CRD],
+      [0]
+    ];
+    var TrackingOptionsAlreadyExistsException$ = [
+      -3,
+      n08,
+      _TOAEE,
+      { [_aQE3]: [`TrackingOptionsAlreadyExistsException`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(TrackingOptionsAlreadyExistsException$, TrackingOptionsAlreadyExistsException);
+    var TrackingOptionsDoesNotExistException$ = [
+      -3,
+      n08,
+      _TODNEE,
+      { [_aQE3]: [`TrackingOptionsDoesNotExistException`, 400], [_e8]: _c8, [_hE8]: 400 },
+      [_CSN, _m6],
+      [0, 0]
+    ];
+    schema.TypeRegistry.for(n08).registerError(TrackingOptionsDoesNotExistException$, TrackingOptionsDoesNotExistException);
+    var UpdateAccountSendingEnabledRequest$ = [
+      3,
+      n08,
+      _UASER,
+      0,
+      [_En],
+      [2]
+    ];
+    var UpdateConfigurationSetEventDestinationRequest$ = [
+      3,
+      n08,
+      _UCSEDR,
+      0,
+      [_CSN, _ED],
+      [0, () => EventDestination$],
+      2
+    ];
+    var UpdateConfigurationSetEventDestinationResponse$ = [
+      3,
+      n08,
+      _UCSEDRp,
+      0,
+      [],
+      []
+    ];
+    var UpdateConfigurationSetReputationMetricsEnabledRequest$ = [
+      3,
+      n08,
+      _UCSRMER,
+      0,
+      [_CSN, _En],
+      [0, 2],
+      2
+    ];
+    var UpdateConfigurationSetSendingEnabledRequest$ = [
+      3,
+      n08,
+      _UCSSER,
+      0,
+      [_CSN, _En],
+      [0, 2],
+      2
+    ];
+    var UpdateConfigurationSetTrackingOptionsRequest$ = [
+      3,
+      n08,
+      _UCSTOR,
+      0,
+      [_CSN, _TO],
+      [0, () => TrackingOptions$],
+      2
+    ];
+    var UpdateConfigurationSetTrackingOptionsResponse$ = [
+      3,
+      n08,
+      _UCSTORp,
+      0,
+      [],
+      []
+    ];
+    var UpdateCustomVerificationEmailTemplateRequest$ = [
+      3,
+      n08,
+      _UCVETR,
+      0,
+      [_TN, _FEA, _TS, _TC3, _SRURL, _FRURL],
+      [0, 0, 0, 0, 0, 0],
+      1
+    ];
+    var UpdateReceiptRuleRequest$ = [
+      3,
+      n08,
+      _URRR,
+      0,
+      [_RSN3, _Ru],
+      [0, () => ReceiptRule$],
+      2
+    ];
+    var UpdateReceiptRuleResponse$ = [
+      3,
+      n08,
+      _URRRp,
+      0,
+      [],
+      []
+    ];
+    var UpdateTemplateRequest$ = [
+      3,
+      n08,
+      _UTR,
+      0,
+      [_Te],
+      [() => Template$],
+      1
+    ];
+    var UpdateTemplateResponse$ = [
+      3,
+      n08,
+      _UTRp,
+      0,
+      [],
+      []
+    ];
+    var VerifyDomainDkimRequest$ = [
+      3,
+      n08,
+      _VDDR,
+      0,
+      [_Do],
+      [0],
+      1
+    ];
+    var VerifyDomainDkimResponse$ = [
+      3,
+      n08,
+      _VDDRe,
+      0,
+      [_DT],
+      [64 | 0],
+      1
+    ];
+    var VerifyDomainIdentityRequest$ = [
+      3,
+      n08,
+      _VDIR,
+      0,
+      [_Do],
+      [0],
+      1
+    ];
+    var VerifyDomainIdentityResponse$ = [
+      3,
+      n08,
+      _VDIRe,
+      0,
+      [_VT],
+      [0],
+      1
+    ];
+    var VerifyEmailAddressRequest$ = [
+      3,
+      n08,
+      _VEAR,
+      0,
+      [_EA],
+      [0],
+      1
+    ];
+    var VerifyEmailIdentityRequest$ = [
+      3,
+      n08,
+      _VEIR,
+      0,
+      [_EA],
+      [0],
+      1
+    ];
+    var VerifyEmailIdentityResponse$ = [
+      3,
+      n08,
+      _VEIRe,
+      0,
+      [],
+      []
+    ];
+    var WorkmailAction$ = [
+      3,
+      n08,
+      _WA,
+      0,
+      [_OA, _TA],
+      [0, 0],
+      1
+    ];
+    var __Unit = "unit";
+    var SESServiceException$ = [-3, _s8, "SESServiceException", 0, [], []];
+    schema.TypeRegistry.for(_s8).registerError(SESServiceException$, SESServiceException);
+    var BouncedRecipientInfoList = [
+      1,
+      n08,
+      _BRIL,
+      0,
+      () => BouncedRecipientInfo$
+    ];
+    var BulkEmailDestinationList = [
+      1,
+      n08,
+      _BEDL,
+      0,
+      () => BulkEmailDestination$
+    ];
+    var BulkEmailDestinationStatusList = [
+      1,
+      n08,
+      _BEDSL,
+      0,
+      () => BulkEmailDestinationStatus$
+    ];
+    var CloudWatchDimensionConfigurations = [
+      1,
+      n08,
+      _CWDCl,
+      0,
+      () => CloudWatchDimensionConfiguration$
+    ];
+    var ConfigurationSets = [
+      1,
+      n08,
+      _CSo,
+      0,
+      () => ConfigurationSet$
+    ];
+    var CustomVerificationEmailTemplates = [
+      1,
+      n08,
+      _CVETu,
+      0,
+      () => CustomVerificationEmailTemplate$
+    ];
+    var EventDestinations = [
+      1,
+      n08,
+      _EDv,
+      0,
+      () => EventDestination$
+    ];
+    var ExtensionFieldList = [
+      1,
+      n08,
+      _EFL,
+      0,
+      () => ExtensionField$
+    ];
+    var MessageTagList = [
+      1,
+      n08,
+      _MTL,
+      0,
+      () => MessageTag$
+    ];
+    var ReceiptActionsList = [
+      1,
+      n08,
+      _RAL,
+      0,
+      () => ReceiptAction$
+    ];
+    var ReceiptFilterList = [
+      1,
+      n08,
+      _RFL,
+      0,
+      () => ReceiptFilter$
+    ];
+    var ReceiptRuleSetsLists = [
+      1,
+      n08,
+      _RRSL,
+      0,
+      () => ReceiptRuleSetMetadata$
+    ];
+    var ReceiptRulesList = [
+      1,
+      n08,
+      _RRL,
+      0,
+      () => ReceiptRule$
+    ];
+    var SendDataPointList = [
+      1,
+      n08,
+      _SDPL,
+      0,
+      () => SendDataPoint$
+    ];
+    var TemplateMetadataList = [
+      1,
+      n08,
+      _TML,
+      0,
+      () => TemplateMetadata$
+    ];
+    var DkimAttributes = [
+      2,
+      n08,
+      _DA,
+      0,
+      0,
+      () => IdentityDkimAttributes$
+    ];
+    var MailFromDomainAttributes = [
+      2,
+      n08,
+      _MFDA,
+      0,
+      0,
+      () => IdentityMailFromDomainAttributes$
+    ];
+    var NotificationAttributes = [
+      2,
+      n08,
+      _NA,
+      0,
+      0,
+      () => IdentityNotificationAttributes$
+    ];
+    var VerificationAttributes = [
+      2,
+      n08,
+      _VA,
+      0,
+      0,
+      () => IdentityVerificationAttributes$
+    ];
+    var CloneReceiptRuleSet$ = [
+      9,
+      n08,
+      _CRRS,
+      0,
+      () => CloneReceiptRuleSetRequest$,
+      () => CloneReceiptRuleSetResponse$
+    ];
+    var CreateConfigurationSet$ = [
+      9,
+      n08,
+      _CCS,
+      0,
+      () => CreateConfigurationSetRequest$,
+      () => CreateConfigurationSetResponse$
+    ];
+    var CreateConfigurationSetEventDestination$ = [
+      9,
+      n08,
+      _CCSED,
+      0,
+      () => CreateConfigurationSetEventDestinationRequest$,
+      () => CreateConfigurationSetEventDestinationResponse$
+    ];
+    var CreateConfigurationSetTrackingOptions$ = [
+      9,
+      n08,
+      _CCSTO,
+      0,
+      () => CreateConfigurationSetTrackingOptionsRequest$,
+      () => CreateConfigurationSetTrackingOptionsResponse$
+    ];
+    var CreateCustomVerificationEmailTemplate$ = [
+      9,
+      n08,
+      _CCVET,
+      0,
+      () => CreateCustomVerificationEmailTemplateRequest$,
+      () => __Unit
+    ];
+    var CreateReceiptFilter$ = [
+      9,
+      n08,
+      _CRF,
+      0,
+      () => CreateReceiptFilterRequest$,
+      () => CreateReceiptFilterResponse$
+    ];
+    var CreateReceiptRule$ = [
+      9,
+      n08,
+      _CRR,
+      0,
+      () => CreateReceiptRuleRequest$,
+      () => CreateReceiptRuleResponse$
+    ];
+    var CreateReceiptRuleSet$ = [
+      9,
+      n08,
+      _CRRSr,
+      0,
+      () => CreateReceiptRuleSetRequest$,
+      () => CreateReceiptRuleSetResponse$
+    ];
+    var CreateTemplate$ = [
+      9,
+      n08,
+      _CTre,
+      0,
+      () => CreateTemplateRequest$,
+      () => CreateTemplateResponse$
+    ];
+    var DeleteConfigurationSet$ = [
+      9,
+      n08,
+      _DCS,
+      0,
+      () => DeleteConfigurationSetRequest$,
+      () => DeleteConfigurationSetResponse$
+    ];
+    var DeleteConfigurationSetEventDestination$ = [
+      9,
+      n08,
+      _DCSED,
+      0,
+      () => DeleteConfigurationSetEventDestinationRequest$,
+      () => DeleteConfigurationSetEventDestinationResponse$
+    ];
+    var DeleteConfigurationSetTrackingOptions$ = [
+      9,
+      n08,
+      _DCSTO,
+      0,
+      () => DeleteConfigurationSetTrackingOptionsRequest$,
+      () => DeleteConfigurationSetTrackingOptionsResponse$
+    ];
+    var DeleteCustomVerificationEmailTemplate$ = [
+      9,
+      n08,
+      _DCVET,
+      0,
+      () => DeleteCustomVerificationEmailTemplateRequest$,
+      () => __Unit
+    ];
+    var DeleteIdentity$ = [
+      9,
+      n08,
+      _DI,
+      0,
+      () => DeleteIdentityRequest$,
+      () => DeleteIdentityResponse$
+    ];
+    var DeleteIdentityPolicy$ = [
+      9,
+      n08,
+      _DIP,
+      0,
+      () => DeleteIdentityPolicyRequest$,
+      () => DeleteIdentityPolicyResponse$
+    ];
+    var DeleteReceiptFilter$ = [
+      9,
+      n08,
+      _DRF,
+      0,
+      () => DeleteReceiptFilterRequest$,
+      () => DeleteReceiptFilterResponse$
+    ];
+    var DeleteReceiptRule$ = [
+      9,
+      n08,
+      _DRR,
+      0,
+      () => DeleteReceiptRuleRequest$,
+      () => DeleteReceiptRuleResponse$
+    ];
+    var DeleteReceiptRuleSet$ = [
+      9,
+      n08,
+      _DRRS,
+      0,
+      () => DeleteReceiptRuleSetRequest$,
+      () => DeleteReceiptRuleSetResponse$
+    ];
+    var DeleteTemplate$ = [
+      9,
+      n08,
+      _DTel,
+      0,
+      () => DeleteTemplateRequest$,
+      () => DeleteTemplateResponse$
+    ];
+    var DeleteVerifiedEmailAddress$ = [
+      9,
+      n08,
+      _DVEA,
+      0,
+      () => DeleteVerifiedEmailAddressRequest$,
+      () => __Unit
+    ];
+    var DescribeActiveReceiptRuleSet$ = [
+      9,
+      n08,
+      _DARRS,
+      0,
+      () => DescribeActiveReceiptRuleSetRequest$,
+      () => DescribeActiveReceiptRuleSetResponse$
+    ];
+    var DescribeConfigurationSet$ = [
+      9,
+      n08,
+      _DCSe,
+      0,
+      () => DescribeConfigurationSetRequest$,
+      () => DescribeConfigurationSetResponse$
+    ];
+    var DescribeReceiptRule$ = [
+      9,
+      n08,
+      _DRRe,
+      0,
+      () => DescribeReceiptRuleRequest$,
+      () => DescribeReceiptRuleResponse$
+    ];
+    var DescribeReceiptRuleSet$ = [
+      9,
+      n08,
+      _DRRSe,
+      0,
+      () => DescribeReceiptRuleSetRequest$,
+      () => DescribeReceiptRuleSetResponse$
+    ];
+    var GetAccountSendingEnabled$ = [
+      9,
+      n08,
+      _GASE,
+      0,
+      () => __Unit,
+      () => GetAccountSendingEnabledResponse$
+    ];
+    var GetCustomVerificationEmailTemplate$ = [
+      9,
+      n08,
+      _GCVET,
+      0,
+      () => GetCustomVerificationEmailTemplateRequest$,
+      () => GetCustomVerificationEmailTemplateResponse$
+    ];
+    var GetIdentityDkimAttributes$ = [
+      9,
+      n08,
+      _GIDA,
+      0,
+      () => GetIdentityDkimAttributesRequest$,
+      () => GetIdentityDkimAttributesResponse$
+    ];
+    var GetIdentityMailFromDomainAttributes$ = [
+      9,
+      n08,
+      _GIMFDA,
+      0,
+      () => GetIdentityMailFromDomainAttributesRequest$,
+      () => GetIdentityMailFromDomainAttributesResponse$
+    ];
+    var GetIdentityNotificationAttributes$ = [
+      9,
+      n08,
+      _GINA,
+      0,
+      () => GetIdentityNotificationAttributesRequest$,
+      () => GetIdentityNotificationAttributesResponse$
+    ];
+    var GetIdentityPolicies$ = [
+      9,
+      n08,
+      _GIP,
+      0,
+      () => GetIdentityPoliciesRequest$,
+      () => GetIdentityPoliciesResponse$
+    ];
+    var GetIdentityVerificationAttributes$ = [
+      9,
+      n08,
+      _GIVA,
+      0,
+      () => GetIdentityVerificationAttributesRequest$,
+      () => GetIdentityVerificationAttributesResponse$
+    ];
+    var GetSendQuota$ = [
+      9,
+      n08,
+      _GSQ,
+      0,
+      () => __Unit,
+      () => GetSendQuotaResponse$
+    ];
+    var GetSendStatistics$ = [
+      9,
+      n08,
+      _GSS,
+      0,
+      () => __Unit,
+      () => GetSendStatisticsResponse$
+    ];
+    var GetTemplate$ = [
+      9,
+      n08,
+      _GT,
+      0,
+      () => GetTemplateRequest$,
+      () => GetTemplateResponse$
+    ];
+    var ListConfigurationSets$ = [
+      9,
+      n08,
+      _LCS,
+      0,
+      () => ListConfigurationSetsRequest$,
+      () => ListConfigurationSetsResponse$
+    ];
+    var ListCustomVerificationEmailTemplates$ = [
+      9,
+      n08,
+      _LCVET,
+      0,
+      () => ListCustomVerificationEmailTemplatesRequest$,
+      () => ListCustomVerificationEmailTemplatesResponse$
+    ];
+    var ListIdentities$ = [
+      9,
+      n08,
+      _LI,
+      0,
+      () => ListIdentitiesRequest$,
+      () => ListIdentitiesResponse$
+    ];
+    var ListIdentityPolicies$ = [
+      9,
+      n08,
+      _LIP,
+      0,
+      () => ListIdentityPoliciesRequest$,
+      () => ListIdentityPoliciesResponse$
+    ];
+    var ListReceiptFilters$ = [
+      9,
+      n08,
+      _LRF,
+      0,
+      () => ListReceiptFiltersRequest$,
+      () => ListReceiptFiltersResponse$
+    ];
+    var ListReceiptRuleSets$ = [
+      9,
+      n08,
+      _LRRS,
+      0,
+      () => ListReceiptRuleSetsRequest$,
+      () => ListReceiptRuleSetsResponse$
+    ];
+    var ListTemplates$ = [
+      9,
+      n08,
+      _LT,
+      0,
+      () => ListTemplatesRequest$,
+      () => ListTemplatesResponse$
+    ];
+    var ListVerifiedEmailAddresses$ = [
+      9,
+      n08,
+      _LVEA,
+      0,
+      () => __Unit,
+      () => ListVerifiedEmailAddressesResponse$
+    ];
+    var PutConfigurationSetDeliveryOptions$ = [
+      9,
+      n08,
+      _PCSDO,
+      0,
+      () => PutConfigurationSetDeliveryOptionsRequest$,
+      () => PutConfigurationSetDeliveryOptionsResponse$
+    ];
+    var PutIdentityPolicy$ = [
+      9,
+      n08,
+      _PIP,
+      0,
+      () => PutIdentityPolicyRequest$,
+      () => PutIdentityPolicyResponse$
+    ];
+    var ReorderReceiptRuleSet$ = [
+      9,
+      n08,
+      _RRRS,
+      0,
+      () => ReorderReceiptRuleSetRequest$,
+      () => ReorderReceiptRuleSetResponse$
+    ];
+    var SendBounce$ = [
+      9,
+      n08,
+      _SB,
+      0,
+      () => SendBounceRequest$,
+      () => SendBounceResponse$
+    ];
+    var SendBulkTemplatedEmail$ = [
+      9,
+      n08,
+      _SBTE,
+      0,
+      () => SendBulkTemplatedEmailRequest$,
+      () => SendBulkTemplatedEmailResponse$
+    ];
+    var SendCustomVerificationEmail$ = [
+      9,
+      n08,
+      _SCVE,
+      0,
+      () => SendCustomVerificationEmailRequest$,
+      () => SendCustomVerificationEmailResponse$
+    ];
+    var SendEmail$ = [
+      9,
+      n08,
+      _SEen,
+      0,
+      () => SendEmailRequest$,
+      () => SendEmailResponse$
+    ];
+    var SendRawEmail$ = [
+      9,
+      n08,
+      _SRE,
+      0,
+      () => SendRawEmailRequest$,
+      () => SendRawEmailResponse$
+    ];
+    var SendTemplatedEmail$ = [
+      9,
+      n08,
+      _STE,
+      0,
+      () => SendTemplatedEmailRequest$,
+      () => SendTemplatedEmailResponse$
+    ];
+    var SetActiveReceiptRuleSet$ = [
+      9,
+      n08,
+      _SARRS,
+      0,
+      () => SetActiveReceiptRuleSetRequest$,
+      () => SetActiveReceiptRuleSetResponse$
+    ];
+    var SetIdentityDkimEnabled$ = [
+      9,
+      n08,
+      _SIDE,
+      0,
+      () => SetIdentityDkimEnabledRequest$,
+      () => SetIdentityDkimEnabledResponse$
+    ];
+    var SetIdentityFeedbackForwardingEnabled$ = [
+      9,
+      n08,
+      _SIFFE,
+      0,
+      () => SetIdentityFeedbackForwardingEnabledRequest$,
+      () => SetIdentityFeedbackForwardingEnabledResponse$
+    ];
+    var SetIdentityHeadersInNotificationsEnabled$ = [
+      9,
+      n08,
+      _SIHINE,
+      0,
+      () => SetIdentityHeadersInNotificationsEnabledRequest$,
+      () => SetIdentityHeadersInNotificationsEnabledResponse$
+    ];
+    var SetIdentityMailFromDomain$ = [
+      9,
+      n08,
+      _SIMFD,
+      0,
+      () => SetIdentityMailFromDomainRequest$,
+      () => SetIdentityMailFromDomainResponse$
+    ];
+    var SetIdentityNotificationTopic$ = [
+      9,
+      n08,
+      _SINT,
+      0,
+      () => SetIdentityNotificationTopicRequest$,
+      () => SetIdentityNotificationTopicResponse$
+    ];
+    var SetReceiptRulePosition$ = [
+      9,
+      n08,
+      _SRRP,
+      0,
+      () => SetReceiptRulePositionRequest$,
+      () => SetReceiptRulePositionResponse$
+    ];
+    var TestRenderTemplate$ = [
+      9,
+      n08,
+      _TRT,
+      0,
+      () => TestRenderTemplateRequest$,
+      () => TestRenderTemplateResponse$
+    ];
+    var UpdateAccountSendingEnabled$ = [
+      9,
+      n08,
+      _UASE,
+      0,
+      () => UpdateAccountSendingEnabledRequest$,
+      () => __Unit
+    ];
+    var UpdateConfigurationSetEventDestination$ = [
+      9,
+      n08,
+      _UCSED,
+      0,
+      () => UpdateConfigurationSetEventDestinationRequest$,
+      () => UpdateConfigurationSetEventDestinationResponse$
+    ];
+    var UpdateConfigurationSetReputationMetricsEnabled$ = [
+      9,
+      n08,
+      _UCSRME,
+      0,
+      () => UpdateConfigurationSetReputationMetricsEnabledRequest$,
+      () => __Unit
+    ];
+    var UpdateConfigurationSetSendingEnabled$ = [
+      9,
+      n08,
+      _UCSSE,
+      0,
+      () => UpdateConfigurationSetSendingEnabledRequest$,
+      () => __Unit
+    ];
+    var UpdateConfigurationSetTrackingOptions$ = [
+      9,
+      n08,
+      _UCSTO,
+      0,
+      () => UpdateConfigurationSetTrackingOptionsRequest$,
+      () => UpdateConfigurationSetTrackingOptionsResponse$
+    ];
+    var UpdateCustomVerificationEmailTemplate$ = [
+      9,
+      n08,
+      _UCVET,
+      0,
+      () => UpdateCustomVerificationEmailTemplateRequest$,
+      () => __Unit
+    ];
+    var UpdateReceiptRule$ = [
+      9,
+      n08,
+      _URR,
+      0,
+      () => UpdateReceiptRuleRequest$,
+      () => UpdateReceiptRuleResponse$
+    ];
+    var UpdateTemplate$ = [
+      9,
+      n08,
+      _UT,
+      0,
+      () => UpdateTemplateRequest$,
+      () => UpdateTemplateResponse$
+    ];
+    var VerifyDomainDkim$ = [
+      9,
+      n08,
+      _VDD,
+      0,
+      () => VerifyDomainDkimRequest$,
+      () => VerifyDomainDkimResponse$
+    ];
+    var VerifyDomainIdentity$ = [
+      9,
+      n08,
+      _VDI,
+      0,
+      () => VerifyDomainIdentityRequest$,
+      () => VerifyDomainIdentityResponse$
+    ];
+    var VerifyEmailAddress$ = [
+      9,
+      n08,
+      _VEAe,
+      0,
+      () => VerifyEmailAddressRequest$,
+      () => __Unit
+    ];
+    var VerifyEmailIdentity$ = [
+      9,
+      n08,
+      _VEI,
+      0,
+      () => VerifyEmailIdentityRequest$,
+      () => VerifyEmailIdentityResponse$
+    ];
+    var CloneReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CloneReceiptRuleSet", {}).n("SESClient", "CloneReceiptRuleSetCommand").sc(CloneReceiptRuleSet$).build() {
+    };
+    var CreateConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateConfigurationSet", {}).n("SESClient", "CreateConfigurationSetCommand").sc(CreateConfigurationSet$).build() {
+    };
+    var CreateConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateConfigurationSetEventDestination", {}).n("SESClient", "CreateConfigurationSetEventDestinationCommand").sc(CreateConfigurationSetEventDestination$).build() {
+    };
+    var CreateConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateConfigurationSetTrackingOptions", {}).n("SESClient", "CreateConfigurationSetTrackingOptionsCommand").sc(CreateConfigurationSetTrackingOptions$).build() {
+    };
+    var CreateCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateCustomVerificationEmailTemplate", {}).n("SESClient", "CreateCustomVerificationEmailTemplateCommand").sc(CreateCustomVerificationEmailTemplate$).build() {
+    };
+    var CreateReceiptFilterCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateReceiptFilter", {}).n("SESClient", "CreateReceiptFilterCommand").sc(CreateReceiptFilter$).build() {
+    };
+    var CreateReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateReceiptRule", {}).n("SESClient", "CreateReceiptRuleCommand").sc(CreateReceiptRule$).build() {
+    };
+    var CreateReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateReceiptRuleSet", {}).n("SESClient", "CreateReceiptRuleSetCommand").sc(CreateReceiptRuleSet$).build() {
+    };
+    var CreateTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "CreateTemplate", {}).n("SESClient", "CreateTemplateCommand").sc(CreateTemplate$).build() {
+    };
+    var DeleteConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteConfigurationSet", {}).n("SESClient", "DeleteConfigurationSetCommand").sc(DeleteConfigurationSet$).build() {
+    };
+    var DeleteConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteConfigurationSetEventDestination", {}).n("SESClient", "DeleteConfigurationSetEventDestinationCommand").sc(DeleteConfigurationSetEventDestination$).build() {
+    };
+    var DeleteConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteConfigurationSetTrackingOptions", {}).n("SESClient", "DeleteConfigurationSetTrackingOptionsCommand").sc(DeleteConfigurationSetTrackingOptions$).build() {
+    };
+    var DeleteCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteCustomVerificationEmailTemplate", {}).n("SESClient", "DeleteCustomVerificationEmailTemplateCommand").sc(DeleteCustomVerificationEmailTemplate$).build() {
+    };
+    var DeleteIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteIdentity", {}).n("SESClient", "DeleteIdentityCommand").sc(DeleteIdentity$).build() {
+    };
+    var DeleteIdentityPolicyCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteIdentityPolicy", {}).n("SESClient", "DeleteIdentityPolicyCommand").sc(DeleteIdentityPolicy$).build() {
+    };
+    var DeleteReceiptFilterCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteReceiptFilter", {}).n("SESClient", "DeleteReceiptFilterCommand").sc(DeleteReceiptFilter$).build() {
+    };
+    var DeleteReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteReceiptRule", {}).n("SESClient", "DeleteReceiptRuleCommand").sc(DeleteReceiptRule$).build() {
+    };
+    var DeleteReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteReceiptRuleSet", {}).n("SESClient", "DeleteReceiptRuleSetCommand").sc(DeleteReceiptRuleSet$).build() {
+    };
+    var DeleteTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteTemplate", {}).n("SESClient", "DeleteTemplateCommand").sc(DeleteTemplate$).build() {
+    };
+    var DeleteVerifiedEmailAddressCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DeleteVerifiedEmailAddress", {}).n("SESClient", "DeleteVerifiedEmailAddressCommand").sc(DeleteVerifiedEmailAddress$).build() {
+    };
+    var DescribeActiveReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DescribeActiveReceiptRuleSet", {}).n("SESClient", "DescribeActiveReceiptRuleSetCommand").sc(DescribeActiveReceiptRuleSet$).build() {
+    };
+    var DescribeConfigurationSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DescribeConfigurationSet", {}).n("SESClient", "DescribeConfigurationSetCommand").sc(DescribeConfigurationSet$).build() {
+    };
+    var DescribeReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DescribeReceiptRule", {}).n("SESClient", "DescribeReceiptRuleCommand").sc(DescribeReceiptRule$).build() {
+    };
+    var DescribeReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "DescribeReceiptRuleSet", {}).n("SESClient", "DescribeReceiptRuleSetCommand").sc(DescribeReceiptRuleSet$).build() {
+    };
+    var GetAccountSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetAccountSendingEnabled", {}).n("SESClient", "GetAccountSendingEnabledCommand").sc(GetAccountSendingEnabled$).build() {
+    };
+    var GetCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetCustomVerificationEmailTemplate", {}).n("SESClient", "GetCustomVerificationEmailTemplateCommand").sc(GetCustomVerificationEmailTemplate$).build() {
+    };
+    var GetIdentityDkimAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetIdentityDkimAttributes", {}).n("SESClient", "GetIdentityDkimAttributesCommand").sc(GetIdentityDkimAttributes$).build() {
+    };
+    var GetIdentityMailFromDomainAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetIdentityMailFromDomainAttributes", {}).n("SESClient", "GetIdentityMailFromDomainAttributesCommand").sc(GetIdentityMailFromDomainAttributes$).build() {
+    };
+    var GetIdentityNotificationAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetIdentityNotificationAttributes", {}).n("SESClient", "GetIdentityNotificationAttributesCommand").sc(GetIdentityNotificationAttributes$).build() {
+    };
+    var GetIdentityPoliciesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetIdentityPolicies", {}).n("SESClient", "GetIdentityPoliciesCommand").sc(GetIdentityPolicies$).build() {
+    };
+    var GetIdentityVerificationAttributesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetIdentityVerificationAttributes", {}).n("SESClient", "GetIdentityVerificationAttributesCommand").sc(GetIdentityVerificationAttributes$).build() {
+    };
+    var GetSendQuotaCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetSendQuota", {}).n("SESClient", "GetSendQuotaCommand").sc(GetSendQuota$).build() {
+    };
+    var GetSendStatisticsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetSendStatistics", {}).n("SESClient", "GetSendStatisticsCommand").sc(GetSendStatistics$).build() {
+    };
+    var GetTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "GetTemplate", {}).n("SESClient", "GetTemplateCommand").sc(GetTemplate$).build() {
+    };
+    var ListConfigurationSetsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListConfigurationSets", {}).n("SESClient", "ListConfigurationSetsCommand").sc(ListConfigurationSets$).build() {
+    };
+    var ListCustomVerificationEmailTemplatesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListCustomVerificationEmailTemplates", {}).n("SESClient", "ListCustomVerificationEmailTemplatesCommand").sc(ListCustomVerificationEmailTemplates$).build() {
+    };
+    var ListIdentitiesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListIdentities", {}).n("SESClient", "ListIdentitiesCommand").sc(ListIdentities$).build() {
+    };
+    var ListIdentityPoliciesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListIdentityPolicies", {}).n("SESClient", "ListIdentityPoliciesCommand").sc(ListIdentityPolicies$).build() {
+    };
+    var ListReceiptFiltersCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListReceiptFilters", {}).n("SESClient", "ListReceiptFiltersCommand").sc(ListReceiptFilters$).build() {
+    };
+    var ListReceiptRuleSetsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListReceiptRuleSets", {}).n("SESClient", "ListReceiptRuleSetsCommand").sc(ListReceiptRuleSets$).build() {
+    };
+    var ListTemplatesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListTemplates", {}).n("SESClient", "ListTemplatesCommand").sc(ListTemplates$).build() {
+    };
+    var ListVerifiedEmailAddressesCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ListVerifiedEmailAddresses", {}).n("SESClient", "ListVerifiedEmailAddressesCommand").sc(ListVerifiedEmailAddresses$).build() {
+    };
+    var PutConfigurationSetDeliveryOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "PutConfigurationSetDeliveryOptions", {}).n("SESClient", "PutConfigurationSetDeliveryOptionsCommand").sc(PutConfigurationSetDeliveryOptions$).build() {
+    };
+    var PutIdentityPolicyCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "PutIdentityPolicy", {}).n("SESClient", "PutIdentityPolicyCommand").sc(PutIdentityPolicy$).build() {
+    };
+    var ReorderReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "ReorderReceiptRuleSet", {}).n("SESClient", "ReorderReceiptRuleSetCommand").sc(ReorderReceiptRuleSet$).build() {
+    };
+    var SendBounceCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendBounce", {}).n("SESClient", "SendBounceCommand").sc(SendBounce$).build() {
+    };
+    var SendBulkTemplatedEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendBulkTemplatedEmail", {}).n("SESClient", "SendBulkTemplatedEmailCommand").sc(SendBulkTemplatedEmail$).build() {
+    };
+    var SendCustomVerificationEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendCustomVerificationEmail", {}).n("SESClient", "SendCustomVerificationEmailCommand").sc(SendCustomVerificationEmail$).build() {
+    };
+    var SendEmailCommand2 = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendEmail", {}).n("SESClient", "SendEmailCommand").sc(SendEmail$).build() {
+    };
+    var SendRawEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendRawEmail", {}).n("SESClient", "SendRawEmailCommand").sc(SendRawEmail$).build() {
+    };
+    var SendTemplatedEmailCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SendTemplatedEmail", {}).n("SESClient", "SendTemplatedEmailCommand").sc(SendTemplatedEmail$).build() {
+    };
+    var SetActiveReceiptRuleSetCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetActiveReceiptRuleSet", {}).n("SESClient", "SetActiveReceiptRuleSetCommand").sc(SetActiveReceiptRuleSet$).build() {
+    };
+    var SetIdentityDkimEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetIdentityDkimEnabled", {}).n("SESClient", "SetIdentityDkimEnabledCommand").sc(SetIdentityDkimEnabled$).build() {
+    };
+    var SetIdentityFeedbackForwardingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetIdentityFeedbackForwardingEnabled", {}).n("SESClient", "SetIdentityFeedbackForwardingEnabledCommand").sc(SetIdentityFeedbackForwardingEnabled$).build() {
+    };
+    var SetIdentityHeadersInNotificationsEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetIdentityHeadersInNotificationsEnabled", {}).n("SESClient", "SetIdentityHeadersInNotificationsEnabledCommand").sc(SetIdentityHeadersInNotificationsEnabled$).build() {
+    };
+    var SetIdentityMailFromDomainCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetIdentityMailFromDomain", {}).n("SESClient", "SetIdentityMailFromDomainCommand").sc(SetIdentityMailFromDomain$).build() {
+    };
+    var SetIdentityNotificationTopicCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetIdentityNotificationTopic", {}).n("SESClient", "SetIdentityNotificationTopicCommand").sc(SetIdentityNotificationTopic$).build() {
+    };
+    var SetReceiptRulePositionCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "SetReceiptRulePosition", {}).n("SESClient", "SetReceiptRulePositionCommand").sc(SetReceiptRulePosition$).build() {
+    };
+    var TestRenderTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "TestRenderTemplate", {}).n("SESClient", "TestRenderTemplateCommand").sc(TestRenderTemplate$).build() {
+    };
+    var UpdateAccountSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateAccountSendingEnabled", {}).n("SESClient", "UpdateAccountSendingEnabledCommand").sc(UpdateAccountSendingEnabled$).build() {
+    };
+    var UpdateConfigurationSetEventDestinationCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateConfigurationSetEventDestination", {}).n("SESClient", "UpdateConfigurationSetEventDestinationCommand").sc(UpdateConfigurationSetEventDestination$).build() {
+    };
+    var UpdateConfigurationSetReputationMetricsEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateConfigurationSetReputationMetricsEnabled", {}).n("SESClient", "UpdateConfigurationSetReputationMetricsEnabledCommand").sc(UpdateConfigurationSetReputationMetricsEnabled$).build() {
+    };
+    var UpdateConfigurationSetSendingEnabledCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateConfigurationSetSendingEnabled", {}).n("SESClient", "UpdateConfigurationSetSendingEnabledCommand").sc(UpdateConfigurationSetSendingEnabled$).build() {
+    };
+    var UpdateConfigurationSetTrackingOptionsCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateConfigurationSetTrackingOptions", {}).n("SESClient", "UpdateConfigurationSetTrackingOptionsCommand").sc(UpdateConfigurationSetTrackingOptions$).build() {
+    };
+    var UpdateCustomVerificationEmailTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateCustomVerificationEmailTemplate", {}).n("SESClient", "UpdateCustomVerificationEmailTemplateCommand").sc(UpdateCustomVerificationEmailTemplate$).build() {
+    };
+    var UpdateReceiptRuleCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateReceiptRule", {}).n("SESClient", "UpdateReceiptRuleCommand").sc(UpdateReceiptRule$).build() {
+    };
+    var UpdateTemplateCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "UpdateTemplate", {}).n("SESClient", "UpdateTemplateCommand").sc(UpdateTemplate$).build() {
+    };
+    var VerifyDomainDkimCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "VerifyDomainDkim", {}).n("SESClient", "VerifyDomainDkimCommand").sc(VerifyDomainDkim$).build() {
+    };
+    var VerifyDomainIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "VerifyDomainIdentity", {}).n("SESClient", "VerifyDomainIdentityCommand").sc(VerifyDomainIdentity$).build() {
+    };
+    var VerifyEmailAddressCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "VerifyEmailAddress", {}).n("SESClient", "VerifyEmailAddressCommand").sc(VerifyEmailAddress$).build() {
+    };
+    var VerifyEmailIdentityCommand = class extends smithyClient.Command.classBuilder().ep(commonParams8).m(function(Command2, cs, config, o6) {
+      return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
+    }).s("SimpleEmailService", "VerifyEmailIdentity", {}).n("SESClient", "VerifyEmailIdentityCommand").sc(VerifyEmailIdentity$).build() {
+    };
+    var commands8 = {
+      CloneReceiptRuleSetCommand,
+      CreateConfigurationSetCommand,
+      CreateConfigurationSetEventDestinationCommand,
+      CreateConfigurationSetTrackingOptionsCommand,
+      CreateCustomVerificationEmailTemplateCommand,
+      CreateReceiptFilterCommand,
+      CreateReceiptRuleCommand,
+      CreateReceiptRuleSetCommand,
+      CreateTemplateCommand,
+      DeleteConfigurationSetCommand,
+      DeleteConfigurationSetEventDestinationCommand,
+      DeleteConfigurationSetTrackingOptionsCommand,
+      DeleteCustomVerificationEmailTemplateCommand,
+      DeleteIdentityCommand,
+      DeleteIdentityPolicyCommand,
+      DeleteReceiptFilterCommand,
+      DeleteReceiptRuleCommand,
+      DeleteReceiptRuleSetCommand,
+      DeleteTemplateCommand,
+      DeleteVerifiedEmailAddressCommand,
+      DescribeActiveReceiptRuleSetCommand,
+      DescribeConfigurationSetCommand,
+      DescribeReceiptRuleCommand,
+      DescribeReceiptRuleSetCommand,
+      GetAccountSendingEnabledCommand,
+      GetCustomVerificationEmailTemplateCommand,
+      GetIdentityDkimAttributesCommand,
+      GetIdentityMailFromDomainAttributesCommand,
+      GetIdentityNotificationAttributesCommand,
+      GetIdentityPoliciesCommand,
+      GetIdentityVerificationAttributesCommand,
+      GetSendQuotaCommand,
+      GetSendStatisticsCommand,
+      GetTemplateCommand,
+      ListConfigurationSetsCommand,
+      ListCustomVerificationEmailTemplatesCommand,
+      ListIdentitiesCommand,
+      ListIdentityPoliciesCommand,
+      ListReceiptFiltersCommand,
+      ListReceiptRuleSetsCommand,
+      ListTemplatesCommand,
+      ListVerifiedEmailAddressesCommand,
+      PutConfigurationSetDeliveryOptionsCommand,
+      PutIdentityPolicyCommand,
+      ReorderReceiptRuleSetCommand,
+      SendBounceCommand,
+      SendBulkTemplatedEmailCommand,
+      SendCustomVerificationEmailCommand,
+      SendEmailCommand: SendEmailCommand2,
+      SendRawEmailCommand,
+      SendTemplatedEmailCommand,
+      SetActiveReceiptRuleSetCommand,
+      SetIdentityDkimEnabledCommand,
+      SetIdentityFeedbackForwardingEnabledCommand,
+      SetIdentityHeadersInNotificationsEnabledCommand,
+      SetIdentityMailFromDomainCommand,
+      SetIdentityNotificationTopicCommand,
+      SetReceiptRulePositionCommand,
+      TestRenderTemplateCommand,
+      UpdateAccountSendingEnabledCommand,
+      UpdateConfigurationSetEventDestinationCommand,
+      UpdateConfigurationSetReputationMetricsEnabledCommand,
+      UpdateConfigurationSetSendingEnabledCommand,
+      UpdateConfigurationSetTrackingOptionsCommand,
+      UpdateCustomVerificationEmailTemplateCommand,
+      UpdateReceiptRuleCommand,
+      UpdateTemplateCommand,
+      VerifyDomainDkimCommand,
+      VerifyDomainIdentityCommand,
+      VerifyEmailAddressCommand,
+      VerifyEmailIdentityCommand
+    };
+    var SES = class extends SESClient2 {
+    };
+    smithyClient.createAggregatedClient(commands8, SES);
+    var paginateListCustomVerificationEmailTemplates = core.createPaginator(SESClient2, ListCustomVerificationEmailTemplatesCommand, "NextToken", "NextToken", "MaxResults");
+    var paginateListIdentities = core.createPaginator(SESClient2, ListIdentitiesCommand, "NextToken", "NextToken", "MaxItems");
+    var checkState = async (client3, input) => {
+      let reason;
+      try {
+        let result = await client3.send(new GetIdentityVerificationAttributesCommand(input));
+        reason = result;
+        try {
+          const returnComparator = () => {
+            let objectProjection_2 = Object.values(result.VerificationAttributes).map((element_1) => {
+              return element_1.VerificationStatus;
+            });
+            return objectProjection_2;
+          };
+          let allStringEq_4 = returnComparator().length > 0;
+          for (let element_3 of returnComparator()) {
+            allStringEq_4 = allStringEq_4 && element_3 == "Success";
+          }
+          if (allStringEq_4) {
+            return { state: utilWaiter.WaiterState.SUCCESS, reason };
+          }
+        } catch (e8) {
+        }
+      } catch (exception) {
+        reason = exception;
+      }
+      return { state: utilWaiter.WaiterState.RETRY, reason };
+    };
+    var waitForIdentityExists = async (params, input) => {
+      const serviceDefaults = { minDelay: 3, maxDelay: 120 };
+      return utilWaiter.createWaiter({ ...serviceDefaults, ...params }, input, checkState);
+    };
+    var waitUntilIdentityExists = async (params, input) => {
+      const serviceDefaults = { minDelay: 3, maxDelay: 120 };
+      const result = await utilWaiter.createWaiter({ ...serviceDefaults, ...params }, input, checkState);
+      return utilWaiter.checkExceptions(result);
+    };
+    var BehaviorOnMXFailure = {
+      RejectMessage: "RejectMessage",
+      UseDefaultValue: "UseDefaultValue"
+    };
+    var BounceType = {
+      ContentRejected: "ContentRejected",
+      DoesNotExist: "DoesNotExist",
+      ExceededQuota: "ExceededQuota",
+      MessageTooLarge: "MessageTooLarge",
+      TemporaryFailure: "TemporaryFailure",
+      Undefined: "Undefined"
+    };
+    var DsnAction = {
+      DELAYED: "delayed",
+      DELIVERED: "delivered",
+      EXPANDED: "expanded",
+      FAILED: "failed",
+      RELAYED: "relayed"
+    };
+    var BulkEmailStatus = {
+      AccountDailyQuotaExceeded: "AccountDailyQuotaExceeded",
+      AccountSendingPaused: "AccountSendingPaused",
+      AccountSuspended: "AccountSuspended",
+      AccountThrottled: "AccountThrottled",
+      ConfigurationSetDoesNotExist: "ConfigurationSetDoesNotExist",
+      ConfigurationSetSendingPaused: "ConfigurationSetSendingPaused",
+      Failed: "Failed",
+      InvalidParameterValue: "InvalidParameterValue",
+      InvalidSendingPoolName: "InvalidSendingPoolName",
+      MailFromDomainNotVerified: "MailFromDomainNotVerified",
+      MessageRejected: "MessageRejected",
+      Success: "Success",
+      TemplateDoesNotExist: "TemplateDoesNotExist",
+      TransientFailure: "TransientFailure"
+    };
+    var DimensionValueSource = {
+      EMAIL_HEADER: "emailHeader",
+      LINK_TAG: "linkTag",
+      MESSAGE_TAG: "messageTag"
+    };
+    var ConfigurationSetAttribute = {
+      DELIVERY_OPTIONS: "deliveryOptions",
+      EVENT_DESTINATIONS: "eventDestinations",
+      REPUTATION_OPTIONS: "reputationOptions",
+      TRACKING_OPTIONS: "trackingOptions"
+    };
+    var EventType = {
+      BOUNCE: "bounce",
+      CLICK: "click",
+      COMPLAINT: "complaint",
+      DELIVERY: "delivery",
+      OPEN: "open",
+      REJECT: "reject",
+      RENDERING_FAILURE: "renderingFailure",
+      SEND: "send"
+    };
+    var ReceiptFilterPolicy = {
+      Allow: "Allow",
+      Block: "Block"
+    };
+    var InvocationType = {
+      Event: "Event",
+      RequestResponse: "RequestResponse"
+    };
+    var SNSActionEncoding = {
+      Base64: "Base64",
+      UTF8: "UTF-8"
+    };
+    var StopScope = {
+      RULE_SET: "RuleSet"
+    };
+    var TlsPolicy = {
+      Optional: "Optional",
+      Require: "Require"
+    };
+    var CustomMailFromStatus = {
+      Failed: "Failed",
+      Pending: "Pending",
+      Success: "Success",
+      TemporaryFailure: "TemporaryFailure"
+    };
+    var VerificationStatus = {
+      Failed: "Failed",
+      NotStarted: "NotStarted",
+      Pending: "Pending",
+      Success: "Success",
+      TemporaryFailure: "TemporaryFailure"
+    };
+    var IdentityType = {
+      Domain: "Domain",
+      EmailAddress: "EmailAddress"
+    };
+    var NotificationType = {
+      Bounce: "Bounce",
+      Complaint: "Complaint",
+      Delivery: "Delivery"
+    };
+    Object.defineProperty(exports2, "$Command", {
+      enumerable: true,
+      get: function() {
+        return smithyClient.Command;
+      }
+    });
+    Object.defineProperty(exports2, "__Client", {
+      enumerable: true,
+      get: function() {
+        return smithyClient.Client;
+      }
+    });
+    exports2.AccountSendingPausedException = AccountSendingPausedException;
+    exports2.AccountSendingPausedException$ = AccountSendingPausedException$;
+    exports2.AddHeaderAction$ = AddHeaderAction$;
+    exports2.AlreadyExistsException = AlreadyExistsException;
+    exports2.AlreadyExistsException$ = AlreadyExistsException$;
+    exports2.BehaviorOnMXFailure = BehaviorOnMXFailure;
+    exports2.Body$ = Body$;
+    exports2.BounceAction$ = BounceAction$;
+    exports2.BounceType = BounceType;
+    exports2.BouncedRecipientInfo$ = BouncedRecipientInfo$;
+    exports2.BulkEmailDestination$ = BulkEmailDestination$;
+    exports2.BulkEmailDestinationStatus$ = BulkEmailDestinationStatus$;
+    exports2.BulkEmailStatus = BulkEmailStatus;
+    exports2.CannotDeleteException = CannotDeleteException;
+    exports2.CannotDeleteException$ = CannotDeleteException$;
+    exports2.CloneReceiptRuleSet$ = CloneReceiptRuleSet$;
+    exports2.CloneReceiptRuleSetCommand = CloneReceiptRuleSetCommand;
+    exports2.CloneReceiptRuleSetRequest$ = CloneReceiptRuleSetRequest$;
+    exports2.CloneReceiptRuleSetResponse$ = CloneReceiptRuleSetResponse$;
+    exports2.CloudWatchDestination$ = CloudWatchDestination$;
+    exports2.CloudWatchDimensionConfiguration$ = CloudWatchDimensionConfiguration$;
+    exports2.ConfigurationSet$ = ConfigurationSet$;
+    exports2.ConfigurationSetAlreadyExistsException = ConfigurationSetAlreadyExistsException;
+    exports2.ConfigurationSetAlreadyExistsException$ = ConfigurationSetAlreadyExistsException$;
+    exports2.ConfigurationSetAttribute = ConfigurationSetAttribute;
+    exports2.ConfigurationSetDoesNotExistException = ConfigurationSetDoesNotExistException;
+    exports2.ConfigurationSetDoesNotExistException$ = ConfigurationSetDoesNotExistException$;
+    exports2.ConfigurationSetSendingPausedException = ConfigurationSetSendingPausedException;
+    exports2.ConfigurationSetSendingPausedException$ = ConfigurationSetSendingPausedException$;
+    exports2.ConnectAction$ = ConnectAction$;
+    exports2.Content$ = Content$;
+    exports2.CreateConfigurationSet$ = CreateConfigurationSet$;
+    exports2.CreateConfigurationSetCommand = CreateConfigurationSetCommand;
+    exports2.CreateConfigurationSetEventDestination$ = CreateConfigurationSetEventDestination$;
+    exports2.CreateConfigurationSetEventDestinationCommand = CreateConfigurationSetEventDestinationCommand;
+    exports2.CreateConfigurationSetEventDestinationRequest$ = CreateConfigurationSetEventDestinationRequest$;
+    exports2.CreateConfigurationSetEventDestinationResponse$ = CreateConfigurationSetEventDestinationResponse$;
+    exports2.CreateConfigurationSetRequest$ = CreateConfigurationSetRequest$;
+    exports2.CreateConfigurationSetResponse$ = CreateConfigurationSetResponse$;
+    exports2.CreateConfigurationSetTrackingOptions$ = CreateConfigurationSetTrackingOptions$;
+    exports2.CreateConfigurationSetTrackingOptionsCommand = CreateConfigurationSetTrackingOptionsCommand;
+    exports2.CreateConfigurationSetTrackingOptionsRequest$ = CreateConfigurationSetTrackingOptionsRequest$;
+    exports2.CreateConfigurationSetTrackingOptionsResponse$ = CreateConfigurationSetTrackingOptionsResponse$;
+    exports2.CreateCustomVerificationEmailTemplate$ = CreateCustomVerificationEmailTemplate$;
+    exports2.CreateCustomVerificationEmailTemplateCommand = CreateCustomVerificationEmailTemplateCommand;
+    exports2.CreateCustomVerificationEmailTemplateRequest$ = CreateCustomVerificationEmailTemplateRequest$;
+    exports2.CreateReceiptFilter$ = CreateReceiptFilter$;
+    exports2.CreateReceiptFilterCommand = CreateReceiptFilterCommand;
+    exports2.CreateReceiptFilterRequest$ = CreateReceiptFilterRequest$;
+    exports2.CreateReceiptFilterResponse$ = CreateReceiptFilterResponse$;
+    exports2.CreateReceiptRule$ = CreateReceiptRule$;
+    exports2.CreateReceiptRuleCommand = CreateReceiptRuleCommand;
+    exports2.CreateReceiptRuleRequest$ = CreateReceiptRuleRequest$;
+    exports2.CreateReceiptRuleResponse$ = CreateReceiptRuleResponse$;
+    exports2.CreateReceiptRuleSet$ = CreateReceiptRuleSet$;
+    exports2.CreateReceiptRuleSetCommand = CreateReceiptRuleSetCommand;
+    exports2.CreateReceiptRuleSetRequest$ = CreateReceiptRuleSetRequest$;
+    exports2.CreateReceiptRuleSetResponse$ = CreateReceiptRuleSetResponse$;
+    exports2.CreateTemplate$ = CreateTemplate$;
+    exports2.CreateTemplateCommand = CreateTemplateCommand;
+    exports2.CreateTemplateRequest$ = CreateTemplateRequest$;
+    exports2.CreateTemplateResponse$ = CreateTemplateResponse$;
+    exports2.CustomMailFromStatus = CustomMailFromStatus;
+    exports2.CustomVerificationEmailInvalidContentException = CustomVerificationEmailInvalidContentException;
+    exports2.CustomVerificationEmailInvalidContentException$ = CustomVerificationEmailInvalidContentException$;
+    exports2.CustomVerificationEmailTemplate$ = CustomVerificationEmailTemplate$;
+    exports2.CustomVerificationEmailTemplateAlreadyExistsException = CustomVerificationEmailTemplateAlreadyExistsException;
+    exports2.CustomVerificationEmailTemplateAlreadyExistsException$ = CustomVerificationEmailTemplateAlreadyExistsException$;
+    exports2.CustomVerificationEmailTemplateDoesNotExistException = CustomVerificationEmailTemplateDoesNotExistException;
+    exports2.CustomVerificationEmailTemplateDoesNotExistException$ = CustomVerificationEmailTemplateDoesNotExistException$;
+    exports2.DeleteConfigurationSet$ = DeleteConfigurationSet$;
+    exports2.DeleteConfigurationSetCommand = DeleteConfigurationSetCommand;
+    exports2.DeleteConfigurationSetEventDestination$ = DeleteConfigurationSetEventDestination$;
+    exports2.DeleteConfigurationSetEventDestinationCommand = DeleteConfigurationSetEventDestinationCommand;
+    exports2.DeleteConfigurationSetEventDestinationRequest$ = DeleteConfigurationSetEventDestinationRequest$;
+    exports2.DeleteConfigurationSetEventDestinationResponse$ = DeleteConfigurationSetEventDestinationResponse$;
+    exports2.DeleteConfigurationSetRequest$ = DeleteConfigurationSetRequest$;
+    exports2.DeleteConfigurationSetResponse$ = DeleteConfigurationSetResponse$;
+    exports2.DeleteConfigurationSetTrackingOptions$ = DeleteConfigurationSetTrackingOptions$;
+    exports2.DeleteConfigurationSetTrackingOptionsCommand = DeleteConfigurationSetTrackingOptionsCommand;
+    exports2.DeleteConfigurationSetTrackingOptionsRequest$ = DeleteConfigurationSetTrackingOptionsRequest$;
+    exports2.DeleteConfigurationSetTrackingOptionsResponse$ = DeleteConfigurationSetTrackingOptionsResponse$;
+    exports2.DeleteCustomVerificationEmailTemplate$ = DeleteCustomVerificationEmailTemplate$;
+    exports2.DeleteCustomVerificationEmailTemplateCommand = DeleteCustomVerificationEmailTemplateCommand;
+    exports2.DeleteCustomVerificationEmailTemplateRequest$ = DeleteCustomVerificationEmailTemplateRequest$;
+    exports2.DeleteIdentity$ = DeleteIdentity$;
+    exports2.DeleteIdentityCommand = DeleteIdentityCommand;
+    exports2.DeleteIdentityPolicy$ = DeleteIdentityPolicy$;
+    exports2.DeleteIdentityPolicyCommand = DeleteIdentityPolicyCommand;
+    exports2.DeleteIdentityPolicyRequest$ = DeleteIdentityPolicyRequest$;
+    exports2.DeleteIdentityPolicyResponse$ = DeleteIdentityPolicyResponse$;
+    exports2.DeleteIdentityRequest$ = DeleteIdentityRequest$;
+    exports2.DeleteIdentityResponse$ = DeleteIdentityResponse$;
+    exports2.DeleteReceiptFilter$ = DeleteReceiptFilter$;
+    exports2.DeleteReceiptFilterCommand = DeleteReceiptFilterCommand;
+    exports2.DeleteReceiptFilterRequest$ = DeleteReceiptFilterRequest$;
+    exports2.DeleteReceiptFilterResponse$ = DeleteReceiptFilterResponse$;
+    exports2.DeleteReceiptRule$ = DeleteReceiptRule$;
+    exports2.DeleteReceiptRuleCommand = DeleteReceiptRuleCommand;
+    exports2.DeleteReceiptRuleRequest$ = DeleteReceiptRuleRequest$;
+    exports2.DeleteReceiptRuleResponse$ = DeleteReceiptRuleResponse$;
+    exports2.DeleteReceiptRuleSet$ = DeleteReceiptRuleSet$;
+    exports2.DeleteReceiptRuleSetCommand = DeleteReceiptRuleSetCommand;
+    exports2.DeleteReceiptRuleSetRequest$ = DeleteReceiptRuleSetRequest$;
+    exports2.DeleteReceiptRuleSetResponse$ = DeleteReceiptRuleSetResponse$;
+    exports2.DeleteTemplate$ = DeleteTemplate$;
+    exports2.DeleteTemplateCommand = DeleteTemplateCommand;
+    exports2.DeleteTemplateRequest$ = DeleteTemplateRequest$;
+    exports2.DeleteTemplateResponse$ = DeleteTemplateResponse$;
+    exports2.DeleteVerifiedEmailAddress$ = DeleteVerifiedEmailAddress$;
+    exports2.DeleteVerifiedEmailAddressCommand = DeleteVerifiedEmailAddressCommand;
+    exports2.DeleteVerifiedEmailAddressRequest$ = DeleteVerifiedEmailAddressRequest$;
+    exports2.DeliveryOptions$ = DeliveryOptions$;
+    exports2.DescribeActiveReceiptRuleSet$ = DescribeActiveReceiptRuleSet$;
+    exports2.DescribeActiveReceiptRuleSetCommand = DescribeActiveReceiptRuleSetCommand;
+    exports2.DescribeActiveReceiptRuleSetRequest$ = DescribeActiveReceiptRuleSetRequest$;
+    exports2.DescribeActiveReceiptRuleSetResponse$ = DescribeActiveReceiptRuleSetResponse$;
+    exports2.DescribeConfigurationSet$ = DescribeConfigurationSet$;
+    exports2.DescribeConfigurationSetCommand = DescribeConfigurationSetCommand;
+    exports2.DescribeConfigurationSetRequest$ = DescribeConfigurationSetRequest$;
+    exports2.DescribeConfigurationSetResponse$ = DescribeConfigurationSetResponse$;
+    exports2.DescribeReceiptRule$ = DescribeReceiptRule$;
+    exports2.DescribeReceiptRuleCommand = DescribeReceiptRuleCommand;
+    exports2.DescribeReceiptRuleRequest$ = DescribeReceiptRuleRequest$;
+    exports2.DescribeReceiptRuleResponse$ = DescribeReceiptRuleResponse$;
+    exports2.DescribeReceiptRuleSet$ = DescribeReceiptRuleSet$;
+    exports2.DescribeReceiptRuleSetCommand = DescribeReceiptRuleSetCommand;
+    exports2.DescribeReceiptRuleSetRequest$ = DescribeReceiptRuleSetRequest$;
+    exports2.DescribeReceiptRuleSetResponse$ = DescribeReceiptRuleSetResponse$;
+    exports2.Destination$ = Destination$;
+    exports2.DimensionValueSource = DimensionValueSource;
+    exports2.DsnAction = DsnAction;
+    exports2.EventDestination$ = EventDestination$;
+    exports2.EventDestinationAlreadyExistsException = EventDestinationAlreadyExistsException;
+    exports2.EventDestinationAlreadyExistsException$ = EventDestinationAlreadyExistsException$;
+    exports2.EventDestinationDoesNotExistException = EventDestinationDoesNotExistException;
+    exports2.EventDestinationDoesNotExistException$ = EventDestinationDoesNotExistException$;
+    exports2.EventType = EventType;
+    exports2.ExtensionField$ = ExtensionField$;
+    exports2.FromEmailAddressNotVerifiedException = FromEmailAddressNotVerifiedException;
+    exports2.FromEmailAddressNotVerifiedException$ = FromEmailAddressNotVerifiedException$;
+    exports2.GetAccountSendingEnabled$ = GetAccountSendingEnabled$;
+    exports2.GetAccountSendingEnabledCommand = GetAccountSendingEnabledCommand;
+    exports2.GetAccountSendingEnabledResponse$ = GetAccountSendingEnabledResponse$;
+    exports2.GetCustomVerificationEmailTemplate$ = GetCustomVerificationEmailTemplate$;
+    exports2.GetCustomVerificationEmailTemplateCommand = GetCustomVerificationEmailTemplateCommand;
+    exports2.GetCustomVerificationEmailTemplateRequest$ = GetCustomVerificationEmailTemplateRequest$;
+    exports2.GetCustomVerificationEmailTemplateResponse$ = GetCustomVerificationEmailTemplateResponse$;
+    exports2.GetIdentityDkimAttributes$ = GetIdentityDkimAttributes$;
+    exports2.GetIdentityDkimAttributesCommand = GetIdentityDkimAttributesCommand;
+    exports2.GetIdentityDkimAttributesRequest$ = GetIdentityDkimAttributesRequest$;
+    exports2.GetIdentityDkimAttributesResponse$ = GetIdentityDkimAttributesResponse$;
+    exports2.GetIdentityMailFromDomainAttributes$ = GetIdentityMailFromDomainAttributes$;
+    exports2.GetIdentityMailFromDomainAttributesCommand = GetIdentityMailFromDomainAttributesCommand;
+    exports2.GetIdentityMailFromDomainAttributesRequest$ = GetIdentityMailFromDomainAttributesRequest$;
+    exports2.GetIdentityMailFromDomainAttributesResponse$ = GetIdentityMailFromDomainAttributesResponse$;
+    exports2.GetIdentityNotificationAttributes$ = GetIdentityNotificationAttributes$;
+    exports2.GetIdentityNotificationAttributesCommand = GetIdentityNotificationAttributesCommand;
+    exports2.GetIdentityNotificationAttributesRequest$ = GetIdentityNotificationAttributesRequest$;
+    exports2.GetIdentityNotificationAttributesResponse$ = GetIdentityNotificationAttributesResponse$;
+    exports2.GetIdentityPolicies$ = GetIdentityPolicies$;
+    exports2.GetIdentityPoliciesCommand = GetIdentityPoliciesCommand;
+    exports2.GetIdentityPoliciesRequest$ = GetIdentityPoliciesRequest$;
+    exports2.GetIdentityPoliciesResponse$ = GetIdentityPoliciesResponse$;
+    exports2.GetIdentityVerificationAttributes$ = GetIdentityVerificationAttributes$;
+    exports2.GetIdentityVerificationAttributesCommand = GetIdentityVerificationAttributesCommand;
+    exports2.GetIdentityVerificationAttributesRequest$ = GetIdentityVerificationAttributesRequest$;
+    exports2.GetIdentityVerificationAttributesResponse$ = GetIdentityVerificationAttributesResponse$;
+    exports2.GetSendQuota$ = GetSendQuota$;
+    exports2.GetSendQuotaCommand = GetSendQuotaCommand;
+    exports2.GetSendQuotaResponse$ = GetSendQuotaResponse$;
+    exports2.GetSendStatistics$ = GetSendStatistics$;
+    exports2.GetSendStatisticsCommand = GetSendStatisticsCommand;
+    exports2.GetSendStatisticsResponse$ = GetSendStatisticsResponse$;
+    exports2.GetTemplate$ = GetTemplate$;
+    exports2.GetTemplateCommand = GetTemplateCommand;
+    exports2.GetTemplateRequest$ = GetTemplateRequest$;
+    exports2.GetTemplateResponse$ = GetTemplateResponse$;
+    exports2.IdentityDkimAttributes$ = IdentityDkimAttributes$;
+    exports2.IdentityMailFromDomainAttributes$ = IdentityMailFromDomainAttributes$;
+    exports2.IdentityNotificationAttributes$ = IdentityNotificationAttributes$;
+    exports2.IdentityType = IdentityType;
+    exports2.IdentityVerificationAttributes$ = IdentityVerificationAttributes$;
+    exports2.InvalidCloudWatchDestinationException = InvalidCloudWatchDestinationException;
+    exports2.InvalidCloudWatchDestinationException$ = InvalidCloudWatchDestinationException$;
+    exports2.InvalidConfigurationSetException = InvalidConfigurationSetException;
+    exports2.InvalidConfigurationSetException$ = InvalidConfigurationSetException$;
+    exports2.InvalidDeliveryOptionsException = InvalidDeliveryOptionsException;
+    exports2.InvalidDeliveryOptionsException$ = InvalidDeliveryOptionsException$;
+    exports2.InvalidFirehoseDestinationException = InvalidFirehoseDestinationException;
+    exports2.InvalidFirehoseDestinationException$ = InvalidFirehoseDestinationException$;
+    exports2.InvalidLambdaFunctionException = InvalidLambdaFunctionException;
+    exports2.InvalidLambdaFunctionException$ = InvalidLambdaFunctionException$;
+    exports2.InvalidPolicyException = InvalidPolicyException;
+    exports2.InvalidPolicyException$ = InvalidPolicyException$;
+    exports2.InvalidRenderingParameterException = InvalidRenderingParameterException;
+    exports2.InvalidRenderingParameterException$ = InvalidRenderingParameterException$;
+    exports2.InvalidS3ConfigurationException = InvalidS3ConfigurationException;
+    exports2.InvalidS3ConfigurationException$ = InvalidS3ConfigurationException$;
+    exports2.InvalidSNSDestinationException = InvalidSNSDestinationException;
+    exports2.InvalidSNSDestinationException$ = InvalidSNSDestinationException$;
+    exports2.InvalidSnsTopicException = InvalidSnsTopicException;
+    exports2.InvalidSnsTopicException$ = InvalidSnsTopicException$;
+    exports2.InvalidTemplateException = InvalidTemplateException;
+    exports2.InvalidTemplateException$ = InvalidTemplateException$;
+    exports2.InvalidTrackingOptionsException = InvalidTrackingOptionsException;
+    exports2.InvalidTrackingOptionsException$ = InvalidTrackingOptionsException$;
+    exports2.InvocationType = InvocationType;
+    exports2.KinesisFirehoseDestination$ = KinesisFirehoseDestination$;
+    exports2.LambdaAction$ = LambdaAction$;
+    exports2.LimitExceededException = LimitExceededException;
+    exports2.LimitExceededException$ = LimitExceededException$;
+    exports2.ListConfigurationSets$ = ListConfigurationSets$;
+    exports2.ListConfigurationSetsCommand = ListConfigurationSetsCommand;
+    exports2.ListConfigurationSetsRequest$ = ListConfigurationSetsRequest$;
+    exports2.ListConfigurationSetsResponse$ = ListConfigurationSetsResponse$;
+    exports2.ListCustomVerificationEmailTemplates$ = ListCustomVerificationEmailTemplates$;
+    exports2.ListCustomVerificationEmailTemplatesCommand = ListCustomVerificationEmailTemplatesCommand;
+    exports2.ListCustomVerificationEmailTemplatesRequest$ = ListCustomVerificationEmailTemplatesRequest$;
+    exports2.ListCustomVerificationEmailTemplatesResponse$ = ListCustomVerificationEmailTemplatesResponse$;
+    exports2.ListIdentities$ = ListIdentities$;
+    exports2.ListIdentitiesCommand = ListIdentitiesCommand;
+    exports2.ListIdentitiesRequest$ = ListIdentitiesRequest$;
+    exports2.ListIdentitiesResponse$ = ListIdentitiesResponse$;
+    exports2.ListIdentityPolicies$ = ListIdentityPolicies$;
+    exports2.ListIdentityPoliciesCommand = ListIdentityPoliciesCommand;
+    exports2.ListIdentityPoliciesRequest$ = ListIdentityPoliciesRequest$;
+    exports2.ListIdentityPoliciesResponse$ = ListIdentityPoliciesResponse$;
+    exports2.ListReceiptFilters$ = ListReceiptFilters$;
+    exports2.ListReceiptFiltersCommand = ListReceiptFiltersCommand;
+    exports2.ListReceiptFiltersRequest$ = ListReceiptFiltersRequest$;
+    exports2.ListReceiptFiltersResponse$ = ListReceiptFiltersResponse$;
+    exports2.ListReceiptRuleSets$ = ListReceiptRuleSets$;
+    exports2.ListReceiptRuleSetsCommand = ListReceiptRuleSetsCommand;
+    exports2.ListReceiptRuleSetsRequest$ = ListReceiptRuleSetsRequest$;
+    exports2.ListReceiptRuleSetsResponse$ = ListReceiptRuleSetsResponse$;
+    exports2.ListTemplates$ = ListTemplates$;
+    exports2.ListTemplatesCommand = ListTemplatesCommand;
+    exports2.ListTemplatesRequest$ = ListTemplatesRequest$;
+    exports2.ListTemplatesResponse$ = ListTemplatesResponse$;
+    exports2.ListVerifiedEmailAddresses$ = ListVerifiedEmailAddresses$;
+    exports2.ListVerifiedEmailAddressesCommand = ListVerifiedEmailAddressesCommand;
+    exports2.ListVerifiedEmailAddressesResponse$ = ListVerifiedEmailAddressesResponse$;
+    exports2.MailFromDomainNotVerifiedException = MailFromDomainNotVerifiedException;
+    exports2.MailFromDomainNotVerifiedException$ = MailFromDomainNotVerifiedException$;
+    exports2.Message$ = Message$;
+    exports2.MessageDsn$ = MessageDsn$;
+    exports2.MessageRejected = MessageRejected;
+    exports2.MessageRejected$ = MessageRejected$;
+    exports2.MessageTag$ = MessageTag$;
+    exports2.MissingRenderingAttributeException = MissingRenderingAttributeException;
+    exports2.MissingRenderingAttributeException$ = MissingRenderingAttributeException$;
+    exports2.NotificationType = NotificationType;
+    exports2.ProductionAccessNotGrantedException = ProductionAccessNotGrantedException;
+    exports2.ProductionAccessNotGrantedException$ = ProductionAccessNotGrantedException$;
+    exports2.PutConfigurationSetDeliveryOptions$ = PutConfigurationSetDeliveryOptions$;
+    exports2.PutConfigurationSetDeliveryOptionsCommand = PutConfigurationSetDeliveryOptionsCommand;
+    exports2.PutConfigurationSetDeliveryOptionsRequest$ = PutConfigurationSetDeliveryOptionsRequest$;
+    exports2.PutConfigurationSetDeliveryOptionsResponse$ = PutConfigurationSetDeliveryOptionsResponse$;
+    exports2.PutIdentityPolicy$ = PutIdentityPolicy$;
+    exports2.PutIdentityPolicyCommand = PutIdentityPolicyCommand;
+    exports2.PutIdentityPolicyRequest$ = PutIdentityPolicyRequest$;
+    exports2.PutIdentityPolicyResponse$ = PutIdentityPolicyResponse$;
+    exports2.RawMessage$ = RawMessage$;
+    exports2.ReceiptAction$ = ReceiptAction$;
+    exports2.ReceiptFilter$ = ReceiptFilter$;
+    exports2.ReceiptFilterPolicy = ReceiptFilterPolicy;
+    exports2.ReceiptIpFilter$ = ReceiptIpFilter$;
+    exports2.ReceiptRule$ = ReceiptRule$;
+    exports2.ReceiptRuleSetMetadata$ = ReceiptRuleSetMetadata$;
+    exports2.RecipientDsnFields$ = RecipientDsnFields$;
+    exports2.ReorderReceiptRuleSet$ = ReorderReceiptRuleSet$;
+    exports2.ReorderReceiptRuleSetCommand = ReorderReceiptRuleSetCommand;
+    exports2.ReorderReceiptRuleSetRequest$ = ReorderReceiptRuleSetRequest$;
+    exports2.ReorderReceiptRuleSetResponse$ = ReorderReceiptRuleSetResponse$;
+    exports2.ReputationOptions$ = ReputationOptions$;
+    exports2.RuleDoesNotExistException = RuleDoesNotExistException;
+    exports2.RuleDoesNotExistException$ = RuleDoesNotExistException$;
+    exports2.RuleSetDoesNotExistException = RuleSetDoesNotExistException;
+    exports2.RuleSetDoesNotExistException$ = RuleSetDoesNotExistException$;
+    exports2.S3Action$ = S3Action$;
+    exports2.SES = SES;
+    exports2.SESClient = SESClient2;
+    exports2.SESServiceException = SESServiceException;
+    exports2.SESServiceException$ = SESServiceException$;
+    exports2.SNSAction$ = SNSAction$;
+    exports2.SNSActionEncoding = SNSActionEncoding;
+    exports2.SNSDestination$ = SNSDestination$;
+    exports2.SendBounce$ = SendBounce$;
+    exports2.SendBounceCommand = SendBounceCommand;
+    exports2.SendBounceRequest$ = SendBounceRequest$;
+    exports2.SendBounceResponse$ = SendBounceResponse$;
+    exports2.SendBulkTemplatedEmail$ = SendBulkTemplatedEmail$;
+    exports2.SendBulkTemplatedEmailCommand = SendBulkTemplatedEmailCommand;
+    exports2.SendBulkTemplatedEmailRequest$ = SendBulkTemplatedEmailRequest$;
+    exports2.SendBulkTemplatedEmailResponse$ = SendBulkTemplatedEmailResponse$;
+    exports2.SendCustomVerificationEmail$ = SendCustomVerificationEmail$;
+    exports2.SendCustomVerificationEmailCommand = SendCustomVerificationEmailCommand;
+    exports2.SendCustomVerificationEmailRequest$ = SendCustomVerificationEmailRequest$;
+    exports2.SendCustomVerificationEmailResponse$ = SendCustomVerificationEmailResponse$;
+    exports2.SendDataPoint$ = SendDataPoint$;
+    exports2.SendEmail$ = SendEmail$;
+    exports2.SendEmailCommand = SendEmailCommand2;
+    exports2.SendEmailRequest$ = SendEmailRequest$;
+    exports2.SendEmailResponse$ = SendEmailResponse$;
+    exports2.SendRawEmail$ = SendRawEmail$;
+    exports2.SendRawEmailCommand = SendRawEmailCommand;
+    exports2.SendRawEmailRequest$ = SendRawEmailRequest$;
+    exports2.SendRawEmailResponse$ = SendRawEmailResponse$;
+    exports2.SendTemplatedEmail$ = SendTemplatedEmail$;
+    exports2.SendTemplatedEmailCommand = SendTemplatedEmailCommand;
+    exports2.SendTemplatedEmailRequest$ = SendTemplatedEmailRequest$;
+    exports2.SendTemplatedEmailResponse$ = SendTemplatedEmailResponse$;
+    exports2.SetActiveReceiptRuleSet$ = SetActiveReceiptRuleSet$;
+    exports2.SetActiveReceiptRuleSetCommand = SetActiveReceiptRuleSetCommand;
+    exports2.SetActiveReceiptRuleSetRequest$ = SetActiveReceiptRuleSetRequest$;
+    exports2.SetActiveReceiptRuleSetResponse$ = SetActiveReceiptRuleSetResponse$;
+    exports2.SetIdentityDkimEnabled$ = SetIdentityDkimEnabled$;
+    exports2.SetIdentityDkimEnabledCommand = SetIdentityDkimEnabledCommand;
+    exports2.SetIdentityDkimEnabledRequest$ = SetIdentityDkimEnabledRequest$;
+    exports2.SetIdentityDkimEnabledResponse$ = SetIdentityDkimEnabledResponse$;
+    exports2.SetIdentityFeedbackForwardingEnabled$ = SetIdentityFeedbackForwardingEnabled$;
+    exports2.SetIdentityFeedbackForwardingEnabledCommand = SetIdentityFeedbackForwardingEnabledCommand;
+    exports2.SetIdentityFeedbackForwardingEnabledRequest$ = SetIdentityFeedbackForwardingEnabledRequest$;
+    exports2.SetIdentityFeedbackForwardingEnabledResponse$ = SetIdentityFeedbackForwardingEnabledResponse$;
+    exports2.SetIdentityHeadersInNotificationsEnabled$ = SetIdentityHeadersInNotificationsEnabled$;
+    exports2.SetIdentityHeadersInNotificationsEnabledCommand = SetIdentityHeadersInNotificationsEnabledCommand;
+    exports2.SetIdentityHeadersInNotificationsEnabledRequest$ = SetIdentityHeadersInNotificationsEnabledRequest$;
+    exports2.SetIdentityHeadersInNotificationsEnabledResponse$ = SetIdentityHeadersInNotificationsEnabledResponse$;
+    exports2.SetIdentityMailFromDomain$ = SetIdentityMailFromDomain$;
+    exports2.SetIdentityMailFromDomainCommand = SetIdentityMailFromDomainCommand;
+    exports2.SetIdentityMailFromDomainRequest$ = SetIdentityMailFromDomainRequest$;
+    exports2.SetIdentityMailFromDomainResponse$ = SetIdentityMailFromDomainResponse$;
+    exports2.SetIdentityNotificationTopic$ = SetIdentityNotificationTopic$;
+    exports2.SetIdentityNotificationTopicCommand = SetIdentityNotificationTopicCommand;
+    exports2.SetIdentityNotificationTopicRequest$ = SetIdentityNotificationTopicRequest$;
+    exports2.SetIdentityNotificationTopicResponse$ = SetIdentityNotificationTopicResponse$;
+    exports2.SetReceiptRulePosition$ = SetReceiptRulePosition$;
+    exports2.SetReceiptRulePositionCommand = SetReceiptRulePositionCommand;
+    exports2.SetReceiptRulePositionRequest$ = SetReceiptRulePositionRequest$;
+    exports2.SetReceiptRulePositionResponse$ = SetReceiptRulePositionResponse$;
+    exports2.StopAction$ = StopAction$;
+    exports2.StopScope = StopScope;
+    exports2.Template$ = Template$;
+    exports2.TemplateDoesNotExistException = TemplateDoesNotExistException;
+    exports2.TemplateDoesNotExistException$ = TemplateDoesNotExistException$;
+    exports2.TemplateMetadata$ = TemplateMetadata$;
+    exports2.TestRenderTemplate$ = TestRenderTemplate$;
+    exports2.TestRenderTemplateCommand = TestRenderTemplateCommand;
+    exports2.TestRenderTemplateRequest$ = TestRenderTemplateRequest$;
+    exports2.TestRenderTemplateResponse$ = TestRenderTemplateResponse$;
+    exports2.TlsPolicy = TlsPolicy;
+    exports2.TrackingOptions$ = TrackingOptions$;
+    exports2.TrackingOptionsAlreadyExistsException = TrackingOptionsAlreadyExistsException;
+    exports2.TrackingOptionsAlreadyExistsException$ = TrackingOptionsAlreadyExistsException$;
+    exports2.TrackingOptionsDoesNotExistException = TrackingOptionsDoesNotExistException;
+    exports2.TrackingOptionsDoesNotExistException$ = TrackingOptionsDoesNotExistException$;
+    exports2.UpdateAccountSendingEnabled$ = UpdateAccountSendingEnabled$;
+    exports2.UpdateAccountSendingEnabledCommand = UpdateAccountSendingEnabledCommand;
+    exports2.UpdateAccountSendingEnabledRequest$ = UpdateAccountSendingEnabledRequest$;
+    exports2.UpdateConfigurationSetEventDestination$ = UpdateConfigurationSetEventDestination$;
+    exports2.UpdateConfigurationSetEventDestinationCommand = UpdateConfigurationSetEventDestinationCommand;
+    exports2.UpdateConfigurationSetEventDestinationRequest$ = UpdateConfigurationSetEventDestinationRequest$;
+    exports2.UpdateConfigurationSetEventDestinationResponse$ = UpdateConfigurationSetEventDestinationResponse$;
+    exports2.UpdateConfigurationSetReputationMetricsEnabled$ = UpdateConfigurationSetReputationMetricsEnabled$;
+    exports2.UpdateConfigurationSetReputationMetricsEnabledCommand = UpdateConfigurationSetReputationMetricsEnabledCommand;
+    exports2.UpdateConfigurationSetReputationMetricsEnabledRequest$ = UpdateConfigurationSetReputationMetricsEnabledRequest$;
+    exports2.UpdateConfigurationSetSendingEnabled$ = UpdateConfigurationSetSendingEnabled$;
+    exports2.UpdateConfigurationSetSendingEnabledCommand = UpdateConfigurationSetSendingEnabledCommand;
+    exports2.UpdateConfigurationSetSendingEnabledRequest$ = UpdateConfigurationSetSendingEnabledRequest$;
+    exports2.UpdateConfigurationSetTrackingOptions$ = UpdateConfigurationSetTrackingOptions$;
+    exports2.UpdateConfigurationSetTrackingOptionsCommand = UpdateConfigurationSetTrackingOptionsCommand;
+    exports2.UpdateConfigurationSetTrackingOptionsRequest$ = UpdateConfigurationSetTrackingOptionsRequest$;
+    exports2.UpdateConfigurationSetTrackingOptionsResponse$ = UpdateConfigurationSetTrackingOptionsResponse$;
+    exports2.UpdateCustomVerificationEmailTemplate$ = UpdateCustomVerificationEmailTemplate$;
+    exports2.UpdateCustomVerificationEmailTemplateCommand = UpdateCustomVerificationEmailTemplateCommand;
+    exports2.UpdateCustomVerificationEmailTemplateRequest$ = UpdateCustomVerificationEmailTemplateRequest$;
+    exports2.UpdateReceiptRule$ = UpdateReceiptRule$;
+    exports2.UpdateReceiptRuleCommand = UpdateReceiptRuleCommand;
+    exports2.UpdateReceiptRuleRequest$ = UpdateReceiptRuleRequest$;
+    exports2.UpdateReceiptRuleResponse$ = UpdateReceiptRuleResponse$;
+    exports2.UpdateTemplate$ = UpdateTemplate$;
+    exports2.UpdateTemplateCommand = UpdateTemplateCommand;
+    exports2.UpdateTemplateRequest$ = UpdateTemplateRequest$;
+    exports2.UpdateTemplateResponse$ = UpdateTemplateResponse$;
+    exports2.VerificationStatus = VerificationStatus;
+    exports2.VerifyDomainDkim$ = VerifyDomainDkim$;
+    exports2.VerifyDomainDkimCommand = VerifyDomainDkimCommand;
+    exports2.VerifyDomainDkimRequest$ = VerifyDomainDkimRequest$;
+    exports2.VerifyDomainDkimResponse$ = VerifyDomainDkimResponse$;
+    exports2.VerifyDomainIdentity$ = VerifyDomainIdentity$;
+    exports2.VerifyDomainIdentityCommand = VerifyDomainIdentityCommand;
+    exports2.VerifyDomainIdentityRequest$ = VerifyDomainIdentityRequest$;
+    exports2.VerifyDomainIdentityResponse$ = VerifyDomainIdentityResponse$;
+    exports2.VerifyEmailAddress$ = VerifyEmailAddress$;
+    exports2.VerifyEmailAddressCommand = VerifyEmailAddressCommand;
+    exports2.VerifyEmailAddressRequest$ = VerifyEmailAddressRequest$;
+    exports2.VerifyEmailIdentity$ = VerifyEmailIdentity$;
+    exports2.VerifyEmailIdentityCommand = VerifyEmailIdentityCommand;
+    exports2.VerifyEmailIdentityRequest$ = VerifyEmailIdentityRequest$;
+    exports2.VerifyEmailIdentityResponse$ = VerifyEmailIdentityResponse$;
+    exports2.WorkmailAction$ = WorkmailAction$;
+    exports2.paginateListCustomVerificationEmailTemplates = paginateListCustomVerificationEmailTemplates;
+    exports2.paginateListIdentities = paginateListIdentities;
+    exports2.waitForIdentityExists = waitForIdentityExists;
+    exports2.waitUntilIdentityExists = waitUntilIdentityExists;
   }
 });
 
@@ -128080,6 +128080,16 @@ var chapterSchema = external_exports.object({
 var createFolderSchema = external_exports.object({
   name: external_exports.string().min(1).max(120)
 });
+var renameFolderSchema = external_exports.object({
+  name: external_exports.string().trim().min(1).max(80)
+});
+var bulkMoveSchema = external_exports.object({
+  ids: external_exports.array(external_exports.string().uuid()).min(1).max(100),
+  folderId: external_exports.string().min(1)
+});
+var bulkDeleteSchema = external_exports.object({
+  ids: external_exports.array(external_exports.string().uuid()).min(1).max(100)
+});
 var updateVideoSchema = external_exports.object({
   title: external_exports.string().min(1).max(300).optional(),
   folderId: external_exports.string().min(1).optional(),
@@ -128113,164 +128123,12 @@ var createInviteSchema = external_exports.object({
   role: roleSchema
 });
 
-// src/routes/validate.ts
-var validate2 = (schema) => (req, res, next) => {
-  const result = schema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ error: "validation", details: result.error.issues });
-    return;
-  }
-  req.body = result.data;
-  next();
-};
-
-// src/routes/async-router.ts
-var import_express = __toESM(require_express2());
-var wrap = (handler) => (req, res, next) => {
-  const result = handler(req, res, next);
-  if (result && typeof result.catch === "function") {
-    result.catch(next);
-  }
-};
-var methods = ["get", "post", "patch", "put", "delete"];
-var asyncRouter = () => {
-  const router = (0, import_express.Router)();
-  methods.forEach((method) => {
-    const original = router[method].bind(router);
-    router[method] = (...args) => original(
-      ...args.map(
-        (arg) => typeof arg === "function" ? wrap(arg) : arg
-      )
-    );
-  });
-  return router;
-};
-
-// src/routes/folders.ts
-var foldersRouter = () => {
-  const router = asyncRouter();
-  router.get("/", async (_req, res) => {
-    const { data: data2 } = await folderEntity.query.all({}).go({ pages: "all" });
-    res.json({
-      items: [
-        { id: "ROOT", name: "Unfiled" },
-        ...data2.map(({ id, name }) => ({ id, name }))
-      ]
-    });
-  });
-  router.post(
-    "/",
-    requireCreator,
-    validate2(createFolderSchema),
-    async (req, res) => {
-      const id = v4_default();
-      const { name } = req.body;
-      await folderEntity.create({ id, name, createdAt: (/* @__PURE__ */ new Date()).toISOString() }).go();
-      res.json({ id, name });
-    }
-  );
-  return router;
-};
-
-// src/routes/request.ts
-var anonymous = {
-  sub: "",
-  email: "",
-  name: "",
-  role: "member"
-};
-var currentUser = (req) => req.user ?? anonymous;
-var pathParam = (req, name) => req.params[name] ?? "";
-
-// src/email.ts
-var import_client_ses = __toESM(require_dist_cjs64());
-var subject = "You have been invited to ASAP Demos";
-var client;
-var getClient = () => {
-  if (!client) {
-    client = new import_client_ses.SESClient({ region: getSesRegion() });
-  }
-  return client;
-};
-var sendInviteEmail = async (email) => {
-  const appUrl = `https://${getDemoHostname()}`;
-  const text = [
-    "You have been invited to review sprint demo recordings on ASAP Demos.",
-    "",
-    `Create your account at ${appUrl} using this exact email address (${email}).`,
-    "You can sign in with Google or with an email and password."
-  ].join("\n");
-  const html = [
-    "<p>You have been invited to review sprint demo recordings on ASAP Demos.</p>",
-    `<p>Create your account at <a href="${appUrl}">${appUrl}</a> using this exact email address (${email}).</p>`,
-    "<p>You can sign in with Google or with an email and password.</p>"
-  ].join("");
-  if (isLocal()) {
-    console.log(
-      `[local] invite email to ${email}: ${JSON.stringify({ subject, text })}`
-    );
-    return;
-  }
-  await getClient().send(
-    new import_client_ses.SendEmailCommand({
-      Source: getEmailSender(),
-      Destination: { ToAddresses: [email] },
-      Message: {
-        Subject: { Data: subject, Charset: "UTF-8" },
-        Body: {
-          Text: { Data: text, Charset: "UTF-8" },
-          Html: { Data: html, Charset: "UTF-8" }
-        }
-      }
-    })
-  );
-};
-
-// src/routes/invites.ts
-var invitesRouter = () => {
-  const router = asyncRouter();
-  router.get("/", requireCreator, async (_req, res) => {
-    const { data: data2 } = await inviteEntity.query.all({}).go({ pages: "all" });
-    res.json({
-      items: data2.map((invite) => ({
-        email: invite.email,
-        role: invite.role,
-        createdAt: invite.createdAt,
-        ...invite.claimedBy ? { claimedBy: invite.claimedBy.name } : {}
-      }))
-    });
-  });
-  router.post(
-    "/",
-    requireCreator,
-    validate2(createInviteSchema),
-    async (req, res) => {
-      const { role } = req.body;
-      const email = req.body.email.toLowerCase();
-      const existing = await inviteEntity.get({ email }).go();
-      if (existing.data?.claimedBy) {
-        res.status(409).json({ error: "already_invited" });
-        return;
-      }
-      await inviteEntity.upsert({
-        email,
-        role,
-        invitedBy: { sub: currentUser(req).sub, name: currentUser(req).name },
-        createdAt: existing.data?.createdAt ?? (/* @__PURE__ */ new Date()).toISOString()
-      }).go();
-      await sendInviteEmail(email);
-      res.json({ email, role });
-    }
-  );
-  return router;
-};
-
 // src/storage.ts
-var import_client_s3 = __toESM(require_dist_cjs82());
-var import_s3_request_presigner = __toESM(require_dist_cjs84());
-var client2;
+var import_client_s3 = __toESM(require_dist_cjs81());
+var import_s3_request_presigner = __toESM(require_dist_cjs83());
+var client;
 var getS3Client = () => {
-  if (!client2) {
+  if (!client) {
     const config = isLocal() ? {
       endpoint: localS3Endpoint(),
       forcePathStyle: true,
@@ -128280,9 +128138,9 @@ var getS3Client = () => {
         secretAccessKey: "minioadmin"
       }
     } : {};
-    client2 = new import_client_s3.S3Client(config);
+    client = new import_client_s3.S3Client(config);
   }
-  return client2;
+  return client;
 };
 var rawKey = (videoId) => `raw/${videoId}/original.mp4`;
 var mediaPrefix = (videoId) => `media/${videoId}/`;
@@ -128384,6 +128242,229 @@ var deletePrefix = async (prefix) => {
   } while (continuationToken);
 };
 
+// src/routes/cascade.ts
+var deleteVideoCascade = async (id) => {
+  await Promise.all(
+    [`raw/${id}/`, mediaPrefix(id)].map(
+      (prefix) => deletePrefix(prefix).catch((error3) => {
+        console.error(`failed to delete ${prefix}`, error3);
+      })
+    )
+  );
+  await videoEntity.delete({ id }).go();
+};
+
+// src/routes/request.ts
+var anonymous = {
+  sub: "",
+  email: "",
+  name: "",
+  role: "member"
+};
+var currentUser = (req) => req.user ?? anonymous;
+var pathParam = (req, name) => req.params[name] ?? "";
+
+// src/routes/validate.ts
+var validate2 = (schema) => (req, res, next) => {
+  const result = schema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ error: "validation", details: result.error.issues });
+    return;
+  }
+  req.body = result.data;
+  next();
+};
+
+// src/routes/async-router.ts
+var import_express = __toESM(require_express2());
+var wrap = (handler) => (req, res, next) => {
+  const result = handler(req, res, next);
+  if (result && typeof result.catch === "function") {
+    result.catch(next);
+  }
+};
+var methods = ["get", "post", "patch", "put", "delete"];
+var asyncRouter = () => {
+  const router = (0, import_express.Router)();
+  methods.forEach((method) => {
+    const original = router[method].bind(router);
+    router[method] = (...args) => original(
+      ...args.map(
+        (arg) => typeof arg === "function" ? wrap(arg) : arg
+      )
+    );
+  });
+  return router;
+};
+
+// src/routes/folders.ts
+var rootFolderId = "ROOT";
+var foldersRouter = () => {
+  const router = asyncRouter();
+  router.get("/", async (_req, res) => {
+    const { data: data2 } = await folderEntity.query.all({}).go({ pages: "all" });
+    res.json({
+      items: [
+        { id: rootFolderId, name: "Unfiled" },
+        ...data2.map(({ id, name }) => ({ id, name }))
+      ]
+    });
+  });
+  router.get("/counts", async (req, res) => {
+    const { data: data2 } = await folderEntity.query.all({}).go({ pages: "all" });
+    const folderIds = [rootFolderId, ...data2.map(({ id }) => id)];
+    const isCreator = req.user?.role === "creator";
+    const entries = await Promise.all(
+      folderIds.map(async (folderId) => {
+        const query = isCreator ? videoEntity.query.byFolder({ folderId }) : videoEntity.query.byFolder({ folderId }).begins({ statusKey: "PUBLISHED", recordedAt: "" });
+        const { data: videos } = await query.go({ pages: "all" });
+        const visible = isCreator ? videos : videos.filter(({ processingState }) => processingState === "ready");
+        return [folderId, visible.length];
+      })
+    );
+    res.json({ counts: Object.fromEntries(entries) });
+  });
+  router.post(
+    "/",
+    requireCreator,
+    validate2(createFolderSchema),
+    async (req, res) => {
+      const id = v4_default();
+      const { name } = req.body;
+      await folderEntity.create({ id, name, createdAt: (/* @__PURE__ */ new Date()).toISOString() }).go();
+      res.json({ id, name });
+    }
+  );
+  router.patch(
+    "/:id",
+    requireCreator,
+    validate2(renameFolderSchema),
+    async (req, res) => {
+      const id = pathParam(req, "id");
+      if (id === rootFolderId) {
+        res.status(400).json({ error: "root_folder" });
+        return;
+      }
+      const { name } = req.body;
+      const existing = await folderEntity.get({ id }).go();
+      if (!existing.data) {
+        res.status(404).json({ error: "not_found" });
+        return;
+      }
+      await folderEntity.put({ ...existing.data, name }).go();
+      res.json({ id, name });
+    }
+  );
+  router.delete("/:id", requireCreator, async (req, res) => {
+    const id = pathParam(req, "id");
+    if (id === rootFolderId) {
+      res.status(400).json({ error: "root_folder" });
+      return;
+    }
+    const existing = await folderEntity.get({ id }).go();
+    if (!existing.data) {
+      res.status(404).json({ error: "not_found" });
+      return;
+    }
+    const { data: videos } = await videoEntity.query.byFolder({ folderId: id }).go({ pages: "all" });
+    await Promise.all(
+      videos.map(async (video) => {
+        try {
+          await deleteVideoCascade(video.id);
+        } catch (error3) {
+          console.error(`failed to delete video ${video.id}`, error3);
+        }
+      })
+    );
+    await folderEntity.delete({ id }).go();
+    res.status(204).end();
+  });
+  return router;
+};
+
+// src/email.ts
+var import_client_ses = __toESM(require_dist_cjs84());
+var subject = "You have been invited to ASAP Demos";
+var client2;
+var getClient = () => {
+  if (!client2) {
+    client2 = new import_client_ses.SESClient({ region: getSesRegion() });
+  }
+  return client2;
+};
+var sendInviteEmail = async (email) => {
+  const appUrl = `https://${getDemoHostname()}`;
+  const text = [
+    "You have been invited to review sprint demo recordings on ASAP Demos.",
+    "",
+    `Create your account at ${appUrl} using this exact email address (${email}).`,
+    "You can sign in with Google or with an email and password."
+  ].join("\n");
+  const html = [
+    "<p>You have been invited to review sprint demo recordings on ASAP Demos.</p>",
+    `<p>Create your account at <a href="${appUrl}">${appUrl}</a> using this exact email address (${email}).</p>`,
+    "<p>You can sign in with Google or with an email and password.</p>"
+  ].join("");
+  if (isLocal()) {
+    console.log(
+      `[local] invite email to ${email}: ${JSON.stringify({ subject, text })}`
+    );
+    return;
+  }
+  await getClient().send(
+    new import_client_ses.SendEmailCommand({
+      Source: getEmailSender(),
+      Destination: { ToAddresses: [email] },
+      Message: {
+        Subject: { Data: subject, Charset: "UTF-8" },
+        Body: {
+          Text: { Data: text, Charset: "UTF-8" },
+          Html: { Data: html, Charset: "UTF-8" }
+        }
+      }
+    })
+  );
+};
+
+// src/routes/invites.ts
+var invitesRouter = () => {
+  const router = asyncRouter();
+  router.get("/", requireCreator, async (_req, res) => {
+    const { data: data2 } = await inviteEntity.query.all({}).go({ pages: "all" });
+    res.json({
+      items: data2.map((invite) => ({
+        email: invite.email,
+        role: invite.role,
+        createdAt: invite.createdAt,
+        ...invite.claimedBy ? { claimedBy: invite.claimedBy.name } : {}
+      }))
+    });
+  });
+  router.post(
+    "/",
+    requireCreator,
+    validate2(createInviteSchema),
+    async (req, res) => {
+      const { role } = req.body;
+      const email = req.body.email.toLowerCase();
+      const existing = await inviteEntity.get({ email }).go();
+      if (existing.data?.claimedBy) {
+        res.status(409).json({ error: "already_invited" });
+        return;
+      }
+      await inviteEntity.upsert({
+        email,
+        role,
+        invitedBy: { sub: currentUser(req).sub, name: currentUser(req).name },
+        createdAt: existing.data?.createdAt ?? (/* @__PURE__ */ new Date()).toISOString()
+      }).go();
+      await sendInviteEmail(email);
+      res.json({ email, role });
+    }
+  );
+  return router;
+};
+
 // src/routes/media.ts
 var mediaRouter = () => {
   const router = asyncRouter();
@@ -128420,8 +128501,12 @@ var import_promises3 = require("stream/promises");
 var spriteIntervalSeconds = 10;
 var spriteTileWidth = 160;
 var spriteColumns = 10;
+var binaryDirs = ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin"];
+var binaryPaths = /* @__PURE__ */ new Map();
 var run = (command5, args) => new Promise((resolve, reject) => {
-  const child = (0, import_child_process.spawn)(command5, args, { stdio: ["ignore", "pipe", "pipe"] });
+  const child = (0, import_child_process.spawn)(binaryPaths.get(command5) ?? command5, args, {
+    stdio: ["ignore", "pipe", "pipe"]
+  });
   let stdout = "";
   let stderr = "";
   child.stdout.on("data", (chunk) => {
@@ -128433,13 +128518,26 @@ var run = (command5, args) => new Promise((resolve, reject) => {
   child.on("error", reject);
   child.on("close", (code) => resolve({ code: code ?? 1, stdout, stderr }));
 });
-var hasBinary = async (command5) => {
+var tryRunVersion = async (command5) => {
   try {
     const { code } = await run(command5, ["-version"]);
     return code === 0;
   } catch {
     return false;
   }
+};
+var hasBinary = async (command5) => {
+  if (binaryPaths.has(command5) || await tryRunVersion(command5)) {
+    return true;
+  }
+  for (const dir of binaryDirs) {
+    binaryPaths.set(command5, (0, import_path.join)(dir, command5));
+    if (await tryRunVersion(command5)) {
+      return true;
+    }
+    binaryPaths.delete(command5);
+  }
+  return false;
 };
 var formatTimestamp = (totalMs) => {
   const hours = Math.floor(totalMs / 36e5);
@@ -128519,10 +128617,34 @@ var probeHeight = async (input) => {
   const height = Number(stdout.trim());
   return code === 0 && Number.isFinite(height) ? height : 0;
 };
+var posterOffsetSeconds = (durationMs) => Math.max(0, durationMs / 1e3 * 0.25);
+var extractPoster = async (inputFile, posterFile, durationMs) => {
+  try {
+    const { code } = await run("ffmpeg", [
+      "-nostdin",
+      "-y",
+      "-ss",
+      posterOffsetSeconds(durationMs).toFixed(3),
+      "-i",
+      inputFile,
+      "-frames:v",
+      "1",
+      "-vf",
+      "scale=640:-2",
+      "-q:v",
+      "4",
+      posterFile
+    ]);
+    return code === 0;
+  } catch {
+    return false;
+  }
+};
 var encodeWithFfmpeg = async (workDir, inputFile) => {
   const streamFile = (0, import_path.join)(workDir, "stream.mp4");
   const spriteFile = (0, import_path.join)(workDir, "sprite.jpg");
   const vttFile = (0, import_path.join)(workDir, "thumbnails.vtt");
+  const posterFile = (0, import_path.join)(workDir, "thumb.jpg");
   const encoded = await run("ffmpeg", [
     "-nostdin",
     "-y",
@@ -128578,9 +128700,10 @@ var encodeWithFfmpeg = async (workDir, inputFile) => {
       sprites = true;
     }
   }
-  return { durationMs, sprites };
+  const poster = await extractPoster(streamFile, posterFile, durationMs);
+  return { durationMs, sprites, poster };
 };
-var uploadArtefacts = async (videoId, workDir, sprites) => {
+var uploadArtefacts = async (videoId, workDir, sprites, poster) => {
   const prefix = mediaPrefix(videoId);
   await putObject(
     `${prefix}stream.mp4`,
@@ -128599,6 +128722,13 @@ var uploadArtefacts = async (videoId, workDir, sprites) => {
       "text/vtt"
     );
   }
+  if (poster) {
+    await putObject(
+      `${prefix}thumb.jpg`,
+      await import_fs.promises.readFile((0, import_path.join)(workDir, "thumb.jpg")),
+      "image/jpeg"
+    );
+  }
 };
 var encodeLocally = async (videoId) => {
   const workDir = await import_fs.promises.mkdtemp((0, import_path.join)((0, import_os.tmpdir)(), `demo-encode-${videoId}-`));
@@ -128608,14 +128738,16 @@ var encodeLocally = async (videoId) => {
     await (0, import_promises3.pipeline)(raw.body, (0, import_fs.createWriteStream)(inputFile));
     let durationMs = 0;
     let sprites = false;
-    if (await hasBinary("ffmpeg")) {
+    let poster = false;
+    if (await hasBinary("ffmpeg") && await hasBinary("ffprobe")) {
       const result = await encodeWithFfmpeg(workDir, inputFile);
       durationMs = result.durationMs;
       sprites = result.sprites;
+      poster = result.poster;
     } else {
       await import_fs.promises.copyFile(inputFile, (0, import_path.join)(workDir, "stream.mp4"));
     }
-    await uploadArtefacts(videoId, workDir, sprites);
+    await uploadArtefacts(videoId, workDir, sprites, poster);
     await videoEntity.patch({ id: videoId }).set({ durationMs, processingState: "ready" }).remove(["processingError"]).go();
   } catch (error3) {
     await videoEntity.patch({ id: videoId }).set({
@@ -128725,6 +128857,61 @@ var videosRouter = () => {
     const items = data2.slice().sort((a8, b8) => String(b8.recordedAt).localeCompare(String(a8.recordedAt))).map(serialiseVideo);
     res.json({ items });
   });
+  router.post(
+    "/bulk-move",
+    requireCreator,
+    validate2(bulkMoveSchema),
+    async (req, res) => {
+      const { ids, folderId } = req.body;
+      if (folderId !== rootFolderId) {
+        const folder = await folderEntity.get({ id: folderId }).go();
+        if (!folder.data) {
+          res.status(404).json({ error: "not_found" });
+          return;
+        }
+      }
+      const moved = [];
+      const missing = [];
+      for (const id of ids) {
+        const existing = await videoEntity.get({ id }).go();
+        if (!existing.data) {
+          missing.push(id);
+          continue;
+        }
+        await videoEntity.put({
+          ...existing.data,
+          folderId,
+          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+        }).go();
+        moved.push(id);
+      }
+      res.json({ moved, missing });
+    }
+  );
+  router.post(
+    "/bulk-delete",
+    requireCreator,
+    validate2(bulkDeleteSchema),
+    async (req, res) => {
+      const { ids } = req.body;
+      const deleted = [];
+      const missing = [];
+      for (const id of ids) {
+        const existing = await videoEntity.get({ id }).go();
+        if (!existing.data) {
+          missing.push(id);
+          continue;
+        }
+        try {
+          await deleteVideoCascade(id);
+          deleted.push(id);
+        } catch (error3) {
+          console.error(`failed to delete video ${id}`, error3);
+        }
+      }
+      res.json({ deleted, missing });
+    }
+  );
   router.get("/:id", async (req, res) => {
     const { data: data2 } = await videoEntity.get({ id: pathParam(req, "id") }).go();
     if (!data2) {
@@ -128935,10 +129122,7 @@ var videosRouter = () => {
     res.status(204).end();
   });
   router.delete("/:id", requireCreator, async (req, res) => {
-    const id = pathParam(req, "id");
-    await videoEntity.delete({ id }).go();
-    await deletePrefix(`raw/${id}/`).catch(() => void 0);
-    await deletePrefix(mediaPrefix(id)).catch(() => void 0);
+    await deleteVideoCascade(pathParam(req, "id"));
     res.status(204).end();
   });
   router.post("/:id/access", async (req, res) => {

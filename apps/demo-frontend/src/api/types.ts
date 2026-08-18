@@ -14,6 +14,8 @@ export type Folder = {
 
 export const rootFolderId = 'ROOT';
 
+export type FolderCounts = Record<string, number>;
+
 export type BulkMoveResult = { moved: string[]; missing: string[] };
 
 export type BulkDeleteResult = { deleted: string[]; missing: string[] };

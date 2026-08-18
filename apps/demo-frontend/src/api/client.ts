@@ -4,6 +4,7 @@ import type {
   BulkMoveResult,
   CreatedUpload,
   Folder,
+  FolderCounts,
   Invite,
   Lease,
   ListResponse,
@@ -120,6 +121,10 @@ export const createApi = (getToken: GetToken) => ({
 
   listFolders: async (): Promise<Folder[]> =>
     (await request<ListResponse<Folder>>('/folders', await getToken())).items,
+
+  folderCounts: async (): Promise<FolderCounts> =>
+    (await request<{ counts: FolderCounts }>('/folders/counts', await getToken()))
+      .counts,
 
   createFolder: async (name: string): Promise<Folder> =>
     request<Folder>('/folders', await getToken(), {

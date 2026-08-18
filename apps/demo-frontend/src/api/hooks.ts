@@ -9,6 +9,7 @@ import { useApi } from './ApiProvider';
 import { ApiError } from './client';
 import type {
   Folder,
+  FolderCounts,
   Invite,
   Me,
   Role,
@@ -44,6 +45,16 @@ export const useFolders = (): UseQueryResult<Folder[], unknown> => {
     queryKey: ['folders'],
     queryFn: () => api.listFolders(),
     retry: noRetryOnClientError,
+  });
+};
+
+export const useFolderCounts = (): UseQueryResult<FolderCounts, unknown> => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ['folder-counts'],
+    queryFn: () => api.folderCounts(),
+    retry: noRetryOnClientError,
+    staleTime: 60 * 1000,
   });
 };
 
@@ -92,6 +103,7 @@ export const useUpdateVideo = (id: string) => {
     onSuccess: (video) => {
       queryClient.setQueryData(['video', id], video);
       void queryClient.invalidateQueries({ queryKey: ['videos'] });
+      void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
     },
   });
 };
@@ -104,6 +116,7 @@ export const usePublishVideo = (id: string) => {
     onSuccess: (video) => {
       queryClient.setQueryData(['video', id], video);
       void queryClient.invalidateQueries({ queryKey: ['videos'] });
+      void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
     },
   });
 };
@@ -113,7 +126,10 @@ export const useDeleteVideo = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => api.deleteVideo(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['videos'] }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['videos'] });
+      void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
+    },
   });
 };
 
@@ -154,7 +170,10 @@ export const useCreateFolder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (name: string) => api.createFolder(name),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['folders'] }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['folders'] });
+      void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
+    },
   });
 };
 
@@ -163,6 +182,7 @@ const useInvalidateFoldersAndVideos = () => {
   return () => {
     void queryClient.invalidateQueries({ queryKey: ['videos'] });
     void queryClient.invalidateQueries({ queryKey: ['folders'] });
+    void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
   };
 };
 

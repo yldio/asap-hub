@@ -4,8 +4,6 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
-  useDraggable,
-  useDroppable,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -13,7 +11,6 @@ import {
 } from '@dnd-kit/core';
 import {
   FC,
-  FormEvent,
   MouseEvent as ReactMouseEvent,
   useCallback,
   useEffect,
@@ -21,7 +18,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import {
@@ -29,13 +26,28 @@ import {
   useBulkMoveVideos,
   useCreateFolder,
   useDeleteFolder,
+  useFolderCounts,
   useFolders,
   useRenameFolder,
   useVideos,
 } from '../api/hooks';
 import { rootFolderId, type Folder, type Video } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
-import { Badge, Button, Card, Headline, Modal, Spinner } from '../ui/components';
+import { FolderCard } from '../library/FolderCard';
+import { Sidebar } from '../library/Sidebar';
+import { Toolbar } from '../library/Toolbar';
+import { useSearchResults } from '../library/useSearchResults';
+import { isWatchable, VideoCard } from '../library/VideoCard';
+import {
+  matchesStatusFilter,
+  nextStatusFilter,
+  sortVideos,
+  useDebounced,
+  useViewMode,
+  type SortMode,
+  type StatusFilter,
+} from '../library/state';
+import { Button, Modal, Spinner } from '../ui/components';
 import {
   ContextMenu,
   ContextMenuItem,
@@ -43,20 +55,8 @@ import {
   ContextMenuSubmenu,
   type MenuPosition,
 } from '../ui/ContextMenu';
-import {
-  charcoal,
-  ember,
-  lead,
-  mint,
-  paper,
-  pine,
-  rem,
-  rose,
-  silver,
-  steel,
-  tin,
-} from '../ui/theme';
-import { formatDuration, formatRecordedAt } from '../utils/time';
+import { charcoal, ember, lead, paper, pine, rem, rose, steel } from '../ui/theme';
+import { folderCount, videoCount } from '../utils/format';
 import {
   applySelection,
   emptySelection,
@@ -65,7 +65,7 @@ import {
   type SelectionState,
 } from './selection';
 
-const gridStyles = css({
+const layoutStyles = css({
   display: 'grid',
   gridTemplateColumns: `minmax(${rem(200)}, ${rem(240)}) 1fr`,
   gap: rem(32),
@@ -75,111 +75,46 @@ const gridStyles = css({
   },
 });
 
-const sidebarHeadingStyles = css({
+const breadcrumbStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'baseline',
+  gap: rem(10),
+  paddingBottom: rem(16),
+});
+
+const breadcrumbNameStyles = css({
+  margin: 0,
+  fontSize: rem(20),
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+});
+
+const summaryStyles = css({ fontSize: rem(14), color: lead.rgb });
+
+const sectionLabelStyles = css({
   fontSize: rem(12),
   letterSpacing: rem(1.2),
   textTransform: 'uppercase',
   color: lead.rgb,
   fontWeight: 'bold',
-  paddingBottom: rem(12),
+  paddingBottom: rem(10),
 });
 
-const folderListStyles = css({
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
+const folderGridStyles = css({
   display: 'grid',
-  gap: rem(2),
+  gridTemplateColumns: `repeat(auto-fill, minmax(${rem(200)}, 1fr))`,
+  gap: rem(12),
+  paddingBottom: rem(28),
 });
 
-const folderLinkStyles = css({
-  display: 'block',
-  padding: `${rem(8)} ${rem(12)}`,
-  borderRadius: rem(4),
-  color: charcoal.rgb,
-  textDecoration: 'none',
-  fontSize: rem(15),
-  ':hover': { backgroundColor: silver.rgb },
-});
-
-const folderLinkActiveStyles = css({
-  backgroundColor: mint.rgb,
-  color: pine.rgb,
-  fontWeight: 'bold',
-  ':hover': { backgroundColor: mint.rgb },
-});
-
-const folderDropTargetStyles = css({
-  backgroundColor: mint.rgb,
-  outline: `2px solid ${pine.rgb}`,
-  outlineOffset: rem(-2),
-  color: pine.rgb,
-});
-
-const folderInputStyles = css({
-  boxSizing: 'border-box',
-  width: '100%',
-  padding: `${rem(7)} ${rem(11)}`,
-  borderRadius: rem(4),
-  border: `1px solid ${pine.rgb}`,
-  font: 'inherit',
-  fontSize: rem(15),
-  color: charcoal.rgb,
-});
-
-const newFolderButtonStyles = css({
-  display: 'block',
-  width: '100%',
-  marginTop: rem(8),
-  padding: `${rem(8)} ${rem(12)}`,
-  border: 'none',
-  borderRadius: rem(4),
-  background: 'none',
-  font: 'inherit',
-  fontSize: rem(14),
-  textAlign: 'left',
-  color: lead.rgb,
-  cursor: 'pointer',
-  ':hover': { backgroundColor: silver.rgb, color: charcoal.rgb },
-});
-
-const videoListStyles = css({
+const videoGridStyles = css({
   display: 'grid',
+  gridTemplateColumns: `repeat(auto-fill, minmax(${rem(230)}, 1fr))`,
   gap: rem(16),
 });
 
-const videoCardStyles = css({
-  padding: rem(24),
-  display: 'grid',
-  gap: rem(8),
-});
-
-const selectedCardStyles = css({
-  backgroundColor: mint.rgb,
-  borderColor: pine.rgb,
-});
-
-const selectableBodyStyles = css({
-  userSelect: 'none',
-  cursor: 'default',
-});
-
-const titleLinkStyles = css({
-  color: charcoal.rgb,
-  textDecoration: 'none',
-  ':hover': { textDecoration: 'underline' },
-});
-
-const metaStyles = css({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: rem(12),
-  fontSize: rem(14),
-  color: lead.rgb,
-});
-
-const dotStyles = css({ color: tin.rgb });
+const videoListStyles = css({ display: 'grid', gap: rem(10) });
 
 const emptyStyles = css({
   padding: rem(32),
@@ -241,186 +176,12 @@ const dragOverlayStyles = css({
   boxShadow: `0 ${rem(4)} ${rem(12)} rgba(0, 0, 0, 0.3)`,
 });
 
-const isWatchable = (video: Video): boolean =>
-  video.processingState === 'ready' && video.status === 'published';
-
-const demoCount = (count: number): string =>
-  `${count} ${count === 1 ? 'demo' : 'demos'}`;
-
-const VideoStatusBadge: FC<{ readonly video: Video }> = ({ video }) => {
-  if (video.processingState === 'failed') {
-    return <Badge tone="error">Failed</Badge>;
-  }
-  if (video.processingState !== 'ready') {
-    return <Badge tone="warning">Processing</Badge>;
-  }
-  if (video.status === 'draft') {
-    return <Badge tone="neutral">Draft</Badge>;
-  }
-  return null;
-};
-
-type VideoCardProps = {
-  readonly video: Video;
-  readonly isCreator: boolean;
-  readonly isSelected: boolean;
-  readonly onSelect: (event: ReactMouseEvent) => void;
-  readonly onContextMenu: (event: ReactMouseEvent) => void;
-};
-
-const VideoCard: FC<VideoCardProps> = ({
-  video,
-  isCreator,
-  isSelected,
-  onSelect,
-  onContextMenu,
-}) => {
-  const editPath = `/studio/videos/${video.id}`;
-  const titlePath =
-    isCreator && !isWatchable(video) ? editPath : `/videos/${video.id}`;
-
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: video.id,
-    disabled: !isCreator,
-  });
-
-  return (
-    <div
-      ref={isCreator ? setNodeRef : undefined}
-      data-testid={`video-card-${video.id}`}
-      aria-selected={isCreator ? isSelected : undefined}
-      css={{ opacity: isDragging ? 0.4 : 1 }}
-      {...(isCreator ? attributes : {})}
-      {...(isCreator ? listeners : {})}
-      onContextMenu={isCreator ? onContextMenu : undefined}
-      onMouseDown={
-        isCreator
-          ? (event: ReactMouseEvent) => {
-              // shift-click would otherwise paint a text selection across cards
-              if (event.shiftKey) event.preventDefault();
-            }
-          : undefined
-      }
-      onClick={isCreator ? onSelect : undefined}
-    >
-      <Card
-        overrideStyles={
-          isSelected
-            ? css([videoCardStyles, selectedCardStyles])
-            : videoCardStyles
-        }
-      >
-        <div
-          css={[
-            { display: 'flex', gap: rem(12), alignItems: 'baseline' },
-            isCreator && selectableBodyStyles,
-          ]}
-        >
-          <h3 css={{ fontSize: rem(18), fontWeight: 'bold', margin: 0 }}>
-            <Link
-              to={titlePath}
-              css={titleLinkStyles}
-              draggable={false}
-              onClick={(event) => event.stopPropagation()}
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-              {video.title}
-            </Link>
-          </h3>
-          {isCreator && <VideoStatusBadge video={video} />}
-        </div>
-        <div css={[metaStyles, isCreator && selectableBodyStyles]}>
-          <span>{formatRecordedAt(video.recordedAt)}</span>
-          <span css={dotStyles}>&middot;</span>
-          <span>{formatDuration(video.durationMs)}</span>
-          <span css={dotStyles}>&middot;</span>
-          <span>
-            {video.chapters.length}{' '}
-            {video.chapters.length === 1 ? 'chapter' : 'chapters'}
-          </span>
-          {isCreator && (
-            <>
-              <span css={dotStyles}>&middot;</span>
-              <Link
-                to={editPath}
-                css={titleLinkStyles}
-                draggable={false}
-                onClick={(event) => event.stopPropagation()}
-                onMouseDown={(event) => event.stopPropagation()}
-              >
-                Edit
-              </Link>
-            </>
-          )}
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-const FolderRow: FC<{
-  readonly folder: Folder;
-  readonly isActive: boolean;
-  readonly isDropTarget: boolean;
-  readonly onContextMenu?: (event: ReactMouseEvent) => void;
-}> = ({ folder, isActive, isDropTarget, onContextMenu }) => {
-  const { setNodeRef, isOver } = useDroppable({
-    id: folder.id,
-    disabled: !isDropTarget,
-  });
-  return (
-    <Link
-      ref={setNodeRef}
-      to={`/?folder=${folder.id}`}
-      onContextMenu={onContextMenu}
-      css={[
-        folderLinkStyles,
-        isActive && folderLinkActiveStyles,
-        isDropTarget && isOver && folderDropTargetStyles,
-      ]}
-    >
-      {folder.name}
-    </Link>
-  );
-};
-
-const InlineFolderInput: FC<{
-  readonly initialValue?: string;
-  readonly label: string;
-  readonly onSubmit: (name: string) => void;
-  readonly onCancel: () => void;
-}> = ({ initialValue = '', label, onSubmit, onCancel }) => {
-  const [value, setValue] = useState(initialValue);
-  return (
-    <form
-      onSubmit={(event: FormEvent) => {
-        event.preventDefault();
-        const trimmed = value.trim();
-        if (trimmed) onSubmit(trimmed);
-        else onCancel();
-      }}
-    >
-      {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
-      <input
-        autoFocus
-        aria-label={label}
-        css={folderInputStyles}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-        onBlur={onCancel}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            onCancel();
-          }
-        }}
-      />
-    </form>
-  );
-};
-
 type FolderMenuState = { folder: Folder; position: MenuPosition };
 type VideoMenuState = { position: MenuPosition };
+
+// folder cards register as `card-<id>` so they never collide with the sidebar row ids
+const folderIdFromDropTarget = (id: string): string =>
+  id.startsWith('card-') ? id.slice('card-'.length) : id;
 
 const Home: FC = () => {
   const [searchParams] = useSearchParams();
@@ -431,6 +192,7 @@ const Home: FC = () => {
 
   const folders = useFolders();
   const videos = useVideos(selectedFolder);
+  const counts = useFolderCounts();
 
   const createFolder = useCreateFolder();
   const renameFolder = useRenameFolder();
@@ -449,23 +211,56 @@ const Home: FC = () => {
   const [isDeletingVideos, setIsDeletingVideos] = useState(false);
   const [draggingIds, setDraggingIds] = useState<string[]>([]);
 
-  const folderList = useMemo(() => folders.data ?? [], [folders.data]);
+  const [query, setQuery] = useState('');
+  const [sort, setSort] = useState<SortMode>('newest');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [view, setView] = useViewMode();
 
-  const visibleVideos = useMemo(
-    () =>
-      (videos.data ?? []).filter((video) => isCreator || isWatchable(video)),
-    [videos.data, isCreator],
+  const debouncedQuery = useDebounced(query, 250).trim();
+  const isSearching = debouncedQuery.length > 0;
+
+  const folderList = useMemo(() => folders.data ?? [], [folders.data]);
+  const folderNames = useMemo(
+    () => new Map(folderList.map(({ id, name }) => [id, name])),
+    [folderList],
   );
+
+  const search = useSearchResults(
+    folderList,
+    isSearching ? debouncedQuery : '',
+  );
+
+  const filterAndSort = useCallback(
+    (list: readonly Video[]): Video[] =>
+      sortVideos(
+        list.filter(
+          (video) =>
+            (isCreator || isWatchable(video)) &&
+            (!isCreator || matchesStatusFilter(video, statusFilter)),
+        ),
+        sort,
+      ),
+    [isCreator, statusFilter, sort],
+  );
+
+  const searchVideos = useMemo(
+    () => filterAndSort(search.results.map(({ video }) => video)),
+    [search.results, filterAndSort],
+  );
+
+  const folderVideos = useMemo(
+    () => filterAndSort(videos.data ?? []),
+    [videos.data, filterAndSort],
+  );
+
+  const visibleVideos = isSearching ? searchVideos : folderVideos;
 
   const orderedIds = useMemo(
     () => visibleVideos.map(({ id }) => id),
     [visibleVideos],
   );
 
-  const clearSelection = useCallback(
-    () => setSelection(emptySelection),
-    [],
-  );
+  const clearSelection = useCallback(() => setSelection(emptySelection), []);
 
   useEffect(() => {
     setSelection((current) => pruneSelection(current, orderedIds));
@@ -504,12 +299,16 @@ const Home: FC = () => {
     setVideoMenu({ position: { x: event.clientX, y: event.clientY } });
   };
 
-  const onFolderContextMenu =
-    (folder: Folder) => (event: ReactMouseEvent) => {
-      event.preventDefault();
-      setVideoMenu(undefined);
-      setFolderMenu({ folder, position: { x: event.clientX, y: event.clientY } });
-    };
+  const onCardDelete = (id: string) => () => {
+    setSelection((current) => selectionForContextMenu(current, id));
+    setIsDeletingVideos(true);
+  };
+
+  const onFolderContextMenu = (folder: Folder) => (event: ReactMouseEvent) => {
+    event.preventDefault();
+    setVideoMenu(undefined);
+    setFolderMenu({ folder, position: { x: event.clientX, y: event.clientY } });
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -531,7 +330,9 @@ const Home: FC = () => {
     const ids = draggingIdsRef.current;
     draggingIdsRef.current = [];
     setDraggingIds([]);
-    const folderId = event.over ? String(event.over.id) : undefined;
+    const folderId = event.over
+      ? folderIdFromDropTarget(String(event.over.id))
+      : undefined;
     if (!folderId || ids.length === 0) return;
     bulkMove.mutate({ ids, folderId }, { onSuccess: clearSelection });
   };
@@ -542,8 +343,8 @@ const Home: FC = () => {
       setConfirmName('');
       setFolderVideoCount(undefined);
       try {
-        const folderVideos = await api.listVideos(folder.id);
-        setFolderVideoCount(folderVideos.length);
+        const list = await api.listVideos(folder.id);
+        setFolderVideoCount(list.length);
       } catch {
         setFolderVideoCount(undefined);
       }
@@ -578,15 +379,33 @@ const Home: FC = () => {
   };
 
   const moveTargets = folderList.filter(({ id }) => id !== selectedFolder);
-  const singleSelected = selectedVideos.length === 1 ? selectedVideos[0] : undefined;
+  const singleSelected =
+    selectedVideos.length === 1 ? selectedVideos[0] : undefined;
 
   const dragLabel =
     draggingIds.length === 1
       ? visibleVideos.find(({ id }) => id === draggingIds[0])?.title ??
-        demoCount(1)
-      : demoCount(draggingIds.length);
+        videoCount(1)
+      : videoCount(draggingIds.length);
 
   const isEmptyFolderDelete = folderVideoCount === 0;
+
+  const totalCount = useMemo(
+    () =>
+      counts.data
+        ? Object.values(counts.data).reduce((sum, value) => sum + value, 0)
+        : undefined,
+    [counts.data],
+  );
+
+  const currentFolderName = selectedFolder
+    ? folderNames.get(selectedFolder) ?? 'Folder'
+    : 'Home';
+
+  const childFolders = folderList.filter(({ id }) => id !== rootFolderId);
+
+  const isLoadingList = isSearching ? search.isLoading : videos.isLoading;
+  const isEmpty = !isLoadingList && visibleVideos.length === 0;
 
   return (
     <DndContext
@@ -599,113 +418,115 @@ const Home: FC = () => {
       }}
     >
       <div
-        css={gridStyles}
+        css={layoutStyles}
         onClick={(event) => {
           if (event.target === event.currentTarget) clearSelection();
         }}
       >
-        <aside>
-          <h2 css={sidebarHeadingStyles}>Folders</h2>
-          {folders.isLoading ? (
-            <Spinner label="Loading folders" />
-          ) : (
-            <>
-              <ul css={folderListStyles}>
-                <li>
-                  <Link
-                    to="/"
-                    css={[
-                      folderLinkStyles,
-                      !selectedFolder && folderLinkActiveStyles,
-                    ]}
-                  >
-                    All demos
-                  </Link>
-                </li>
-                {folderList.map((folder) => (
-                  <li key={folder.id}>
-                    {renamingFolderId === folder.id ? (
-                      <InlineFolderInput
-                        initialValue={folder.name}
-                        label={`Rename ${folder.name}`}
-                        onCancel={() => setRenamingFolderId(undefined)}
-                        onSubmit={(name) => {
-                          setRenamingFolderId(undefined);
-                          renameFolder.mutate({ id: folder.id, name });
-                        }}
-                      />
-                    ) : (
-                      <FolderRow
-                        folder={folder}
-                        isActive={selectedFolder === folder.id}
-                        isDropTarget={
-                          isCreator && selectedFolder !== folder.id
-                        }
-                        onContextMenu={
-                          isCreator && folder.id !== rootFolderId
-                            ? onFolderContextMenu(folder)
-                            : undefined
-                        }
-                      />
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {isCreator &&
-                (isCreatingFolder ? (
-                  <div css={{ marginTop: rem(8) }}>
-                    <InlineFolderInput
-                      label="New folder name"
-                      onCancel={() => setIsCreatingFolder(false)}
-                      onSubmit={(name) => {
-                        setIsCreatingFolder(false);
-                        createFolder.mutate(name);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    css={newFolderButtonStyles}
-                    onClick={() => setIsCreatingFolder(true)}
-                  >
-                    + New folder
-                  </button>
-                ))}
-            </>
-          )}
-        </aside>
+        <Sidebar
+          folders={folderList}
+          counts={counts.data}
+          totalCount={totalCount}
+          selectedFolder={selectedFolder}
+          isCreator={isCreator}
+          isLoading={folders.isLoading}
+          rootFolderId={rootFolderId}
+          isCreatingFolder={isCreatingFolder}
+          renamingFolderId={renamingFolderId}
+          onStartCreate={() => setIsCreatingFolder(true)}
+          onCancelCreate={() => setIsCreatingFolder(false)}
+          onCreate={(name) => {
+            setIsCreatingFolder(false);
+            createFolder.mutate(name);
+          }}
+          onCancelRename={() => setRenamingFolderId(undefined)}
+          onRename={(id, name) => {
+            setRenamingFolderId(undefined);
+            renameFolder.mutate({ id, name });
+          }}
+          onFolderContextMenu={onFolderContextMenu}
+        />
 
         <section
           onClick={(event) => {
             if (event.target === event.currentTarget) clearSelection();
           }}
         >
-          <Headline level={3}>
-            {folderList.find(({ id }) => id === selectedFolder)?.name ??
-              'All demos'}
-          </Headline>
-          <div css={{ height: rem(16) }} />
-          {videos.isLoading && <Spinner label="Loading demos" />}
-          {videos.isError && (
+          <Toolbar
+            query={query}
+            onQueryChange={setQuery}
+            sort={sort}
+            onSortChange={setSort}
+            view={view}
+            onViewChange={setView}
+            statusFilter={statusFilter}
+            onStatusFilterClick={() =>
+              setStatusFilter(nextStatusFilter(statusFilter))
+            }
+            isCreator={isCreator}
+          />
+
+          <div css={breadcrumbStyles}>
+            <h2 css={breadcrumbNameStyles}>
+              {isSearching
+                ? `Results for "${debouncedQuery}"`
+                : currentFolderName}
+            </h2>
+            <span css={summaryStyles}>
+              {videoCount(visibleVideos.length)}
+              {!isSearching &&
+                !selectedFolder &&
+                ` · ${folderCount(childFolders.length)}`}
+            </span>
+          </div>
+
+          {!isSearching && !selectedFolder && childFolders.length > 0 && (
+            <>
+              <div css={sectionLabelStyles}>Folders</div>
+              <div css={folderGridStyles}>
+                {childFolders.map((folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    folder={folder}
+                    count={counts.data?.[folder.id]}
+                    isDropTarget={isCreator}
+                    onContextMenu={
+                      isCreator ? onFolderContextMenu(folder) : undefined
+                    }
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          {isLoadingList && <Spinner label="Loading videos" />}
+          {!isSearching && videos.isError && (
             <div css={emptyStyles}>
-              We could not load the demos in this folder.
+              We could not load the videos in this folder.
             </div>
           )}
-          {!videos.isLoading &&
-            !videos.isError &&
-            visibleVideos.length === 0 && (
-              <div css={emptyStyles}>No demos here yet.</div>
-            )}
-          <div css={videoListStyles}>
+          {isEmpty && (
+            <div css={emptyStyles}>
+              {isSearching
+                ? `No results for ${debouncedQuery}`
+                : 'No videos here yet.'}
+            </div>
+          )}
+
+          <div css={view === 'grid' ? videoGridStyles : videoListStyles}>
             {visibleVideos.map((video) => (
               <VideoCard
                 key={video.id}
                 video={video}
+                view={view}
                 isCreator={isCreator}
                 isSelected={selection.ids.includes(video.id)}
+                folderName={
+                  isSearching ? folderNames.get(video.folderId) : undefined
+                }
                 onSelect={onCardSelect(video.id)}
                 onContextMenu={onCardContextMenu(video.id)}
+                onDelete={onCardDelete(video.id)}
               />
             ))}
           </div>
@@ -748,7 +569,7 @@ const Home: FC = () => {
 
       {videoMenu && (
         <ContextMenu
-          label="Demo actions"
+          label="Video actions"
           position={videoMenu.position}
           onClose={() => setVideoMenu(undefined)}
         >
@@ -797,7 +618,7 @@ const Home: FC = () => {
             }}
           >
             {selection.ids.length > 1
-              ? `Delete ${demoCount(selection.ids.length)}`
+              ? `Delete ${videoCount(selection.ids.length)}`
               : 'Delete'}
           </ContextMenuItem>
         </ContextMenu>
@@ -812,7 +633,9 @@ const Home: FC = () => {
             <Spinner label="Checking folder contents" />
           ) : (
             <>
-              <h2 css={dangerTitleStyles}>Delete &ldquo;{folderToDelete.name}&rdquo;?</h2>
+              <h2 css={dangerTitleStyles}>
+                Delete &ldquo;{folderToDelete.name}&rdquo;?
+              </h2>
               {isEmptyFolderDelete ? (
                 <p css={dangerBodyStyles}>
                   This folder is empty. Deleting it cannot be undone.
@@ -820,12 +643,12 @@ const Home: FC = () => {
               ) : (
                 <>
                   <p css={dangerBodyStyles}>
-                    This folder contains {demoCount(folderVideoCount)}.
+                    This folder contains {videoCount(folderVideoCount)}.
                   </p>
                   <div css={dangerNoticeStyles}>
-                    All {demoCount(folderVideoCount)} inside
-                    &ldquo;{folderToDelete.name}&rdquo;, including their video
-                    files, will be permanently deleted and cannot be recovered.
+                    All {videoCount(folderVideoCount)} inside &ldquo;
+                    {folderToDelete.name}&rdquo;, including their video files,
+                    will be permanently deleted and cannot be recovered.
                   </div>
                   <label css={{ display: 'block', marginTop: rem(16) }}>
                     <span css={{ fontSize: rem(14), color: lead.rgb }}>
@@ -846,7 +669,8 @@ const Home: FC = () => {
                   danger
                   disabled={
                     deleteFolder.isPending ||
-                    (!isEmptyFolderDelete && confirmName !== folderToDelete.name)
+                    (!isEmptyFolderDelete &&
+                      confirmName !== folderToDelete.name)
                   }
                   onClick={confirmFolderDelete}
                 >
@@ -859,15 +683,12 @@ const Home: FC = () => {
       )}
 
       {isDeletingVideos && (
-        <Modal
-          label="Delete demos"
-          onClose={() => setIsDeletingVideos(false)}
-        >
+        <Modal label="Delete videos" onClose={() => setIsDeletingVideos(false)}>
           <h2 css={dangerTitleStyles}>
-            Delete {demoCount(selection.ids.length)}?
+            Delete {videoCount(selection.ids.length)}?
           </h2>
           <div css={dangerNoticeStyles}>
-            {demoCount(selection.ids.length)} and their video files will be
+            {videoCount(selection.ids.length)} and their video files will be
             permanently removed and cannot be recovered.
           </div>
           <div css={modalActionsStyles}>

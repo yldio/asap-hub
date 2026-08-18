@@ -506,7 +506,8 @@ const Editor: FC<{
           <span css={keyStyles}>Space</span> play or pause
         </span>
         <span>
-          <span css={keyStyles}>M</span> mark a chapter here
+          <span css={keyStyles}>M</span> mark a chapter here (when not typing
+          in a field)
         </span>
         <span>
           <span css={keyStyles}>&larr; &rarr;</span> nudge 1s
@@ -514,6 +515,13 @@ const Editor: FC<{
         <span>
           <span css={keyStyles}>Shift + &larr; &rarr;</span> nudge one frame
         </span>
+        {!readOnly && (
+          <span css={{ marginLeft: 'auto' }}>
+            <Button small onClick={markChapter}>
+              Add chapter at {formatDuration(Math.round(currentTime * 1000))}
+            </Button>
+          </span>
+        )}
       </div>
 
       <Card>

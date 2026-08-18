@@ -71,6 +71,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/crn-server"\
     },\
     {\
+      "name": "@asap-hub/demo-frontend",\
+      "reference": "workspace:apps/demo-frontend"\
+    },\
+    {\
       "name": "@asap-hub/demo-server",\
       "reference": "workspace:apps/demo-server"\
     },\
@@ -296,6 +300,7 @@ const RAW_RUNTIME_STATE =
     ["@asap-hub/crn-frontend", ["workspace:apps/crn-frontend"]],\
     ["@asap-hub/crn-messages", ["workspace:apps/crn-messages"]],\
     ["@asap-hub/crn-server", ["workspace:apps/crn-server"]],\
+    ["@asap-hub/demo-frontend", ["workspace:apps/demo-frontend"]],\
     ["@asap-hub/demo-server", ["workspace:apps/demo-server"]],\
     ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],\
     ["@asap-hub/errors", ["workspace:packages/errors"]],\
@@ -531,6 +536,10 @@ const RAW_RUNTIME_STATE =
     [\
       "@asap-hub/crn-server",\
       "workspace:apps/crn-server"\
+    ],\
+    [\
+      "@asap-hub/demo-frontend",\
+      "workspace:apps/demo-frontend"\
     ],\
     [\
       "@asap-hub/demo-server",\
@@ -12962,6 +12971,37 @@ const RAW_RUNTIME_STATE =
           ["uuid", "npm:8.3.2"],\
           ["xlsx", "npm:0.18.5"],\
           ["yargs", "npm:17.3.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@asap-hub/demo-frontend", [\
+      ["workspace:apps/demo-frontend", {\
+        "packageLocation": "./apps/demo-frontend/",\
+        "packageDependencies": [\
+          ["@asap-hub/demo-frontend", "workspace:apps/demo-frontend"],\
+          ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
+          ["@asap-hub/react-components", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#workspace:packages/react-components"],\
+          ["@auth0/auth0-spa-js", "npm:1.22.6"],\
+          ["@babel/preset-react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:7.28.5"],\
+          ["@babel/runtime-corejs3", "npm:7.28.6"],\
+          ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
+          ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
+          ["@testing-library/dom", "npm:10.4.1"],\
+          ["@testing-library/jest-dom", "npm:6.9.1"],\
+          ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.2"],\
+          ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.6.1"],\
+          ["@types/jest", "npm:29.5.14"],\
+          ["@types/react", "npm:18.3.12"],\
+          ["@types/react-dom", "npm:18.3.1"],\
+          ["@vitejs/plugin-react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:4.7.0"],\
+          ["babel-preset-vite", "npm:1.1.3"],\
+          ["cross-env", "npm:7.0.3"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
+          ["react-router", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:7.13.0"],\
+          ["typescript", "patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587"],\
+          ["vite", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.4.21"]\
         ],\
         "linkType": "SOFT"\
       }]\

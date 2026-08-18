@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "target": "ESNext",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "types": ["vite/client", "@testing-library/jest-dom"],
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@asap-hub/react-components/src/*": [
+        "../../packages/react-components/src/*"
+      ]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "../../packages/react-components" }]
+}

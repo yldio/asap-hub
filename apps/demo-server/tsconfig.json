@@ -9,5 +9,5 @@
     "module": "commonjs",
     "target": "es2022"
   },
-  "include": ["src", "test", "@types/**/*.d.ts", "serverless.ts"]
+  "include": ["src", "test", "scripts", "@types/**/*.d.ts", "serverless.ts"]
 }

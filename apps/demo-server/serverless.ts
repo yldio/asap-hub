@@ -12,7 +12,9 @@ if (process.env.SLS_STAGE !== 'local') {
     'DEMO_HOSTNAME',
     'DEMO_SUBNET_IDS',
     'DEMO_VPC_ID',
+    'EMAIL_SENDER',
     'HOSTED_ZONE_NAME',
+    'SES_REGION',
     'SLS_STAGE',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
@@ -43,6 +45,8 @@ const subnetIds = (process.env.DEMO_SUBNET_IDS || '')
 const ciCommitSha = process.env.CI_COMMIT_SHA;
 const currentRevision = process.env.CURRENT_REVISION!;
 const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
+const sesRegion = process.env.SES_REGION || region;
+const emailSender = process.env.EMAIL_SENDER || '';
 
 const appUrl = `https://${demoHostname}`;
 const localAppUrl = 'http://localhost:3500';
@@ -106,6 +110,11 @@ const serverlessConfig: AWS = {
       AUTH0_DOMAIN: auth0Domain,
       TABLE_NAME: tableName,
       BUCKET_NAME: storageBucketName,
+      DEMO_HOSTNAME: demoHostname,
+      SLS_STAGE: stage,
+      SES_REGION: sesRegion,
+      EMAIL_SENDER: emailSender,
+      CLOUDFRONT_PRIVATE_KEY_PARAM: `/${service}/${stage}/cloudfront-private-key`,
       ...(stage === 'local' && process.env.LOCAL_DYNAMODB_ENDPOINT
         ? { LOCAL_DYNAMODB_ENDPOINT: process.env.LOCAL_DYNAMODB_ENDPOINT }
         : {}),
@@ -155,6 +164,7 @@ const serverlessConfig: AWS = {
               's3:DeleteObject',
               's3:AbortMultipartUpload',
               's3:ListMultipartUploadParts',
+              's3:PutObjectAcl',
             ],
             Resource: {
               'Fn::Join': [
@@ -182,6 +192,11 @@ const serverlessConfig: AWS = {
                 ],
               ],
             },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['ses:SendEmail', 'ses:SendRawEmail'],
+            Resource: '*',
           },
         ],
       },
@@ -212,13 +227,18 @@ const serverlessConfig: AWS = {
       concurrency: 1,
     },
     'serverless-offline': {
-      httpPort: 3400,
+      httpPort: 5555,
+      ignoreJWTSignature: true,
+      corsAllowOrigin: localAppUrl,
       useWorkerThreads: false,
     },
   },
   functions: {
     apiHandler: {
       handler: './src/handlers/api-handler.apiHandler',
+      environment: {
+        CLOUDFRONT_KEY_PAIR_ID: { Ref: 'CloudFrontSigningPublicKey' },
+      },
       events: [
         {
           httpApi: {
@@ -226,6 +246,17 @@ const serverlessConfig: AWS = {
             path: '/api/health',
           },
         },
+        // deployed, /media/* is served by CloudFront with signed cookies and never reaches lambda
+        ...(stage === 'local'
+          ? [
+              {
+                httpApi: {
+                  method: 'GET' as const,
+                  path: '/media/{proxy+}',
+                },
+              },
+            ]
+          : []),
         {
           httpApi: {
             method: '*',

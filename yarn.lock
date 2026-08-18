@@ -1222,6 +1222,8 @@ __metadata:
     "@auth0/auth0-spa-js": "npm:1.22.6"
     "@babel/preset-react": "npm:7.28.5"
     "@babel/runtime-corejs3": "npm:7.28.6"
+    "@dnd-kit/core": "npm:6.3.1"
+    "@dnd-kit/utilities": "npm:3.2.2"
     "@emotion/react": "npm:11.11.1"
     "@tanstack/react-query": "npm:5.90.21"
     "@testing-library/dom": "npm:10.4.1"
@@ -9257,7 +9259,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dnd-kit/core@npm:^6.0.8":
+"@dnd-kit/core@npm:6.3.1, @dnd-kit/core@npm:^6.0.8":
   version: 6.3.1
   resolution: "@dnd-kit/core@npm:6.3.1"
   dependencies:
@@ -9297,7 +9299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dnd-kit/utilities@npm:^3.2.2":
+"@dnd-kit/utilities@npm:3.2.2, @dnd-kit/utilities@npm:^3.2.2":
   version: 3.2.2
   resolution: "@dnd-kit/utilities@npm:3.2.2"
   dependencies:

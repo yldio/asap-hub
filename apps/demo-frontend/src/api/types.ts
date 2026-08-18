@@ -12,6 +12,12 @@ export type Folder = {
   name: string;
 };
 
+export const rootFolderId = 'ROOT';
+
+export type BulkMoveResult = { moved: string[]; missing: string[] };
+
+export type BulkDeleteResult = { deleted: string[]; missing: string[] };
+
 export type Chapter = {
   startMs: number;
   title: string;

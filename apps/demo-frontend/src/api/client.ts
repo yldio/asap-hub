@@ -1,5 +1,7 @@
 import { API_BASE_URL } from '../config';
 import type {
+  BulkDeleteResult,
+  BulkMoveResult,
   CreatedUpload,
   Folder,
   Invite,
@@ -123,6 +125,33 @@ export const createApi = (getToken: GetToken) => ({
     request<Folder>('/folders', await getToken(), {
       method: 'POST',
       body: { name },
+    }),
+
+  renameFolder: async (id: string, name: string): Promise<Folder> =>
+    request<Folder>(`/folders/${encodeURIComponent(id)}`, await getToken(), {
+      method: 'PATCH',
+      body: { name },
+    }),
+
+  deleteFolder: async (id: string): Promise<void> => {
+    await request<void>(`/folders/${encodeURIComponent(id)}`, await getToken(), {
+      method: 'DELETE',
+    });
+  },
+
+  bulkMoveVideos: async (
+    ids: string[],
+    folderId: string,
+  ): Promise<BulkMoveResult> =>
+    request<BulkMoveResult>('/videos/bulk-move', await getToken(), {
+      method: 'POST',
+      body: { ids, folderId },
+    }),
+
+  bulkDeleteVideos: async (ids: string[]): Promise<BulkDeleteResult> =>
+    request<BulkDeleteResult>('/videos/bulk-delete', await getToken(), {
+      method: 'POST',
+      body: { ids },
     }),
 
   listVideos: async (folderId?: string): Promise<Video[]> => {

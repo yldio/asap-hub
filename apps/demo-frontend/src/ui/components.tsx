@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from '@emotion/react';
-import { ButtonHTMLAttributes, FC, ReactNode } from 'react';
+import { ButtonHTMLAttributes, FC, ReactNode, useEffect } from 'react';
 
 import {
   captionStyles,
@@ -80,13 +80,30 @@ const smallButton = css({
   fontSize: rem(14),
 });
 
+const dangerButton = css({
+  color: paper.rgb,
+  backgroundColor: ember.rgb,
+  borderColor: ember.rgb,
+  ':hover:enabled, :focus-visible:enabled': {
+    backgroundColor: ember.rgb,
+    opacity: 0.85,
+  },
+});
+
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   readonly primary?: boolean;
+  readonly danger?: boolean;
   readonly small?: boolean;
+};
+
+const variantStyles = (primary: boolean, danger: boolean): SerializedStyles => {
+  if (danger) return dangerButton;
+  return primary ? primaryButton : secondaryButton;
 };
 
 export const Button: FC<ButtonProps> = ({
   primary = false,
+  danger = false,
   small = false,
   type = 'button',
   children,
@@ -94,11 +111,7 @@ export const Button: FC<ButtonProps> = ({
 }) => (
   <button
     type={type}
-    css={[
-      buttonBase,
-      primary ? primaryButton : secondaryButton,
-      small && smallButton,
-    ]}
+    css={[buttonBase, variantStyles(primary, danger), small && smallButton]}
     {...props}
   >
     {children}
@@ -170,6 +183,57 @@ export const Badge: FC<{
 }> = ({ tone = 'neutral', children }) => (
   <span css={[badgeStyles, badgeTones[tone]]}>{children}</span>
 );
+
+const overlayStyles = css({
+  position: 'fixed',
+  inset: 0,
+  zIndex: 20,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: rem(24),
+  backgroundColor: 'rgba(0, 0, 0, 0.45)',
+});
+
+const modalCardStyles = css({
+  boxSizing: 'border-box',
+  width: '100%',
+  maxWidth: rem(440),
+  maxHeight: '100%',
+  overflowY: 'auto',
+  padding: rem(24),
+  backgroundColor: paper.rgb,
+  borderRadius: rem(8),
+  boxShadow: `0 ${rem(8)} ${rem(24)} rgba(0, 0, 0, 0.25)`,
+});
+
+export const Modal: FC<{
+  readonly onClose: () => void;
+  readonly label: string;
+  readonly children: ReactNode;
+}> = ({ onClose, label, children }) => {
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      css={overlayStyles}
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div css={modalCardStyles} role="dialog" aria-modal aria-label={label}>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 export const Spinner: FC<{ readonly label?: string }> = ({
   label = 'Loading',

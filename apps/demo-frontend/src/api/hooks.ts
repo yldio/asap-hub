@@ -157,3 +157,49 @@ export const useCreateFolder = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['folders'] }),
   });
 };
+
+const useInvalidateFoldersAndVideos = () => {
+  const queryClient = useQueryClient();
+  return () => {
+    void queryClient.invalidateQueries({ queryKey: ['videos'] });
+    void queryClient.invalidateQueries({ queryKey: ['folders'] });
+  };
+};
+
+export const useRenameFolder = () => {
+  const api = useApi();
+  const invalidate = useInvalidateFoldersAndVideos();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) =>
+      api.renameFolder(id, name),
+    onSuccess: invalidate,
+  });
+};
+
+export const useDeleteFolder = () => {
+  const api = useApi();
+  const invalidate = useInvalidateFoldersAndVideos();
+  return useMutation({
+    mutationFn: (id: string) => api.deleteFolder(id),
+    onSuccess: invalidate,
+  });
+};
+
+export const useBulkMoveVideos = () => {
+  const api = useApi();
+  const invalidate = useInvalidateFoldersAndVideos();
+  return useMutation({
+    mutationFn: ({ ids, folderId }: { ids: string[]; folderId: string }) =>
+      api.bulkMoveVideos(ids, folderId),
+    onSuccess: invalidate,
+  });
+};
+
+export const useBulkDeleteVideos = () => {
+  const api = useApi();
+  const invalidate = useInvalidateFoldersAndVideos();
+  return useMutation({
+    mutationFn: (ids: string[]) => api.bulkDeleteVideos(ids),
+    onSuccess: invalidate,
+  });
+};

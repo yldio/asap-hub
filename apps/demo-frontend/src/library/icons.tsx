@@ -117,6 +117,14 @@ export const KebabIcon: FC<IconProps> = ({ size = 16 }) => (
   </svg>
 );
 
+export const StackIcon: FC<IconProps> = ({ size = 16 }) => (
+  <svg {...svgProps(size)}>
+    <path d="M12 3.5 3.5 8 12 12.5 20.5 8Z" />
+    <path d="m3.5 12 8.5 4.5 8.5-4.5" />
+    <path d="m3.5 16 8.5 4.5 8.5-4.5" />
+  </svg>
+);
+
 export const FilterIcon: FC<IconProps> = ({ size = 16 }) => (
   <svg {...svgProps(size)}>
     <path d="M4 6h16l-6 7v5l-4 2v-7Z" />

@@ -63,7 +63,8 @@ export const videosRouter = (): Router => {
 
   router.get('/', async (req: Request, res: Response) => {
     const folderId = (req.query.folderId as string | undefined) || 'ROOT';
-    const isCreator = req.user?.role === 'creator';
+    const isCreator =
+      req.user?.role === 'creator' || req.user?.role === 'admin';
 
     const query = isCreator
       ? videoEntity.query.byFolder({ folderId })
@@ -75,6 +76,34 @@ export const videosRouter = (): Router => {
     const { data } = await query.go({ pages: 'all' });
     const items = (data as VideoItem[])
       .slice()
+      .sort((a, b) => String(b.recordedAt).localeCompare(String(a.recordedAt)))
+      .map(serialiseVideo);
+
+    res.json({ items });
+  });
+
+  router.get('/all', async (req: Request, res: Response) => {
+    const isCreator =
+      req.user?.role === 'creator' || req.user?.role === 'admin';
+    const { data: folders } = await folderEntity.query
+      .all({})
+      .go({ pages: 'all' });
+    const folderIds = [rootFolderId, ...folders.map(({ id }) => id)];
+
+    const lists = await Promise.all(
+      folderIds.map(async (folderId) => {
+        const query = isCreator
+          ? videoEntity.query.byFolder({ folderId })
+          : videoEntity.query
+              .byFolder({ folderId })
+              .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
+        const { data } = await query.go({ pages: 'all' });
+        return data as VideoItem[];
+      }),
+    );
+
+    const items = lists
+      .flat()
       .sort((a, b) => String(b.recordedAt).localeCompare(String(a.recordedAt)))
       .map(serialiseVideo);
 

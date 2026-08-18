@@ -188,6 +188,9 @@ export const createApi = (getToken: GetToken) => ({
     ).items;
   },
 
+  listAllVideos: async (): Promise<Video[]> =>
+    (await request<ListResponse<Video>>('/videos/all', await getToken())).items,
+
   getVideo: async (id: string): Promise<Video> =>
     request<Video>(`/videos/${encodeURIComponent(id)}`, await getToken()),
 

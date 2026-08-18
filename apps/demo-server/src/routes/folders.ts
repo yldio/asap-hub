@@ -58,7 +58,8 @@ export const foldersRouter = (): Router => {
   router.get('/counts', async (req, res) => {
     const { data } = await folderEntity.query.all({}).go({ pages: 'all' });
     const folderIds = [rootFolderId, ...data.map(({ id }) => id)];
-    const isCreator = req.user?.role === 'creator';
+    const isCreator =
+      req.user?.role === 'creator' || req.user?.role === 'admin';
 
     const entries = await Promise.all(
       folderIds.map(async (folderId) => {

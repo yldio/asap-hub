@@ -22,6 +22,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import {
+  useAllVideos,
   useBulkDeleteVideos,
   useBulkMoveVideos,
   useCreateFolder,
@@ -221,7 +222,10 @@ const folderDragPrefix = 'folder:';
 
 const Home: FC = () => {
   const [searchParams] = useSearchParams();
-  const folderParam = searchParams.get('folder') ?? undefined;
+  const isAllVideos = searchParams.get('view') === 'all';
+  const folderParam = isAllVideos
+    ? undefined
+    : searchParams.get('folder') ?? undefined;
   const selectedFolder = folderParam === rootFolderId ? undefined : folderParam;
   const isCreator = useIsCreator();
   const navigate = useNavigate();
@@ -229,6 +233,7 @@ const Home: FC = () => {
 
   const folders = useFolders();
   const videos = useVideos(selectedFolder);
+  const allVideos = useAllVideos(isAllVideos);
   const counts = useFolderCounts();
 
   const createFolder = useCreateFolder();
@@ -298,7 +303,19 @@ const Home: FC = () => {
     [videos.data, filterAndSort],
   );
 
-  const visibleVideos = isSearching ? searchVideos : folderVideos;
+  const allVideosList = useMemo(
+    () => filterAndSort(allVideos.data ?? []),
+    [allVideos.data, filterAndSort],
+  );
+
+  // the folder path badge is what makes a mixed-folder list readable
+  const showsFolderPath = isSearching || isAllVideos;
+
+  const visibleVideos = isSearching
+    ? searchVideos
+    : isAllVideos
+      ? allVideosList
+      : folderVideos;
 
   const orderedIds = useMemo(
     () => visibleVideos.map(({ id }) => id),
@@ -313,7 +330,7 @@ const Home: FC = () => {
 
   useEffect(() => {
     clearSelection();
-  }, [selectedFolder, clearSelection]);
+  }, [selectedFolder, isAllVideos, clearSelection]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -377,7 +394,22 @@ const Home: FC = () => {
     setDraggingIds(draggingIdsRef.current);
   };
 
+  // a finished drag still fires the underlying link's click; swallow that one
+  const suppressNavRef = useRef(false);
+  const suppressNextNav = () => {
+    suppressNavRef.current = true;
+    setTimeout(() => {
+      suppressNavRef.current = false;
+    }, 0);
+  };
+  const guardNav = (event: { preventDefault: () => void }) => {
+    if (suppressNavRef.current) event.preventDefault();
+  };
+
   const resetDrag = () => {
+    if (draggingIdsRef.current.length > 0 || draggingFolderId) {
+      suppressNextNav();
+    }
     draggingIdsRef.current = [];
     setDraggingIds([]);
     setDraggingFolderId(undefined);
@@ -481,6 +513,14 @@ const Home: FC = () => {
 
   const unfiledCount = counts.data?.[rootFolderId];
 
+  const allVideosCount = useMemo(
+    () =>
+      counts.data
+        ? Object.values(counts.data).reduce((sum, value) => sum + value, 0)
+        : undefined,
+    [counts.data],
+  );
+
   const currentFolderName = selectedFolder
     ? folderNames.get(selectedFolder) ?? 'Folder'
     : 'Home';
@@ -524,7 +564,7 @@ const Home: FC = () => {
       ? draggingFolderIsTopLevel
         ? undefined
         : topLevelParentId
-      : selectedFolder || isSearching
+      : selectedFolder || isSearching || isAllVideos
         ? rootFolderId
         : undefined;
 
@@ -541,8 +581,14 @@ const Home: FC = () => {
   const createFolderHere = (name: string) =>
     createFolder.mutate({ name, parentId: selectedFolder });
 
-  const isLoadingList = isSearching ? search.isLoading : videos.isLoading;
+  const isLoadingList = isSearching
+    ? search.isLoading
+    : isAllVideos
+      ? allVideos.isLoading
+      : videos.isLoading;
   const isEmpty = !isLoadingList && visibleVideos.length === 0;
+  const showsFolderCards =
+    !isSearching && !isAllVideos && childFolders.length > 0;
 
   if (folderParam === rootFolderId) return <Navigate to="/" replace />;
 
@@ -587,7 +633,10 @@ const Home: FC = () => {
           }}
           isBlockedTarget={isBlockedTarget}
           homeDroppableId={homeDroppableId}
+          isAllVideos={isAllVideos}
+          allVideosCount={allVideosCount}
           onFolderContextMenu={onFolderContextMenu}
+          onNavClick={guardNav}
         />
 
         <section
@@ -616,6 +665,8 @@ const Home: FC = () => {
             <h2 css={breadcrumbNameStyles}>
               {isSearching ? (
                 `Results for "${debouncedQuery}"`
+              ) : isAllVideos ? (
+                'All videos'
               ) : breadcrumbPath.length > 1 ? (
                 <span>
                   <Link to="/" css={crumbLinkStyles}>
@@ -643,13 +694,11 @@ const Home: FC = () => {
             </h2>
             <span css={summaryStyles}>
               {videoCount(visibleVideos.length)}
-              {!isSearching &&
-                childFolders.length > 0 &&
-                ` · ${folderCount(childFolders.length)}`}
+              {showsFolderCards && ` · ${folderCount(childFolders.length)}`}
             </span>
           </div>
 
-          {!isSearching && childFolders.length > 0 && (
+          {showsFolderCards && (
             <>
               <div css={sectionLabelStyles}>Folders</div>
               <div css={folderGridStyles}>
@@ -667,6 +716,7 @@ const Home: FC = () => {
                     onContextMenu={
                       isCreator ? onFolderContextMenu(folder) : undefined
                     }
+                    onNavClick={guardNav}
                   />
                 ))}
               </div>
@@ -674,16 +724,21 @@ const Home: FC = () => {
           )}
 
           {isLoadingList && <Spinner label="Loading videos" />}
-          {!isSearching && videos.isError && (
-            <div css={emptyStyles}>
-              We could not load the videos in this folder.
-            </div>
-          )}
+          {!isSearching &&
+            (isAllVideos ? allVideos.isError : videos.isError) && (
+              <div css={emptyStyles}>
+                {isAllVideos
+                  ? 'We could not load the videos.'
+                  : 'We could not load the videos in this folder.'}
+              </div>
+            )}
           {isEmpty && (
             <div css={emptyStyles}>
               {isSearching
                 ? `No results for ${debouncedQuery}`
-                : 'No videos here yet.'}
+                : isAllVideos
+                  ? 'No videos yet.'
+                  : 'No videos here yet.'}
             </div>
           )}
 
@@ -696,7 +751,7 @@ const Home: FC = () => {
                 isCreator={isCreator}
                 isSelected={selection.ids.includes(video.id)}
                 folderName={
-                  isSearching ? folderPathLabel(video.folderId) : undefined
+                  showsFolderPath ? folderPathLabel(video.folderId) : undefined
                 }
                 onSelect={onCardSelect(video.id)}
                 onContextMenu={onCardContextMenu(video.id)}

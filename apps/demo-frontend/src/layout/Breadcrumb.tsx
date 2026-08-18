@@ -35,15 +35,21 @@ const useCrumbs = (): Crumb[] => {
   const video = useVideo(id ?? '');
 
   const isWatch = pathname.startsWith('/videos/') && Boolean(id);
+  const isAllVideos = !isWatch && searchParams.get('view') === 'all';
   const folderId = isWatch
     ? video.data?.folderId
-    : searchParams.get('folder') ?? undefined;
+    : isAllVideos
+      ? undefined
+      : searchParams.get('folder') ?? undefined;
   // ROOT has no crumb of its own, "Demos" already is the top level
   const folder = realFolders(folders.data ?? []).find(
     ({ id: candidate }) => candidate === folderId,
   );
 
   const crumbs: Crumb[] = [{ label: 'Demos', to: '/' }];
+  if (isAllVideos) {
+    crumbs.push({ label: 'All videos', to: '/?view=all' });
+  }
   if (folder) {
     crumbs.push({ label: folder.name, to: `/?folder=${folder.id}` });
   }

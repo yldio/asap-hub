@@ -128385,7 +128385,7 @@ var foldersRouter = () => {
   router.get("/counts", async (req, res) => {
     const { data: data2 } = await folderEntity.query.all({}).go({ pages: "all" });
     const folderIds = [rootFolderId, ...data2.map(({ id }) => id)];
-    const isCreator = req.user?.role === "creator";
+    const isCreator = req.user?.role === "creator" || req.user?.role === "admin";
     const entries = await Promise.all(
       folderIds.map(async (folderId) => {
         const query = isCreator ? videoEntity.query.byFolder({ folderId }) : videoEntity.query.byFolder({ folderId }).begins({ statusKey: "PUBLISHED", recordedAt: "" });
@@ -128981,10 +128981,24 @@ var videosRouter = () => {
   const router = asyncRouter();
   router.get("/", async (req, res) => {
     const folderId = req.query.folderId || "ROOT";
-    const isCreator = req.user?.role === "creator";
+    const isCreator = req.user?.role === "creator" || req.user?.role === "admin";
     const query = isCreator ? videoEntity.query.byFolder({ folderId }) : videoEntity.query.byFolder({ folderId }).begins({ statusKey: "PUBLISHED", recordedAt: "" });
     const { data: data2 } = await query.go({ pages: "all" });
     const items = data2.slice().sort((a8, b8) => String(b8.recordedAt).localeCompare(String(a8.recordedAt))).map(serialiseVideo);
+    res.json({ items });
+  });
+  router.get("/all", async (req, res) => {
+    const isCreator = req.user?.role === "creator" || req.user?.role === "admin";
+    const { data: folders } = await folderEntity.query.all({}).go({ pages: "all" });
+    const folderIds = [rootFolderId, ...folders.map(({ id }) => id)];
+    const lists = await Promise.all(
+      folderIds.map(async (folderId) => {
+        const query = isCreator ? videoEntity.query.byFolder({ folderId }) : videoEntity.query.byFolder({ folderId }).begins({ statusKey: "PUBLISHED", recordedAt: "" });
+        const { data: data2 } = await query.go({ pages: "all" });
+        return data2;
+      })
+    );
+    const items = lists.flat().sort((a8, b8) => String(b8.recordedAt).localeCompare(String(a8.recordedAt))).map(serialiseVideo);
     res.json({ items });
   });
   router.post(

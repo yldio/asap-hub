@@ -49,7 +49,7 @@ export const sortLabels: Record<SortMode, string> = {
 };
 
 export const statusFilterLabels: Record<StatusFilter, string> = {
-  all: 'All videos',
+  all: 'All statuses',
   published: 'Published',
   drafts: 'Drafts',
 };

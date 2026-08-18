@@ -15,7 +15,14 @@ import { Link } from 'react-router';
 import type { Folder, FolderCounts } from '../api/types';
 import { Spinner } from '../ui/components';
 import { charcoal, lead, mint, pine, rem, silver, tin } from '../ui/theme';
-import { CaretIcon, FolderIcon, HomeIcon, KebabIcon, PlusIcon } from './icons';
+import {
+  CaretIcon,
+  FolderIcon,
+  HomeIcon,
+  KebabIcon,
+  PlusIcon,
+  StackIcon,
+} from './icons';
 import { aggregateCount, buildTree, pathOf, type FolderNode } from './tree';
 
 const headerStyles = css({
@@ -198,6 +205,7 @@ const SidebarRow: FC<{
   readonly draggableId?: string;
   readonly onContextMenu?: (event: ReactMouseEvent) => void;
   readonly onMenuButton?: (event: ReactMouseEvent) => void;
+  readonly onNavClick?: (event: ReactMouseEvent) => void;
 }> = ({
   to,
   icon,
@@ -212,6 +220,7 @@ const SidebarRow: FC<{
   draggableId,
   onContextMenu,
   onMenuButton,
+  onNavClick,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: droppableId ?? `sidebar-${name}`,
@@ -237,6 +246,7 @@ const SidebarRow: FC<{
       onContextMenu={onContextMenu}
       {...(draggableId !== undefined ? attributes : {})}
       {...(draggableId !== undefined ? listeners : {})}
+      onClick={onNavClick}
       css={[
         rowStyles,
         rowHoverStyles,
@@ -342,6 +352,33 @@ const useExpandedFolders = (
   return [visible, toggle];
 };
 
+const homeExpandedKey = 'demo-hub.library.home-expanded';
+
+// Home is the root of the tree and starts open, so only an explicit "0" collapses it
+const useHomeExpanded = (): [boolean, () => void] => {
+  const [expanded, setExpanded] = useState(() => {
+    try {
+      return window.localStorage.getItem(homeExpandedKey) !== '0';
+    } catch {
+      return true;
+    }
+  });
+
+  const toggle = useCallback(() => {
+    setExpanded((current) => {
+      const next = !current;
+      try {
+        window.localStorage.setItem(homeExpandedKey, next ? '1' : '0');
+      } catch {
+        // a blocked storage should not break the tree
+      }
+      return next;
+    });
+  }, []);
+
+  return [expanded, toggle];
+};
+
 export const Sidebar: FC<{
   readonly folders: readonly Folder[];
   readonly counts?: FolderCounts;
@@ -361,9 +398,12 @@ export const Sidebar: FC<{
   readonly onCancelRename: () => void;
   readonly isBlockedTarget: (folderId: string) => boolean;
   readonly homeDroppableId?: string;
+  readonly isAllVideos: boolean;
+  readonly allVideosCount?: number;
   readonly onFolderContextMenu: (
     folder: Folder,
   ) => (event: ReactMouseEvent) => void;
+  readonly onNavClick: (event: ReactMouseEvent) => void;
 }> = ({
   folders,
   counts,
@@ -383,12 +423,22 @@ export const Sidebar: FC<{
   onCancelRename,
   isBlockedTarget,
   homeDroppableId,
+  isAllVideos,
+  allVideosCount,
   onFolderContextMenu,
+  onNavClick,
 }) => {
   const [expanded, toggle] = useExpandedFolders(folders, selectedFolder);
+  const [homeExpanded, toggleHome] = useHomeExpanded();
   const tree = useMemo(() => buildTree(folders), [folders]);
 
-  const renderNode = ({ folder, depth, children }: FolderNode): ReactNode => {
+  // Home occupies depth 0, so every real folder renders one level deeper
+  const renderNode = ({
+    folder,
+    depth: folderDepth,
+    children,
+  }: FolderNode): ReactNode => {
+    const depth = folderDepth + 1;
     const isExpanded = expanded.has(folder.id) || creatingChildOf === folder.id;
     const hasChildren = children.length > 0;
     const direct = counts?.[folder.id];
@@ -428,6 +478,7 @@ export const Sidebar: FC<{
             draggableId={isCreator ? `folder:${folder.id}` : undefined}
             onContextMenu={isCreator ? onFolderContextMenu(folder) : undefined}
             onMenuButton={isCreator ? onFolderContextMenu(folder) : undefined}
+            onNavClick={onNavClick}
           />
         )}
         {(isExpanded || creatingChildOf === folder.id) && (
@@ -480,15 +531,29 @@ export const Sidebar: FC<{
           <ul css={listStyles}>
             <li>
               <SidebarRow
+                to="/?view=all"
+                icon={<StackIcon />}
+                name="All videos"
+                count={allVideosCount}
+                isActive={isAllVideos}
+                onNavClick={onNavClick}
+              />
+            </li>
+            <li>
+              <SidebarRow
                 to="/"
                 icon={<HomeIcon />}
                 name="Home"
                 count={unfiledCount}
-                isActive={!selectedFolder}
+                isActive={!isAllVideos && !selectedFolder}
+                hasChildren={tree.length > 0}
+                isExpanded={homeExpanded}
+                onToggle={tree.length > 0 ? toggleHome : undefined}
                 droppableId={homeDroppableId}
+                onNavClick={onNavClick}
               />
+              {homeExpanded && <ul css={listStyles}>{tree.map(renderNode)}</ul>}
             </li>
-            {tree.map(renderNode)}
           </ul>
         </>
       )}

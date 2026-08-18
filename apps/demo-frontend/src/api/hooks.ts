@@ -71,6 +71,18 @@ export const useVideos = (
   });
 };
 
+export const useAllVideos = (
+  enabled: boolean,
+): UseQueryResult<Video[], unknown> => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ['videos', 'all'],
+    queryFn: () => api.listAllVideos(),
+    enabled,
+    retry: noRetryOnClientError,
+  });
+};
+
 export const useVideo = (id: string): UseQueryResult<Video, unknown> => {
   const api = useApi();
   return useQuery({

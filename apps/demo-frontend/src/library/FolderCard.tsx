@@ -54,7 +54,15 @@ export const FolderCard: FC<{
   readonly isDropTarget: boolean;
   readonly isDraggable?: boolean;
   readonly onContextMenu?: (event: ReactMouseEvent) => void;
-}> = ({ folder, count, isDropTarget, isDraggable = false, onContextMenu }) => {
+  readonly onNavClick?: (event: ReactMouseEvent) => void;
+}> = ({
+  folder,
+  count,
+  isDropTarget,
+  isDraggable = false,
+  onContextMenu,
+  onNavClick,
+}) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `card-${folder.id}`,
     data: { folderId: folder.id },
@@ -80,6 +88,7 @@ export const FolderCard: FC<{
       onContextMenu={onContextMenu}
       {...(isDraggable ? attributes : {})}
       {...(isDraggable ? listeners : {})}
+      onClick={onNavClick}
       css={[
         cardStyles,
         isDragging && { opacity: 0.4 },

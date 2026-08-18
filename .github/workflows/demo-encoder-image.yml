@@ -38,9 +38,22 @@ jobs:
       - name: Login to Amazon ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v2
+      # the repository is created by the demo-hub CloudFormation stack; on the
+      # very first pipeline run it does not exist yet, so skip instead of fail
+      # and re-run this workflow once demo-sls-deploy has succeeded
+      - name: Check repository exists
+        id: repo
+        run: |
+          if aws ecr describe-repositories --repository-names demo-hub-dev-encoder > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::ECR repository demo-hub-dev-encoder does not exist yet (first stack deploy pending). Re-run this workflow after demo-sls-deploy succeeds."
+          fi
       # PRs push too: the demo stack is a single shared dev environment, and a
       # PR that changes the encoder deploys to it anyway
       - name: Build and push
+        if: steps.repo.outputs.exists == 'true'
         uses: docker/build-push-action@v6
         with:
           context: apps/demo-server/encoder

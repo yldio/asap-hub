@@ -166,7 +166,6 @@ export const InlineFolderInput: FC<{
         else onCancel();
       }}
     >
-      {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
       <input
         autoFocus
         aria-label={label}

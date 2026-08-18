@@ -47,14 +47,15 @@ const hasBinary = async (command: string): Promise<boolean> => {
   if (binaryPaths.has(command) || (await tryRunVersion(command))) {
     return true;
   }
-  for (const dir of binaryDirs) {
+  const resolve = async (index: number): Promise<boolean> => {
+    const dir = binaryDirs[index];
+    if (dir === undefined) return false;
     binaryPaths.set(command, join(dir, command));
-    if (await tryRunVersion(command)) {
-      return true;
-    }
+    if (await tryRunVersion(command)) return true;
     binaryPaths.delete(command);
-  }
-  return false;
+    return resolve(index + 1);
+  };
+  return resolve(0);
 };
 
 const formatTimestamp = (totalMs: number): string => {

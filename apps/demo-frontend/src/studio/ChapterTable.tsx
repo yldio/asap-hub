@@ -25,6 +25,8 @@ const tableStyles = css({
     borderTop: 'none',
     whiteSpace: 'nowrap' as const,
   },
+  // the title column absorbs all spare width
+  'th:nth-of-type(2)': { width: '100%' },
 });
 
 const activeRowStyles = css({ backgroundColor: mint.rgb });
@@ -62,6 +64,14 @@ const inlineErrorStyles = css({
 
 const emptyStyles = css({ color: lead.rgb });
 
+const actionsCellStyles = css({
+  whiteSpace: 'nowrap' as const,
+  '& [data-hover-action]': { opacity: 0, transition: 'opacity 0.1s' },
+  'tr:hover & [data-hover-action], tr:focus-within & [data-hover-action]': {
+    opacity: 1,
+  },
+});
+
 const ChapterTable: FC<{
   readonly rows: ChapterRow[];
   readonly drafts: Record<string, string>;
@@ -83,6 +93,8 @@ const ChapterTable: FC<{
   readonly onEndBlur: (key: string) => void;
   readonly onTitleChange: (key: string, value: string) => void;
   readonly onDelete: (key: string) => void;
+  readonly onInsertBefore: (key: string) => void;
+  readonly onInsertAfter: (key: string) => void;
 }> = ({
   rows,
   drafts,
@@ -102,6 +114,8 @@ const ChapterTable: FC<{
   onEndBlur,
   onTitleChange,
   onDelete,
+  onInsertBefore,
+  onInsertAfter,
 }) => (
   <table css={tableStyles}>
     <thead>
@@ -123,7 +137,12 @@ const ChapterTable: FC<{
           <tr
             key={row.key}
             css={row.key === activeKey && activeRowStyles}
-            onClick={() => onSeek(row.startMs)}
+            onClick={(event) => {
+              // clicks in the editable fields and buttons must not seek
+              const target = event.target as HTMLElement;
+              if (target.closest('input, button')) return;
+              onSeek(row.startMs);
+            }}
           >
             <td>
               <input
@@ -195,15 +214,35 @@ const ChapterTable: FC<{
             <td css={derivedStyles}>
               {formatDuration(Math.max(0, endMs - row.startMs))}
             </td>
-            <td>
+            <td css={actionsCellStyles}>
               {!readOnly && (
-                <Button
-                  small
-                  aria-label={`Delete chapter ${index + 1}`}
-                  onClick={() => onDelete(row.key)}
-                >
-                  Delete
-                </Button>
+                <span css={{ display: 'inline-flex', gap: rem(6) }}>
+                  <span data-hover-action>
+                    <Button
+                      small
+                      aria-label={`Add chapter before chapter ${index + 1}`}
+                      onClick={() => onInsertBefore(row.key)}
+                    >
+                      + Before
+                    </Button>
+                  </span>
+                  <span data-hover-action>
+                    <Button
+                      small
+                      aria-label={`Add chapter after chapter ${index + 1}`}
+                      onClick={() => onInsertAfter(row.key)}
+                    >
+                      + After
+                    </Button>
+                  </span>
+                  <Button
+                    small
+                    aria-label={`Delete chapter ${index + 1}`}
+                    onClick={() => onDelete(row.key)}
+                  >
+                    Delete
+                  </Button>
+                </span>
               )}
             </td>
           </tr>

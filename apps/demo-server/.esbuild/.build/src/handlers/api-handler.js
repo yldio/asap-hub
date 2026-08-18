@@ -128659,14 +128659,15 @@ var hasBinary = async (command5) => {
   if (binaryPaths.has(command5) || await tryRunVersion(command5)) {
     return true;
   }
-  for (const dir of binaryDirs) {
+  const resolve = async (index) => {
+    const dir = binaryDirs[index];
+    if (dir === void 0) return false;
     binaryPaths.set(command5, (0, import_path.join)(dir, command5));
-    if (await tryRunVersion(command5)) {
-      return true;
-    }
+    if (await tryRunVersion(command5)) return true;
     binaryPaths.delete(command5);
-  }
-  return false;
+    return resolve(index + 1);
+  };
+  return resolve(0);
 };
 var formatTimestamp = (totalMs) => {
   const hours = Math.floor(totalMs / 36e5);
@@ -129001,11 +129002,11 @@ var videosRouter = () => {
       }
       const moved = [];
       const missing = [];
-      for (const id of ids) {
+      const moveOne = async (id) => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
-          continue;
+          return;
         }
         await videoEntity.put({
           ...existing.data,
@@ -129013,7 +129014,11 @@ var videosRouter = () => {
           updatedAt: (/* @__PURE__ */ new Date()).toISOString()
         }).go();
         moved.push(id);
-      }
+      };
+      await ids.reduce(
+        (chain2, id) => chain2.then(() => moveOne(id)),
+        Promise.resolve()
+      );
       res.json({ moved, missing });
     }
   );
@@ -129025,11 +129030,11 @@ var videosRouter = () => {
       const { ids } = req.body;
       const deleted = [];
       const missing = [];
-      for (const id of ids) {
+      const deleteOne = async (id) => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
-          continue;
+          return;
         }
         try {
           await deleteVideoCascade(id);
@@ -129037,7 +129042,11 @@ var videosRouter = () => {
         } catch (error3) {
           console.error(`failed to delete video ${id}`, error3);
         }
-      }
+      };
+      await ids.reduce(
+        (chain2, id) => chain2.then(() => deleteOne(id)),
+        Promise.resolve()
+      );
       res.json({ deleted, missing });
     }
   );

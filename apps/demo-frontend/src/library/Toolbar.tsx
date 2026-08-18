@@ -40,7 +40,7 @@ const barStyles = css({
 
 const searchWrapStyles = css({
   position: 'relative',
-  flex: '1 1 ' + rem(220),
+  flex: `1 1 ${rem(220)}`,
   minWidth: rem(180),
   display: 'flex',
   alignItems: 'center',
@@ -168,7 +168,7 @@ const newFolderStyles = css({
 const popoverStyles = css({
   position: 'absolute',
   zIndex: 20,
-  top: 'calc(100% + ' + rem(6) + ')',
+  top: `calc(100% + ${rem(6)})`,
   right: 0,
   width: rem(240),
   padding: rem(10),
@@ -228,7 +228,6 @@ const NewFolderButton: FC<{
             close();
           }}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
           <input
             autoFocus
             aria-label={`New folder name in ${locationName}`}

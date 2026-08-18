@@ -101,7 +101,7 @@ const SeekBar: FC<{
 
   const track = (event: PointerEvent<HTMLDivElement>) => {
     const position = positionAt(event.clientX);
-    if (!position) return;
+    if (!position) return undefined;
     setHovered(segmentIndexAt(position.seconds));
     onHover(position);
     return position;

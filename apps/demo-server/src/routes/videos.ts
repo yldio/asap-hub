@@ -99,11 +99,11 @@ export const videosRouter = (): Router => {
       const moved: string[] = [];
       const missing: string[] = [];
 
-      for (const id of ids) {
+      const moveOne = async (id: string): Promise<void> => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
-          continue;
+          return;
         }
         // folderId is part of GSI1PK, so the item is rewritten wholesale to recompute the key
         await videoEntity
@@ -114,7 +114,11 @@ export const videosRouter = (): Router => {
           })
           .go();
         moved.push(id);
-      }
+      };
+      await ids.reduce(
+        (chain, id) => chain.then(() => moveOne(id)),
+        Promise.resolve(),
+      );
 
       res.json({ moved, missing });
     },
@@ -129,11 +133,11 @@ export const videosRouter = (): Router => {
       const deleted: string[] = [];
       const missing: string[] = [];
 
-      for (const id of ids) {
+      const deleteOne = async (id: string): Promise<void> => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
-          continue;
+          return;
         }
         try {
           await deleteVideoCascade(id);
@@ -142,7 +146,11 @@ export const videosRouter = (): Router => {
           // eslint-disable-next-line no-console
           console.error(`failed to delete video ${id}`, error);
         }
-      }
+      };
+      await ids.reduce(
+        (chain, id) => chain.then(() => deleteOne(id)),
+        Promise.resolve(),
+      );
 
       res.json({ deleted, missing });
     },

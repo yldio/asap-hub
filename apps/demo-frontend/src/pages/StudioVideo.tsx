@@ -16,6 +16,7 @@ import {
 import type { Video, VideoAccess } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import ChapterTable from '../studio/ChapterTable';
+import ChapterProgress from '../watch/ChapterProgress';
 import {
   ChapterRow,
   insertAt,
@@ -494,6 +495,30 @@ const Editor: FC<{
     });
   };
 
+  // new chapter lands midway between the row and its neighbouring boundary
+  const insertNear = (key: string, where: 'before' | 'after') => {
+    if (readOnly) return;
+    setRows((current) => {
+      const sorted = sortRows(current);
+      const index = sorted.findIndex((row) => row.key === key);
+      const row = sorted[index];
+      if (!row) return current;
+      const startMs =
+        where === 'before'
+          ? Math.max(
+              0,
+              Math.round(((sorted[index - 1]?.startMs ?? 0) + row.startMs) / 2),
+            )
+          : Math.round(
+              (row.startMs + (sorted[index + 1]?.startMs ?? durationMs)) / 2,
+            );
+      const { rows: next, key: newKey } = insertAt(current, startMs);
+      setPendingFocusKey(newKey);
+      scheduleSave(snapFirstToZero(next), { title, folderId });
+      return next;
+    });
+  };
+
   const onDeleteRow = (key: string) => {
     setRows((current) => {
       const next = snapFirstToZero(current.filter((row) => row.key !== key));
@@ -601,6 +626,17 @@ const Editor: FC<{
               setCurrentTime(event.currentTarget.currentTime)
             }
           />
+          {rows.length > 0 && durationMs > 0 && (
+            <div css={{ padding: `${rem(6)} ${rem(10)} ${rem(10)}` }}>
+              <ChapterProgress
+                chapters={toChapters(sortRows(rows))}
+                durationSeconds={durationMs / 1000}
+                currentSeconds={currentTime}
+                onSeek={seekTo}
+                onPreview={() => undefined}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -647,6 +683,8 @@ const Editor: FC<{
           onEndBlur={onEndBlur}
           onTitleChange={onTitleChange}
           onDelete={onDeleteRow}
+          onInsertBefore={(key) => insertNear(key, 'before')}
+          onInsertAfter={(key) => insertNear(key, 'after')}
         />
       </Card>
 

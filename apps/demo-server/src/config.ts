@@ -30,4 +30,5 @@ export const getSesRegion = (): string => process.env.SES_REGION || getRegion();
 
 export const getEmailSender = (): string => process.env.EMAIL_SENDER || '';
 
-export const getAuth0Domain = (): string => process.env.AUTH0_DOMAIN || '';
+export const getAuth0Domain = (): string =>
+  process.env.DEMO_AUTH0_DOMAIN || 'dev-asap-hub.us.auth0.com';

@@ -3,12 +3,12 @@ import assert from 'assert';
 
 if (process.env.SLS_STAGE !== 'local') {
   [
-    'AUTH0_AUDIENCE',
-    'AUTH0_CLIENT_ID',
-    'AUTH0_DOMAIN',
     'AWS_ACM_CERTIFICATE_ARN',
     'AWS_REGION',
     'CLOUDFRONT_PUBLIC_KEY',
+    'DEMO_AUTH0_AUDIENCE',
+    'DEMO_AUTH0_CLIENT_ID',
+    'DEMO_AUTH0_DOMAIN',
     'DEMO_HOSTNAME',
     'DEMO_SUBNET_IDS',
     'DEMO_VPC_ID',
@@ -33,9 +33,11 @@ const service = 'demo-hub';
 const demoHostname = process.env.DEMO_HOSTNAME!;
 const hostedZoneName = process.env.HOSTED_ZONE_NAME!;
 const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
-const auth0Domain = process.env.AUTH0_DOMAIN!;
-const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
-const auth0Audience = process.env.AUTH0_AUDIENCE!;
+// DEMO_-prefixed so the repo's untracked .env (CRN's AUTH0_*) cannot shadow them
+const auth0Domain = process.env.DEMO_AUTH0_DOMAIN || 'dev-asap-hub.us.auth0.com';
+const auth0ClientId = process.env.DEMO_AUTH0_CLIENT_ID || '';
+const auth0Audience =
+  process.env.DEMO_AUTH0_AUDIENCE || 'https://demos.hub.asap.science';
 const cloudfrontPublicKey = process.env.CLOUDFRONT_PUBLIC_KEY!;
 const vpcId = process.env.DEMO_VPC_ID!;
 const subnetIds = (process.env.DEMO_SUBNET_IDS || '')
@@ -105,9 +107,9 @@ const serverlessConfig: AWS = {
       REGION: region,
       NODE_OPTIONS: '--enable-source-maps',
       CURRENT_REVISION: ciCommitSha ?? currentRevision,
-      AUTH0_AUDIENCE: auth0Audience,
-      AUTH0_CLIENT_ID: auth0ClientId,
-      AUTH0_DOMAIN: auth0Domain,
+      DEMO_AUTH0_AUDIENCE: auth0Audience,
+      DEMO_AUTH0_CLIENT_ID: auth0ClientId,
+      DEMO_AUTH0_DOMAIN: auth0Domain,
       TABLE_NAME: tableName,
       BUCKET_NAME: storageBucketName,
       DEMO_HOSTNAME: demoHostname,

@@ -10,12 +10,18 @@ const spriteIntervalSeconds = 10;
 const spriteTileWidth = 160;
 const spriteColumns = 10;
 
+// Homebrew's bin is often missing from the PATH serverless-offline inherits
+const binaryDirs = ['/opt/homebrew/bin', '/usr/local/bin', '/usr/bin'];
+const binaryPaths = new Map<string, string>();
+
 const run = (
   command: string,
   args: string[],
 ): Promise<{ code: number; stdout: string; stderr: string }> =>
   new Promise((resolve, reject) => {
-    const child = spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(binaryPaths.get(command) ?? command, args, {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (chunk) => {
@@ -28,13 +34,27 @@ const run = (
     child.on('close', (code) => resolve({ code: code ?? 1, stdout, stderr }));
   });
 
-const hasBinary = async (command: string): Promise<boolean> => {
+const tryRunVersion = async (command: string): Promise<boolean> => {
   try {
     const { code } = await run(command, ['-version']);
     return code === 0;
   } catch {
     return false;
   }
+};
+
+const hasBinary = async (command: string): Promise<boolean> => {
+  if (binaryPaths.has(command) || (await tryRunVersion(command))) {
+    return true;
+  }
+  for (const dir of binaryDirs) {
+    binaryPaths.set(command, join(dir, command));
+    if (await tryRunVersion(command)) {
+      return true;
+    }
+    binaryPaths.delete(command);
+  }
+  return false;
 };
 
 const formatTimestamp = (totalMs: number): string => {
@@ -232,7 +252,7 @@ export const encodeLocally = async (videoId: string): Promise<void> => {
     let durationMs = 0;
     let sprites = false;
 
-    if (await hasBinary('ffmpeg')) {
+    if ((await hasBinary('ffmpeg')) && (await hasBinary('ffprobe'))) {
       const result = await encodeWithFfmpeg(workDir, inputFile);
       durationMs = result.durationMs;
       sprites = result.sprites;

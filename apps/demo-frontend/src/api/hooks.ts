@@ -124,6 +124,7 @@ export const useVideoAccess = (
   return useQuery({
     queryKey: ['video-access', id],
     queryFn: () => api.requestAccess(id),
+    enabled: id !== '',
     retry: false,
     staleTime: 10 * 60 * 1000,
   });

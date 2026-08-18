@@ -118,28 +118,41 @@ const VideoStatusBadge: FC<{ readonly video: Video }> = ({ video }) => {
 const VideoCard: FC<{ readonly video: Video; readonly isCreator: boolean }> = ({
   video,
   isCreator,
-}) => (
-  <Card overrideStyles={videoCardStyles}>
-    <div css={{ display: 'flex', gap: rem(12), alignItems: 'baseline' }}>
-      <h3 css={{ fontSize: rem(18), fontWeight: 'bold', margin: 0 }}>
-        <Link to={`/videos/${video.id}`} css={titleLinkStyles}>
-          {video.title}
-        </Link>
-      </h3>
-      {isCreator && <VideoStatusBadge video={video} />}
-    </div>
-    <div css={metaStyles}>
-      <span>{formatRecordedAt(video.recordedAt)}</span>
-      <span css={dotStyles}>&middot;</span>
-      <span>{formatDuration(video.durationMs)}</span>
-      <span css={dotStyles}>&middot;</span>
-      <span>
-        {video.chapters.length}{' '}
-        {video.chapters.length === 1 ? 'chapter' : 'chapters'}
-      </span>
-    </div>
-  </Card>
-);
+}) => {
+  const editPath = `/studio/videos/${video.id}`;
+  const titlePath =
+    isCreator && !isWatchable(video) ? editPath : `/videos/${video.id}`;
+  return (
+    <Card overrideStyles={videoCardStyles}>
+      <div css={{ display: 'flex', gap: rem(12), alignItems: 'baseline' }}>
+        <h3 css={{ fontSize: rem(18), fontWeight: 'bold', margin: 0 }}>
+          <Link to={titlePath} css={titleLinkStyles}>
+            {video.title}
+          </Link>
+        </h3>
+        {isCreator && <VideoStatusBadge video={video} />}
+      </div>
+      <div css={metaStyles}>
+        <span>{formatRecordedAt(video.recordedAt)}</span>
+        <span css={dotStyles}>&middot;</span>
+        <span>{formatDuration(video.durationMs)}</span>
+        <span css={dotStyles}>&middot;</span>
+        <span>
+          {video.chapters.length}{' '}
+          {video.chapters.length === 1 ? 'chapter' : 'chapters'}
+        </span>
+        {isCreator && (
+          <>
+            <span css={dotStyles}>&middot;</span>
+            <Link to={editPath} css={titleLinkStyles}>
+              Edit
+            </Link>
+          </>
+        )}
+      </div>
+    </Card>
+  );
+};
 
 const Home: FC = () => {
   const [searchParams] = useSearchParams();

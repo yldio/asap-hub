@@ -5,8 +5,5 @@ const config = makeDefaultConfig(resolve(__dirname, '..'), 'demo-server');
 
 module.exports = {
   ...config,
-  setupFiles: [
-    ...(config.setupFiles || []),
-    '<rootDir>/test/setup-env.js',
-  ],
+  setupFiles: [...(config.setupFiles || []), '<rootDir>/test/setup-env.js'],
 };

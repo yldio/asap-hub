@@ -161,6 +161,8 @@ const errorTextStyles = css({ color: ember.rgb, margin: 0, fontSize: rem(14) });
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
+type SaveExtras = { title?: string; folderId?: string };
+
 const ConfirmDialog: FC<{
   readonly title: string;
   readonly body: string;
@@ -201,7 +203,7 @@ const Editor: FC<{
 
   const [rows, setRows] = useState<ChapterRow[]>(() => toRows(video.chapters));
   const [title, setTitle] = useState(video.title);
-  const [folderId] = useState(video.folderId || ROOT_FOLDER);
+  const folderId = video.folderId || ROOT_FOLDER;
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
   const [endDrafts, setEndDrafts] = useState<Record<string, string>>({});
@@ -236,17 +238,11 @@ const Editor: FC<{
   const inFlightRef = useRef(false);
   const pendingRef = useRef<{
     rows: ChapterRow[];
-    extra: { title?: string; folderId?: string };
+    extra: SaveExtras;
   } | null>(null);
 
   const doSave = useCallback(
-    (
-      payload: {
-        rows: ChapterRow[];
-        extra: { title?: string; folderId?: string };
-      },
-      isRetry: boolean,
-    ) => {
+    (payload: { rows: ChapterRow[]; extra: SaveExtras }, isRetry: boolean) => {
       const finish = () => {
         inFlightRef.current = false;
         const pending = pendingRef.current;
@@ -303,7 +299,7 @@ const Editor: FC<{
   );
 
   const save = useCallback(
-    (nextRows: ChapterRow[], extra: { title?: string; folderId?: string }) => {
+    (nextRows: ChapterRow[], extra: SaveExtras) => {
       const payload = { rows: nextRows, extra };
       if (inFlightRef.current) {
         pendingRef.current = payload;
@@ -315,7 +311,7 @@ const Editor: FC<{
   );
 
   const scheduleSave = useCallback(
-    (nextRows: ChapterRow[], extra: { title?: string; folderId?: string }) => {
+    (nextRows: ChapterRow[], extra: SaveExtras) => {
       if (readOnly) return;
       clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => save(nextRows, extra), AUTOSAVE_MS);

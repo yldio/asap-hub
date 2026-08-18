@@ -211,17 +211,15 @@ const serverlessConfig: AWS = {
   },
   custom: {
     demoHostname,
-    ...(s3SyncEnabled
-      ? {
-          s3Sync: [
-            {
-              bucketName: '${self:service}-${self:provider.stage}-frontend',
-              deleteRemoved: false,
-              localDir: '../demo-frontend/dist',
-            },
-          ],
-        }
-      : {}),
+    // always defined like CRN's: deploy --package reads custom.* from the
+    // packaged state, which is built with the sync plugin disabled
+    s3Sync: [
+      {
+        bucketName: '${self:service}-${self:provider.stage}-frontend',
+        deleteRemoved: false,
+        localDir: '../demo-frontend/dist',
+      },
+    ],
     esbuild: {
       packager: 'yarn',
       platform: 'node',

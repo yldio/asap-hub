@@ -347,16 +347,16 @@ const Editor: FC<{
     setCurrentTime(next);
   }, []);
 
+  // state updaters stay pure: React may defer or replay them, so scheduling
+  // saves inside one makes the debounce start at an unpredictable time
   const markChapter = useCallback(() => {
     if (readOnly) return;
     const startMs = (videoRef.current?.currentTime ?? currentTime) * 1000;
-    setRows((current) => {
-      const { rows: next, key } = insertAt(current, startMs);
-      setPendingFocusKey(key);
-      scheduleSave(next, { title, folderId });
-      return next;
-    });
-  }, [currentTime, folderId, readOnly, scheduleSave, title]);
+    const { rows: next, key } = insertAt(rows, startMs);
+    setRows(next);
+    setPendingFocusKey(key);
+    scheduleSave(next, { title, folderId });
+  }, [currentTime, folderId, readOnly, rows, scheduleSave, title]);
 
   const nudge = useCallback((deltaMs: number) => {
     const element = videoRef.current;
@@ -405,13 +405,11 @@ const Editor: FC<{
     const parsed = parseTimecode(value);
     setInvalid((current) => ({ ...current, [key]: parsed === undefined }));
     if (parsed === undefined) return;
-    setRows((current) => {
-      const next = current.map((row) =>
-        row.key === key ? { ...row, startMs: parsed } : row,
-      );
-      scheduleSave(snapFirstToZero(next), { title, folderId });
-      return next;
-    });
+    const next = rows.map((row) =>
+      row.key === key ? { ...row, startMs: parsed } : row,
+    );
+    setRows(next);
+    scheduleSave(snapFirstToZero(next), { title, folderId });
   };
 
   const onTimecodeBlur = (key: string) => {
@@ -425,11 +423,9 @@ const Editor: FC<{
       setInvalid((current) => ({ ...current, [key]: false }));
       return;
     }
-    setRows((current) => {
-      const next = snapFirstToZero(current);
-      saveNow(next);
-      return next;
-    });
+    const next = snapFirstToZero(rows);
+    setRows(next);
+    saveNow(next);
   };
 
   // chapters are contiguous, so editing an end time moves the next start
@@ -447,13 +443,11 @@ const Editor: FC<{
       parsed <= durationMs;
     setEndInvalid((current) => ({ ...current, [key]: !valid }));
     if (!valid || parsed === undefined || nextRow === undefined) return;
-    setRows((current) => {
-      const next = current.map((r) =>
-        r.key === nextRow.key ? { ...r, startMs: parsed } : r,
-      );
-      scheduleSave(snapFirstToZero(next), { title, folderId });
-      return next;
-    });
+    const next = rows.map((r) =>
+      r.key === nextRow.key ? { ...r, startMs: parsed } : r,
+    );
+    setRows(next);
+    scheduleSave(snapFirstToZero(next), { title, folderId });
   };
 
   const onEndFocus = (key: string) => setFocusedKey(`end:${key}`);
@@ -469,53 +463,45 @@ const Editor: FC<{
       setEndInvalid((current) => ({ ...current, [key]: false }));
       return;
     }
-    setRows((current) => {
-      const next = snapFirstToZero(current);
-      saveNow(next);
-      return next;
-    });
+    const next = snapFirstToZero(rows);
+    setRows(next);
+    saveNow(next);
   };
 
   const onTitleChange = (key: string, value: string) => {
-    setRows((current) => {
-      const next = current.map((row) =>
-        row.key === key ? { ...row, title: value } : row,
-      );
-      scheduleSave(next, { title, folderId });
-      return next;
-    });
+    const next = rows.map((row) =>
+      row.key === key ? { ...row, title: value } : row,
+    );
+    setRows(next);
+    scheduleSave(next, { title, folderId });
   };
 
   // new chapter lands midway between the row and its neighbouring boundary
   const insertNear = (key: string, where: 'before' | 'after') => {
     if (readOnly) return;
-    setRows((current) => {
-      const sorted = sortRows(current);
-      const index = sorted.findIndex((row) => row.key === key);
-      const row = sorted[index];
-      if (!row) return current;
-      const startMs =
-        where === 'before'
-          ? Math.max(
-              0,
-              Math.round(((sorted[index - 1]?.startMs ?? 0) + row.startMs) / 2),
-            )
-          : Math.round(
-              (row.startMs + (sorted[index + 1]?.startMs ?? durationMs)) / 2,
-            );
-      const { rows: next, key: newKey } = insertAt(current, startMs);
-      setPendingFocusKey(newKey);
-      scheduleSave(snapFirstToZero(next), { title, folderId });
-      return next;
-    });
+    const sorted = sortRows(rows);
+    const index = sorted.findIndex((row) => row.key === key);
+    const row = sorted[index];
+    if (!row) return;
+    const startMs =
+      where === 'before'
+        ? Math.max(
+            0,
+            Math.round(((sorted[index - 1]?.startMs ?? 0) + row.startMs) / 2),
+          )
+        : Math.round(
+            (row.startMs + (sorted[index + 1]?.startMs ?? durationMs)) / 2,
+          );
+    const { rows: next, key: newKey } = insertAt(rows, startMs);
+    setRows(next);
+    setPendingFocusKey(newKey);
+    scheduleSave(snapFirstToZero(next), { title, folderId });
   };
 
   const onDeleteRow = (key: string) => {
-    setRows((current) => {
-      const next = snapFirstToZero(current.filter((row) => row.key !== key));
-      scheduleSave(next, { title, folderId });
-      return next;
-    });
+    const next = snapFirstToZero(rows.filter((row) => row.key !== key));
+    setRows(next);
+    scheduleSave(next, { title, folderId });
   };
 
   // Rows only reorder once the timecode field being edited loses focus.

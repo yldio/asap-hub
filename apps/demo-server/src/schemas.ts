@@ -11,6 +11,19 @@ export const createFolderSchema = z.object({
   name: z.string().min(1).max(120),
 });
 
+export const renameFolderSchema = z.object({
+  name: z.string().trim().min(1).max(80),
+});
+
+export const bulkMoveSchema = z.object({
+  ids: z.array(z.string().uuid()).min(1).max(100),
+  folderId: z.string().min(1),
+});
+
+export const bulkDeleteSchema = z.object({
+  ids: z.array(z.string().uuid()).min(1).max(100),
+});
+
 export const updateVideoSchema = z.object({
   title: z.string().min(1).max(300).optional(),
   folderId: z.string().min(1).optional(),

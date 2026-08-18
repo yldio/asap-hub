@@ -4,10 +4,17 @@ import { Request, Response, Router } from 'express';
 import { requireCreator } from '../auth';
 import { getTableName, isLocal } from '../config';
 import { getDocumentClient } from '../data/client';
-import { videoEntity } from '../data/entities';
-import { publishVideoSchema, updateVideoSchema } from '../schemas';
+import { folderEntity, videoEntity } from '../data/entities';
+import {
+  bulkDeleteSchema,
+  bulkMoveSchema,
+  publishVideoSchema,
+  updateVideoSchema,
+} from '../schemas';
 import { buildSignedCookies } from '../signed-cookies';
-import { deletePrefix, mediaPrefix, putObject, rawKey } from '../storage';
+import { mediaPrefix, putObject, rawKey } from '../storage';
+import { deleteVideoCascade } from './cascade';
+import { rootFolderId } from './folders';
 import { currentUser, pathParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
@@ -73,6 +80,73 @@ export const videosRouter = (): Router => {
 
     res.json({ items });
   });
+
+  router.post(
+    '/bulk-move',
+    requireCreator,
+    validate(bulkMoveSchema),
+    async (req: Request, res: Response) => {
+      const { ids, folderId } = req.body as { ids: string[]; folderId: string };
+
+      if (folderId !== rootFolderId) {
+        const folder = await folderEntity.get({ id: folderId }).go();
+        if (!folder.data) {
+          res.status(404).json({ error: 'not_found' });
+          return;
+        }
+      }
+
+      const moved: string[] = [];
+      const missing: string[] = [];
+
+      for (const id of ids) {
+        const existing = await videoEntity.get({ id }).go();
+        if (!existing.data) {
+          missing.push(id);
+          continue;
+        }
+        // folderId is part of GSI1PK, so the item is rewritten wholesale to recompute the key
+        await videoEntity
+          .put({
+            ...existing.data,
+            folderId,
+            updatedAt: new Date().toISOString(),
+          })
+          .go();
+        moved.push(id);
+      }
+
+      res.json({ moved, missing });
+    },
+  );
+
+  router.post(
+    '/bulk-delete',
+    requireCreator,
+    validate(bulkDeleteSchema),
+    async (req: Request, res: Response) => {
+      const { ids } = req.body as { ids: string[] };
+      const deleted: string[] = [];
+      const missing: string[] = [];
+
+      for (const id of ids) {
+        const existing = await videoEntity.get({ id }).go();
+        if (!existing.data) {
+          missing.push(id);
+          continue;
+        }
+        try {
+          await deleteVideoCascade(id);
+          deleted.push(id);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`failed to delete video ${id}`, error);
+        }
+      }
+
+      res.json({ deleted, missing });
+    },
+  );
 
   router.get('/:id', async (req: Request, res: Response) => {
     const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
@@ -326,10 +400,7 @@ export const videosRouter = (): Router => {
   });
 
   router.delete('/:id', requireCreator, async (req, res) => {
-    const id = pathParam(req, 'id');
-    await videoEntity.delete({ id }).go();
-    await deletePrefix(`raw/${id}/`).catch(() => undefined);
-    await deletePrefix(mediaPrefix(id)).catch(() => undefined);
+    await deleteVideoCascade(pathParam(req, 'id'));
     res.status(204).end();
   });
 

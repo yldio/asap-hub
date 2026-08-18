@@ -346,6 +346,76 @@ export const videosRouter = (): Router => {
     },
   );
 
+  router.post(
+    '/:id/unpublish',
+    requireCreator,
+    validate(publishVideoSchema),
+    async (req: Request, res: Response) => {
+      const id = pathParam(req, 'id');
+      const { version } = req.body as { version: number };
+
+      const existing = await videoEntity.get({ id }).go();
+      if (!existing.data) {
+        res.status(404).json({ error: 'not_found' });
+        return;
+      }
+
+      const params = videoEntity
+        .put({
+          ...existing.data,
+          status: 'draft',
+          version: version + 1,
+          updatedAt: new Date().toISOString(),
+        })
+        .params() as Record<string, unknown>;
+      const item = params.Item as Record<string, string>;
+
+      try {
+        await getDocumentClient().send(
+          new UpdateCommand({
+            TableName: getTableName(),
+            Key: videoKey(id),
+            UpdateExpression:
+              'SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
+            ConditionExpression:
+              'lockedBy = :sub AND #version = :expectedVersion',
+            ExpressionAttributeNames: {
+              '#status': 'status',
+              '#version': 'version',
+              '#updatedAt': 'updatedAt',
+            },
+            ExpressionAttributeValues: {
+              ':status': 'draft',
+              ':statusKey': 'DRAFT',
+              ':one': 1,
+              ':updatedAt': new Date().toISOString(),
+              ':sub': currentUser(req).sub,
+              ':expectedVersion': version,
+              ':gsi1pk': item.GSI1PK,
+              ':gsi1sk': item.GSI1SK,
+            },
+            ReturnValuesOnConditionCheckFailure: 'ALL_OLD',
+          }),
+        );
+      } catch (error) {
+        const failed = failedItem(error);
+        if (failed) {
+          res.status(409).json({
+            error: 'conflict',
+            ...(holderNameOf(failed)
+              ? { holderName: holderNameOf(failed) }
+              : {}),
+          });
+          return;
+        }
+        throw error;
+      }
+
+      const updated = await videoEntity.get({ id }).go();
+      res.json({ video: serialiseVideo(updated.data as VideoItem) });
+    },
+  );
+
   router.post('/:id/lease', requireCreator, async (req, res) => {
     const id = pathParam(req, 'id');
     const now = Date.now();

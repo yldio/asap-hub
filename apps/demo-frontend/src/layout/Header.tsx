@@ -9,6 +9,9 @@ import { Button } from '../ui/components';
 import { charcoal, lead, paper, rem, silver, steel } from '../ui/theme';
 
 const headerStyles = css({
+  position: 'sticky',
+  top: 0,
+  zIndex: 40,
   backgroundColor: paper.rgb,
   borderBottom: `1px solid ${steel.rgb}`,
 });

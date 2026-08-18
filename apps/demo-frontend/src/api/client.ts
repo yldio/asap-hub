@@ -253,6 +253,15 @@ export const createApi = (getToken: GetToken) => ({
       )
     ).video,
 
+  unpublishVideo: async (id: string, version: number): Promise<Video> =>
+    (
+      await request<{ video: Video }>(
+        `/videos/${encodeURIComponent(id)}/unpublish`,
+        await getToken(),
+        { method: 'POST', body: { version } },
+      )
+    ).video,
+
   publishVideo: async (id: string, version: number): Promise<Video> =>
     (
       await request<{ video: Video }>(

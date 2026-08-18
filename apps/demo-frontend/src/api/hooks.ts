@@ -110,6 +110,19 @@ export const useUpdateVideo = (id: string) => {
   });
 };
 
+export const useUnpublishVideo = (id: string) => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (version: number) => api.unpublishVideo(id, version),
+    onSuccess: (video) => {
+      queryClient.setQueryData(['video', id], video);
+      void queryClient.invalidateQueries({ queryKey: ['videos'] });
+      void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
+    },
+  });
+};
+
 export const usePublishVideo = (id: string) => {
   const api = useApi();
   const queryClient = useQueryClient();

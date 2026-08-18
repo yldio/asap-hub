@@ -8,8 +8,8 @@ import { useApi } from '../api/ApiProvider';
 import {
   useDeleteVideo,
   useEditableVideo,
-  useFolders,
   usePublishVideo,
+  useUnpublishVideo,
   useUpdateVideo,
   useVideoAccess,
 } from '../api/hooks';
@@ -37,7 +37,6 @@ import {
   silver,
   steel,
 } from '../ui/theme';
-import { buildTree, flattenTree } from '../library/tree';
 import { formatDuration, parseTimecode } from '../utils/time';
 
 const AUTOSAVE_MS = 1500;
@@ -83,16 +82,6 @@ const titleInputStyles = css({
     borderColor: steel.rgb,
     backgroundColor: paper.rgb,
   },
-});
-
-const selectStyles = css({
-  fontFamily: 'inherit',
-  fontSize: rem(14),
-  color: charcoal.rgb,
-  padding: `${rem(8)} ${rem(10)}`,
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(4),
-  backgroundColor: 'white',
 });
 
 const hintStripStyles = css({
@@ -198,9 +187,9 @@ const Editor: FC<{
 }> = ({ video, access }) => {
   const navigate = useNavigate();
   const api = useApi();
-  const folders = useFolders();
   const updateVideo = useUpdateVideo(video.id);
   const publishVideo = usePublishVideo(video.id);
+  const unpublishVideo = useUnpublishVideo(video.id);
   const deleteVideo = useDeleteVideo(video.id);
   const { lease, retry, markLost } = useEditLease(video.id, true);
 
@@ -211,7 +200,7 @@ const Editor: FC<{
 
   const [rows, setRows] = useState<ChapterRow[]>(() => toRows(video.chapters));
   const [title, setTitle] = useState(video.title);
-  const [folderId, setFolderId] = useState(video.folderId || ROOT_FOLDER);
+  const [folderId] = useState(video.folderId || ROOT_FOLDER);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
   const [endDrafts, setEndDrafts] = useState<Record<string, string>>({});
@@ -220,7 +209,9 @@ const Editor: FC<{
   const [pendingFocusKey, setPendingFocusKey] = useState<string>();
   const [currentTime, setCurrentTime] = useState(0);
   const [saveState, setSaveState] = useState<SaveState>('idle');
-  const [confirming, setConfirming] = useState<'publish' | 'delete'>();
+  const [confirming, setConfirming] = useState<
+    'publish' | 'unpublish' | 'delete'
+  >();
 
   const readOnly = lease.status !== 'held';
 
@@ -564,28 +555,6 @@ const Editor: FC<{
         <Badge tone={video.status === 'published' ? 'neutral' : 'warning'}>
           {video.status === 'published' ? 'Published' : 'Draft'}
         </Badge>
-        <select
-          css={selectStyles}
-          aria-label="Folder"
-          disabled={readOnly}
-          value={folderId}
-          onChange={(event) => {
-            const nextFolder = event.currentTarget.value;
-            setFolderId(nextFolder);
-            if (readOnly) return;
-            clearTimeout(saveTimer.current);
-            save(rows, { title, folderId: nextFolder });
-          }}
-        >
-          <option value={ROOT_FOLDER}>Home</option>
-          {flattenTree(buildTree(folders.data ?? [])).map(
-            ({ folder, depth }) => (
-              <option key={folder.id} value={folder.id}>
-                {`${'    '.repeat(depth)}${folder.name}`}
-              </option>
-            ),
-          )}
-        </select>
       </div>
 
       {lease.status === 'denied' && (
@@ -707,6 +676,14 @@ const Editor: FC<{
           <Button disabled={readOnly} onClick={() => setConfirming('delete')}>
             Delete demo
           </Button>
+          {video.status === 'published' && (
+            <Button
+              disabled={readOnly || saveState === 'saving'}
+              onClick={() => setConfirming('unpublish')}
+            >
+              Unpublish
+            </Button>
+          )}
           <Button
             primary
             disabled={readOnly || saveState === 'saving'}
@@ -740,6 +717,23 @@ const Editor: FC<{
           onConfirm={() => {
             setConfirming(undefined);
             publishVideo.mutate(versionRef.current, {
+              onSuccess: (saved) => {
+                versionRef.current = saved.version;
+              },
+            });
+          }}
+        />
+      )}
+
+      {confirming === 'unpublish' && (
+        <ConfirmDialog
+          title="Unpublish demo"
+          body={`"${title}" will go back to draft and disappear for members until it is published again.`}
+          confirmLabel="Unpublish"
+          onCancel={() => setConfirming(undefined)}
+          onConfirm={() => {
+            setConfirming(undefined);
+            unpublishVideo.mutate(versionRef.current, {
               onSuccess: (saved) => {
                 versionRef.current = saved.version;
               },

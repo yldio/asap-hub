@@ -129204,6 +129204,65 @@ var videosRouter = () => {
       res.json({ video: serialiseVideo(updated.data) });
     }
   );
+  router.post(
+    "/:id/unpublish",
+    requireCreator,
+    validate2(publishVideoSchema),
+    async (req, res) => {
+      const id = pathParam(req, "id");
+      const { version } = req.body;
+      const existing = await videoEntity.get({ id }).go();
+      if (!existing.data) {
+        res.status(404).json({ error: "not_found" });
+        return;
+      }
+      const params = videoEntity.put({
+        ...existing.data,
+        status: "draft",
+        version: version + 1,
+        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+      }).params();
+      const item = params.Item;
+      try {
+        await getDocumentClient().send(
+          new import_lib_dynamodb2.UpdateCommand({
+            TableName: getTableName(),
+            Key: videoKey(id),
+            UpdateExpression: "SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk",
+            ConditionExpression: "lockedBy = :sub AND #version = :expectedVersion",
+            ExpressionAttributeNames: {
+              "#status": "status",
+              "#version": "version",
+              "#updatedAt": "updatedAt"
+            },
+            ExpressionAttributeValues: {
+              ":status": "draft",
+              ":statusKey": "DRAFT",
+              ":one": 1,
+              ":updatedAt": (/* @__PURE__ */ new Date()).toISOString(),
+              ":sub": currentUser(req).sub,
+              ":expectedVersion": version,
+              ":gsi1pk": item.GSI1PK,
+              ":gsi1sk": item.GSI1SK
+            },
+            ReturnValuesOnConditionCheckFailure: "ALL_OLD"
+          })
+        );
+      } catch (error3) {
+        const failed = failedItem(error3);
+        if (failed) {
+          res.status(409).json({
+            error: "conflict",
+            ...holderNameOf(failed) ? { holderName: holderNameOf(failed) } : {}
+          });
+          return;
+        }
+        throw error3;
+      }
+      const updated = await videoEntity.get({ id }).go();
+      res.json({ video: serialiseVideo(updated.data) });
+    }
+  );
   router.post("/:id/lease", requireCreator, async (req, res) => {
     const id = pathParam(req, "id");
     const now = Date.now();

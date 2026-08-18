@@ -3,6 +3,8 @@ import { css } from '@emotion/react';
 import { FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router';
 
+import Dropdown from '../ui/Dropdown';
+
 import {
   charcoal,
   lead,
@@ -65,17 +67,6 @@ const searchInputStyles = css({
   fontSize: rem(15),
   color: charcoal.rgb,
   ':focus': { outline: 'none', borderColor: pine.rgb },
-});
-
-const selectStyles = css({
-  padding: `${rem(9)} ${rem(10)}`,
-  borderRadius: rem(6),
-  border: `1px solid ${steel.rgb}`,
-  backgroundColor: paper.rgb,
-  font: 'inherit',
-  fontSize: rem(14),
-  color: charcoal.rgb,
-  cursor: 'pointer',
 });
 
 const toggleGroupStyles = css({
@@ -293,18 +284,15 @@ export const Toolbar: FC<{
       />
     </div>
 
-    <select
-      aria-label="Sort videos"
-      css={selectStyles}
+    <Dropdown
+      label="Sort videos"
       value={sort}
-      onChange={(event) => onSortChange(event.target.value as SortMode)}
-    >
-      {sortOptions.map((option) => (
-        <option key={option} value={option}>
-          {sortLabels[option]}
-        </option>
-      ))}
-    </select>
+      options={sortOptions.map((option) => ({
+        value: option,
+        label: sortLabels[option],
+      }))}
+      onChange={onSortChange}
+    />
 
     <div css={toggleGroupStyles} role="group" aria-label="View mode">
       <button

@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import { FC, useEffect, useState } from 'react';
 
+import Dropdown from './Dropdown';
 import { SearchIcon } from '../library/icons';
 import { charcoal, paper, pine, rem, steel, tin } from './theme';
 
@@ -40,17 +41,6 @@ const searchInputStyles = css({
   fontSize: rem(15),
   color: charcoal.rgb,
   ':focus': { outline: 'none', borderColor: pine.rgb },
-});
-
-const selectStyles = css({
-  padding: `${rem(9)} ${rem(10)}`,
-  borderRadius: rem(6),
-  border: `1px solid ${steel.rgb}`,
-  backgroundColor: paper.rgb,
-  font: 'inherit',
-  fontSize: rem(14),
-  color: charcoal.rgb,
-  cursor: 'pointer',
 });
 
 export type FilterOption<T extends string> = {
@@ -95,19 +85,13 @@ export const TableFilters: FC<{
       />
     </div>
     {selects.map((select) => (
-      <select
+      <Dropdown
         key={select.label}
-        aria-label={select.label}
-        css={selectStyles}
+        label={select.label}
         value={select.value}
-        onChange={(event) => select.onChange(event.target.value)}
-      >
-        {select.options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        options={select.options}
+        onChange={select.onChange}
+      />
     ))}
   </div>
 );

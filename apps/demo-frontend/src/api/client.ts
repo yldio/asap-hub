@@ -8,10 +8,12 @@ import type {
   Invite,
   Lease,
   ListResponse,
+  ManagedUser,
   Me,
   PartUrl,
   Role,
   UploadedPart,
+  UserStatus,
   Video,
   VideoAccess,
   VideoPatch,
@@ -43,6 +45,9 @@ export const isNotInvited = (error: unknown): boolean =>
   error instanceof ApiError &&
   error.status === 403 &&
   error.code === 'not_invited';
+
+export const isRevoked = (error: unknown): boolean =>
+  error instanceof ApiError && error.status === 403 && error.code === 'revoked';
 
 export const isLockedOut = (error: unknown): boolean =>
   error instanceof ApiError && error.status === 409 && error.code === 'locked';
@@ -287,6 +292,25 @@ export const createApi = (getToken: GetToken) => ({
     await request<unknown>('/invites', await getToken(), {
       method: 'POST',
       body: { email, role },
+    });
+  },
+
+  listUsers: async (): Promise<ManagedUser[]> =>
+    (await request<ListResponse<ManagedUser>>('/users', await getToken()))
+      .items,
+
+  updateUser: async (
+    sub: string,
+    patch: { role?: Role; status?: UserStatus },
+  ): Promise<ManagedUser> =>
+    request<ManagedUser>(`/users/${encodeURIComponent(sub)}`, await getToken(), {
+      method: 'PATCH',
+      body: patch,
+    }),
+
+  deleteUser: async (sub: string): Promise<void> => {
+    await request<void>(`/users/${encodeURIComponent(sub)}`, await getToken(), {
+      method: 'DELETE',
     });
   },
 });

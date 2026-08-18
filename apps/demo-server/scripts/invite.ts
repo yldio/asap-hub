@@ -5,14 +5,14 @@ import { inviteEntity } from '../src/data/entities';
 const [email, role = 'member'] = process.argv.slice(2);
 
 const main = async (): Promise<void> => {
-  if (!email || !['creator', 'member'].includes(role)) {
-    console.error('usage: yarn invite <email> [creator|member]');
+  if (!email || !['creator', 'member', 'admin'].includes(role)) {
+    console.error('usage: yarn invite <email> [creator|member|admin]');
     process.exit(1);
   }
   await inviteEntity
     .upsert({
       email: email.toLowerCase(),
-      role: role as 'creator' | 'member',
+      role: role as 'creator' | 'member' | 'admin',
       invitedBy: { sub: 'local-script', name: 'Local script' },
       createdAt: new Date().toISOString(),
     })

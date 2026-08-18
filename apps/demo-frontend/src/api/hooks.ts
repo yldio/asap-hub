@@ -11,8 +11,10 @@ import type {
   Folder,
   FolderCounts,
   Invite,
+  ManagedUser,
   Me,
   Role,
+  UserStatus,
   Video,
   VideoAccess,
   VideoPatch,
@@ -162,6 +164,46 @@ export const useCreateInvite = () => {
     mutationFn: ({ email, role }: { email: string; role: Role }) =>
       api.createInvite(email, role),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['invites'] }),
+  });
+};
+
+export const useUsers = (
+  enabled: boolean,
+): UseQueryResult<ManagedUser[], unknown> => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: () => api.listUsers(),
+    enabled,
+    retry: noRetryOnClientError,
+  });
+};
+
+export const useUpdateUser = () => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      sub,
+      ...patch
+    }: {
+      sub: string;
+      role?: Role;
+      status?: UserStatus;
+    }) => api.updateUser(sub, patch),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+  });
+};
+
+export const useDeleteUser = () => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (sub: string) => api.deleteUser(sub),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['users'] });
+      void queryClient.invalidateQueries({ queryKey: ['invites'] });
+    },
   });
 };
 

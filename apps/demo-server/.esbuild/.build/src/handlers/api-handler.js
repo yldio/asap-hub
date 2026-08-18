@@ -123747,7 +123747,12 @@ var userEntity = new import_electrodb.Entity(
       sub: { type: "string", required: true },
       email: { type: "string", required: true },
       name: { type: "string", required: true },
-      role: { type: ["creator", "member"], required: true },
+      role: { type: ["creator", "member", "admin"], required: true },
+      status: {
+        type: ["active", "revoked"],
+        required: true,
+        default: "active"
+      },
       createdAt: { type: "string", required: true }
     },
     indexes: {
@@ -123789,7 +123794,7 @@ var inviteEntity = new import_electrodb.Entity(
     model: { entity: "invite", version: "1", service: "demo" },
     attributes: {
       email: { type: "string", required: true },
-      role: { type: ["creator", "member"], required: true },
+      role: { type: ["creator", "member", "admin"], required: true },
       invitedBy: {
         type: "map",
         required: true,
@@ -123844,6 +123849,7 @@ var inviteEntity = new import_electrodb.Entity(
 );
 
 // src/auth.ts
+var toStatus = (value) => value === "revoked" ? "revoked" : "active";
 var userInfoCache = /* @__PURE__ */ new Map();
 var decodeSegment = (segment) => {
   try {
@@ -123932,11 +123938,17 @@ var userMiddleware = async (req, res, next) => {
   }
   const existing = await userEntity.get({ sub }).go();
   if (existing.data) {
+    const status2 = toStatus(existing.data.status);
+    if (status2 === "revoked") {
+      res.status(403).json({ error: "revoked" });
+      return;
+    }
     req.user = {
       sub: existing.data.sub,
       email: existing.data.email,
       name: existing.data.name,
-      role: existing.data.role
+      role: existing.data.role,
+      status: status2
     };
     next();
     return;
@@ -123953,27 +123965,41 @@ var userMiddleware = async (req, res, next) => {
   }
   const name = claims.name || email;
   const role = invite.data.role;
-  await userEntity.create({
+  const status = await userEntity.create({
     sub,
     email,
     name,
     role,
+    status: "active",
     createdAt: (/* @__PURE__ */ new Date()).toISOString()
-  }).go().catch(async () => {
+  }).go().then(() => "active").catch(async () => {
     const raced = await userEntity.get({ sub }).go();
     if (!raced.data) {
       throw new Error("could not create the user record");
     }
+    return toStatus(raced.data.status);
   });
+  if (status === "revoked") {
+    res.status(403).json({ error: "revoked" });
+    return;
+  }
   await inviteEntity.patch({ email }).set({
     claimedBy: { sub, name },
     claimedAt: (/* @__PURE__ */ new Date()).toISOString()
   }).go().catch(() => void 0);
-  req.user = { sub, email, name, role };
+  req.user = { sub, email, name, role, status };
   next();
 };
 var requireCreator = (req, res, next) => {
-  if (req.user?.role !== "creator") {
+  const role = req.user?.role;
+  if (role !== "creator" && role !== "admin") {
+    res.status(403).json({ error: "forbidden" });
+    return;
+  }
+  next();
+};
+var requireAdmin = (req, res, next) => {
+  if (req.user?.role !== "admin") {
     res.status(403).json({ error: "forbidden" });
     return;
   }
@@ -128074,7 +128100,8 @@ var coerce = {
 var NEVER = INVALID;
 
 // src/schemas.ts
-var roleSchema = external_exports.enum(["creator", "member"]);
+var roleSchema = external_exports.enum(["creator", "member", "admin"]);
+var userStatusSchema = external_exports.enum(["active", "revoked"]);
 var chapterSchema = external_exports.object({
   startMs: external_exports.number().int().nonnegative(),
   title: external_exports.string().min(1)
@@ -128131,6 +128158,12 @@ var completeUploadSchema = external_exports.object({
 var createInviteSchema = external_exports.object({
   email: external_exports.string().email(),
   role: roleSchema
+});
+var updateUserSchema = external_exports.object({
+  role: roleSchema.optional(),
+  status: userStatusSchema.optional()
+}).refine(({ role, status }) => role !== void 0 || status !== void 0, {
+  message: "role or status is required"
 });
 
 // src/storage.ts
@@ -128269,7 +128302,8 @@ var anonymous = {
   sub: "",
   email: "",
   name: "",
-  role: "member"
+  role: "member",
+  status: "active"
 };
 var currentUser = (req) => req.user ?? anonymous;
 var pathParam = (req, name) => req.params[name] ?? "";
@@ -128532,6 +128566,10 @@ var invitesRouter = () => {
     async (req, res) => {
       const { role } = req.body;
       const email = req.body.email.toLowerCase();
+      if (role === "admin" && currentUser(req).role !== "admin") {
+        res.status(403).json({ error: "forbidden" });
+        return;
+      }
       const existing = await inviteEntity.get({ email }).go();
       if (existing.data?.claimedBy) {
         res.status(409).json({ error: "already_invited" });
@@ -129313,6 +129351,66 @@ var uploadsRouter = () => {
   return router;
 };
 
+// src/routes/users.ts
+var usersRouter = () => {
+  const router = asyncRouter();
+  router.use(requireAdmin);
+  router.get("/", async (_req, res) => {
+    const { data: data2 } = await userEntity.query.all({}).go({ pages: "all" });
+    res.json({
+      items: data2.map((user) => ({
+        sub: user.sub,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: toStatus(user.status),
+        createdAt: user.createdAt
+      }))
+    });
+  });
+  router.patch("/:sub", validate2(updateUserSchema), async (req, res) => {
+    const sub = pathParam(req, "sub");
+    if (sub === currentUser(req).sub) {
+      res.status(400).json({ error: "self_target" });
+      return;
+    }
+    const existing = await userEntity.get({ sub }).go();
+    if (!existing.data) {
+      res.status(404).json({ error: "not_found" });
+      return;
+    }
+    const { role, status } = req.body;
+    const { data: data2 } = await userEntity.patch({ sub }).set({
+      ...role ? { role } : {},
+      ...status ? { status } : {}
+    }).go({ response: "all_new" });
+    res.json({
+      sub,
+      name: data2.name ?? existing.data.name,
+      email: data2.email ?? existing.data.email,
+      role: data2.role ?? role ?? existing.data.role,
+      status: toStatus(data2.status ?? status),
+      createdAt: data2.createdAt ?? existing.data.createdAt
+    });
+  });
+  router.delete("/:sub", async (req, res) => {
+    const sub = pathParam(req, "sub");
+    if (sub === currentUser(req).sub) {
+      res.status(400).json({ error: "self_target" });
+      return;
+    }
+    const existing = await userEntity.get({ sub }).go();
+    if (!existing.data) {
+      res.status(404).json({ error: "not_found" });
+      return;
+    }
+    await userEntity.delete({ sub }).go();
+    await inviteEntity.delete({ email: existing.data.email }).go().catch(() => void 0);
+    res.status(204).end();
+  });
+  return router;
+};
+
 // src/app.ts
 var asyncHandler = (handler) => (req, res, next) => {
   handler(req, res, next).catch(next);
@@ -129337,6 +129435,7 @@ var appFactory = () => {
   api.use("/videos", videosRouter());
   api.use("/uploads", uploadsRouter());
   api.use("/invites", invitesRouter());
+  api.use("/users", usersRouter());
   app2.use("/api", api);
   app2.use((_req, res) => {
     res.status(404).json({ error: "Not Found" });

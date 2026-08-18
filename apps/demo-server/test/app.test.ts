@@ -53,7 +53,12 @@ const memberToken = bearer({
 const app = appFactory();
 const api = supertest(app);
 
-const mockUser = (role: 'creator' | 'member', sub: string, name: string) => {
+const mockUser = (
+  role: 'creator' | 'member' | 'admin',
+  sub: string,
+  name: string,
+  status?: 'active' | 'revoked',
+) => {
   jest
     .spyOn(userEntity, 'get')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,12 +69,20 @@ const mockUser = (role: 'creator' | 'member', sub: string, name: string) => {
           name,
           email: `${name.toLowerCase()}@example.com`,
           role,
+          ...(status ? { status } : {}),
           createdAt: '2026-01-01T00:00:00.000Z',
         },
       }),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 };
+
+const adminToken = bearer({
+  sub: 'auth0|admin',
+  email: 'dana@example.com',
+  email_verified: true,
+  name: 'Dana',
+});
 
 const videoItem = (overrides: Record<string, unknown> = {}) => ({
   id: 'video-1',
@@ -421,5 +434,200 @@ describe('folders', () => {
       id: 'folder-1',
       name: 'Sprint 12',
     });
+  });
+});
+
+describe('revoked users', () => {
+  it('refuses every endpoint with 403 revoked', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana', 'revoked');
+
+    const me = await api.get('/api/me').set('Authorization', creatorToken);
+    expect(me.status).toBe(403);
+    expect(me.body).toEqual({ error: 'revoked' });
+
+    const folders = await api
+      .get('/api/folders')
+      .set('Authorization', creatorToken);
+    expect(folders.status).toBe(403);
+    expect(folders.body).toEqual({ error: 'revoked' });
+  });
+
+  it('treats a row without a status as active', async () => {
+    mockUser('member', 'auth0|member', 'Bob');
+    const response = await api.get('/api/me').set('Authorization', memberToken);
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('admin invites', () => {
+  it('refuses a creator inviting an admin', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    const response = await api
+      .post('/api/invites')
+      .set('Authorization', creatorToken)
+      .send({ email: 'new@example.com', role: 'admin' });
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({ error: 'forbidden' });
+  });
+
+  it('lets an admin invite an admin', async () => {
+    mockUser('admin', 'auth0|admin', 'Dana');
+    jest.spyOn(inviteEntity, 'get').mockReturnValue({
+      go: async () => ({ data: null }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    const upsert = jest
+      .spyOn(inviteEntity, 'upsert')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+
+    const response = await api
+      .post('/api/invites')
+      .set('Authorization', adminToken)
+      .send({ email: 'New@example.com', role: 'admin' });
+
+    expect(response.status).toBe(200);
+    expect(upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'new@example.com', role: 'admin' }),
+    );
+  });
+});
+
+describe('user management', () => {
+  it('refuses a creator', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    const response = await api
+      .get('/api/users')
+      .set('Authorization', creatorToken);
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({ error: 'forbidden' });
+  });
+
+  it('lists the users partition for an admin', async () => {
+    mockUser('admin', 'auth0|admin', 'Dana');
+    jest.spyOn(userEntity.query, 'all').mockReturnValue({
+      go: async () => ({
+        data: [
+          {
+            sub: 'auth0|member',
+            name: 'Bob',
+            email: 'bob@example.com',
+            role: 'member',
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+        ],
+      }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await api
+      .get('/api/users')
+      .set('Authorization', adminToken);
+
+    expect(response.status).toBe(200);
+    expect(response.body.items[0]).toEqual({
+      sub: 'auth0|member',
+      name: 'Bob',
+      email: 'bob@example.com',
+      role: 'member',
+      status: 'active',
+      createdAt: '2026-01-01T00:00:00.000Z',
+    });
+  });
+
+  it('refuses a self role change with self_target', async () => {
+    mockUser('admin', 'auth0|admin', 'Dana');
+    const response = await api
+      .patch('/api/users/auth0%7Cadmin')
+      .set('Authorization', adminToken)
+      .send({ role: 'member' });
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'self_target' });
+  });
+
+  it('refuses a self delete with self_target', async () => {
+    mockUser('admin', 'auth0|admin', 'Dana');
+    const response = await api
+      .delete('/api/users/auth0%7Cadmin')
+      .set('Authorization', adminToken);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'self_target' });
+  });
+
+  it('rejects a patch with neither role nor status', async () => {
+    mockUser('admin', 'auth0|admin', 'Dana');
+    const response = await api
+      .patch('/api/users/auth0%7Cmember')
+      .set('Authorization', adminToken)
+      .send({});
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('validation');
+  });
+
+  it('returns 404 for an unknown user', async () => {
+    jest
+      .spyOn(userEntity, 'get')
+      .mockReturnValueOnce({
+        go: async () => ({
+          data: {
+            sub: 'auth0|admin',
+            name: 'Dana',
+            email: 'dana@example.com',
+            role: 'admin',
+            status: 'active',
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValueOnce({ go: async () => ({ data: null }) } as any);
+
+    const response = await api
+      .patch('/api/users/auth0%7Cghost')
+      .set('Authorization', adminToken)
+      .send({ status: 'revoked' });
+
+    expect(response.status).toBe(404);
+  });
+
+  it('deletes the user and their invite', async () => {
+    jest
+      .spyOn(userEntity, 'get')
+      .mockReturnValueOnce({
+        go: async () => ({
+          data: {
+            sub: 'auth0|admin',
+            name: 'Dana',
+            email: 'dana@example.com',
+            role: 'admin',
+            status: 'active',
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
+      .mockReturnValueOnce({
+        go: async () => ({
+          data: { sub: 'auth0|member', email: 'bob@example.com' },
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
+    const deleteUser = jest
+      .spyOn(userEntity, 'delete')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+    const deleteInvite = jest
+      .spyOn(inviteEntity, 'delete')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+
+    const response = await api
+      .delete('/api/users/auth0%7Cmember')
+      .set('Authorization', adminToken);
+
+    expect(response.status).toBe(204);
+    expect(deleteUser).toHaveBeenCalledWith({ sub: 'auth0|member' });
+    expect(deleteInvite).toHaveBeenCalledWith({ email: 'bob@example.com' });
   });
 });

@@ -4,7 +4,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 
 import { useAuth } from '../auth/AuthProvider';
-import { useMeContext } from '../auth/MeContext';
+import { useIsAdmin, useIsCreator, useMeContext } from '../auth/MeContext';
 import { Button } from '../ui/components';
 import { charcoal, lead, paper, rem, silver, steel } from '../ui/theme';
 
@@ -81,6 +81,8 @@ const menuLinkStyles = css({
 
 const Header: FC = () => {
   const me = useMeContext();
+  const isCreator = useIsCreator();
+  const isAdmin = useIsAdmin();
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ const Header: FC = () => {
                 <span css={nameStyles}>{me.name}</span>
                 <span css={emailStyles}>{me.email}</span>
               </div>
-              {me.role === 'creator' && (
+              {isCreator && (
                 <>
                   <Link
                     to="/studio/upload"
@@ -133,6 +135,15 @@ const Header: FC = () => {
                     Invites
                   </Link>
                 </>
+              )}
+              {isAdmin && (
+                <Link
+                  to="/users"
+                  css={menuLinkStyles}
+                  onClick={() => setOpen(false)}
+                >
+                  Manage users
+                </Link>
               )}
               <Button small onClick={logout}>
                 Sign out

@@ -10,4 +10,10 @@ export const useMeContext = (): Me => {
   return me;
 };
 
-export const useIsCreator = (): boolean => useMeContext().role === 'creator';
+export const useIsAdmin = (): boolean => useMeContext().role === 'admin';
+
+// an admin passes every creator check on top of managing users
+export const useIsCreator = (): boolean => {
+  const { role } = useMeContext();
+  return role === 'creator' || role === 'admin';
+};

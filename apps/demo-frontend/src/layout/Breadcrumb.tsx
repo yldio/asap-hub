@@ -53,6 +53,9 @@ const useCrumbs = (): Crumb[] => {
   if (pathname === '/invites') {
     crumbs.push({ label: 'Invites' });
   }
+  if (pathname === '/users') {
+    crumbs.push({ label: 'Users' });
+  }
   if (pathname.startsWith('/studio')) {
     crumbs.push({ label: 'Studio' });
   }

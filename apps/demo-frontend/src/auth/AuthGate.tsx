@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, ReactNode } from 'react';
 
 import { useMe } from '../api/hooks';
-import { isNotInvited } from '../api/client';
+import { isNotInvited, isRevoked } from '../api/client';
 import { Button, Card, Headline, Spinner } from '../ui/components';
 import { charcoal, lead, pearl, rem, steel } from '../ui/theme';
 import { useAuth } from './AuthProvider';
@@ -80,6 +80,23 @@ const AuthGate: FC<{ readonly children: ReactNode }> = ({ children }) => {
     return (
       <div css={screenStyles}>
         <Spinner label="Loading your account" />
+      </div>
+    );
+  }
+
+  if (me.isError && isRevoked(me.error)) {
+    return (
+      <div css={screenStyles}>
+        <Card overrideStyles={panelStyles}>
+          <span css={markStyles}>ASAP</span>
+          <Headline level={2}>Your account is disabled</Headline>
+          <p css={bodyStyles}>
+            Access for{' '}
+            <span css={emailStyles}>{user?.email ?? 'your account'}</span> has
+            been turned off. Contact an admin if you think this is a mistake.
+          </p>
+          <Button onClick={logout}>Sign out</Button>
+        </Card>
       </div>
     );
   }

@@ -4,9 +4,10 @@ import { FC, FormEvent, useState } from 'react';
 
 import { useCreateInvite, useInvites } from '../api/hooks';
 import type { Role } from '../api/types';
-import { useIsCreator } from '../auth/MeContext';
+import { useIsAdmin, useIsCreator } from '../auth/MeContext';
 import { Badge, Button, Card, Headline, Spinner } from '../ui/components';
 import { charcoal, ember, lead, rem, silver, steel } from '../ui/theme';
+import { roleLabel } from '../utils/format';
 import { formatRecordedAt } from '../utils/time';
 
 const formStyles = css({
@@ -62,6 +63,7 @@ const errorStyles = css({ color: ember.rgb, fontSize: rem(14), margin: 0 });
 
 const Invites: FC = () => {
   const isCreator = useIsCreator();
+  const isAdmin = useIsAdmin();
   const invites = useInvites();
   const createInvite = useCreateInvite();
   const [email, setEmail] = useState('');
@@ -107,6 +109,7 @@ const Invites: FC = () => {
             >
               <option value="member">Member</option>
               <option value="creator">Creator</option>
+              {isAdmin && <option value="admin">Admin</option>}
             </select>
           </label>
           <Button primary type="submit" disabled={createInvite.isPending}>
@@ -138,7 +141,7 @@ const Invites: FC = () => {
               {(invites.data ?? []).map((invite) => (
                 <tr key={invite.email}>
                   <td>{invite.email}</td>
-                  <td>{invite.role === 'creator' ? 'Creator' : 'Member'}</td>
+                  <td>{roleLabel(invite.role)}</td>
                   <td>{formatRecordedAt(invite.createdAt)}</td>
                   <td>
                     {invite.claimedBy ? (

@@ -146,7 +146,12 @@ export const userEntity = new Entity(
       sub: { type: 'string', required: true },
       email: { type: 'string', required: true },
       name: { type: 'string', required: true },
-      role: { type: ['creator', 'member'] as const, required: true },
+      role: { type: ['creator', 'member', 'admin'] as const, required: true },
+      status: {
+        type: ['active', 'revoked'] as const,
+        required: true,
+        default: 'active',
+      },
       createdAt: { type: 'string', required: true },
     },
     indexes: {
@@ -189,7 +194,7 @@ export const inviteEntity = new Entity(
     model: { entity: 'invite', version: '1', service: 'demo' },
     attributes: {
       email: { type: 'string', required: true },
-      role: { type: ['creator', 'member'] as const, required: true },
+      role: { type: ['creator', 'member', 'admin'] as const, required: true },
       invitedBy: {
         type: 'map',
         required: true,

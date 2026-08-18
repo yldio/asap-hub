@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireCreator } from '../auth';
+import { requireCreator, Role } from '../auth';
 import { inviteEntity } from '../data/entities';
 import { sendInviteEmail } from '../email';
 import { createInviteSchema } from '../schemas';
@@ -27,8 +27,13 @@ export const invitesRouter = (): Router => {
     requireCreator,
     validate(createInviteSchema),
     async (req, res) => {
-      const { role } = req.body as { role: 'creator' | 'member' };
+      const { role } = req.body as { role: Role };
       const email = (req.body as { email: string }).email.toLowerCase();
+
+      if (role === 'admin' && currentUser(req).role !== 'admin') {
+        res.status(403).json({ error: 'forbidden' });
+        return;
+      }
 
       const existing = await inviteEntity.get({ email }).go();
       if (existing.data?.claimedBy) {

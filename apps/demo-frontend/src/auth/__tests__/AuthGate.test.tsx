@@ -43,6 +43,21 @@ it('shows the not invited screen when the api returns not_invited', async () => 
   expect(screen.queryByText('secret')).not.toBeInTheDocument();
 });
 
+it('shows the disabled account screen when the api returns revoked', async () => {
+  const getMe = jest.fn(() =>
+    Promise.reject(new ApiError(403, 'forbidden', 'revoked')),
+  );
+
+  renderApp(<AuthGate>secret</AuthGate>, {
+    auth: authenticatedState,
+    api: { getMe },
+  });
+
+  expect(await screen.findByText('Your account is disabled')).toBeVisible();
+  expect(screen.getByRole('button', { name: /sign out/i })).toBeVisible();
+  expect(screen.queryByText('secret')).not.toBeInTheDocument();
+});
+
 it('renders its children once the account is loaded', async () => {
   const getMe = jest.fn(() =>
     Promise.resolve({

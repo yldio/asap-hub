@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-export const roleSchema = z.enum(['creator', 'member']);
+export const roleSchema = z.enum(['creator', 'member', 'admin']);
+
+export const userStatusSchema = z.enum(['active', 'revoked']);
 
 export const chapterSchema = z.object({
   startMs: z.number().int().nonnegative(),
@@ -82,3 +84,12 @@ export const createInviteSchema = z.object({
   email: z.string().email(),
   role: roleSchema,
 });
+
+export const updateUserSchema = z
+  .object({
+    role: roleSchema.optional(),
+    status: userStatusSchema.optional(),
+  })
+  .refine(({ role, status }) => role !== undefined || status !== undefined, {
+    message: 'role or status is required',
+  });

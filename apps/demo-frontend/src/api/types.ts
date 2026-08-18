@@ -1,10 +1,21 @@
-export type Role = 'creator' | 'member';
+export type Role = 'creator' | 'member' | 'admin';
+
+export type UserStatus = 'active' | 'revoked';
 
 export type Me = {
   sub: string;
   name: string;
   email: string;
   role: Role;
+};
+
+export type ManagedUser = {
+  sub: string;
+  name: string;
+  email: string;
+  role: Role;
+  status: UserStatus;
+  createdAt: string;
 };
 
 export type Folder = {

@@ -3,14 +3,21 @@ import { NextFunction, Request, Response } from 'express';
 import { getAuth0Domain, isLocal } from './config';
 import { inviteEntity, userEntity } from './data/entities';
 
-export type Role = 'creator' | 'member';
+export type Role = 'creator' | 'member' | 'admin';
+
+export type UserStatus = 'active' | 'revoked';
 
 export type AuthenticatedUser = {
   sub: string;
   email: string;
   name: string;
   role: Role;
+  status: UserStatus;
 };
+
+// rows written before the status attribute existed count as active
+export const toStatus = (value: string | undefined): UserStatus =>
+  value === 'revoked' ? 'revoked' : 'active';
 
 export type Claims = {
   sub?: string;
@@ -148,11 +155,17 @@ export const userMiddleware = async (
 
   const existing = await userEntity.get({ sub }).go();
   if (existing.data) {
+    const status = toStatus(existing.data.status);
+    if (status === 'revoked') {
+      res.status(403).json({ error: 'revoked' });
+      return;
+    }
     req.user = {
       sub: existing.data.sub,
       email: existing.data.email,
       name: existing.data.name,
       role: existing.data.role as Role,
+      status,
     };
     next();
     return;
@@ -176,22 +189,30 @@ export const userMiddleware = async (
   const name = claims.name || email;
   const role = invite.data.role as Role;
 
-  await userEntity
+  const status = await userEntity
     .create({
       sub,
       email,
       name,
       role,
+      status: 'active',
       createdAt: new Date().toISOString(),
     })
     .go()
+    .then((): UserStatus => 'active')
     .catch(async () => {
       // a concurrent first request may have created it already
       const raced = await userEntity.get({ sub }).go();
       if (!raced.data) {
         throw new Error('could not create the user record');
       }
+      return toStatus(raced.data.status);
     });
+
+  if (status === 'revoked') {
+    res.status(403).json({ error: 'revoked' });
+    return;
+  }
 
   await inviteEntity
     .patch({ email })
@@ -202,7 +223,7 @@ export const userMiddleware = async (
     .go()
     .catch(() => undefined);
 
-  req.user = { sub, email, name, role };
+  req.user = { sub, email, name, role, status };
   next();
 };
 
@@ -211,7 +232,20 @@ export const requireCreator = (
   res: Response,
   next: NextFunction,
 ): void => {
-  if (req.user?.role !== 'creator') {
+  const role = req.user?.role;
+  if (role !== 'creator' && role !== 'admin') {
+    res.status(403).json({ error: 'forbidden' });
+    return;
+  }
+  next();
+};
+
+export const requireAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  if (req.user?.role !== 'admin') {
     res.status(403).json({ error: 'forbidden' });
     return;
   }

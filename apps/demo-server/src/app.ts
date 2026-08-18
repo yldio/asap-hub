@@ -6,6 +6,7 @@ import { currentUser } from './routes/request';
 import { invitesRouter } from './routes/invites';
 import { mediaRouter } from './routes/media';
 import { uploadsRouter } from './routes/uploads';
+import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
 
 type AsyncHandler = (
@@ -46,6 +47,7 @@ export const appFactory = (): Express => {
   api.use('/videos', videosRouter());
   api.use('/uploads', uploadsRouter());
   api.use('/invites', invitesRouter());
+  api.use('/users', usersRouter());
 
   app.use('/api', api);
 

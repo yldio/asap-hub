@@ -6,6 +6,7 @@ const anonymous: AuthenticatedUser = {
   email: '',
   name: '',
   role: 'member',
+  status: 'active',
 };
 
 // the auth middleware always populates req.user before any router runs

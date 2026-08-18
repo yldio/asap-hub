@@ -31,6 +31,13 @@ export const memberMe: Me = {
   role: 'member',
 };
 
+export const adminMe: Me = {
+  sub: 'auth0|admin',
+  name: 'Dana Admin',
+  email: 'dana@example.com',
+  role: 'admin',
+};
+
 export const renderApp = (
   children: ReactNode,
   {

@@ -11,6 +11,7 @@ import Invites from './pages/Invites';
 import NotFound from './pages/NotFound';
 import StudioUpload from './pages/StudioUpload';
 import StudioVideo from './pages/StudioVideo';
+import Users from './pages/Users';
 import Watch from './pages/Watch';
 import GlobalStyles from './ui/GlobalStyles';
 
@@ -34,6 +35,7 @@ const App: FC = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/videos/:id" element={<Watch />} />
                 <Route path="/invites" element={<Invites />} />
+                <Route path="/users" element={<Users />} />
                 <Route path="/studio/upload" element={<StudioUpload />} />
                 <Route path="/studio/videos/:id" element={<StudioVideo />} />
                 <Route path="*" element={<NotFound />} />

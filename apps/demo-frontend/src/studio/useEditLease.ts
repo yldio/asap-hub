@@ -62,7 +62,7 @@ const useEditLease = (
       .then((token) => {
         tokenRef.current = token;
       })
-      .catch(() => {});
+      .catch(() => undefined);
 
     return () => {
       cancelled = true;
@@ -79,7 +79,7 @@ const useEditLease = (
         .then((token) => {
           tokenRef.current = token;
         })
-        .catch(() => {});
+        .catch(() => undefined);
     }, HEARTBEAT_MS);
     return () => clearInterval(timer);
   }, [api, getToken, id, lease.status, markLost]);
@@ -99,7 +99,7 @@ const useEditLease = (
       window.removeEventListener('beforeunload', release);
       if (heldRef.current) {
         heldRef.current = false;
-        void api.releaseLease(id).catch(() => {});
+        void api.releaseLease(id).catch(() => undefined);
       }
     };
   }, [api, id, lease.status]);

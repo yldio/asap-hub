@@ -2,9 +2,8 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ApiError } from '../../api/client';
-import type { Video, VideoAccess } from '../../api/types';
+import type { Me, Video, VideoAccess } from '../../api/types';
 import { renderApp } from '../../test-utils';
-import type { Me } from '../../api/types';
 import StudioVideo from '../StudioVideo';
 
 const creatorMe: Me = {

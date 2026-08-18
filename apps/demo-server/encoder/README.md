@@ -24,19 +24,19 @@ non-zero. That runs from an `EXIT` trap, so a partial failure still records a st
 
 ## Environment
 
-| Variable | Required | Notes |
-|---|---|---|
-| `S3_OBJECT_KEY` | yes | Injected per run by the EventBridge rule |
-| `BUCKET_NAME` | yes | Storage bucket |
-| `TABLE_NAME` | yes | Single table |
-| `S3_ENDPOINT` | no | Endpoint override for MinIO |
-| `DYNAMODB_ENDPOINT` | no | Endpoint override for DynamoDB Local |
-| `SKIP_AWS` | no | `1` runs encode and VTT generation only, from `LOCAL_INPUT` |
-| `LOCAL_INPUT` | when `SKIP_AWS=1` | Local file to use instead of downloading |
-| `WORK_DIR` | no | Scratch directory, defaults to `/scratch` |
-| `SPRITE_INTERVAL_SECONDS` | no | Defaults to `10` |
-| `SPRITE_TILE_WIDTH` | no | Defaults to `160` |
-| `SPRITE_COLUMNS` | no | Defaults to `10` |
+| Variable                  | Required          | Notes                                                       |
+| ------------------------- | ----------------- | ----------------------------------------------------------- |
+| `S3_OBJECT_KEY`           | yes               | Injected per run by the EventBridge rule                    |
+| `BUCKET_NAME`             | yes               | Storage bucket                                              |
+| `TABLE_NAME`              | yes               | Single table                                                |
+| `S3_ENDPOINT`             | no                | Endpoint override for MinIO                                 |
+| `DYNAMODB_ENDPOINT`       | no                | Endpoint override for DynamoDB Local                        |
+| `SKIP_AWS`                | no                | `1` runs encode and VTT generation only, from `LOCAL_INPUT` |
+| `LOCAL_INPUT`             | when `SKIP_AWS=1` | Local file to use instead of downloading                    |
+| `WORK_DIR`                | no                | Scratch directory, defaults to `/scratch`                   |
+| `SPRITE_INTERVAL_SECONDS` | no                | Defaults to `10`                                            |
+| `SPRITE_TILE_WIDTH`       | no                | Defaults to `160`                                           |
+| `SPRITE_COLUMNS`          | no                | Defaults to `10`                                            |
 
 The AWS CLI also honours `AWS_ENDPOINT_URL_S3` and `AWS_ENDPOINT_URL_DYNAMODB` directly if you
 prefer those over `S3_ENDPOINT` / `DYNAMODB_ENDPOINT`.

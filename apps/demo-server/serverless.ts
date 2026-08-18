@@ -34,7 +34,8 @@ const demoHostname = process.env.DEMO_HOSTNAME!;
 const hostedZoneName = process.env.HOSTED_ZONE_NAME!;
 const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 // DEMO_-prefixed so the repo's untracked .env (CRN's AUTH0_*) cannot shadow them
-const auth0Domain = process.env.DEMO_AUTH0_DOMAIN || 'dev-asap-hub.us.auth0.com';
+const auth0Domain =
+  process.env.DEMO_AUTH0_DOMAIN || 'dev-asap-hub.us.auth0.com';
 const auth0ClientId = process.env.DEMO_AUTH0_CLIENT_ID || '';
 const auth0Audience =
   process.env.DEMO_AUTH0_AUDIENCE || 'https://demos.hub.asap.science';

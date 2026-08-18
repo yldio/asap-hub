@@ -228,7 +228,7 @@ export const createApi = (getToken: GetToken) => ({
       method: 'DELETE',
       keepalive: true,
       headers: { Authorization: `Bearer ${token}` },
-    }).catch(() => {});
+    }).catch(() => undefined);
   },
 
   deleteVideo: async (id: string): Promise<void> => {

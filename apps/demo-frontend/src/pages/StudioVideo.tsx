@@ -222,7 +222,7 @@ const Editor: FC<{
     versionRef.current = video.version;
   }, [video.version]);
 
-  const durationMs = video.durationMs;
+  const { durationMs } = video;
 
   const activeKey = useMemo(() => {
     const currentMs = currentTime * 1000;
@@ -329,7 +329,7 @@ const Editor: FC<{
       if (event.key === ' ') {
         event.preventDefault();
         if (!element) return;
-        if (element.paused) void element.play()?.catch(() => {});
+        if (element.paused) void element.play()?.catch(() => undefined);
         else element.pause();
         return;
       }

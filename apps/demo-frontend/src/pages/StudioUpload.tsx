@@ -138,7 +138,7 @@ const StudioUpload: FC = () => {
         await api.completeUpload(created.videoId, created.uploadId, ordered);
 
         setPhase('done');
-        navigate(`/studio/videos/${created.videoId}`);
+        void navigate(`/studio/videos/${created.videoId}`);
       } catch (caught) {
         if (controller.signal.aborted) return;
         setPhase('error');
@@ -164,7 +164,9 @@ const StudioUpload: FC = () => {
     abortRef.current?.abort();
     const created = uploadRef.current;
     if (created) {
-      void api.abortUpload(created.videoId, created.uploadId).catch(() => {});
+      void api
+        .abortUpload(created.videoId, created.uploadId)
+        .catch(() => undefined);
     }
     uploadRef.current = undefined;
     partsRef.current = [];

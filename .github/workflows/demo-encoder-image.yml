@@ -1,0 +1,48 @@
+name: Demo encoder image
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'apps/demo-server/encoder/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'apps/demo-server/encoder/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+      # PRs push too: the demo stack is a single shared dev environment, and a
+      # PR that changes the encoder deploys to it anyway
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/demo-server/encoder
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.ecr-login.outputs.registry }}/demo-hub-dev-encoder:latest

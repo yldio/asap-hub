@@ -73,8 +73,22 @@ yarn lint --testPathPattern apps/demo-server
 
 ## Deployment
 
-This stack is deliberately not wired into CI yet. Deploys are run by hand from a machine with
-credentials for the ASAP AWS account, `SLS_STAGE=dev`.
+There is one shared demo environment, `SLS_STAGE=dev` on `demos.hub.asap.science`. CI deploys it
+from a PR branch whenever the PR touches `apps/demo-*`, and from master after merge (the
+Development phase only, never Production). There are no per-PR demo stacks.
+
+The non-secret values live in `.github/environment/Base` under `demo-*` keys and are wired through
+`.github/actions/demo-sls-package` and `.github/actions/demo-sls-deployment`. Several are still
+`TO_BE_SET`: `demo-email-sender`, `demo-vpc-id`, `demo-subnet-ids` and
+`demo-cloudfront-public-key-b64`. The public key cannot be stored verbatim because that file is
+parsed one `key=value` per line, so it is held base64 encoded on a single line
+(`base64 -w0 public_key.pem`) and decoded back into `CLOUDFRONT_PUBLIC_KEY` by the two actions.
+
+The encoder image is built and pushed to ECR by `.github/workflows/demo-encoder-image.yml`, which
+runs on pushes and PRs touching `apps/demo-server/encoder/**`.
+
+A manual deploy from a machine with credentials for the ASAP AWS account still works and needs the
+same variables set.
 
 `serverless.ts` asserts these variables are set for any stage other than `local`:
 
@@ -110,7 +124,8 @@ One-time manual steps before the first deploy:
    in the SES sandbox.
 4. Provide `DEMO_VPC_ID` and public `DEMO_SUBNET_IDS`; the encoder task runs with
    `AssignPublicIp: ENABLED` and no NAT gateway.
-5. After the first deploy has created the ECR repository, build and push the encoder image (see
+5. After the first deploy has created the ECR repository, build and push the encoder image, either
+   by touching `apps/demo-server/encoder/**` so the encoder image workflow runs, or by hand (see
    [`encoder/README.md`](encoder/README.md)). Until an image exists, encode tasks fail to start.
 6. When going live, add `https://demos.hub.asap.science` to the Auth0 application's allowed
    callback URLs, logout URLs, and web origins.

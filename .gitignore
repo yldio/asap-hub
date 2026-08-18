@@ -66,3 +66,5 @@ tramp
 CLAUDE.md
 AGENTS.md
 .esbuild
+demo-cf.pem
+demo-cf.pub

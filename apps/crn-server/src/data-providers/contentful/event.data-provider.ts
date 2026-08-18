@@ -517,6 +517,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
         id: ig.sys.id,
         name: ig.name || '',
         active: !!ig.active,
+        thumbnail: ig.thumbnail?.url ?? undefined,
         tools: {
           slack: ig.slack || undefined,
           googleDrive: ig.googleDrive ?? undefined,

@@ -47,4 +47,34 @@ describe('EventAttendanceMetric', () => {
     expect(getByText('- 5')).toBeVisible();
     expect(getByLabelText('Decrease')).toBeInTheDocument();
   });
+
+  it('renders a plain value with no sign or arrow for a none delta', () => {
+    const { getByText, queryByLabelText } = render(
+      <EventAttendanceMetric
+        variant="delta"
+        direction="none"
+        label="Since last event"
+        value={0}
+        caption="No change from 18 of 25 teams"
+      />,
+    );
+    expect(getByText('0')).toBeVisible();
+    expect(getByText('No change from 18 of 25 teams')).toBeVisible();
+    expect(queryByLabelText('Increase')).not.toBeInTheDocument();
+    expect(queryByLabelText('Decrease')).not.toBeInTheDocument();
+  });
+
+  it('renders the empty variant with its label and message and no value', () => {
+    const { getByText, queryByLabelText } = render(
+      <EventAttendanceMetric
+        variant="empty"
+        label="Since last event"
+        message="No previous event to compare to."
+      />,
+    );
+    expect(getByText('Since last event')).toBeVisible();
+    expect(getByText('No previous event to compare to.')).toBeVisible();
+    expect(queryByLabelText('Increase')).not.toBeInTheDocument();
+    expect(queryByLabelText('Decrease')).not.toBeInTheDocument();
+  });
 });

@@ -204,6 +204,9 @@ export const eventsContentQueryFragment = gql`
             active
             slack
             googleDrive
+            thumbnail {
+              url
+            }
           }
         }
       }

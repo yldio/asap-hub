@@ -38,33 +38,58 @@ const arrowStyles = (direction: 'up' | 'down') =>
       : { borderTop: `${rem(10)} solid ${ember.rgb}` }),
   });
 
-type BaseProps = {
+type ValueProps = {
   label: string;
   value: number;
   caption: string;
 };
 
-type EventAttendanceMetricProps = BaseProps &
-  ({ variant: 'progress' } | { variant: 'delta'; direction: 'up' | 'down' });
+type EventAttendanceMetricProps =
+  | (ValueProps & { variant: 'progress' })
+  | (ValueProps & { variant: 'delta'; direction: 'up' | 'down' | 'none' })
+  | { variant: 'empty'; label: string; message: string };
+
+const deltaSign: Record<'up' | 'down' | 'none', string> = {
+  up: '+ ',
+  down: '- ',
+  none: '',
+};
+
+const emptyStackStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: rem(24),
+});
 
 const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
+  if (props.variant === 'empty') {
+    return (
+      <div css={[metricContainerStyles, emptyStackStyles]}>
+        <p css={metricLabelStyles}>{props.label}</p>
+        <p css={metricLabelStyles}>{props.message}</p>
+      </div>
+    );
+  }
+
   const { label, value, caption } = props;
 
   if (props.variant === 'delta') {
+    const deltaValue = `${deltaSign[props.direction]}${value}`;
     return (
       <div css={metricContainerStyles}>
         <p css={metricLabelStyles}>{label}</p>
         <div css={deltaRowStyles}>
-          <p css={metricValueStyles}>
-            {`${props.direction === 'up' ? '+' : '-'} ${value}`}
-          </p>
-          <span
-            css={arrowContainerStyles}
-            role="img"
-            aria-label={props.direction === 'up' ? 'Increase' : 'Decrease'}
-          >
-            <span css={arrowStyles(props.direction)} />
-          </span>
+          <p css={metricValueStyles}>{deltaValue}</p>
+          {props.direction !== 'none' && (
+            <span
+              css={arrowContainerStyles}
+              role="img"
+              aria-label={props.direction === 'up' ? 'Increase' : 'Decrease'}
+            >
+              <span css={arrowStyles(props.direction)} />
+            </span>
+          )}
         </div>
         <p css={metricLabelStyles}>{caption}</p>
       </div>

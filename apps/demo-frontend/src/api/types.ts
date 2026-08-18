@@ -30,6 +30,7 @@ export type Video = {
   durationMs: number;
   chapters: Chapter[];
   processingState: ProcessingState;
+  processingError?: string;
   createdBy: { sub: string; name: string };
   lockedBy?: string;
   lockedByName?: string;
@@ -51,3 +52,28 @@ export type Invite = {
 };
 
 export type ListResponse<T> = { items: T[] };
+
+export type CreatedUpload = {
+  videoId: string;
+  uploadId: string;
+  key: string;
+  partSize: number;
+};
+
+export type PartUrl = { partNumber: number; url: string };
+
+export type UploadedPart = { partNumber: number; eTag: string };
+
+export type VideoPatch = {
+  title?: string;
+  folderId?: string;
+  chapters?: Chapter[];
+  recordedAt?: string;
+  version: number;
+};
+
+export type Lease = {
+  lockedBy: string;
+  lockedByName: string;
+  lockExpiresAt: string;
+};

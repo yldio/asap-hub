@@ -11,6 +11,21 @@ export const formatDuration = (milliseconds: number): string => {
     : `${minutes}:${pad(seconds)}`;
 };
 
+const timecodePattern = /^(?:(\d+):)?([0-5]?\d):([0-5]\d)$/;
+
+export const parseTimecode = (value: string): number | undefined => {
+  const match = timecodePattern.exec(value.trim());
+  if (!match) return undefined;
+
+  const [, hours, minutes, seconds] = match;
+  return (
+    ((hours ? Number(hours) * 3600 : 0) +
+      Number(minutes) * 60 +
+      Number(seconds)) *
+    1000
+  );
+};
+
 export const formatRecordedAt = (isoDate: string): string => {
   const date = new Date(isoDate);
   if (Number.isNaN(date.getTime())) return '';

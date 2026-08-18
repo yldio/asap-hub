@@ -1,4 +1,4 @@
-import { formatDuration, formatRecordedAt } from '../time';
+import { formatDuration, formatRecordedAt, parseTimecode } from '../time';
 
 describe('formatDuration', () => {
   it.each`
@@ -14,6 +14,41 @@ describe('formatDuration', () => {
 
   it('clamps negative durations to zero', () => {
     expect(formatDuration(-1000)).toEqual('0:00');
+  });
+});
+
+describe('parseTimecode', () => {
+  it.each`
+    value         | expected
+    ${'0:00'}     | ${0}
+    ${'00:09'}    | ${9000}
+    ${'9:21'}     | ${561000}
+    ${'1:00:00'}  | ${3600000}
+    ${'1:02:05'}  | ${3725000}
+    ${'  2:30  '} | ${150000}
+    ${'12:34:56'} | ${45296000}
+  `('parses $value as $expected', ({ value, expected }) => {
+    expect(parseTimecode(value)).toEqual(expected);
+  });
+
+  it.each([
+    '',
+    'abc',
+    '90',
+    '1:2:3:4',
+    '1:60',
+    '1:75',
+    '12:99:00',
+    '-1:00',
+    '1.5',
+  ])('rejects %s', (value) => {
+    expect(parseTimecode(value)).toBeUndefined();
+  });
+
+  it('round-trips through formatDuration', () => {
+    [0, 9000, 561000, 3600000, 3725000].forEach((milliseconds) => {
+      expect(parseTimecode(formatDuration(milliseconds))).toEqual(milliseconds);
+    });
   });
 });
 

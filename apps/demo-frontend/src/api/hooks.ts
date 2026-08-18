@@ -7,7 +7,15 @@ import {
 
 import { useApi } from './ApiProvider';
 import { ApiError } from './client';
-import type { Folder, Invite, Me, Role, Video, VideoAccess } from './types';
+import type {
+  Folder,
+  Invite,
+  Me,
+  Role,
+  Video,
+  VideoAccess,
+  VideoPatch,
+} from './types';
 
 const noRetryOnClientError = (
   failureCount: number,
@@ -57,6 +65,55 @@ export const useVideo = (id: string): UseQueryResult<Video, unknown> => {
     queryFn: () => api.getVideo(id),
     enabled: Boolean(id),
     retry: noRetryOnClientError,
+  });
+};
+
+export const useEditableVideo = (
+  id: string,
+): UseQueryResult<Video, unknown> => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ['video', id],
+    queryFn: () => api.getVideo(id),
+    enabled: Boolean(id),
+    retry: noRetryOnClientError,
+    refetchInterval: (query) => {
+      const state = query.state.data?.processingState;
+      return state === 'uploading' || state === 'processing' ? 5000 : false;
+    },
+  });
+};
+
+export const useUpdateVideo = (id: string) => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (patch: VideoPatch) => api.updateVideo(id, patch),
+    onSuccess: (video) => {
+      queryClient.setQueryData(['video', id], video);
+      void queryClient.invalidateQueries({ queryKey: ['videos'] });
+    },
+  });
+};
+
+export const usePublishVideo = (id: string) => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (version: number) => api.publishVideo(id, version),
+    onSuccess: (video) => {
+      queryClient.setQueryData(['video', id], video);
+      void queryClient.invalidateQueries({ queryKey: ['videos'] });
+    },
+  });
+};
+
+export const useDeleteVideo = (id: string) => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.deleteVideo(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['videos'] }),
   });
 };
 

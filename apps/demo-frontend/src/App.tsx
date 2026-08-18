@@ -9,7 +9,8 @@ import Layout from './layout/Layout';
 import Home from './pages/Home';
 import Invites from './pages/Invites';
 import NotFound from './pages/NotFound';
-import StudioPlaceholder from './pages/StudioPlaceholder';
+import StudioUpload from './pages/StudioUpload';
+import StudioVideo from './pages/StudioVideo';
 import Watch from './pages/Watch';
 import GlobalStyles from './ui/GlobalStyles';
 
@@ -33,14 +34,8 @@ const App: FC = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/videos/:id" element={<Watch />} />
                 <Route path="/invites" element={<Invites />} />
-                <Route
-                  path="/studio/upload"
-                  element={<StudioPlaceholder title="Upload a demo" />}
-                />
-                <Route
-                  path="/studio/videos/:id"
-                  element={<StudioPlaceholder title="Edit chapters" />}
-                />
+                <Route path="/studio/upload" element={<StudioUpload />} />
+                <Route path="/studio/videos/:id" element={<StudioVideo />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

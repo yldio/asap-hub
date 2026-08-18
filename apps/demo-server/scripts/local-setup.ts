@@ -7,6 +7,7 @@ import {
   CreateBucketCommand,
   HeadBucketCommand,
   PutBucketCorsCommand,
+  PutBucketPolicyCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 
@@ -104,11 +105,37 @@ const setupBucket = async (): Promise<void> => {
   }
 };
 
+// lets the Vite proxy stream media straight from MinIO; local dev only
+const setupMediaReadPolicy = async (): Promise<void> => {
+  try {
+    await s3.send(
+      new PutBucketPolicyCommand({
+        Bucket: bucketName,
+        Policy: JSON.stringify({
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { AWS: ['*'] },
+              Action: ['s3:GetObject'],
+              Resource: [`arn:aws:s3:::${bucketName}/media/*`],
+            },
+          ],
+        }),
+      }),
+    );
+    console.log(`applied anonymous media read policy to ${bucketName}`);
+  } catch (error) {
+    console.log(`could not apply media read policy: ${String(error)}`);
+  }
+};
+
 const main = async (): Promise<void> => {
   console.log(`dynamodb: ${dynamodbEndpoint}`);
   console.log(`s3: ${s3Endpoint}`);
   await setupTable();
   await setupBucket();
+  await setupMediaReadPolicy();
   console.log('local demo-hub setup complete');
 };
 

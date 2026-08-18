@@ -10,13 +10,11 @@ import { chapterEndMs } from './playback';
 const panelStyles = css({
   position: 'absolute',
   right: rem(12),
-  bottom: '100%',
-  marginBottom: rem(8),
+  // anchored to the player wrapper, above the control bar
+  bottom: rem(88),
   width: rem(500),
   maxWidth: 'calc(100% - 24px)',
-  // vh, not %: the percentage would resolve against the control bar, which
-  // collapses the panel to a single row in fullscreen
-  maxHeight: 'min(60vh, 520px)',
+  maxHeight: `calc(100% - ${rem(112)})`,
   overflowY: 'auto',
   backgroundColor: 'rgba(20, 20, 20, 0.95)',
   border: `1px solid rgba(255, 255, 255, 0.15)`,

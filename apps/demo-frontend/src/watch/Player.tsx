@@ -504,16 +504,16 @@ const Player: FC<{
             {fullscreen ? <ExitFullscreenIcon /> : <EnterFullscreenIcon />}
           </button>
         </div>
-
-        {panelOpen && hasChapters && (
-          <ChaptersPanel
-            chapters={chapters}
-            durationMs={durationMs}
-            activeIndex={activeIndex}
-            onSelect={(chapter) => seekTo(chapter.startMs / 1000)}
-          />
-        )}
       </div>
+
+      {panelOpen && hasChapters && (
+        <ChaptersPanel
+          chapters={chapters}
+          durationMs={durationMs}
+          activeIndex={activeIndex}
+          onSelect={(chapter) => seekTo(chapter.startMs / 1000)}
+        />
+      )}
     </div>
   );
 };

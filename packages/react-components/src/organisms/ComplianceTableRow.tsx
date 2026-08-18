@@ -153,7 +153,6 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
-  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -265,7 +264,6 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
-  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
@@ -318,24 +316,22 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             </span>
           </Pill>
         </td>
-        {displayProjectColumn && (
-          <td>
-            {project?.title ? (
-              <p css={projectEntityStyles}>
-                <span css={projectIconStyles}>{projectConfig?.icon}</span>
-                <span css={projectTitleStyles} title={project.title}>
-                  {projectConfig?.href ? (
-                    <Link href={projectConfig.href}>{project.title}</Link>
-                  ) : (
-                    project.title
-                  )}
-                </span>
-              </p>
-            ) : (
-              '—'
-            )}
-          </td>
-        )}
+        <td>
+          {project?.title ? (
+            <p css={projectEntityStyles}>
+              <span css={projectIconStyles}>{projectConfig?.icon}</span>
+              <span css={projectTitleStyles} title={project.title}>
+                {projectConfig?.href ? (
+                  <Link href={projectConfig.href}>{project.title}</Link>
+                ) : (
+                  project.title
+                )}
+              </span>
+            </p>
+          ) : (
+            '—'
+          )}
+        </td>
         <td>
           {isUserBasedProject ? (
             '—'

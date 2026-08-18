@@ -23,7 +23,6 @@ describe('ComplianceTableRow', () => {
 
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
-    displayProjectColumn: false,
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     handleAssignUsersClick: jest.fn(),
@@ -101,7 +100,6 @@ describe('ComplianceTableRow', () => {
 
   it('renders an em dash for user-based projects', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -130,7 +128,6 @@ describe('ComplianceTableRow', () => {
     'renders $projectType project link and icon',
     ({ projectType, expectedHref, iconTitle }) => {
       renderComponent({
-        displayProjectColumn: true,
         data: {
           ...data,
           project: {
@@ -165,7 +162,6 @@ describe('ComplianceTableRow', () => {
 
   it('renders a plain project title when the project route is unavailable', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -183,7 +179,7 @@ describe('ComplianceTableRow', () => {
   });
 
   it('renders an em dash in the project column when no project exists', () => {
-    renderComponent({ displayProjectColumn: true });
+    renderComponent();
 
     expect(screen.getAllByRole('cell')[1]).toHaveTextContent('—');
   });

@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Api } from './api/client';
 import { TestApiProvider } from './api/ApiProvider';
-import type { Me } from './api/types';
+import type { Me, Video } from './api/types';
 import { AuthContext, AuthState } from './auth/AuthProvider';
 import { MeContext } from './auth/MeContext';
 
@@ -37,6 +37,27 @@ export const adminMe: Me = {
   email: 'dana@example.com',
   role: 'admin',
 };
+
+export const creatorMe: Me = {
+  sub: 'auth0|2',
+  name: 'Sam Creator',
+  email: 'sam@example.com',
+  role: 'creator',
+};
+
+export const makeVideo = (overrides: Partial<Video> = {}): Video => ({
+  id: 'video-1',
+  title: 'Sprint 42 demo',
+  status: 'published',
+  folderId: 'ROOT',
+  recordedAt: '2026-08-14T09:00:00.000Z',
+  durationMs: 600000,
+  chapters: [],
+  processingState: 'ready',
+  createdBy: { sub: 'auth0|2', name: 'Sam Creator' },
+  version: 1,
+  ...overrides,
+});
 
 export const renderApp = (
   children: ReactNode,

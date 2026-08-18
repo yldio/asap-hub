@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Navigate } from 'react-router';
 
 import { useDeleteUser, useUpdateUser, useUsers } from '../api/hooks';
@@ -14,6 +14,7 @@ import {
   Modal,
   Spinner,
 } from '../ui/components';
+import { TableFilters, useDebounced } from '../ui/TableFilters';
 import { charcoal, ember, lead, rem, rose, silver, steel } from '../ui/theme';
 import { formatRecordedAt } from '../utils/time';
 
@@ -96,6 +97,19 @@ const modalActionsStyles = css({
   marginTop: rem(24),
 });
 
+const roleOptions = [
+  { value: 'all', label: 'All roles' },
+  { value: 'member', label: 'Member' },
+  { value: 'creator', label: 'Creator' },
+  { value: 'admin', label: 'Admin' },
+];
+
+const statusOptions = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'active', label: 'Active' },
+  { value: 'revoked', label: 'Revoked' },
+];
+
 const Users: FC = () => {
   const isAdmin = useIsAdmin();
   const me = useMeContext();
@@ -104,6 +118,27 @@ const Users: FC = () => {
   const deleteUser = useDeleteUser();
   const [statusTarget, setStatusTarget] = useState<ManagedUser | undefined>();
   const [deleteTarget, setDeleteTarget] = useState<ManagedUser | undefined>();
+  const [query, setQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const debouncedQuery = useDebounced(query);
+
+  const items = users.data;
+  const visible = useMemo(() => {
+    const needle = debouncedQuery.trim().toLowerCase();
+    return (items ?? []).filter((user) => {
+      if (
+        needle &&
+        !user.name.toLowerCase().includes(needle) &&
+        !user.email.toLowerCase().includes(needle)
+      ) {
+        return false;
+      }
+      if (roleFilter !== 'all' && user.role !== roleFilter) return false;
+      if (statusFilter !== 'all' && user.status !== statusFilter) return false;
+      return true;
+    });
+  }, [items, debouncedQuery, roleFilter, statusFilter]);
 
   if (!isAdmin) return <Navigate to="/" replace />;
 
@@ -138,80 +173,106 @@ const Users: FC = () => {
           </p>
         )}
         {!users.isLoading && (
-          <table css={tableStyles}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Joined</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(users.data ?? []).map((user) => {
-                const isSelf = user.sub === me.sub;
-                return (
-                  <tr key={user.sub}>
-                    <td>
-                      {user.name} {isSelf && <span css={youStyles}>(you)</span>}
-                    </td>
-                    <td>{user.email}</td>
-                    <td>
-                      <select
-                        css={selectStyles}
-                        aria-label={`Role for ${user.email}`}
-                        value={user.role}
-                        disabled={isSelf || updateUser.isPending}
-                        onChange={(event) =>
-                          updateUser.mutate({
-                            sub: user.sub,
-                            role: event.currentTarget.value as Role,
-                          })
-                        }
-                      >
-                        <option value="member">Member</option>
-                        <option value="creator">Creator</option>
-                        <option value="admin">Admin</option>
-                      </select>
-                    </td>
-                    <td>
-                      {user.status === 'revoked' ? (
-                        <Badge tone="error">Revoked</Badge>
-                      ) : (
-                        <Badge>Active</Badge>
-                      )}
-                    </td>
-                    <td>{formatRecordedAt(user.createdAt)}</td>
-                    <td>
-                      {!isSelf && (
-                        <div css={actionsStyles}>
-                          <Button small onClick={() => setStatusTarget(user)}>
-                            {user.status === 'revoked' ? 'Re-enable' : 'Revoke'}
-                          </Button>
-                          <Button
-                            small
-                            danger
-                            onClick={() => setDeleteTarget(user)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      )}
+          <>
+            <TableFilters
+              searchLabel="Search users"
+              query={query}
+              onQueryChange={setQuery}
+              selects={[
+                {
+                  label: 'Filter by role',
+                  value: roleFilter,
+                  options: roleOptions,
+                  onChange: setRoleFilter,
+                },
+                {
+                  label: 'Filter by status',
+                  value: statusFilter,
+                  options: statusOptions,
+                  onChange: setStatusFilter,
+                },
+              ]}
+            />
+            <table css={tableStyles}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visible.map((user) => {
+                  const isSelf = user.sub === me.sub;
+                  return (
+                    <tr key={user.sub}>
+                      <td>
+                        {user.name}{' '}
+                        {isSelf && <span css={youStyles}>(you)</span>}
+                      </td>
+                      <td>{user.email}</td>
+                      <td>
+                        <select
+                          css={selectStyles}
+                          aria-label={`Role for ${user.email}`}
+                          value={user.role}
+                          disabled={isSelf || updateUser.isPending}
+                          onChange={(event) =>
+                            updateUser.mutate({
+                              sub: user.sub,
+                              role: event.currentTarget.value as Role,
+                            })
+                          }
+                        >
+                          <option value="member">Member</option>
+                          <option value="creator">Creator</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </td>
+                      <td>
+                        {user.status === 'revoked' ? (
+                          <Badge tone="error">Revoked</Badge>
+                        ) : (
+                          <Badge>Active</Badge>
+                        )}
+                      </td>
+                      <td>{formatRecordedAt(user.createdAt)}</td>
+                      <td>
+                        {!isSelf && (
+                          <div css={actionsStyles}>
+                            <Button small onClick={() => setStatusTarget(user)}>
+                              {user.status === 'revoked'
+                                ? 'Re-enable'
+                                : 'Revoke'}
+                            </Button>
+                            <Button
+                              small
+                              danger
+                              onClick={() => setDeleteTarget(user)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+                {visible.length === 0 && (
+                  <tr>
+                    <td colSpan={6} css={{ color: lead.rgb }}>
+                      {(items ?? []).length === 0
+                        ? 'Nobody has signed in yet.'
+                        : 'No users match'}
                     </td>
                   </tr>
-                );
-              })}
-              {(users.data ?? []).length === 0 && (
-                <tr>
-                  <td colSpan={6} css={{ color: lead.rgb }}>
-                    Nobody has signed in yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </>
         )}
       </Card>
 

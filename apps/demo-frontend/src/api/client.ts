@@ -315,6 +315,14 @@ export const createApi = (getToken: GetToken) => ({
     });
   },
 
+  cancelInvite: async (email: string): Promise<void> => {
+    await request<void>(
+      `/invites/${encodeURIComponent(email)}`,
+      await getToken(),
+      { method: 'DELETE' },
+    );
+  },
+
   listUsers: async (): Promise<ManagedUser[]> =>
     (await request<ListResponse<ManagedUser>>('/users', await getToken()))
       .items,

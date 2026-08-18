@@ -192,6 +192,15 @@ export const useCreateInvite = () => {
   });
 };
 
+export const useCancelInvite = () => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (email: string) => api.cancelInvite(email),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['invites'] }),
+  });
+};
+
 export const useUsers = (
   enabled: boolean,
 ): UseQueryResult<ManagedUser[], unknown> => {

@@ -15,7 +15,16 @@ import {
   Spinner,
 } from '../ui/components';
 import { TableFilters, useDebounced } from '../ui/TableFilters';
-import { charcoal, ember, lead, rem, rose, silver, steel } from '../ui/theme';
+import {
+  charcoal,
+  ember,
+  lead,
+  paper,
+  rem,
+  rose,
+  silver,
+  steel,
+} from '../ui/theme';
 import { formatRecordedAt } from '../utils/time';
 
 const tableStyles = css({
@@ -44,7 +53,7 @@ const selectStyles = css({
   padding: `${rem(6)} ${rem(8)}`,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(4),
-  backgroundColor: 'white',
+  backgroundColor: paper.rgb,
   ':disabled': { color: lead.rgb, backgroundColor: silver.rgb },
 });
 

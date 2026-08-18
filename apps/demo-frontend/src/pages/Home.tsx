@@ -81,6 +81,7 @@ import {
   pine,
   rem,
   rose,
+  shadowStrong,
   steel,
 } from '../ui/theme';
 import { folderCount, videoCount } from '../utils/format';
@@ -208,7 +209,7 @@ const dragOverlayStyles = css({
   color: paper.rgb,
   fontSize: rem(14),
   fontWeight: 'bold',
-  boxShadow: `0 ${rem(4)} ${rem(12)} rgba(0, 0, 0, 0.3)`,
+  boxShadow: `0 ${rem(4)} ${rem(12)} ${shadowStrong.rgb}`,
 });
 
 type FolderMenuState = { folder: Folder; position: MenuPosition };

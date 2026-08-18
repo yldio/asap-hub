@@ -12,6 +12,7 @@ import {
   paper,
   pine,
   rem,
+  shadowMedium,
   silver,
   steel,
   tin,
@@ -166,7 +167,7 @@ const popoverStyles = css({
   borderRadius: rem(8),
   border: `1px solid ${steel.rgb}`,
   backgroundColor: paper.rgb,
-  boxShadow: `0 ${rem(4)} ${rem(16)} rgba(0, 0, 0, 0.18)`,
+  boxShadow: `0 ${rem(4)} ${rem(16)} ${shadowMedium.rgb}`,
 });
 
 const popoverInputStyles = css({

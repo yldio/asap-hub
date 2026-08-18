@@ -8,11 +8,14 @@ import type { Video } from '../api/types';
 import { Badge } from '../ui/components';
 import {
   charcoal,
+  ember,
   lead,
   mint,
   paper,
   pine,
   rem,
+  shadowSoft,
+  shadowStrong,
   silver,
   steel,
   tin,
@@ -46,7 +49,7 @@ const shellStyles = css({
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(10),
   transition: 'box-shadow 150ms, border-color 150ms',
-  ':hover': { boxShadow: `0 ${rem(2)} ${rem(10)} rgba(0, 0, 0, 0.12)` },
+  ':hover': { boxShadow: `0 ${rem(2)} ${rem(10)} ${shadowSoft.rgb}` },
 });
 
 const selectedShellStyles = css({
@@ -119,14 +122,14 @@ const actionButtonStyles = css({
   padding: 0,
   border: 'none',
   borderRadius: rem(6),
-  backgroundColor: 'rgba(255, 255, 255, 0.92)',
+  backgroundColor: paper.rgb,
   color: charcoal.rgb,
   cursor: 'pointer',
-  boxShadow: `0 ${rem(1)} ${rem(4)} rgba(0, 0, 0, 0.25)`,
+  boxShadow: `0 ${rem(1)} ${rem(4)} ${shadowStrong.rgb}`,
   ':hover': { backgroundColor: silver.rgb },
 });
 
-const dangerActionStyles = css({ color: '#B7362C' });
+const dangerActionStyles = css({ color: ember.rgb });
 
 const stop = (event: ReactMouseEvent) => event.stopPropagation();
 

@@ -12,6 +12,7 @@ import {
   lead,
   paper,
   rem,
+  shadowSoft,
   steel,
 } from '../ui/theme';
 import { videoCount } from '../utils/format';
@@ -28,7 +29,7 @@ const cardStyles = css({
   color: charcoal.rgb,
   textDecoration: 'none',
   transition: 'box-shadow 150ms, border-color 150ms',
-  ':hover': { boxShadow: `0 ${rem(2)} ${rem(10)} rgba(0, 0, 0, 0.1)` },
+  ':hover': { boxShadow: `0 ${rem(2)} ${rem(10)} ${shadowSoft.rgb}` },
 });
 
 const overStyles = css({

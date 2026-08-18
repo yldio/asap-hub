@@ -9,7 +9,17 @@ import {
   useState,
 } from 'react';
 
-import { charcoal, lead, paper, rem, silver, steel, tin } from './theme';
+import {
+  charcoal,
+  ember,
+  lead,
+  paper,
+  rem,
+  shadowMedium,
+  silver,
+  steel,
+  tin,
+} from './theme';
 
 const menuStyles = css({
   position: 'fixed',
@@ -19,7 +29,7 @@ const menuStyles = css({
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(6),
-  boxShadow: `0 ${rem(4)} ${rem(16)} rgba(0, 0, 0, 0.18)`,
+  boxShadow: `0 ${rem(4)} ${rem(16)} ${shadowMedium.rgb}`,
 });
 
 const itemStyles = css({
@@ -41,7 +51,7 @@ const itemStyles = css({
   ':disabled': { color: tin.rgb, cursor: 'default' },
 });
 
-const dangerItemStyles = css({ color: '#B7362C' });
+const dangerItemStyles = css({ color: ember.rgb });
 
 const separatorStyles = css({
   height: 1,

@@ -11,6 +11,20 @@
       rel="stylesheet"
     />
     <title>ASAP Demos</title>
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('demo-hub.theme') || 'system';
+          var dark =
+            mode === 'dark' ||
+            (mode === 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

@@ -2,7 +2,16 @@
 import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
-import { charcoal, fern, mint, paper, rem, silver, steel } from './theme';
+import {
+  charcoal,
+  fern,
+  mint,
+  paper,
+  rem,
+  shadowSoft,
+  silver,
+  steel,
+} from './theme';
 
 const wrapperStyles = css({ position: 'relative', display: 'inline-flex' });
 
@@ -38,7 +47,7 @@ const panelStyles = css({
   backgroundColor: paper.rgb,
   border: `1px solid ${silver.rgb}`,
   borderRadius: rem(6),
-  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.12)',
+  boxShadow: `0 6px 20px ${shadowSoft.rgb}`,
 });
 
 const optionStyles = css({

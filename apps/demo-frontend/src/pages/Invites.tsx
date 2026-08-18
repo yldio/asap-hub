@@ -14,7 +14,7 @@ import {
   Spinner,
 } from '../ui/components';
 import { TableFilters, useDebounced } from '../ui/TableFilters';
-import { charcoal, ember, lead, rem, silver, steel } from '../ui/theme';
+import { charcoal, ember, lead, paper, rem, silver, steel } from '../ui/theme';
 import { roleLabel } from '../utils/format';
 import { formatRecordedAt } from '../utils/time';
 
@@ -46,7 +46,7 @@ const controlStyles = css({
   padding: `${rem(10)} ${rem(12)}`,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(4),
-  backgroundColor: 'white',
+  backgroundColor: paper.rgb,
 });
 
 const tableStyles = css({

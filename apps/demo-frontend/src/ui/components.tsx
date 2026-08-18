@@ -10,9 +10,12 @@ import {
   headlineStyles,
   lead,
   paper,
+  overlay,
   pine,
   rem,
   rose,
+  shadowSoft,
+  shadowStrong,
   silver,
   steel,
   tin,
@@ -125,7 +128,7 @@ const cardStyles = css({
   borderStyle: 'solid',
   borderColor: steel.rgb,
   borderRadius: rem(8),
-  boxShadow: `0px 2px 4px ${steel.rgb}`,
+  boxShadow: `0px 2px 4px ${shadowSoft.rgb}`,
 });
 
 export const Card: FC<{
@@ -192,7 +195,7 @@ const overlayStyles = css({
   alignItems: 'center',
   justifyContent: 'center',
   padding: rem(24),
-  backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  backgroundColor: overlay.rgb,
 });
 
 const modalCardStyles = css({
@@ -204,7 +207,7 @@ const modalCardStyles = css({
   padding: rem(24),
   backgroundColor: paper.rgb,
   borderRadius: rem(8),
-  boxShadow: `0 ${rem(8)} ${rem(24)} rgba(0, 0, 0, 0.25)`,
+  boxShadow: `0 ${rem(8)} ${rem(24)} ${shadowStrong.rgb}`,
 });
 
 export const Modal: FC<{

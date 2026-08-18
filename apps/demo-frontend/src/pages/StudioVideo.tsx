@@ -31,6 +31,7 @@ import {
   charcoal,
   ember,
   lead,
+  overlay,
   paper,
   pearl,
   rem,
@@ -136,7 +137,7 @@ const dialogStyles = css({
   zIndex: 20,
   display: 'grid',
   placeItems: 'center',
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  backgroundColor: overlay.rgb,
   padding: rem(24),
 });
 

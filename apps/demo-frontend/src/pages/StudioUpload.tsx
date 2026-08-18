@@ -8,7 +8,16 @@ import { useFolders } from '../api/hooks';
 import type { CreatedUpload, UploadedPart } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import { Button, Card, Headline } from '../ui/components';
-import { charcoal, ember, fern, lead, rem, silver, steel } from '../ui/theme';
+import {
+  charcoal,
+  ember,
+  fern,
+  lead,
+  paper,
+  rem,
+  silver,
+  steel,
+} from '../ui/theme';
 import { planParts, uploadParts } from '../studio/upload';
 import { buildTree, flattenTree } from '../library/tree';
 
@@ -29,7 +38,7 @@ const controlStyles = css({
   padding: `${rem(10)} ${rem(12)}`,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(4),
-  backgroundColor: 'white',
+  backgroundColor: paper.rgb,
 });
 
 const rowStyles = css({

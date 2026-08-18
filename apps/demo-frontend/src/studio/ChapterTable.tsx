@@ -3,7 +3,16 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import { Button } from '../ui/components';
-import { charcoal, ember, lead, mint, rem, silver, steel } from '../ui/theme';
+import {
+  charcoal,
+  ember,
+  lead,
+  mint,
+  paper,
+  rem,
+  silver,
+  steel,
+} from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import { ChapterRow, endMsOf } from './chapters';
 
@@ -38,7 +47,7 @@ const inputStyles = css({
   padding: `${rem(6)} ${rem(8)}`,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(4),
-  backgroundColor: 'white',
+  backgroundColor: paper.rgb,
   width: '100%',
   boxSizing: 'border-box' as const,
 });

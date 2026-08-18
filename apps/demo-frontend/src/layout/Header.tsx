@@ -5,8 +5,26 @@ import { Link } from 'react-router';
 
 import { useAuth } from '../auth/AuthProvider';
 import { useIsAdmin, useIsCreator, useMeContext } from '../auth/MeContext';
+import { AutoThemeIcon, MoonIcon, SunIcon } from '../library/icons';
 import { Button } from '../ui/components';
-import { charcoal, lead, paper, rem, silver, steel } from '../ui/theme';
+import {
+  charcoal,
+  lead,
+  paper,
+  rem,
+  shadowMedium,
+  silver,
+  steel,
+} from '../ui/theme';
+import {
+  applyThemeMode,
+  darkMediaQuery,
+  nextThemeMode,
+  readThemeMode,
+  themeModeLabels,
+  writeThemeMode,
+  type ThemeMode,
+} from '../ui/themeMode';
 
 const headerStyles = css({
   position: 'sticky',
@@ -57,7 +75,7 @@ const menuStyles = css({
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
   borderRadius: rem(8),
-  boxShadow: `0px 4px 12px ${steel.rgb}`,
+  boxShadow: `0px 4px 12px ${shadowMedium.rgb}`,
   padding: rem(16),
   display: 'grid',
   gap: rem(12),
@@ -81,6 +99,62 @@ const menuLinkStyles = css({
   textDecoration: 'none',
   ':hover': { textDecoration: 'underline' },
 });
+
+const themeToggleStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(8),
+  width: '100%',
+  padding: `${rem(6)} ${rem(8)}`,
+  margin: `0 ${rem(-8)}`,
+  border: 'none',
+  borderRadius: rem(6),
+  background: 'none',
+  font: 'inherit',
+  fontSize: rem(14),
+  color: charcoal.rgb,
+  textAlign: 'left',
+  cursor: 'pointer',
+  ':hover, :focus-visible': { backgroundColor: silver.rgb },
+});
+
+const themeValueStyles = css({ marginLeft: 'auto', color: lead.rgb });
+
+const themeIcons: Record<ThemeMode, FC<{ readonly size?: number }>> = {
+  light: SunIcon,
+  dark: MoonIcon,
+  system: AutoThemeIcon,
+};
+
+const ThemeToggle: FC = () => {
+  const [mode, setMode] = useState<ThemeMode>(readThemeMode);
+  const Icon = themeIcons[mode];
+
+  useEffect(() => {
+    const media = darkMediaQuery();
+    if (!media || mode !== 'system') return undefined;
+    const onChange = () => applyThemeMode('system');
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, [mode]);
+
+  return (
+    <button
+      type="button"
+      css={themeToggleStyles}
+      aria-label={`Theme: ${themeModeLabels[mode]}. Change theme`}
+      onClick={() => {
+        const next = nextThemeMode(mode);
+        setMode(next);
+        writeThemeMode(next);
+      }}
+    >
+      <Icon />
+      <span>Theme</span>
+      <span css={themeValueStyles}>{themeModeLabels[mode]}</span>
+    </button>
+  );
+};
 
 const Header: FC = () => {
   const me = useMeContext();
@@ -148,6 +222,7 @@ const Header: FC = () => {
                   Manage users
                 </Link>
               )}
+              <ThemeToggle />
               <Button small onClick={logout}>
                 Sign out
               </Button>

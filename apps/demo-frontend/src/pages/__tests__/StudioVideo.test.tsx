@@ -161,6 +161,23 @@ describe('with a debounced autosave', () => {
   const user = () =>
     userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
+  // advances fake time in explicit act() steps: waitFor's own fake-timer
+  // auto-advance is environment sensitive and flaked on slow CI runners
+  const pumpUntil = async (assertion: () => void) => {
+    for (let i = 0; i < 50; i += 1) {
+      try {
+        assertion();
+        return;
+      } catch {
+        await act(async () => {
+          jest.advanceTimersByTime(200);
+          await Promise.resolve();
+        });
+      }
+    }
+    assertion();
+  };
+
   it('saves chapters with the current version and adopts the version from the response', async () => {
     const updateVideo = jest
       .fn()
@@ -179,11 +196,7 @@ describe('with a debounced autosave', () => {
       'Intro',
     );
 
-    await act(async () => {
-      jest.advanceTimersByTime(1600);
-    });
-
-    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(1));
+    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(1));
     expect(updateVideo.mock.calls[0]?.[1]).toMatchObject({
       version: 3,
       chapters: [{ startMs: 0, title: 'Intro' }],
@@ -191,11 +204,7 @@ describe('with a debounced autosave', () => {
 
     await events.type(screen.getByLabelText('Title of chapter 1'), ' updated');
 
-    await act(async () => {
-      jest.advanceTimersByTime(1600);
-    });
-
-    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(2));
+    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(2));
     expect(updateVideo.mock.calls[1]?.[1]).toMatchObject({ version: 4 });
   });
 
@@ -218,11 +227,7 @@ describe('with a debounced autosave', () => {
 
     expect(updateVideo).not.toHaveBeenCalled();
 
-    await act(async () => {
-      jest.advanceTimersByTime(1600);
-    });
-
-    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(1));
+    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(1));
   });
 });
 

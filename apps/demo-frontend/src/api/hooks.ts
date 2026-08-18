@@ -89,7 +89,11 @@ export const useVideo = (id: string): UseQueryResult<Video, unknown> => {
     queryKey: ['video', id],
     queryFn: () => api.getVideo(id),
     enabled: Boolean(id),
-    retry: noRetryOnClientError,
+    // a freshly created video can 404 for a moment right after upload
+    retry: (count, error) =>
+      error instanceof ApiError && error.status === 404
+        ? count < 3
+        : noRetryOnClientError(count, error),
   });
 };
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
-import { requireCreator } from '../auth';
+import { canViewDrafts, requireCreator } from '../auth';
 import { folderEntity, videoEntity } from '../data/entities';
 import { createFolderSchema, updateFolderSchema } from '../schemas';
 import { deleteVideoCascade } from './cascade';
@@ -58,8 +58,7 @@ export const foldersRouter = (): Router => {
   router.get('/counts', async (req, res) => {
     const { data } = await folderEntity.query.all({}).go({ pages: 'all' });
     const folderIds = [rootFolderId, ...data.map(({ id }) => id)];
-    const isCreator =
-      req.user?.role === 'creator' || req.user?.role === 'admin';
+    const isCreator = canViewDrafts(req.user?.role);
 
     const entries = await Promise.all(
       folderIds.map(async (folderId) => {

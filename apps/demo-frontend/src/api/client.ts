@@ -80,6 +80,11 @@ const request = async <T>(
       ? undefined
       : await response.json().catch(() => undefined);
 
+  // a 200 with an unparseable body is the SPA fallback masking an api miss
+  if (response.ok && response.status !== 204 && payload === undefined) {
+    throw new ApiError(response.status, `Request to ${path} returned no JSON`);
+  }
+
   if (!response.ok) {
     const envelope =
       payload && typeof payload === 'object'

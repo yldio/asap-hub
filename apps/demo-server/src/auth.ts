@@ -240,6 +240,9 @@ export const requireCreator = (
   next();
 };
 
+export const canViewDrafts = (role?: string): boolean =>
+  role === 'creator' || role === 'admin';
+
 export const requireAdmin = (
   req: Request,
   res: Response,

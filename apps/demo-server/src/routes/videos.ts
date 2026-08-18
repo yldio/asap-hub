@@ -1,7 +1,7 @@
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { Request, Response, Router } from 'express';
-import { requireCreator } from '../auth';
+import { canViewDrafts, requireCreator } from '../auth';
 import { getTableName, isLocal } from '../config';
 import { getDocumentClient } from '../data/client';
 import { folderEntity, videoEntity } from '../data/entities';
@@ -63,8 +63,7 @@ export const videosRouter = (): Router => {
 
   router.get('/', async (req: Request, res: Response) => {
     const folderId = (req.query.folderId as string | undefined) || 'ROOT';
-    const isCreator =
-      req.user?.role === 'creator' || req.user?.role === 'admin';
+    const isCreator = canViewDrafts(req.user?.role);
 
     const query = isCreator
       ? videoEntity.query.byFolder({ folderId })
@@ -83,8 +82,7 @@ export const videosRouter = (): Router => {
   });
 
   router.get('/all', async (req: Request, res: Response) => {
-    const isCreator =
-      req.user?.role === 'creator' || req.user?.role === 'admin';
+    const isCreator = canViewDrafts(req.user?.role);
     const { data: folders } = await folderEntity.query
       .all({})
       .go({ pages: 'all' });
@@ -191,7 +189,7 @@ export const videosRouter = (): Router => {
       res.status(404).json({ error: 'not_found' });
       return;
     }
-    if (req.user?.role !== 'creator' && data.status !== 'published') {
+    if (!canViewDrafts(req.user?.role) && data.status !== 'published') {
       res.status(404).json({ error: 'not_found' });
       return;
     }
@@ -518,7 +516,7 @@ export const videosRouter = (): Router => {
       res.status(404).json({ error: 'not_found' });
       return;
     }
-    if (req.user?.role !== 'creator' && data.status !== 'published') {
+    if (!canViewDrafts(req.user?.role) && data.status !== 'published') {
       res.status(403).json({ error: 'forbidden' });
       return;
     }

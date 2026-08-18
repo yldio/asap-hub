@@ -232,6 +232,9 @@ const serverlessConfig: AWS = {
     'serverless-offline': {
       httpPort: 5555,
       ignoreJWTSignature: true,
+      // local /media/* streams large files through the handler; the emulated
+      // 16s lambda timeout would cut playback off (deployed media bypasses lambda)
+      noTimeout: true,
       corsAllowOrigin: localAppUrl,
       useWorkerThreads: false,
     },

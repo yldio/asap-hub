@@ -1213,6 +1213,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/demo-server@workspace:apps/demo-server":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/demo-server@workspace:apps/demo-server"
+  dependencies:
+    "@aws-sdk/client-dynamodb": "npm:^3.687.0"
+    "@aws-sdk/client-s3": "npm:^3.758.0"
+    "@aws-sdk/lib-dynamodb": "npm:^3.687.0"
+    "@aws-sdk/s3-request-presigner": "npm:^3.758.0"
+    "@babel/preset-env": "npm:7.28.6"
+    "@babel/preset-typescript": "npm:7.28.5"
+    "@babel/runtime-corejs3": "npm:7.28.6"
+    "@serverless/typescript": "npm:3.38.0"
+    "@types/aws-lambda": "npm:8.10.159"
+    "@types/express": "npm:4.17.21"
+    "@types/jest": "npm:29.5.14"
+    "@types/node": "npm:20.10.5"
+    "@types/serverless": "npm:3.12.27"
+    "@types/uuid": "npm:8.3.4"
+    "@yarnpkg/pnpify": "npm:3.1.8"
+    electrodb: "npm:^3.9.3"
+    esbuild: "npm:^0.25.0"
+    express: "npm:4.20.0"
+    serverless: "npm:3.38.0"
+    serverless-esbuild: "npm:^1.57.2"
+    serverless-http: "npm:2.7.0"
+    serverless-offline: "npm:13.10.0"
+    serverless-s3-sync: "npm:3.2.0"
+    uuid: "npm:8.3.2"
+    zod: "npm:^3.24.1"
+  dependenciesMeta:
+    serverless:
+      built: false
+    serverless-s3-sync:
+      unplugged: true
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/dom-test-utils@workspace:*, @asap-hub/dom-test-utils@workspace:packages/dom-test-utils":
   version: 0.0.0-use.local
   resolution: "@asap-hub/dom-test-utils@workspace:packages/dom-test-utils"
@@ -2834,6 +2871,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/core@npm:^3.977.8":
+  version: 3.977.8
+  resolution: "@aws-sdk/core@npm:3.977.8"
+  dependencies:
+    "@aws-sdk/types": "npm:^3.974.4"
+    "@aws-sdk/xml-builder": "npm:^3.972.39"
+    "@aws/lambda-invoke-store": "npm:^0.3.0"
+    "@smithy/core": "npm:^3.31.1"
+    "@smithy/signature-v4": "npm:^5.6.12"
+    "@smithy/types": "npm:^4.16.1"
+    bowser: "npm:^2.11.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/201c1c962b313079aa077a34eab81762d7da2f391a8e1a40ebb6594b5bd65fe19120713f93abc5a732a7c3aeed4e66f14cff5e595411de9d3eaba14ae3f5d679
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/crc64-nvme@npm:3.969.0":
   version: 3.969.0
   resolution: "@aws-sdk/crc64-nvme@npm:3.969.0"
@@ -3242,6 +3295,21 @@ __metadata:
     mnemonist: "npm:0.38.3"
     tslib: "npm:^2.6.2"
   checksum: 10/abb10e8932cb09962a43d0fb2f2ec4887c90f414a0589fc8fec6e26284bf64db6688fbee7235c0e36488fb6222c49c2369f65755bc01e3b420a00522fc5e2087
+  languageName: node
+  linkType: hard
+
+"@aws-sdk/lib-dynamodb@npm:^3.654.0, @aws-sdk/lib-dynamodb@npm:^3.687.0":
+  version: 3.1112.0
+  resolution: "@aws-sdk/lib-dynamodb@npm:3.1112.0"
+  dependencies:
+    "@aws-sdk/core": "npm:^3.977.8"
+    "@aws-sdk/util-dynamodb": "npm:^3.996.9"
+    "@smithy/core": "npm:^3.31.1"
+    "@smithy/types": "npm:^4.16.1"
+    tslib: "npm:^2.6.2"
+  peerDependencies:
+    "@aws-sdk/client-dynamodb": ^3.1112.0
+  checksum: 10/92a1af53813b5e309f3b300a47dc53735999570e43c422ddc220b17af61310740d6dbb98486552e672dea7f292332f81a5ba281aa023fc147045cd27a2e17181
   languageName: node
   linkType: hard
 
@@ -3720,12 +3788,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/types@npm:^3.974.4":
+  version: 3.974.4
+  resolution: "@aws-sdk/types@npm:3.974.4"
+  dependencies:
+    "@smithy/types": "npm:^4.16.1"
+    tslib: "npm:^2.6.2"
+  checksum: 10/0724780fb930f013fc9b15a4dea2bb0b37013083169d764d1180cdf24d79b2cc2804ab436cddfc8225f8a922d567bcacf9729ffa076c9b7dc4644bfa23d95597
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/util-arn-parser@npm:3.968.0":
   version: 3.968.0
   resolution: "@aws-sdk/util-arn-parser@npm:3.968.0"
   dependencies:
     tslib: "npm:^2.6.2"
   checksum: 10/5e65417386f31158a6704c177ba154f631ed28ba76163b79f3a0c40f445284e8b36e628e9465ead7c9ff36e1ae06751e7eadb643770c8a8335b910917bda7456
+  languageName: node
+  linkType: hard
+
+"@aws-sdk/util-dynamodb@npm:^3.654.0, @aws-sdk/util-dynamodb@npm:^3.996.9":
+  version: 3.996.9
+  resolution: "@aws-sdk/util-dynamodb@npm:3.996.9"
+  dependencies:
+    tslib: "npm:^2.6.2"
+  peerDependencies:
+    "@aws-sdk/client-dynamodb": ^3.1111.0
+  checksum: 10/23962e56d744c23904817edeb90434e5ab6153e78b7305cec897c3bece772ea96e650e932cae8ad3e2bec8e4fa154cbebf1b3e3de04ac81aff10ed1d7e8ce54d
   languageName: node
   linkType: hard
 
@@ -3869,6 +3958,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/xml-builder@npm:^3.972.39":
+  version: 3.972.39
+  resolution: "@aws-sdk/xml-builder@npm:3.972.39"
+  dependencies:
+    "@smithy/types": "npm:^4.16.1"
+    tslib: "npm:^2.6.2"
+  checksum: 10/404ee6f35a422069b99a860c7ebcbcebc3ac8af966dd3059a002aa9e6ddc407a95fc340f8cecade0f4be563da174833ba3ed36de4a0086b0753ba83e11b97bb8
+  languageName: node
+  linkType: hard
+
 "@aws/lambda-invoke-store@npm:^0.1.1":
   version: 0.1.1
   resolution: "@aws/lambda-invoke-store@npm:0.1.1"
@@ -3880,6 +3979,13 @@ __metadata:
   version: 0.2.3
   resolution: "@aws/lambda-invoke-store@npm:0.2.3"
   checksum: 10/d0efa8ca73b2d8dc0bf634525eefa1b72cda85f5d47366264849343a6f2860cfa5c52b7f766a16b78da8406bbd3ee975da3abb1dbe38183f8af95413eafeb256
+  languageName: node
+  linkType: hard
+
+"@aws/lambda-invoke-store@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@aws/lambda-invoke-store@npm:0.3.0"
+  checksum: 10/4a6c7af16477dd330d4dcd2269f89370be68295b54ae1e90ef8c2175efa4df6735f9a3f914ab7efa21ba7db5477031fe8488853adcd268eeb6cb8e34ad06b206
   languageName: node
   linkType: hard
 
@@ -13999,6 +14105,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@smithy/core@npm:^3.31.1, @smithy/core@npm:^3.33.2":
+  version: 3.33.2
+  resolution: "@smithy/core@npm:3.33.2"
+  dependencies:
+    "@smithy/types": "npm:^4.17.2"
+    tslib: "npm:^2.6.2"
+  checksum: 10/9a7bdacb40e9e79b11de4efc8538cdb302e3228d17e99f5bebe25d695dd57107322b0a8e7dcbcd73844521a1c4b04048043e50e0c82771d59d47710634b44535
+  languageName: node
+  linkType: hard
+
 "@smithy/credential-provider-imds@npm:^4.2.5":
   version: 4.2.5
   resolution: "@smithy/credential-provider-imds@npm:4.2.5"
@@ -14578,6 +14694,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@smithy/signature-v4@npm:^5.6.12":
+  version: 5.7.2
+  resolution: "@smithy/signature-v4@npm:5.7.2"
+  dependencies:
+    "@smithy/core": "npm:^3.33.2"
+    "@smithy/types": "npm:^4.17.2"
+    tslib: "npm:^2.6.2"
+  checksum: 10/47b59515c2cc9273ba18dbe4d840f6c64d203373a73520c25b366ae9e3b508d863ea36a14be0fd92a2ede187b14a63f4ae1c09d2c55e57d04012d0276d42715d
+  languageName: node
+  linkType: hard
+
 "@smithy/smithy-client@npm:^4.10.8":
   version: 4.10.8
   resolution: "@smithy/smithy-client@npm:4.10.8"
@@ -14623,6 +14750,15 @@ __metadata:
   dependencies:
     tslib: "npm:^2.6.2"
   checksum: 10/e41a84ec3eb9feb45040ccd541b1cacf0fc2375297802886459cb9311ff361080978c08ef98e9ad69f41d80ad212279d682a8fe30a993381b2f1dd376c1006c3
+  languageName: node
+  linkType: hard
+
+"@smithy/types@npm:^4.16.1, @smithy/types@npm:^4.17.2":
+  version: 4.17.2
+  resolution: "@smithy/types@npm:4.17.2"
+  dependencies:
+    tslib: "npm:^2.6.2"
+  checksum: 10/e54500bb56a12a6f92374d6095834af04f19868e5178836b21fdcbce0c0fef0570dede2a39777b9d3330075d55096db206867f73ddf4dfe530d1b392f8d0aea9
   languageName: node
   linkType: hard
 
@@ -23425,6 +23561,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"electrodb@npm:^3.9.3":
+  version: 3.9.3
+  resolution: "electrodb@npm:3.9.3"
+  dependencies:
+    "@aws-sdk/lib-dynamodb": "npm:^3.654.0"
+    "@aws-sdk/util-dynamodb": "npm:^3.654.0"
+    jsonschema: "npm:1.5.0"
+  checksum: 10/d1335ba0a1143b346c3cd858aee7836d02f904df389f9b4b01f60b996675a932bcab2ea8dc847310a443dc1a1dce18af76554a7c56f544378677370a5bdbefe2
+  languageName: node
+  linkType: hard
+
 "electron-to-chromium@npm:^1.5.249":
   version: 1.5.252
   resolution: "electron-to-chromium@npm:1.5.252"
@@ -31084,7 +31231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonschema@npm:^1.4.1":
+"jsonschema@npm:1.5.0, jsonschema@npm:^1.4.1":
   version: 1.5.0
   resolution: "jsonschema@npm:1.5.0"
   checksum: 10/46bf49b388ba922073bcb3c8d5e90af9d29fc8303dc866fd440182c88d6b4fd2807679fd39cdefb4113156d104ea47da9c0ff4bbcb0032c9fa29461cb1a92182

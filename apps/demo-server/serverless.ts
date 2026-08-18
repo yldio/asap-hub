@@ -595,8 +595,11 @@ const serverlessConfig: AWS = {
                 DefaultTTL: 0,
                 MaxTTL: 0,
                 ForwardedValues: {
+                  // 'none' makes CloudFront strip Set-Cookie from responses,
+                  // which silently discards the signed media cookies; TTLs are
+                  // all zero so forwarding cookies cannot poison a cache
                   Cookies: {
-                    Forward: 'none',
+                    Forward: 'all',
                   },
                   QueryString: true,
                   Headers: [

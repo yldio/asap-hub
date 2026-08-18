@@ -176,6 +176,11 @@ export const VideoCard: FC<VideoCardProps> = ({
           <span>{folderName}</span>
         </>
       )}
+      {isCreator && (
+        <span css={{ marginLeft: 'auto' }}>
+          <VideoStatusBadge video={video} />
+        </span>
+      )}
     </div>
   );
 
@@ -279,7 +284,6 @@ export const VideoCard: FC<VideoCardProps> = ({
             <div css={{ display: 'grid', gap: rem(6), padding: `0 ${rem(2)}` }}>
               {title}
               {meta}
-              {isCreator && <VideoStatusBadge video={video} />}
             </div>
           </>
         ) : (
@@ -295,7 +299,6 @@ export const VideoCard: FC<VideoCardProps> = ({
               {title}
               {meta}
             </div>
-            {isCreator && <VideoStatusBadge video={video} />}
           </>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ApiError } from '../../api/client';
@@ -150,34 +150,8 @@ it('shows an inline error for an unparseable timecode and does not save it', asy
 });
 
 describe('with a debounced autosave', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  const user = () =>
-    userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-
-  // advances fake time in explicit act() steps: waitFor's own fake-timer
-  // auto-advance is environment sensitive and flaked on slow CI runners
-  const pumpUntil = async (assertion: () => void) => {
-    for (let i = 0; i < 50; i += 1) {
-      try {
-        assertion();
-        return;
-      } catch {
-        await act(async () => {
-          jest.advanceTimersByTime(200);
-          await Promise.resolve();
-        });
-      }
-    }
-    assertion();
-  };
-
+  // real timers on purpose: jest's fake timers interact with React's
+  // scheduling differently across environments and flaked on CI runners
   it('saves chapters with the current version and adopts the version from the response', async () => {
     const updateVideo = jest
       .fn()
@@ -185,28 +159,34 @@ describe('with a debounced autosave', () => {
       .mockResolvedValueOnce({ ...video, version: 5 });
 
     renderEditor({ updateVideo });
-    const events = user();
 
     await screen.findByTestId('studio-video');
     setPlayhead(90);
-    await events.keyboard('m');
+    await userEvent.keyboard('m');
 
-    await events.type(
+    await userEvent.type(
       await screen.findByLabelText('Title of chapter 1'),
       'Intro',
     );
 
-    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(1), {
+      timeout: 5000,
+    });
     expect(updateVideo.mock.calls[0]?.[1]).toMatchObject({
       version: 3,
       chapters: [{ startMs: 0, title: 'Intro' }],
     });
 
-    await events.type(screen.getByLabelText('Title of chapter 1'), ' updated');
+    await userEvent.type(
+      screen.getByLabelText('Title of chapter 1'),
+      ' updated',
+    );
 
-    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(2), {
+      timeout: 5000,
+    });
     expect(updateVideo.mock.calls[1]?.[1]).toMatchObject({ version: 4 });
-  });
+  }, 15000);
 
   it('coalesces rapid edits into a single save', async () => {
     const updateVideo = jest.fn(() =>
@@ -214,21 +194,26 @@ describe('with a debounced autosave', () => {
     );
 
     renderEditor({ updateVideo });
-    const events = user();
 
     await screen.findByTestId('studio-video');
     setPlayhead(90);
-    await events.keyboard('m');
+    await userEvent.keyboard('m');
 
-    await events.type(
+    await userEvent.type(
       await screen.findByLabelText('Title of chapter 1'),
       'Introduction',
     );
 
     expect(updateVideo).not.toHaveBeenCalled();
 
-    await pumpUntil(() => expect(updateVideo).toHaveBeenCalledTimes(1));
-  });
+    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(1), {
+      timeout: 5000,
+    });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1700);
+    });
+    expect(updateVideo).toHaveBeenCalledTimes(1);
+  }, 15000);
 });
 
 it('renders a read-only banner naming the lease holder on 409', async () => {

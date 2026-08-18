@@ -15,7 +15,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    environment: Development
+    # Development is protected to master; PR runs deploy via the Branch environment
+    environment: ${{ github.event_name == 'pull_request' && 'Branch' || 'Development' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +24,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Development
+          environment-name: ${{ github.event_name == 'pull_request' && 'Branch' || 'Development' }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Buildx

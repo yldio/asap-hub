@@ -150,10 +150,13 @@ it('ignores pointer input when the duration is unknown', () => {
   expect(onHover).not.toHaveBeenCalled();
 });
 
-it('ignores pointer input on a zero width bar', () => {
+// a zero width bar has no meaningful ratio, so ratioAt clamps to 0 and the
+// press seeks to the start rather than being dropped
+it('seeks to the start on a zero width bar', () => {
   const { bar, onSeek } = renderBar({}, 0);
 
   firePointer('pointerDown', bar, { clientX: BAR_LEFT + 100, pointerId: 1 });
 
+  expect(onSeek).toHaveBeenCalledTimes(1);
   expect(onSeek).toHaveBeenCalledWith(0);
 });

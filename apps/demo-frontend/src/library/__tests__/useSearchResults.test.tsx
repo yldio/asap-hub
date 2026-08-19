@@ -92,3 +92,28 @@ it('starts the sweep only once a query arrives', async () => {
   await waitFor(() => expect(result.current.results).toHaveLength(2));
   expect(listVideos).toHaveBeenCalledTimes(folders.length);
 });
+
+it('still returns the folders that resolved when one folder fails', async () => {
+  const listVideos = jest.fn((folderId: string) =>
+    folderId === 'f-eng'
+      ? Promise.reject(new Error('boom'))
+      : Promise.resolve(byFolder[folderId] ?? []),
+  );
+  const { result } = renderSearch('sprint', listVideos);
+
+  // the healthy folder still contributes; a partial outage must not blank search
+  await waitFor(() =>
+    expect(result.current.results.map(({ video }) => video.id)).toEqual([
+      'v-root',
+    ]),
+  );
+  expect(result.current.isLoading).toBe(false);
+});
+
+it('settles with no results when every folder fails', async () => {
+  const listVideos = jest.fn(() => Promise.reject(new Error('offline')));
+  const { result } = renderSearch('sprint', listVideos);
+
+  await waitFor(() => expect(result.current.isLoading).toBe(false));
+  expect(result.current.results).toEqual([]);
+});

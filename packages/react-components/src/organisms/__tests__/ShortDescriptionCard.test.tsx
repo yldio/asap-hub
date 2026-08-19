@@ -70,4 +70,64 @@ describe('ShortDescriptionCard', () => {
     });
     expect(regenerateButton).toBeVisible();
   });
+
+  it('shows an error message and keeps the field editable when generation fails', async () => {
+    const failingGetShortDescription = jest
+      .fn()
+      .mockRejectedValue(new Error('429 no credits remaining'));
+
+    render(
+      <ShortDescriptionCard
+        enabled
+        getShortDescription={failingGetShortDescription}
+        value="current short description"
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/problem generating the short description/i),
+      ).toBeVisible();
+    });
+
+    const generateButton = screen.getByRole('button', { name: /Generate/i });
+    expect(generateButton).toBeEnabled();
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toBeEnabled();
+  });
+
+  it('clears the generation error once the user edits the field', async () => {
+    const failingGetShortDescription = jest
+      .fn()
+      .mockRejectedValue(new Error('429 no credits remaining'));
+
+    render(
+      <ShortDescriptionCard
+        enabled
+        getShortDescription={failingGetShortDescription}
+        value=""
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await waitFor(() => {
+      expect(
+        screen.getByText(/problem generating the short description/i),
+      ).toBeVisible();
+    });
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /short description/i }),
+      'a',
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/problem generating the short description/i),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

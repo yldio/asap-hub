@@ -49,14 +49,54 @@ const failedItem = (error: unknown): Record<string, unknown> | undefined =>
     ? (error.Item as Record<string, unknown> | undefined)
     : undefined;
 
-const holderNameOf = (item?: Record<string, unknown>): string | undefined => {
-  if (!item) return undefined;
-  const raw = item.lockedByName;
-  if (typeof raw === 'string') return raw;
-  if (raw && typeof raw === 'object' && 'S' in raw) {
-    return String((raw as { S: unknown }).S);
+// an unexpired lease held by the caller; the same test is repeated as a
+// condition on every write so a takeover between the read and the write loses
+const holdsLease = (
+  item: Record<string, unknown>,
+  sub: string,
+  now: number,
+): boolean =>
+  item.lockedBy === sub &&
+  typeof item.lockExpiresAt === 'number' &&
+  item.lockExpiresAt > now;
+
+const leaseCondition = 'lockedBy = :sub AND lockExpiresAt > :now';
+
+// ReturnValuesOnConditionCheckFailure hands back raw AttributeValues, while a
+// stubbed client in tests may hand back plain values
+const unwrap = (raw: unknown): unknown => {
+  if (raw && typeof raw === 'object') {
+    if ('S' in raw) return String((raw as { S: unknown }).S);
+    if ('N' in raw) return Number((raw as { N: unknown }).N);
   }
-  return undefined;
+  return raw;
+};
+
+const holderNameOf = (item?: Record<string, unknown>): string | undefined => {
+  const name = unwrap(item?.lockedByName);
+  return typeof name === 'string' ? name : undefined;
+};
+
+// the write condition bundles the lease and the version, so the item returned
+// on failure is what tells the client whether to warn about a takeover or rebase
+const conflictBody = (
+  item: Record<string, unknown>,
+  sub: string,
+  now: number,
+): Record<string, unknown> => {
+  const lost = !holdsLease(
+    {
+      lockedBy: unwrap(item.lockedBy),
+      lockExpiresAt: unwrap(item.lockExpiresAt),
+    },
+    sub,
+    now,
+  );
+  const holderName = holderNameOf(item);
+  return {
+    error: lost ? 'locked' : 'conflict',
+    ...(holderName ? { holderName } : {}),
+  };
 };
 
 export const videosRouter = (): Router => {
@@ -158,11 +198,24 @@ export const videosRouter = (): Router => {
       const { ids } = req.body as { ids: string[] };
       const deleted: string[] = [];
       const missing: string[] = [];
+      const locked: string[] = [];
 
       const deleteOne = async (id: string): Promise<void> => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
+          return;
+        }
+        // a video someone else holds open is skipped rather than destroyed,
+        // matching the single delete; an unheld video needs no lease
+        const holder = existing.data.lockedBy;
+        if (
+          holder &&
+          holder !== currentUser(req).sub &&
+          typeof existing.data.lockExpiresAt === 'number' &&
+          existing.data.lockExpiresAt > Date.now()
+        ) {
+          locked.push(id);
           return;
         }
         try {
@@ -178,7 +231,7 @@ export const videosRouter = (): Router => {
         Promise.resolve(),
       );
 
-      res.json({ deleted, missing });
+      res.json({ deleted, missing, locked });
     },
   );
 
@@ -219,11 +272,7 @@ export const videosRouter = (): Router => {
       }
 
       const now = Date.now();
-      const holdsLease =
-        existing.data.lockedBy === currentUser(req).sub &&
-        typeof existing.data.lockExpiresAt === 'number' &&
-        existing.data.lockExpiresAt > now;
-      if (!holdsLease) {
+      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
         res.status(409).json({
           error: 'locked',
           ...(existing.data.lockedByName
@@ -257,8 +306,7 @@ export const videosRouter = (): Router => {
             Key: videoKey(id),
             UpdateExpression:
               'SET #title = :title, #folderId = :folderId, #recordedAt = :recordedAt, #chapters = :chapters, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression:
-              'lockedBy = :sub AND #version = :expectedVersion',
+            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
             ExpressionAttributeNames: {
               '#title': 'title',
               '#folderId': 'folderId',
@@ -275,6 +323,7 @@ export const videosRouter = (): Router => {
               ':one': 1,
               ':updatedAt': new Date().toISOString(),
               ':sub': currentUser(req).sub,
+              ':now': now,
               ':expectedVersion': version,
               ':gsi1pk': (params.Item as Record<string, string>).GSI1PK,
               ':gsi1sk': (params.Item as Record<string, string>).GSI1SK,
@@ -285,10 +334,7 @@ export const videosRouter = (): Router => {
       } catch (error) {
         const item = failedItem(error);
         if (item) {
-          res.status(409).json({
-            error: 'conflict',
-            ...(holderNameOf(item) ? { holderName: holderNameOf(item) } : {}),
-          });
+          res.status(409).json(conflictBody(item, currentUser(req).sub, now));
           return;
         }
         throw error;
@@ -314,6 +360,17 @@ export const videosRouter = (): Router => {
         return;
       }
 
+      const now = Date.now();
+      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
+        res.status(409).json({
+          error: 'locked',
+          ...(existing.data.lockedByName
+            ? { holderName: existing.data.lockedByName }
+            : {}),
+        });
+        return;
+      }
+
       const params = videoEntity
         .put({
           ...existing.data,
@@ -331,8 +388,7 @@ export const videosRouter = (): Router => {
             Key: videoKey(id),
             UpdateExpression:
               'SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression:
-              'lockedBy = :sub AND #version = :expectedVersion',
+            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
             ExpressionAttributeNames: {
               '#status': 'status',
               '#version': 'version',
@@ -344,6 +400,7 @@ export const videosRouter = (): Router => {
               ':one': 1,
               ':updatedAt': new Date().toISOString(),
               ':sub': currentUser(req).sub,
+              ':now': now,
               ':expectedVersion': version,
               ':gsi1pk': item.GSI1PK,
               ':gsi1sk': item.GSI1SK,
@@ -354,12 +411,7 @@ export const videosRouter = (): Router => {
       } catch (error) {
         const failed = failedItem(error);
         if (failed) {
-          res.status(409).json({
-            error: 'conflict',
-            ...(holderNameOf(failed)
-              ? { holderName: holderNameOf(failed) }
-              : {}),
-          });
+          res.status(409).json(conflictBody(failed, currentUser(req).sub, now));
           return;
         }
         throw error;
@@ -385,6 +437,17 @@ export const videosRouter = (): Router => {
         return;
       }
 
+      const now = Date.now();
+      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
+        res.status(409).json({
+          error: 'locked',
+          ...(existing.data.lockedByName
+            ? { holderName: existing.data.lockedByName }
+            : {}),
+        });
+        return;
+      }
+
       const params = videoEntity
         .put({
           ...existing.data,
@@ -402,8 +465,7 @@ export const videosRouter = (): Router => {
             Key: videoKey(id),
             UpdateExpression:
               'SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression:
-              'lockedBy = :sub AND #version = :expectedVersion',
+            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
             ExpressionAttributeNames: {
               '#status': 'status',
               '#version': 'version',
@@ -415,6 +477,7 @@ export const videosRouter = (): Router => {
               ':one': 1,
               ':updatedAt': new Date().toISOString(),
               ':sub': currentUser(req).sub,
+              ':now': now,
               ':expectedVersion': version,
               ':gsi1pk': item.GSI1PK,
               ':gsi1sk': item.GSI1SK,
@@ -425,12 +488,7 @@ export const videosRouter = (): Router => {
       } catch (error) {
         const failed = failedItem(error);
         if (failed) {
-          res.status(409).json({
-            error: 'conflict',
-            ...(holderNameOf(failed)
-              ? { holderName: holderNameOf(failed) }
-              : {}),
-          });
+          res.status(409).json(conflictBody(failed, currentUser(req).sub, now));
           return;
         }
         throw error;
@@ -503,7 +561,29 @@ export const videosRouter = (): Router => {
   });
 
   router.delete('/:id', videoId, requireCreator, async (req, res) => {
-    await deleteVideoCascade(pathParam(req, 'id'));
+    const id = pathParam(req, 'id');
+
+    const existing = await videoEntity.get({ id }).go();
+    if (!existing.data) {
+      res.status(204).end();
+      return;
+    }
+
+    // deleting destroys the row and its media, so it needs the same lease the
+    // other writes take; otherwise a second creator can wipe a demo mid-edit
+    if (
+      !holdsLease(existing.data as VideoItem, currentUser(req).sub, Date.now())
+    ) {
+      res.status(409).json({
+        error: 'locked',
+        ...(existing.data.lockedByName
+          ? { holderName: existing.data.lockedByName }
+          : {}),
+      });
+      return;
+    }
+
+    await deleteVideoCascade(id);
     res.status(204).end();
   });
 

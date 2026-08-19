@@ -483,9 +483,11 @@ const Home: FC = () => {
 
   const confirmVideoDelete = () => {
     bulkDelete.mutate(selection.ids as string[], {
-      onSuccess: () => {
+      onSuccess: ({ locked }) => {
         setIsDeletingVideos(false);
-        clearSelection();
+        // anything another creator holds open survives, so it stays selected
+        // and visible rather than silently looking deleted
+        if (locked.length === 0) clearSelection();
       },
     });
   };

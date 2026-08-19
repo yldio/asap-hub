@@ -10,11 +10,12 @@ export type LeaseState =
   | { status: 'denied'; holderName?: string }
   | { status: 'lost'; holderName?: string };
 
-const HEARTBEAT_MS = 30000;
+export const HEARTBEAT_MS = 30000;
 
 const useEditLease = (
   id: string,
   enabled: boolean,
+  heartbeatMs: number = HEARTBEAT_MS,
 ): {
   lease: LeaseState;
   retry: () => void;
@@ -73,16 +74,20 @@ const useEditLease = (
     if (lease.status !== 'held') return undefined;
     const timer = setInterval(() => {
       api.acquireLease(id).catch((error) => {
-        markLost(error instanceof ApiError ? error.holderName : undefined);
+        // only a refused renewal means someone else took over; a transient
+        // failure still leaves the lease held until it expires
+        if (error instanceof ApiError && error.status === 409) {
+          markLost(error.holderName);
+        }
       });
       void getToken()
         .then((token) => {
           tokenRef.current = token;
         })
         .catch(() => undefined);
-    }, HEARTBEAT_MS);
+    }, heartbeatMs);
     return () => clearInterval(timer);
-  }, [api, getToken, id, lease.status, markLost]);
+  }, [api, getToken, heartbeatMs, id, lease.status, markLost]);
 
   useEffect(() => {
     if (lease.status !== 'held') return undefined;

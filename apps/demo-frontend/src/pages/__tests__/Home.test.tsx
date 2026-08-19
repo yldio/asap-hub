@@ -465,7 +465,7 @@ describe('video context menu', () => {
 
   it('deletes the selection after confirming in the danger modal', async () => {
     const bulkDeleteVideos = jest.fn(() =>
-      Promise.resolve({ deleted: ['v-unfiled'], missing: [] }),
+      Promise.resolve({ deleted: ['v-unfiled'], missing: [], locked: [] }),
     );
     renderHome({ api: { bulkDeleteVideos } });
 
@@ -482,6 +482,31 @@ describe('video context menu', () => {
     );
 
     expect(bulkDeleteVideos).toHaveBeenCalledWith(['v-unfiled']);
+  });
+
+  it('keeps a video another creator holds open selected', async () => {
+    const bulkDeleteVideos = jest.fn(() =>
+      Promise.resolve({ deleted: [], missing: [], locked: ['v-unfiled'] }),
+    );
+    renderHome({ api: { bulkDeleteVideos } });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Delete' }),
+    );
+
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    expect(bulkDeleteVideos).toHaveBeenCalledWith(['v-unfiled']);
+    // the modal closes, but the locked video survives
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText('Unfiled walkthrough')).toBeVisible();
   });
 
   it('counts a multi-selection in the delete label and the modal', async () => {
@@ -506,7 +531,7 @@ describe('video context menu', () => {
 
   it('deletes straight from the card trash button', async () => {
     const bulkDeleteVideos = jest.fn(() =>
-      Promise.resolve({ deleted: ['v-unfiled'], missing: [] }),
+      Promise.resolve({ deleted: ['v-unfiled'], missing: [], locked: [] }),
     );
     renderHome({ api: { bulkDeleteVideos } });
 

@@ -300,8 +300,12 @@ describe('PATCH /api/videos/:id', () => {
       new ConditionalCheckFailedException({
         message: 'conditional check failed',
         $metadata: {},
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Item: { lockedByName: 'Ana' } as any,
+        Item: {
+          lockedBy: { S: 'auth0|creator' },
+          lockedByName: { S: 'Ana' },
+          lockExpiresAt: { N: String(Date.now() + 60000) },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
       }),
     );
 
@@ -348,10 +352,18 @@ describe('PATCH /api/videos/:id', () => {
   });
 });
 
+const heldLease = (overrides: Record<string, unknown> = {}) =>
+  videoItem({
+    lockedBy: 'auth0|creator',
+    lockedByName: 'Ana',
+    lockExpiresAt: Date.now() + 60000,
+    ...overrides,
+  });
+
 describe('POST /api/videos/:id/publish', () => {
   it('flips the status and rewrites GSI1SK', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
-    mockVideoGet(videoItem({ chapters: [{ startMs: 0, title: 'Intro' }] }));
+    mockVideoGet(heldLease({ chapters: [{ startMs: 0, title: 'Intro' }] }));
     mockSend.mockResolvedValue({});
 
     const response = await api
@@ -366,6 +378,159 @@ describe('POST /api/videos/:id/publish', () => {
       'PUBLISHED#2026-08-01T10:00:00.000Z#video-1',
     );
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('refuses to publish without holding the lease', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(videoItem());
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .post('/api/videos/video-1/publish')
+      .set('Authorization', creatorToken)
+      .send({ version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body.error).toBe('locked');
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('refuses to publish on an expired lease', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(heldLease({ lockExpiresAt: Date.now() - 1000 }));
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .post('/api/videos/video-1/publish')
+      .set('Authorization', creatorToken)
+      .send({ version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'locked', holderName: 'Ana' });
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+});
+
+describe('DELETE /api/videos/:id', () => {
+  it('refuses to delete a demo someone else is editing', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|other',
+        lockedByName: 'Diana',
+        lockExpiresAt: Date.now() + 60000,
+      }),
+    );
+
+    const response = await api
+      .delete('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'locked', holderName: 'Diana' });
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
+
+  it('refuses to delete when the caller has not taken the lease', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|other',
+        lockedByName: 'Diana',
+        lockExpiresAt: Date.now() - 1000,
+      }),
+    );
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .delete('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(409);
+  });
+});
+
+describe('POST /api/videos/:id/unpublish', () => {
+  it('refuses to unpublish without holding the lease', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(videoItem({ status: 'published' }));
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .post('/api/videos/video-1/unpublish')
+      .set('Authorization', creatorToken)
+      .send({ version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body.error).toBe('locked');
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+});
+
+describe('lease conditions on writes', () => {
+  it('makes the lease expiry part of the write condition', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(heldLease());
+    mockSend.mockResolvedValue({});
+
+    await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ title: 'New title', version: 1 });
+
+    const { input } = mockSend.mock.calls[0][0];
+    expect(input.ConditionExpression).toContain('lockExpiresAt > :now');
+    expect(typeof input.ExpressionAttributeValues[':now']).toBe('number');
+  });
+
+  it('reports a takeover as locked, not as a version conflict', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(heldLease());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'conditional check failed',
+        $metadata: {},
+        Item: {
+          lockedBy: { S: 'auth0|other' },
+          lockedByName: { S: 'Diana' },
+          lockExpiresAt: { N: String(Date.now() + 60000) },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
+      }),
+    );
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ title: 'New title', version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'locked', holderName: 'Diana' });
+  });
+
+  it('still reports a plain version clash as a conflict', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(heldLease());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'conditional check failed',
+        $metadata: {},
+        Item: {
+          lockedBy: { S: 'auth0|creator' },
+          lockedByName: { S: 'Ana' },
+          lockExpiresAt: { N: String(Date.now() + 60000) },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
+      }),
+    );
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ title: 'New title', version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'conflict', holderName: 'Ana' });
   });
 });
 

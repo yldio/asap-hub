@@ -4,7 +4,7 @@ import { canViewDrafts, requireCreator } from '../auth';
 import { folderEntity, videoEntity } from '../data/entities';
 import { createFolderSchema, updateFolderSchema } from '../schemas';
 import { deleteVideoCascade } from './cascade';
-import { pathParam } from './request';
+import { pathParam, requireFolderIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
 
@@ -111,8 +111,11 @@ export const foldersRouter = (): Router => {
     },
   );
 
+  const folderIdParam = requireFolderIdParam('id');
+
   router.patch(
     '/:id',
+    folderIdParam,
     requireCreator,
     validate(updateFolderSchema),
     async (req, res) => {
@@ -184,7 +187,7 @@ export const foldersRouter = (): Router => {
     },
   );
 
-  router.delete('/:id', requireCreator, async (req, res) => {
+  router.delete('/:id', folderIdParam, requireCreator, async (req, res) => {
     const id = pathParam(req, 'id');
     if (id === rootFolderId) {
       res.status(400).json({ error: 'root_folder' });

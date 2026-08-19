@@ -682,7 +682,9 @@ jobs:
           API_URL: ${{ steps.setup.outputs.crn-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
           AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
-          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"crn","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.crn-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.crn-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.CRN_AUTH0_SHARED_SECRET }}"}'
+          # DEMO_CLIENT_ID exempts the demo hub app (dev tenant only) from the
+          # CRN metadata action; in tenants without it the id never matches
+          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"crn","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.crn-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.crn-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.CRN_AUTH0_SHARED_SECRET }}","DEMO_CLIENT_ID":"${{ steps.setup.outputs.demo-auth0-client-id }}"}'
 
       - name: Deploy GP2 PR
         if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.auth0-label == 'true' }}

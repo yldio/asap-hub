@@ -31,6 +31,8 @@ import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-output.controller.mock';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
 import { projectControllerMock } from '../mocks/project.controller.mock';
+import { teamControllerMock } from '../mocks/team.controller.mock';
+import { getTeamResponse } from '../fixtures/teams.fixtures';
 
 describe('/research-outputs/ route', () => {
   const userMockFactory = jest.fn<UserResponse, []>();
@@ -42,8 +44,24 @@ describe('/research-outputs/ route', () => {
     researchOutputController: researchOutputControllerMock,
     manuscriptController: manuscriptControllerMock,
     projectController: projectControllerMock,
+    teamController: teamControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
+  });
+
+  const teamResponseWithProjectManager = () => ({
+    ...getTeamResponse(),
+    members: [
+      ...getTeamResponse().members,
+      {
+        id: 'pm-user-id',
+        email: 'pm@example.com',
+        firstName: 'Pat',
+        lastName: 'Manager',
+        displayName: 'Pat Manager',
+        role: 'Project Manager' as TeamRole,
+      },
+    ],
   });
 
   const userTeam = {
@@ -68,6 +86,9 @@ describe('/research-outputs/ route', () => {
 
   beforeEach(() => {
     userMockFactory.mockReturnValue(createUserResponse());
+    teamControllerMock.fetchById.mockResolvedValue(
+      teamResponseWithProjectManager(),
+    );
   });
   afterEach(() => {
     jest.resetAllMocks();
@@ -580,6 +601,62 @@ describe('/research-outputs/ route', () => {
           expect(response.status).toBe(expected);
         },
       );
+
+      test('Should let a team member publish when the team has no active project manager', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...user,
+          role: 'Grantee' as Role,
+          teams: [
+            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+          ],
+        });
+        teamControllerMock.fetchById.mockResolvedValueOnce({
+          ...getTeamResponse(),
+          members: [
+            {
+              id: 'user-id-1',
+              email: 'lead@example.com',
+              firstName: 'Lead',
+              lastName: 'Pi',
+              displayName: 'Lead Pi',
+              role: 'Lead PI (Core Leadership)',
+            },
+          ],
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getResearchOutputPostRequest(),
+            teams: ['team-1'],
+            published: true,
+          });
+
+        expect(response.status).toBe(201);
+      });
+
+      test('Should block a team member from publishing when the team has an active project manager', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...user,
+          role: 'Grantee' as Role,
+          teams: [
+            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+          ],
+        });
+        teamControllerMock.fetchById.mockResolvedValueOnce(
+          teamResponseWithProjectManager(),
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getResearchOutputPostRequest(),
+            teams: ['team-1'],
+            published: true,
+          });
+
+        expect(response.status).toBe(403);
+      });
     });
 
     describe('Creating a research output from a working group', () => {

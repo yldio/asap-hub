@@ -6,9 +6,11 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   canPublishProjectOutput,
+  teamHasActiveProjectManager,
   ListResearchOutputResponse,
   Project,
   ResearchOutputResponse,
+  TeamMember,
 } from '@asap-hub/model';
 import {
   ResearchOutputPermissions,
@@ -204,6 +206,29 @@ export const useProjectOutputPermissions = (
       expandUserTeamRoles(user.teams ?? []),
       project,
     );
+
+  return resolveProjectOutputPermissions(basePermissions, {
+    isStaff,
+    isMember,
+    canPublish,
+  });
+};
+
+export const useTeamOutputPermissions = (
+  basePermissions: ResearchOutputPermissions,
+  teamMembers:
+    | ReadonlyArray<
+        Pick<TeamMember, 'role' | 'alumniSinceDate' | 'inactiveSinceDate'>
+      >
+    | undefined,
+): ResearchOutputPermissions => {
+  const user = useCurrentUserCRN();
+
+  const isStaff = user?.role === 'Staff';
+  const isMember = !!basePermissions.canShareResearchOutput;
+  const canPublish =
+    basePermissions.canPublishResearchOutput ||
+    !teamHasActiveProjectManager(teamMembers ?? []);
 
   return resolveProjectOutputPermissions(basePermissions, {
     isStaff,

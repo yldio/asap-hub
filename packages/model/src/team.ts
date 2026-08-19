@@ -97,6 +97,15 @@ export const countActiveUniqueMembers = (
 ): number =>
   new Set(members.filter(isActiveTeamMember).map(({ id }) => id)).size;
 
+export const teamHasActiveProjectManager = (
+  members: ReadonlyArray<
+    Pick<TeamMember, 'role' | 'alumniSinceDate' | 'inactiveSinceDate'>
+  >,
+): boolean =>
+  members.some(
+    (member) => member.role === 'Project Manager' && isActiveTeamMember(member),
+  );
+
 export type TeamManuscript = Pick<
   ManuscriptResponse,
   | 'id'

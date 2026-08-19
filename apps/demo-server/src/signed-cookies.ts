@@ -7,7 +7,7 @@ import {
   getRegion,
 } from './config';
 
-const twelveHoursMs = 12 * 60 * 60 * 1000;
+export const signedCookieTtlMs = 12 * 60 * 60 * 1000;
 
 let privateKeyPromise: Promise<string> | undefined;
 
@@ -43,9 +43,10 @@ export type SignedCookie = { name: string; value: string };
 
 export const buildSignedCookies = async (
   videoId: string,
+  now: number = Date.now(),
 ): Promise<SignedCookie[]> => {
   const privateKey = await loadPrivateKey();
-  const expires = Date.now() + twelveHoursMs;
+  const expires = now + signedCookieTtlMs;
   const cookies = getSignedCookies({
     url: `https://${getDemoHostname()}/media/${videoId}/*`,
     keyPairId: getCloudFrontKeyPairId(),

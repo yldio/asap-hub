@@ -4,6 +4,7 @@ import { getSignedCookies } from '@aws-sdk/cloudfront-signer';
 import {
   buildSignedCookies,
   resetPrivateKeyCache,
+  signedCookieTtlMs,
 } from '../src/signed-cookies';
 /* eslint-enable import/first */
 
@@ -79,20 +80,50 @@ describe('buildSignedCookies', () => {
 
   it('expires the policy twelve hours out, in whole epoch seconds', async () => {
     const now = Date.parse('2026-08-18T12:00:00.000Z');
-    jest.spyOn(Date, 'now').mockReturnValue(now);
 
-    await buildSignedCookies('video-1');
+    await buildSignedCookies('video-1', now);
 
     const policy = JSON.parse(
       mockGetSignedCookies.mock.calls[0]![0].policy as string,
     );
     const epoch = policy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
 
-    expect(epoch).toBe(Math.floor((now + 12 * 60 * 60 * 1000) / 1000));
-    expect(epoch).toBe(Date.parse('2026-08-19T00:00:00.000Z') / 1000);
+    expect(signedCookieTtlMs).toBe(12 * 60 * 60 * 1000);
+    expect(epoch).toBe((now + signedCookieTtlMs) / 1000);
+    expect(epoch - now / 1000).toBe(12 * 60 * 60);
     expect(Number.isInteger(epoch)).toBe(true);
+  });
 
-    jest.spyOn(Date, 'now').mockRestore();
+  it('floors a sub-second now to whole epoch seconds', async () => {
+    const now = Date.parse('2026-08-18T12:00:00.000Z') + 999;
+
+    await buildSignedCookies('video-1', now);
+
+    const policy = JSON.parse(
+      mockGetSignedCookies.mock.calls[0]![0].policy as string,
+    );
+    const epoch = policy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
+
+    expect(Number.isInteger(epoch)).toBe(true);
+    expect(epoch).toBe(Math.floor((now + signedCookieTtlMs) / 1000));
+  });
+
+  it('defaults the expiry window to twelve hours past the current clock', async () => {
+    const before = Date.now();
+    await buildSignedCookies('video-1');
+    const after = Date.now();
+
+    const policy = JSON.parse(
+      mockGetSignedCookies.mock.calls[0]![0].policy as string,
+    );
+    const epoch = policy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
+
+    expect(epoch).toBeGreaterThanOrEqual(
+      Math.floor((before + signedCookieTtlMs) / 1000),
+    );
+    expect(epoch).toBeLessThanOrEqual(
+      Math.floor((after + signedCookieTtlMs) / 1000),
+    );
   });
 
   it('returns every cookie the signer produced as name/value pairs', async () => {
@@ -138,7 +169,7 @@ describe('buildSignedCookies', () => {
 
     // the failed lookup must not poison the cache for the next request
     mockSsmSend.mockResolvedValue({ Parameter: { Value: 'recovered-key' } });
-    await expect(buildSignedCookies('video-1')).resolves.toBeDefined();
+    await expect(buildSignedCookies('video-1')).resolves.toHaveLength(3);
     expect(mockSsmSend).toHaveBeenCalledTimes(2);
   });
 
@@ -147,7 +178,7 @@ describe('buildSignedCookies', () => {
 
     await expect(buildSignedCookies('video-1')).rejects.toThrow('AccessDenied');
 
-    await expect(buildSignedCookies('video-1')).resolves.toBeDefined();
+    await expect(buildSignedCookies('video-1')).resolves.toHaveLength(3);
     expect(mockSsmSend).toHaveBeenCalledTimes(2);
   });
 

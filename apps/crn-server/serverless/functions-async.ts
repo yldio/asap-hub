@@ -111,6 +111,9 @@ export const asyncFunctions: AWS['functions'] = {
   },
   updateContentfulWorkingGroupDeliverables: {
     handler: './src/handlers/working-group/update-deliverables-handler.handler',
+    // Shortened: the default name would exceed Lambda's 64-char limit on the
+    // production stage.
+    name: '${self:service}-${self:provider.stage}-updateWorkingGroupDeliverables',
     events: contentfulEventBridge(['WorkingGroupsPublished']),
     environment: {
       SENTRY_DSN: sentryDsnHandlers,

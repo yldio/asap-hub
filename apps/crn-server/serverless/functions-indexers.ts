@@ -15,10 +15,17 @@ const algoliaIndexEnvironment = {
   SENTRY_DSN: sentryDsnHandlers,
 };
 
-const algoliaIndexer = (handler: string, detailTypes: WebhookDetailType[]) => ({
+// `name` is only passed when the generated name would exceed Lambda's
+// 64-character limit on the production stage.
+const algoliaIndexer = (
+  handler: string,
+  detailTypes: WebhookDetailType[],
+  name?: string,
+) => ({
   handler,
   events: contentfulEventBridge(detailTypes),
   environment: algoliaIndexEnvironment,
+  ...(name ? { name: `\${self:service}-\${self:provider.stage}-${name}` } : {}),
 });
 
 const opensearchIndexerEnvironment = {
@@ -128,6 +135,7 @@ export const indexerFunctions: AWS['functions'] = {
   algoliaIndexManuscriptVersionsManuscripts: algoliaIndexer(
     './src/handlers/manuscript/algolia-index-manuscript-versions-manuscripts-handler.handler',
     ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+    'algoliaIndexManuscriptVersionsMs',
   ),
   opensearchIndexAims: {
     handler: './src/handlers/aim/opensearch-index-aim-handler.handler',

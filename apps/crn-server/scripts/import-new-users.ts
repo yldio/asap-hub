@@ -22,6 +22,7 @@ import {
   runPrepareSteps,
   shouldSkipRow,
   uploadAvatar,
+  upsertUserSocials,
   validateRequiredColumns,
 } from './import-utils';
 
@@ -177,6 +178,17 @@ const app = async () => {
 
               const userEntry = await env.createEntry('users', { fields });
               createdUserId = userEntry.sys.id;
+
+              const socialsLink = await upsertUserSocials(
+                env,
+                userEntry.sys.id,
+                data,
+              );
+              if (socialsLink) {
+                userEntry.fields.userSocials = loc(socialsLink);
+                await userEntry.update();
+              }
+
               imported += 1;
               console.log(`  Created user (draft): ${createdUserId}`);
             }

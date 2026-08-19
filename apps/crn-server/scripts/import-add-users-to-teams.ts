@@ -12,6 +12,7 @@ import {
   getErrorMessage,
   isEmptyRow,
   loadTagCache,
+  loc,
   normalizeTagNames,
   parseImportArgs,
   parseUserRow,
@@ -24,6 +25,7 @@ import {
   type ParsedUserData,
   UPDATE_USER_FIELDS_OPTIONS,
   uploadAvatar,
+  upsertUserSocials,
   userHasTeamMembership,
   validateRequiredColumns,
 } from './import-utils';
@@ -196,6 +198,11 @@ const app = async () => {
 
               for (const [key, value] of Object.entries(updateFields)) {
                 userEntry.fields[key] = value;
+              }
+
+              const socialsLink = await upsertUserSocials(env, user.id, data);
+              if (socialsLink) {
+                userEntry.fields.userSocials = loc(socialsLink);
               }
 
               await userEntry.update();

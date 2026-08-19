@@ -9,6 +9,7 @@ export const getContentfulEnvironmentMock = (
     getEntries: jest.fn(),
     getAsset: jest.fn(),
     createEntry: jest.fn(),
+    createEntryWithId: jest.fn(),
     createAssetFromFiles: jest.fn(),
     createAsset: jest.fn(),
   }) as unknown as jest.Mocked<Environment>;

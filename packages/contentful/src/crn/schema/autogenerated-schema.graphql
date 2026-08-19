@@ -4,10 +4,22 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+directive @contentfulSchemaMetadata(contentTypePublishedCounters: JSON) on SCHEMA
+
+directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
+
+directive @enumMapper(value: JSON) on ENUM_VALUE
+
+directive @featureFlag(featureName: String) on FIELD
+
+directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
+
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
 
 directive @timeline(where: TimelineFilterInput!) on QUERY
+
+directive @typeIdentifier(contentTypeId: String) on OBJECT
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims)"""
 type Aims implements Entry & _Node {
@@ -609,7 +621,7 @@ enum AttendanceOrder {
   sys_publishedVersion_DESC
 }
 
-"""Reusable award definition: a name and its badge image. [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType)"""
 type AwardType implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -1717,8 +1729,6 @@ enum DiscoverMembersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1735,18 +1745,12 @@ enum DiscoverMembersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -1763,10 +1767,6 @@ enum DiscoverMembersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -1779,12 +1779,6 @@ enum DiscoverMembersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type DiscoverMembersCursorCollection {
@@ -1804,8 +1798,6 @@ enum DiscoverMembersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1822,18 +1814,12 @@ enum DiscoverMembersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -1850,10 +1836,6 @@ enum DiscoverMembersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -1866,12 +1848,6 @@ enum DiscoverMembersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum DiscoverOrder {
@@ -1903,8 +1879,6 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1921,18 +1895,12 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -1949,10 +1917,6 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -1965,12 +1929,6 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type DiscoverScientificAdvisoryBoardCursorCollection {
@@ -1990,8 +1948,6 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -2008,18 +1964,12 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -2036,10 +1986,6 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -2052,12 +1998,6 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions)"""
@@ -2219,8 +2159,6 @@ enum DiscussionsReadByCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -2237,18 +2175,12 @@ enum DiscussionsReadByCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -2265,10 +2197,6 @@ enum DiscussionsReadByCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -2281,12 +2209,6 @@ enum DiscussionsReadByCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type DiscussionsReadByCursorCollection {
@@ -2306,8 +2228,6 @@ enum DiscussionsReadByCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -2324,18 +2244,12 @@ enum DiscussionsReadByCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -2352,10 +2266,6 @@ enum DiscussionsReadByCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -2368,12 +2278,6 @@ enum DiscussionsReadByCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type DiscussionsRepliesCollection {
@@ -3701,7 +3605,7 @@ enum ExternalAuthorsOrder {
   sys_publishedVersion_DESC
 }
 
-"""Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
 type ExternalTools implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -5156,8 +5060,6 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5174,18 +5076,12 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -5202,10 +5098,6 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -5218,12 +5110,6 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -5237,8 +5123,6 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5255,18 +5139,12 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -5283,10 +5161,6 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -5299,12 +5173,6 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum LabMembershipOrder {
@@ -5617,8 +5485,6 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5635,18 +5501,12 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -5663,10 +5523,6 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -5679,12 +5535,6 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum LabsLinkingCollectionsUsersCursorCollectionOrder {
@@ -5698,8 +5548,6 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5716,18 +5564,12 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -5744,10 +5586,6 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -5760,12 +5598,6 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum LabsOrder {
@@ -6639,8 +6471,6 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -6657,18 +6487,12 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -6685,10 +6509,6 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -6701,12 +6521,6 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type ManuscriptsAssignedUsersCursorCollection {
@@ -6726,8 +6540,6 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -6744,18 +6556,12 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -6772,10 +6578,6 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -6788,12 +6590,6 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type ManuscriptsCategoriesCollection {
@@ -7258,7 +7054,7 @@ enum ManuscriptsVersionsCursorCollectionOrder {
   url_DESC
 }
 
-"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -7398,7 +7194,7 @@ enum MessagesOrder {
   sys_publishedVersion_DESC
 }
 
-"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
   contentTypeId(locale: String, useFallbackLocale: Boolean): String
@@ -7683,7 +7479,7 @@ enum MilestonesRelatedArticlesCursorCollectionOrder {
   usedInAPublication_DESC
 }
 
-"""ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -8821,8 +8617,6 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -8839,18 +8633,12 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -8867,10 +8655,6 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -8883,12 +8667,6 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type ProjectsScientificFacilitatorCursorCollection {
@@ -8908,8 +8686,6 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -8926,18 +8702,12 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -8954,10 +8724,6 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -8970,12 +8736,6 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type ProjectsToolsCollection {
@@ -9159,6 +8919,9 @@ type Query {
   resourceType(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ResourceType
   resourceTypeCollection(limit: Int = 100, locale: String, order: [ResourceTypeOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourceTypeFilter): ResourceTypeCollection
   resourceTypeCursorCollection(limit: Int = 100, locale: String, order: [ResourceTypeOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResourceTypeFilter): ResourceTypeCursorCollection
+  socials(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Socials
+  socialsCollection(limit: Int = 100, locale: String, order: [SocialsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: SocialsFilter): SocialsCollection
+  socialsCursorCollection(limit: Int = 100, locale: String, order: [SocialsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: SocialsFilter): SocialsCursorCollection
   supplementGrant(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): SupplementGrant
   supplementGrantCollection(limit: Int = 100, locale: String, order: [SupplementGrantOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrantCollection
   supplementGrantCursorCollection(limit: Int = 100, locale: String, order: [SupplementGrantOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrantCursorCollection
@@ -11217,8 +10980,6 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -11235,18 +10996,12 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -11263,10 +11018,6 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -11279,12 +11030,6 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
@@ -11298,8 +11043,6 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -11316,18 +11059,12 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -11344,10 +11081,6 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -11360,12 +11093,6 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -11653,6 +11380,271 @@ enum ResourceTypeOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials)"""
+type Socials implements Entry & _Node {
+  _id: ID!
+  blueSky(locale: String, useFallbackLocale: Boolean): String
+  contentfulMetadata: ContentfulMetadata!
+  github(locale: String, useFallbackLocale: Boolean): String
+  googleScholar(locale: String, useFallbackLocale: Boolean): String
+  linkedFrom(allowedLocales: [String]): SocialsLinkingCollections
+  linkedIn(locale: String, useFallbackLocale: Boolean): String
+  researchGate(locale: String, useFallbackLocale: Boolean): String
+  researcherId(locale: String, useFallbackLocale: Boolean): String
+  sys: Sys!
+  twitter(locale: String, useFallbackLocale: Boolean): String
+  user(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
+  website1(locale: String, useFallbackLocale: Boolean): String
+  website2(locale: String, useFallbackLocale: Boolean): String
+}
+
+type SocialsCollection {
+  items: [Socials]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type SocialsCursorCollection {
+  items: [Socials]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+input SocialsFilter {
+  AND: [SocialsFilter]
+  OR: [SocialsFilter]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  github: String
+  github_contains: String
+  github_exists: Boolean
+  github_in: [String]
+  github_not: String
+  github_not_contains: String
+  github_not_in: [String]
+  googleScholar: String
+  googleScholar_contains: String
+  googleScholar_exists: Boolean
+  googleScholar_in: [String]
+  googleScholar_not: String
+  googleScholar_not_contains: String
+  googleScholar_not_in: [String]
+  linkedIn: String
+  linkedIn_contains: String
+  linkedIn_exists: Boolean
+  linkedIn_in: [String]
+  linkedIn_not: String
+  linkedIn_not_contains: String
+  linkedIn_not_in: [String]
+  researchGate: String
+  researchGate_contains: String
+  researchGate_exists: Boolean
+  researchGate_in: [String]
+  researchGate_not: String
+  researchGate_not_contains: String
+  researchGate_not_in: [String]
+  researcherId: String
+  researcherId_contains: String
+  researcherId_exists: Boolean
+  researcherId_in: [String]
+  researcherId_not: String
+  researcherId_not_contains: String
+  researcherId_not_in: [String]
+  sys: SysFilter
+  twitter: String
+  twitter_contains: String
+  twitter_exists: Boolean
+  twitter_in: [String]
+  twitter_not: String
+  twitter_not_contains: String
+  twitter_not_in: [String]
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+  website1: String
+  website1_contains: String
+  website1_exists: Boolean
+  website1_in: [String]
+  website1_not: String
+  website1_not_contains: String
+  website1_not_in: [String]
+  website2: String
+  website2_contains: String
+  website2_exists: Boolean
+  website2_in: [String]
+  website2_not: String
+  website2_not_contains: String
+  website2_not_in: [String]
+}
+
+type SocialsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
+  usersCollection(limit: Int = 100, locale: String, order: [SocialsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
+  usersCursorCollection(limit: Int = 100, locale: String, order: [SocialsLinkingCollectionsUsersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): UsersCursorCollection
+}
+
+enum SocialsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum SocialsLinkingCollectionsUsersCursorCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  personalEmail_ASC
+  personalEmail_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum SocialsOrder {
+  blueSky_ASC
+  blueSky_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant)"""
@@ -12011,8 +12003,6 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -12029,18 +12019,12 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -12057,10 +12041,6 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -12073,12 +12053,6 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -12092,8 +12066,6 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -12110,18 +12082,12 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -12138,10 +12104,6 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -12154,12 +12116,6 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum TeamMembershipOrder {
@@ -13541,7 +13497,6 @@ type Users implements Entry & _Node {
   alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   biography(locale: String, useFallbackLocale: Boolean): String
-  blueSky(locale: String, useFallbackLocale: Boolean): String
   city(locale: String, useFallbackLocale: Boolean): String
   connections(locale: String, useFallbackLocale: Boolean): [String]
   contactEmail(locale: String, useFallbackLocale: Boolean): String
@@ -13553,8 +13508,6 @@ type Users implements Entry & _Node {
   email(locale: String, useFallbackLocale: Boolean): String
   expertiseAndResourceDescription(locale: String, useFallbackLocale: Boolean): String
   firstName(locale: String, useFallbackLocale: Boolean): String
-  github(locale: String, useFallbackLocale: Boolean): String
-  googleScholar(locale: String, useFallbackLocale: Boolean): String
   institution(locale: String, useFallbackLocale: Boolean): String
   jobTitle(locale: String, useFallbackLocale: Boolean): String
   labsCollection(limit: Int = 100, locale: String, order: [UsersLabsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LabsFilter): UsersLabsCollection
@@ -13562,7 +13515,6 @@ type Users implements Entry & _Node {
   lastName(locale: String, useFallbackLocale: Boolean): String
   lastUpdated(locale: String, useFallbackLocale: Boolean): DateTime
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
-  linkedIn(locale: String, useFallbackLocale: Boolean): String
   middleName(locale: String, useFallbackLocale: Boolean): String
   nickname(locale: String, useFallbackLocale: Boolean): String
   oldLabsCollection(limit: Int = 100, locale: String, order: [UsersOldLabsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LabMembershipFilter): UsersOldLabsCollection
@@ -13576,20 +13528,16 @@ type Users implements Entry & _Node {
   personalEmail(locale: String, useFallbackLocale: Boolean): String
   questions(locale: String, useFallbackLocale: Boolean): JSON
   reachOut(locale: String, useFallbackLocale: Boolean): String
-  researchGate(locale: String, useFallbackLocale: Boolean): String
   researchInterests(locale: String, useFallbackLocale: Boolean): String
   researchTagsCollection(limit: Int = 100, locale: String, order: [UsersResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): UsersResearchTagsCollection
   researchTagsCursorCollection(limit: Int = 100, locale: String, order: [UsersResearchTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchTagsFilter): UsersResearchTagsCursorCollection
-  researcherId(locale: String, useFallbackLocale: Boolean): String
   responsibilities(locale: String, useFallbackLocale: Boolean): String
   role(locale: String, useFallbackLocale: Boolean): String
   stateOrProvince(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [UsersTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TeamMembershipFilter): UsersTeamsCollection
   teamsCursorCollection(limit: Int = 100, locale: String, order: [UsersTeamsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TeamMembershipFilter): UsersTeamsCursorCollection
-  twitter(locale: String, useFallbackLocale: Boolean): String
-  website1(locale: String, useFallbackLocale: Boolean): String
-  website2(locale: String, useFallbackLocale: Boolean): String
+  userSocials(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SocialsFilter): Socials
 }
 
 type UsersCollection {
@@ -13664,13 +13612,6 @@ input UsersFilter {
   biography_not: String
   biography_not_contains: String
   biography_not_in: [String]
-  blueSky: String
-  blueSky_contains: String
-  blueSky_exists: Boolean
-  blueSky_in: [String]
-  blueSky_not: String
-  blueSky_not_contains: String
-  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean
@@ -13737,20 +13678,6 @@ input UsersFilter {
   firstName_not: String
   firstName_not_contains: String
   firstName_not_in: [String]
-  github: String
-  github_contains: String
-  github_exists: Boolean
-  github_in: [String]
-  github_not: String
-  github_not_contains: String
-  github_not_in: [String]
-  googleScholar: String
-  googleScholar_contains: String
-  googleScholar_exists: Boolean
-  googleScholar_in: [String]
-  googleScholar_not: String
-  googleScholar_not_contains: String
-  googleScholar_not_in: [String]
   institution: String
   institution_contains: String
   institution_exists: Boolean
@@ -13783,13 +13710,6 @@ input UsersFilter {
   lastUpdated_lte: DateTime
   lastUpdated_not: DateTime
   lastUpdated_not_in: [DateTime]
-  linkedIn: String
-  linkedIn_contains: String
-  linkedIn_exists: Boolean
-  linkedIn_in: [String]
-  linkedIn_not: String
-  linkedIn_not_contains: String
-  linkedIn_not_in: [String]
   middleName: String
   middleName_contains: String
   middleName_exists: Boolean
@@ -13853,13 +13773,6 @@ input UsersFilter {
   reachOut_not: String
   reachOut_not_contains: String
   reachOut_not_in: [String]
-  researchGate: String
-  researchGate_contains: String
-  researchGate_exists: Boolean
-  researchGate_in: [String]
-  researchGate_not: String
-  researchGate_not_contains: String
-  researchGate_not_in: [String]
   researchInterests: String
   researchInterests_contains: String
   researchInterests_exists: Boolean
@@ -13869,13 +13782,6 @@ input UsersFilter {
   researchInterests_not_in: [String]
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
-  researcherId: String
-  researcherId_contains: String
-  researcherId_exists: Boolean
-  researcherId_in: [String]
-  researcherId_not: String
-  researcherId_not_contains: String
-  researcherId_not_in: [String]
   responsibilities: String
   responsibilities_contains: String
   responsibilities_exists: Boolean
@@ -13900,27 +13806,8 @@ input UsersFilter {
   sys: SysFilter
   teams: cfTeamMembershipNestedFilter
   teamsCollection_exists: Boolean
-  twitter: String
-  twitter_contains: String
-  twitter_exists: Boolean
-  twitter_in: [String]
-  twitter_not: String
-  twitter_not_contains: String
-  twitter_not_in: [String]
-  website1: String
-  website1_contains: String
-  website1_exists: Boolean
-  website1_in: [String]
-  website1_not: String
-  website1_not_contains: String
-  website1_not_in: [String]
-  website2: String
-  website2_contains: String
-  website2_exists: Boolean
-  website2_in: [String]
-  website2_not: String
-  website2_not_contains: String
-  website2_not_in: [String]
+  userSocials: cfSocialsNestedFilter
+  userSocials_exists: Boolean
 }
 
 type UsersLabsCollection {
@@ -13991,6 +13878,8 @@ type UsersLinkingCollections {
   projectsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
   researchOutputsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ResearchOutputsCursorCollection
+  socialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsSocialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): SocialsCollection
+  socialsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsSocialsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): SocialsCursorCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
   tutorialsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): TutorialsCursorCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupLeadersCollection
@@ -14577,6 +14466,64 @@ enum UsersLinkingCollectionsResearchOutputsCursorCollectionOrder {
   usedInAPublication_DESC
 }
 
+enum UsersLinkingCollectionsSocialsCollectionOrder {
+  blueSky_ASC
+  blueSky_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
+}
+
+enum UsersLinkingCollectionsSocialsCursorCollectionOrder {
+  blueSky_ASC
+  blueSky_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
+}
+
 enum UsersLinkingCollectionsTutorialsCollectionOrder {
   addedDate_ASC
   addedDate_DESC
@@ -14749,8 +14696,6 @@ enum UsersOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
-  blueSky_ASC
-  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -14767,18 +14712,12 @@ enum UsersOrder {
   email_DESC
   firstName_ASC
   firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
   institution_ASC
   institution_DESC
   lastName_ASC
   lastName_DESC
   lastUpdated_ASC
   lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
   middleName_ASC
   middleName_DESC
   nickname_ASC
@@ -14795,10 +14734,6 @@ enum UsersOrder {
   orcid_DESC
   personalEmail_ASC
   personalEmail_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
   role_ASC
   role_DESC
   stateOrProvince_ASC
@@ -14811,12 +14746,6 @@ enum UsersOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 type UsersResearchTagsCollection {
@@ -16909,6 +16838,77 @@ input cfResourceTypeNestedFilter {
   sys: SysFilter
 }
 
+input cfSocialsNestedFilter {
+  AND: [cfSocialsNestedFilter]
+  OR: [cfSocialsNestedFilter]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  github: String
+  github_contains: String
+  github_exists: Boolean
+  github_in: [String]
+  github_not: String
+  github_not_contains: String
+  github_not_in: [String]
+  googleScholar: String
+  googleScholar_contains: String
+  googleScholar_exists: Boolean
+  googleScholar_in: [String]
+  googleScholar_not: String
+  googleScholar_not_contains: String
+  googleScholar_not_in: [String]
+  linkedIn: String
+  linkedIn_contains: String
+  linkedIn_exists: Boolean
+  linkedIn_in: [String]
+  linkedIn_not: String
+  linkedIn_not_contains: String
+  linkedIn_not_in: [String]
+  researchGate: String
+  researchGate_contains: String
+  researchGate_exists: Boolean
+  researchGate_in: [String]
+  researchGate_not: String
+  researchGate_not_contains: String
+  researchGate_not_in: [String]
+  researcherId: String
+  researcherId_contains: String
+  researcherId_exists: Boolean
+  researcherId_in: [String]
+  researcherId_not: String
+  researcherId_not_contains: String
+  researcherId_not_in: [String]
+  sys: SysFilter
+  twitter: String
+  twitter_contains: String
+  twitter_exists: Boolean
+  twitter_in: [String]
+  twitter_not: String
+  twitter_not_contains: String
+  twitter_not_in: [String]
+  user_exists: Boolean
+  website1: String
+  website1_contains: String
+  website1_exists: Boolean
+  website1_in: [String]
+  website1_not: String
+  website1_not_contains: String
+  website1_not_in: [String]
+  website2: String
+  website2_contains: String
+  website2_exists: Boolean
+  website2_in: [String]
+  website2_not: String
+  website2_not_contains: String
+  website2_not_in: [String]
+}
+
 input cfSupplementGrantNestedFilter {
   AND: [cfSupplementGrantNestedFilter]
   OR: [cfSupplementGrantNestedFilter]
@@ -17200,13 +17200,6 @@ input cfUsersNestedFilter {
   biography_not: String
   biography_not_contains: String
   biography_not_in: [String]
-  blueSky: String
-  blueSky_contains: String
-  blueSky_exists: Boolean
-  blueSky_in: [String]
-  blueSky_not: String
-  blueSky_not_contains: String
-  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean
@@ -17273,20 +17266,6 @@ input cfUsersNestedFilter {
   firstName_not: String
   firstName_not_contains: String
   firstName_not_in: [String]
-  github: String
-  github_contains: String
-  github_exists: Boolean
-  github_in: [String]
-  github_not: String
-  github_not_contains: String
-  github_not_in: [String]
-  googleScholar: String
-  googleScholar_contains: String
-  googleScholar_exists: Boolean
-  googleScholar_in: [String]
-  googleScholar_not: String
-  googleScholar_not_contains: String
-  googleScholar_not_in: [String]
   institution: String
   institution_contains: String
   institution_exists: Boolean
@@ -17318,13 +17297,6 @@ input cfUsersNestedFilter {
   lastUpdated_lte: DateTime
   lastUpdated_not: DateTime
   lastUpdated_not_in: [DateTime]
-  linkedIn: String
-  linkedIn_contains: String
-  linkedIn_exists: Boolean
-  linkedIn_in: [String]
-  linkedIn_not: String
-  linkedIn_not_contains: String
-  linkedIn_not_in: [String]
   middleName: String
   middleName_contains: String
   middleName_exists: Boolean
@@ -17387,13 +17359,6 @@ input cfUsersNestedFilter {
   reachOut_not: String
   reachOut_not_contains: String
   reachOut_not_in: [String]
-  researchGate: String
-  researchGate_contains: String
-  researchGate_exists: Boolean
-  researchGate_in: [String]
-  researchGate_not: String
-  researchGate_not_contains: String
-  researchGate_not_in: [String]
   researchInterests: String
   researchInterests_contains: String
   researchInterests_exists: Boolean
@@ -17402,13 +17367,6 @@ input cfUsersNestedFilter {
   researchInterests_not_contains: String
   researchInterests_not_in: [String]
   researchTagsCollection_exists: Boolean
-  researcherId: String
-  researcherId_contains: String
-  researcherId_exists: Boolean
-  researcherId_in: [String]
-  researcherId_not: String
-  researcherId_not_contains: String
-  researcherId_not_in: [String]
   responsibilities: String
   responsibilities_contains: String
   responsibilities_exists: Boolean
@@ -17432,27 +17390,7 @@ input cfUsersNestedFilter {
   stateOrProvince_not_in: [String]
   sys: SysFilter
   teamsCollection_exists: Boolean
-  twitter: String
-  twitter_contains: String
-  twitter_exists: Boolean
-  twitter_in: [String]
-  twitter_not: String
-  twitter_not_contains: String
-  twitter_not_in: [String]
-  website1: String
-  website1_contains: String
-  website1_exists: Boolean
-  website1_in: [String]
-  website1_not: String
-  website1_not_contains: String
-  website1_not_in: [String]
-  website2: String
-  website2_contains: String
-  website2_exists: Boolean
-  website2_in: [String]
-  website2_not: String
-  website2_not_contains: String
-  website2_not_in: [String]
+  userSocials_exists: Boolean
 }
 
 input cfWorkingGroupDeliverablesNestedFilter {

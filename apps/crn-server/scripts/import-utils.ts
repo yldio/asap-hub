@@ -1067,15 +1067,16 @@ export const upsertUserSocials = async (
   }
 
   const entryId = `socials-${userId}`;
-  const fields = { ...socialFields, user: loc(createEntryLink(userId)) };
 
   let entry;
   try {
     entry = await env.getEntry(entryId);
-    entry.fields = fields;
+    entry.fields = socialFields;
     entry = await entry.update();
   } catch {
-    entry = await env.createEntryWithId('socials', entryId, { fields });
+    entry = await env.createEntryWithId('socials', entryId, {
+      fields: socialFields,
+    });
   }
 
   if (publish) {

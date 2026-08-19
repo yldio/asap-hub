@@ -35,6 +35,12 @@ export const appFactory = (): Express => {
   }
 
   const api = express.Router();
+  // per-user payloads and Set-Cookie must never be stored by CloudFront or a
+  // shared proxy, whatever the distribution TTLs happen to be
+  api.use((_req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, private');
+    next();
+  });
   api.use(asyncHandler(claimsMiddleware));
   api.use(asyncHandler(userMiddleware));
 

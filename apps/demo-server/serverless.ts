@@ -402,11 +402,13 @@ const serverlessConfig: AWS = {
               },
             ],
           },
+          // served only through the CloudFront OAI, so nothing here needs to
+          // be reachable publicly
           PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-            BlockPublicAcls: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
+            BlockPublicPolicy: true,
+            BlockPublicAcls: true,
+            IgnorePublicAcls: true,
+            RestrictPublicBuckets: true,
           },
           CorsConfiguration: {
             CorsRules: [

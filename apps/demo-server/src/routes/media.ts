@@ -25,7 +25,10 @@ export const mediaRouter = (): Router => {
         res.status(206);
       }
 
-      (object.body as Readable).pipe(res);
+      const body = object.body as Readable;
+      // headers are already out, so a mid-stream failure can only end the response
+      body.on('error', () => res.destroy());
+      body.pipe(res);
     } catch {
       res.status(404).json({ error: 'not_found' });
     }

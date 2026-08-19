@@ -29,6 +29,10 @@ export type Claims = {
 
 const userInfoCache = new Map<string, Claims>();
 
+// a warm lambda would otherwise grow this map for every distinct token it ever
+// sees, which an authenticated caller can drive by rotating tokens
+const userInfoCacheLimit = 500;
+
 const decodeSegment = (
   segment: string,
 ): Record<string, unknown> | undefined => {
@@ -85,6 +89,12 @@ const fetchUserInfo = async (token: string): Promise<Claims | undefined> => {
     const claims = normaliseClaims(
       (await response.json()) as Record<string, unknown>,
     );
+    if (userInfoCache.size >= userInfoCacheLimit) {
+      const oldest = userInfoCache.keys().next();
+      if (!oldest.done) {
+        userInfoCache.delete(oldest.value);
+      }
+    }
     userInfoCache.set(key, claims);
     return claims;
   } catch {
@@ -124,7 +134,10 @@ export const claimsMiddleware = async (
 
   if (!claims.email && token) {
     const userInfo = await fetchUserInfo(token);
-    if (userInfo) {
+    // the email is only adopted when /userinfo describes the same subject the
+    // gateway authenticated, so a mismatched or cross-tenant response can never
+    // attach someone else's invited address to this caller
+    if (userInfo && userInfo.sub === claims.sub) {
       claims = {
         ...claims,
         email: userInfo.email ?? claims.email,

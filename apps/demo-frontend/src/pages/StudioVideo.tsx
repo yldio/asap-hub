@@ -169,20 +169,41 @@ const ConfirmDialog: FC<{
   readonly confirmLabel: string;
   readonly onConfirm: () => void;
   readonly onCancel: () => void;
-}> = ({ title, body, confirmLabel, onConfirm, onCancel }) => (
-  <div css={dialogStyles} role="dialog" aria-modal="true" aria-label={title}>
-    <div css={dialogPanelStyles}>
-      <Headline level={3}>{title}</Headline>
-      <p css={{ margin: 0, color: lead.rgb }}>{body}</p>
-      <div css={{ display: 'flex', gap: rem(12), justifyContent: 'flex-end' }}>
-        <Button onClick={onCancel}>Cancel</Button>
-        <Button primary onClick={onConfirm}>
-          {confirmLabel}
-        </Button>
+}> = ({ title, body, confirmLabel, onConfirm, onCancel }) => {
+  const confirmRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    confirmRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        onCancel();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, [onCancel]);
+
+  return (
+    <div css={dialogStyles} role="dialog" aria-modal="true" aria-label={title}>
+      <div css={dialogPanelStyles}>
+        <Headline level={3}>{title}</Headline>
+        <p css={{ margin: 0, color: lead.rgb }}>{body}</p>
+        <div
+          css={{ display: 'flex', gap: rem(12), justifyContent: 'flex-end' }}
+        >
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button ref={confirmRef} primary onClick={onConfirm}>
+            {confirmLabel}
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Editor: FC<{
   readonly video: Video;
@@ -372,6 +393,9 @@ const Editor: FC<{
         target instanceof HTMLSelectElement ||
         target?.isContentEditable === true;
       if (typing) return;
+
+      // a focused control owns its own keys, and a dialog owns the whole page
+      if (target?.closest('button, a[href], [role="dialog"]')) return;
 
       const element = videoRef.current;
       if (event.key === ' ') {

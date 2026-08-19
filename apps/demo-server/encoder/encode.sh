@@ -51,10 +51,12 @@ report_failure() {
   if [[ "$SKIP_AWS" == "1" ]]; then
     return
   fi
+  # the condition keeps a delete that raced the encode from resurrecting the item
   aws_dynamodb update-item \
     --table-name "$TABLE_NAME" \
     --key "{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"META\"}}" \
     --update-expression 'SET processingState = :state, processingError = :error' \
+    --condition-expression 'attribute_exists(PK)' \
     --expression-attribute-values \
     "{\":state\":{\"S\":\"failed\"},\":error\":{\"S\":$(json_string "${message:0:500}")}}" \
     >/dev/null || log "WARN could not record the failure on VIDEO#${VIDEO_ID}"
@@ -224,6 +226,7 @@ run_step "mark VIDEO#${VIDEO_ID} ready" \
   --table-name "$TABLE_NAME" \
   --key "{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"META\"}}" \
   --update-expression 'SET durationMs = :durationMs, processingState = :state REMOVE processingError' \
+  --condition-expression 'attribute_exists(PK)' \
   --expression-attribute-values \
   "{\":durationMs\":{\"N\":\"${DURATION_MS}\"},\":state\":{\"S\":\"ready\"}}"
 

@@ -98,6 +98,13 @@ const videoItem = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+const mockVideoGet = (data: Record<string, unknown> | null) => {
+  jest.spyOn(videoEntity, 'get').mockReturnValue({
+    go: async () => ({ data }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
 beforeEach(() => {
   jest.restoreAllMocks();
   mockSend.mockReset();
@@ -238,6 +245,7 @@ describe('POST /api/uploads', () => {
 describe('POST /api/uploads/:videoId/parts', () => {
   it('returns a presigned url for every requested part number', async () => {
     mockUser('creator', 'auth0|creator');
+    mockVideoGet(videoItem({ processingState: 'uploading' }));
     (storage.signUploadParts as jest.Mock).mockResolvedValue([
       { partNumber: 1, url: 'https://signed.example/1' },
       { partNumber: 2, url: 'https://signed.example/2' },
@@ -300,6 +308,7 @@ describe('POST /api/uploads/:videoId/parts', () => {
 
 describe('POST /api/uploads/:videoId/complete', () => {
   const mockPatch = () => {
+    mockVideoGet(videoItem({ processingState: 'uploading' }));
     const set = jest
       .fn()
       .mockReturnValue({ go: async () => ({ data: videoItem() }) });
@@ -400,13 +409,6 @@ describe('POST /api/uploads/:videoId/complete', () => {
 });
 
 describe('DELETE /api/uploads/:videoId', () => {
-  const mockVideoGet = (data: Record<string, unknown> | null) => {
-    jest.spyOn(videoEntity, 'get').mockReturnValue({
-      go: async () => ({ data }),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
-  };
-
   it('aborts the multipart upload and deletes a still-uploading item', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(videoItem({ processingState: 'uploading' }));

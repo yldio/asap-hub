@@ -1,6 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from '@emotion/react';
-import { ButtonHTMLAttributes, FC, ReactNode, useEffect } from 'react';
+import {
+  ButtonHTMLAttributes,
+  FC,
+  forwardRef,
+  ReactNode,
+  RefObject,
+  useEffect,
+  useRef,
+} from 'react';
 
 import {
   captionStyles,
@@ -104,22 +112,30 @@ const variantStyles = (primary: boolean, danger: boolean): SerializedStyles => {
   return primary ? primaryButton : secondaryButton;
 };
 
-export const Button: FC<ButtonProps> = ({
-  primary = false,
-  danger = false,
-  small = false,
-  type = 'button',
-  children,
-  ...props
-}) => (
-  <button
-    type={type}
-    css={[buttonBase, variantStyles(primary, danger), small && smallButton]}
-    {...props}
-  >
-    {children}
-  </button>
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      primary = false,
+      danger = false,
+      small = false,
+      type = 'button',
+      children,
+      ...props
+    },
+    ref,
+  ) => (
+    <button
+      ref={ref}
+      type={type}
+      css={[buttonBase, variantStyles(primary, danger), small && smallButton]}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
 );
+
+Button.displayName = 'Button';
 
 const cardStyles = css({
   boxSizing: 'border-box',
@@ -210,18 +226,77 @@ const modalCardStyles = css({
   boxShadow: `0 ${rem(8)} ${rem(24)} ${shadowStrong.rgb}`,
 });
 
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
+const focusableWithin = (node: HTMLElement): HTMLElement[] =>
+  Array.from(node.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+    (element) => element.getAttribute('aria-hidden') !== 'true',
+  );
+
+/**
+ * Keeps Tab inside `ref`, focuses it on mount and hands focus back to whatever
+ * opened it on unmount, so a keyboard user is never dropped behind the overlay.
+ */
+export const useFocusTrap = (
+  ref: RefObject<HTMLElement>,
+  onClose: () => void,
+): void => {
+  const returnTo = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    returnTo.current = document.activeElement as HTMLElement | null;
+    const node = ref.current;
+    const first = node ? focusableWithin(node)[0] : undefined;
+    (first ?? node)?.focus();
+    return () => returnTo.current?.focus?.();
+  }, [ref]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        onClose();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const node = ref.current;
+      if (!node) return;
+      const items = focusableWithin(node);
+      if (items.length === 0) {
+        event.preventDefault();
+        node.focus();
+        return;
+      }
+      const first = items[0] as HTMLElement;
+      const last = items[items.length - 1] as HTMLElement;
+      const active = document.activeElement;
+      if (!event.shiftKey && (active === last || !node.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && (active === first || !node.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, [onClose, ref]);
+};
+
 export const Modal: FC<{
   readonly onClose: () => void;
   readonly label: string;
   readonly children: ReactNode;
 }> = ({ onClose, label, children }) => {
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, onClose);
 
   return (
     <div
@@ -231,7 +306,14 @@ export const Modal: FC<{
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div css={modalCardStyles} role="dialog" aria-modal aria-label={label}>
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        css={modalCardStyles}
+        role="dialog"
+        aria-modal
+        aria-label={label}
+      >
         {children}
       </div>
     </div>

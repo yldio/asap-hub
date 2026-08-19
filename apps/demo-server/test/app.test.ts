@@ -349,7 +349,7 @@ describe('PATCH /api/videos/:id', () => {
 });
 
 describe('POST /api/videos/:id/publish', () => {
-  it('flips the status, rewrites GSI1SK and writes chapters.json', async () => {
+  it('flips the status and rewrites GSI1SK', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
     mockVideoGet(videoItem({ chapters: [{ startMs: 0, title: 'Intro' }] }));
     mockSend.mockResolvedValue({});
@@ -365,17 +365,14 @@ describe('POST /api/videos/:id/publish', () => {
     expect(values[':gsi1sk']).toBe(
       'PUBLISHED#2026-08-01T10:00:00.000Z#video-1',
     );
-    expect(storage.putObject).toHaveBeenCalledWith(
-      'media/video-1/chapters.json',
-      JSON.stringify([{ startMs: 0, title: 'Intro' }]),
-      'application/json',
-    );
+    expect(storage.putObject).not.toHaveBeenCalled();
   });
 });
 
 describe('uploads', () => {
   it('marks the video as processing once the upload completes', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(videoItem({ processingState: 'uploading' }));
     const set = jest
       .fn()
       .mockReturnValue({ go: async () => ({ data: videoItem() }) });

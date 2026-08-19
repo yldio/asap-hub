@@ -158,6 +158,8 @@ export const useDeleteVideo = (id: string) => {
   return useMutation({
     mutationFn: () => api.deleteVideo(id),
     onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ['video', id] });
+      queryClient.removeQueries({ queryKey: ['video-access', id] });
       void queryClient.invalidateQueries({ queryKey: ['videos'] });
       void queryClient.invalidateQueries({ queryKey: ['folder-counts'] });
     },
@@ -308,9 +310,16 @@ export const useBulkMoveVideos = () => {
 
 export const useBulkDeleteVideos = () => {
   const api = useApi();
+  const queryClient = useQueryClient();
   const invalidate = useInvalidateFoldersAndVideos();
   return useMutation({
     mutationFn: (ids: string[]) => api.bulkDeleteVideos(ids),
-    onSuccess: invalidate,
+    onSuccess: ({ deleted }) => {
+      deleted.forEach((id) => {
+        queryClient.removeQueries({ queryKey: ['video', id] });
+        queryClient.removeQueries({ queryKey: ['video-access', id] });
+      });
+      invalidate();
+    },
   });
 };

@@ -12,10 +12,10 @@ import {
   updateVideoSchema,
 } from '../schemas';
 import { buildSignedCookies } from '../signed-cookies';
-import { mediaPrefix, putObject, rawKey } from '../storage';
+import { rawKey } from '../storage';
 import { deleteVideoCascade } from './cascade';
 import { rootFolderId } from './folders';
-import { currentUser, pathParam } from './request';
+import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
 
@@ -32,6 +32,7 @@ export const serialiseVideo = (item: VideoItem) => ({
   durationMs: item.durationMs ?? 0,
   chapters: item.chapters ?? [],
   processingState: item.processingState,
+  ...(item.processingError ? { processingError: item.processingError } : {}),
   createdBy: item.createdBy,
   ...(item.lockedBy ? { lockedBy: item.lockedBy } : {}),
   ...(item.lockedByName ? { lockedByName: item.lockedByName } : {}),
@@ -132,13 +133,11 @@ export const videosRouter = (): Router => {
           missing.push(id);
           return;
         }
-        // folderId is part of GSI1PK, so the item is rewritten wholesale to recompute the key
+        // patch recomputes GSI1PK from folderId and leaves the rest of the item alone
         await videoEntity
-          .put({
-            ...existing.data,
-            folderId,
-            updatedAt: new Date().toISOString(),
-          })
+          .patch({ id })
+          .set({ folderId, updatedAt: new Date().toISOString() })
+          .add({ version: 1 })
           .go();
         moved.push(id);
       };
@@ -183,7 +182,9 @@ export const videosRouter = (): Router => {
     },
   );
 
-  router.get('/:id', async (req: Request, res: Response) => {
+  const videoId = requireVideoIdParam('id');
+
+  router.get('/:id', videoId, async (req: Request, res: Response) => {
     const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
     if (!data) {
       res.status(404).json({ error: 'not_found' });
@@ -198,6 +199,7 @@ export const videosRouter = (): Router => {
 
   router.patch(
     '/:id',
+    videoId,
     requireCreator,
     validate(updateVideoSchema),
     async (req: Request, res: Response) => {
@@ -299,6 +301,7 @@ export const videosRouter = (): Router => {
 
   router.post(
     '/:id/publish',
+    videoId,
     requireCreator,
     validate(publishVideoSchema),
     async (req: Request, res: Response) => {
@@ -362,12 +365,6 @@ export const videosRouter = (): Router => {
         throw error;
       }
 
-      await putObject(
-        `${mediaPrefix(id)}chapters.json`,
-        JSON.stringify(existing.data.chapters ?? []),
-        'application/json',
-      );
-
       const updated = await videoEntity.get({ id }).go();
       res.json({ video: serialiseVideo(updated.data as VideoItem) });
     },
@@ -375,6 +372,7 @@ export const videosRouter = (): Router => {
 
   router.post(
     '/:id/unpublish',
+    videoId,
     requireCreator,
     validate(publishVideoSchema),
     async (req: Request, res: Response) => {
@@ -443,7 +441,7 @@ export const videosRouter = (): Router => {
     },
   );
 
-  router.post('/:id/lease', requireCreator, async (req, res) => {
+  router.post('/:id/lease', videoId, requireCreator, async (req, res) => {
     const id = pathParam(req, 'id');
     const now = Date.now();
     const lockExpiresAt = now + leaseDurationMs;
@@ -485,7 +483,7 @@ export const videosRouter = (): Router => {
     });
   });
 
-  router.delete('/:id/lease', requireCreator, async (req, res) => {
+  router.delete('/:id/lease', videoId, requireCreator, async (req, res) => {
     try {
       await getDocumentClient().send(
         new UpdateCommand({
@@ -504,12 +502,12 @@ export const videosRouter = (): Router => {
     res.status(204).end();
   });
 
-  router.delete('/:id', requireCreator, async (req, res) => {
+  router.delete('/:id', videoId, requireCreator, async (req, res) => {
     await deleteVideoCascade(pathParam(req, 'id'));
     res.status(204).end();
   });
 
-  router.post('/:id/access', async (req, res) => {
+  router.post('/:id/access', videoId, async (req, res) => {
     const id = pathParam(req, 'id');
     const { data } = await videoEntity.get({ id }).go();
     if (!data) {

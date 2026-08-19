@@ -102,6 +102,35 @@ describe('uploadParts', () => {
     expect(put).toHaveBeenCalledTimes(3);
   });
 
+  it('stops handing out parts once one worker gives up', async () => {
+    const plans = planParts(100, 10);
+    const started: number[] = [];
+    const put = jest.fn(async (url: string) => {
+      const partNumber = Number(url.split('/').pop());
+      started.push(partNumber);
+      if (partNumber === 1) throw new Error('network');
+      return 'etag';
+    });
+
+    await expect(
+      uploadParts({
+        file: fakeFile(100),
+        plans,
+        urls: plans.map(({ partNumber }) => ({
+          partNumber,
+          url: `https://s3/${partNumber}`,
+        })),
+        concurrency: 2,
+        put,
+        wait: noWait,
+      }),
+    ).rejects.toThrow('network');
+
+    // the pool is two wide, so without the stop flag the survivor would keep
+    // draining every remaining part and re-report them on the next retry
+    expect(new Set(started).size).toBeLessThan(plans.length);
+  });
+
   it('reports bytes per finished part', async () => {
     const onPartDone = jest.fn();
     await uploadParts({

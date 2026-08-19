@@ -24,6 +24,7 @@ import {
   sortRows,
   toChapters,
   toRows,
+  toSavableChapters,
 } from '../studio/chapters';
 import useEditLease from '../studio/useEditLease';
 import { Badge, Button, Card, Headline, Spinner } from '../ui/components';
@@ -274,7 +275,7 @@ const Editor: FC<{
       setSaveState('saving');
       updateVideo.mutate(
         {
-          chapters: toChapters(payload.rows),
+          chapters: toSavableChapters(payload.rows),
           version: versionRef.current,
           ...payload.extra,
         },

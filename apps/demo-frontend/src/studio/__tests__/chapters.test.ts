@@ -5,6 +5,7 @@ import {
   sortRows,
   toChapters,
   toRows,
+  toSavableChapters,
 } from '../chapters';
 
 const rowsOf = (...starts: number[]) =>
@@ -62,6 +63,26 @@ describe('sortRows', () => {
     const rows = rowsOf(90000, 0, 30000);
     expect(sortRows(rows).map((r) => r.startMs)).toEqual([0, 30000, 90000]);
     expect(rows.map((r) => r.startMs)).toEqual([90000, 0, 30000]);
+  });
+});
+
+describe('toSavableChapters', () => {
+  it('drops a chapter that has not been named yet', () => {
+    const { rows } = insertAt(rowsOf(0), 90000);
+    expect(toChapters(rows)).toHaveLength(2);
+    expect(toSavableChapters(rows)).toEqual([{ startMs: 0, title: 'at 0' }]);
+  });
+
+  it('drops a title that is only whitespace', () => {
+    const rows = toRows([{ startMs: 0, title: '   ' }]);
+    expect(toSavableChapters(rows)).toEqual([]);
+  });
+
+  it('keeps every named chapter', () => {
+    expect(toSavableChapters(rowsOf(0, 90000))).toEqual([
+      { startMs: 0, title: 'at 0' },
+      { startMs: 90000, title: 'at 90000' },
+    ]);
   });
 });
 

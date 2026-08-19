@@ -72,19 +72,30 @@ export const uploadParts = async (
   );
   const done: UploadedPart[] = [];
   let next = 0;
+  // Promise.all rejects on the first failure while the other workers keep
+  // going, and those late parts would be re-uploaded by a retry and reported
+  // twice, so the pool stops handing out work as soon as one worker gives up
+  let failed = false;
 
   const worker = async (): Promise<void> => {
     for (;;) {
       const plan = plans[next];
-      if (!plan) return;
+      if (!plan || failed) return;
       next += 1;
       const url = urlByPart.get(plan.partNumber);
-      if (!url)
+      if (!url) {
+        failed = true;
         throw new ApiError(0, `Missing upload URL for part ${plan.partNumber}`);
-      // eslint-disable-next-line no-await-in-loop
-      const part = await uploadOnePart(plan, url, options);
-      done.push(part);
-      onPartDone?.(part, plan.end - plan.start);
+      }
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const part = await uploadOnePart(plan, url, options);
+        done.push(part);
+        onPartDone?.(part, plan.end - plan.start);
+      } catch (error) {
+        failed = true;
+        throw error;
+      }
     }
   };
 

@@ -15,6 +15,11 @@ export const toRows = (chapters: Chapter[]): ChapterRow[] =>
 export const toChapters = (rows: ChapterRow[]): Chapter[] =>
   rows.map(({ startMs, title }) => ({ startMs, title }));
 
+// a freshly marked chapter has no title yet, and the API rejects a blank one,
+// so it stays local until the user names it
+export const toSavableChapters = (rows: ChapterRow[]): Chapter[] =>
+  toChapters(rows).filter((chapter) => chapter.title.trim() !== '');
+
 export const sortRows = (rows: ChapterRow[]): ChapterRow[] =>
   [...rows].sort((a, b) => a.startMs - b.startMs);
 

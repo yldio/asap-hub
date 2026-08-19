@@ -65,5 +65,4 @@ tramp
 .gitnexus/*
 CLAUDE.md
 AGENTS.md
-.esbuild
-.playwright-mcp
+apps/demo-server/.esbuild/.build/*

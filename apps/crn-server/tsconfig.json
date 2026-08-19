@@ -15,7 +15,11 @@
     "test",
     "test/**/*.json",
     "@types/**/*.d.ts",
-    "serverless.ts"
+    "serverless.ts",
+    "serverless-async.ts",
+    "serverless-indexers.ts",
+    "serverless-local.ts",
+    "serverless"
   ],
   "references": [
     { "path": "../../packages/auth" },

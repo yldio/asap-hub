@@ -1,7 +1,9 @@
+// this file owns its env: BUCKET_NAME is deleted so the driver exercises the
+// local fallback in config.getBucketName(), regardless of what other test
+// files set on the shared process
 process.env.SLS_STAGE = 'local';
+delete process.env.BUCKET_NAME;
 
-// BUCKET_NAME is inlined at transform time and is unset here, so the driver
-// falls back to the local default bucket name from config.getBucketName()
 const bucket = 'demo-hub-local-storage';
 
 /* eslint-disable import/first */
@@ -10,6 +12,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Readable } from 'stream';
 import {
   abortMultipartUpload,
+  abortMultipartUploadsUnder,
   completeMultipartUpload,
   createMultipartUpload,
   deletePrefix,
@@ -320,6 +323,120 @@ describe('deletePrefix', () => {
       .mockResolvedValueOnce({});
 
     await deletePrefix('media/video-1/');
+
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('abortMultipartUploadsUnder', () => {
+  it('aborts every in-flight upload under the prefix', async () => {
+    send
+      .mockResolvedValueOnce({
+        Uploads: [
+          { Key: 'raw/video-1/original.mp4', UploadId: 'u1' },
+          { Key: 'raw/video-1/original.mp4', UploadId: 'u2' },
+        ],
+        IsTruncated: false,
+      })
+      .mockResolvedValue({});
+
+    await abortMultipartUploadsUnder('raw/video-1/');
+
+    expect(lastInput(0)).toEqual({
+      Bucket: bucket,
+      Prefix: 'raw/video-1/',
+      KeyMarker: undefined,
+      UploadIdMarker: undefined,
+    });
+    expect(lastInput(1)).toEqual({
+      Bucket: bucket,
+      Key: 'raw/video-1/original.mp4',
+      UploadId: 'u1',
+    });
+    expect(lastInput(2)).toEqual({
+      Bucket: bucket,
+      Key: 'raw/video-1/original.mp4',
+      UploadId: 'u2',
+    });
+  });
+
+  it('follows the key and upload id markers across pages', async () => {
+    send
+      .mockResolvedValueOnce({
+        Uploads: [{ Key: 'raw/video-1/original.mp4', UploadId: 'u1' }],
+        IsTruncated: true,
+        NextKeyMarker: 'raw/video-1/original.mp4',
+        NextUploadIdMarker: 'u1',
+      })
+      .mockResolvedValueOnce({})
+      .mockResolvedValueOnce({
+        Uploads: [{ Key: 'raw/video-1/original.mp4', UploadId: 'u2' }],
+        IsTruncated: false,
+      })
+      .mockResolvedValue({});
+
+    await abortMultipartUploadsUnder('raw/video-1/');
+
+    expect(lastInput(2)).toEqual({
+      Bucket: bucket,
+      Prefix: 'raw/video-1/',
+      KeyMarker: 'raw/video-1/original.mp4',
+      UploadIdMarker: 'u1',
+    });
+    expect(lastInput(3)).toEqual({
+      Bucket: bucket,
+      Key: 'raw/video-1/original.mp4',
+      UploadId: 'u2',
+    });
+  });
+
+  it('retries without a prefix when the prefixed listing comes back empty', async () => {
+    // MinIO answers a prefixed ListMultipartUploads with nothing at all
+    send
+      .mockResolvedValueOnce({ Uploads: [], IsTruncated: false })
+      .mockResolvedValueOnce({
+        Uploads: [
+          { Key: 'raw/video-1/original.mp4', UploadId: 'u1' },
+          { Key: 'raw/video-2/original.mp4', UploadId: 'other' },
+        ],
+        IsTruncated: false,
+      })
+      .mockResolvedValue({});
+
+    await abortMultipartUploadsUnder('raw/video-1/');
+
+    expect(lastInput(1)).toEqual({
+      Bucket: bucket,
+      KeyMarker: undefined,
+      UploadIdMarker: undefined,
+    });
+    // only the upload under the requested prefix is aborted
+    expect(send).toHaveBeenCalledTimes(3);
+    expect(lastInput(2)).toEqual({
+      Bucket: bucket,
+      Key: 'raw/video-1/original.mp4',
+      UploadId: 'u1',
+    });
+  });
+
+  it('ignores uploads with no key or no upload id', async () => {
+    send
+      .mockResolvedValueOnce({
+        Uploads: [{ Key: 'raw/video-1/original.mp4' }, { UploadId: 'u2' }],
+        IsTruncated: false,
+      })
+      .mockResolvedValueOnce({ Uploads: [], IsTruncated: false })
+      .mockResolvedValue({});
+
+    await abortMultipartUploadsUnder('raw/video-1/');
+
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  it('does nothing when there is no upload in flight', async () => {
+    send.mockResolvedValue({ Uploads: [], IsTruncated: false });
+
+    await abortMultipartUploadsUnder('raw/video-1/');
 
     expect(send).toHaveBeenCalledTimes(2);
   });

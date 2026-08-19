@@ -4,6 +4,7 @@ import {
   CreateMultipartUploadCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
+  ListMultipartUploadsCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -178,4 +179,57 @@ export const deletePrefix = async (prefix: string): Promise<void> => {
       ? listed.NextContinuationToken
       : undefined;
   } while (continuationToken);
+};
+
+// in-flight multipart uploads keep their parts billable and are invisible to
+// ListObjectsV2, so deleting the objects under a prefix is not enough to free
+// the storage; every upload still open on that prefix has to be aborted too
+export const abortMultipartUploadsUnder = async (
+  prefix: string,
+): Promise<void> => {
+  // MinIO answers a prefixed ListMultipartUploads with an empty set, so when a
+  // prefixed page comes back empty the whole bucket is listed and filtered here
+  const abortPage = async (usePrefix: boolean): Promise<number> => {
+    let keyMarker: string | undefined;
+    let uploadIdMarker: string | undefined;
+    let aborted = 0;
+    do {
+      const listed = await getS3Client().send(
+        new ListMultipartUploadsCommand({
+          Bucket: getBucketName(),
+          ...(usePrefix ? { Prefix: prefix } : {}),
+          KeyMarker: keyMarker,
+          UploadIdMarker: uploadIdMarker,
+        }),
+      );
+      const uploads = (listed.Uploads || []).filter(
+        (upload): upload is { Key: string; UploadId: string } =>
+          Boolean(upload.Key?.startsWith(prefix) && upload.UploadId),
+      );
+      await Promise.all(
+        uploads.map(({ Key, UploadId }) =>
+          getS3Client().send(
+            new AbortMultipartUploadCommand({
+              Bucket: getBucketName(),
+              Key,
+              UploadId,
+            }),
+          ),
+        ),
+      );
+      aborted += uploads.length;
+      if (listed.IsTruncated) {
+        keyMarker = listed.NextKeyMarker;
+        uploadIdMarker = listed.NextUploadIdMarker;
+      } else {
+        keyMarker = undefined;
+        uploadIdMarker = undefined;
+      }
+    } while (keyMarker || uploadIdMarker);
+    return aborted;
+  };
+
+  if ((await abortPage(true)) === 0) {
+    await abortPage(false);
+  }
 };

@@ -1,4 +1,6 @@
 process.env.SLS_STAGE = 'local';
+process.env.TABLE_NAME = 'demo-hub-test-data';
+process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import supertest from 'supertest';
@@ -16,6 +18,7 @@ jest.mock('../src/storage', () => ({
   signUploadParts: jest.fn(),
   completeMultipartUpload: jest.fn(),
   abortMultipartUpload: jest.fn(),
+  abortMultipartUploadsUnder: jest.fn(),
   putObject: jest.fn(),
   deletePrefix: jest.fn(),
   getObject: jest.fn(),
@@ -118,6 +121,10 @@ beforeEach(() => {
   (storage.abortMultipartUpload as jest.Mock)
     .mockReset()
     .mockResolvedValue(undefined);
+  (storage.abortMultipartUploadsUnder as jest.Mock)
+    .mockReset()
+    .mockResolvedValue(undefined);
+  (storage.deletePrefix as jest.Mock).mockReset().mockResolvedValue(undefined);
 });
 
 describe('POST /api/uploads', () => {
@@ -459,6 +466,61 @@ describe('DELETE /api/uploads/:videoId', () => {
 
     expect(response.status).toBe(204);
     expect(storage.abortMultipartUpload).not.toHaveBeenCalled();
+    // the prefix sweep still runs, so a retried upload cannot be left behind
+    expect(storage.abortMultipartUploadsUnder).toHaveBeenCalledWith(
+      'raw/video-1/',
+    );
+  });
+
+  it('sweeps every upload left open on the key, not just the one supplied', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(videoItem({ processingState: 'uploading' }));
+    jest
+      .spyOn(videoEntity, 'delete')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+
+    const response = await api
+      .delete('/api/uploads/video-1?uploadId=upload-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    expect(storage.abortMultipartUploadsUnder).toHaveBeenCalledWith(
+      'raw/video-1/',
+    );
+    expect(storage.deletePrefix).toHaveBeenCalledWith('raw/video-1/');
+  });
+
+  it('leaves the sweep alone for an item past uploading', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(videoItem({ processingState: 'ready' }));
+
+    const response = await api
+      .delete('/api/uploads/video-1?uploadId=upload-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    expect(storage.abortMultipartUploadsUnder).not.toHaveBeenCalled();
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
+
+  it('still deletes the item when the sweep fails', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(videoItem({ processingState: 'uploading' }));
+    const remove = jest
+      .spyOn(videoEntity, 'delete')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+    (storage.abortMultipartUploadsUnder as jest.Mock).mockRejectedValue(
+      new Error('AccessDenied'),
+    );
+
+    const response = await api
+      .delete('/api/uploads/video-1?uploadId=upload-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
   });
 
   it('still succeeds when the abort call fails', async () => {

@@ -11,8 +11,10 @@ import {
 } from '../schemas';
 import {
   abortMultipartUpload,
+  abortMultipartUploadsUnder,
   completeMultipartUpload,
   createMultipartUpload,
+  deletePrefix,
   signUploadParts,
 } from '../storage';
 import { serialiseVideo } from './videos';
@@ -118,18 +120,28 @@ export const uploadsRouter = (): Router => {
     },
   );
 
-  router.delete('/:videoId', requireVideoIdParam('videoId'), async (req, res) => {
-    const videoId = pathParam(req, 'videoId');
-    const { uploadId } = req.query;
-    if (typeof uploadId === 'string' && uploadId) {
-      await abortMultipartUpload(videoId, uploadId).catch(() => undefined);
-    }
-    const { data } = await videoEntity.get({ id: videoId }).go();
-    if (data?.processingState === 'uploading') {
-      await videoEntity.delete({ id: videoId }).go();
-    }
-    res.status(204).end();
-  });
+  router.delete(
+    '/:videoId',
+    requireVideoIdParam('videoId'),
+    async (req, res) => {
+      const videoId = pathParam(req, 'videoId');
+      const { uploadId } = req.query;
+      if (typeof uploadId === 'string' && uploadId) {
+        await abortMultipartUpload(videoId, uploadId).catch(() => undefined);
+      }
+      const { data } = await videoEntity.get({ id: videoId }).go();
+      if (data?.processingState === 'uploading') {
+        // a retried upload can leave earlier attempts open on the same key and
+        // the client only ever knows the id of its own latest one
+        await abortMultipartUploadsUnder(`raw/${videoId}/`).catch(
+          () => undefined,
+        );
+        await deletePrefix(`raw/${videoId}/`).catch(() => undefined);
+        await videoEntity.delete({ id: videoId }).go();
+      }
+      res.status(204).end();
+    },
+  );
 
   return router;
 };

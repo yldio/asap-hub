@@ -1,18 +1,25 @@
 process.env.SLS_STAGE = 'local';
+process.env.TABLE_NAME = 'demo-hub-test-data';
+process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { videoEntity } from '../src/data/entities';
 import { deleteVideoCascade } from '../src/routes/cascade';
-import { deletePrefix } from '../src/storage';
+import { abortMultipartUploadsUnder, deletePrefix } from '../src/storage';
 /* eslint-enable import/first */
 
 jest.mock('../src/storage', () => ({
   ...jest.requireActual('../src/storage'),
   deletePrefix: jest.fn(),
+  abortMultipartUploadsUnder: jest.fn(),
 }));
 
 const mockDeletePrefix = deletePrefix as jest.MockedFunction<
   typeof deletePrefix
+>;
+
+const mockAbortUploads = abortMultipartUploadsUnder as jest.MockedFunction<
+  typeof abortMultipartUploadsUnder
 >;
 
 const mockItemDelete = () =>
@@ -24,6 +31,7 @@ const mockItemDelete = () =>
 beforeEach(() => {
   jest.restoreAllMocks();
   mockDeletePrefix.mockReset().mockResolvedValue(undefined);
+  mockAbortUploads.mockReset().mockResolvedValue(undefined);
 });
 
 describe('deleteVideoCascade', () => {
@@ -80,6 +88,49 @@ describe('deleteVideoCascade', () => {
 
     await expect(deleteVideoCascade('video-1')).rejects.toThrow(
       'ThrottlingException',
+    );
+  });
+});
+
+describe('deleteVideoCascade in-flight uploads', () => {
+  it('aborts the uploads still open on the raw prefix', async () => {
+    mockItemDelete();
+
+    await deleteVideoCascade('video-1');
+
+    expect(mockAbortUploads).toHaveBeenCalledWith('raw/video-1/');
+  });
+
+  it('aborts before the objects are deleted, so a late part cannot survive', async () => {
+    mockItemDelete();
+    const order: string[] = [];
+    mockAbortUploads.mockImplementation(async () => {
+      order.push('abort');
+    });
+    mockDeletePrefix.mockImplementation(async () => {
+      order.push('delete');
+    });
+
+    await deleteVideoCascade('video-1');
+
+    expect(order[0]).toBe('abort');
+  });
+
+  it('still deletes the objects and the item when the abort fails', async () => {
+    const remove = mockItemDelete();
+    const error = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    mockAbortUploads.mockRejectedValue(new Error('AccessDenied'));
+
+    await expect(deleteVideoCascade('video-1')).resolves.toBeUndefined();
+
+    expect(mockDeletePrefix).toHaveBeenCalledWith('raw/video-1/');
+    expect(mockDeletePrefix).toHaveBeenCalledWith('media/video-1/');
+    expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
+    expect(error).toHaveBeenCalledWith(
+      'failed to abort uploads under raw/video-1/',
+      expect.any(Error),
     );
   });
 });

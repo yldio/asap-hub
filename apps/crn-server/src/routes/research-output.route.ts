@@ -2,6 +2,7 @@ import {
   canPublishProjectOutput,
   mapManuscriptLifecycleToType,
   mapManuscriptTypeToSubType,
+  teamHasActiveProjectManager,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -17,6 +18,7 @@ import { Response, Router } from 'express';
 import ManuscriptController from '../controllers/manuscript.controller';
 import ProjectController from '../controllers/project.controller';
 import ResearchOutputController from '../controllers/research-output.controller';
+import TeamController from '../controllers/team.controller';
 
 import {
   validateResearchOutputParameters,
@@ -52,6 +54,7 @@ export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
   manuscriptController: ManuscriptController,
   projectController: ProjectController,
+  teamController: TeamController,
 ): Router => {
   const researchOutputRoutes = Router();
 
@@ -74,6 +77,19 @@ export const researchOutputRouteFactory = (
     ) {
       const project = await projectController.fetchById(associationIds[0]);
       return canPublishProjectOutput(user.id, user.teams, project);
+    }
+
+    if (
+      association === 'teams' &&
+      request.published &&
+      !isManuscriptOutput &&
+      userRole === 'Member' &&
+      associationIds[0]
+    ) {
+      const team = await teamController.fetchById(associationIds[0]);
+      if (!teamHasActiveProjectManager(team.members)) {
+        return true;
+      }
     }
 
     return hasEditResearchOutputPermission(

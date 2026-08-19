@@ -3,6 +3,7 @@ import {
   isActiveTeamMember,
   isPIRole,
   isTeamType,
+  teamHasActiveProjectManager,
 } from '../src/team';
 
 describe('isPIRole', () => {
@@ -87,6 +88,39 @@ describe('countActiveUniqueMembers', () => {
         { id: 'user-1', inactiveSinceDate: '2020-01-01T00:00:00Z' },
       ]),
     ).toBe(1);
+  });
+});
+
+describe('teamHasActiveProjectManager', () => {
+  test('should return false for an empty list', () => {
+    expect(teamHasActiveProjectManager([])).toBe(false);
+  });
+
+  test('should return true when an active Project Manager exists', () => {
+    expect(
+      teamHasActiveProjectManager([
+        { role: 'Lead PI (Core Leadership)' },
+        { role: 'Project Manager' },
+      ]),
+    ).toBe(true);
+  });
+
+  test('should return false when there is no Project Manager', () => {
+    expect(
+      teamHasActiveProjectManager([
+        { role: 'Lead PI (Core Leadership)' },
+        { role: 'Key Personnel' },
+      ]),
+    ).toBe(false);
+  });
+
+  test('should ignore alumni and inactive Project Managers', () => {
+    expect(
+      teamHasActiveProjectManager([
+        { role: 'Project Manager', alumniSinceDate: '2020-01-01T00:00:00Z' },
+        { role: 'Project Manager', inactiveSinceDate: '2020-01-01T00:00:00Z' },
+      ]),
+    ).toBe(false);
   });
 });
 

@@ -45,6 +45,13 @@ import { LabeledDropdownType } from '../molecules/LabeledDropdown';
 import { LabeledRadioButtonGroupType } from '../molecules/LabeledRadioButtonGroup';
 import { AuthorSelectType } from '../organisms/AuthorSelect';
 import { MultiSelectOnChange } from '../atoms/MultiSelect';
+import {
+  getAuthorsMissingTeam,
+  getLabsMissingPITeam,
+  missingPITeamLabsMessage,
+  missingTeamAuthorsMessage,
+  nonProjectMemberAuthorsMessage,
+} from '../utils';
 import ManuscriptFormModals from '../organisms/ManuscriptFormModals';
 import LabeledFileField from '../molecules/LabeledFileField';
 import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
@@ -87,8 +94,6 @@ const LabeledRadioButtonGroup = lazy(
 ) as LabeledRadioButtonGroupType;
 
 const LabeledTextArea = lazy(() => import('../molecules/LabeledTextArea'));
-
-const BIG_SPACE = '\u2004';
 
 const MAX_FILE_SIZE = 100_000_000;
 const KRT_GUIDANCE_FILE =
@@ -639,29 +644,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       return true;
     }
 
-    labs
-      .filter((lab) => {
-        const { labPITeamIds } = lab as LabOption;
-        return (
-          labPITeamIds?.length > 0 &&
-          labPITeamIds.every(
-            (labPITeamId) => !teamFormIds.includes(labPITeamId),
-          )
-        );
-      })
-      .forEach((lab) => {
-        labsWithValidationIssues.add(lab.label);
-      });
+    getLabsMissingPITeam(labs as LabOption[], teamFormIds).forEach((lab) => {
+      labsWithValidationIssues.add(lab.label);
+    });
 
     await trigger('versions.0.teams');
 
     if (labsWithValidationIssues.size > 0) {
-      const labErrorMessage = `The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.\n${Array.from(
-        labsWithValidationIssues,
-      )
-        .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
-        .join('\n')}`;
-      return labErrorMessage;
+      return missingPITeamLabsMessage(Array.from(labsWithValidationIssues));
     }
     return true;
   };
@@ -685,12 +675,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     if (missingContributors.size === 0) {
       return true;
     }
-    const errorPrefix = isProjectManuscript
-      ? `The following ${role} are not members of this project. Only project members can be authors, so please contact support to add them, or remove them from the list.`
-      : `The following ${role} do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.`;
-    return `${errorPrefix}\n${Array.from(missingContributors)
-      .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-      .join('\n')}`;
+    const labels = Array.from(missingContributors);
+    return isProjectManuscript
+      ? nonProjectMemberAuthorsMessage(role, labels)
+      : missingTeamAuthorsMessage(role, labels);
   };
 
   const validateFirstAuthors = async (
@@ -724,28 +712,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       return true;
     }
 
-    selectedFirstAuthors
-      .filter((algoliaAuthor) => {
-        if (
-          !('author' in algoliaAuthor) ||
-          !algoliaAuthor.author ||
-          !isInternalUser(algoliaAuthor.author)
-        ) {
-          return false;
-        }
-        if (isProjectManuscript) {
-          return !(projectMemberIds ?? []).includes(algoliaAuthor.value);
-        }
-        return (
-          algoliaAuthor.author.teams.length > 0 &&
-          algoliaAuthor.author.teams.every(
-            (team) => !teamFormIds.includes(team.id),
-          )
-        );
-      })
-      .forEach((author) => {
-        firstAuthorsWithoutTeamAdded.add(author.label);
-      });
+    const firstAuthorsMissing = isProjectManuscript
+      ? selectedFirstAuthors.filter(
+          (algoliaAuthor) =>
+            'author' in algoliaAuthor &&
+            algoliaAuthor.author &&
+            isInternalUser(algoliaAuthor.author) &&
+            !(projectMemberIds ?? []).includes(algoliaAuthor.value),
+        )
+      : getAuthorsMissingTeam(selectedFirstAuthors, teamFormIds);
+
+    firstAuthorsMissing.forEach((author) => {
+      firstAuthorsWithoutTeamAdded.add(author.label);
+    });
 
     if (!isProjectManuscript) {
       await trigger('versions.0.teams');
@@ -767,29 +746,22 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     correspondingAuthorWithoutTeamAdded.clear();
 
-    if (
-      correspondingAuthorValue &&
-      'author' in correspondingAuthorValue &&
-      correspondingAuthorValue.author &&
-      isInternalUser(correspondingAuthorValue.author)
-    ) {
-      if (isProjectManuscript) {
-        if (
-          !(projectMemberIds ?? []).includes(correspondingAuthorValue.value)
-        ) {
-          correspondingAuthorWithoutTeamAdded.add(
-            correspondingAuthorValue.label,
-          );
-        }
-      } else if (
-        correspondingAuthorValue.author.teams.length > 0 &&
-        correspondingAuthorValue.author.teams.every(
-          (team) => !teamFormIds.includes(team.id),
+    const selectedCorrespondingAuthors = correspondingAuthorValue
+      ? [correspondingAuthorValue]
+      : [];
+    const correspondingAuthorMissing = isProjectManuscript
+      ? selectedCorrespondingAuthors.filter(
+          (algoliaAuthor) =>
+            'author' in algoliaAuthor &&
+            algoliaAuthor.author &&
+            isInternalUser(algoliaAuthor.author) &&
+            !(projectMemberIds ?? []).includes(algoliaAuthor.value),
         )
-      ) {
-        correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
-      }
-    }
+      : getAuthorsMissingTeam(selectedCorrespondingAuthors, teamFormIds);
+
+    correspondingAuthorMissing.forEach((author) => {
+      correspondingAuthorWithoutTeamAdded.add(author.label);
+    });
 
     if (!isProjectManuscript) {
       await trigger('versions.0.teams');
@@ -809,28 +781,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     additionalAuthorsWithoutTeamAdded.clear();
 
-    selectedAdditionalAuthors
-      .filter((algoliaAuthor) => {
-        if (
-          !('author' in algoliaAuthor) ||
-          !algoliaAuthor.author ||
-          !isInternalUser(algoliaAuthor.author)
-        ) {
-          return false;
-        }
-        if (isProjectManuscript) {
-          return !(projectMemberIds ?? []).includes(algoliaAuthor.value);
-        }
-        return (
-          algoliaAuthor.author.teams.length > 0 &&
-          algoliaAuthor.author.teams.every(
-            (team) => !teamFormIds.includes(team.id),
-          )
-        );
-      })
-      .forEach((author) => {
-        additionalAuthorsWithoutTeamAdded.add(author.label);
-      });
+    const additionalAuthorsMissing = isProjectManuscript
+      ? selectedAdditionalAuthors.filter(
+          (algoliaAuthor) =>
+            'author' in algoliaAuthor &&
+            algoliaAuthor.author &&
+            isInternalUser(algoliaAuthor.author) &&
+            !(projectMemberIds ?? []).includes(algoliaAuthor.value),
+        )
+      : getAuthorsMissingTeam(selectedAdditionalAuthors, teamFormIds);
+
+    additionalAuthorsMissing.forEach((author) => {
+      additionalAuthorsWithoutTeamAdded.add(author.label);
+    });
 
     if (!isProjectManuscript) {
       await trigger('versions.0.teams');

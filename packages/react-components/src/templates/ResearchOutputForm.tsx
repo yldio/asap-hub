@@ -69,6 +69,7 @@ type ResearchOutputFormProps = Pick<
     | 'getAuthorSuggestions'
     | 'getTeamSuggestions'
     | 'authorsRequired'
+    | 'validateContributorTeams'
   > & {
     versionAction?: 'create' | 'edit';
     projectMemberIds?: ReadonlyArray<string>;
@@ -143,6 +144,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   tagSuggestions,
   urlRequired = true,
   authorsRequired = false,
+  validateContributorTeams = false,
   projectMemberIds,
   typeOptions,
   selectedTeams,
@@ -479,6 +481,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               authorsRequired={authorsRequired}
               showTeamsAndLabs={availableActions.showTeamsAndLabs}
               authorRestriction={authorRestriction}
+              validateContributorTeams={validateContributorTeams}
             />
             <Controller
               name="relatedResearch"

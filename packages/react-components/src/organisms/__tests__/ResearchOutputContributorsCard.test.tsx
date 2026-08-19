@@ -275,6 +275,209 @@ describe('Labs Multiselect', () => {
   });
 });
 
+describe('contributor team validation', () => {
+  const authorWithTeams = (
+    label: string,
+    value: string,
+    teamIds: string[],
+  ) => ({
+    label,
+    value,
+    author: {
+      id: value,
+      firstName: label,
+      lastName: 'Author',
+      displayName: label,
+      teams: teamIds.map((id) => ({ id, role: 'Collaborating PI' })),
+    },
+  });
+
+  it('flags an author whose teams are not listed as contributors', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard validateContributorTeams />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          authors: [authorWithTeams('Author A', 'author-a', ['team-2'])],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    const message = screen.getByText(
+      /do not have a team listed as a contributor/i,
+    );
+    expect(message).toBeVisible();
+    expect(message.textContent).toContain('Author A');
+  });
+
+  it('accepts an author who has one of their teams listed', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard validateContributorTeams />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          authors: [authorWithTeams('Author A', 'author-a', ['team-1'])],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    expect(
+      screen.queryByText(/do not have a team listed as a contributor/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('ignores authors with no teams (e.g. external authors)', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard validateContributorTeams />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          authors: [{ label: 'External', value: 'external-1' }],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    expect(
+      screen.queryByText(/do not have a team listed as a contributor/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not validate author teams when the flag is off', async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          authors: [authorWithTeams('Author A', 'author-a', ['team-2'])],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('authors');
+    });
+
+    expect(
+      screen.queryByText(/do not have a team listed as a contributor/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it("flags a lab whose PI's team is not listed as a contributor", async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard validateContributorTeams />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          labs: [
+            { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-2'] },
+          ] as unknown as ResearchOutputFormValues['labs'],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('labs');
+    });
+
+    const message = screen.getByText(
+      /do not list their corresponding PI’s team as a contributor/i,
+    );
+    expect(message).toBeVisible();
+    expect(message.textContent).toContain('Lab One');
+  });
+
+  it("accepts a lab whose PI's team is listed as a contributor", async () => {
+    const { methodsRef } = renderContributors(
+      <ResearchOutputContributorsCard validateContributorTeams />,
+      {
+        defaultValues: {
+          teams: [{ label: 'Team One', value: 'team-1' }],
+          labs: [
+            { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-1'] },
+          ] as unknown as ResearchOutputFormValues['labs'],
+        },
+      },
+    );
+
+    await act(async () => {
+      await methodsRef.current?.trigger('labs');
+    });
+
+    expect(
+      screen.queryByText(
+        /do not list their corresponding PI’s team as a contributor/i,
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it('revalidates authors and labs when contributor teams change', async () => {
+    const getTeamSuggestions = jest.fn();
+    getTeamSuggestions.mockResolvedValue([
+      { label: 'Team One', value: 'team-1' },
+      { label: 'Team Two', value: 'team-2' },
+    ]);
+
+    const { methodsRef, getByLabelText, getByText, queryByText } =
+      renderContributors(
+        <ResearchOutputContributorsCard
+          validateContributorTeams
+          getTeamSuggestions={getTeamSuggestions}
+        />,
+        {
+          defaultValues: {
+            teams: [{ label: 'Team One', value: 'team-1' }],
+            authors: [authorWithTeams('Author A', 'author-a', ['team-2'])],
+            labs: [
+              { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-2'] },
+            ] as unknown as ResearchOutputFormValues['labs'],
+          },
+        },
+      );
+
+    await act(async () => {
+      await methodsRef.current?.trigger(['authors', 'labs']);
+    });
+
+    expect(
+      screen.getByText(/do not have a team listed as a contributor/i),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        /do not list their corresponding PI’s team as a contributor/i,
+      ),
+    ).toBeVisible();
+
+    await userEvent.click(getByLabelText(/teams\(required\)/i));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    await userEvent.click(getByText('Team Two'));
+
+    await waitFor(() => {
+      expect(
+        queryByText(/do not have a team listed as a contributor/i),
+      ).not.toBeInTheDocument();
+      expect(
+        queryByText(
+          /do not list their corresponding PI’s team as a contributor/i,
+        ),
+      ).not.toBeInTheDocument();
+    });
+  });
+});
+
 describe('Teams Multiselect', () => {
   it('should render provided values', () => {
     const { getByText } = renderContributors(

@@ -120,6 +120,9 @@ jobs:
     if: ${{ needs.demo-changed.outputs.changed == 'true' && inputs.environment-name != 'Production' }}
     concurrency:
       group: demo-hub-dev
+      # one shared stack: superseded runs must not sit queued, or a demo deploy
+      # from another branch would hold this workflow (and its rollup) open
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe

@@ -280,7 +280,10 @@ export const useFocusTrap = (
       if (!event.shiftKey && (active === last || !node.contains(active))) {
         event.preventDefault();
         first.focus();
-      } else if (event.shiftKey && (active === first || !node.contains(active))) {
+      } else if (
+        event.shiftKey &&
+        (active === first || !node.contains(active))
+      ) {
         event.preventDefault();
         last.focus();
       }

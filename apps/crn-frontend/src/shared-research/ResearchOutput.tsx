@@ -19,6 +19,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import {
   ManuscriptVersionResponse,
+  projectHasLead,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import { ReactNode, Suspense, useEffect, useState } from 'react';
@@ -37,12 +38,16 @@ import {
 const ProjectOutputPermissionsGate: React.FC<{
   projectId: string;
   basePermissions: ResearchOutputPermissions;
-  children: (permissions: ResearchOutputPermissions) => ReactNode;
+  children: (
+    permissions: ResearchOutputPermissions,
+    hasLead: boolean,
+  ) => ReactNode;
 }> = ({ projectId, basePermissions, children }) => {
   const project = useProjectById(projectId);
   const permissions = useProjectOutputPermissions(basePermissions, project);
+  const hasLead = project ? projectHasLead(project) : false;
 
-  return <>{children(permissions)}</>;
+  return <>{children(permissions, hasLead)}</>;
 };
 
 const entityAssociation = {
@@ -204,11 +209,12 @@ const ResearchOutput: React.FC = () => {
       }
     };
 
-    const renderResearchOutputView = () => (
+    const renderResearchOutputView = (hasLead = false) => (
       <Frame title={researchOutputData.title}>
         {toast === 'published' && <ScrollToTop />}
         <SharedResearchOutput
           {...researchOutputData}
+          projectHasLead={hasLead}
           backHref={backHref}
           onRequestReview={(shouldReview) =>
             updateResearchOutput(researchOutputData.id, {
@@ -239,11 +245,12 @@ const ResearchOutput: React.FC = () => {
 
     const renderWithPermissions = (
       resolvedPermissions: ResearchOutputPermissions,
+      hasLead = false,
     ) => (
       <ResearchOutputPermissionsContext.Provider value={resolvedPermissions}>
         <Suspense key={location.pathname} fallback={<Loading />}>
           <Routes>
-            <Route index element={renderResearchOutputView()} />
+            <Route index element={renderResearchOutputView(hasLead)} />
             {resolvedPermissions.canVersionResearchOutput && (
               <Route
                 path={

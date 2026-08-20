@@ -59,6 +59,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'isInReview'
   | 'impact'
   | 'categories'
+  | 'publishingEntity'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -79,11 +80,16 @@ const SharedResearchOutputHeaderCard: React.FC<
   isInReview,
   impact,
   categories,
+  publishingEntity,
 }) => (
   <Card>
     <SharedResearchMetadata
       pills={[
-        workingGroups ? 'Working Group' : 'Team',
+        workingGroups
+          ? 'Working Group'
+          : publishingEntity === 'Project'
+            ? 'Project'
+            : 'Team',
         ...(documentType ? [documentType] : []),
         ...(type ? [type] : []),
       ]}

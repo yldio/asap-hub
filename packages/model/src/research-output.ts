@@ -488,7 +488,11 @@ export type ResearchOutputGenerateContentRequest = Partial<
   Pick<ResearchOutputPostRequest, 'descriptionMD'>
 >;
 
-export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
+export type ResearchOutputAssociations =
+  | 'team'
+  | 'teams'
+  | 'working group'
+  | 'project';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
   statusChangedById?: string;

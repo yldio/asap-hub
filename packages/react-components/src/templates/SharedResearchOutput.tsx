@@ -69,6 +69,7 @@ type SharedResearchOutputProps = Pick<
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     toast?: ResearchOutputToast;
+    projectHasLead?: boolean;
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
@@ -134,6 +135,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   onPublish,
   relatedManuscript,
   checkForNewVersion,
+  projectHasLead = false,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -166,6 +168,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasUsageNotes = usageNotes || usageNotesMD;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
+  const isProjectOutput = association === 'project';
+  const memberGroupLabel =
+    association === 'working group'
+      ? 'working group'
+      : isProjectOutput
+        ? 'project'
+        : 'team';
   const [reviewToggled, setReviewToggled] = useState(false);
   const [displayReviewModal, setDisplayReviewModal] = useState(false);
   const [
@@ -215,6 +224,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         reviewToggled={reviewToggled}
         associationName={associationName}
         isInReview={isInReview}
+        projectHasLead={projectHasLead}
       />
       <PageConstraints>
         {!isGrantDocument && (
@@ -224,6 +234,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             setDisplayReviewModal={setDisplayReviewModal}
             checkForNewerManuscriptVersion={checkForNewerManuscriptVersion}
             isInReview={isInReview}
+            isProjectOutput={isProjectOutput}
             duplicateLink={duplicateLink}
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
@@ -236,18 +247,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             title={`${
               isInReview
                 ? 'Switch output to draft?'
-                : 'Output ready for PM review?'
+                : `Output ready for ${isProjectOutput ? '' : 'PM '}review?`
             }`}
-            description={`All ${
-              association === 'working group' ? 'working group' : 'team'
-            } members listed on this output will be notified and ${
+            description={`All ${memberGroupLabel} members listed on this output will be notified and ${
               isInReview
                 ? 'will be able to edit this output again.'
-                : 'PMs will be able to review and publish this output.'
+                : isProjectOutput
+                  ? 'the project leads will be able to review and publish this output.'
+                  : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"
             confirmText={`${
-              isInReview ? 'Switch to Draft' : 'Ready for PM Review'
+              isInReview
+                ? 'Switch to Draft'
+                : `Ready for ${isProjectOutput ? 'Review' : 'PM Review'}`
             }`}
             onSave={() => toggleReview(!isInReview)}
             onCancel={() => {
@@ -281,9 +294,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             title={'Publish output for the whole hub?'}
             description={
               <>
-                {`All ${
-                  association === 'working group' ? 'working group' : 'team'
-                } members listed on this output will be notified and all
+                {`All ${memberGroupLabel} members listed on this output will be notified and all
                 CRN members will be able to access it. If you want to switch to
                 draft after the output was published you need to contact`}
                 <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.

@@ -557,7 +557,7 @@ describe('a project research output', () => {
     );
 
     expect(queryByText('Publish')).not.toBeInTheDocument();
-    expect(queryByText('Ready for PM Review')).toBeVisible();
+    expect(queryByText('Ready for Review')).toBeVisible();
   });
 });
 

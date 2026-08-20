@@ -36,6 +36,7 @@ test.each`
   associationDisplayableText | association
   ${'Working Group'}         | ${'working group'}
   ${'Team'}                  | ${'team'}
+  ${'Project'}               | ${'project'}
 `(
   'should render draft created toast for $associationDisplayableText',
   async ({ associationDisplayableText, association }) => {
@@ -159,4 +160,83 @@ it('should render only PMs can publish output', async () => {
       'This draft is available to members in the working group listed below. Only PMs can publish this output.',
     ),
   ).toBeInTheDocument();
+});
+
+describe('project outputs', () => {
+  const projectProps: SharedResearchOutputToastsProps = {
+    ...defaultProps,
+    association: 'project',
+    associationName: 'My Project',
+  };
+
+  it('renders the review requested toast without mentioning PMs', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        reviewToggled
+        isInReview
+        statusChangedBy={{
+          id: 'user-id',
+          firstName: 'First',
+          lastName: 'Last',
+        }}
+      />,
+    );
+
+    expect(
+      getByText('Draft project Article submitted for review successfully.'),
+    ).toBeInTheDocument();
+  });
+
+  it('asks the project leads to review in the info toast', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        isInReview
+        statusChangedBy={{
+          id: 'user-id',
+          firstName: 'First',
+          lastName: 'Last',
+        }}
+      />,
+    );
+
+    expect(
+      getByText(
+        'First Last on My Project requested the project leads to review this output. This draft is only available to members in the project listed below.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('tells only project leads can publish when the project has a lead', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        statusChangedBy={undefined}
+        projectHasLead
+      />,
+    );
+
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Only project leads can publish this output.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('tells any project member can publish when the project has no lead', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        statusChangedBy={undefined}
+        projectHasLead={false}
+      />,
+    );
+
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Any project member can publish this output.',
+      ),
+    ).toBeInTheDocument();
+  });
 });

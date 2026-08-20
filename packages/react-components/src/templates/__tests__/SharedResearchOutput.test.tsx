@@ -578,6 +578,52 @@ describe('a draft output', () => {
     ).toBeVisible();
     expect(getByText('Draft')).toBeVisible();
   });
+  it('shows the toast for project drafts when the project has a lead', () => {
+    const { getByText } = renderWithRouter(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        publishingEntity="Project"
+        workingGroups={undefined}
+        teams={[]}
+        project={{
+          id: 'project-1',
+          title: 'My Project',
+          projectType: 'Trainee Project',
+        }}
+        projectHasLead
+      />,
+    );
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Only project leads can publish this output.',
+      ),
+    ).toBeVisible();
+    expect(getByText('Draft')).toBeVisible();
+  });
+  it('shows the toast for project drafts when the project has no lead', () => {
+    const { getByText } = renderWithRouter(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        publishingEntity="Project"
+        workingGroups={undefined}
+        teams={[]}
+        project={{
+          id: 'project-1',
+          title: 'My Project',
+          projectType: 'Trainee Project',
+        }}
+        projectHasLead={false}
+      />,
+    );
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Any project member can publish this output.',
+      ),
+    ).toBeVisible();
+    expect(getByText('Draft')).toBeVisible();
+  });
 });
 
 describe('a newly published output', () => {
@@ -801,6 +847,46 @@ describe('the ready for pm review button', () => {
           /All working group members listed on this output will be notified and PMs will be able to review and publish this output./i,
         ),
       ).toBeVisible();
+    });
+    it('and renders with the correct text fields for a project research output', () => {
+      const { getByText, getAllByText, queryByText } = render(
+        <MemoryRouter>
+          <ResearchOutputPermissionsContext.Provider
+            value={{
+              canEditResearchOutput: false,
+              canPublishResearchOutput: false,
+              canShareResearchOutput: true,
+              canRequestReview: true,
+            }}
+          >
+            <SharedResearchOutput
+              {...props}
+              documentType="Article"
+              published={false}
+              publishingEntity="Project"
+              workingGroups={undefined}
+              teams={[]}
+              project={{
+                id: 'project-1',
+                title: 'My Project',
+                projectType: 'Trainee Project',
+              }}
+            />
+            ,
+          </ResearchOutputPermissionsContext.Provider>
+          ,
+        </MemoryRouter>,
+      );
+      const button = getByText('Ready for Review');
+      fireEvent.click(button);
+      expect(getByText('Output ready for review?')).toBeVisible();
+      expect(
+        getByText(
+          /All project members listed on this output will be notified and the project leads will be able to review and publish this output./i,
+        ),
+      ).toBeVisible();
+      expect(queryByText(/PM/)).not.toBeInTheDocument();
+      expect(getAllByText('Ready for Review').length).toEqual(2);
     });
     describe('and has the correct actions on the  buttons', () => {
       it('closes the modal correctly', () => {

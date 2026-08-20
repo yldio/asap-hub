@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from '@emotion/react';
 import {
+  AnchorHTMLAttributes,
   ButtonHTMLAttributes,
   FC,
   forwardRef,
@@ -136,6 +137,30 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+
+const linkButton = css({
+  textDecoration: 'none',
+  color: charcoal.rgb,
+  backgroundColor: paper.rgb,
+  borderColor: steel.rgb,
+  ':hover, :focus-visible': {
+    backgroundColor: silver.rgb,
+  },
+});
+
+type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  readonly small?: boolean;
+};
+
+export const ButtonLink: FC<ButtonLinkProps> = ({
+  small = false,
+  children,
+  ...props
+}) => (
+  <a css={[buttonBase, linkButton, small && smallButton]} {...props}>
+    {children}
+  </a>
+);
 
 const cardStyles = css({
   boxSizing: 'border-box',

@@ -91,3 +91,19 @@ it('offers a retry when playback access fails', async () => {
   expect(await screen.findByText('Playback is not available')).toBeVisible();
   expect(screen.getByRole('button', { name: /retry/i })).toBeVisible();
 });
+
+it('offers a download of the stream with a safe file name', async () => {
+  renderApp(<Watch />, {
+    api: {
+      ...api,
+      getVideo: () => Promise.resolve({ ...video, title: 'Q3: a/b results' }),
+    },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  const link = await screen.findByRole('link', { name: 'Download' });
+  expect(link).toHaveAttribute('href', '/media/video-1/stream.mp4');
+  expect(link).toHaveAttribute('download', 'Q3- a-b results.mp4');
+});

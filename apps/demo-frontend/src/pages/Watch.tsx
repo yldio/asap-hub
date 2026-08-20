@@ -10,7 +10,7 @@ import ChapterList from '../watch/ChapterList';
 import Player from '../watch/Player';
 import SpritePreview from '../watch/SpritePreview';
 import useThumbnails from '../watch/useThumbnails';
-import { Button, Card, Headline, Spinner } from '../ui/components';
+import { Button, ButtonLink, Card, Headline, Spinner } from '../ui/components';
 import { lead, rem } from '../ui/theme';
 import { formatDuration, formatRecordedAt } from '../utils/time';
 
@@ -27,11 +27,15 @@ const layoutStyles = css({
 const metaStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
+  alignItems: 'center',
   gap: rem(12),
   fontSize: rem(14),
   color: lead.rgb,
   paddingTop: rem(12),
 });
+
+const downloadFileName = (title: string) =>
+  `${title.replace(/[\\/:*?"<>|]/g, '-').trim() || 'demo'}.mp4`;
 
 const statePanelStyles = css({
   padding: rem(40),
@@ -82,10 +86,18 @@ const WatchPlayer: FC<{
           <span>{formatRecordedAt(video.recordedAt)}</span>
           <span>{formatDuration(video.durationMs)}</span>
           <span>Recorded by {video.createdBy.name}</span>
+          <ButtonLink
+            small
+            href={access.streamUrl}
+            download={downloadFileName(video.title)}
+            css={{ marginLeft: 'auto' }}
+          >
+            Download
+          </ButtonLink>
           {isCreator && (
             <Link
               to={`/studio/videos/${video.id}`}
-              css={{ marginLeft: 'auto', fontWeight: 'bold' }}
+              css={{ fontWeight: 'bold' }}
             >
               Edit demo
             </Link>

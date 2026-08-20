@@ -30,12 +30,14 @@ export default class DiscussionController {
     reply?: Reply,
     manuscriptId?: string,
     notificationList?: string,
+    useProjectBasedEmail?: boolean,
   ): Promise<DiscussionResponse> {
     await this.discussionDataProvider.update(id, {
       userId,
       reply,
       notificationList,
       manuscriptId,
+      useProjectBasedEmail,
     });
 
     return this.fetchById(id);
@@ -54,6 +56,7 @@ export default class DiscussionController {
     text: string,
     files: ManuscriptFileResponse[] | undefined,
     notificationList: string,
+    useProjectBasedEmail?: boolean,
   ): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create({
       userId,
@@ -62,6 +65,7 @@ export default class DiscussionController {
       text,
       files,
       notificationList,
+      useProjectBasedEmail,
     });
 
     return this.fetchById(id);

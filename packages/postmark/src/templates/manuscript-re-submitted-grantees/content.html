@@ -1,10 +1,15 @@
 <div>
-  <p>Dear Team {{ team.name }},</p>
   <p>
-    Thank you for updating your manuscript {{ manuscript.title }}. We will
-    review this manuscript version with the goal of returning it to you within
-    10 business days. You will receive an email and a notification on the Hub
-    when the report is ready.
+    Dear {{#if useProjectBasedEmail}}Grantee{{else}}Team {{ team.name }}{{/if}},
+  </p>
+  <p>
+    Thank you for updating your manuscript {{#if useProjectBasedEmail}}<a
+      href="{{{ manuscript.link }}}"
+      >{{ manuscript.title }}</a
+    >{{else}}{{ manuscript.title }}{{/if}}. We will review this manuscript
+    version with the goal of returning it to you within 10 business days. You
+    will receive an email and a notification on the Hub when the report is
+    ready.
   </p>
   <p>
     This is an automated message. Please do not reply to this email. If you have

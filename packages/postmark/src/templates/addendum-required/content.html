@@ -1,7 +1,13 @@
 <div>
-  <p>Dear Team {{ team.name }},</p>
   <p>
-    Your publication {{ manuscript.title }} is not compliant with ASAP Open
+    Dear {{#if useProjectBasedEmail}}Grantees{{else}}Team {{ team.name
+    }}{{/if}},
+  </p>
+  <p>
+    Your publication {{#if useProjectBasedEmail}}<a
+      href="{{{ manuscript.link }}}"
+      >{{ manuscript.title }}</a
+    >{{else}}{{ manuscript.title }}{{/if}} is not compliant with ASAP Open
     Science Policy. To ensure that your work is compliant with the ASAP Open
     Science Policy, you will need to submit an addendum to the editor of the
     journal.

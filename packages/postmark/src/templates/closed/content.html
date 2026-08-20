@@ -1,13 +1,15 @@
 <div>
   <p>
-    Dear {{#if useProjectBasedEmail}}Grantees{{else}}Team {{ team.name
-    }}{{/if}},
+    Dear
+    {{#useProjectBasedEmail}}Grantees{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
+    {{ team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
     This message is to inform you that the compliance review process for the
-    publication {{#if useProjectBasedEmail}}<a href="{{{ manuscript.link }}}"
+    publication {{#useProjectBasedEmail}}<a href="{{{ manuscript.link }}}"
       >{{ manuscript.title }}</a
-    >{{else}}{{ manuscript.title }}{{/if}} is now closed.
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+    }}{{/useProjectBasedEmail}} is now closed.
   </p>
   <p>
     This is an automated message. Please do not reply to this email. If you have

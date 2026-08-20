@@ -328,7 +328,11 @@ export const usePostComplianceReport = () => {
       const notificationList = getOverrides()
         .COMPLIANCE_NOTIFICATION_LIST as string;
       return createComplianceReport(
-        { ...payload, notificationList },
+        {
+          ...payload,
+          notificationList,
+          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
+        },
         await getAuthorization(),
       );
     },

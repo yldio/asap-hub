@@ -1,14 +1,16 @@
 <div>
   <p>
-    Dear {{#if useProjectBasedEmail}}Grantees{{else}}Team {{ team.name
-    }}{{/if}},
+    Dear
+    {{#useProjectBasedEmail}}Grantees{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
+    {{ team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
-    Congratulations! Your {{ manuscript.type }} {{#if useProjectBasedEmail}}<a
+    Congratulations! Your {{ manuscript.type }} {{#useProjectBasedEmail}}<a
       href="{{{ manuscript.link }}}"
       >{{ manuscript.title }}</a
-    >{{else}}{{ manuscript.title }}{{/if}} is compliant with the ASAP Open
-    Science Policy. You are now eligible to apply for APC coverage
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+    }}{{/useProjectBasedEmail}} is compliant with the ASAP Open Science Policy.
+    You are now eligible to apply for APC coverage
     <a href="https://parkinsonsroadmap.org/requestforapc/#" target="_blank"
       >here</a
     >. Thank you for your continued commitment to open science.

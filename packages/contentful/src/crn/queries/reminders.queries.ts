@@ -34,7 +34,29 @@ export const FETCH_REMINDERS = gql`
               id
             }
             displayName
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
+        }
+        project {
+          sys {
+            id
+          }
+          title
         }
         assignedUsersCollection(limit: 30) {
           items {
@@ -289,7 +311,16 @@ export const FETCH_TEAM_PROJECT_MANAGER = gql`
 export const manuscriptsCollectionQueryFragment = gql`
   fragment ManuscriptsCollectionContent on ManuscriptsCollection {
     items {
+      sys {
+        id
+      }
       title
+      project {
+        sys {
+          id
+        }
+        title
+      }
       assignedUsersCollection(limit: 30) {
         items {
           sys {
@@ -305,6 +336,22 @@ export const manuscriptsCollectionQueryFragment = gql`
                 id
               }
               displayName
+              linkedFrom {
+                projectMembershipCollection(limit: 1) {
+                  items {
+                    linkedFrom {
+                      projectsCollection(limit: 1) {
+                        items {
+                          sys {
+                            id
+                          }
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           firstAuthorsCollection(limit: 10) {

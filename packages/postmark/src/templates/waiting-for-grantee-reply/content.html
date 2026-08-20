@@ -1,8 +1,12 @@
 <div>
-  <p>Dear Team {{ team.name }},</p>
+  <p>
+    Dear {{#if useProjectBasedEmail}}Grantee{{else}}Team {{ team.name }}{{/if}},
+  </p>
   <p>
     The ASAP Open Science Team has sent a message about the {{ manuscript.type
-    }} {{ manuscript.title }}. Please view the
+    }} {{#if useProjectBasedEmail}}<a href="{{{ manuscript.link }}}"
+      >{{ manuscript.title }}</a
+    >{{else}}{{ manuscript.title }}{{/if}}. Please view the
     <a href="{{{ discussion.link }}}">message "{{ discussion.title }}"</a> on
     the Hub and respond as needed.
   </p>

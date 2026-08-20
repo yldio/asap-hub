@@ -1,4 +1,4 @@
-import { getOverrides } from '@asap-hub/flags';
+import { getOverrides, isEnabled } from '@asap-hub/flags';
 import {
   BackendError,
   createQueryKeys,
@@ -216,7 +216,11 @@ export const usePostManuscript = () => {
       const notificationList = getOverrides()
         .COMPLIANCE_NOTIFICATION_LIST as string;
       return createManuscript(
-        { ...payload, notificationList },
+        {
+          ...payload,
+          notificationList,
+          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
+        },
         await getAuthorization(),
       );
     },
@@ -242,7 +246,11 @@ export const useResubmitManuscript = () => {
         .COMPLIANCE_NOTIFICATION_LIST as string;
       return resubmitManuscript(
         id,
-        { ...payload, notificationList },
+        {
+          ...payload,
+          notificationList,
+          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
+        },
         await getAuthorization(),
       );
     },
@@ -270,7 +278,11 @@ export const usePutManuscript = () => {
         .COMPLIANCE_NOTIFICATION_LIST as string;
       return updateManuscript(
         id,
-        { ...payload, notificationList },
+        {
+          ...payload,
+          notificationList,
+          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
+        },
         await getAuthorization(),
       );
     },
@@ -397,7 +409,11 @@ export const useReplyToDiscussion = () => {
       try {
         const discussion = await updateDiscussion(
           id,
-          { ...patch, notificationList },
+          {
+            ...patch,
+            notificationList,
+            useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
+          },
           authorization,
         );
         setDiscussion(discussion);
@@ -575,6 +591,7 @@ export const useCreateDiscussion = () => {
             text,
             files,
             notificationList,
+            useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
           },
           authorization,
         );

@@ -442,6 +442,7 @@ export type ManuscriptPostCreateRequest = Pick<
     url?: string;
   }[];
   notificationList?: string;
+  useProjectBasedEmail?: boolean;
 };
 export type ManuscriptPostResubmitRequest = Omit<
   ManuscriptPostCreateRequest,
@@ -467,6 +468,7 @@ export type ManuscriptUpdateAPCCoverageDetails = Pick<
 
 export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'> & {
   notificationList?: string;
+  useProjectBasedEmail?: boolean;
 };
 export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
 export type ManuscriptPutRequest =
@@ -761,6 +763,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         items: manuscriptVersionSchema,
       },
       notificationList: { type: 'string', nullable: true },
+      useProjectBasedEmail: { type: 'boolean', nullable: true },
       preprintDate: { type: 'string', nullable: true, format: 'date-time' },
       publicationDate: { type: 'string', nullable: true, format: 'date-time' },
       impact: { type: 'string', nullable: true },
@@ -811,6 +814,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
         nullable: true,
       },
       notificationList: { type: 'string', nullable: true },
+      useProjectBasedEmail: { type: 'boolean', nullable: true },
       impact: { type: 'string', nullable: true },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
       preprintDate: { type: 'string', nullable: true, format: 'date-time' },

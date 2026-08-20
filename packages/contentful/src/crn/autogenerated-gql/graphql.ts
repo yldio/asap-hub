@@ -28793,7 +28793,10 @@ export type EventsContentFragment = Pick<
               Pick<
                 InterestGroups,
                 'name' | 'active' | 'slack' | 'googleDrive'
-              > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+              > & {
+                sys: Pick<Sys, 'id'>;
+                thumbnail?: Maybe<Pick<Asset, 'url'>>;
+              }
             >
           >;
         }>;
@@ -28886,6 +28889,15 @@ export type FetchEventByIdQuery = {
           >;
         }
       >;
+      preliminaryDataSharedCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<PreliminaryDataSharing, 'preliminaryDataShared'> & {
+              team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
+          >
+        >;
+      }>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -29252,7 +29264,10 @@ export type FetchEventByIdQuery = {
                   Pick<
                     InterestGroups,
                     'name' | 'active' | 'slack' | 'googleDrive'
-                  > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                  }
                 >
               >;
             }>;
@@ -29884,7 +29899,10 @@ export type FetchEventsQuery = {
                         Pick<
                           InterestGroups,
                           'name' | 'active' | 'slack' | 'googleDrive'
-                        > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                        }
                       >
                     >;
                   }>;
@@ -30002,6 +30020,16 @@ export type FetchEventsByUserIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -30612,7 +30640,10 @@ export type FetchEventsByUserIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -30738,6 +30769,16 @@ export type FetchEventsByExternalAuthorIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -31348,7 +31389,10 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -31474,6 +31518,16 @@ export type FetchEventsByTeamIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -32084,7 +32138,10 @@ export type FetchEventsByTeamIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -34967,7 +35024,10 @@ export type FetchManuscriptNotificationDetailsQuery = {
                             Maybe<
                               Pick<
                                 Projects,
-                                'projectId' | 'projectType' | 'grantId'
+                                | 'title'
+                                | 'projectId'
+                                | 'projectType'
+                                | 'grantId'
                               > & { sys: Pick<Sys, 'id'> }
                             >
                           >;
@@ -34981,6 +35041,11 @@ export type FetchManuscriptNotificationDetailsQuery = {
           >
         >;
       }>;
+      project?: Maybe<
+        Pick<Projects, 'title' | 'projectId' | 'projectType' | 'grantId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >;
       assignedUsersCollection?: Maybe<{
         items: Array<Maybe<Pick<Users, 'firstName' | 'lastName' | 'email'>>>;
       }>;
@@ -41407,10 +41472,7 @@ export const EventsContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'preliminaryDataShared',
-                        },
+                        name: { kind: 'Name', value: 'preliminaryDataShared' },
                       },
                       {
                         kind: 'Field',
@@ -64766,6 +64828,14 @@ export const FetchManuscriptNotificationDetailsDocument = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
+                                                                      'title',
+                                                                  },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
                                                                       'projectId',
                                                                   },
                                                                 },
@@ -64805,6 +64875,41 @@ export const FetchManuscriptNotificationDetailsDocument = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'project' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectType' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'grantId' },
                       },
                     ],
                   },

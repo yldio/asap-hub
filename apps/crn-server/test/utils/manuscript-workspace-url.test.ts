@@ -47,6 +47,10 @@ const baseManuscript = (
     ...overrides,
   }) as ManuscriptResponse;
 
+const noTeamVersions = (): ManuscriptResponse['versions'] => [
+  { ...baseManuscript().versions[0]!, teams: [] },
+];
+
 describe('manuscript-workspace-url', () => {
   describe('getManuscriptComplianceRedirectUrl', () => {
     it('prefixes the redirect path with the hub origin', () => {
@@ -91,27 +95,25 @@ describe('manuscript-workspace-url', () => {
       });
     });
 
-    it('builds project context for project-linked manuscripts', () => {
+    it('builds project context for project-linked manuscripts with no team', () => {
       expect(
         getManuscriptWorkspaceContextFromResponse(
           baseManuscript({
             teamId: undefined,
             projectId: 'project-1',
             projectType: 'Discovery Project',
+            versions: noTeamVersions(),
           }),
         ),
       ).toEqual({
         manuscriptId: 'manuscript-1',
-        submittingTeamId: 'team-alpha',
-        contributingTeamIds: ['team-alpha', 'team-beta'],
+        submittingTeamId: undefined,
+        contributingTeamIds: [],
         project: {
           id: 'project-1',
           type: 'Discovery Project',
         },
-        projectsByTeamId: {
-          'team-alpha': { id: 'project-alpha', type: 'Resource Project' },
-          'team-beta': { id: 'project-beta', type: 'Resource Project' },
-        },
+        projectsByTeamId: {},
       });
     });
 
@@ -224,6 +226,7 @@ describe('manuscript-workspace-url', () => {
           teamId: undefined,
           projectId: 'project-1',
           projectType: 'Trainee Project',
+          versions: noTeamVersions(),
         }),
       )!;
 
@@ -252,7 +255,8 @@ describe('manuscript-workspace-url', () => {
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Discovery Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
 
           expect(
@@ -310,13 +314,14 @@ describe('manuscript-workspace-url', () => {
       describe('Feature flag is disabled', () => {
         const options = { projectWorkspaceEnabled: false };
 
-        it('redirects to the team workspace for user based manuscript', () => {
+        it('returns null for user based manuscript since there is no team to fall back to', () => {
           const context = getManuscriptWorkspaceContextFromResponse(
             baseManuscript({
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Discovery Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
           expect(
             resolveManuscriptWorkspacePath(
@@ -328,7 +333,7 @@ describe('manuscript-workspace-url', () => {
               },
               options,
             ),
-          ).toBe('/network/teams/team-alpha/workspace#manuscript-1');
+          ).toBeNull();
         });
 
         it('redirects to the team workspace for team based manuscript', () => {
@@ -424,7 +429,8 @@ describe('manuscript-workspace-url', () => {
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Trainee Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
 
           expect(
@@ -440,13 +446,14 @@ describe('manuscript-workspace-url', () => {
           ).toBe('/projects/trainee/project-1/workspace#manuscript-1');
         });
 
-        it('redirects non-project members to the collaborating team project workspace for user based manuscript', () => {
+        it('returns null for non-project members since only project members can collaborate on a user based manuscript', () => {
           const context = getManuscriptWorkspaceContextFromResponse(
             baseManuscript({
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Trainee Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
 
           expect(
@@ -459,7 +466,7 @@ describe('manuscript-workspace-url', () => {
               },
               options,
             ),
-          ).toBe('/projects/resource/project-alpha/workspace#manuscript-1');
+          ).toBeNull();
         });
 
         it('redirects project members to the project workspace for team based manuscript', () => {
@@ -572,13 +579,14 @@ describe('manuscript-workspace-url', () => {
       describe('Feature flag is disabled', () => {
         const options = { projectWorkspaceEnabled: false };
 
-        it('redirects to the collaborating team workspace for user based manuscript', () => {
+        it('returns null for user based manuscript since only project members can collaborate on it', () => {
           const context = getManuscriptWorkspaceContextFromResponse(
             baseManuscript({
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Trainee Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
 
           expect(
@@ -591,7 +599,7 @@ describe('manuscript-workspace-url', () => {
               },
               options,
             ),
-          ).toBe('/network/teams/team-alpha/workspace#manuscript-1');
+          ).toBeNull();
         });
 
         it('redirects team members to the team workspace for team based manuscript', () => {
@@ -658,7 +666,8 @@ describe('manuscript-workspace-url', () => {
               teamId: undefined,
               projectId: 'project-1',
               projectType: 'Trainee Project',
-            }),
+              versions: noTeamVersions(),
+            } as Partial<ManuscriptResponse>),
           )!;
 
           expect(

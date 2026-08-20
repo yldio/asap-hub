@@ -115,6 +115,28 @@ describe('manuscript-workspace-url', () => {
       });
     });
 
+    it('keeps the project when a user based manuscript has no teams', () => {
+      expect(
+        getManuscriptWorkspaceContextFromResponse(
+          baseManuscript({
+            teamId: undefined,
+            projectId: 'project-1',
+            projectType: 'Discovery Project',
+            versions: [{ id: 'version-1', teams: [] }],
+          } as unknown as Partial<ManuscriptResponse>),
+        ),
+      ).toEqual({
+        manuscriptId: 'manuscript-1',
+        submittingTeamId: undefined,
+        contributingTeamIds: [],
+        project: {
+          id: 'project-1',
+          type: 'Discovery Project',
+        },
+        projectsByTeamId: {},
+      });
+    });
+
     it('returns null when the manuscript has no versions', () => {
       expect(
         getManuscriptWorkspaceContextFromResponse(
@@ -253,6 +275,29 @@ describe('manuscript-workspace-url', () => {
               projectId: 'project-1',
               projectType: 'Discovery Project',
             }),
+          )!;
+
+          expect(
+            resolveManuscriptWorkspacePath(
+              context,
+              {
+                openScienceTeamMember: true,
+                teams: [],
+                projects: [],
+              },
+              options,
+            ),
+          ).toBe('/projects/discovery/project-1/workspace#manuscript-1');
+        });
+
+        it('redirects to the project workspace for user based manuscript without teams', () => {
+          const context = getManuscriptWorkspaceContextFromResponse(
+            baseManuscript({
+              teamId: undefined,
+              projectId: 'project-1',
+              projectType: 'Discovery Project',
+              versions: [{ id: 'version-1', teams: [] }],
+            } as unknown as Partial<ManuscriptResponse>),
           )!;
 
           expect(
@@ -438,6 +483,52 @@ describe('manuscript-workspace-url', () => {
               options,
             ),
           ).toBe('/projects/trainee/project-1/workspace#manuscript-1');
+        });
+
+        it('redirects project members to the project workspace for user based manuscript without teams', () => {
+          const context = getManuscriptWorkspaceContextFromResponse(
+            baseManuscript({
+              teamId: undefined,
+              projectId: 'project-1',
+              projectType: 'Trainee Project',
+              versions: [{ id: 'version-1', teams: [] }],
+            } as unknown as Partial<ManuscriptResponse>),
+          )!;
+
+          expect(
+            resolveManuscriptWorkspacePath(
+              context,
+              {
+                openScienceTeamMember: false,
+                teams: [],
+                projects: [{ id: 'project-1' }],
+              },
+              options,
+            ),
+          ).toBe('/projects/trainee/project-1/workspace#manuscript-1');
+        });
+
+        it('returns null for non-project members when a user based manuscript has no teams', () => {
+          const context = getManuscriptWorkspaceContextFromResponse(
+            baseManuscript({
+              teamId: undefined,
+              projectId: 'project-1',
+              projectType: 'Trainee Project',
+              versions: [{ id: 'version-1', teams: [] }],
+            } as unknown as Partial<ManuscriptResponse>),
+          )!;
+
+          expect(
+            resolveManuscriptWorkspacePath(
+              context,
+              {
+                openScienceTeamMember: false,
+                teams: [{ id: 'team-alpha' }],
+                projects: [],
+              },
+              options,
+            ),
+          ).toBeNull();
         });
 
         it('redirects non-project members to the collaborating team project workspace for user based manuscript', () => {

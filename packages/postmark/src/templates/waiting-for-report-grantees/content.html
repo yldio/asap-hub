@@ -2,13 +2,13 @@
   <p>
     Dear
     {{#useProjectBasedEmail}}Grantees{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
-    {{ team.name }}{{/useProjectBasedEmail}},
+    {{ ../team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
     Thank you for submitting your {{ manuscript.type }}
-    {{#useProjectBasedEmail}}<a href="{{{ manuscript.link }}}"
-      >{{ manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+    {{#useProjectBasedEmail}}<a href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
     }}{{/useProjectBasedEmail}} to the ASAP Open Science Team for a compliance
     review! We will review the {{ manuscript.type }} with the goal of returning
     a compliance report to you within 10 business days. You will receive an

@@ -2,13 +2,13 @@
   <p>
     Dear
     {{#useProjectBasedEmail}}Grantee{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
-    {{ team.name }}{{/useProjectBasedEmail}},
+    {{ ../team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
     Thank you for updating your manuscript {{#useProjectBasedEmail}}<a
-      href="{{{ manuscript.link }}}"
-      >{{ manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+      href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
     }}{{/useProjectBasedEmail}}. We will review this manuscript version with the
     goal of returning it to you within 10 business days. You will receive an
     email and a notification on the Hub when the report is ready.

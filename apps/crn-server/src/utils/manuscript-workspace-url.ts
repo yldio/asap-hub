@@ -6,7 +6,7 @@ import {
   ProjectType,
 } from '@asap-hub/model';
 
-const projectTypeUrlSegment: Record<ProjectType, string> = {
+export const projectTypeUrlSegment: Record<ProjectType, string> = {
   'Discovery Project': 'discovery',
   'Resource Project': 'resource',
   'Trainee Project': 'trainee',

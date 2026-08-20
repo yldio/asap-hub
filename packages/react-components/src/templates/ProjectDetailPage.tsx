@@ -7,8 +7,10 @@ type ProjectDetailPageProps = ProjectDetail & {
   readonly aboutHref: string;
   readonly workspaceHref?: string;
   readonly milestonesHref: string;
+  readonly complianceHref?: string;
   readonly outputsHref?: string;
   readonly draftOutputsHref?: string;
+  readonly manuscriptsCount?: number;
   readonly outputsCount?: number;
   readonly draftOutputsCount?: number;
   readonly canShareOutput?: boolean;
@@ -21,8 +23,10 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   workspaceHref,
   pointOfContactEmail,
   milestonesHref,
+  complianceHref,
   outputsHref,
   draftOutputsHref,
+  manuscriptsCount,
   outputsCount,
   draftOutputsCount,
   canShareOutput,
@@ -35,8 +39,10 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
       aboutHref={aboutHref}
       workspaceHref={workspaceHref}
       milestonesHref={milestonesHref}
+      complianceHref={complianceHref}
       outputsHref={outputsHref}
       draftOutputsHref={draftOutputsHref}
+      manuscriptsCount={manuscriptsCount}
       outputsCount={outputsCount}
       draftOutputsCount={draftOutputsCount}
       canShareOutput={canShareOutput}

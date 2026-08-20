@@ -945,18 +945,24 @@ describe('The draft output tab', () => {
 });
 
 describe('The compliance tab', () => {
-  it('does not show compliance tab if not on Team ASAP', async () => {
-    await renderPage({
-      ...createTeamResponse(),
-      displayName: 'Test',
-    });
+  it('does not show a compliance tab on Team ASAP when the user is Staff', async () => {
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        displayName: 'ASAP',
+      },
+      {},
+      {
+        role: 'Staff',
+      },
+    );
 
     expect(
       screen.queryByText(/Compliance/i, { selector: 'nav *' }),
     ).not.toBeInTheDocument();
   });
 
-  it('does not show compliance tab if on Team ASAP but not Staff', async () => {
+  it('does not show a compliance tab when the user is not Staff', async () => {
     await renderPage(
       {
         ...createTeamResponse(),
@@ -971,42 +977,41 @@ describe('The compliance tab', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('shows compliance tab on Team ASAP page if user is Staff', async () => {
-    await renderPage(
-      {
-        ...createTeamResponse(),
-        displayName: 'ASAP',
-      },
-      {},
-      {
-        role: 'Staff',
-      },
-    );
-
-    expect(
-      screen.getByText(/Compliance/i, { selector: 'nav *' }),
-    ).toBeVisible();
-  });
-
-  it('renders compliance dashboard on Team ASAP page', async () => {
-    jest.useRealTimers();
+  it('does not render the compliance dashboard on the team compliance path', async () => {
     const manuscriptTeamName =
       algoliaManuscriptsResponse.items[0]!.team.displayName;
+    const teamResponse = { ...createTeamResponse(), displayName: 'ASAP' };
+
     await renderPage(
-      {
-        ...createTeamResponse(),
-        displayName: 'ASAP',
-      },
+      teamResponse,
       {},
-      {
-        role: 'Staff',
-      },
+      { role: 'Staff' },
+      `${network({}).teams({}).team({ teamId: teamResponse.id }).$}/compliance`,
     );
 
-    await userEvent.click(
-      screen.getByText(/Compliance/i, { selector: 'nav *' }),
-    );
-    expect(await screen.findByText(manuscriptTeamName)).toBeVisible();
-    jest.useFakeTimers();
+    expect(await screen.findByText(/Team.+ASAP/i)).toBeVisible();
+    expect(screen.queryByText(manuscriptTeamName)).not.toBeInTheDocument();
+  });
+});
+
+describe('The lab count', () => {
+  it('is displayed on a team that is not Team ASAP', async () => {
+    await renderPage({
+      ...createTeamResponse(),
+      displayName: 'Not ASAP',
+      labCount: 5,
+    });
+
+    expect(await screen.findByText(/5 Labs/i)).toBeVisible();
+  });
+
+  it('is not displayed on Team ASAP', async () => {
+    await renderPage({
+      ...createTeamResponse(),
+      displayName: 'ASAP',
+      labCount: 5,
+    });
+
+    expect(screen.queryByText(/5 Labs/i)).not.toBeInTheDocument();
   });
 });

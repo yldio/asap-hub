@@ -218,15 +218,8 @@ it('renders workspace tabs when tools provided', () => {
   ]);
 });
 
-it('renders compliance tabs when is ASAP team and is staff', () => {
-  render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      isAsapTeam
-      isStaff
-      manuscriptsCount={0}
-    />,
-  );
+it('does not render a compliance tab when is ASAP team and is staff', () => {
+  render(<TeamProfileHeader {...boilerplateProps} isAsapTeam isStaff />);
   expect(
     within(screen.getByRole('navigation', { name: 'tabs' }))
       .getAllByRole('link')
@@ -234,7 +227,6 @@ it('renders compliance tabs when is ASAP team and is staff', () => {
   ).toEqual([
     'About',
     'Team Workspace',
-    'Compliance (0)',
     'Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',

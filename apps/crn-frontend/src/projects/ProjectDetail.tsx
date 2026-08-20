@@ -1,7 +1,7 @@
 import { FC, lazy, ReactNode } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { expandUserTeamRoles } from '@asap-hub/auth';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { isProjectLead, isProjectMember } from '@asap-hub/model';
 import {
   ProjectDetailPage,
@@ -23,7 +23,11 @@ import ProjectOutputs from './ProjectOutputs';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 import TeamBasedOutput from './TeamBasedOutput';
 import UserBasedOutput from './UserBasedOutput';
+import { ASAP_TEAM_NAME } from '../constants';
+import { useManuscripts } from '../network/teams/state';
 
+const loadProjectCompliance = () =>
+  import(/* webpackChunkName: "project-compliance" */ './Compliance');
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
 const loadProjectMilestones = () =>
@@ -33,6 +37,7 @@ const loadProjectComplianceReport = () =>
     /* webpackChunkName: "project-compliance-report" */ './ProjectComplianceReport'
   );
 
+const ProjectCompliance = lazy(loadProjectCompliance);
 const ProjectManuscript = lazy(loadProjectManuscript);
 const ProjectMilestones = lazy(loadProjectMilestones);
 const ProjectComplianceReport = lazy(loadProjectComplianceReport);
@@ -93,6 +98,38 @@ const ProjectOutputCounts: FC<
     >
       {children}
     </ProjectOutputCountsLoader>
+  ) : (
+    <>{children({})}</>
+  );
+
+type ManuscriptsCountProps = {
+  children: (counts: { manuscriptsCount?: number }) => ReactNode;
+};
+
+const ManuscriptsCountLoader: FC<ManuscriptsCountProps> = ({ children }) => {
+  // Fixed page size on purpose. This loader sits above every project tab, so
+  // reading the ambient `view` param would let an unrelated tab's list/card
+  // toggle change this query key mid-session and suspend the whole page. total
+  // is independent of page size, so the count is unaffected; the cost is one
+  // extra cached query when the dashboard itself is in list view.
+  const { total } = useManuscripts({
+    searchQuery: '',
+    currentPage: 0,
+    pageSize: 10,
+    requestedAPCCoverage: 'all',
+    completedStatus: 'hide',
+    selectedStatuses: [],
+  });
+
+  return <>{children({ manuscriptsCount: total })}</>;
+};
+
+const ManuscriptsCount: FC<ManuscriptsCountProps & { enabled: boolean }> = ({
+  enabled,
+  children,
+}) =>
+  enabled ? (
+    <ManuscriptsCountLoader>{children}</ManuscriptsCountLoader>
   ) : (
     <>{children({})}</>
   );
@@ -188,6 +225,16 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const canCreateComplianceReport = showWorkspace && isOpenScienceMember;
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
+
+  // The project-type check is what scopes compliance to the ASAP resource
+  // project: DiscoveryProject also declares teamName and fundedTeam, so a
+  // name-only match would show the tab on a discovery project funded by ASAP.
+  const showCompliance =
+    projectDetail.projectType === 'Resource Project' &&
+    projectDetail.fundedTeam?.displayName === ASAP_TEAM_NAME &&
+    (isMember || isOpenScienceMember);
+
+  const complianceHref = showCompliance ? route.compliance({}).$ : undefined;
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
   const isTeamBased = config.getIsTeamBased(projectDetail);
 
@@ -310,158 +357,184 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                   enabled={isProjectOutputsEnabled}
                 >
                   {({ publishedOutputsCount, draftOutputsCount }) => (
-                    <ProjectDetailPage
-                      {...projectDetail}
-                      pointOfContactEmail={
-                        projectDetail.contactEmail || undefined
-                      }
-                      aboutHref={route.about({}).$}
-                      workspaceHref={workspaceHref}
-                      milestonesHref={route.milestones({}).$}
-                      outputsHref={
-                        isProjectOutputsEnabled
-                          ? route.outputs({}).$
-                          : undefined
-                      }
-                      draftOutputsHref={
-                        displayDraftOutputs
-                          ? route.draftOutputs({}).$
-                          : undefined
-                      }
-                      outputsCount={publishedOutputsCount}
-                      draftOutputsCount={draftOutputsCount}
-                      canShareOutput={canShareOutput}
-                    >
-                      <Routes>
-                        <Route
-                          path="about"
-                          element={
-                            <ProjectDetailAbout
-                              {...projectDetail}
-                              pointOfContactEmail={
-                                projectDetail.contactEmail || undefined
-                              }
-                              fetchArticles={fetchArticles}
-                              seeMilestonesHref={route.milestones({}).$}
-                            />
+                    <ManuscriptsCount enabled={showCompliance}>
+                      {({ manuscriptsCount }) => (
+                        <ProjectDetailPage
+                          {...projectDetail}
+                          pointOfContactEmail={
+                            projectDetail.contactEmail || undefined
                           }
-                        />
-                        <Route
-                          path="milestones"
-                          element={
-                            <Frame title="Project Milestones">
-                              <ProjectMilestones
-                                projectId={projectId}
-                                projectName={projectDetail.title || ''}
-                                seeAimsHref={route.about({}).$}
-                                hasSupplementGrant={hasSupplementGrant}
-                                aims={activeProjectAims}
-                                isLead={isLead}
-                                loadArticleOptions={loadArticleOptions}
-                                milestonesLastUpdated={
-                                  projectDetail.milestonesLastUpdated
-                                }
-                              />
-                            </Frame>
+                          aboutHref={route.about({}).$}
+                          workspaceHref={workspaceHref}
+                          milestonesHref={route.milestones({}).$}
+                          complianceHref={complianceHref}
+                          manuscriptsCount={manuscriptsCount}
+                          outputsHref={
+                            isProjectOutputsEnabled
+                              ? route.outputs({}).$
+                              : undefined
                           }
-                        />
-                        {showWorkspace && (
-                          <Route
-                            path="workspace/*"
-                            element={
-                              <ProjectWorkspace
-                                id={projectId}
-                                isProjectMember={isMember}
-                                isTeamBased={isTeamBased}
-                                teamId={teamId}
-                                tools={projectDetail.tools ?? []}
-                                lastModifiedDate={new Date().toISOString()}
-                                contactEmail={
-                                  projectDetail.contactEmail || undefined
-                                }
-                                contactName={config.getContactName(
-                                  projectDetail,
-                                )}
-                                toolsHref={route.workspace({}).tools({}).$}
-                                editToolHref={(index) =>
-                                  route
-                                    .workspace({})
-                                    .tools({})
-                                    .tool({ toolIndex: `${index}` }).$
-                                }
-                                isActiveProject={
-                                  projectDetail.status === 'Active'
-                                }
-                                createManuscriptHref={
-                                  route.workspace({}).createManuscript({}).$
-                                }
-                                getEditManuscriptHref={(manuscriptId) =>
-                                  route
-                                    .workspace({})
-                                    .editManuscript({ manuscriptId }).$
-                                }
-                                getResubmitManuscriptHref={(manuscriptId) =>
-                                  route
-                                    .workspace({})
-                                    .resubmitManuscript({ manuscriptId }).$
-                                }
-                                getCreateComplianceReportHref={(manuscriptId) =>
-                                  route
-                                    .workspace({})
-                                    .createComplianceReport({ manuscriptId }).$
-                                }
-                                targetManuscriptId={targetManuscript.slice(1)}
-                                workspaceHref={route.workspace({}).$}
-                              />
-                            }
-                          />
-                        )}
-                        <Route
-                          path="outputs"
-                          element={
-                            isProjectOutputsEnabled ? (
-                              <Frame title="Project Outputs">
-                                <ProjectOutputs
-                                  projectId={projectId}
-                                  teamId={outputsTeamId}
-                                  projectTitle={projectDetail.title}
-                                  userAssociationMember={isMemberOrStaff}
-                                  hasOutputs={(publishedOutputsCount ?? 0) > 0}
-                                />
-                              </Frame>
-                            ) : (
-                              <NotFoundPage />
-                            )
+                          draftOutputsHref={
+                            displayDraftOutputs
+                              ? route.draftOutputs({}).$
+                              : undefined
                           }
-                        />
-                        <Route
-                          path="draft-outputs"
-                          element={
-                            displayDraftOutputs ? (
-                              <Frame title="Project Draft Outputs">
-                                <ProjectOutputs
-                                  projectId={projectId}
-                                  projectTitle={projectDetail.title}
-                                  teamId={outputsTeamId}
-                                  draftOutputs
-                                  userAssociationMember={isMemberOrStaff}
-                                  hasOutputs={
-                                    isMemberOrStaff &&
-                                    (draftOutputsCount ?? 0) > 0
+                          outputsCount={publishedOutputsCount}
+                          draftOutputsCount={draftOutputsCount}
+                          canShareOutput={canShareOutput}
+                        >
+                          <Routes>
+                            <Route
+                              path="about"
+                              element={
+                                <ProjectDetailAbout
+                                  {...projectDetail}
+                                  pointOfContactEmail={
+                                    projectDetail.contactEmail || undefined
                                   }
+                                  fetchArticles={fetchArticles}
+                                  seeMilestonesHref={route.milestones({}).$}
                                 />
-                              </Frame>
-                            ) : (
-                              <NotFoundPage />
-                            )
-                          }
-                        />
-                        <Route
-                          index
-                          element={<Navigate to={route.about({}).$} replace />}
-                        />
-                      </Routes>
-                    </ProjectDetailPage>
+                              }
+                            />
+                            <Route
+                              path="milestones"
+                              element={
+                                <Frame title="Project Milestones">
+                                  <ProjectMilestones
+                                    projectId={projectId}
+                                    projectName={projectDetail.title || ''}
+                                    seeAimsHref={route.about({}).$}
+                                    hasSupplementGrant={hasSupplementGrant}
+                                    aims={activeProjectAims}
+                                    isLead={isLead}
+                                    loadArticleOptions={loadArticleOptions}
+                                    milestonesLastUpdated={
+                                      projectDetail.milestonesLastUpdated
+                                    }
+                                  />
+                                </Frame>
+                              }
+                            />
+                            {showWorkspace && (
+                              <Route
+                                path="workspace/*"
+                                element={
+                                  <ProjectWorkspace
+                                    id={projectId}
+                                    isProjectMember={isMember}
+                                    isTeamBased={isTeamBased}
+                                    teamId={teamId}
+                                    tools={projectDetail.tools ?? []}
+                                    lastModifiedDate={new Date().toISOString()}
+                                    contactEmail={
+                                      projectDetail.contactEmail || undefined
+                                    }
+                                    contactName={config.getContactName(
+                                      projectDetail,
+                                    )}
+                                    toolsHref={route.workspace({}).tools({}).$}
+                                    editToolHref={(index) =>
+                                      route
+                                        .workspace({})
+                                        .tools({})
+                                        .tool({ toolIndex: `${index}` }).$
+                                    }
+                                    isActiveProject={
+                                      projectDetail.status === 'Active'
+                                    }
+                                    createManuscriptHref={
+                                      route.workspace({}).createManuscript({}).$
+                                    }
+                                    getEditManuscriptHref={(manuscriptId) =>
+                                      route
+                                        .workspace({})
+                                        .editManuscript({ manuscriptId }).$
+                                    }
+                                    getResubmitManuscriptHref={(manuscriptId) =>
+                                      route
+                                        .workspace({})
+                                        .resubmitManuscript({ manuscriptId }).$
+                                    }
+                                    getCreateComplianceReportHref={(
+                                      manuscriptId,
+                                    ) =>
+                                      route
+                                        .workspace({})
+                                        .createComplianceReport({
+                                          manuscriptId,
+                                        }).$
+                                    }
+                                    targetManuscriptId={targetManuscript.slice(
+                                      1,
+                                    )}
+                                    workspaceHref={route.workspace({}).$}
+                                  />
+                                }
+                              />
+                            )}
+                            <Route
+                              path="outputs"
+                              element={
+                                isProjectOutputsEnabled ? (
+                                  <Frame title="Project Outputs">
+                                    <ProjectOutputs
+                                      projectId={projectId}
+                                      teamId={outputsTeamId}
+                                      projectTitle={projectDetail.title}
+                                      userAssociationMember={isMemberOrStaff}
+                                      hasOutputs={
+                                        (publishedOutputsCount ?? 0) > 0
+                                      }
+                                    />
+                                  </Frame>
+                                ) : (
+                                  <NotFoundPage />
+                                )
+                              }
+                            />
+                            <Route
+                              path="draft-outputs"
+                              element={
+                                displayDraftOutputs ? (
+                                  <Frame title="Project Draft Outputs">
+                                    <ProjectOutputs
+                                      projectId={projectId}
+                                      projectTitle={projectDetail.title}
+                                      teamId={outputsTeamId}
+                                      draftOutputs
+                                      userAssociationMember={isMemberOrStaff}
+                                      hasOutputs={
+                                        isMemberOrStaff &&
+                                        (draftOutputsCount ?? 0) > 0
+                                      }
+                                    />
+                                  </Frame>
+                                ) : (
+                                  <NotFoundPage />
+                                )
+                              }
+                            />
+                            {showCompliance && (
+                              <Route
+                                path="compliance"
+                                element={
+                                  <SearchFrame title="Compliance">
+                                    <ProjectCompliance />
+                                  </SearchFrame>
+                                }
+                              />
+                            )}
+                            <Route
+                              index
+                              element={
+                                <Navigate to={route.about({}).$} replace />
+                              }
+                            />
+                          </Routes>
+                        </ProjectDetailPage>
+                      )}
+                    </ManuscriptsCount>
                   )}
                 </ProjectOutputCounts>
               }

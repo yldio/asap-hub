@@ -18,20 +18,13 @@ import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { getPresignedUrl } from '../../../shared-api/files';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { useAlgolia } from '../../../hooks/algolia';
-import { getOpenScienceMembers } from '../../users/api';
-import { getManuscripts, updateManuscript } from '../api';
+import { getPresignedUrl } from '../../shared-api/files';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useAlgolia } from '../../hooks/algolia';
+import { getOpenScienceMembers } from '../../network/users/api';
+import { getManuscripts, updateManuscript } from '../../network/teams/api';
 import Compliance from '../Compliance';
-import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-
-const mockIsEnabled = jest.fn();
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
+import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 mockConsoleError();
 
@@ -45,24 +38,24 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 
-jest.mock('../../../hooks/algolia', () => ({
+jest.mock('../../hooks/algolia', () => ({
   useAlgolia: jest.fn(),
 }));
 
-jest.mock('../api', () => ({
-  ...jest.requireActual('../api'),
+jest.mock('../../network/teams/api', () => ({
+  ...jest.requireActual('../../network/teams/api'),
   getOpenScienceMembers: jest.fn(),
   getManuscripts: jest.fn(),
   getPresignedUrl: jest.fn(),
   updateManuscript: jest.fn(),
 }));
 
-jest.mock('../../users/api', () => ({
-  ...jest.requireActual('../../users/api'),
+jest.mock('../../network/users/api', () => ({
+  ...jest.requireActual('../../network/users/api'),
   getOpenScienceMembers: jest.fn(),
 }));
 
-jest.mock('../../../shared-api/files');
+jest.mock('../../shared-api/files');
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -142,7 +135,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
   jest.resetModules();
-  mockIsEnabled.mockReturnValue(false);
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
@@ -163,11 +155,7 @@ it('renders error message when the request is not a 2XX', async () => {
   });
 });
 
-it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
-  mockIsEnabled.mockImplementation(
-    (flag: string) => flag === 'PROJECT_WORKSPACE',
-  );
-
+it('shows the project column', async () => {
   mockGetManuscripts.mockResolvedValue({
     items: [
       {
@@ -194,24 +182,7 @@ it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
   );
 });
 
-it('does not show project name in the search placeholder when PROJECT_WORKSPACE is disabled', async () => {
-  mockGetManuscripts.mockResolvedValue({
-    items: [createPartialManuscriptResponse()],
-    total: 1,
-  });
-
-  await renderCompliancePage();
-
-  expect(screen.getByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Enter team name, ID, assigned users...',
-  );
-});
-
-it('shows project name in the search placeholder when PROJECT_WORKSPACE is enabled', async () => {
-  mockIsEnabled.mockImplementation(
-    (flag: string) => flag === 'PROJECT_WORKSPACE',
-  );
+it('shows project name in the search placeholder', async () => {
   mockGetManuscripts.mockResolvedValue({
     items: [createPartialManuscriptResponse()],
     total: 1,

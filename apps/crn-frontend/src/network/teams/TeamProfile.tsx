@@ -11,6 +11,7 @@ import {
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
+import { ASAP_TEAM_NAME } from '../../constants';
 import { usePaginationParams } from '../../hooks';
 import {
   useCanDuplicateResearchOutput,
@@ -23,7 +24,7 @@ import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
 import { ManuscriptToastProvider } from './ManuscriptToastProvider';
-import { useIsComplianceReviewer, useManuscripts, useTeamById } from './state';
+import { useIsComplianceReviewer, useTeamById } from './state';
 import { EligibilityReasonProvider } from './EligibilityReasonProvider';
 
 const loadAbout = () =>
@@ -32,8 +33,6 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
 const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
-const loadCompliance = () =>
-  import(/* webpackChunkName: "network-team-compliance" */ './Compliance');
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
 const loadEventsList = () =>
@@ -48,7 +47,6 @@ const loadTeamManuscript = () =>
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
-const Compliance = lazy(loadCompliance);
 const TeamOutput = lazy(loadTeamOutput);
 const TeamComplianceReport = lazy(loadComplianceReport);
 const TeamManuscript = lazy(loadTeamManuscript);
@@ -87,18 +85,16 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const isStaff = user?.role === 'Staff';
-  const isAsapTeam = team?.displayName === 'ASAP';
-  const canDisplayCompliancePage = isStaff && isAsapTeam;
+  const isAsapTeam = team?.displayName === ASAP_TEAM_NAME;
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(team?.tools || isStaff ? loadWorkspace : undefined)
-      .then(canDisplayCompliancePage ? loadCompliance : undefined)
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);
-  }, [team, isStaff, canDisplayCompliancePage]);
+  }, [team, isStaff]);
 
   const canShareResearchOutput = useCanShareResearchOutput(
     'teams',
@@ -130,28 +126,12 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     teamId,
   });
 
-  const manuscriptCount = useManuscripts({
-    searchQuery: '',
-    currentPage: 0,
-    pageSize,
-    requestedAPCCoverage: 'all',
-    completedStatus: 'hide',
-    selectedStatuses: [],
-  });
-
   if (team) {
-    const {
-      about,
-      compliance,
-      outputs,
-      past,
-      upcoming,
-      workspace,
-      draftOutputs,
-    } = route({ teamId });
+    const { about, outputs, past, upcoming, workspace, draftOutputs } = route({
+      teamId,
+    });
     const paths = {
       about: about.template.replace(/^\//, ''),
-      compliance: compliance.template.replace(/^\//, ''),
       outputs: outputs.template.replace(/^\//, ''),
       past: past.template.replace(/^\//, ''),
       upcoming: upcoming.template.replace(/^\//, ''),
@@ -244,7 +224,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                         ? outputDraftResults.total
                         : undefined
                     }
-                    manuscriptsCount={manuscriptCount.total || 0}
                   >
                     <ProfileSwitch
                       About={() => (
@@ -278,9 +257,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                           team={{ ...team, tools: team.tools ?? [] }}
                         />
                       }
-                      {...(canDisplayCompliancePage
-                        ? { Compliance: <Compliance /> }
-                        : {})}
                     />
                   </TeamProfilePage>
                 }

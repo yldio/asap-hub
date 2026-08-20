@@ -344,9 +344,17 @@ export const canPublishProjectOutput = (
   userId: string,
   userTeams: ReadonlyArray<{ id: string; role: TeamRole }>,
   project: Project,
-): boolean =>
-  isProjectLead(userId, userTeams, project) || !projectHasLead(project);
+): boolean => {
+  if (isProjectLead(userId, userTeams, project)) {
+    return true;
+  }
 
+  if ('teamId' in project && project.teamId) {
+    return false;
+  }
+
+  return !projectHasLead(project);
+};
 /**
  * Determines if a user is a member of a project.
  *

@@ -521,6 +521,14 @@ describe('Project Model', () => {
       members,
     });
 
+    const discoveryProject = (): Project => ({
+      ...baseProject,
+      projectType: 'Discovery Project',
+      researchTheme: 'theme',
+      teamName: 'Team A',
+      teamId: 'team-1',
+    });
+
     it('lets a project lead publish even when a lead exists', () => {
       const project = traineeProject([
         {
@@ -553,6 +561,26 @@ describe('Project Model', () => {
         },
       ]);
       expect(canPublishProjectOutput('user-1', [], project)).toBe(true);
+    });
+
+    it('lets a Discovery Project team lead publish', () => {
+      expect(
+        canPublishProjectOutput(
+          'user-1',
+          [{ id: 'team-1', role: 'Project Manager' }],
+          discoveryProject(),
+        ),
+      ).toBe(true);
+    });
+
+    it('blocks a non-lead member of a Discovery Project', () => {
+      expect(
+        canPublishProjectOutput(
+          'user-1',
+          [{ id: 'team-1', role: 'Key Personnel' }],
+          discoveryProject(),
+        ),
+      ).toBe(false);
     });
   });
 

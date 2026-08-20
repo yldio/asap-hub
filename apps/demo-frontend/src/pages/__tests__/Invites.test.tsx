@@ -1,0 +1,312 @@
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import type { Invite } from '../../api/types';
+import { adminMe, creatorMe, memberMe, renderApp } from '../../test-utils';
+import Invites from '../Invites';
+
+const items: Invite[] = [
+  {
+    email: 'jane@example.com',
+    role: 'member',
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    email: 'carl@example.com',
+    role: 'creator',
+    createdAt: '2026-02-01T00:00:00.000Z',
+    claimedBy: 'auth0|9',
+  },
+];
+
+const rowFor = async (email: string) =>
+  (await screen.findByText(email)).closest('tr') as HTMLElement;
+
+it('tells a non-creator that only creators can manage invites', async () => {
+  renderApp(<Invites />, {
+    me: memberMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  expect(
+    await screen.findByText('Only creators can manage invites'),
+  ).toBeVisible();
+  expect(screen.queryByText('Invites')).toBeNull();
+});
+
+it('shows a creator the form and the invites with their status badges', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  expect(screen.getByLabelText('Email address')).toBeVisible();
+  const pending = await rowFor('jane@example.com');
+  expect(within(pending).getByText('Member')).toBeVisible();
+  expect(within(pending).getByText('Pending')).toBeVisible();
+  const claimed = await rowFor('carl@example.com');
+  expect(within(claimed).getByText('Creator')).toBeVisible();
+  expect(within(claimed).getByText('Claimed')).toBeVisible();
+});
+
+it('hides the admin role option and the actions column from a plain creator', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  const role = screen.getByLabelText('Role');
+  expect(within(role).queryByRole('option', { name: 'Admin' })).toBeNull();
+  expect(screen.queryByText('Actions')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Cancel' })).toBeNull();
+});
+
+it('gives an admin the admin role option and a cancel action on pending rows', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  const role = screen.getByLabelText('Role');
+  expect(within(role).getByRole('option', { name: 'Admin' })).toBeVisible();
+  expect(screen.getByText('Actions')).toBeVisible();
+
+  const pending = await rowFor('jane@example.com');
+  expect(within(pending).getByRole('button', { name: 'Cancel' })).toBeVisible();
+  const claimed = await rowFor('carl@example.com');
+  expect(within(claimed).queryByRole('button', { name: 'Cancel' })).toBeNull();
+});
+
+it('sends an invite with the chosen role and clears the email on success', async () => {
+  const createInvite = jest.fn(() => Promise.resolve());
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items), createInvite },
+  });
+
+  await screen.findByText('jane@example.com');
+  const email = screen.getByLabelText('Email address');
+  await userEvent.type(email, 'new@example.com');
+  await userEvent.selectOptions(screen.getByLabelText('Role'), 'creator');
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+
+  expect(createInvite).toHaveBeenCalledWith('new@example.com', 'creator');
+  await waitFor(() => expect(email).toHaveValue(''));
+});
+
+it('does not send anything when the email is empty', async () => {
+  const createInvite = jest.fn(() => Promise.resolve());
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items), createInvite },
+  });
+
+  await screen.findByText('jane@example.com');
+  fireEvent.submit(
+    screen
+      .getByRole('button', { name: 'Send invite' })
+      .closest('form') as HTMLFormElement,
+  );
+
+  expect(createInvite).not.toHaveBeenCalled();
+});
+
+it('disables the submit button while the invite is being sent', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      createInvite: () => new Promise<void>(() => {}),
+    },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.type(
+    screen.getByLabelText('Email address'),
+    'new@example.com',
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+
+  expect(
+    await screen.findByRole('button', { name: 'Inviting' }),
+  ).toBeDisabled();
+});
+
+it('surfaces a failed invite', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      createInvite: () => Promise.reject(new Error('nope')),
+    },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.type(
+    screen.getByLabelText('Email address'),
+    'new@example.com',
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+
+  expect(
+    await screen.findByText(
+      'We could not send that invite. Check the address and try again.',
+    ),
+  ).toBeVisible();
+});
+
+it('narrows the table by email search', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.type(screen.getByLabelText('Search invites'), 'carl');
+
+  await waitFor(
+    () => expect(screen.queryByText('jane@example.com')).toBeNull(),
+    { timeout: 4000 },
+  );
+  expect(screen.getByText('carl@example.com')).toBeVisible();
+});
+
+it('filters the table by role and reports when nothing matches', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.click(screen.getByRole('button', { name: 'Filter by role' }));
+  await userEvent.click(
+    within(screen.getByRole('listbox', { name: 'Filter by role' })).getByRole(
+      'option',
+      { name: 'Admin' },
+    ),
+  );
+
+  expect(await screen.findByText('No invites match')).toBeVisible();
+  expect(screen.queryByText('jane@example.com')).toBeNull();
+});
+
+it('filters the table by status', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Filter by status' }),
+  );
+  await userEvent.click(screen.getByRole('option', { name: 'Claimed' }));
+
+  await waitFor(() =>
+    expect(screen.queryByText('jane@example.com')).toBeNull(),
+  );
+  expect(screen.getByText('carl@example.com')).toBeVisible();
+});
+
+it('says nobody has been invited when the list is empty', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve([]) },
+  });
+
+  expect(await screen.findByText('Nobody has been invited yet.')).toBeVisible();
+});
+
+it('shows the empty state when the invites fail to load', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.reject(new Error('boom')) },
+  });
+
+  expect(
+    await screen.findByText(
+      'Nobody has been invited yet.',
+      {},
+      { timeout: 4000 },
+    ),
+  ).toBeVisible();
+});
+
+it('cancels a pending invite after confirming', async () => {
+  const cancelInvite = jest.fn(() => Promise.resolve());
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve(items), cancelInvite },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Cancel' }));
+
+  const dialog = screen.getByRole('dialog');
+  expect(within(dialog).getByText('Cancel jane@example.com?')).toBeVisible();
+  expect(within(dialog).getByText(/will stop granting access/)).toBeVisible();
+  await userEvent.click(
+    within(dialog).getByRole('button', { name: 'Cancel invite' }),
+  );
+
+  expect(cancelInvite).toHaveBeenCalledWith('jane@example.com');
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+});
+
+it('closes the cancel dialog on keep without cancelling anything', async () => {
+  const cancelInvite = jest.fn(() => Promise.resolve());
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve(items), cancelInvite },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Cancel' }));
+  await userEvent.click(
+    within(screen.getByRole('dialog')).getByRole('button', { name: 'Keep' }),
+  );
+
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  expect(cancelInvite).not.toHaveBeenCalled();
+});
+
+it('closes the cancel dialog on escape', async () => {
+  const cancelInvite = jest.fn(() => Promise.resolve());
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve(items), cancelInvite },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Cancel' }));
+  await userEvent.keyboard('{Escape}');
+
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  expect(cancelInvite).not.toHaveBeenCalled();
+});
+
+it('surfaces a failed cancellation', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      cancelInvite: () => Promise.reject(new Error('nope')),
+    },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Cancel' }));
+  await userEvent.click(
+    within(screen.getByRole('dialog')).getByRole('button', {
+      name: 'Cancel invite',
+    }),
+  );
+
+  expect(
+    await screen.findByText(
+      'We could not cancel that invite. Try again in a moment.',
+    ),
+  ).toBeVisible();
+});

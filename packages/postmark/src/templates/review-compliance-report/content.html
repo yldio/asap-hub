@@ -2,14 +2,14 @@
   <p>
     Dear
     {{#useProjectBasedEmail}}Grantees{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
-    {{ team.name }}{{/useProjectBasedEmail}},
+    {{ ../team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
     The ASAP Open Science Team has completed the compliance check for your {{
     manuscript.type }} {{#useProjectBasedEmail}}<a
-      href="{{{ manuscript.link }}}"
-      >{{ manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+      href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
     }}{{/useProjectBasedEmail}}. Please log-in to the Hub to view the compliance
     report and any required changes.
   </p>

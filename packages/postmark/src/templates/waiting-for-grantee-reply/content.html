@@ -2,13 +2,13 @@
   <p>
     Dear
     {{#useProjectBasedEmail}}Grantee{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
-    {{ team.name }}{{/useProjectBasedEmail}},
+    {{ ../team.name }}{{/useProjectBasedEmail}},
   </p>
   <p>
     The ASAP Open Science Team has sent a message about the {{ manuscript.type
-    }} {{#useProjectBasedEmail}}<a href="{{{ manuscript.link }}}"
-      >{{ manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+    }} {{#useProjectBasedEmail}}<a href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
     }}{{/useProjectBasedEmail}}. Please view the
     <a href="{{{ discussion.link }}}">message "{{ discussion.title }}"</a> on
     the Hub and respond as needed.

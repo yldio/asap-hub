@@ -3,15 +3,15 @@
   <p>
     This message is to inform you that a grantee has submitted a new version of
     a manuscript for {{ manuscript.type }} {{#useProjectBasedEmail}}<a
-      href="{{{ manuscript.link }}}"
-      >{{ manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ manuscript.title
+      href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
     }}{{/useProjectBasedEmail}} ({{ manuscript.id }}). Please check the
-    {{#useProjectBasedEmail}}<a href="{{{ project.workspace }}}"
-      >Project {{ project.name }} workspace</a
+    {{#useProjectBasedEmail}}<a href="{{{ ../project.workspace }}}"
+      >Project {{ ../project.name }} workspace</a
     >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}<a
-      href="{{{ team.workspace }}}"
-      >Team {{ team.name }} workspace</a
+      href="{{{ ../team.workspace }}}"
+      >Team {{ ../team.name }} workspace</a
     >{{/useProjectBasedEmail}} on the Hub to initiate a new compliance review.
   </p>
 </div>

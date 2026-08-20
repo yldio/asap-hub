@@ -26,6 +26,7 @@ const manuscriptResponse = {
   versions: [{ id: 'manuscript-version-1' }],
   status: 'Addendum Required',
   notificationList: '',
+  useProjectBasedEmail: false,
 };
 const complianceReportResponse = { id: 'compliance-report-1' };
 

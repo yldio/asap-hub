@@ -738,7 +738,7 @@ describe('ProjectDetailHeader', () => {
   });
 
   describe('Compliance tab', () => {
-    it('renders Compliance tab with its count when flag is enabled and complianceHref is provided', () => {
+    it('renders Compliance tab with its count when complianceHref is provided', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}

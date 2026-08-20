@@ -15,6 +15,7 @@ import {
   emailHeaderLinkUrl,
   emailNotificationMapping,
   EmailTriggerAction,
+  ProjectType,
 } from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
@@ -26,7 +27,10 @@ import {
   postmarkServerToken,
 } from '../config';
 import logger from '../utils/logger';
-import { getManuscriptComplianceRedirectUrl } from '../utils/manuscript-workspace-url';
+import {
+  getManuscriptComplianceRedirectUrl,
+  projectTypeUrlSegment,
+} from '../utils/manuscript-workspace-url';
 import { getCommaAndString } from '../utils/text';
 import { getManuscriptVersionUID } from './contentful/manuscript.data-provider';
 
@@ -37,8 +41,13 @@ type TemplateModel = {
     title: string;
     type: string;
     id: string;
+    link: string;
   };
   team: {
+    name: string;
+    workspace: string;
+  };
+  project: {
     name: string;
     workspace: string;
   };
@@ -48,12 +57,30 @@ type TemplateModel = {
     submitterName: string;
     link: string;
   };
+  useProjectBasedEmail: boolean;
 };
 
 type DiscussionNotificationInfo = {
   id: string;
   userName: string;
 };
+
+type NotificationDataBuilder = (
+  recipientType: 'open_science_team' | 'grantee',
+) => TemplateModel;
+
+type ManuscriptDetails = NonNullable<
+  FetchManuscriptNotificationDetailsQuery['manuscripts']
+>;
+type VersionData = NonNullable<
+  ManuscriptDetails['versionsCollection']
+>['items'][number];
+type ContributingTeam = NonNullable<
+  NonNullable<VersionData>['teamsCollection']
+>['items'][number];
+type SubmittingTeam = NonNullable<
+  ManuscriptDetails['teamsCollection']
+>['items'][number];
 
 export class EmailNotificationService {
   private readonly postmarkClient: postmark.ServerClient;
@@ -80,18 +107,240 @@ export class EmailNotificationService {
       );
   }
 
+  private filterForNonProduction(
+    recipients: string[],
+    emailList: string,
+    isProduction: boolean,
+  ): string[] {
+    return isProduction
+      ? recipients
+      : recipients.filter((email) => email && emailList.includes(email));
+  }
+
+  private getActiveContributingTeams(
+    versionData: VersionData,
+  ): ContributingTeam[] {
+    return cleanArray(versionData?.teamsCollection?.items).filter(
+      (team) => !team.inactiveSince,
+    );
+  }
+
+  private resolveProject(
+    manuscripts: ManuscriptDetails,
+    submittingTeam: SubmittingTeam | undefined,
+  ): { name: string; workspace: string; projectId: string; grantId: string } {
+    const project =
+      manuscripts.project ??
+      submittingTeam?.linkedFrom?.projectMembershipCollection?.items[0]
+        ?.linkedFrom?.projectsCollection?.items[0];
+
+    return {
+      name: project?.title || '',
+      workspace: project?.projectType
+        ? `${origin}/projects/${
+            projectTypeUrlSegment[project.projectType as ProjectType]
+          }/${project.sys.id}/workspace`
+        : '',
+      projectId: project?.projectId || '',
+      grantId: project?.grantId || '',
+    };
+  }
+
+  private getAssignedOSMembers(manuscripts: ManuscriptDetails): {
+    names: string[];
+    emails: string[];
+  } {
+    const assignedUsers = cleanArray(
+      manuscripts.assignedUsersCollection?.items,
+    );
+    const names = assignedUsers
+      .map((user) => `${user.firstName || ''} ${user.lastName || ''}`.trim())
+      .filter(Boolean);
+    const emails = cleanArray(assignedUsers.map((user) => user.email));
+
+    return {
+      names,
+      emails: emails.length ? emails : [alternativeAssignedOSEmail],
+    };
+  }
+
+  private async getDiscussionTitle(discussionId?: string): Promise<string> {
+    if (!discussionId) return '';
+
+    const { discussions } = await this.contentfulClient.request<
+      FetchDiscussionTitleQuery,
+      FetchDiscussionTitleQueryVariables
+    >(FETCH_DISCUSSION_TITLE, { id: discussionId });
+
+    return discussions?.title || '';
+  }
+
+  private createNotificationDataBuilder(context: {
+    manuscriptData: TemplateModel['manuscript'];
+    submittingTeamName: string;
+    contributingTeamNames: string[];
+    teamWorkspaceUrl: string;
+    projectName: string;
+    projectWorkspaceUrl: string;
+    assignedOSMembers: string[];
+    discussionTitle: string;
+    discussionDetails?: DiscussionNotificationInfo;
+    discussionLink: string;
+    useProjectBasedEmail: boolean;
+  }): NotificationDataBuilder {
+    return (recipientType) => ({
+      headerImage: emailHeaderImageUrl,
+      headerLink: emailHeaderLinkUrl,
+      manuscript: context.manuscriptData,
+      team: {
+        name:
+          recipientType === 'open_science_team'
+            ? context.submittingTeamName
+            : getCommaAndString(context.contributingTeamNames),
+        workspace: context.teamWorkspaceUrl,
+      },
+      project: {
+        name: context.projectName,
+        workspace: context.projectWorkspaceUrl,
+      },
+      assignedOSMembers: getCommaAndString(context.assignedOSMembers),
+      discussion: {
+        title: context.discussionTitle,
+        submitterName: context.discussionDetails?.userName || '',
+        link: context.discussionLink,
+      },
+      useProjectBasedEmail: context.useProjectBasedEmail,
+    });
+  }
+
+  private async resolveDiscussionReplyRecipients(
+    discussionId: string,
+    isOSMemberReplyAction: boolean,
+    assignedOSMembersEmails: string[],
+    emailList: string,
+    isProduction: boolean,
+  ): Promise<string[]> {
+    const messagesFilter = {
+      createdBy: {
+        alumniSinceDate: null,
+        ...(isOSMemberReplyAction
+          ? { openScienceTeamMember_not: true }
+          : { openScienceTeamMember: true }),
+      },
+    };
+
+    const { discussions } = await this.contentfulClient.request<
+      FetchDiscussionParticipantsQuery,
+      FetchDiscussionParticipantsQueryVariables
+    >(FETCH_DISCUSSION_PARTICIPANTS, {
+      id: discussionId,
+      messagesFilter,
+    });
+
+    const recipients = Array.from(
+      new Set(
+        cleanArray([
+          discussions?.message?.createdBy?.email,
+          ...cleanArray(discussions?.repliesCollection?.items).map(
+            (reply) => reply.createdBy?.email,
+          ),
+        ]),
+      ),
+    );
+
+    const allowedRecipients = [...recipients];
+    if (!isOSMemberReplyAction) {
+      allowedRecipients.push(openScienceDL);
+      assignedOSMembersEmails.forEach(
+        (assigneeEmail) =>
+          assigneeEmail &&
+          !allowedRecipients.includes(assigneeEmail) &&
+          allowedRecipients.push(assigneeEmail),
+      );
+    }
+
+    return this.filterForNonProduction(
+      allowedRecipients,
+      emailList,
+      isProduction,
+    );
+  }
+
+  private resolveGranteeRecipients(
+    versionData: VersionData,
+    activeContributingTeams: ContributingTeam[],
+  ): string[] {
+    const contributingAuthors = [
+      ...cleanArray(versionData?.firstAuthorsCollection?.items).map(
+        (firstAuthor) => firstAuthor.email,
+      ),
+      ...cleanArray(versionData?.additionalAuthorsCollection?.items).map(
+        (additionalAuthor) => additionalAuthor.email,
+      ),
+      ...cleanArray(versionData?.correspondingAuthorCollection?.items).map(
+        (correspondingAuthor) => correspondingAuthor.email,
+      ),
+    ];
+
+    const teamLeaders = activeContributingTeams.map((team) => {
+      const activeMemberships = cleanArray(
+        team?.linkedFrom?.teamMembershipCollection?.items,
+      )
+        .filter(
+          (membership) =>
+            !membership?.inactiveSinceDate &&
+            membership?.linkedFrom?.usersCollection?.items[0] &&
+            !membership?.linkedFrom?.usersCollection?.items[0]?.alumniSinceDate,
+        )
+        .map((membership) => ({
+          email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
+          role: membership?.role,
+        }));
+
+      return activeMemberships
+        ?.filter(
+          (member) =>
+            member.role === 'Project Manager' ||
+            member.role === 'Lead PI (Core Leadership)',
+        )
+        .map((member) => member.email);
+    });
+
+    const labPIs = cleanArray(versionData?.labsCollection?.items)
+      .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
+      .map((lab) => lab.labPi?.email);
+
+    return cleanArray([
+      ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
+    ]);
+  }
+
+  private resolveOpenScienceRecipients(
+    action: EmailTriggerAction,
+    assignedOSMembersEmails: string[],
+    isProduction: boolean,
+    emailList: string,
+  ): string[] {
+    return isProduction
+      ? [
+          openScienceDL,
+          ...(action === 'discussion_created_by_grantee'
+            ? assignedOSMembersEmails
+            : []),
+        ]
+      : emailList
+          .split(',')
+          .map((e) => e.trim())
+          .filter(Boolean);
+  }
+
   async sendEmailNotification(
     action: EmailTriggerAction,
     manuscriptId: string,
     emailList: string,
     discussionDetails?: DiscussionNotificationInfo,
+    useProjectBasedEmail = false,
   ): Promise<void> {
-    const isProduction = environmentName === 'production';
-    const isDiscussionCreatedAction = [
-      'discussion_created_by_os_member',
-      'discussion_created_by_grantee',
-    ].includes(action);
-
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptNotificationDetailsQuery,
       FetchManuscriptNotificationDetailsQueryVariables
@@ -103,18 +352,33 @@ export class EmailNotificationService {
       return;
     }
 
+    const isProduction = environmentName === 'production';
+    const isDiscussionCreatedAction = [
+      'discussion_created_by_os_member',
+      'discussion_created_by_grantee',
+    ].includes(action);
+
     const submittingTeam = manuscripts.teamsCollection?.items[0];
-    const project =
-      submittingTeam?.linkedFrom?.projectMembershipCollection?.items[0]
-        ?.linkedFrom?.projectsCollection?.items[0];
-
-    const activeContributingTeams = cleanArray(
-      versionData.teamsCollection?.items,
-    ).filter((team) => !team.inactiveSince);
-
+    const activeContributingTeams =
+      this.getActiveContributingTeams(versionData);
     const contributingTeamNames = activeContributingTeams
       .map((team) => team?.displayName || '')
       .filter(Boolean);
+    const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
+
+    const project = this.resolveProject(manuscripts, submittingTeam);
+
+    const { names: assignedOSMembers, emails: assignedOSMembersEmails } =
+      this.getAssignedOSMembers(manuscripts);
+
+    const discussionTitle = await this.getDiscussionTitle(
+      discussionDetails?.id,
+    );
+    const discussionLink = getManuscriptComplianceRedirectUrl(
+      manuscriptId,
+      origin,
+      { tab: 'discussions' },
+    );
 
     const manuscriptData = {
       title: manuscripts.title || '',
@@ -125,220 +389,91 @@ export class EmailNotificationService {
           count: versionData.count,
           lifecycle: versionData.lifecycle,
         },
-        teamIdCode: project?.projectId || '',
-        grantId: project?.grantId || '',
+        teamIdCode: project.projectId,
+        grantId: project.grantId,
         manuscriptCount: manuscripts.count || 0,
       }),
+      link: getManuscriptComplianceRedirectUrl(manuscriptId, origin),
     };
-    const assignedOSMembers = manuscripts.assignedUsersCollection?.items
-      .map((user) => `${user?.firstName} ${user?.lastName}`)
-      .filter(Boolean);
 
-    const assignedOSMembersEmails =
-      manuscripts.assignedUsersCollection?.items
-        .map((user) => user?.email)
-        .filter(Boolean) || [];
-
-    if (!assignedOSMembersEmails.length) {
-      assignedOSMembersEmails.push(alternativeAssignedOSEmail);
-    }
-
-    let discussionTitle = '';
-    if (discussionDetails?.id) {
-      const { discussions } = await this.contentfulClient.request<
-        FetchDiscussionTitleQuery,
-        FetchDiscussionTitleQueryVariables
-      >(FETCH_DISCUSSION_TITLE, { id: discussionDetails.id });
-      discussionTitle = discussions?.title || '';
-    }
-
-    const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
-    const discussionLink = getManuscriptComplianceRedirectUrl(
-      manuscriptId,
-      origin,
-      { tab: 'discussions' },
-    );
-
-    const notificationData = (
-      recipientType: 'open_science_team' | 'grantee',
-    ): TemplateModel => ({
-      headerImage: emailHeaderImageUrl,
-      headerLink: emailHeaderLinkUrl,
-      manuscript: manuscriptData,
-      team: {
-        name:
-          recipientType === 'open_science_team'
-            ? submittingTeam?.displayName || ''
-            : getCommaAndString(contributingTeamNames),
-        workspace: teamWorkspaceUrl,
-      },
-      assignedOSMembers: getCommaAndString(assignedOSMembers || []),
-      discussion: {
-        title: discussionTitle,
-        submitterName: discussionDetails?.userName || '',
-        link: discussionLink,
-      },
+    const buildNotificationData = this.createNotificationDataBuilder({
+      manuscriptData,
+      submittingTeamName: submittingTeam?.displayName || '',
+      contributingTeamNames,
+      teamWorkspaceUrl,
+      projectName: project.name,
+      projectWorkspaceUrl: project.workspace,
+      assignedOSMembers,
+      discussionTitle,
+      discussionDetails,
+      discussionLink,
+      useProjectBasedEmail,
     });
 
-    const sendDiscussionReplyEmailNotification = async (
-      discussionId: string,
-    ) => {
+    const templateDetails = emailNotificationMapping[action];
+
+    if (discussionDetails?.id && !isDiscussionCreatedAction) {
       const isOSMemberReplyAction =
         action === 'os_member_replied_to_discussion';
-      const messagesFilter = {
-        createdBy: {
-          alumniSinceDate: null,
-          ...(isOSMemberReplyAction
-            ? { openScienceTeamMember_not: true }
-            : { openScienceTeamMember: true }),
-        },
-      };
-
-      const { discussions } = await this.contentfulClient.request<
-        FetchDiscussionParticipantsQuery,
-        FetchDiscussionParticipantsQueryVariables
-      >(FETCH_DISCUSSION_PARTICIPANTS, {
-        id: discussionId,
-        messagesFilter,
-      });
-
-      const recipients = Array.from(
-        new Set(
-          [
-            discussions?.message?.createdBy?.email,
-            ...(discussions?.repliesCollection?.items.map(
-              (reply) => reply?.createdBy?.email,
-            ) || []),
-          ].filter(Boolean) as string[],
-        ),
+      const allowedRecipients = await this.resolveDiscussionReplyRecipients(
+        discussionDetails.id,
+        isOSMemberReplyAction,
+        assignedOSMembersEmails,
+        emailList,
+        isProduction,
       );
 
-      const addEmailIfNotYetIncluded = (email: string) =>
-        !allowedRecipients.includes(email) && allowedRecipients.push(email);
-
-      let allowedRecipients = recipients;
-      if (!isOSMemberReplyAction) {
-        allowedRecipients.push(openScienceDL);
-        assignedOSMembersEmails.forEach(
-          (assigneeEmail) =>
-            assigneeEmail && addEmailIfNotYetIncluded(assigneeEmail),
-        );
-      }
-
-      if (!isProduction) {
-        allowedRecipients = recipients.filter(
-          (email) => email && emailList.includes(email),
-        );
-      }
-
-      const templateDetails = emailNotificationMapping[action];
       if (allowedRecipients.length >= 1) {
         if (!isOSMemberReplyAction && templateDetails.open_science_team)
           await this.sendEmail(
             allowedRecipients,
             templateDetails.open_science_team,
-            notificationData('open_science_team'),
+            buildNotificationData('open_science_team'),
           );
         if (isOSMemberReplyAction && templateDetails.grantee)
           await this.sendEmail(
             allowedRecipients,
             templateDetails.grantee,
-            notificationData('grantee'),
+            buildNotificationData('grantee'),
           );
       }
-    };
+      return;
+    }
 
-    if (discussionDetails?.id && !isDiscussionCreatedAction) {
-      await sendDiscussionReplyEmailNotification(discussionDetails.id);
-    } else if (
-      !discussionDetails?.id ||
-      (discussionDetails?.id && isDiscussionCreatedAction)
+    const granteeRecipients = this.filterForNonProduction(
+      this.resolveGranteeRecipients(versionData, activeContributingTeams),
+      emailList,
+      isProduction,
+    );
+
+    const openScienceRecipients = this.filterForNonProduction(
+      this.resolveOpenScienceRecipients(
+        action,
+        assignedOSMembersEmails,
+        isProduction,
+        emailList,
+      ),
+      emailList,
+      isProduction,
+    );
+
+    if (templateDetails.grantee && granteeRecipients.length >= 1) {
+      await this.sendEmail(
+        granteeRecipients,
+        templateDetails.grantee,
+        buildNotificationData('grantee'),
+      );
+    }
+
+    if (
+      templateDetails.open_science_team &&
+      openScienceRecipients.length >= 1
     ) {
-      const contributingAuthors = [
-        ...(versionData.firstAuthorsCollection?.items.map(
-          (firstAuthor) => firstAuthor?.email,
-        ) || []),
-        ...(versionData.additionalAuthorsCollection?.items.map(
-          (additionalAuthor) => additionalAuthor?.email,
-        ) || []),
-        ...(versionData.correspondingAuthorCollection?.items.map(
-          (correspondingAuthor) => correspondingAuthor?.email,
-        ) || []),
-      ];
-
-      const teamLeaders = activeContributingTeams.map((team) => {
-        const activeMemberships = cleanArray(
-          team?.linkedFrom?.teamMembershipCollection?.items,
-        )
-          .filter(
-            (membership) =>
-              !membership?.inactiveSinceDate &&
-              membership?.linkedFrom?.usersCollection?.items[0] &&
-              !membership?.linkedFrom?.usersCollection?.items[0]
-                ?.alumniSinceDate,
-          )
-          .map((membership) => ({
-            email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
-            role: membership?.role,
-          }));
-
-        return activeMemberships
-          ?.filter(
-            (member) =>
-              member.role === 'Project Manager' ||
-              member.role === 'Lead PI (Core Leadership)',
-          )
-          .map((member) => member.email);
-      });
-
-      const labPIs = cleanArray(versionData.labsCollection?.items)
-        .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
-        .map((lab) => lab.labPi?.email);
-
-      let granteeRecipients = [
-        ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
-      ].filter(Boolean) as string[];
-
-      let openScienceRecipients = isProduction
-        ? ([
-            openScienceDL,
-            ...(action === 'discussion_created_by_grantee'
-              ? assignedOSMembersEmails
-              : []),
-          ] as string[])
-        : emailList
-            .split(',')
-            .map((e) => e.trim())
-            .filter(Boolean);
-
-      if (!isProduction) {
-        granteeRecipients = granteeRecipients.filter(
-          (email) => email && emailList.includes(email),
-        );
-        openScienceRecipients = openScienceRecipients.filter(
-          (email) => email && emailList.includes(email),
-        );
-      }
-
-      const templateDetails = emailNotificationMapping[action];
-      if (templateDetails.grantee && granteeRecipients.length >= 1) {
-        await this.sendEmail(
-          granteeRecipients,
-          templateDetails.grantee,
-          notificationData('grantee'),
-        );
-      }
-
-      if (
-        templateDetails.open_science_team &&
-        openScienceRecipients.length >= 1
-      ) {
-        await this.sendEmail(
-          openScienceRecipients,
-          templateDetails.open_science_team,
-          notificationData('open_science_team'),
-        );
-      }
+      await this.sendEmail(
+        openScienceRecipients,
+        templateDetails.open_science_team,
+        buildNotificationData('open_science_team'),
+      );
     }
   }
 }

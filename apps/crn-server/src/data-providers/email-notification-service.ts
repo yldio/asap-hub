@@ -156,7 +156,9 @@ export class EmailNotificationService {
     const names = assignedUsers
       .map((user) => `${user.firstName || ''} ${user.lastName || ''}`.trim())
       .filter(Boolean);
-    const emails = cleanArray(assignedUsers.map((user) => user.email));
+    const emails = cleanArray(assignedUsers.map((user) => user.email)).filter(
+      Boolean,
+    );
 
     return {
       names,
@@ -244,7 +246,7 @@ export class EmailNotificationService {
           ...cleanArray(discussions?.repliesCollection?.items).map(
             (reply) => reply.createdBy?.email,
           ),
-        ]),
+        ]).filter(Boolean),
       ),
     );
 
@@ -312,7 +314,7 @@ export class EmailNotificationService {
 
     return cleanArray([
       ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
-    ]);
+    ]).filter(Boolean);
   }
 
   private resolveOpenScienceRecipients(
@@ -364,7 +366,9 @@ export class EmailNotificationService {
     const contributingTeamNames = activeContributingTeams
       .map((team) => team?.displayName || '')
       .filter(Boolean);
-    const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
+    const teamWorkspaceUrl = submittingTeam
+      ? `${origin}/network/teams/${submittingTeam.sys.id}/workspace`
+      : '';
 
     const project = this.resolveProject(manuscripts, submittingTeam);
 
@@ -446,15 +450,11 @@ export class EmailNotificationService {
       isProduction,
     );
 
-    const openScienceRecipients = this.filterForNonProduction(
-      this.resolveOpenScienceRecipients(
-        action,
-        assignedOSMembersEmails,
-        isProduction,
-        emailList,
-      ),
-      emailList,
+    const openScienceRecipients = this.resolveOpenScienceRecipients(
+      action,
+      assignedOSMembersEmails,
       isProduction,
+      emailList,
     );
 
     if (templateDetails.grantee && granteeRecipients.length >= 1) {

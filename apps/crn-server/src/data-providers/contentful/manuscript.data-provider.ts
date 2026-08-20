@@ -671,16 +671,12 @@ export class ManuscriptContentfulDataProvider
           'notificationList' in manuscriptData
             ? (manuscriptData.notificationList as string)
             : '';
-        const useProjectBasedEmail =
-          'useProjectBasedEmail' in manuscriptData
-            ? manuscriptData.useProjectBasedEmail
-            : undefined;
         await this.emailNotificationService.sendEmailNotification(
           statusUpdateAction,
           id,
           notificationList,
           undefined,
-          useProjectBasedEmail,
+          manuscriptData.useProjectBasedEmail,
         );
       }
     }

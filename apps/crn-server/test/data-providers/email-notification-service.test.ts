@@ -461,6 +461,42 @@ describe('Email Notification Service', () => {
       );
     });
 
+    test('excludes assigned OS members with an empty email', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: {
+          ...manuscript,
+          assignedUsersCollection: {
+            items: [
+              {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john@doe.asap.com',
+              },
+              {
+                firstName: 'Empty',
+                lastName: 'Email',
+                email: '',
+              },
+            ],
+          },
+        },
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        '',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: `${openScienceDL},john@doe.asap.com`,
+        }),
+      );
+    });
+
     test('Should send email notification to OS team, assigned OS team member and OS discussion participants when discussion is replied to by grantee', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -503,6 +539,52 @@ describe('Email Notification Service', () => {
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({
           To: `jim@doe.asap.com,jane@doe.asap.com,${openScienceDL},john@doe.asap.com`,
+        }),
+      );
+    });
+
+    test('sends OS discussion email only to allowed recipients in notification list addresses on non-prod when discussion is replied to by grantee', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('development');
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussions: {
+          title: 'Discussion Title',
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussions: {
+          message: {
+            createdBy: {
+              email: 'jim@doe.asap.com',
+            },
+          },
+          repliesCollection: {
+            items: [
+              {
+                createdBy: {
+                  email: 'jane@doe.asap.com',
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'grantee_replied_to_discussion',
+        manuscript.sys.id,
+        'jim@doe.asap.com',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledTimes(1);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: 'jim@doe.asap.com',
         }),
       );
     });
@@ -598,6 +680,44 @@ describe('Email Notification Service', () => {
 
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        '',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: recipients }),
+      );
+    });
+
+    test('excludes contributing authors with an empty email', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      const recipients =
+        'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com';
+
+      const manuscriptWithEmptyAuthorEmail = {
+        ...manuscript,
+        versionsCollection: {
+          items: [
+            {
+              ...manuscript.versionsCollection!.items[0],
+              additionalAuthorsCollection: {
+                items: [
+                  ...manuscript.versionsCollection!.items[0]!
+                    .additionalAuthorsCollection!.items,
+                  { __typename: 'ExternalAuthors', email: '' },
+                ],
+              },
+            },
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscriptWithEmptyAuthorEmail,
       });
 
       await emailNotificationService.sendEmailNotification(
@@ -910,6 +1030,50 @@ describe('Email Notification Service', () => {
         );
 
         expect(mockedPostmark).not.toHaveBeenCalled();
+      });
+
+      test('excludes discussion participants with an empty email', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('production');
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: manuscript,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussions: {
+            title: 'Discussion Title',
+          },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussions: {
+            message: {
+              createdBy: {
+                email: 'jim@doe.asap.com',
+              },
+            },
+            repliesCollection: {
+              items: [
+                {
+                  createdBy: {
+                    email: '',
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+        await emailNotificationService.sendEmailNotification(
+          'os_member_replied_to_discussion',
+          manuscript.sys.id,
+          '',
+          discussionDetails,
+        );
+
+        expect(mockedPostmark).toHaveBeenCalledWith(
+          expect.objectContaining({ To: 'jim@doe.asap.com' }),
+        );
       });
 
       test('sends email when discussion recipients are in the notification list and environment is not production', async () => {

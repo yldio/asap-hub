@@ -354,7 +354,10 @@ describe('Manuscripts Contentful Data Provider', () => {
       jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
       const manuscriptId = 'manuscript-id-1';
 
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -425,6 +428,61 @@ describe('Manuscripts Contentful Data Provider', () => {
         { id: manuscriptId },
       );
       expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+
+    test('passes useProjectBasedEmail through when a status change triggers an email notification', async () => {
+      mockEnvironmentGetter.mockReturnValue('production');
+
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+        { __typename: 'Users', email: 'author@example.com' },
+      ];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          status: {
+            'en-US': 'Addendum Required',
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          ...getManuscriptUpdateStatusDataObject(),
+          status: 'Review Compliance Report',
+          useProjectBasedEmail: true,
+        },
+        'user-id-1',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateAlias: 'review-compliance-report',
+          TemplateModel: expect.objectContaining({
+            useProjectBasedEmail: true,
+          }),
+        }),
+      );
     });
 
     test('can update assigned users', async () => {
@@ -2707,6 +2765,50 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result).toEqual(manuscriptId);
     });
 
+    test('passes useProjectBasedEmail through when creating a manuscript triggers an email notification', async () => {
+      mockEnvironmentGetter.mockReturnValue('production');
+
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+
+      const publish = jest.fn();
+
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('manuscripts', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptId },
+          publish,
+        } as unknown as Entry);
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
+
+      await manuscriptDataProviderMockGraphql.create({
+        ...manuscriptCreateDataObject,
+        userId: 'user-id-0',
+        useProjectBasedEmail: true,
+      });
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateAlias: 'waiting-for-report-os-team',
+          TemplateModel: expect.objectContaining({
+            useProjectBasedEmail: true,
+          }),
+        }),
+      );
+    });
+
     test('can create a manuscript with key resource table, compliance report response and additional files', async () => {
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.additionalFiles = [
@@ -3095,6 +3197,72 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         },
       ]);
+    });
+
+    test('passes useProjectBasedEmail through when resubmitting a manuscript triggers an email notification', async () => {
+      mockEnvironmentGetter.mockReturnValue('production');
+
+      const patch: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+      const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          versions: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'previous-version',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      environmentMock.getEntry.mockResolvedValue(manuscriptEntry);
+      patch.mockResolvedValue(manuscriptEntry);
+      publish.mockResolvedValue(manuscriptEntry);
+
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
+
+      await manuscriptDataProviderMockGraphql.createVersion(manuscriptId, {
+        ...manuscriptCreateDataObject,
+        url: 'https://example.com/manuscript',
+        userId: 'user-id-0',
+        useProjectBasedEmail: true,
+      });
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateAlias: 'manuscript-resubmitted-os-team',
+          TemplateModel: expect.objectContaining({
+            useProjectBasedEmail: true,
+          }),
+        }),
+      );
     });
   });
 });

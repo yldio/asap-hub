@@ -216,6 +216,29 @@ describe('/discussions/ route', () => {
       );
     });
 
+    test('Should forward useProjectBasedEmail to the controller when provided', async () => {
+      const discussionId = 'discussion-id-1';
+      const text = 'test reply';
+      const manuscriptId = 'manuscript-id';
+
+      const reply: Reply = { text, isOpenScienceMember: false };
+
+      await supertest(app).patch(`/discussions/${discussionId}`).send({
+        text,
+        manuscriptId,
+        useProjectBasedEmail: true,
+      });
+
+      expect(discussionControllerMock.update).toHaveBeenCalledWith(
+        discussionId,
+        'user-id-0',
+        reply,
+        manuscriptId,
+        '',
+        true,
+      );
+    });
+
     test('Should accept a string of over 256 characters for the reply', async () => {
       const discussionId = 'discussion-id-1';
 
@@ -367,6 +390,31 @@ describe('/discussions/ route', () => {
       });
 
       expect(response.body).toEqual(discussionResponse);
+    });
+
+    test('Should call the controller with the right parameters', async () => {
+      const manuscriptId = 'manuscript-id';
+      const title = 'A good title';
+      const text = 'A good message';
+      const notificationList = 'user1,user2';
+
+      await supertest(app).post(`/discussions`).send({
+        manuscriptId,
+        title,
+        text,
+        notificationList,
+        useProjectBasedEmail: true,
+      });
+
+      expect(discussionControllerMock.create).toHaveBeenCalledWith(
+        'user-id-0',
+        manuscriptId,
+        title,
+        text,
+        undefined,
+        notificationList,
+        true,
+      );
     });
 
     test('Should not accept discussion title over 100 characters', async () => {

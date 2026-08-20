@@ -215,6 +215,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
         manuscriptId: manuscriptResponse.id,
         status: manuscriptResponse.status,
         notificationList: manuscriptResponse.notificationList,
+        useProjectBasedEmail: manuscriptResponse.useProjectBasedEmail,
       },
       expect.anything(),
     );

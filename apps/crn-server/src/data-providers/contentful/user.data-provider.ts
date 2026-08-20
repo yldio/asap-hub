@@ -433,10 +433,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     }
 
     const entryId = `socials-${user.sys.id}`;
-    const entryFields = Object.entries({
-      ...fields,
-      user: { sys: { type: 'Link', linkType: 'Entry', id: user.sys.id } },
-    }).reduce(
+    const entryFields = Object.entries(fields).reduce(
       (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
       {},
     );

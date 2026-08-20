@@ -1366,11 +1366,6 @@ describe('User data provider', () => {
           expect.objectContaining({
             fields: expect.objectContaining({
               github: { 'en-US': 'yldio' },
-              user: {
-                'en-US': {
-                  sys: { type: 'Link', linkType: 'Entry', id: 'entry-id' },
-                },
-              },
             }),
           }),
         );

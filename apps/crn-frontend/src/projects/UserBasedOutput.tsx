@@ -27,7 +27,10 @@ import {
   resolveResearchOutputFlowId,
   toResearchOutputVersion,
 } from '../shared-research/util';
-import { useResearchOutputPermissions } from '../shared-research/state';
+import {
+  useProjectOutputPermissions,
+  useResearchOutputPermissions,
+} from '../shared-research/state';
 import { useProjectById } from './state';
 import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
@@ -131,12 +134,14 @@ const UserBasedOutput: React.FC<UserBasedOutputProps> = ({
 
   const published = !!researchOutput?.published;
 
-  const permissions = useResearchOutputPermissions(
+  const basePermissions = useResearchOutputPermissions(
     'projects',
     [projectId],
     published,
     isImportedFromManuscript,
   );
+
+  const permissions = useProjectOutputPermissions(basePermissions, project);
 
   const flowId = resolveResearchOutputFlowId({
     entityType: 'project',

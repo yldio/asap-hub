@@ -55,6 +55,36 @@ it.each`
   expect(getByRole(role, { name })).toBeInTheDocument();
 });
 
+it('renders "Ready for PM Review" for non-project outputs', () => {
+  const { getByRole } = render(
+    <SharedResearchOutputButtons
+      {...props}
+      actions={{ ...defaultActions, showRequestReview: true }}
+    />,
+  );
+
+  expect(
+    getByRole('button', { name: /ready for pm review/i }),
+  ).toBeInTheDocument();
+});
+
+it('renders "Ready for Review" without mentioning PM for project outputs', () => {
+  const { getByRole, queryByRole } = render(
+    <SharedResearchOutputButtons
+      {...props}
+      isProjectOutput
+      actions={{ ...defaultActions, showRequestReview: true }}
+    />,
+  );
+
+  expect(
+    getByRole('button', { name: /ready for review/i }),
+  ).toBeInTheDocument();
+  expect(
+    queryByRole('button', { name: /ready for pm review/i }),
+  ).not.toBeInTheDocument();
+});
+
 it('renders nothing when no actions are available', () => {
   const { container } = render(
     <SharedResearchOutputButtons {...props} actions={{ ...defaultActions }} />,

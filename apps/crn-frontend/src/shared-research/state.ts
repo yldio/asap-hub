@@ -1,14 +1,19 @@
-import { expandUserRoles } from '@asap-hub/auth';
+import { expandUserRoles, expandUserTeamRoles } from '@asap-hub/auth';
 import {
   createQueryKeys,
   nullOnUndefined,
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import {
+  canPublishProjectOutput,
   ListResearchOutputResponse,
+  Project,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissions,
+  useCurrentUserCRN,
+} from '@asap-hub/react-context';
 import {
   getUserRole,
   hasDuplicateResearchOutputPermission,
@@ -163,4 +168,46 @@ export const useResearchOutputPermissions = (
     ),
     canRequestReview: hasRequestForReviewPermission(userRole),
   };
+};
+
+export const resolveProjectOutputPermissions = (
+  basePermissions: ResearchOutputPermissions,
+  {
+    isStaff,
+    isMember,
+    canPublish,
+  }: { isStaff: boolean; isMember: boolean; canPublish: boolean },
+): ResearchOutputPermissions => {
+  const canPublishResearchOutput = isStaff || (isMember && canPublish);
+  return {
+    ...basePermissions,
+    canPublishResearchOutput,
+    canVersionResearchOutput: canPublishResearchOutput,
+    canRequestReview:
+      !!basePermissions.canRequestReview && !canPublishResearchOutput,
+  };
+};
+
+export const useProjectOutputPermissions = (
+  basePermissions: ResearchOutputPermissions,
+  project: Project | undefined,
+): ResearchOutputPermissions => {
+  const user = useCurrentUserCRN();
+
+  const isStaff = user?.role === 'Staff';
+  const isMember = !!basePermissions.canShareResearchOutput;
+  const canPublish =
+    !!user &&
+    !!project &&
+    canPublishProjectOutput(
+      user.id,
+      expandUserTeamRoles(user.teams ?? []),
+      project,
+    );
+
+  return resolveProjectOutputPermissions(basePermissions, {
+    isStaff,
+    isMember,
+    canPublish,
+  });
 };

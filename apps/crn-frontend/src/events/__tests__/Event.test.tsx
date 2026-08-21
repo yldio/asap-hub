@@ -2,7 +2,8 @@ import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { Route, Routes, StaticRouter } from 'react-router';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   createCalendarResponse,
   createEventResponse,
@@ -18,7 +19,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Event from '../Event';
-import { getEvent } from '../api';
+import { getEvent, patchEvent } from '../api';
 
 jest.mock('../api');
 
@@ -31,9 +32,11 @@ globalThis.ResizeObserver = jest.fn(() => ({
 const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
+const mockPatchEvent = patchEvent as jest.MockedFunction<typeof patchEvent>;
 beforeEach(() => {
   disable('NEW_EVENT_PAGE');
   mockGetEvent.mockClear();
+  mockPatchEvent.mockClear();
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,
@@ -223,6 +226,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
 
     const createAttendance = (count: number): EventTeamAttendance[] =>
       Array.from({ length: count }, (_, i) => ({
+        id: `attendance-${i}`,
         team: { id: `team-${i}`, displayName: `Team ${i}` },
         attended: true,
       }));
@@ -238,6 +242,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
         endDate: pastEndDate,
         attendance: [
           {
+            id: 'attendance-1',
             team: {
               id: 't1',
               displayName: 'Team One',
@@ -246,6 +251,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
             attended: true,
           },
           {
+            id: 'attendance-2',
             team: {
               id: 't2',
               displayName: 'Team Two',
@@ -253,7 +259,11 @@ describe('the NEW_EVENT_PAGE flag', () => {
             },
             attended: false,
           },
-          { team: { id: 't3', displayName: 'Team Three' }, attended: false },
+          {
+            id: 'attendance-3',
+            team: { id: 't3', displayName: 'Team Three' },
+            attended: false,
+          },
         ],
       });
       const { findByText, getByTitle } = render(<Event />, { wrapper });
@@ -289,48 +299,71 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Add Attendance')).not.toBeInTheDocument();
     });
 
-    it('shows the add attendance cta for a project manager of the event group', async () => {
+    it('shows the add attendance cta for a tech support user', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
         endDate: pastEndDate,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
         attendance: [],
       });
-      const pmWrapper = createWrapper({
-        interestGroups: [
-          {
-            id: 'ig-pm',
-            name: 'Group',
-            active: true,
-            role: 'Project Manager',
-          },
-        ],
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByText } = render(<Event />, {
+        wrapper: techSupportWrapper,
       });
-      const { findByText } = render(<Event />, { wrapper: pmWrapper });
       expect(await findByText('Add Attendance')).toBeVisible();
     });
 
-    it('hides the add attendance cta for a project manager of an inactive group', async () => {
+    it('saves attendance changes for a tech support user', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
         endDate: pastEndDate,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
-        attendance: [],
-      });
-      const pmWrapper = createWrapper({
-        interestGroups: [
+        attendance: [
           {
-            id: 'ig-pm',
-            name: 'Group',
-            active: false,
-            role: 'Project Manager',
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
           },
         ],
       });
+      mockPatchEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.click(
+        getByRole('checkbox', { name: 'Team One attendance' }),
+      );
+      await userEvent.click(getByRole('button', { name: 'Save' }));
+
+      await waitFor(() =>
+        expect(mockPatchEvent).toHaveBeenCalledWith(
+          id,
+          {
+            attendance: [{ id: 'attendance-1', teamId: 't1', attended: true }],
+          },
+          expect.anything(),
+        ),
+      );
+    });
+
+    it('hides the add attendance cta for a user without tech support', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [],
+      });
+      const nonTechSupportWrapper = createWrapper({ techSupport: false });
       const { findByText, queryByText } = render(<Event />, {
-        wrapper: pmWrapper,
+        wrapper: nonTechSupportWrapper,
       });
       expect(await findByText('No attendance recorded yet')).toBeVisible();
       expect(queryByText('Add Attendance')).not.toBeInTheDocument();
@@ -353,7 +386,11 @@ describe('the NEW_EVENT_PAGE flag', () => {
         ...createEventResponse(),
         id,
         attendance: [
-          { team: { id: 't1', displayName: 'Team One' }, attended: true },
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: true,
+          },
         ],
       });
       const { findAllByText, queryByText } = render(<Event />, { wrapper });

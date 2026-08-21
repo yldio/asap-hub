@@ -254,6 +254,7 @@ export const getContentfulGraphqlEvent = (
         total: 2,
         items: [
           {
+            sys: { id: 'attendance-id-1' },
             attended: true,
             team: {
               sys: { id: 'team-id-1' },
@@ -263,6 +264,7 @@ export const getContentfulGraphqlEvent = (
             },
           },
           {
+            sys: { id: 'attendance-id-2' },
             attended: false,
             team: {
               sys: { id: 'team-id-2' },
@@ -272,6 +274,7 @@ export const getContentfulGraphqlEvent = (
             },
           },
           {
+            sys: { id: 'attendance-id-3' },
             attended: true,
             team: null,
           },
@@ -458,6 +461,7 @@ export const getContentfulEventDataObject = (
     : {
         attendance: [
           {
+            id: 'attendance-id-1',
             attended: true,
             team: {
               id: 'team-id-1',
@@ -467,6 +471,7 @@ export const getContentfulEventDataObject = (
             },
           },
           {
+            id: 'attendance-id-2',
             attended: false,
             team: {
               id: 'team-id-2',

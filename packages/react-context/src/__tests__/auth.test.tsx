@@ -122,6 +122,7 @@ describe('useCurrentUser', () => {
           projects: [],
           role: 'Grantee',
           openScienceTeamMember: false,
+          techSupport: false,
         },
       }),
     });
@@ -340,6 +341,7 @@ describe('useCurrentUserTeamRoles', () => {
           projects: [],
           role: 'Grantee',
           openScienceTeamMember: false,
+          techSupport: false,
         },
       }),
     });

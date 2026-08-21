@@ -28,6 +28,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   onboarded: true,
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   _tags: [],
 };
 const people = [

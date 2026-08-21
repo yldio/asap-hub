@@ -123,6 +123,38 @@ describe('User data provider', () => {
       ]);
     });
 
+    describe('techSupport', () => {
+      test('Should map techSupport to true when the field is set', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: getContentfulGraphqlUser({ techSupport: true }),
+        });
+
+        const result = await userDataProvider.fetchById('123');
+
+        expect(result!.techSupport).toBe(true);
+      });
+
+      test('Should map techSupport to false when the field is set to false', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: getContentfulGraphqlUser({ techSupport: false }),
+        });
+
+        const result = await userDataProvider.fetchById('123');
+
+        expect(result!.techSupport).toBe(false);
+      });
+
+      test('Should default techSupport to false when the field is null', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: getContentfulGraphqlUser({ techSupport: null }),
+        });
+
+        const result = await userDataProvider.fetchById('123');
+
+        expect(result!.techSupport).toBe(false);
+      });
+    });
+
     test('drops the leader role when the leadership is inactive', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({

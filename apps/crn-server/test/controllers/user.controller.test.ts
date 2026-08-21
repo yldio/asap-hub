@@ -249,6 +249,22 @@ describe('Users controller', () => {
       expect(result).toEqual(getUserListItemResponse());
     });
 
+    test('Should carry techSupport onto the response without a controller enumeration', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserListItemResponse()],
+      });
+
+      userDataProviderMock.fetchById.mockResolvedValue({
+        ...getUserDataObject(),
+        techSupport: true,
+      });
+
+      const result = await userController.fetchByCode(code);
+
+      expect(result.techSupport).toBe(true);
+    });
+
     test('Should call the data provider with correct parameters', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,

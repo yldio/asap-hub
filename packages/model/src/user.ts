@@ -119,6 +119,7 @@ export interface UserDataObject extends Invitee {
   responsibilities?: string;
   role: Role;
   openScienceTeamMember: boolean;
+  techSupport: boolean;
   social?: UserSocialLinks;
   stateOrProvince?: string;
   teams: UserTeam[];

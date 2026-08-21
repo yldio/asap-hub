@@ -16,3 +16,10 @@ export const getEvents = jest.fn(
     ...createListEventResponse(2),
   }),
 );
+
+export const patchEvent = jest.fn(
+  async (id: string): Promise<EventResponse> => ({
+    ...createEventResponse(),
+    id,
+  }),
+);

@@ -102,6 +102,7 @@ describe('For an ASAP KR-Sync login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
 
@@ -364,6 +365,7 @@ describe('For a CRN login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
   it('adds the user metadata on successful fetch for crn', async () => {

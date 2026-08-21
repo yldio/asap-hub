@@ -30,6 +30,7 @@ import {
   FETCH_PREVIOUS_EVENT_ATTENDANCE,
   FETCH_WORKING_GROUP_CALENDAR,
   GraphQLClient,
+  Link,
   patchAndPublish,
   pollContentfulGql,
   RichTextFromQuery,
@@ -37,13 +38,13 @@ import {
 import {
   EventCreateDataObject,
   EventDataObject,
-  EventDataProvider,
   EventSpeaker,
   EventSpeakerExternalUserData,
   EventSpeakerUserData,
   EventPreliminaryDataSharing,
   EventTeamAttendance,
   EventUpdateDataObject,
+  EventUpdateDetailsRequest,
   FetchEventsOptions,
   isEventStatus,
   isTeamType,
@@ -53,6 +54,8 @@ import { parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
+import logger from '../../utils/logger';
+import { EventDataProvider } from '../types';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -324,6 +327,99 @@ export class EventContentfulDataProvider implements EventDataProvider {
       'events',
     );
   }
+
+  async updateEventDetails(
+    id: string,
+    data: EventUpdateDetailsRequest,
+  ): Promise<void> {
+    const environment = await this.getRestClient();
+    const event = await environment.getEntry(id);
+
+    const existingLinks: Link<'Entry'>[] =
+      event.fields.attendance?.['en-US'] || [];
+
+    const incomingIds = new Set(
+      data.attendance
+        .map((attendance) => attendance.id)
+        .filter((attendanceId): attendanceId is string => !!attendanceId),
+    );
+    const linksToDelete = existingLinks.filter(
+      (link) => !incomingIds.has(link.sys.id),
+    );
+
+    await Promise.all(
+      linksToDelete.map(async (link) => {
+        try {
+          const attendanceEntry = await environment.getEntry(link.sys.id);
+          try {
+            if (attendanceEntry.isPublished()) {
+              await attendanceEntry.unpublish();
+            }
+            try {
+              await attendanceEntry.delete();
+            } catch (error) {
+              logger.warn(
+                { error, attendanceId: link.sys.id },
+                `Error deleting attendance entry with id: ${link.sys.id}`,
+              );
+            }
+          } catch (error) {
+            logger.warn(
+              { error, attendanceId: link.sys.id },
+              `Error unpublishing attendance entry with id: ${link.sys.id}`,
+            );
+          }
+        } catch (error) {
+          logger.warn(
+            { error, attendanceId: link.sys.id },
+            `Error fetching attendance entry with id: ${link.sys.id}`,
+          );
+        }
+      }),
+    );
+
+    const attendanceEntries = await Promise.all(
+      data.attendance.map(async ({ id: attendanceId, teamId, attended }) => {
+        if (attendanceId) {
+          const attendanceEntry = await environment.getEntry(attendanceId);
+          if (attendanceEntry.fields.attended?.['en-US'] === attended) {
+            return attendanceEntry;
+          }
+          attendanceEntry.fields = addLocaleToFields({
+            team: createLink(teamId),
+            attended,
+          });
+          const updatedEntry = await attendanceEntry.update();
+          return updatedEntry.publish();
+        }
+
+        try {
+          const newEntry = await environment.createEntry('attendance', {
+            fields: addLocaleToFields({
+              team: createLink(teamId),
+              attended,
+            }),
+          });
+          return await newEntry.publish();
+        } catch (e) {
+          throw new Error(`Error creating attendance entry: ${e}`);
+        }
+      }),
+    );
+
+    const attendance = attendanceEntries.map((attendanceEntry) =>
+      createLink(attendanceEntry.sys.id),
+    );
+
+    const result = await patchAndPublish(event, { attendance });
+
+    const fetchEventById = () => this.fetchEventById(id);
+    await pollContentfulGql<FetchEventByIdQuery>(
+      result.sys.publishedVersion || Infinity,
+      fetchEventById,
+      'events',
+    );
+  }
 }
 
 type SpeakerItem = NonNullable<
@@ -425,12 +521,13 @@ type AttendanceItem = NonNullable<
 export const parseGraphQLAttendance = (
   attendance: AttendanceItem[],
 ): EventTeamAttendance[] =>
-  attendance.reduce<EventTeamAttendance[]>((list, { attended, team }) => {
+  attendance.reduce<EventTeamAttendance[]>((list, { sys, attended, team }) => {
     if (!team) {
       return list;
     }
 
     list.push({
+      id: sys.id,
       attended: !!attended,
       team: {
         id: team.sys.id,

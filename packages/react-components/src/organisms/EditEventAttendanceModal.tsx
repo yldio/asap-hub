@@ -420,6 +420,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const title = isEditMode ? 'Edit Attendance' : 'Add Attendance';
 
   const attendedCount = rows.filter((team) => team.attended).length;
+  const allAttended = rows.length > 0 && attendedCount === rows.length;
   const saveEnabled = rows.length > 0 && !isSaving;
   const addedTeamIds = new Set(rows.map((team) => team.teamId));
 
@@ -552,8 +553,10 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     });
   };
 
-  const markAllAttended = () =>
-    setRows((current) => current.map((team) => ({ ...team, attended: true })));
+  const toggleMarkAllAttended = () =>
+    setRows((current) =>
+      current.map((team) => ({ ...team, attended: !allAttended })),
+    );
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -755,9 +758,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                 noMargin
                 enabled={!isCancelling}
                 overrideStyles={markAllButtonStyles}
-                onClick={markAllAttended}
+                onClick={toggleMarkAllAttended}
               >
-                Mark All Attended
+                {allAttended ? 'Mark All Not Attended' : 'Mark All Attended'}
               </Button>
             )}
           </div>

@@ -26,6 +26,9 @@ export const eventsContentQueryFragment = gql`
     attendanceCollection(limit: 50) @include(if: $singleEvent) {
       total
       items {
+        sys {
+          id
+        }
         attended
         team {
           sys {

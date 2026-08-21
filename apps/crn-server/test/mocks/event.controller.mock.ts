@@ -6,4 +6,5 @@ export const eventControllerMock = {
   fetchById: jest.fn(),
   fetchByGoogleId: jest.fn(),
   update: jest.fn(),
+  updateEventDetails: jest.fn(),
 } as unknown as jest.Mocked<EventController>;

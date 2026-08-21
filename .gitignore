@@ -65,3 +65,4 @@ tramp
 .gitnexus/*
 CLAUDE.md
 AGENTS.md
+apps/demo-server/.esbuild/.build/*

@@ -1,0 +1,62 @@
+name: Demo encoder image
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'apps/demo-server/encoder/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'apps/demo-server/encoder/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    # Development is protected to master; PR runs deploy via the Branch environment
+    environment: ${{ github.event_name == 'pull_request' && 'Branch' || 'Development' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ github.event_name == 'pull_request' && 'Branch' || 'Development' }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+      # the repository is created by the demo-hub CloudFormation stack; on the
+      # very first pipeline run it does not exist yet, so skip instead of fail
+      # and re-run this workflow once demo-sls-deploy has succeeded
+      - name: Check repository exists
+        id: repo
+        run: |
+          if aws ecr describe-repositories --repository-names demo-hub-dev-encoder > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::ECR repository demo-hub-dev-encoder does not exist yet (first stack deploy pending). Re-run this workflow after demo-sls-deploy succeeds."
+          fi
+      # PRs push too: the demo stack is a single shared dev environment, and a
+      # PR that changes the encoder deploys to it anyway
+      - name: Build and push
+        if: steps.repo.outputs.exists == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/demo-server/encoder
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.ecr-login.outputs.registry }}/demo-hub-dev-encoder:latest

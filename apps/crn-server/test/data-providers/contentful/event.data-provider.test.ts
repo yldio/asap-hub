@@ -1378,15 +1378,79 @@ describe('Events Contentful Data Provider', () => {
       when(environmentMock.getEntry)
         .calledWith('123')
         .mockResolvedValue(eventEntry);
+      const fetchError = new Error('failed!');
       when(environmentMock.getEntry)
         .calledWith('attendance-stale')
-        .mockRejectedValue(new Error('failed!'));
+        .mockRejectedValue(fetchError);
       mockPollingConsistency();
 
       await eventDataProvider.updateEventDetails('123', { attendance: [] });
 
       expect(loggerWarnSpy).toHaveBeenCalledWith(
+        { error: fetchError, attendanceId: 'attendance-stale' },
         'Error fetching attendance entry with id: attendance-stale',
+      );
+    });
+
+    test('logs a warning and continues if unpublishing a stale attendance entry fails', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      const staleLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-stale' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [staleLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const staleEntry = getEntry({}, { id: 'attendance-stale' });
+      staleEntry.isPublished = jest.fn(() => true);
+      const unpublishError = new Error('unpublish failed!');
+      staleEntry.unpublish = jest.fn().mockRejectedValue(unpublishError);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-stale')
+        .mockResolvedValue(staleEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', { attendance: [] });
+
+      expect(staleEntry.delete).not.toHaveBeenCalled();
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        { error: unpublishError, attendanceId: 'attendance-stale' },
+        'Error unpublishing attendance entry with id: attendance-stale',
+      );
+    });
+
+    test('logs a warning and continues if deleting a stale attendance entry fails', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      const staleLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-stale' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [staleLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const staleEntry = getEntry({}, { id: 'attendance-stale' });
+      staleEntry.isPublished = jest.fn(() => true);
+      const deleteError = new Error('delete failed!');
+      staleEntry.delete = jest.fn().mockRejectedValue(deleteError);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-stale')
+        .mockResolvedValue(staleEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', { attendance: [] });
+
+      expect(staleEntry.unpublish).toHaveBeenCalled();
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        { error: deleteError, attendanceId: 'attendance-stale' },
+        'Error deleting attendance entry with id: attendance-stale',
       );
     });
 

@@ -357,18 +357,21 @@ export class EventContentfulDataProvider implements EventDataProvider {
             }
             try {
               await attendanceEntry.delete();
-            } catch {
+            } catch (error) {
               logger.warn(
+                { error, attendanceId: link.sys.id },
                 `Error deleting attendance entry with id: ${link.sys.id}`,
               );
             }
-          } catch {
+          } catch (error) {
             logger.warn(
+              { error, attendanceId: link.sys.id },
               `Error unpublishing attendance entry with id: ${link.sys.id}`,
             );
           }
-        } catch {
+        } catch (error) {
           logger.warn(
+            { error, attendanceId: link.sys.id },
             `Error fetching attendance entry with id: ${link.sys.id}`,
           );
         }

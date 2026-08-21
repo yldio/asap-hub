@@ -354,6 +354,61 @@ describe('the NEW_EVENT_PAGE flag', () => {
       );
     });
 
+    it('shows no matches when searching in the attendance modal', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole, findByText } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.type(getByRole('combobox'), 'zzz');
+
+      expect(await findByText('Sorry, no matches for zzz.')).toBeVisible();
+    });
+
+    it('closes the attendance modal without saving when dismissed', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole, queryByRole } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        queryByRole('heading', { name: 'Edit Attendance' }),
+      ).not.toBeInTheDocument();
+      expect(mockPatchEvent).not.toHaveBeenCalled();
+    });
+
     it('hides the add attendance cta for a user without tech support', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),

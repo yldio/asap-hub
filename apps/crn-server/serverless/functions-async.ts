@@ -42,6 +42,8 @@ export const asyncFunctions: AWS['functions'] = {
     environment: googleCalendarEnvironment,
   },
   syncActiveCampaignContact: {
+    // Hits the 16s provider default when ActiveCampaign responds slowly.
+    timeout: 120,
     handler: './src/handlers/user/sync-active-campaign-contact.handler',
     events: contentfulEventBridge(['UsersPublished']),
     environment: activeCampaignEnvironment,

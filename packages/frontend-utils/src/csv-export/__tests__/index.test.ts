@@ -9,6 +9,7 @@ import {
   emptyToNA,
   EXCEL_CELL_CHARACTER_LIMIT,
   htmlToCsvText,
+  sanitizeFileNamePart,
 } from '..';
 
 const mockWriteStream = {
@@ -81,6 +82,26 @@ describe('emptyToNA', () => {
       d: false,
       e: true,
     });
+  });
+});
+
+describe('sanitizeFileNamePart', () => {
+  it('collapses runs of non-alphanumeric characters into single underscores', () => {
+    expect(sanitizeFileNamePart('Alessi Project / 2026!', 'fallback')).toBe(
+      'Alessi_Project_2026',
+    );
+  });
+
+  it('trims surrounding whitespace and underscores', () => {
+    expect(sanitizeFileNamePart('  Kick-off  ', 'fallback')).toBe('Kick_off');
+  });
+
+  it('returns the fallback when no alphanumeric characters remain', () => {
+    expect(sanitizeFileNamePart('  !! ', 'fallback')).toBe('fallback');
+  });
+
+  it('returns the fallback for an empty string', () => {
+    expect(sanitizeFileNamePart('', 'fallback')).toBe('fallback');
   });
 });
 

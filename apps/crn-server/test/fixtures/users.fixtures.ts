@@ -42,6 +42,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   responsibilities: 'some responsibilities',
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   social: {
     orcid: '363-98-9330',
   },
@@ -147,6 +148,7 @@ export const getUserResponse = (): UserResponse => ({
   ],
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
@@ -395,6 +397,7 @@ export const getUserDataObject = (): UserDataObject => ({
   ],
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },

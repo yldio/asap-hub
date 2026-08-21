@@ -19,6 +19,12 @@ const EXCEL_CELL_SAFE_CHARACTER_LIMIT = Math.floor(
   (EXCEL_CELL_CHARACTER_LIMIT - 2) / 2, // Cell likely wrapped with ""; " escapes to ""
 );
 
+export const sanitizeFileNamePart = (value: string, fallback: string): string =>
+  value
+    .trim()
+    .replace(/[^A-Za-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '') || fallback;
+
 export const caseInsensitive = (a: string, b: string) =>
   a.localeCompare(b, undefined, { sensitivity: 'base' });
 

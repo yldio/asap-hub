@@ -33,3 +33,9 @@ export type SpeakerGroup =
       readonly preliminaryFindingsShared: boolean;
       readonly users: SpeakerGroupExternalUser[];
     };
+
+export type SpeakerTeamGroup = Extract<SpeakerGroup, { variant: 'team' }>;
+export type SpeakerExternalGroup = Extract<
+  SpeakerGroup,
+  { variant: 'external' }
+>;

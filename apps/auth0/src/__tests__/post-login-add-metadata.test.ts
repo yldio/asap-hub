@@ -102,6 +102,7 @@ describe('For an ASAP KR-Sync login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
 
@@ -364,6 +365,7 @@ describe('For a CRN login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
   it('adds the user metadata on successful fetch for crn', async () => {
@@ -375,6 +377,32 @@ describe('For a CRN login', () => {
     expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
       'http://example.com/user',
       expect.objectContaining({ id: '42' }),
+    );
+  });
+
+  it('sets the techSupport claim to true for a tech support member', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { ...baseUser, id: '42', techSupport: true });
+
+    await onExecutePostLogin(eventBase, apiBase);
+
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({ techSupport: true }),
+    );
+  });
+
+  it('sets the techSupport claim to false for a non tech support member', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { ...baseUser, id: '42', techSupport: false });
+
+    await onExecutePostLogin(eventBase, apiBase);
+
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({ techSupport: false }),
     );
   });
 

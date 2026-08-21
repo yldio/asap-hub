@@ -52,6 +52,7 @@ export const createUserResponse = (
   itemIndex = 0,
 ): UserResponse => ({
   ...listUserResponseItem,
+  techSupport: false,
   lastModifiedDate: '2020-09-07T17:36:54Z',
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],

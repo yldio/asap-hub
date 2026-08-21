@@ -9,6 +9,7 @@ export default {
 
 const baseMemberProps = {
   onboarded: true,
+  techSupport: false,
   lastModifiedDate: '',
   createdDate: '',
   teams: [],

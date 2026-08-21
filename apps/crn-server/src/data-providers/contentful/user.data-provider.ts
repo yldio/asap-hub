@@ -797,6 +797,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     questions,
     role,
     openScienceTeamMember: !!item.openScienceTeamMember,
+    techSupport: !!item.techSupport,
     degree,
     connections: connections.map((connection) => ({ code: connection })),
     teams,

@@ -23,6 +23,7 @@ import { events, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { useState } from 'react';
 
+import { downloadEventSpeakers } from './export';
 import {
   useEventById,
   useEventSpeakerGroups,
@@ -123,6 +124,11 @@ const Event: React.FC = () => {
               <EventSpeakers
                 groups={speakerGroups}
                 hasFinished={hasFinished}
+                onExport={
+                  isTechSupport
+                    ? () => downloadEventSpeakers(event, speakerGroups)
+                    : undefined
+                }
                 onAddSpeaker={isEventProjectManager ? noop : undefined}
               />
             }

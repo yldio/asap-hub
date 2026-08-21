@@ -55,6 +55,9 @@ export const asyncFunctions: AWS['functions'] = {
     environment: activeCampaignEnvironment,
   },
   syncUserOrcidContentful: {
+    // Hits the 16s provider default on slow ORCID responses; matches
+    // cronjobSyncOrcidContentful.
+    timeout: 120,
     handler: './src/handlers/user/sync-orcid-handler.handler',
     events: contentfulEventBridge(['UsersPublished'], {
       maximumRetryAttempts: 2,

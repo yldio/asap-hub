@@ -70,6 +70,7 @@ const createAuth0 = (
       projects: [],
       role: 'Grantee',
       openScienceTeamMember: false,
+      techSupport: false,
       ...rest,
       ...(teams && {
         teams: groupRoles(

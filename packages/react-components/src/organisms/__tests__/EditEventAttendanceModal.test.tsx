@@ -743,7 +743,7 @@ describe('EditEventAttendanceModal', () => {
     it('Should disable the Mark All Attended button', async () => {
       await enterCancelConfirmation();
       expect(
-        screen.getByRole('button', { name: 'Mark All Attended' }),
+        screen.getByRole('button', { name: 'Mark All Not Attended' }),
       ).toBeDisabled();
     });
 
@@ -806,7 +806,7 @@ describe('EditEventAttendanceModal', () => {
         screen.getByRole('button', { name: 'Keep Editing' }),
       );
       expect(
-        screen.getByRole('button', { name: 'Mark All Attended' }),
+        screen.getByRole('button', { name: 'Mark All Not Attended' }),
       ).toBeEnabled();
       expect(
         screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),

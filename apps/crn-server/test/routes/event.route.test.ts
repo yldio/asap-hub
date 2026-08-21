@@ -25,6 +25,10 @@ describe('/events/ routes', () => {
     logger: loggerMock,
   });
 
+  beforeEach(() => {
+    userMockFactory.mockReturnValue(createUserResponse());
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });

@@ -1,12 +1,14 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   EventCreateRequest,
-  EventDataProvider,
   EventResponse,
+  EventUpdateDetailsRequest,
   EventUpdateRequest,
   FetchEventsOptions,
   ListEventResponse,
 } from '@asap-hub/model';
+
+import { EventDataProvider } from '../data-providers/types';
 
 export default class EventController {
   constructor(private dataProvider: EventDataProvider) {}
@@ -33,6 +35,14 @@ export default class EventController {
     event: EventUpdateRequest,
   ): Promise<EventResponse> {
     await this.dataProvider.update(eventId, event);
+    return this.fetchById(eventId);
+  }
+
+  async updateEventDetails(
+    eventId: string,
+    data: EventUpdateDetailsRequest,
+  ): Promise<EventResponse> {
+    await this.dataProvider.updateEventDetails(eventId, data);
     return this.fetchById(eventId);
   }
 

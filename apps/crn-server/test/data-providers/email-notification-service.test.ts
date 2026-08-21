@@ -229,6 +229,7 @@ describe('Email Notification Service', () => {
                         items: [
                           {
                             sys: { id: 'project-7' },
+                            title: 'Project Seven',
                             projectId: 'P7',
                             projectType,
                             grantId: 'g7',
@@ -266,7 +267,7 @@ describe('Email Notification Service', () => {
       },
     };
 
-    test('Should send email notification to OS team when manuscript is submitted for a user based manuscript', async () => {
+    test('Should send email notification to OS team when manuscript is submitted for a user based project manuscript', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: userBasedManuscript,
@@ -389,7 +390,7 @@ describe('Email Notification Service', () => {
         expect.objectContaining({
           TemplateModel: expect.objectContaining({
             project: {
-              name: '',
+              name: 'Project Seven',
               workspace: `https://dev.hub.asap.science/projects/resource/project-7/workspace`,
             },
           }),

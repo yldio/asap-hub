@@ -714,6 +714,46 @@ describe.each(variants)(
       expect(screen.queryByText(/^Draft Outputs/)).not.toBeInTheDocument();
     });
 
+    describe('Share an Output button', () => {
+      it('is displayed to a project member', async () => {
+        enable('PROJECT_OUTPUTS');
+        await renderProjectDetail(
+          Component,
+          routeKeyword,
+          mainProjectId,
+          memberUser,
+        );
+        expect(
+          screen.getByRole('button', { name: /Share an Output/i }),
+        ).toBeVisible();
+      });
+
+      it('is not displayed to a user who is not a project member', async () => {
+        enable('PROJECT_OUTPUTS');
+        await renderProjectDetail(
+          Component,
+          routeKeyword,
+          mainProjectId,
+          nonMemberUser,
+        );
+        expect(
+          screen.queryByRole('button', { name: /Share an Output/i }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('blocks the create-output route for a user who is not a project member', async () => {
+        enable('PROJECT_OUTPUTS');
+        await renderProjectDetail(
+          Component,
+          routeKeyword,
+          mainProjectId,
+          nonMemberUser,
+          'create-output/article',
+        );
+        expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      });
+    });
+
     it('renders outputs list when navigating to outputs route', async () => {
       enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
@@ -899,6 +939,41 @@ describe('DiscoveryProjectDetail - specific', () => {
           'Add the contributing authors. Each author must have one of their teams listed in the Teams field.',
         ),
       ).toBeVisible();
+    });
+
+    it('requires authors for a team-based project Article output', async () => {
+      const researchOutput: ResearchOutputTeamResponse = {
+        ...createResearchOutputResponse(),
+        id: '456',
+        documentType: 'Article',
+        workingGroups: undefined,
+        teams: [
+          {
+            displayName: teamResponse.displayName,
+            id: teamResponse.id,
+            teamType: 'Discovery Team',
+          },
+        ],
+        title: 'Example Article',
+        link: 'http://example.com',
+      };
+      mockUseResearchOutputById.mockReturnValue(researchOutput);
+
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        DiscoveryProjectDetail,
+        'discovery',
+        'discovery-1',
+        memberUser,
+        `duplicate/${researchOutput.id}`,
+      );
+
+      expect(
+        await screen.findByLabelText(/Authors\(required\)/i),
+      ).toBeVisible();
+      expect(
+        screen.queryByLabelText(/Authors\(optional\)/i),
+      ).not.toBeInTheDocument();
     });
 
     it('will show a page not found if research output does not exist', async () => {

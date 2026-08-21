@@ -21341,6 +21341,7 @@ export type Users = Entry &
     sys: Sys;
     teamsCollection?: Maybe<UsersTeamsCollection>;
     teamsCursorCollection?: Maybe<UsersTeamsCursorCollection>;
+    techSupport?: Maybe<Scalars['Boolean']>;
     userSocials?: Maybe<Socials>;
   };
 
@@ -21662,6 +21663,12 @@ export type UsersTeamsCursorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TeamMembershipFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersTechSupportArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -39221,6 +39228,7 @@ export type UsersContentFragment = Pick<
   | 'expertiseAndResourceDescription'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -39615,6 +39623,7 @@ export type FetchUserByIdQuery = {
       | 'expertiseAndResourceDescription'
       | 'role'
       | 'openScienceTeamMember'
+      | 'techSupport'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -49804,6 +49813,7 @@ export const UsersContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'openScienceTeamMember' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'techSupport' } },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },

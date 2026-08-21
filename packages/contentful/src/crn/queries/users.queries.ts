@@ -52,6 +52,7 @@ export const usersContentQueryFragment = gql`
     }
     role
     openScienceTeamMember
+    techSupport
     responsibilities
     researchInterests
     reachOut

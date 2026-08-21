@@ -1,4 +1,6 @@
-import { FetchEventsOptions } from '@asap-hub/model';
+import { createUserResponse } from '@asap-hub/fixtures';
+import { FetchEventsOptions, UserResponse } from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -7,11 +9,16 @@ import {
   getEventResponse,
   getListEventResponse,
 } from '../fixtures/events.fixtures';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/events/ routes', () => {
+  const userMockFactory = jest.fn<UserResponse | undefined, []>();
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = userMockFactory();
+    return next();
+  };
+
   const app = appFactory({
     authHandler: authHandlerMock,
     eventController: eventControllerMock,
@@ -246,6 +253,68 @@ describe('/events/ routes', () => {
       const response = await supertest(app).get('/events/123');
 
       expect(response.body).toEqual(getEventResponse());
+    });
+  });
+
+  describe('PATCH /events/{event_id}', () => {
+    test('Should update attendance and return the updated event for a tech support user', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        techSupport: true,
+      });
+      eventControllerMock.updateEventDetails.mockResolvedValueOnce(
+        getEventResponse(),
+      );
+
+      const response = await supertest(app)
+        .patch('/events/123')
+        .send({ attendance: [{ teamId: 'team-1', attended: true }] });
+
+      expect(response.status).toBe(200);
+      expect(eventControllerMock.updateEventDetails).toHaveBeenCalledWith(
+        '123',
+        { attendance: [{ teamId: 'team-1', attended: true }] },
+      );
+      expect(response.body).toEqual(getEventResponse());
+    });
+
+    test('Should return 403 when the logged in user is not a tech support user', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        techSupport: false,
+      });
+
+      const response = await supertest(app)
+        .patch('/events/123')
+        .send({ attendance: [{ teamId: 'team-1', attended: true }] });
+
+      expect(response.status).toBe(403);
+      expect(eventControllerMock.updateEventDetails).not.toHaveBeenCalled();
+    });
+
+    test('Should return 403 when there is no logged in user', async () => {
+      userMockFactory.mockReturnValueOnce(undefined);
+
+      const response = await supertest(app)
+        .patch('/events/123')
+        .send({ attendance: [{ teamId: 'team-1', attended: true }] });
+
+      expect(response.status).toBe(403);
+      expect(eventControllerMock.updateEventDetails).not.toHaveBeenCalled();
+    });
+
+    test('Should return a validation error when attendance is missing', async () => {
+      const response = await supertest(app).patch('/events/123').send({});
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return a validation error when an attendance item is missing required fields', async () => {
+      const response = await supertest(app)
+        .patch('/events/123')
+        .send({ attendance: [{ teamId: 'team-1' }] });
+
+      expect(response.status).toBe(400);
     });
   });
 });

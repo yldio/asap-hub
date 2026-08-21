@@ -6,11 +6,13 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { EventSpeakerTeam } from '@asap-hub/model';
+import { when } from 'jest-when';
 
 import {
   EventContentfulDataProvider,
   parseGraphQLEvent,
 } from '../../../src/data-providers/contentful/event.data-provider';
+import logger from '../../../src/utils/logger';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulEventDataObject,
@@ -473,6 +475,7 @@ describe('Events Contentful Data Provider', () => {
         const result = await eventDataProvider.fetchById(eventId);
         expect(result?.attendance).toEqual([
           {
+            id: 'attendance-id-1',
             attended: true,
             team: {
               id: 'team-id-1',
@@ -482,6 +485,7 @@ describe('Events Contentful Data Provider', () => {
             },
           },
           {
+            id: 'attendance-id-2',
             attended: false,
             team: {
               id: 'team-id-2',
@@ -1210,6 +1214,197 @@ describe('Events Contentful Data Provider', () => {
           },
         },
       });
+    });
+  });
+
+  describe('updateEventDetails', () => {
+    const mockPollingConsistency = () => {
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: { publishedVersion: 2 },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        events: { sys: { publishedVersion: 2 } },
+      });
+    };
+
+    test('creates a new attendance entry for an attendance item without an id and links it to the event', async () => {
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const publishedEntry = getEntry({}, { id: 'attendance-new' });
+      const newAttendanceEntry = getEntry({}, { id: 'attendance-new' });
+      newAttendanceEntry.publish = jest.fn().mockResolvedValue(publishedEntry);
+      environmentMock.createEntry.mockResolvedValue(newAttendanceEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', {
+        attendance: [{ teamId: 'team-1', attended: true }],
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('attendance', {
+        fields: {
+          team: {
+            'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'team-1' } },
+          },
+          attended: { 'en-US': true },
+        },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        attendance: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'attendance-new' } },
+        ],
+      });
+    });
+
+    test('updates an existing attendance entry in place when attended changes, without recreating it', async () => {
+      const existingLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [existingLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const existingAttendanceEntry = getEntry(
+        { attended: { 'en-US': true } },
+        { id: 'attendance-1' },
+      );
+      existingAttendanceEntry.update = jest
+        .fn()
+        .mockResolvedValue(existingAttendanceEntry);
+      existingAttendanceEntry.publish = jest
+        .fn()
+        .mockResolvedValue(existingAttendanceEntry);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-1')
+        .mockResolvedValue(existingAttendanceEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', {
+        attendance: [{ id: 'attendance-1', teamId: 'team-1', attended: false }],
+      });
+
+      expect(existingAttendanceEntry.fields).toEqual({
+        team: {
+          'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'team-1' } },
+        },
+        attended: { 'en-US': false },
+      });
+      expect(existingAttendanceEntry.update).toHaveBeenCalled();
+      expect(existingAttendanceEntry.publish).toHaveBeenCalled();
+      expect(environmentMock.createEntry).not.toHaveBeenCalled();
+    });
+
+    test('does not touch an existing attendance entry when attended is unchanged', async () => {
+      const existingLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [existingLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const existingAttendanceEntry = getEntry(
+        { attended: { 'en-US': true } },
+        { id: 'attendance-1' },
+      );
+      existingAttendanceEntry.update = jest.fn();
+      when(environmentMock.getEntry)
+        .calledWith('attendance-1')
+        .mockResolvedValue(existingAttendanceEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', {
+        attendance: [{ id: 'attendance-1', teamId: 'team-1', attended: true }],
+      });
+
+      expect(existingAttendanceEntry.update).not.toHaveBeenCalled();
+      expect(environmentMock.createEntry).not.toHaveBeenCalled();
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        attendance: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' } },
+        ],
+      });
+    });
+
+    test('deletes an attendance entry that is no longer present in the payload', async () => {
+      const staleLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-stale' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [staleLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const staleEntry = getEntry({}, { id: 'attendance-stale' });
+      staleEntry.isPublished = jest.fn(() => true);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-stale')
+        .mockResolvedValue(staleEntry);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', { attendance: [] });
+
+      expect(staleEntry.unpublish).toHaveBeenCalled();
+      expect(staleEntry.delete).toHaveBeenCalled();
+    });
+
+    test('logs a warning and continues if fetching a stale attendance entry fails', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      const staleLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-stale' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [staleLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-stale')
+        .mockRejectedValue(new Error('failed!'));
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', { attendance: [] });
+
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        'Error fetching attendance entry with id: attendance-stale',
+      );
+    });
+
+    test('throws if creating a new attendance entry fails', async () => {
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+      environmentMock.createEntry.mockRejectedValue(new Error('boom'));
+
+      await expect(
+        eventDataProvider.updateEventDetails('123', {
+          attendance: [{ teamId: 'team-1', attended: true }],
+        }),
+      ).rejects.toThrow('Error creating attendance entry');
     });
   });
 

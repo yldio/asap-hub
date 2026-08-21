@@ -91,7 +91,9 @@ export const asyncFunctions: AWS['functions'] = {
     },
   },
   gcalEventsUpdatedContentfulProcess: {
-    timeout: 300,
+    // A full calendar resync (invalidated syncToken) takes ~5 minutes and
+    // times out at 300.
+    timeout: 600,
     handler:
       './src/handlers/webhooks/gcal-webhook-events-updated-process.handler',
     events: [

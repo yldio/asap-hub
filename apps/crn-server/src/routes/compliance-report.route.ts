@@ -15,8 +15,13 @@ export const complianceReportRouteFactory = (
   complianceReportRoutes.post('/compliance-reports', async (req, res) => {
     const { body, loggedInUser } = req;
 
-    const { status, manuscriptId, notificationList, ...createRequest } =
-      validateComplianceReportPostRequestParameters(body);
+    const {
+      status,
+      manuscriptId,
+      notificationList,
+      useProjectBasedEmail,
+      ...createRequest
+    } = validateComplianceReportPostRequestParameters(body);
 
     if (!loggedInUser || !isCMSAdministrator(loggedInUser.role)) {
       throw Boom.forbidden();
@@ -45,7 +50,7 @@ export const complianceReportRouteFactory = (
     if (manuscript && status && manuscript.status !== status && manuscriptId) {
       await manuscriptController.update(
         manuscriptId,
-        { status, notificationList },
+        { status, notificationList, useProjectBasedEmail },
         loggedInUser.id,
       );
     }

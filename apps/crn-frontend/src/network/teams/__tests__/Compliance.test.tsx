@@ -270,6 +270,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
       manuscriptId,
       {
         notificationList: '',
+        useProjectBasedEmail: false,
         status: 'Addendum Required',
       },
       expect.any(String),
@@ -350,6 +351,7 @@ it('does not display success message when apc coverage details are updated', asy
         apcAmountPaid: undefined,
         declinedReason: undefined,
         notificationList: '',
+        useProjectBasedEmail: false,
       },
       expect.any(String),
     );
@@ -405,6 +407,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
       {
         notificationList: '',
         status: 'Addendum Required',
+        useProjectBasedEmail: false,
       },
       expect.any(String),
     );
@@ -466,6 +469,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
       {
         notificationList: '',
         status: 'Addendum Required',
+        useProjectBasedEmail: false,
       },
       expect.any(String),
     );

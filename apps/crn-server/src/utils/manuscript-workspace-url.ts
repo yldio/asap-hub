@@ -6,7 +6,7 @@ import {
   ProjectType,
 } from '@asap-hub/model';
 
-const projectTypeUrlSegment: Record<ProjectType, string> = {
+export const projectTypeUrlSegment: Record<ProjectType, string> = {
   'Discovery Project': 'discovery',
   'Resource Project': 'resource',
   'Trainee Project': 'trainee',
@@ -81,7 +81,7 @@ export const getManuscriptWorkspaceContextFromResponse = (
   const projectsByTeamId = buildProjectsByTeamId(latestVersion.teams);
 
   const project =
-    manuscript.projectId && manuscript.projectType && submittingTeamId
+    manuscript.projectId && manuscript.projectType
       ? {
           id: manuscript.projectId,
           type: manuscript.projectType,

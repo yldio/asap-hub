@@ -19,6 +19,7 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       manuscriptId: { type: 'string' },
       status: { enum: manuscriptStatus, type: 'string' },
       notificationList: { type: 'string', nullable: true },
+      useProjectBasedEmail: { type: 'boolean', nullable: true },
     },
     required: ['description', 'manuscriptVersionId', 'status', 'manuscriptId'],
     additionalProperties: false,

@@ -279,6 +279,29 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
+        undefined,
+      );
+    });
+
+    test('forwards useProjectBasedEmail to the email notification service', async () => {
+      getManuscriptMock({
+        'en-US': [],
+      });
+
+      await discussionDataProviderMock.create({
+        ...discussionRequestObject,
+        notificationList: '',
+        useProjectBasedEmail: true,
+      });
+
+      expect(
+        emailNotificationServiceMock.sendEmailNotification,
+      ).toHaveBeenCalledWith(
+        'discussion_created_by_grantee',
+        discussionRequestObject.manuscriptId,
+        '',
+        { id: discussionId, userName: 'Jane Doe' },
+        true,
       );
     });
 
@@ -302,6 +325,7 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
+        undefined,
       );
     });
   });
@@ -702,6 +726,7 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
+          undefined,
         );
       });
 
@@ -738,6 +763,46 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
+          undefined,
+        );
+      });
+
+      test('forwards useProjectBasedEmail to the email notification service', async () => {
+        const reply = {
+          text: 'test reply',
+          userId: userId,
+          isOpenScienceMember: true,
+        };
+
+        const replyMock = getEntry({});
+        replyMock.sys.id = 'new-reply';
+        environmentMock.createEntry.mockResolvedValueOnce(replyMock);
+        replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
+
+        await discussionDataProviderMock.update(discussionId, {
+          userId,
+          reply,
+          manuscriptId: 'manuscript-id-1',
+          notificationList: '',
+          useProjectBasedEmail: false,
+        });
+
+        const emailNotificationServiceMock = jest.mocked(
+          discussionDataProviderMock['emailNotificationService'],
+          { shallow: true },
+        );
+
+        expect(
+          emailNotificationServiceMock.sendEmailNotification,
+        ).toHaveBeenCalledWith(
+          'os_member_replied_to_discussion',
+          'manuscript-id-1',
+          '',
+          {
+            id: discussionId,
+            userName: 'Jane Doe',
+          },
+          false,
         );
       });
     });

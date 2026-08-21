@@ -17,10 +17,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import userEvent from '@testing-library/user-event';
 import Event from '../Event';
 import { getEvent } from '../api';
+import { downloadEventSpeakers } from '../export';
 
 jest.mock('../api');
+jest.mock('../export');
+
+const mockDownloadEventSpeakers = downloadEventSpeakers as jest.MockedFunction<
+  typeof downloadEventSpeakers
+>;
 
 globalThis.ResizeObserver = jest.fn(() => ({
   observe: jest.fn(),
@@ -491,6 +498,53 @@ describe('the NEW_EVENT_PAGE flag', () => {
         await findByText('No speakers have been added for this event yet.'),
       ).toBeVisible();
       expect(queryByText('Add Speakers')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('speakers export', () => {
+    beforeEach(() => {
+      enable('NEW_EVENT_PAGE');
+      mockDownloadEventSpeakers.mockClear();
+    });
+
+    it('lets a tech support member download the speakers', async () => {
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByLabelText } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      const downloadButton = await findByLabelText('Download speakers');
+      await userEvent.click(downloadButton);
+
+      expect(mockDownloadEventSpeakers).toHaveBeenCalledTimes(1);
+      expect(mockDownloadEventSpeakers).toHaveBeenCalledWith(
+        expect.objectContaining({ id }),
+        expect.any(Array),
+      );
+    });
+
+    it('hides the download from a member who is not tech support', async () => {
+      const nonTechSupportWrapper = createWrapper({ techSupport: false });
+      const { findAllByText, queryByLabelText } = render(<Event />, {
+        wrapper: nonTechSupportWrapper,
+      });
+
+      await findAllByText('Event 0', { exact: false });
+
+      expect(queryByLabelText('Download speakers')).not.toBeInTheDocument();
+    });
+
+    it('hides the download when the token carries no techSupport value', async () => {
+      // test-utils defaults techSupport to false, so the shared wrapper would
+      // make this a duplicate of the test above rather than a claim-less token.
+      const noClaimWrapper = createWrapper({ techSupport: undefined });
+      const { findAllByText, queryByLabelText } = render(<Event />, {
+        wrapper: noClaimWrapper,
+      });
+
+      await findAllByText('Event 0', { exact: false });
+
+      expect(queryByLabelText('Download speakers')).not.toBeInTheDocument();
     });
   });
 });

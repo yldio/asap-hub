@@ -31,9 +31,11 @@ export type {
   SpeakerTeamOption,
 } from './EditEventSpeakersModal';
 export type {
+  SpeakerExternalGroup,
   SpeakerGroup,
   SpeakerGroupExternalUser,
   SpeakerGroupUser,
+  SpeakerTeamGroup,
 } from './speaker-group';
 export { default as EventAttendance } from './EventAttendance';
 export type {

@@ -54,10 +54,11 @@ import {
   teamInfoStyles,
   viewMoreStyles,
 } from './shared-event-card-styles';
-import { SpeakerGroup } from './speaker-group';
-
-type SpeakerTeamGroup = Extract<SpeakerGroup, { variant: 'team' }>;
-type SpeakerExternalGroup = Extract<SpeakerGroup, { variant: 'external' }>;
+import {
+  SpeakerExternalGroup,
+  SpeakerGroup,
+  SpeakerTeamGroup,
+} from './speaker-group';
 
 const mobileQuery = `@media (max-width: ${tabletScreen.min}px)`;
 

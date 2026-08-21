@@ -5,6 +5,7 @@ import {
 import type {
   SpeakerGroup,
   SpeakerSearchOption,
+  SpeakerTeamGroup,
 } from '@asap-hub/react-components';
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
@@ -13,8 +14,6 @@ import { StaticRouter } from 'react-router';
 import { CenterDecorator } from './layout';
 
 const noop = () => undefined;
-
-type SpeakerTeamGroup = Extract<SpeakerGroup, { variant: 'team' }>;
 
 const roles = ['Data Manager', 'Multiple roles', 'Lead PI', 'Project Manager'];
 

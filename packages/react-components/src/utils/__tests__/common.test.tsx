@@ -171,6 +171,21 @@ describe('getResearchOutputAssociation', () => {
       'working group',
     );
   });
+  it('returns project for a research output published by a project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('project');
+  });
 });
 
 describe('getResearchOutputAssociationName', () => {
@@ -206,5 +221,32 @@ describe('getResearchOutputAssociationName', () => {
     expect(getResearchOutputAssociationName(researchOutput)).toEqual(
       'My new Working Group',
     );
+  });
+  it('returns project title for a project research output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'My Project',
+    );
+  });
+  it('returns an empty string for a project research output with no project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual('');
   });
 });

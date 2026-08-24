@@ -94,15 +94,30 @@ export const splitListBy = <T>(
   );
 
 export const getResearchOutputAssociation = (
-  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
-): ResearchOutputAssociations =>
-  researchOutputData.workingGroups
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'publishingEntity'
+  >,
+): ResearchOutputAssociations => {
+  if (researchOutputData.publishingEntity === 'Project') {
+    return 'project';
+  }
+
+  return researchOutputData.workingGroups
     ? 'working group'
     : `team${researchOutputData.teams.length > 1 ? 's' : ''}`;
+};
 
 export const getResearchOutputAssociationName = (
-  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'project' | 'publishingEntity'
+  >,
 ): string => {
+  if (researchOutputData.publishingEntity === 'Project') {
+    return researchOutputData.project?.title || '';
+  }
+
   if (researchOutputData.workingGroups) {
     return researchOutputData.workingGroups[0].title;
   }

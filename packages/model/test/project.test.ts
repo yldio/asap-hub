@@ -3,6 +3,8 @@ import {
   projectTypes,
   isProjectLead,
   isProjectMember,
+  projectHasLead,
+  canPublishProjectOutput,
   groupTraineeProjectMembers,
   Project,
 } from '../src/project';
@@ -432,6 +434,153 @@ describe('Project Model', () => {
         ],
       };
       expect(isProjectMember('user-1', [], project)).toBe(true);
+    });
+  });
+
+  describe('projectHasLead', () => {
+    it('returns true when a Trainee Project has an Independent Project - Lead', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Lead',
+            role: 'Independent Project - Lead',
+          },
+          {
+            id: 'user-2',
+            displayName: 'Mentor',
+            role: 'Independent Project - Mentor',
+          },
+        ],
+      };
+      expect(projectHasLead(project)).toBe(true);
+    });
+
+    it('returns false when a Trainee Project has no lead', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-2',
+            displayName: 'Mentor',
+            role: 'Independent Project - Mentor',
+          },
+        ],
+      };
+      expect(projectHasLead(project)).toBe(false);
+    });
+
+    it.each(['Project Manager', 'Lead PI', 'Co-PI', 'Data Manager'])(
+      'returns true when a user-based Resource Project has a %s',
+      (role) => {
+        const project: Project = {
+          ...baseProject,
+          projectType: 'Resource Project',
+          resourceType: 'Resource',
+          isTeamBased: false,
+          members: [{ id: 'user-1', displayName: 'Lead', role }],
+        };
+        expect(projectHasLead(project)).toBe(true);
+      },
+    );
+
+    it('returns false when a user-based Resource Project has only non-lead members', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          { id: 'user-1', displayName: 'Member', role: 'Key Personnel' },
+        ],
+      };
+      expect(projectHasLead(project)).toBe(false);
+    });
+
+    it('returns false for team-based projects (leads resolved from team roles)', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Discovery Project',
+        researchTheme: 'theme',
+        teamName: 'Team A',
+        teamId: 'team-1',
+      };
+      expect(projectHasLead(project)).toBe(false);
+    });
+  });
+
+  describe('canPublishProjectOutput', () => {
+    const traineeProject = (
+      members: { id: string; displayName: string; role?: string }[],
+    ): Project => ({
+      ...baseProject,
+      projectType: 'Trainee Project',
+      members,
+    });
+
+    const discoveryProject = (): Project => ({
+      ...baseProject,
+      projectType: 'Discovery Project',
+      researchTheme: 'theme',
+      teamName: 'Team A',
+      teamId: 'team-1',
+    });
+
+    it('lets a project lead publish even when a lead exists', () => {
+      const project = traineeProject([
+        {
+          id: 'user-1',
+          displayName: 'Lead',
+          role: 'Independent Project - Lead',
+        },
+      ]);
+      expect(canPublishProjectOutput('user-1', [], project)).toBe(true);
+    });
+
+    it('blocks a non-lead member when the project has a lead', () => {
+      const project = traineeProject([
+        { id: 'lead', displayName: 'Lead', role: 'Independent Project - Lead' },
+        {
+          id: 'user-1',
+          displayName: 'Member',
+          role: 'Independent Project - Mentor',
+        },
+      ]);
+      expect(canPublishProjectOutput('user-1', [], project)).toBe(false);
+    });
+
+    it('lets any member publish when the project has no lead', () => {
+      const project = traineeProject([
+        {
+          id: 'user-1',
+          displayName: 'Member',
+          role: 'Independent Project - Mentor',
+        },
+      ]);
+      expect(canPublishProjectOutput('user-1', [], project)).toBe(true);
+    });
+
+    it('lets a Discovery Project team lead publish', () => {
+      expect(
+        canPublishProjectOutput(
+          'user-1',
+          [{ id: 'team-1', role: 'Project Manager' }],
+          discoveryProject(),
+        ),
+      ).toBe(true);
+    });
+
+    it('blocks a non-lead member of a Discovery Project', () => {
+      expect(
+        canPublishProjectOutput(
+          'user-1',
+          [{ id: 'team-1', role: 'Key Personnel' }],
+          discoveryProject(),
+        ),
+      ).toBe(false);
     });
   });
 

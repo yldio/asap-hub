@@ -1,21 +1,21 @@
 import {
+  canPublishProjectOutput,
   mapManuscriptLifecycleToType,
   mapManuscriptTypeToSubType,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputTeamResponse,
-  ResearchOutputWorkingGroupResponse,
   UserResponse,
 } from '@asap-hub/model';
 import {
   getUserRole,
   hasEditResearchOutputPermission,
-  isStaff,
+  hasResearchOutputDraftAccess,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import ManuscriptController from '../controllers/manuscript.controller';
+import ProjectController from '../controllers/project.controller';
 import ResearchOutputController from '../controllers/research-output.controller';
 
 import {
@@ -51,8 +51,37 @@ const resolveOutputAssociation = (
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
   manuscriptController: ManuscriptController,
+  projectController: ProjectController,
 ): Router => {
   const researchOutputRoutes = Router();
+
+  const canEditOutput = async (
+    user: UserResponse,
+    request: Pick<
+      ResearchOutputPostRequest,
+      'projectId' | 'workingGroups' | 'teams' | 'published'
+    >,
+    isManuscriptOutput: boolean,
+  ): Promise<boolean> => {
+    const { association, associationIds } = resolveOutputAssociation(request);
+    const userRole = getUserRole(user, association, associationIds);
+
+    if (
+      association === 'projects' &&
+      request.published &&
+      userRole === 'Member' &&
+      associationIds[0]
+    ) {
+      const project = await projectController.fetchById(associationIds[0]);
+      return canPublishProjectOutput(user.id, user.teams, project);
+    }
+
+    return hasEditResearchOutputPermission(
+      userRole,
+      request.published,
+      isManuscriptOutput,
+    );
+  };
 
   researchOutputRoutes.get(
     '/research-outputs',
@@ -62,28 +91,19 @@ export const researchOutputRouteFactory = (
         validateResearchOutputFetchOptions(query);
       const isRequestingDrafts = status === 'draft';
 
-      if (isRequestingDrafts) {
-        const hasTeamRole = teamId
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getUserRole(loggedInUser!, 'teams', [teamId]) !== 'None'
-          : false;
-
-        const hasWorkingGroupRole = workingGroupId
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getUserRole(loggedInUser!, 'workingGroups', [workingGroupId]) !==
-            'None'
-          : false;
-
-        const hasProjectMembership = projectId
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            isStaff(loggedInUser!) ||
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            loggedInUser!.projects.some((project) => project.id === projectId)
-          : false;
-
-        if (!hasTeamRole && !hasWorkingGroupRole && !hasProjectMembership) {
-          throw Boom.forbidden();
-        }
+      if (
+        isRequestingDrafts &&
+        !hasResearchOutputDraftAccess(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          loggedInUser!,
+          {
+            teams: teamId ? [teamId] : undefined,
+            workingGroups: workingGroupId ? [workingGroupId] : undefined,
+            projects: projectId ? [projectId] : undefined,
+          },
+        )
+      ) {
+        throw Boom.forbidden();
       }
 
       const scopeFilter = {
@@ -126,7 +146,19 @@ export const researchOutputRouteFactory = (
 
       const result = await researchOutputController.fetchById(researchOutputId);
 
-      if (!result.published && !hasAccessToDraft(req.loggedInUser, result)) {
+      if (
+        !result.published &&
+        !hasResearchOutputDraftAccess(req.loggedInUser, {
+          ...(result.workingGroups
+            ? {
+                workingGroups: result.workingGroups.map(
+                  (workingGroup) => workingGroup.id,
+                ),
+              }
+            : { teams: result.teams.map((team) => team.id) }),
+          projects: result.project ? [result.project.id] : undefined,
+        })
+      ) {
         throw Boom.notFound(
           'You do not have permission to view this research-output',
         );
@@ -141,24 +173,15 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    const { association, associationIds } =
-      resolveOutputAssociation(createRequest);
-
-    const userRole = getUserRole(
-      loggedInUser as UserResponse,
-      association,
-      associationIds,
-    );
-
     const isManuscriptOutput = !!createRequest.relatedManuscriptVersion;
 
     if (
       !loggedInUser ||
-      !hasEditResearchOutputPermission(
-        userRole,
-        createRequest.published,
+      !(await canEditOutput(
+        loggedInUser as UserResponse,
+        createRequest,
         isManuscriptOutput,
-      )
+      ))
     ) {
       throw Boom.forbidden();
     }
@@ -180,24 +203,15 @@ export const researchOutputRouteFactory = (
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
-      const { association, associationIds } =
-        resolveOutputAssociation(updateRequest);
-
-      const userRole = getUserRole(
-        loggedInUser as UserResponse,
-        association,
-        associationIds,
-      );
-
       const isManuscriptOutput = !!updateRequest.relatedManuscriptVersion;
 
       if (
         !loggedInUser ||
-        !hasEditResearchOutputPermission(
-          userRole,
-          updateRequest.published,
+        !(await canEditOutput(
+          loggedInUser as UserResponse,
+          updateRequest,
           isManuscriptOutput,
-        )
+        ))
       ) {
         throw Boom.forbidden();
       }
@@ -304,26 +318,4 @@ export const researchOutputRouteFactory = (
   });
 
   return researchOutputRoutes;
-};
-
-export const hasAccessToDraft = (
-  loggedInUser: UserResponse,
-  researchOutput:
-    | ResearchOutputTeamResponse
-    | ResearchOutputWorkingGroupResponse,
-): boolean => {
-  if (loggedInUser.role === 'Staff') {
-    return true;
-  }
-  if (!researchOutput.workingGroups) {
-    return loggedInUser.teams.some((userTeam) =>
-      researchOutput.teams.find((outputTeam) => outputTeam.id === userTeam.id),
-    );
-  }
-  return loggedInUser.workingGroups.some(
-    (userWorkingGroup) =>
-      researchOutput?.workingGroups.find(
-        (outputWorkingGroup) => outputWorkingGroup.id === userWorkingGroup.id,
-      ),
-  );
 };

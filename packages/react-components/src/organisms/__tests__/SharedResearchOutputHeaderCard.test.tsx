@@ -130,3 +130,22 @@ it('renders an output with document type and type', () => {
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['Team', 'Protocol', '3D Printing']);
 });
+
+it('renders a Project pill for a project research output', () => {
+  const { getAllByRole } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      impact={undefined}
+      categories={[]}
+      teams={[]}
+      authors={[]}
+      documentType="Protocol"
+      workingGroups={undefined}
+      publishingEntity="Project"
+      type={undefined}
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Project', 'Protocol']);
+});

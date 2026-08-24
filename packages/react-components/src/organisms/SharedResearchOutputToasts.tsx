@@ -19,7 +19,19 @@ export interface SharedResearchOutputToastsProps {
   reviewToggled: boolean;
   associationName: string;
   isInReview: boolean;
+  projectHasLead?: boolean;
 }
+
+const capitalizeAssociation = (association: string): string => {
+  switch (association) {
+    case 'working group':
+      return 'Working Group';
+    case 'project':
+      return 'Project';
+    default:
+      return 'Team';
+  }
+};
 
 const toastContainer = css({
   display: 'flex',
@@ -36,7 +48,9 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
   reviewToggled,
   associationName,
   isInReview,
+  projectHasLead = false,
 }) => {
+  const isProject = association === 'project';
   const [flashToast, setFlashToast] = useState(toast);
   const [reviewToastState, setReviewToastState] = useState(
     reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
@@ -53,14 +67,16 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
     <div css={toastContainer}>
       {flashToast === 'draftCreated' && (
         <Toast accent="successLarge" onClose={() => setFlashToast(undefined)}>
-          {`Draft ${
-            association === 'working group' ? 'Working Group' : 'Team'
-          } ${documentType} created successfully.`}
+          {`Draft ${capitalizeAssociation(
+            association,
+          )} ${documentType} created successfully.`}
         </Toast>
       )}
       {reviewToastState === 'requested' && (
         <Toast accent="successLarge" onClose={() => setReviewToastState(null)}>
-          {`Draft ${association} ${documentType} submitted for PM review successfully.`}
+          {`Draft ${association} ${documentType} submitted for ${
+            isProject ? 'review' : 'PM review'
+          } successfully.`}
         </Toast>
       )}
       {reviewToastState === 'dismissed' && (
@@ -70,19 +86,29 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
       )}
       {!published && isInReview && statusChangedBy && (
         <Toast accent="info">
-          {`${statusChangedBy.firstName} ${statusChangedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
+          {`${statusChangedBy.firstName} ${
+            statusChangedBy.lastName
+          } on ${associationName} requested ${
+            isProject ? 'the project leads' : 'PMs'
+          } to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
       {flashToast === 'published' && (
         <Toast accent="successLarge" onClose={() => setFlashToast(undefined)}>
-          {`${
-            association === 'working group' ? 'Working Group' : 'Team'
-          } ${documentType} published successfully.`}
+          {`${capitalizeAssociation(
+            association,
+          )} ${documentType} published successfully.`}
         </Toast>
       )}
       {!published && !isInReview && (
         <Toast accent="warning">{`This draft is available to members in the ${association}
-                listed below. Only PMs can publish this output.`}</Toast>
+                listed below. ${
+                  isProject
+                    ? projectHasLead
+                      ? 'Only project leads can publish this output.'
+                      : 'Any project member can publish this output.'
+                    : 'Only PMs can publish this output.'
+                }`}</Toast>
       )}
     </div>
   );

@@ -608,6 +608,27 @@ describe('EditEventAttendanceModal', () => {
       expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled(),
     );
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
+    expect(
+      screen.getByText('An error has occurred. Please try again later.'),
+    ).toBeInTheDocument();
+  });
+
+  it('Should clear the error toast when the user tries saving again', async () => {
+    const failingOnSave = jest.fn().mockRejectedValueOnce(new Error('nope'));
+    renderModal({ onSave: failingOnSave });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument(),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(
+      screen.queryByText('An error has occurred. Please try again later.'),
+    ).not.toBeInTheDocument();
   });
 
   it('Should close immediately on cancel when nothing has changed', async () => {

@@ -1454,6 +1454,57 @@ describe('Events Contentful Data Provider', () => {
       );
     });
 
+    test('skips an attendance entry that no longer exists', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      const existingLink = {
+        sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' },
+      };
+      const eventEntry = getEntry(
+        { attendance: { 'en-US': [existingLink] } },
+        { id: '123' },
+      );
+      when(environmentMock.getEntry)
+        .calledWith('123')
+        .mockResolvedValue(eventEntry);
+
+      const existingAttendanceEntry = getEntry(
+        { attended: { 'en-US': true } },
+        { id: 'attendance-1' },
+      );
+      existingAttendanceEntry.update = jest
+        .fn()
+        .mockResolvedValue(existingAttendanceEntry);
+      existingAttendanceEntry.publish = jest
+        .fn()
+        .mockResolvedValue(existingAttendanceEntry);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-1')
+        .mockResolvedValue(existingAttendanceEntry);
+
+      const missingError = new Error('not found');
+      when(environmentMock.getEntry)
+        .calledWith('attendance-missing')
+        .mockRejectedValue(missingError);
+      mockPollingConsistency();
+
+      await eventDataProvider.updateEventDetails('123', {
+        attendance: [
+          { id: 'attendance-1', teamId: 'team-1', attended: false },
+          { id: 'attendance-missing', teamId: 'team-2', attended: true },
+        ],
+      });
+
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        { error: missingError, attendanceId: 'attendance-missing' },
+        'Attendance entry with id: attendance-missing no longer exists, skipping',
+      );
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        attendance: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' } },
+        ],
+      });
+    });
+
     test('throws if creating a new attendance entry fails', async () => {
       const eventEntry = getEntry(
         { attendance: { 'en-US': [] } },

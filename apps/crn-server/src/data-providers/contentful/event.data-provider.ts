@@ -381,7 +381,16 @@ export class EventContentfulDataProvider implements EventDataProvider {
     const attendanceEntries = await Promise.all(
       data.attendance.map(async ({ id: attendanceId, teamId, attended }) => {
         if (attendanceId) {
-          const attendanceEntry = await environment.getEntry(attendanceId);
+          let attendanceEntry;
+          try {
+            attendanceEntry = await environment.getEntry(attendanceId);
+          } catch (error) {
+            logger.warn(
+              { error, attendanceId },
+              `Attendance entry with id: ${attendanceId} no longer exists, skipping`,
+            );
+            return null;
+          }
           if (attendanceEntry.fields.attended?.['en-US'] === attended) {
             return attendanceEntry;
           }
@@ -407,9 +416,9 @@ export class EventContentfulDataProvider implements EventDataProvider {
       }),
     );
 
-    const attendance = attendanceEntries.map((attendanceEntry) =>
-      createLink(attendanceEntry.sys.id),
-    );
+    const attendance = attendanceEntries
+      .flatMap((attendanceEntry) => (attendanceEntry ? [attendanceEntry] : []))
+      .map((attendanceEntry) => createLink(attendanceEntry.sys.id));
 
     const result = await patchAndPublish(event, { attendance });
 

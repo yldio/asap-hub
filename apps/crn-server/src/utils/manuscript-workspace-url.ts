@@ -81,7 +81,7 @@ export const getManuscriptWorkspaceContextFromResponse = (
   const projectsByTeamId = buildProjectsByTeamId(latestVersion.teams);
 
   const project =
-    manuscript.projectId && manuscript.projectType && submittingTeamId
+    manuscript.projectId && manuscript.projectType
       ? {
           id: manuscript.projectId,
           type: manuscript.projectType,

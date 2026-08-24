@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { events, network, sharedResearch } from '@asap-hub/routing';
+import { compliance, events, network, sharedResearch } from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
@@ -115,6 +115,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.createdBy}** submitted a manuscript for **${reminder.data.teams}** and its status is 'Waiting for Report':`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
@@ -128,6 +131,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.resubmittedBy}** resubmitted a manuscript for **${reminder.data.teams}** and its status changed to 'Manuscript Re-Submitted':`,
             subtext: reminder.data.title,
             date: reminder.data.resubmittedAt,
@@ -141,6 +147,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.updatedBy}** on **${reminder.data.teams}** changed a compliance status from ${reminder.data.previousStatus} to ${reminder.data.status}:`,
             subtext: reminder.data.title,
             date: reminder.data.updatedAt,
@@ -154,6 +163,11 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: `${
+              compliance({}).manuscript({
+                manuscriptId: reminder.data.manuscriptId,
+              }).$
+            }?tab=discussions`,
             description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** started a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
@@ -167,6 +181,11 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: `${
+              compliance({}).manuscript({
+                manuscriptId: reminder.data.manuscriptId,
+              }).$
+            }?tab=discussions`,
             description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** started a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
@@ -180,6 +199,11 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: `${
+              compliance({}).manuscript({
+                manuscriptId: reminder.data.manuscriptId,
+              }).$
+            }?tab=discussions`,
             description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** replied to a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
@@ -190,6 +214,11 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: `${
+              compliance({}).manuscript({
+                manuscriptId: reminder.data.manuscriptId,
+              }).$
+            }?tab=discussions`,
             description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,

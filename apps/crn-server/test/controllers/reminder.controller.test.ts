@@ -287,7 +287,7 @@ describe('Reminder Controller', () => {
         });
       });
 
-      test('Should return the correct description and subtext for the manuscript created reminder', async () => {
+      test('Should return the correct description, subtext and href for the manuscript created reminder', async () => {
         const reminderDataObject = getManuscriptCreatedReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -300,11 +300,12 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             "**Jane Doe** submitted a manuscript for **Team Reminder** and its status is 'Waiting for Report':",
+          href: '/compliance/manuscripts/manuscript-id-1',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test('Should return the correct description and subtext for the manuscript resubmitted reminder', async () => {
+      test('Should return the correct description, subtext and href for the manuscript resubmitted reminder', async () => {
         const reminderDataObject = getManuscriptResubmittedReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -317,11 +318,12 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             "**John Doe** resubmitted a manuscript for **Team Reminder** and its status changed to 'Manuscript Re-Submitted':",
+          href: '/compliance/manuscripts/manuscript-id-1',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test('Should return the correct description and subtext for the manuscript status changed reminder', async () => {
+      test('Should return the correct description, subtext and href for the manuscript status changed reminder', async () => {
         const reminderDataObject = getManuscriptStatusUpdatedReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -334,11 +336,12 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             '**Jannet Doe** on **Team ASAP** changed a compliance status from Waiting for Report to Review Compliance Report:',
+          href: '/compliance/manuscripts/manuscript-id-1',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test('Should return the correct description and subtext for the discussion started by open science member reminder', async () => {
+      test('Should return the correct description, subtext and href for the discussion started by open science member reminder', async () => {
         const reminderDataObject =
           getDiscussionStartedByOpenScienceMemberReminder();
 
@@ -351,11 +354,12 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             '**Tom Hardy** on **Team Alessi** started a discussion on:',
+          href: '/compliance/manuscripts/manuscript-id-1?tab=discussions',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test('Should return the correct description for the discussion started by grantee reminder', async () => {
+      test('Should return the correct description and href for the discussion started by grantee reminder', async () => {
         const reminderDataObject = getDiscussionStartedByGranteeReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -367,10 +371,11 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             '**Tom Hardy** on **Team Reminder** started a discussion on:',
+          href: '/compliance/manuscripts/manuscript-id-1?tab=discussions',
         });
       });
 
-      test('Should return the correct description and subtext for the discussion replied to by open science member reminder', async () => {
+      test('Should return the correct description, subtext and href for the discussion replied to by open science member reminder', async () => {
         const reminderDataObject =
           getDiscussionRepliedToByOpenScienceMemberReminder();
 
@@ -383,11 +388,12 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             '**Tom Hardy** on **Team Alessi** replied to a discussion on:',
+          href: '/compliance/manuscripts/manuscript-id-1?tab=discussions',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test('Should return the correct description for the discussion replied to by grantee reminder', async () => {
+      test('Should return the correct description and href for the discussion replied to by grantee reminder', async () => {
         const reminderDataObject = getDiscussionRepliedToByGranteeReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -399,6 +405,7 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             '**Tom Hardy** on **Team Reminder** replied to a discussion on:',
+          href: '/compliance/manuscripts/manuscript-id-1?tab=discussions',
         });
       });
 

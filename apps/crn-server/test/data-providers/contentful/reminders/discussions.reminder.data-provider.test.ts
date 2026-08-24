@@ -491,6 +491,219 @@ describe('Reminders data provider', () => {
       });
     });
 
+    describe('User-based project manuscripts', () => {
+      const projectName = 'Genetic Determinants of Progression';
+      const project = {
+        sys: {
+          id: 'project-id-1',
+        },
+        title: projectName,
+      };
+      const fetchOptions = { timezone, includeProjectReminders: true };
+
+      const getProjectDiscussion = () => {
+        const discussion = getContentfulReminderDiscussionCollectionItem();
+        discussion!.linkedFrom!.manuscriptsCollection!.items[0]!.project =
+          project;
+        return discussion;
+      };
+
+      const getProjectMessage = () => {
+        const message = getContentfulReminderMessageCollectionItem();
+        message!.linkedFrom!.discussionsCollection!.items[0]!.linkedFrom!.manuscriptsCollection!.items[0]!.project =
+          project;
+        return message;
+      };
+
+      const mockContentfulGraphqlResponse = (
+        discussion: DiscussionItem | null,
+        message: MessageItem | null,
+        user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
+      ) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: user,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: discussion ? [discussion] : [],
+          },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          messagesCollection: {
+            items: message ? [message] : [],
+          },
+        });
+      };
+
+      test('first author of the manuscript should see discussion started reminders with the project name', async () => {
+        mockContentfulGraphqlResponse(getProjectDiscussion(), null);
+
+        const expectedReminder = getDiscussionStartedByGranteeReminder();
+        expectedReminder.data.manuscriptTeams = projectName;
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('does not return discussion started reminders when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(getProjectDiscussion(), null);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('PI of the manuscript lab should not see discussion started reminders', async () => {
+        const discussion = getProjectDiscussion();
+        discussion!.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.labsCollection =
+          {
+            items: [
+              {
+                labPi: {
+                  sys: {
+                    id: 'lab-pi-user',
+                  },
+                },
+              },
+            ],
+          };
+        mockContentfulGraphqlResponse(discussion, null);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'lab-pi-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('first author of the manuscript should see discussion replied to reminders with the project name', async () => {
+        mockContentfulGraphqlResponse(null, getProjectMessage());
+
+        const expectedReminder = getDiscussionRepliedToByGranteeReminder();
+        expectedReminder.data.manuscriptTeams = projectName;
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('does not return discussion replied to reminders when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(null, getProjectMessage());
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('os member assigned to the manuscript should see discussion replied to reminders', async () => {
+        const expectedReminder = getDiscussionRepliedToByGranteeReminder();
+        expectedReminder.data.manuscriptTeams = projectName;
+
+        mockContentfulGraphqlResponse(null, getProjectMessage());
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'assigned-os-member-id',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+    });
+
+    describe('Team-based manuscripts linked to a project', () => {
+      const teamLinkedProject = {
+        projectMembershipCollection: {
+          items: [
+            {
+              linkedFrom: {
+                projectsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'project-id-2',
+                      },
+                      title: 'Team Linked Project',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      };
+
+      const getTeamDiscussionWithLinkedProject = () => {
+        const discussion = getContentfulReminderDiscussionCollectionItem();
+        discussion!.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.teamsCollection =
+          {
+            items: [
+              {
+                sys: {
+                  id: 'reminder-team',
+                },
+                displayName: 'Reminder',
+                linkedFrom: teamLinkedProject,
+              },
+            ],
+          };
+        return discussion;
+      };
+
+      const mockContentfulGraphqlResponse = (discussion: DiscussionItem) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [discussion],
+          },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          messagesCollection: {
+            items: [],
+          },
+        });
+      };
+
+      test('shows the linked project name when includeProjectReminders is enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
+
+        const expectedReminder = getDiscussionStartedByGranteeReminder();
+        expectedReminder.data.manuscriptTeams = 'Team Linked Project';
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+          includeProjectReminders: true,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('shows team names when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
+
+        const expectedReminder = getDiscussionStartedByGranteeReminder();
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
+    });
+
     test('getTeamNames returns empty string when no teams provided', async () => {
       expect(getTeamNames(undefined)).toEqual('');
     });

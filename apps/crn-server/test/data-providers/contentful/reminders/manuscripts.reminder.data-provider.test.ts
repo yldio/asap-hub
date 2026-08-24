@@ -14,6 +14,7 @@ import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphq
 import {
   getContentfulReminderUsersContent,
   getContentfulReminderManuscriptCollectionItem,
+  getContentfulReminderProjectManuscriptCollectionItem,
   getManuscriptResubmittedReminder,
   getManuscriptCreatedReminder,
   getManuscriptStatusUpdatedReminder,
@@ -576,6 +577,315 @@ describe('Reminders data provider', () => {
         expect(result.items).toEqual(
           expect.arrayContaining([expectedReminder]),
         );
+      });
+    });
+
+    describe('User-based project manuscripts', () => {
+      const projectName = 'Genetic Determinants of Progression';
+      const fetchOptions = { timezone, includeProjectReminders: true };
+
+      const getExpectedCreatedReminder = (): ManuscriptCreatedReminder => {
+        const reminder = getManuscriptCreatedReminder();
+        reminder.data.teams = projectName;
+        return reminder;
+      };
+
+      test('first author of the manuscript should see manuscript created reminders with the project name', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([getExpectedCreatedReminder()]);
+      });
+
+      test('does not return any reminders when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('the person who created the manuscript should not see manuscript created reminders', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'user-who-created-manuscript',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('the open science team member should see manuscript created reminders', async () => {
+        const user = getContentfulReminderUsersContent();
+        user!.role = 'Staff';
+        user!.openScienceTeamMember = true;
+
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+          user,
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'open-science-team-member-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([getExpectedCreatedReminder()]);
+      });
+
+      test('PIs of the manuscript labs should not see manuscript created reminders', async () => {
+        const manuscript =
+          getContentfulReminderProjectManuscriptCollectionItem();
+        manuscript!.versionsCollection!.items[0]!.labsCollection = {
+          items: [
+            {
+              labPi: {
+                sys: {
+                  id: 'lab-pi-user',
+                },
+              },
+            },
+          ],
+        };
+        mockContentfulGraphqlResponse(manuscript);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'lab-pi-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('a user not related to the manuscript should not see any reminders', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderProjectManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'unrelated-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      test('does not return the reminder if manuscript has neither teams nor a project', async () => {
+        const manuscript =
+          getContentfulReminderProjectManuscriptCollectionItem();
+        manuscript!.project = null;
+
+        mockContentfulGraphqlResponse(manuscript);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          ...fetchOptions,
+        });
+        expect(result.items).toEqual([]);
+      });
+
+      describe('Manuscript resubmitted', () => {
+        const getProjectManuscriptResubmitted = () => {
+          const manuscript =
+            getContentfulReminderProjectManuscriptCollectionItem();
+          manuscript!.status = 'Manuscript Resubmitted';
+          manuscript!.versionsCollection = {
+            total: 2,
+            items: [
+              getManuscriptVersion({
+                count: 1,
+                firstAuthorIds: ['first-author-user'],
+                additionalAuthorIds: [],
+                correspondingAuthorIds: [],
+                createdById: 'user-who-created-manuscript',
+                createdByFirstName: 'Jane',
+                createdByLastName: 'Doe',
+                labPI: 'lab-pi-on-manuscript',
+              }),
+              getManuscriptVersion({
+                count: 2,
+                firstAuthorIds: ['first-author-user'],
+                additionalAuthorIds: ['additional-author-user'],
+                correspondingAuthorIds: [],
+                createdById: 'user-who-resubmitted-manuscript',
+                createdByFirstName: 'John',
+                createdByLastName: 'Doe',
+                labPI: 'lab-pi-on-manuscript',
+              }),
+            ],
+          };
+          return manuscript;
+        };
+
+        const getExpectedResubmittedReminder =
+          (): ManuscriptResubmittedReminder => {
+            const reminder = getManuscriptResubmittedReminder();
+            reminder.data.teams = projectName;
+            return reminder;
+          };
+
+        test('the authors of the manuscript should see manuscript resubmitted reminders with the project name', async () => {
+          mockContentfulGraphqlResponse(getProjectManuscriptResubmitted());
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'additional-author-user',
+            ...fetchOptions,
+          });
+          expect(result.items).toEqual([getExpectedResubmittedReminder()]);
+        });
+
+        test('the open science team member assigned to the manuscript should see manuscript resubmitted reminders', async () => {
+          const user = getContentfulReminderUsersContent();
+          user!.role = 'Staff';
+          user!.openScienceTeamMember = true;
+
+          mockContentfulGraphqlResponse(
+            getProjectManuscriptResubmitted(),
+            user,
+          );
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'assigned-os-member-id',
+            ...fetchOptions,
+          });
+          expect(result.items).toEqual([getExpectedResubmittedReminder()]);
+        });
+
+        test('the PIs of the manuscript labs should not see manuscript resubmitted reminders', async () => {
+          mockContentfulGraphqlResponse(getProjectManuscriptResubmitted());
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'lab-pi-on-manuscript',
+            ...fetchOptions,
+          });
+          expect(result.items).toEqual([]);
+        });
+      });
+
+      describe('Manuscript status updated', () => {
+        const getProjectManuscriptStatusUpdated = () => {
+          const manuscript =
+            getContentfulReminderProjectManuscriptCollectionItem();
+          manuscript!.previousStatus = 'Waiting for Report';
+          manuscript!.status = 'Review Compliance Report';
+          manuscript!.statusUpdatedAt = '2025-01-08T10:00:00.000Z';
+          manuscript!.statusUpdatedBy = {
+            firstName: 'Jannet',
+            lastName: 'Doe',
+            sys: {
+              id: 'user-who-updated-manuscript-status',
+            },
+          };
+          return manuscript;
+        };
+
+        const getExpectedStatusUpdatedReminder =
+          (): ManuscriptStatusUpdatedReminder => {
+            const reminder = getManuscriptStatusUpdatedReminder();
+            reminder.data.teams = projectName;
+            return reminder;
+          };
+
+        test('the authors of the manuscript should see manuscript status updated reminders with the project name', async () => {
+          mockContentfulGraphqlResponse(getProjectManuscriptStatusUpdated());
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'first-author-user',
+            ...fetchOptions,
+          });
+          expect(result.items).toEqual(
+            expect.arrayContaining([getExpectedStatusUpdatedReminder()]),
+          );
+        });
+
+        test('the person who changed the manuscript status should not see manuscript status updated reminders', async () => {
+          mockContentfulGraphqlResponse(getProjectManuscriptStatusUpdated());
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'user-who-updated-manuscript-status',
+            ...fetchOptions,
+          });
+          expect(result.items).toEqual([]);
+        });
+      });
+    });
+
+    describe('Team-based manuscripts linked to a project', () => {
+      const teamLinkedProject = {
+        projectMembershipCollection: {
+          items: [
+            {
+              linkedFrom: {
+                projectsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'project-id-2',
+                      },
+                      title: 'Team Linked Project',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      };
+
+      const getTeamManuscriptWithLinkedProject = () => {
+        const manuscript = getContentfulReminderManuscriptCollectionItem();
+        manuscript!.teamsCollection!.items[0] = {
+          ...manuscript!.teamsCollection!.items[0]!,
+          linkedFrom: teamLinkedProject,
+        };
+        return manuscript;
+      };
+
+      test('shows the linked project name when includeProjectReminders is enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamManuscriptWithLinkedProject());
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+          includeProjectReminders: true,
+        });
+
+        const expectedReminder = getManuscriptCreatedReminder();
+        expectedReminder.data.teams = 'Team Linked Project';
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('shows team names when includeProjectReminders is not enabled', async () => {
+        mockContentfulGraphqlResponse(getTeamManuscriptWithLinkedProject());
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+
+        expect(result.items).toEqual([getManuscriptCreatedReminder()]);
+      });
+
+      test('falls back to team names when the team has no linked project', async () => {
+        mockContentfulGraphqlResponse(
+          getContentfulReminderManuscriptCollectionItem(),
+        );
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+          includeProjectReminders: true,
+        });
+
+        expect(result.items).toEqual([getManuscriptCreatedReminder()]);
       });
     });
 

@@ -552,7 +552,8 @@ export const apiResources = {
     Properties: {
       QueueName:
         '${self:service}-${self:provider.stage}-google-calendar-event-queue',
-      VisibilityTimeout: 300,
+      // Must be >= the gcalEventsUpdatedContentfulProcess lambda timeout (600).
+      VisibilityTimeout: 600,
       RedrivePolicy: {
         maxReceiveCount: 5,
         deadLetterTargetArn: {

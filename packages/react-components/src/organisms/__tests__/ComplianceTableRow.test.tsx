@@ -149,6 +149,28 @@ describe('ComplianceTableRow', () => {
     },
   );
 
+  it('links the manuscript id to the project workspace when there is no team', () => {
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: '' },
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Trainee Project',
+          isTeamBased: false,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/projects/trainee/project-id/workspace#manuscript-id-1',
+    );
+  });
+
   it('renders a plain manuscript id when the team link is unavailable', () => {
     renderComponent({
       data: {

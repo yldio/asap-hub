@@ -664,6 +664,7 @@ export const parseContentfulGraphQlPublicUsers = (
     firstName: item.firstName ?? '',
     lastName: item.lastName ?? '',
     institution: item.institution ?? undefined,
+    personalEmail: item.personalEmail ?? undefined,
     researchTheme: teamsCollection
       .map((teamItem) => teamItem.team?.researchTheme?.name)
       .filter(

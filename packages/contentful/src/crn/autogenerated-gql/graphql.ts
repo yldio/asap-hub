@@ -39622,6 +39622,7 @@ export type FetchPublicUsersQuery = {
             | 'lastName'
             | 'institution'
             | 'orcid'
+            | 'personalEmail'
           > & {
             sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
             avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -74086,6 +74087,10 @@ export const FetchPublicUsersDocument = {
                         name: { kind: 'Name', value: 'institution' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'personalEmail' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'userSocials' },

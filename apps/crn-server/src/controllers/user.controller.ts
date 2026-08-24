@@ -375,6 +375,7 @@ export const parsePublicUserToResponse = ({
     role: ig.role,
   })),
   labs: user.labs,
+  personalEmail: user.personalEmail,
   researchTheme: user.researchTheme,
   researchOutputs: user.researchOutputs || [],
   tags: user.tags || [],

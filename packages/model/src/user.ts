@@ -151,6 +151,7 @@ export type PublicUserDataObject = Pick<
   | 'labs'
   | 'lastModifiedDate'
   | 'orcid'
+  | 'personalEmail'
   | 'researchOutputs'
   | 'researchTheme'
   | 'social'

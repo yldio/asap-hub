@@ -1114,6 +1114,7 @@ describe('User data provider', () => {
         ],
         lastModifiedDate: '2021-09-23T20:45:22.000Z',
         lastName: 'Hardy',
+        personalEmail: 'personal@rdy.io',
         researchOutputs: [],
         researchTheme: ['PD Functional Genomics'],
         social: {

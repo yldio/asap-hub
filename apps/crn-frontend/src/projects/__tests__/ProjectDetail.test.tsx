@@ -1040,16 +1040,6 @@ describe('Compliance tab', () => {
     ).toBeInTheDocument();
   });
 
-  it('does not render the Compliance tab for an authenticated non-member', async () => {
-    await renderProjectDetail(
-      ResourceProjectDetail,
-      'resource',
-      'resource-asap',
-      nonMemberUser,
-    );
-    expect(hasComplianceTab()).toBe(false);
-  });
-
   it('renders the Compliance tab for an Open Science staff member who is not a project member', async () => {
     await renderProjectDetail(
       ResourceProjectDetail,
@@ -1060,45 +1050,13 @@ describe('Compliance tab', () => {
     expect(getTabNames()).toContain('Compliance (3)');
   });
 
-  it('does not render the Compliance tab when the resource project is not funded by Team ASAP', async () => {
-    await renderProjectDetail(
-      ResourceProjectDetail,
-      'resource',
-      'resource-1',
-      teamBasedMemberUser,
-    );
-    expect(getTabNames()).toContain('Workspace');
-    expect(hasComplianceTab()).toBe(false);
-  });
-
-  it('does not render the Compliance tab for a discovery project funded by Team ASAP', async () => {
-    await renderProjectDetail(
-      DiscoveryProjectDetail,
-      'discovery',
-      'discovery-asap',
-      teamBasedMemberUser,
-    );
-    expect(getTabNames()).toContain('Workspace');
-    expect(hasComplianceTab()).toBe(false);
-  });
-
-  it('does not render the Compliance tab for a trainee project member', async () => {
-    await renderProjectDetail(
-      TraineeProjectDetail,
-      'trainee',
-      'trainee-1',
-      traineeMemberUser,
-    );
-    expect(getTabNames()).toContain('Workspace');
-    expect(hasComplianceTab()).toBe(false);
-  });
-
   const unreachableCases: Array<{
     description: string;
     Component: FC;
     routeKeyword: string;
     projectId: string;
     user: Record<string, unknown>;
+    isMember: boolean;
   }> = [
     {
       description: 'a non-member',
@@ -1106,6 +1064,7 @@ describe('Compliance tab', () => {
       routeKeyword: 'resource',
       projectId: 'resource-asap',
       user: nonMemberUser,
+      isMember: false,
     },
     {
       description: 'a resource project not funded by Team ASAP',
@@ -1113,6 +1072,7 @@ describe('Compliance tab', () => {
       routeKeyword: 'resource',
       projectId: 'resource-1',
       user: teamBasedMemberUser,
+      isMember: true,
     },
     {
       description: 'a discovery project funded by Team ASAP',
@@ -1120,6 +1080,7 @@ describe('Compliance tab', () => {
       routeKeyword: 'discovery',
       projectId: 'discovery-asap',
       user: teamBasedMemberUser,
+      isMember: true,
     },
     {
       description: 'a trainee project',
@@ -1127,12 +1088,13 @@ describe('Compliance tab', () => {
       routeKeyword: 'trainee',
       projectId: 'trainee-1',
       user: traineeMemberUser,
+      isMember: true,
     },
   ];
 
   it.each(unreachableCases)(
-    'does not render the compliance dashboard on the compliance url for $description',
-    async ({ Component, routeKeyword, projectId, user }) => {
+    'exposes neither the Compliance tab nor the dashboard for $description',
+    async ({ Component, routeKeyword, projectId, user, isMember }) => {
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -1140,7 +1102,10 @@ describe('Compliance tab', () => {
         user,
         'compliance',
       );
+
       expect(getTabNames()).toContain('About');
+      expect(getTabNames().includes('Workspace')).toBe(isMember);
+      expect(hasComplianceTab()).toBe(false);
       expect(
         screen.queryByRole('heading', { name: complianceDashboardHeading }),
       ).not.toBeInTheDocument();

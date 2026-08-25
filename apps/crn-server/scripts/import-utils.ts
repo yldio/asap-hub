@@ -1044,9 +1044,8 @@ export const createTeamMembership = async (
 
 /**
  * Creates or updates the socials entry holding a user's social links and
- * returns a link to it, or null when the user has no social values. The entry
- * id mirrors the one used by the socials migration script so repeated imports
- * reuse the same entry.
+ * returns a link to it, or null when the user has no social values. The
+ * deterministic entry id means repeated imports reuse the same entry.
  */
 export const upsertUserSocials = async (
   env: Environment,

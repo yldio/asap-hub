@@ -23,6 +23,7 @@ import {
 } from '@asap-hub/model';
 
 import {
+  addLocaleToFields,
   Entry,
   Environment,
   FetchPublicUsersQuery,
@@ -400,8 +401,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   // Social links live on a separate socials entry, so they are written there
-  // rather than on the user. The entry id mirrors the one used by the socials
-  // migration script, which keeps repeated updates idempotent.
+  // rather than on the user. The deterministic socials-<userId> entry id keeps
+  // repeated updates idempotent.
   private async updateSocials(
     environment: Environment,
     user: Entry,
@@ -433,13 +434,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
     }
 
     const entryId = `socials-${user.sys.id}`;
-    const entryFields = Object.entries(fields).reduce(
-      (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
-      {},
-    );
+    const entryFields = addLocaleToFields(fields);
 
-    // the socials migration script creates entries under this same id, so an
-    // entry can already exist for a user that was never linked to it
+    // earlier data migrations created entries under this same deterministic
+    // id, so an entry can already exist for a user that was never linked to it
     let socialsEntry;
     try {
       socialsEntry = await environment.getEntry(entryId);

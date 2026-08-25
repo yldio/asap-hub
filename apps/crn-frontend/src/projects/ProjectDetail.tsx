@@ -92,11 +92,9 @@ type ManuscriptsCountProps = {
 };
 
 const ManuscriptsCountLoader: FC<ManuscriptsCountProps> = ({ children }) => {
-  // Fixed page size on purpose. This loader sits above every project tab, so
-  // reading the ambient `view` param would let an unrelated tab's list/card
-  // toggle change this query key mid-session and suspend the whole page. total
-  // is independent of page size, so the count is unaffected; the cost is one
-  // extra cached query when the dashboard itself is in list view.
+  // Fixed on purpose: this loader sits above every tab, so reading the shared
+  // `view` param would let an unrelated tab's list toggle change this query
+  // key mid-session and suspend the whole page.
   const { total } = useManuscripts({
     searchQuery: '',
     currentPage: 0,

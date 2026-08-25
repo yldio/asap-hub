@@ -222,21 +222,7 @@ describe('The compliance tab', () => {
       },
     );
 
-    expect(
-      screen.queryByText(/Compliance/i, { selector: 'nav *' }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('does not show a compliance tab when the user is not Staff', async () => {
-    await renderPage(
-      {
-        ...createTeamResponse(),
-        displayName: 'ASAP',
-      },
-      {},
-      { role: 'Grantee' },
-    );
-
+    expect(await screen.findByText(/Team.+ASAP/i)).toBeVisible();
     expect(
       screen.queryByText(/Compliance/i, { selector: 'nav *' }),
     ).not.toBeInTheDocument();

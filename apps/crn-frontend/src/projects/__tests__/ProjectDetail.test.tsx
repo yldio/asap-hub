@@ -1067,6 +1067,7 @@ describe('Compliance tab', () => {
       'resource-1',
       teamBasedMemberUser,
     );
+    expect(getTabNames()).toContain('Workspace');
     expect(hasComplianceTab()).toBe(false);
   });
 
@@ -1076,9 +1077,6 @@ describe('Compliance tab', () => {
       'discovery',
       'discovery-asap',
       teamBasedMemberUser,
-    );
-    expect(mockDiscoveryProjectAsapFunded.fundedTeam.displayName).toBe(
-      ASAP_TEAM_NAME,
     );
     expect(getTabNames()).toContain('Workspace');
     expect(hasComplianceTab()).toBe(false);
@@ -1142,6 +1140,7 @@ describe('Compliance tab', () => {
         user,
         'compliance',
       );
+      expect(getTabNames()).toContain('About');
       expect(
         screen.queryByRole('heading', { name: complianceDashboardHeading }),
       ).not.toBeInTheDocument();
@@ -1158,14 +1157,23 @@ describe('Compliance tab', () => {
     expect(mockUseManuscripts).not.toHaveBeenCalled();
   });
 
-  it('fetches the manuscripts count when the compliance gate resolves true', async () => {
+  it('fetches the manuscripts count with a fixed page size when the gate resolves true', async () => {
     await renderProjectDetail(
       ResourceProjectDetail,
       'resource',
       'resource-asap',
       teamBasedMemberUser,
     );
-    expect(mockUseManuscripts).toHaveBeenCalled();
+    expect(mockUseManuscripts).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchQuery: '',
+        currentPage: 0,
+        pageSize: 10,
+        requestedAPCCoverage: 'all',
+        completedStatus: 'hide',
+        selectedStatuses: [],
+      }),
+    );
   });
 });
 

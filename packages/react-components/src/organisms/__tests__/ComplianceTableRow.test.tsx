@@ -9,6 +9,13 @@ import ComplianceTableRow, {
   apcCoverableStatuses,
 } from '../ComplianceTableRow';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 describe('ComplianceTableRow', () => {
   const data: PartialManuscriptResponse = {
     id: 'manuscript-id-1',
@@ -54,6 +61,7 @@ describe('ComplianceTableRow', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsEnabled.mockReturnValue(false);
   });
 
   it('renders all manuscript information correctly', () => {
@@ -148,6 +156,76 @@ describe('ComplianceTableRow', () => {
       expect(screen.getByTitle(iconTitle)).toBeInTheDocument();
     },
   );
+
+  it('links the manuscript id to the project workspace when there is no team', () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_WORKSPACE',
+    );
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: '' },
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Trainee Project',
+          isTeamBased: false,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/projects/trainee/project-id/workspace#manuscript-id-1',
+    );
+  });
+
+  it('prefers the project workspace over the team workspace when the flag is enabled', () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_WORKSPACE',
+    );
+    renderComponent({
+      data: {
+        ...data,
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/projects/resource/project-id/workspace#manuscript-id-1',
+    );
+  });
+
+  it('links the manuscript id to the team workspace when the flag is disabled', () => {
+    renderComponent({
+      data: {
+        ...data,
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/network/teams/team-id/workspace#manuscript-id-1',
+    );
+  });
 
   it('renders a plain manuscript id when the team link is unavailable', () => {
     renderComponent({

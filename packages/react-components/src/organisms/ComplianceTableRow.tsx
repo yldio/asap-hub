@@ -5,7 +5,8 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
+import { network, projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import {
@@ -272,6 +273,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   handleUpdateAPCDetailsClick,
   handleStatusClick,
 }) => {
+  const { isEnabled } = useFlags();
   const {
     id,
     team,
@@ -287,7 +289,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
   const teamHref = getTeamWorkspaceHref(team.id);
-  const manuscriptHref = teamHref ? `${teamHref}#${id}` : undefined;
+  const projectWorkspaceHref =
+    project?.projectType && project.id
+      ? projectRouteByType[project.projectType](project.id).workspace({}).$
+      : undefined;
+  const workspaceHref = isEnabled('PROJECT_WORKSPACE')
+    ? projectWorkspaceHref ?? teamHref
+    : teamHref;
+  const manuscriptHref = workspaceHref ? `${workspaceHref}#${id}` : undefined;
   const projectConfig = project?.projectType
     ? getProjectConfig({
         projectId: project.id,

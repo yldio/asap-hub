@@ -1109,18 +1109,9 @@ describe('Compliance tab', () => {
       expect(
         screen.queryByRole('heading', { name: complianceDashboardHeading }),
       ).not.toBeInTheDocument();
+      expect(mockUseManuscripts).not.toHaveBeenCalled();
     },
   );
-
-  it('does not fetch the manuscripts count when the compliance gate resolves false', async () => {
-    await renderProjectDetail(
-      ResourceProjectDetail,
-      'resource',
-      'resource-1',
-      teamBasedMemberUser,
-    );
-    expect(mockUseManuscripts).not.toHaveBeenCalled();
-  });
 
   it('fetches the manuscripts count with a fixed page size when the gate resolves true', async () => {
     await renderProjectDetail(

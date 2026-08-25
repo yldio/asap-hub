@@ -18277,7 +18277,6 @@ export type Socials = Entry &
     researcherId?: Maybe<Scalars['String']>;
     sys: Sys;
     twitter?: Maybe<Scalars['String']>;
-    user?: Maybe<Users>;
     website1?: Maybe<Scalars['String']>;
     website2?: Maybe<Scalars['String']>;
   };
@@ -18327,14 +18326,6 @@ export type SocialsResearcherIdArgs = {
 export type SocialsTwitterArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
-export type SocialsUserArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/socials) */
@@ -18416,8 +18407,6 @@ export type SocialsFilter = {
   twitter_not?: InputMaybe<Scalars['String']>;
   twitter_not_contains?: InputMaybe<Scalars['String']>;
   twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  user?: InputMaybe<CfUsersNestedFilter>;
-  user_exists?: InputMaybe<Scalars['Boolean']>;
   website1?: InputMaybe<Scalars['String']>;
   website1_contains?: InputMaybe<Scalars['String']>;
   website1_exists?: InputMaybe<Scalars['Boolean']>;
@@ -22020,8 +22009,6 @@ export type UsersLinkingCollections = {
   projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
-  socialsCollection?: Maybe<SocialsCollection>;
-  socialsCursorCollection?: Maybe<SocialsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
@@ -22351,29 +22338,6 @@ export type UsersLinkingCollectionsResearchOutputsCursorCollectionArgs = {
     Array<
       InputMaybe<UsersLinkingCollectionsResearchOutputsCursorCollectionOrder>
     >
-  >;
-  pageNext?: InputMaybe<Scalars['String']>;
-  pagePrev?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UsersLinkingCollectionsSocialsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<UsersLinkingCollectionsSocialsCollectionOrder>>
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UsersLinkingCollectionsSocialsCursorCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<UsersLinkingCollectionsSocialsCursorCollectionOrder>>
   >;
   pageNext?: InputMaybe<Scalars['String']>;
   pagePrev?: InputMaybe<Scalars['String']>;
@@ -23030,64 +22994,6 @@ export enum UsersLinkingCollectionsResearchOutputsCursorCollectionOrder {
   TypeDesc = 'type_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
-}
-
-export enum UsersLinkingCollectionsSocialsCollectionOrder {
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
-}
-
-export enum UsersLinkingCollectionsSocialsCursorCollectionOrder {
-  BlueSkyAsc = 'blueSky_ASC',
-  BlueSkyDesc = 'blueSky_DESC',
-  GithubAsc = 'github_ASC',
-  GithubDesc = 'github_DESC',
-  GoogleScholarAsc = 'googleScholar_ASC',
-  GoogleScholarDesc = 'googleScholar_DESC',
-  LinkedInAsc = 'linkedIn_ASC',
-  LinkedInDesc = 'linkedIn_DESC',
-  ResearchGateAsc = 'researchGate_ASC',
-  ResearchGateDesc = 'researchGate_DESC',
-  ResearcherIdAsc = 'researcherId_ASC',
-  ResearcherIdDesc = 'researcherId_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TwitterAsc = 'twitter_ASC',
-  TwitterDesc = 'twitter_DESC',
-  Website1Asc = 'website1_ASC',
-  Website1Desc = 'website1_DESC',
-  Website2Asc = 'website2_ASC',
-  Website2Desc = 'website2_DESC',
 }
 
 export enum UsersLinkingCollectionsTutorialsCollectionOrder {
@@ -25881,7 +25787,6 @@ export type CfSocialsNestedFilter = {
   twitter_not?: InputMaybe<Scalars['String']>;
   twitter_not_contains?: InputMaybe<Scalars['String']>;
   twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  user_exists?: InputMaybe<Scalars['Boolean']>;
   website1?: InputMaybe<Scalars['String']>;
   website1_contains?: InputMaybe<Scalars['String']>;
   website1_exists?: InputMaybe<Scalars['Boolean']>;
@@ -28793,7 +28698,10 @@ export type EventsContentFragment = Pick<
               Pick<
                 InterestGroups,
                 'name' | 'active' | 'slack' | 'googleDrive'
-              > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+              > & {
+                sys: Pick<Sys, 'id'>;
+                thumbnail?: Maybe<Pick<Asset, 'url'>>;
+              }
             >
           >;
         }>;
@@ -28886,6 +28794,15 @@ export type FetchEventByIdQuery = {
           >;
         }
       >;
+      preliminaryDataSharedCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<PreliminaryDataSharing, 'preliminaryDataShared'> & {
+              team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
+          >
+        >;
+      }>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -29252,7 +29169,10 @@ export type FetchEventByIdQuery = {
                   Pick<
                     InterestGroups,
                     'name' | 'active' | 'slack' | 'googleDrive'
-                  > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                  }
                 >
               >;
             }>;
@@ -29884,7 +29804,10 @@ export type FetchEventsQuery = {
                         Pick<
                           InterestGroups,
                           'name' | 'active' | 'slack' | 'googleDrive'
-                        > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                        }
                       >
                     >;
                   }>;
@@ -30002,6 +29925,16 @@ export type FetchEventsByUserIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -30612,7 +30545,10 @@ export type FetchEventsByUserIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -30738,6 +30674,16 @@ export type FetchEventsByExternalAuthorIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -31348,7 +31294,10 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -31474,6 +31423,16 @@ export type FetchEventsByTeamIdQuery = {
                             >;
                           }
                         >;
+                        preliminaryDataSharedCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                PreliminaryDataSharing,
+                                'preliminaryDataShared'
+                              > & { team?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -32084,7 +32043,10 @@ export type FetchEventsByTeamIdQuery = {
                                       | 'active'
                                       | 'slack'
                                       | 'googleDrive'
-                                    > & { sys: Pick<Sys, 'id'>; thumbnail?: Maybe<Pick<Asset, 'url'>> }
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                                    }
                                   >
                                 >;
                               }>;
@@ -41407,10 +41369,7 @@ export const EventsContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'preliminaryDataShared',
-                        },
+                        name: { kind: 'Name', value: 'preliminaryDataShared' },
                       },
                       {
                         kind: 'Field',

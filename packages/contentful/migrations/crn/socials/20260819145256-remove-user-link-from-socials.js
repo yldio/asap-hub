@@ -10,12 +10,14 @@ module.exports.up = (migration) => {
 module.exports.down = (migration) => {
   const socials = migration.editContentType('socials');
 
+  // recreated as optional: existing entries have no value for it any more,
+  // so a required field would block every subsequent publish
   socials
     .createField('user')
     .name('User')
     .type('Link')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([{ linkContentType: ['users'] }])
     .disabled(false)
     .omitted(false)

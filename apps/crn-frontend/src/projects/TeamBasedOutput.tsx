@@ -150,9 +150,9 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
     isEnabled('PROJECT_OUTPUTS') &&
     !!(researchOutput ?? existingOutput)?.teams?.[0]?.project;
 
-  const authorsRequired =
-    (fromProjectWorkspace || isTeamBasedProjectOutput) &&
-    documentType === 'Article';
+  const isProjectOutput = fromProjectWorkspace || isTeamBasedProjectOutput;
+
+  const authorsRequired = isProjectOutput && documentType === 'Article';
 
   const basePermissions = useResearchOutputPermissions(
     'teams',
@@ -206,7 +206,11 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
 
   if (showManuscriptOutputFlow) {
     return (
-      <OutputPageShell documentType={documentType} entityType="team">
+      <OutputPageShell
+        documentType={documentType}
+        entityType="team"
+        isProjectOutput={isProjectOutput}
+      >
         <ManuscriptOutputSelectionScreen
           teamId={teamId}
           onCreateManually={() => setShowManuscriptOutputFlow(false)}
@@ -223,6 +227,7 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
     <OutputPageShell
       entityType="team"
       documentType={documentType}
+      isProjectOutput={isProjectOutput}
       banner={
         versionAction === 'create' &&
         !!researchOutput?.id && (

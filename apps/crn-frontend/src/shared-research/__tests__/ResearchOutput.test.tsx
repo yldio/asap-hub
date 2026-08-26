@@ -655,7 +655,7 @@ describe('a team-based project research output', () => {
     expect(queryByText('Publish')).not.toBeInTheDocument();
     expect(queryByText('Ready for Review')).toBeVisible();
     expect(
-      queryByText(/Only project leads can publish this output\./i),
+      queryByText(/Only the project manager can publish this output\./i),
     ).toBeVisible();
   });
 
@@ -689,6 +689,20 @@ describe('a team-based project research output', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('shows a Project header when editing a team-based project output', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: /Share a Project Article/i }),
+    ).toBeVisible();
+  });
+
   it('does not require authors when editing with PROJECT_OUTPUTS disabled', async () => {
     flags.disable('PROJECT_OUTPUTS');
     mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
@@ -703,6 +717,21 @@ describe('a team-based project research output', () => {
     expect(
       screen.queryByLabelText(/Authors\(required\)/i),
     ).not.toBeInTheDocument();
+  });
+
+  it('shows a Team header when editing with PROJECT_OUTPUTS disabled', async () => {
+    flags.disable('PROJECT_OUTPUTS');
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: /Share a Team Article/i }),
+    ).toBeVisible();
   });
 });
 

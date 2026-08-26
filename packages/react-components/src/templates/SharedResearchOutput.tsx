@@ -2,6 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   getVisibleResearchOutputActions,
   ResearchOutputPermissionsContext,
+  useFlags,
 } from '@asap-hub/react-context';
 import { network, projectRouteByType, sharedResearch } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -166,8 +167,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasDescription = description || descriptionMD;
   const displayDescription = hasDescription && !isGrantDocument;
   const hasUsageNotes = usageNotes || usageNotesMD;
-  const association = getResearchOutputAssociation(props);
-  const associationName = getResearchOutputAssociationName(props);
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+  const association = getResearchOutputAssociation(props, isProjectOutputsEnabled);
+  const associationName = getResearchOutputAssociationName(
+    props,
+    isProjectOutputsEnabled,
+  );
   const isProjectOutput = association === 'project';
   const memberGroupLabel =
     association === 'working group'
@@ -321,6 +327,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             {...props}
             published={published}
             isInReview={isInReview}
+            isProjectOutput={isProjectOutput}
           />
           {(displayDescription || !!tags.length) && (
             <SharedResearchDetailsTagsCard

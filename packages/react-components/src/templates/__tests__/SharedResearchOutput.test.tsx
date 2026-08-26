@@ -9,6 +9,12 @@ import { sharedResearch } from '@asap-hub/routing';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
+const mockIsEnabled = jest.fn().mockReturnValue(false);
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 let currentLocation: { pathname: string; search: string } | null = null;
 const LocationCapture = () => {
   const location = useLocation();
@@ -887,6 +893,57 @@ describe('the ready for pm review button', () => {
       ).toBeVisible();
       expect(queryByText(/PM/)).not.toBeInTheDocument();
       expect(getAllByText('Ready for Review').length).toEqual(2);
+    });
+    it('shows project review copy for a team-based project output when PROJECT_OUTPUTS is enabled', () => {
+      mockIsEnabled.mockImplementation((flag: string) => flag === 'PROJECT_OUTPUTS');
+      try {
+        const { getByText, getAllByText, queryByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: false,
+                canShareResearchOutput: true,
+                canRequestReview: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                publishingEntity="Team"
+                workingGroups={undefined}
+                teams={[
+                  {
+                    id: 'team-1',
+                    displayName: 'Team ASAP',
+                    teamType: 'Discovery Team',
+                    project: {
+                      id: 'project-1',
+                      title: 'My Project',
+                      projectType: 'Trainee Project',
+                      projectId: 'ASAP-P1',
+                    },
+                  },
+                ]}
+                project={undefined}
+              />
+            </ResearchOutputPermissionsContext.Provider>
+          </MemoryRouter>,
+        );
+        const button = getByText('Ready for Review');
+        fireEvent.click(button);
+        expect(getByText('Output ready for review?')).toBeVisible();
+        expect(
+          getByText(
+            /All project members listed on this output will be notified and the project leads will be able to review and publish this output./i,
+          ),
+        ).toBeVisible();
+        expect(queryByText(/PM/)).not.toBeInTheDocument();
+        expect(getAllByText('Ready for Review').length).toEqual(2);
+      } finally {
+        mockIsEnabled.mockReturnValue(false);
+      }
     });
     describe('and has the correct actions on the  buttons', () => {
       it('closes the modal correctly', () => {

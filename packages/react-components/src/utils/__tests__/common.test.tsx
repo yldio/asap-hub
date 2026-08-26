@@ -186,6 +186,51 @@ describe('getResearchOutputAssociation', () => {
     };
     expect(getResearchOutputAssociation(researchOutput)).toEqual('project');
   });
+  it('returns project for a team-based project output when project outputs are enabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociation(researchOutput, true)).toEqual(
+      'project',
+    );
+  });
+  it('returns team for a team-based project output when project outputs are disabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociation(researchOutput, false)).toEqual('team');
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('team');
+  });
 });
 
 describe('getResearchOutputAssociationName', () => {
@@ -248,5 +293,51 @@ describe('getResearchOutputAssociationName', () => {
       project: undefined,
     };
     expect(getResearchOutputAssociationName(researchOutput)).toEqual('');
+  });
+  it('returns the project title for a team-based project output when project outputs are enabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput, true)).toEqual(
+      'My Project',
+    );
+  });
+  it('returns the team name for a team-based project output when project outputs are disabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'Team ASAP',
+    );
   });
 });

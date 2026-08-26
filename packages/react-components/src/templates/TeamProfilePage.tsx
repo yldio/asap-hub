@@ -2,6 +2,8 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { Link } from '../atoms';
+import { info100, info500 } from '../colors';
+import { crossIcon, informationIcon } from '../icons';
 import { Toast } from '../organisms';
 import { rem } from '../pixels';
 import { getProjectRoute } from '../utils';
@@ -9,7 +11,40 @@ import PageConstraints from './PageConstraints';
 import TeamProfileHeader from './TeamProfileHeader';
 
 const projectBannerStyles = css({
-  paddingBottom: rem(36),
+  backgroundColor: info100.rgb,
+  border: `1px solid ${info500.rgb}`,
+  borderLeftWidth: rem(4),
+  borderRadius: rem(8),
+  color: info500.rgb,
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: rem(12),
+  padding: rem(17),
+  fontSize: rem(16),
+  lineHeight: rem(24),
+  marginBottom: rem(26),
+  marginTop: rem(-24),
+  '> svg': {
+    flexShrink: 0,
+  },
+});
+
+const projectBannerTextStyles = css({
+  flex: 1,
+  margin: 0,
+});
+
+const projectBannerDismissStyles = css({
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  display: 'flex',
+  svg: {
+    stroke: info500.rgb,
+    width: rem(20),
+    height: rem(20),
+  },
 });
 
 type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader> & {
@@ -40,13 +75,21 @@ const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
       <TeamProfileHeader {...profile} />
       <PageConstraints as="main">
         {showProjectBanner && projectLink && projectTitle && (
-          <div css={projectBannerStyles}>
-            <Toast accent="info" rounded onClose={onDismissProjectBanner}>
+          <section css={projectBannerStyles}>
+            {informationIcon}
+            <p css={projectBannerTextStyles}>
               The workspace and outputs have moved to the team&apos;s project.
               Go to <Link href={projectLink}>{projectTitle}</Link> to access
               them.
-            </Toast>
-          </div>
+            </p>
+            <button
+              aria-label="Close"
+              onClick={onDismissProjectBanner}
+              css={projectBannerDismissStyles}
+            >
+              {crossIcon}
+            </button>
+          </section>
         )}
         {children}
       </PageConstraints>

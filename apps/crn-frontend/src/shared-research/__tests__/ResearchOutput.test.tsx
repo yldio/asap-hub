@@ -669,9 +669,7 @@ describe('a team-based project research output', () => {
     );
 
     expect(queryByText('Publish')).not.toBeInTheDocument();
-    expect(
-      queryByText(/Only PMs can publish this output\./i),
-    ).toBeVisible();
+    expect(queryByText(/Only PMs can publish this output\./i)).toBeVisible();
   });
 
   it('requires authors when editing a team-based project Article output', async () => {

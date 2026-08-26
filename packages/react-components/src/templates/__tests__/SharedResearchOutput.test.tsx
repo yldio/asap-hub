@@ -895,7 +895,9 @@ describe('the ready for pm review button', () => {
       expect(getAllByText('Ready for Review').length).toEqual(2);
     });
     it('shows project review copy for a team-based project output when PROJECT_OUTPUTS is enabled', () => {
-      mockIsEnabled.mockImplementation((flag: string) => flag === 'PROJECT_OUTPUTS');
+      mockIsEnabled.mockImplementation(
+        (flag: string) => flag === 'PROJECT_OUTPUTS',
+      );
       try {
         const { getByText, getAllByText, queryByText } = render(
           <MemoryRouter>

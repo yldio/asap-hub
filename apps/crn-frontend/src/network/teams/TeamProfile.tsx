@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
-import { usePaginationParams } from '../../hooks';
+import { useDismissable, usePaginationParams } from '../../hooks';
 import {
   useCanDuplicateResearchOutput,
   useCanShareResearchOutput,
@@ -85,6 +85,10 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const user = useCurrentUserCRN();
   const { isEnabled } = useFlags();
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+
+  const [isProjectBannerDismissed, dismissProjectBanner] = useDismissable(
+    'crn-team-project-banner-dismissed',
+  );
 
   const isStaff = user?.role === 'Staff';
   const isAsapTeam = team?.displayName === 'ASAP';
@@ -245,6 +249,10 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                         : undefined
                     }
                     manuscriptsCount={manuscriptCount.total || 0}
+                    showProjectBanner={
+                      isProjectOutputsEnabled && !isProjectBannerDismissed
+                    }
+                    onDismissProjectBanner={dismissProjectBanner}
                   >
                     <ProfileSwitch
                       About={() => (

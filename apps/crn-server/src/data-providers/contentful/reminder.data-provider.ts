@@ -1451,9 +1451,9 @@ export const getTeamNames = (
   teams: Maybe<string | undefined>[] | undefined,
 ): string => {
   if (teams) {
-    const teamNames = teams
-      .filter((teamName): teamName is string => teamName !== undefined)
-      .map((teamName) => `Team ${teamName}`);
+    const teamNames = [
+      ...new Set(teams.filter((teamName): teamName is string => !!teamName)),
+    ].map((teamName) => `Team ${teamName}`);
 
     if (teamNames.length === 1 && teamNames[0]) return teamNames[0];
     if (teamNames.length === 2) return teamNames.join(' and ');

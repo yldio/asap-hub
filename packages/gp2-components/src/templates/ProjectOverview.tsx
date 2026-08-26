@@ -1,16 +1,13 @@
 import { gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
   crossQuery,
   ExpandableText,
   Headline3,
-  MembersList,
   Paragraph,
   pixels,
   TagList,
 } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { MembersTabbedCard, Milestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
@@ -72,9 +69,6 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   members,
   calendar,
 }) => {
-  const { isEnabled } = useFlags();
-  const isStagingMode = isEnabled('STAGING_MODE');
-
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
 
@@ -125,45 +119,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           </div>
         </Card>
       ) : null}
-      {isStagingMode ? (
-        <MembersTabbedCard
-          title={`Project Members (${members.length})`}
-          leaders={leaders}
-          members={regularMembers}
-          isComplete={status === 'Completed'}
-        />
-      ) : (
-        <Card>
-          <Headline3
-            noMargin
-          >{`Project Members (${members.length})`}</Headline3>
-          <div css={contentStyles}>
-            <MembersList
-              members={members.map(
-                ({
-                  role,
-                  firstName,
-                  lastName,
-                  displayName,
-                  avatarUrl,
-                  alumniSinceDate,
-                  userId: id,
-                }) => ({
-                  firstLine: displayName,
-                  secondLine: role,
-                  avatarUrl,
-                  firstName,
-                  lastName,
-                  alumniSinceDate,
-                  id,
-                }),
-              )}
-              userRoute={gp2Routing.users({}).user}
-              overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-            />
-          </div>
-        </Card>
-      )}
+      <MembersTabbedCard
+        title={`Project Members (${members.length})`}
+        leaders={leaders}
+        members={regularMembers}
+        isComplete={status === 'Completed'}
+      />
       <Card padding={false} overrideStyles={cardStyles}>
         <Milestones
           milestones={milestones}

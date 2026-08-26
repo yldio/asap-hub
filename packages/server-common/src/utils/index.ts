@@ -7,6 +7,7 @@ export * from './csv-parse';
 export * from './fetch-orcid';
 export * from './google-auth-client';
 export * from './google-sheets-reader';
+export * from './import-utils';
 export * from './logger';
 export * from './loop-over-custom-collection';
 export * from './opensearch';

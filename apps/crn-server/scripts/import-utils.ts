@@ -1,13 +1,19 @@
+/* eslint-disable no-console, no-restricted-syntax, no-continue */
 import {
   type Entry,
   getLinkAsset,
   getLinkEntity,
-  getRestClient,
   type Environment,
   type Link,
 } from '@asap-hub/contentful';
 import { isUserDegree, type UserDegree } from '@asap-hub/model';
-import csvParse from 'csv-parse';
+import {
+  cell,
+  col,
+  type ContentfulEntryLookup,
+  getContentfulEnvironment,
+  NON_ARCHIVED_ENTRY_QUERY,
+} from '@asap-hub/server-common';
 import fs from 'fs';
 import path from 'path';
 
@@ -66,11 +72,6 @@ export type ImportArgs = {
   prepareLocations: boolean;
   prepareTags: boolean;
   hasPrepareFlag: boolean;
-};
-
-export type ContentfulEntryLookup = {
-  id: string;
-  entry: Entry;
 };
 
 export type LocalizedField<T> = {
@@ -234,10 +235,6 @@ const MODEL_INPUT_COST_PER_MILLION = 2.5;
 const MODEL_CACHED_INPUT_COST_PER_MILLION = 1.25;
 const MODEL_OUTPUT_COST_PER_MILLION = 10;
 
-export const NON_ARCHIVED_ENTRY_QUERY = {
-  'sys.archivedAt[exists]': false,
-} as const;
-
 export const isArchivedResource = ({
   archivedAt,
   archivedVersion,
@@ -324,28 +321,6 @@ const parsePreparedLocation = (
   };
 };
 
-/** Reads a CSV file and returns trimmed headers plus raw rows. */
-export const readCsv = (
-  filePath: string,
-): Promise<{ headers: string[]; rows: string[][] }> =>
-  new Promise((resolve, reject) => {
-    const rows: string[][] = [];
-    let headers: string[] = [];
-    const parser = csvParse({ relax_column_count: true });
-
-    fs.createReadStream(filePath)
-      .pipe(parser)
-      .on('data', (row: string[]) => {
-        if (headers.length === 0) {
-          headers = row.map((h: string) => h.trim());
-        } else {
-          rows.push(row);
-        }
-      })
-      .on('end', () => resolve({ headers, rows }))
-      .on('error', reject);
-  });
-
 const escapeCsvField = (field: string): string => {
   if (field.includes(',') || field.includes('"') || field.includes('\n')) {
     return `"${field.replace(/"/g, '""')}"`;
@@ -375,30 +350,6 @@ export const writeCsv = (
   fs.writeFileSync(tmpPath, `${lines.join('\n')}\n`);
   fs.renameSync(tmpPath, filePath);
 };
-
-export const col = (headers: string[], name: string): number => {
-  const idx = headers.indexOf(name);
-  // In practice should not happen because we have validated the headers at the very
-  // beggining, but just in case...
-  if (idx === -1) {
-    throw new Error(
-      `CSV column "${name}" not found. Available: ${headers.join(', ')}`,
-    );
-  }
-  return idx;
-};
-
-export const validateRequiredColumns = (
-  headers: string[],
-  requiredColumns: readonly string[],
-): void => {
-  for (const columnName of requiredColumns) {
-    col(headers, columnName);
-  }
-};
-
-export const cell = (row: string[], index: number): string =>
-  (row[index] || '').trim();
 
 const cellVal = (row: string[], headers: string[], name: string): string => {
   const idx = headers.indexOf(name);
@@ -759,9 +710,6 @@ export const mapTeamRole = (csvRole: string): string => {
   return mapped;
 };
 
-export const isEmptyRow = (row: string[]): boolean =>
-  row.every((value) => !value || value.trim() === '');
-
 /** Parses a raw CSV row into the normalized user shape used by the import scripts. */
 export const parseUserRow = (
   row: string[],
@@ -832,28 +780,6 @@ export const parseUserRow = (
     role,
     teams,
   };
-};
-
-/** Creates a rate-limited Contentful environment client from env vars. */
-export const getContentfulEnvironment = async (): Promise<Environment> => {
-  const accessToken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-  const spaceId = process.env.CONTENTFUL_SPACE_ID;
-  const envId = process.env.CONTENTFUL_ENV_ID;
-
-  if (!accessToken || !spaceId || !envId) {
-    throw new Error(
-      'Missing env vars: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN, CONTENTFUL_SPACE_ID, CONTENTFUL_ENV_ID',
-    );
-  }
-
-  console.log(
-    `Connecting to Contentful environment: ${envId} (using safe rate-limited client)`,
-  );
-  return getRestClient({
-    space: spaceId,
-    accessToken,
-    environment: envId,
-  });
 };
 
 /** Wraps a value in the default Contentful locale. */
@@ -973,31 +899,6 @@ export const findUserByEmail = async (
     return null;
   }
   return { id: firstItem.sys.id, entry: firstItem };
-};
-
-export const findUserByEmailCaseInsensitive = async (
-  env: Environment,
-  email: string,
-): Promise<ContentfulEntryLookup | null> => {
-  const normalizedEmail = email.toLowerCase();
-  const entries = await env.getEntries({
-    ...NON_ARCHIVED_ENTRY_QUERY,
-    content_type: 'users',
-    'fields.email[match]': normalizedEmail,
-    limit: 10,
-  });
-
-  const match = entries.items.find(
-    (item) =>
-      (
-        (item.fields?.email?.['en-US'] as string | undefined) || ''
-      ).toLowerCase() === normalizedEmail,
-  );
-
-  if (!match) {
-    return null;
-  }
-  return { id: match.sys.id, entry: match };
 };
 
 /**

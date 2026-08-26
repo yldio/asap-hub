@@ -1,6 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { pixels, Tag } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 
@@ -47,7 +46,6 @@ const FilterPills: React.FC<FilterPillsProps> = ({
   tags,
   onRemove,
 }) => {
-  const { isEnabled } = useFlags();
   const lookupTag = useMemo(
     () => getArrayLookup(tags.map(({ id, name }) => ({ id, title: name }))),
     [tags],
@@ -91,15 +89,14 @@ const FilterPills: React.FC<FilterPillsProps> = ({
           {lookupProject(filter)}
         </Tag>
       ))}
-      {isEnabled('STAGING_MODE') &&
-        filters.membershipStatus?.map((filter: string) => (
-          <Tag
-            key={`filter-pill-${filter}`}
-            onRemove={() => onRemove(filter, 'membershipStatus')}
-          >
-            {filter}
-          </Tag>
-        ))}
+      {filters.membershipStatus?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'membershipStatus')}
+        >
+          {filter}
+        </Tag>
+      ))}
     </div>
   );
 };

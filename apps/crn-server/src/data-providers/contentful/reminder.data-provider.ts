@@ -182,6 +182,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputVersionCollectionItems,
         user,
         timezone,
+        includeProjectReminders,
       );
 
     const publishedResearchOutputReminders =
@@ -189,6 +190,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
+        includeProjectReminders,
       );
 
     const draftResearchOutputReminders =
@@ -196,12 +198,14 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
+        includeProjectReminders,
       );
 
     const inReviewResearchOutputReminders =
       getInReviewResearchOutputRemindersFromQuery(
         researchOutputsCollectionItems,
         user,
+        includeProjectReminders,
       );
 
     const switchToDraftResearchOutputReminders =
@@ -209,6 +213,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
+        includeProjectReminders,
       );
 
     const eventHappeningNowOrTodayReminders =
@@ -690,6 +695,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
+  includeProjectReminders: boolean,
 ): ResearchOutputPublishedReminder[] => {
   if (
     !user ||
@@ -716,8 +722,10 @@ const getPublishedResearchOutputRemindersFromQuery = (
     )
       return researchOutputReminders;
 
-    const { associationName, associationType } =
-      getAssociationNameAndType(researchOutput);
+    const { associationName, associationType } = getAssociationNameAndType(
+      researchOutput,
+      includeProjectReminders,
+    );
     const userName = getUserName(researchOutput);
 
     const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
@@ -738,7 +746,8 @@ const getPublishedResearchOutputRemindersFromQuery = (
       associationName &&
       associationType &&
       userName &&
-      ((associationType === 'team' && isInTeam) ||
+      (((associationType === 'team' || associationType === 'project') &&
+        isInTeam) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
       const publishedBy = researchOutput.statusChangedBy
@@ -768,6 +777,7 @@ const getDraftResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
+  includeProjectReminders: boolean,
 ): ResearchOutputDraftReminder[] => {
   if (
     !user ||
@@ -798,8 +808,10 @@ const getDraftResearchOutputRemindersFromQuery = (
       )
         return researchOutputReminders;
 
-      const { associationName, associationType } =
-        getAssociationNameAndType(researchOutput);
+      const { associationName, associationType } = getAssociationNameAndType(
+        researchOutput,
+        includeProjectReminders,
+      );
 
       const researchOutputTeamIds = (
         researchOutput?.teamsCollection?.items || []
@@ -821,7 +833,8 @@ const getDraftResearchOutputRemindersFromQuery = (
         associationName &&
         associationType &&
         userName &&
-        ((associationType === 'team' && isInTeam) ||
+        (((associationType === 'team' || associationType === 'project') &&
+          isInTeam) ||
           (associationType === 'working group' && isInWorkingGroup) ||
           isAsapStaff)
       ) {
@@ -849,6 +862,7 @@ const getDraftResearchOutputRemindersFromQuery = (
 const getInReviewResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
+  includeProjectReminders: boolean,
 ): ResearchOutputInReviewReminder[] => {
   if (
     !user ||
@@ -877,8 +891,10 @@ const getInReviewResearchOutputRemindersFromQuery = (
     )
       return researchOutputReminders;
 
-    const { associationName, associationType } =
-      getAssociationNameAndType(researchOutput);
+    const { associationName, associationType } = getAssociationNameAndType(
+      researchOutput,
+      includeProjectReminders,
+    );
 
     const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
       .filter((teamItem) => teamItem?.sys.id !== undefined)
@@ -897,7 +913,8 @@ const getInReviewResearchOutputRemindersFromQuery = (
     if (
       associationName &&
       associationType &&
-      ((associationType === 'team' && isProjectManagerInTeam) ||
+      (((associationType === 'team' || associationType === 'project') &&
+        isProjectManagerInTeam) ||
         (associationType === 'working group' &&
           isProjectManagerInWorkingGroup) ||
         isAsapStaff)
@@ -926,6 +943,7 @@ const getSwitchToDraftResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
+  includeProjectReminders: boolean,
 ): ResearchOutputSwitchToDraftReminder[] => {
   if (
     !user ||
@@ -970,17 +988,23 @@ const getSwitchToDraftResearchOutputRemindersFromQuery = (
       ? userWorkingGroupIds.includes(researchOutputWorkingGroupId)
       : false;
 
-    const { associationName, associationType } =
-      getAssociationNameAndType(researchOutput);
+    const { associationName, associationType } = getAssociationNameAndType(
+      researchOutput,
+      false,
+    );
 
     if (
       associationName &&
-      associationType &&
+      (associationType === 'team' || associationType === 'working group') &&
       ((associationType === 'team' && isInTeam) ||
         (associationType === 'working group' && isInWorkingGroup) ||
         isAsapStaff)
     ) {
       const { firstName, lastName } = researchOutput.statusChangedBy;
+      const isProjectOutput =
+        includeProjectReminders &&
+        associationType === 'team' &&
+        isProjectLinkedOutput(researchOutput);
 
       researchOutputReminders.push({
         id: `research-output-switch-to-draft-${researchOutput.sys.id}`,
@@ -994,6 +1018,7 @@ const getSwitchToDraftResearchOutputRemindersFromQuery = (
           statusChangedBy: `${firstName} ${lastName}`,
           associationType,
           associationName,
+          ...(isProjectOutput ? { isProjectOutput } : {}),
         },
       });
     }
@@ -1005,6 +1030,7 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
   items: ResearchOutputVersionItem[],
   user: User,
   zone: string,
+  includeProjectReminders: boolean,
 ): ResearchOutputVersionPublishedReminder[] => {
   if (!user || !user.teamsCollection?.items || !items.length) {
     return [];
@@ -1041,8 +1067,10 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
         return reminders;
       }
 
-      const { associationName, associationType } =
-        getAssociationNameAndType(researchOutput);
+      const { associationName, associationType } = getAssociationNameAndType(
+        researchOutput,
+        includeProjectReminders,
+      );
 
       const researchOutputTeamIds = (
         researchOutput.teamsCollection?.items || []
@@ -1063,7 +1091,8 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
       if (
         associationName &&
         associationType &&
-        ((associationType === 'team' && isInTeam) ||
+        (((associationType === 'team' || associationType === 'project') &&
+          isInTeam) ||
           (associationType === 'working group' && isInWorkingGroup))
       ) {
         seenOutputList.push(researchOutput.sys.id);
@@ -1779,10 +1808,22 @@ const getUserProjectManagerWorkingGroupIds = (user: User): string[] => {
     : [];
 };
 
+const isProjectLinkedOutput = (
+  researchOutput: Pick<ResearchOutputItem, 'teamsCollection' | 'project'>,
+): boolean =>
+  !!(
+    researchOutput.project?.title ||
+    getTeamLinkedProjectTitle(researchOutput.teamsCollection)
+  );
+
 const getAssociationNameAndType = (
-  researchOutput: ResearchOutputItem,
+  researchOutput: Pick<
+    ResearchOutputItem,
+    'workingGroup' | 'teamsCollection' | 'project'
+  >,
+  includeProjectReminders: boolean,
 ): {
-  associationType: 'team' | 'working group' | null;
+  associationType: 'team' | 'working group' | 'project' | null;
   associationName: string | null;
 } => {
   if (researchOutput.workingGroup && researchOutput.workingGroup.title) {
@@ -1796,6 +1837,18 @@ const getAssociationNameAndType = (
     researchOutput.teamsCollection &&
     researchOutput.teamsCollection.items[0]?.displayName
   ) {
+    const projectTitle = includeProjectReminders
+      ? researchOutput.project?.title ||
+        getTeamLinkedProjectTitle(researchOutput.teamsCollection)
+      : undefined;
+
+    if (projectTitle) {
+      return {
+        associationType: 'project',
+        associationName: projectTitle,
+      };
+    }
+
     return {
       associationType: 'team',
       associationName: researchOutput.teamsCollection.items[0].displayName,

@@ -80,7 +80,7 @@ export interface ResearchOutputPublishedReminder
     title: ResearchOutputPublishedDataObject['title'];
     addedDate: ResearchOutputPublishedDataObject['addedDate'];
     statusChangedBy: string;
-    associationType: 'team' | 'working group';
+    associationType: 'team' | 'working group' | 'project';
     associationName: string;
   };
 }
@@ -93,7 +93,7 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
     title: ResearchOutputDraftDataObject['title'];
     createdDate: ResearchOutputDraftDataObject['created'];
     createdBy: string;
-    associationType: 'team' | 'working group';
+    associationType: 'team' | 'working group' | 'project';
     associationName: string;
   };
 }
@@ -106,7 +106,7 @@ export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
     title: ResearchOutputDraftDataObject['title'];
     documentType: ResearchOutputPublishedDataObject['documentType'];
     createdDate: ResearchOutputDraftDataObject['created'];
-    associationType: 'team' | 'working group';
+    associationType: 'team' | 'working group' | 'project';
     associationName: string;
     statusChangedBy: string;
   };
@@ -124,6 +124,7 @@ export interface ResearchOutputSwitchToDraftReminder
     associationType: 'team' | 'working group';
     associationName: string;
     statusChangedBy: string;
+    isProjectOutput?: boolean;
   };
 }
 
@@ -135,7 +136,7 @@ export interface ResearchOutputVersionPublishedReminder extends Reminder {
     title: ResearchOutputDataObject['title'];
     documentType: ResearchOutputDataObject['documentType'];
     publishedAt: string;
-    associationType: 'team' | 'working group';
+    associationType: 'team' | 'working group' | 'project';
     associationName: string;
   };
 }

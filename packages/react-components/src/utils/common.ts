@@ -146,6 +146,26 @@ export const getResearchOutputAssociationName = (
   return researchOutputData.teams[0]?.displayName || '';
 };
 
+// Capitalised association label used for the pill on research output cards.
+export const getResearchOutputAssociationPill = (
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'publishingEntity'
+  >,
+  isProjectOutputsEnabled = false,
+): 'Working Group' | 'Project' | 'Team' => {
+  switch (
+    getResearchOutputAssociation(researchOutputData, isProjectOutputsEnabled)
+  ) {
+    case 'working group':
+      return 'Working Group';
+    case 'project':
+      return 'Project';
+    default:
+      return 'Team';
+  }
+};
+
 // Get the active Project Manager from a list of team members
 export const getActiveProjectManager = (
   members: ReadonlyArray<TeamMember>,

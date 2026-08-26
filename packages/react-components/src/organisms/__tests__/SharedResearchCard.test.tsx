@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { disable, enable } from '@asap-hub/flags';
 
 import SharedResearchCard from '../SharedResearchCard';
 
@@ -157,4 +158,61 @@ it('displays in review tag when research output not published and someone reques
     <SharedResearchCard {...sharedResearchCardProps} published={true} />,
   );
   expect(queryByText('In Review')).toBeNull();
+});
+
+describe('association pill', () => {
+  const userBasedProjectOutput: ComponentProps<typeof SharedResearchCard> = {
+    ...sharedResearchCardProps,
+    publishingEntity: 'Project',
+    workingGroups: undefined,
+    teams: [{ id: '1', displayName: 'Team A', teamType: 'Discovery Team' }],
+  };
+
+  const teamBasedProjectOutput: ComponentProps<typeof SharedResearchCard> = {
+    ...sharedResearchCardProps,
+    publishingEntity: 'Team',
+    workingGroups: undefined,
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+        project: {
+          id: 'project-1',
+          title: 'My Project',
+          projectType: 'Trainee Project',
+          projectId: 'ASAP-P1',
+        },
+      },
+    ],
+  };
+
+  afterEach(() => {
+    disable('PROJECT_OUTPUTS');
+  });
+
+  it('shows a Project pill for a user-based project output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchCard {...userBasedProjectOutput} />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+
+  it('shows a Project pill for a team-based project output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchCard {...teamBasedProjectOutput} />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+
+  it('does not show a Project pill for a team-based project output when PROJECT_OUTPUTS is disabled', () => {
+    disable('PROJECT_OUTPUTS');
+    const { getByText, queryByText } = render(
+      <SharedResearchCard {...teamBasedProjectOutput} />,
+    );
+    expect(queryByText('Project')).not.toBeInTheDocument();
+    expect(getByText('Team', { selector: 'small' })).toBeVisible();
+  });
 });

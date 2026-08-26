@@ -169,12 +169,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasUsageNotes = usageNotes || usageNotesMD;
   const { isEnabled } = useFlags();
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
-  const association = getResearchOutputAssociation(props, isProjectOutputsEnabled);
+  const association = getResearchOutputAssociation(
+    props,
+    isProjectOutputsEnabled,
+  );
   const associationName = getResearchOutputAssociationName(
     props,
     isProjectOutputsEnabled,
   );
   const isProjectOutput = association === 'project';
+  const isTeamBasedProjectOutput =
+    isProjectOutput && props.publishingEntity !== 'Project';
+  const publisherRoleClause = isTeamBasedProjectOutput
+    ? 'the project manager will be able to review and publish this output.'
+    : 'the project leads will be able to review and publish this output.';
   const memberGroupLabel =
     association === 'working group'
       ? 'working group'
@@ -231,6 +239,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         associationName={associationName}
         isInReview={isInReview}
         projectHasLead={projectHasLead}
+        isTeamBasedProject={isTeamBasedProjectOutput}
       />
       <PageConstraints>
         {!isGrantDocument && (
@@ -259,7 +268,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               isInReview
                 ? 'will be able to edit this output again.'
                 : isProjectOutput
-                  ? 'the project leads will be able to review and publish this output.'
+                  ? publisherRoleClause
                   : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"

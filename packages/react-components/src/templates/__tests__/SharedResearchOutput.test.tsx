@@ -936,7 +936,7 @@ describe('the ready for pm review button', () => {
         expect(getByText('Output ready for review?')).toBeVisible();
         expect(
           getByText(
-            /All project members listed on this output will be notified and the project leads will be able to review and publish this output./i,
+            /All project members listed on this output will be notified and the project manager will be able to review and publish this output./i,
           ),
         ).toBeVisible();
         expect(queryByText(/PM/)).not.toBeInTheDocument();

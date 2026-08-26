@@ -12,7 +12,10 @@ import {
   ResearchOutputForm,
   Toast,
 } from '@asap-hub/react-components';
-import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
+import {
+  resolveResearchOutputAvailableActions,
+  useFlags,
+} from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
@@ -142,7 +145,14 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
 
   const published = !!researchOutput?.published;
 
-  const authorsRequired = fromProjectWorkspace && documentType === 'Article';
+  const { isEnabled } = useFlags();
+  const isTeamBasedProjectOutput =
+    isEnabled('PROJECT_OUTPUTS') &&
+    !!(researchOutput ?? existingOutput)?.teams?.[0]?.project;
+
+  const authorsRequired =
+    (fromProjectWorkspace || isTeamBasedProjectOutput) &&
+    documentType === 'Article';
 
   const basePermissions = useResearchOutputPermissions(
     'teams',
@@ -265,7 +275,7 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
           }),
         )}
         authorsRequired={authorsRequired}
-        validateContributorTeams={fromProjectWorkspace}
+        validateContributorTeams={authorsRequired}
         published={published}
         permissions={permissions}
         isImportedFromManuscript={isImportedFromManuscript}

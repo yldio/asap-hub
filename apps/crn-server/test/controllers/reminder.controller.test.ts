@@ -437,6 +437,34 @@ describe('Reminder Controller', () => {
         });
       });
 
+      test('Should return the correct description and href for the research-output-switch-to-draft team reminder', async () => {
+        const reminder: ResearchOutputSwitchToDraftReminder = {
+          ...getResearchOutputSwitchToDraftTeamReminder(),
+          data: {
+            ...getResearchOutputSwitchToDraftTeamReminder().data,
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            associationType: 'team',
+            associationName: 'Team A',
+            statusChangedBy: 'Some User',
+            documentType: 'Article',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminder],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Some User** on team **Team A** switched to draft a team Article output: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
       test('Should return the correct description, subtext and href for the manuscript created reminder', async () => {
         const reminderDataObject = getManuscriptCreatedReminder();
 

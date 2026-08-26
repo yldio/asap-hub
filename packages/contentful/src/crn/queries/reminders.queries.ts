@@ -129,12 +129,34 @@ export const FETCH_REMINDERS = gql`
         createdDate
         documentType
         title
+        project {
+          sys {
+            id
+          }
+          title
+        }
         teamsCollection(limit: 10) {
           items {
             sys {
               id
             }
             displayName
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
         workingGroup {
@@ -263,12 +285,34 @@ export const FETCH_REMINDERS = gql`
               }
               title
               documentType
+              project {
+                sys {
+                  id
+                }
+                title
+              }
               teamsCollection(limit: 10) {
                 items {
                   sys {
                     id
                   }
                   displayName
+                  linkedFrom {
+                    projectMembershipCollection(limit: 1) {
+                      items {
+                        linkedFrom {
+                          projectsCollection(limit: 1) {
+                            items {
+                              sys {
+                                id
+                              }
+                              title
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
               workingGroup {

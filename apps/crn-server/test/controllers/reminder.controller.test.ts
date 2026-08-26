@@ -6,6 +6,7 @@ import {
   ResearchOutputDraftReminder,
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
+  ResearchOutputSwitchToDraftReminder,
   ResearchOutputVersionPublishedReminder,
   SharePresentationReminder,
   UploadPresentationReminder,
@@ -31,6 +32,7 @@ import {
   getResearchOutputDraftWorkingGroupReminder,
   getResearchOutputInReviewTeamReminder,
   getResearchOutputPublishedReminder,
+  getResearchOutputSwitchToDraftTeamReminder,
   getResearchOutputVersionPublishedReminder,
   getSharePresentationReminder,
   getUploadPresentationReminder,
@@ -283,6 +285,154 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description: `**${reminder.data.statusChangedBy}** on working group **${reminder.data.associationName}** requested PMs to review a working group ${reminder.data.documentType} output: ${reminder.data.title}.`,
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-version-published project reminder', async () => {
+        const researchOutputPublishedReminder =
+          getResearchOutputVersionPublishedReminder();
+        const reminderDataObject: ResearchOutputVersionPublishedReminder = {
+          ...researchOutputPublishedReminder,
+          data: {
+            ...researchOutputPublishedReminder.data,
+            documentType: 'Presentation',
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            publishedAt: '2021-01-01',
+            associationType: 'project',
+            associationName: 'Genetic Determinants of Progression',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Genetic Determinants of Progression** published a new project Presentation version: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-published project reminder', async () => {
+        const researchOutputPublishedReminder =
+          getResearchOutputPublishedReminder();
+        const reminderDataObject: ResearchOutputPublishedReminder = {
+          ...researchOutputPublishedReminder,
+          data: {
+            ...researchOutputPublishedReminder.data,
+            documentType: 'Presentation',
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            addedDate: '2021-01-01',
+            associationType: 'project',
+            associationName: 'Genetic Determinants of Progression',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** published a project Presentation for **Genetic Determinants of Progression**: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-draft project reminder', async () => {
+        const reminder: ResearchOutputDraftReminder = {
+          ...getResearchOutputDraftTeamReminder(),
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            createdDate: '2021-01-01',
+            createdBy: 'Tom Hardy',
+            associationType: 'project',
+            associationName: 'Genetic Determinants of Progression',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminder],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** updated a draft output for **Genetic Determinants of Progression**: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-in-review project reminder', async () => {
+        const reminder: ResearchOutputInReviewReminder = {
+          ...getResearchOutputInReviewTeamReminder(),
+          entity: 'Research Output',
+          type: 'In Review',
+          data: {
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            createdDate: '2021-01-01',
+            associationType: 'project',
+            associationName: 'Genetic Determinants of Progression',
+            statusChangedBy: 'Some User',
+            documentType: 'Article',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminder],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Some User** requested the PM to review a draft Article from **Genetic Determinants of Progression**: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-switch-to-draft project output reminder', async () => {
+        const reminder: ResearchOutputSwitchToDraftReminder = {
+          ...getResearchOutputSwitchToDraftTeamReminder(),
+          data: {
+            ...getResearchOutputSwitchToDraftTeamReminder().data,
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            associationType: 'team',
+            associationName: 'Team A',
+            statusChangedBy: 'Some User',
+            documentType: 'Article',
+            isProjectOutput: true,
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminder],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Some User** on team **Team A** switched to draft a project Article output: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });

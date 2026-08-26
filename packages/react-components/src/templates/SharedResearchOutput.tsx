@@ -2,6 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   getVisibleResearchOutputActions,
   ResearchOutputPermissionsContext,
+  useFlags,
 } from '@asap-hub/react-context';
 import { network, projectRouteByType, sharedResearch } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -166,9 +167,22 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasDescription = description || descriptionMD;
   const displayDescription = hasDescription && !isGrantDocument;
   const hasUsageNotes = usageNotes || usageNotesMD;
-  const association = getResearchOutputAssociation(props);
-  const associationName = getResearchOutputAssociationName(props);
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+  const association = getResearchOutputAssociation(
+    props,
+    isProjectOutputsEnabled,
+  );
+  const associationName = getResearchOutputAssociationName(
+    props,
+    isProjectOutputsEnabled,
+  );
   const isProjectOutput = association === 'project';
+  const isTeamBasedProjectOutput =
+    isProjectOutput && props.publishingEntity !== 'Project';
+  const publisherRoleClause = isTeamBasedProjectOutput
+    ? 'the project manager will be able to review and publish this output.'
+    : 'the project leads will be able to review and publish this output.';
   const memberGroupLabel =
     association === 'working group'
       ? 'working group'
@@ -225,6 +239,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         associationName={associationName}
         isInReview={isInReview}
         projectHasLead={projectHasLead}
+        isTeamBasedProject={isTeamBasedProjectOutput}
       />
       <PageConstraints>
         {!isGrantDocument && (
@@ -253,7 +268,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               isInReview
                 ? 'will be able to edit this output again.'
                 : isProjectOutput
-                  ? 'the project leads will be able to review and publish this output.'
+                  ? publisherRoleClause
                   : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"
@@ -321,6 +336,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             {...props}
             published={published}
             isInReview={isInReview}
+            isProjectOutput={isProjectOutput}
           />
           {(displayDescription || !!tags.length) && (
             <SharedResearchDetailsTagsCard

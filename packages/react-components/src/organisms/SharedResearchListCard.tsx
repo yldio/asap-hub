@@ -1,12 +1,14 @@
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 
 import { Card, Anchor, Headline2 } from '../atoms';
 import { steel } from '../colors';
 import { paddingStyles } from '../card';
 import SharedResearchMetadata from './SharedResearchMetadata';
 import AlgoliaHit from '../atoms/AlgoliaHit';
+import { getResearchOutputAssociationPill } from '../utils';
 
 const containerStyles = css({
   margin: 0,
@@ -27,7 +29,14 @@ type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
     Pick<
       ResearchOutputResponse,
-      'id' | 'title' | 'workingGroups' | 'documentType' | 'type' | 'link'
+      | 'id'
+      | 'title'
+      | 'workingGroups'
+      | 'documentType'
+      | 'type'
+      | 'link'
+      | 'publishingEntity'
+      | 'teams'
     >
   >;
 };
@@ -35,38 +44,63 @@ type SharedResearchListCardProps = {
 const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
   researchOutputs,
   algoliaQueryId,
-}) => (
-  <Card padding={false}>
-    <ul css={containerStyles}>
-      {researchOutputs.map(
-        ({ title, id, workingGroups, documentType, type, link }, index) => (
-          <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
-            <AlgoliaHit
-              index={index}
-              algoliaQueryId={algoliaQueryId}
-              objectId={id}
-            >
-              <SharedResearchMetadata
-                pills={[
-                  workingGroups ? 'Working Group' : 'Team',
-                  ...(documentType ? [documentType] : []),
-                  ...(type ? [type] : []),
-                ]}
-                link={link}
-              />
-              <Anchor
-                href={
-                  sharedResearch({}).researchOutput({ researchOutputId: id }).$
-                }
+}) => {
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+
+  return (
+    <Card padding={false}>
+      <ul css={containerStyles}>
+        {researchOutputs.map(
+          (
+            {
+              title,
+              id,
+              workingGroups,
+              documentType,
+              type,
+              link,
+              publishingEntity,
+              teams,
+            },
+            index,
+          ) => (
+            <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
+              <AlgoliaHit
+                index={index}
+                algoliaQueryId={algoliaQueryId}
+                objectId={id}
               >
-                <Headline2 styleAsHeading={5}>{title}</Headline2>
-              </Anchor>
-            </AlgoliaHit>
-          </li>
-        ),
-      )}
-    </ul>
-  </Card>
-);
+                <SharedResearchMetadata
+                  pills={[
+                    isProjectOutputsEnabled
+                      ? getResearchOutputAssociationPill(
+                          { publishingEntity, teams, workingGroups },
+                          true,
+                        )
+                      : workingGroups
+                        ? 'Working Group'
+                        : 'Team',
+                    ...(documentType ? [documentType] : []),
+                    ...(type ? [type] : []),
+                  ]}
+                  link={link}
+                />
+                <Anchor
+                  href={
+                    sharedResearch({}).researchOutput({ researchOutputId: id })
+                      .$
+                  }
+                >
+                  <Headline2 styleAsHeading={5}>{title}</Headline2>
+                </Anchor>
+              </AlgoliaHit>
+            </li>
+          ),
+        )}
+      </ul>
+    </Card>
+  );
+};
 
 export default SharedResearchListCard;

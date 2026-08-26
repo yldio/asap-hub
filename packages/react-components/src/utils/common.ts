@@ -93,13 +93,29 @@ export const splitListBy = <T>(
     [[], []],
   );
 
+// A team-based project output is shared through a team (publishingEntity is
+// 'Team') but originates from a project workspace, so it carries the project
+// link on its team rather than at the top level. This is only surfaced when the
+// PROJECT_OUTPUTS feature flag is enabled.
+const isTeamBasedProjectOutput = (
+  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
+  isProjectOutputsEnabled: boolean,
+): boolean =>
+  isProjectOutputsEnabled &&
+  !researchOutputData.workingGroups &&
+  !!researchOutputData.teams[0]?.project;
+
 export const getResearchOutputAssociation = (
   researchOutputData: Pick<
     ResearchOutputResponse,
     'workingGroups' | 'teams' | 'publishingEntity'
   >,
+  isProjectOutputsEnabled = false,
 ): ResearchOutputAssociations => {
-  if (researchOutputData.publishingEntity === 'Project') {
+  if (
+    researchOutputData.publishingEntity === 'Project' ||
+    isTeamBasedProjectOutput(researchOutputData, isProjectOutputsEnabled)
+  ) {
     return 'project';
   }
 
@@ -113,6 +129,7 @@ export const getResearchOutputAssociationName = (
     ResearchOutputResponse,
     'workingGroups' | 'teams' | 'project' | 'publishingEntity'
   >,
+  isProjectOutputsEnabled = false,
 ): string => {
   if (researchOutputData.publishingEntity === 'Project') {
     return researchOutputData.project?.title || '';
@@ -122,7 +139,31 @@ export const getResearchOutputAssociationName = (
     return researchOutputData.workingGroups[0].title;
   }
 
+  if (isTeamBasedProjectOutput(researchOutputData, isProjectOutputsEnabled)) {
+    return researchOutputData.teams[0]?.project?.title || '';
+  }
+
   return researchOutputData.teams[0]?.displayName || '';
+};
+
+// Capitalised association label used for the pill on research output cards.
+export const getResearchOutputAssociationPill = (
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'publishingEntity'
+  >,
+  isProjectOutputsEnabled = false,
+): 'Working Group' | 'Project' | 'Team' => {
+  switch (
+    getResearchOutputAssociation(researchOutputData, isProjectOutputsEnabled)
+  ) {
+    case 'working group':
+      return 'Working Group';
+    case 'project':
+      return 'Project';
+    default:
+      return 'Team';
+  }
 };
 
 // Get the active Project Manager from a list of team members

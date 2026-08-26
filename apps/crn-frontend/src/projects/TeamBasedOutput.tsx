@@ -12,7 +12,10 @@ import {
   ResearchOutputForm,
   Toast,
 } from '@asap-hub/react-components';
-import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
+import {
+  resolveResearchOutputAvailableActions,
+  useFlags,
+} from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
@@ -31,7 +34,10 @@ import {
   resolveResearchOutputFlowId,
   toResearchOutputVersion,
 } from '../shared-research/util';
-import { useResearchOutputPermissions } from '../shared-research/state';
+import {
+  useResearchOutputPermissions,
+  useTeamOutputPermissions,
+} from '../shared-research/state';
 import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
@@ -63,6 +69,7 @@ type TeamBasedOutputProps = {
   latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
   isDuplicate?: boolean;
+  fromProjectWorkspace?: boolean;
 };
 
 const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
@@ -71,6 +78,7 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
   latestManuscriptVersion,
   versionAction: versionActionProp,
   isDuplicate = false,
+  fromProjectWorkspace = false,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
@@ -137,12 +145,22 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
 
   const published = !!researchOutput?.published;
 
-  const permissions = useResearchOutputPermissions(
+  const { isEnabled } = useFlags();
+  const isTeamBasedProjectOutput =
+    isEnabled('PROJECT_OUTPUTS') &&
+    !!(researchOutput ?? existingOutput)?.teams?.[0]?.project;
+
+  const isProjectOutput = fromProjectWorkspace || isTeamBasedProjectOutput;
+
+  const authorsRequired = isProjectOutput && documentType === 'Article';
+
+  const basePermissions = useResearchOutputPermissions(
     'teams',
     researchOutput?.teams.map(({ id }) => id) ?? [teamId],
     published,
     isImportedFromManuscript,
   );
+  const permissions = useTeamOutputPermissions(basePermissions, team?.members);
   const flowId = resolveResearchOutputFlowId({
     entityType: 'team',
     versionAction,
@@ -188,7 +206,11 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
 
   if (showManuscriptOutputFlow) {
     return (
-      <OutputPageShell documentType={documentType} entityType="team">
+      <OutputPageShell
+        documentType={documentType}
+        entityType="team"
+        isProjectOutput={isProjectOutput}
+      >
         <ManuscriptOutputSelectionScreen
           teamId={teamId}
           onCreateManually={() => setShowManuscriptOutputFlow(false)}
@@ -205,6 +227,7 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
     <OutputPageShell
       entityType="team"
       documentType={documentType}
+      isProjectOutput={isProjectOutput}
       banner={
         versionAction === 'create' &&
         !!researchOutput?.id && (
@@ -256,6 +279,8 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
             isFixed: index === 0,
           }),
         )}
+        authorsRequired={authorsRequired}
+        validateContributorTeams={authorsRequired}
         published={published}
         permissions={permissions}
         isImportedFromManuscript={isImportedFromManuscript}

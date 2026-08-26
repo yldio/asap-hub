@@ -102,8 +102,11 @@ const entityLabelMap: Record<ResearchOutputEntityType, string> = {
 const getHeaderText = (
   entityType: ResearchOutputEntityType,
   documentType: ResearchOutputDocumentType,
+  isProjectOutput: boolean,
 ) => {
-  const entityLabel = entityLabelMap[entityType];
+  const entityLabel = isProjectOutput
+    ? entityLabelMap.project
+    : entityLabelMap[entityType];
   const documentLabel =
     documentType === 'Report' && entityType === 'working-group'
       ? 'CRN Report'
@@ -116,16 +119,18 @@ const getHeaderText = (
 type ResearchOutputHeaderProps = {
   entityType: ResearchOutputEntityType;
   documentType: ResearchOutputDocumentType;
+  isProjectOutput?: boolean;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   entityType,
   documentType,
+  isProjectOutput = false,
 }) => (
   <header css={headerStyles}>
     <div css={contentStyles}>
       <Display styleAsHeading={2}>
-        {getHeaderText(entityType, documentType)}
+        {getHeaderText(entityType, documentType, isProjectOutput)}
       </Display>
       <div>
         {subheaderRecord[documentType] && (

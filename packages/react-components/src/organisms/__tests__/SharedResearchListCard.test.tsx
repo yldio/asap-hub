@@ -1,6 +1,8 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { disable, enable } from '@asap-hub/flags';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import SharedResearchListCard from '../SharedResearchListCard';
 
@@ -77,4 +79,146 @@ it('shows external link icon when link provided', () => {
     'href',
     'http://example.com',
   );
+});
+
+describe('association pill', () => {
+  const userBasedProjectOutput = {
+    ...createResearchOutputResponse(0),
+    publishingEntity: 'Project' as const,
+    workingGroups: undefined,
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team' as const,
+      },
+    ],
+  };
+
+  const teamBasedProjectOutput = {
+    ...createResearchOutputResponse(0),
+    publishingEntity: 'Team' as const,
+    workingGroups: undefined,
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team' as const,
+        project: {
+          id: 'project-1',
+          title: 'My Project',
+          projectType: 'Trainee Project' as const,
+          projectId: 'ASAP-P1',
+        },
+      },
+    ],
+  };
+
+  const workingGroupOutput: ResearchOutputResponse = {
+    ...createResearchOutputResponse(0),
+    publishingEntity: 'Working Group',
+    workingGroups: [{ id: 'wg-1', title: 'Working Group 1' }],
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+      },
+    ],
+  };
+
+  const teamOutput = {
+    ...createResearchOutputResponse(0),
+    publishingEntity: 'Team' as const,
+    workingGroups: undefined,
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team' as const,
+      },
+    ],
+  };
+
+  afterEach(() => {
+    disable('PROJECT_OUTPUTS');
+  });
+
+  it('shows a Project pill for a user-based project output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[userBasedProjectOutput]}
+      />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+
+  it('shows a Project pill for a team-based project output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[teamBasedProjectOutput]}
+      />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+
+  it('shows a Working Group pill for a working group output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[workingGroupOutput]}
+      />,
+    );
+    expect(getByText('Working Group')).toBeVisible();
+  });
+
+  it('shows a Team pill for a team output when PROJECT_OUTPUTS is enabled', () => {
+    enable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[teamOutput]}
+      />,
+    );
+    expect(getByText('Team')).toBeVisible();
+  });
+
+  it('shows a Working Group pill for a working group output when PROJECT_OUTPUTS is disabled', () => {
+    disable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[workingGroupOutput]}
+      />,
+    );
+    expect(getByText('Working Group')).toBeVisible();
+  });
+
+  it('shows a Team pill for a team output when PROJECT_OUTPUTS is disabled', () => {
+    disable('PROJECT_OUTPUTS');
+    const { getByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[teamOutput]}
+      />,
+    );
+    expect(getByText('Team', { selector: 'small' })).toBeVisible();
+  });
+
+  it('does not show a Project pill for a team-based project output when PROJECT_OUTPUTS is disabled', () => {
+    disable('PROJECT_OUTPUTS');
+    const { getByText, queryByText } = render(
+      <SharedResearchListCard
+        {...sharedResearchListCardProps}
+        researchOutputs={[teamBasedProjectOutput]}
+      />,
+    );
+    expect(queryByText('Project')).not.toBeInTheDocument();
+    expect(getByText('Team', { selector: 'small' })).toBeVisible();
+  });
 });

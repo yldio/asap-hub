@@ -131,6 +131,7 @@ const DuplicateOutput: FC<{ projectId: string; teamId?: string }> = ({
       <TeamBasedOutput
         researchOutputData={duplicatedOutput}
         isDuplicate
+        fromProjectWorkspace
         teamId={teamId}
       />
     );
@@ -275,7 +276,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 if (isTeamBased) {
                   return teamId ? (
                     <Frame title="Share Output">
-                      <TeamBasedOutput teamId={teamId} />
+                      <TeamBasedOutput teamId={teamId} fromProjectWorkspace />
                     </Frame>
                   ) : (
                     <NotFoundPage />

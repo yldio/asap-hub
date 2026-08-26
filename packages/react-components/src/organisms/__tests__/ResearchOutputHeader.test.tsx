@@ -69,3 +69,19 @@ it.each<{
     expect(screen.getByText(subHeader)).toBeInTheDocument();
   },
 );
+
+it('renders a Project header for a team-based project output', () => {
+  render(
+    <ResearchOutputHeader
+      entityType="team"
+      documentType="Article"
+      isProjectOutput
+    />,
+  );
+  expect(
+    screen.getByRole('heading', { name: /Share a Project Article/i }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole('heading', { name: /Team/i }),
+  ).not.toBeInTheDocument();
+});

@@ -487,6 +487,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     researchOutputController,
     manuscriptController,
     projectController,
+    teamController,
   );
   const researchTagRoutes = researchTagRouteFactory(researchTagController);
   const researchThemeRoutes = researchThemeRouteFactory(

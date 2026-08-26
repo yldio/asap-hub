@@ -149,3 +149,23 @@ it('renders a Project pill for a project research output', () => {
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['Project', 'Protocol']);
 });
+
+it('renders a Project pill for a team-based project output when isProjectOutput is set', () => {
+  const { getAllByRole } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      impact={undefined}
+      categories={[]}
+      teams={[]}
+      authors={[]}
+      documentType="Protocol"
+      workingGroups={undefined}
+      publishingEntity="Team"
+      isProjectOutput
+      type={undefined}
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Project', 'Protocol']);
+});

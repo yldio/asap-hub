@@ -6,6 +6,8 @@ import { sharedResearch } from '@asap-hub/routing';
 import * as flags from '@asap-hub/flags';
 import {
   createResearchOutputResponse,
+  createTeamResponse,
+  createTeamResponseMembers,
   createUserResponse,
 } from '@asap-hub/fixtures';
 
@@ -19,12 +21,15 @@ import { User } from '@asap-hub/auth';
 
 import type {
   ResearchOutputResponse,
+  TeamMember,
+  TeamResponse,
   TraineeProjectDetail,
 } from '@asap-hub/model';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import {
   getManuscriptVersionByManuscriptId,
+  getTeam,
   updateTeamResearchOutput,
 } from '../../network/teams/api';
 import { getProject } from '../../projects/api';
@@ -70,6 +75,8 @@ const mockGetManuscriptVersionByManuscriptId =
   >;
 
 const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+
+const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 
 const projectId = 'project-1';
 
@@ -558,6 +565,171 @@ describe('a project research output', () => {
 
     expect(queryByText('Publish')).not.toBeInTheDocument();
     expect(queryByText('Ready for Review')).toBeVisible();
+  });
+});
+
+describe('a team-based project research output', () => {
+  const [baseTeamMember] = createTeamResponseMembers({
+    teamMembers: 1,
+  }) as [TeamMember];
+
+  const teamBasedProjectOutput: ResearchOutputResponse = {
+    ...createResearchOutputResponse(),
+    id,
+    documentType: 'Article',
+    publishingEntity: 'Team',
+    workingGroups: undefined,
+    published: false,
+    project: undefined,
+    teams: [
+      {
+        id: 't0',
+        displayName: 'Team ASAP',
+        teamType: 'Discovery Team',
+        project: {
+          id: projectId,
+          title: project.title,
+          projectType: 'Trainee Project',
+          projectId: 'TP1',
+        },
+      },
+    ],
+  };
+
+  const teamMemberUser: User = {
+    ...defaultUser,
+    teams: [{ id: 't0', displayName: 'Team ASAP', roles: ['Key Personnel'] }],
+  };
+
+  const teamWithActiveProjectManager: TeamResponse = {
+    ...createTeamResponse(),
+    id: 't0',
+    members: [
+      {
+        ...baseTeamMember,
+        role: 'Project Manager',
+        alumniSinceDate: undefined,
+        inactiveSinceDate: undefined,
+      },
+    ],
+  };
+
+  const teamWithoutActiveProjectManager: TeamResponse = {
+    ...createTeamResponse(),
+    id: 't0',
+    members: [{ ...baseTeamMember, role: 'Key Personnel' }],
+  };
+
+  beforeEach(() => {
+    flags.enable('PROJECT_OUTPUTS');
+  });
+
+  afterEach(() => {
+    flags.disable('PROJECT_OUTPUTS');
+  });
+
+  it('lets a member publish a draft when the team has no active project manager', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      teamMemberUser,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+    expect(
+      queryByText(/Any project member can publish this output\./i),
+    ).toBeVisible();
+  });
+
+  it('lets a non-manager member request review but not publish when the team has an active project manager', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithActiveProjectManager);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      teamMemberUser,
+    );
+
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+    expect(queryByText('Ready for Review')).toBeVisible();
+    expect(
+      queryByText(/Only the project manager can publish this output\./i),
+    ).toBeVisible();
+  });
+
+  it('falls back to plain team rules when PROJECT_OUTPUTS is disabled', async () => {
+    flags.disable('PROJECT_OUTPUTS');
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      teamMemberUser,
+    );
+
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+    expect(queryByText(/Only PMs can publish this output\./i)).toBeVisible();
+  });
+
+  it('requires authors when editing a team-based project Article output', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(await screen.findByLabelText(/Authors\(required\)/i)).toBeVisible();
+    expect(
+      screen.queryByLabelText(/Authors\(optional\)/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows a Project header when editing a team-based project output', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: /Share a Project Article/i }),
+    ).toBeVisible();
+  });
+
+  it('does not require authors when editing with PROJECT_OUTPUTS disabled', async () => {
+    flags.disable('PROJECT_OUTPUTS');
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(await screen.findByLabelText(/Authors\(optional\)/i)).toBeVisible();
+    expect(
+      screen.queryByLabelText(/Authors\(required\)/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows a Team header when editing with PROJECT_OUTPUTS disabled', async () => {
+    flags.disable('PROJECT_OUTPUTS');
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: /Share a Team Article/i }),
+    ).toBeVisible();
   });
 });
 

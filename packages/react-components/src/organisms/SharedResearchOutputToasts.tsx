@@ -20,6 +20,7 @@ export interface SharedResearchOutputToastsProps {
   associationName: string;
   isInReview: boolean;
   projectHasLead?: boolean;
+  isTeamBasedProject?: boolean;
 }
 
 const capitalizeAssociation = (association: string): string => {
@@ -49,6 +50,7 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
   associationName,
   isInReview,
   projectHasLead = false,
+  isTeamBasedProject = false,
 }) => {
   const isProject = association === 'project';
   const [flashToast, setFlashToast] = useState(toast);
@@ -89,7 +91,11 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
           {`${statusChangedBy.firstName} ${
             statusChangedBy.lastName
           } on ${associationName} requested ${
-            isProject ? 'the project leads' : 'PMs'
+            isProject
+              ? isTeamBasedProject
+                ? 'the project manager'
+                : 'the project leads'
+              : 'PMs'
           } to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
@@ -105,7 +111,9 @@ const SharedResearchOutputToasts: React.FC<SharedResearchOutputToastsProps> = ({
                 listed below. ${
                   isProject
                     ? projectHasLead
-                      ? 'Only project leads can publish this output.'
+                      ? isTeamBasedProject
+                        ? 'Only the project manager can publish this output.'
+                        : 'Only project leads can publish this output.'
                       : 'Any project member can publish this output.'
                     : 'Only PMs can publish this output.'
                 }`}</Toast>

@@ -12,6 +12,7 @@ import {
   ResearchOutputPermissions,
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
+  useFlags,
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -21,9 +22,13 @@ import {
   ManuscriptVersionResponse,
   projectHasLead,
   ResearchOutputResponse,
+  teamHasActiveProjectManager,
 } from '@asap-hub/model';
 import { ReactNode, Suspense, useEffect, useState } from 'react';
-import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
+import {
+  useLatestManuscriptVersionByManuscriptId,
+  useTeamById,
+} from '../network/teams/state';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import TeamBasedOutput from '../projects/TeamBasedOutput';
 import UserBasedOutput from '../projects/UserBasedOutput';
@@ -33,6 +38,7 @@ import {
   useProjectOutputPermissions,
   useResearchOutputById,
   useResearchOutputPermissions,
+  useTeamOutputPermissions,
 } from './state';
 
 const ProjectOutputPermissionsGate: React.FC<{
@@ -46,6 +52,21 @@ const ProjectOutputPermissionsGate: React.FC<{
   const project = useProjectById(projectId);
   const permissions = useProjectOutputPermissions(basePermissions, project);
   const hasLead = project ? projectHasLead(project) : false;
+
+  return <>{children(permissions, hasLead)}</>;
+};
+
+const TeamBasedProjectOutputPermissionsGate: React.FC<{
+  teamId: string;
+  basePermissions: ResearchOutputPermissions;
+  children: (
+    permissions: ResearchOutputPermissions,
+    hasLead: boolean,
+  ) => ReactNode;
+}> = ({ teamId, basePermissions, children }) => {
+  const team = useTeamById(teamId);
+  const permissions = useTeamOutputPermissions(basePermissions, team?.members);
+  const hasLead = teamHasActiveProjectManager(team?.members ?? []);
 
   return <>{children(permissions, hasLead)}</>;
 };
@@ -76,6 +97,9 @@ const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
     sharedResearch({}).researchOutput,
   );
+
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -283,6 +307,23 @@ const ResearchOutput: React.FC = () => {
         >
           {renderWithPermissions}
         </ProjectOutputPermissionsGate>
+      );
+    }
+
+    const teamBasedProject = researchOutputData.teams[0];
+    if (
+      isProjectOutputsEnabled &&
+      entityType === 'team' &&
+      teamBasedProject?.project &&
+      teamBasedProject.id
+    ) {
+      return (
+        <TeamBasedProjectOutputPermissionsGate
+          teamId={teamBasedProject.id}
+          basePermissions={permissions}
+        >
+          {renderWithPermissions}
+        </TeamBasedProjectOutputPermissionsGate>
       );
     }
 

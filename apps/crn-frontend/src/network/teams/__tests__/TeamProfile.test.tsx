@@ -652,6 +652,60 @@ describe('Duplicate Output', () => {
     jest.useFakeTimers();
   }, 30000);
 
+  it('requires authors when duplicating a team-based project Article output', async () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    const teamResponse = createTeamResponse();
+    const userResponse = createUserResponse({}, 1);
+    const researchOutput: ResearchOutputTeamResponse = {
+      ...createResearchOutputResponse(),
+      id: '123',
+      documentType: 'Article',
+      workingGroups: undefined,
+      teams: [
+        {
+          displayName: teamResponse.displayName,
+          id: teamResponse.id,
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'Example Project',
+            projectType: 'Trainee Project',
+            projectId: 'TP1',
+          },
+        },
+      ],
+      title: 'Example',
+      link: 'http://example.com',
+    };
+    mockGetResearchOutput.mockResolvedValue(researchOutput);
+
+    await renderPage(
+      teamResponse,
+      { teamId: teamResponse.id, currentTime: new Date() },
+      {
+        ...userResponse,
+        teams: [
+          {
+            ...userResponse.teams[0],
+            id: teamResponse.id,
+            role: 'Key Personnel',
+          },
+        ],
+      },
+      network({})
+        .teams({})
+        .team({ teamId: teamResponse.id })
+        .duplicateOutput({ id: researchOutput.id }).$,
+    );
+
+    expect(await screen.findByLabelText(/Authors\(required\)/i)).toBeVisible();
+    expect(
+      screen.queryByLabelText(/Authors\(optional\)/i),
+    ).not.toBeInTheDocument();
+  });
+
   it('will show a page not found if research output does not exist', async () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);

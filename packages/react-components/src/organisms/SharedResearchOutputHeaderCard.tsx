@@ -60,7 +60,9 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'impact'
   | 'categories'
   | 'publishingEntity'
->;
+> & {
+  isProjectOutput?: boolean;
+};
 
 const SharedResearchOutputHeaderCard: React.FC<
   SharedResearchOutputHeaderCardProps
@@ -81,13 +83,14 @@ const SharedResearchOutputHeaderCard: React.FC<
   impact,
   categories,
   publishingEntity,
+  isProjectOutput = false,
 }) => (
   <Card>
     <SharedResearchMetadata
       pills={[
         workingGroups
           ? 'Working Group'
-          : publishingEntity === 'Project'
+          : publishingEntity === 'Project' || isProjectOutput
             ? 'Project'
             : 'Team',
         ...(documentType ? [documentType] : []),

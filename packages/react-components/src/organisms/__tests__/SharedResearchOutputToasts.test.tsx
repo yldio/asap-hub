@@ -239,4 +239,59 @@ describe('project outputs', () => {
       ),
     ).toBeInTheDocument();
   });
+
+  it('asks the project manager to review for a team-based project output', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        isTeamBasedProject
+        isInReview
+        statusChangedBy={{
+          id: 'user-id',
+          firstName: 'First',
+          lastName: 'Last',
+        }}
+      />,
+    );
+
+    expect(
+      getByText(
+        'First Last on My Project requested the project manager to review this output. This draft is only available to members in the project listed below.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('tells only the project manager can publish for a team-based project output with a project manager', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        isTeamBasedProject
+        statusChangedBy={undefined}
+        projectHasLead
+      />,
+    );
+
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Only the project manager can publish this output.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('tells any project member can publish for a team-based project output without a project manager', () => {
+    const { getByText } = render(
+      <SharedResearchOutputToasts
+        {...projectProps}
+        isTeamBasedProject
+        statusChangedBy={undefined}
+        projectHasLead={false}
+      />,
+    );
+
+    expect(
+      getByText(
+        'This draft is available to members in the project listed below. Any project member can publish this output.',
+      ),
+    ).toBeInTheDocument();
+  });
 });

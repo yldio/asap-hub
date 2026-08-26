@@ -153,7 +153,10 @@ describe('Manuscript', () => {
   });
 
   it('status can be changed', async () => {
-    setCurrentOverrides({ COMPLIANCE_NOTIFICATION_LIST: '' });
+    setCurrentOverrides({
+      COMPLIANCE_NOTIFICATION_LIST: '',
+      PROJECT_WORKSPACE: false,
+    });
     renderWithWrapper(
       <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
       user,
@@ -172,6 +175,7 @@ describe('Manuscript', () => {
         {
           notificationList: '',
           status: 'Addendum Required',
+          useProjectBasedEmail: false,
         },
         expect.anything(),
       );
@@ -179,6 +183,7 @@ describe('Manuscript', () => {
   });
 
   it('should create discussion', async () => {
+    setCurrentOverrides({ PROJECT_WORKSPACE: false });
     renderWithWrapper(
       <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
     );
@@ -209,6 +214,7 @@ describe('Manuscript', () => {
           notificationList: undefined,
           text: 'test message',
           title: 'Test',
+          useProjectBasedEmail: false,
         },
         'Bearer access_token',
       );

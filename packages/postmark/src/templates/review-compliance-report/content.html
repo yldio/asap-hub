@@ -1,9 +1,17 @@
 <div>
-  <p>Dear Team {{ team.name }},</p>
+  <p>
+    Dear
+    {{#useProjectBasedEmail}}Grantees{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team
+    {{ ../team.name }}{{/useProjectBasedEmail}},
+  </p>
   <p>
     The ASAP Open Science Team has completed the compliance check for your {{
-    manuscript.type }} {{ manuscript.title }}. Please log-in to the Hub to view
-    the compliance report and any required changes.
+    manuscript.type }} {{#useProjectBasedEmail}}<a
+      href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
+    }}{{/useProjectBasedEmail}}. Please log-in to the Hub to view the compliance
+    report and any required changes.
   </p>
   <p>
     This is an automated message. Please do not reply to this email. If you have

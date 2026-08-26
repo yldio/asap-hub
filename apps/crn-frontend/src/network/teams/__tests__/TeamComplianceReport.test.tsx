@@ -26,6 +26,7 @@ const manuscriptResponse = {
   versions: [{ id: 'manuscript-version-1' }],
   status: 'Addendum Required',
   notificationList: '',
+  useProjectBasedEmail: false,
 };
 const complianceReportResponse = { id: 'compliance-report-1' };
 
@@ -214,6 +215,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
         manuscriptId: manuscriptResponse.id,
         status: manuscriptResponse.status,
         notificationList: manuscriptResponse.notificationList,
+        useProjectBasedEmail: manuscriptResponse.useProjectBasedEmail,
       },
       expect.anything(),
     );

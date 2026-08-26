@@ -1,9 +1,23 @@
 <div>
   <p>Dear Open Science Team,</p>
+  {{#useProjectBasedEmail}}
   <p>
-    A grantee has submitted a {{ manuscript.type }} for {{ team.name }} entitled
-    {{ manuscript.title }} ({{ manuscript.id }}). Please check the
-    <a href="{{{ team.workspace }}}">Team {{ team.name }} workspace</a> on the
-    Hub to initiate a compliance review.
+    A grantee has submitted a {{ ../manuscript.type }} for {{ ../project.name }}
+    entitled
+    <a href="{{{ ../manuscript.link }}}">{{ ../manuscript.title }}</a> ({{
+    ../manuscript.id }}). Please check the
+    <a href="{{{ ../project.workspace }}}"
+      >Project {{ ../project.name }} workspace</a
+    >
+    on the Hub to initiate a compliance review.
   </p>
+  {{/useProjectBasedEmail}} {{^useProjectBasedEmail}}
+  <p>
+    A grantee has submitted a {{ ../manuscript.type }} for {{ ../team.name }}
+    entitled {{ ../manuscript.title }} ({{ ../manuscript.id }}). Please check
+    the
+    <a href="{{{ ../team.workspace }}}">Team {{ ../team.name }} workspace</a> on
+    the Hub to initiate a compliance review.
+  </p>
+  {{/useProjectBasedEmail}}
 </div>

@@ -35024,7 +35024,10 @@ export type FetchManuscriptNotificationDetailsQuery = {
                             Maybe<
                               Pick<
                                 Projects,
-                                'projectId' | 'projectType' | 'grantId'
+                                | 'title'
+                                | 'projectId'
+                                | 'projectType'
+                                | 'grantId'
                               > & { sys: Pick<Sys, 'id'> }
                             >
                           >;
@@ -35038,6 +35041,11 @@ export type FetchManuscriptNotificationDetailsQuery = {
           >
         >;
       }>;
+      project?: Maybe<
+        Pick<Projects, 'title' | 'projectId' | 'projectType' | 'grantId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >;
       assignedUsersCollection?: Maybe<{
         items: Array<Maybe<Pick<Users, 'firstName' | 'lastName' | 'email'>>>;
       }>;
@@ -65090,6 +65098,14 @@ export const FetchManuscriptNotificationDetailsDocument = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
+                                                                      'title',
+                                                                  },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
                                                                       'projectId',
                                                                   },
                                                                 },
@@ -65129,6 +65145,41 @@ export const FetchManuscriptNotificationDetailsDocument = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'project' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectType' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'grantId' },
                       },
                     ],
                   },

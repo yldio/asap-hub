@@ -1,8 +1,14 @@
 <div>
   <p>Dear Team ASAP,</p>
   <p>
-    {{ discussion.submitterName }} from Team {{ team.name }} has sent a message
-    about the {{ manuscript.type }} {{ manuscript.title }}. Please view the
+    {{ discussion.submitterName }} from {{#useProjectBasedEmail}}Project {{
+    ../project.name }}{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}Team {{
+    ../team.name }}{{/useProjectBasedEmail}} has sent a message about the {{
+    manuscript.type }} {{#useProjectBasedEmail}}<a
+      href="{{{ ../manuscript.link }}}"
+      >{{ ../manuscript.title }}</a
+    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
+    }}{{/useProjectBasedEmail}}. Please view the
     <a href="{{{ discussion.link }}}">message "{{ discussion.title }}"</a> on
     the Hub and respond as needed.
   </p>

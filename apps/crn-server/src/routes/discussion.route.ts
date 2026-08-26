@@ -36,8 +36,13 @@ export const discussionRouteFactory = (
       const { body, params } = req;
 
       const { discussionId } = validateDiscussionParameters(params);
-      const { text, files, notificationList, manuscriptId } =
-        validateDiscussionRequest(body);
+      const {
+        text,
+        files,
+        notificationList,
+        manuscriptId,
+        useProjectBasedEmail,
+      } = validateDiscussionRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
@@ -68,6 +73,7 @@ export const discussionRouteFactory = (
         reply,
         manuscriptId,
         notificationList || '',
+        useProjectBasedEmail,
       );
       res.json(discussion);
     },
@@ -78,8 +84,14 @@ export const discussionRouteFactory = (
     async (req, res: Response<DiscussionResponse>) => {
       const { body } = req;
 
-      const { manuscriptId, text, title, files, notificationList } =
-        validateDiscussionCreateRequest(body);
+      const {
+        manuscriptId,
+        text,
+        title,
+        files,
+        notificationList,
+        useProjectBasedEmail,
+      } = validateDiscussionCreateRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
@@ -105,6 +117,7 @@ export const discussionRouteFactory = (
         text,
         files,
         notificationList || '',
+        useProjectBasedEmail,
       );
 
       res.json(result);

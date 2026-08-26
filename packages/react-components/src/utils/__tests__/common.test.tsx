@@ -11,6 +11,7 @@ import {
   splitListBy,
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
+  getResearchOutputAssociationPill,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -339,5 +340,104 @@ describe('getResearchOutputAssociationName', () => {
     expect(getResearchOutputAssociationName(researchOutput)).toEqual(
       'Team ASAP',
     );
+  });
+});
+
+describe('getResearchOutputAssociationPill', () => {
+  it('returns Team for a research output with only a team', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Team');
+  });
+  it('returns Team for a research output with more than one team', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Team');
+  });
+  it('returns Working Group for a research output that has a working group', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
+      ],
+      workingGroups: [{ id: '1', title: 'Working group' }],
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual(
+      'Working Group',
+    );
+  });
+  it('returns Project for a research output published by a project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Project');
+  });
+  it('returns Project for a team-based project output when project outputs are enabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput, true)).toEqual(
+      'Project',
+    );
+  });
+  it('returns Team for a team-based project output when project outputs are disabled', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput, false)).toEqual(
+      'Team',
+    );
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Team');
   });
 });

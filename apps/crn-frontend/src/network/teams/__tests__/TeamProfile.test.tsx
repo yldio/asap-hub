@@ -51,19 +51,6 @@ jest.mock('../../../shared-api/category', () => ({
   }),
 }));
 
-const mockIsEnabled = jest.fn();
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
-beforeEach(() => {
-  mockIsEnabled.mockReturnValue(false);
-});
-afterAll(() => {
-  mockIsEnabled.mockClear();
-});
-
 const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
@@ -484,51 +471,9 @@ it('does not allow navigating to the workspace tab when team tools are not avail
 });
 
 describe('Share Output', () => {
-  it('does not show share outputs button when flag PROJECT_OUTPUTS is enabled', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
+  it('does not show the share an output button in the team header', async () => {
     await renderPage(createTeamResponse());
     expect(screen.queryByText(/share an output/i)).not.toBeInTheDocument();
-  });
-
-  it('shows share outputs button and page when the user has permissions user clicks an option and flag PROJECT_OUTPUTS is not enabled', async () => {
-    mockIsEnabled.mockReturnValue(false);
-    jest.useRealTimers();
-    jest.spyOn(console, 'error').mockImplementation(); // Suppress act() warnings from Suspense
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-
-    const { router } = await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'ASAP Staff',
-          },
-        ],
-      },
-      network({}).teams({}).team({ teamId: teamResponse.id }).$,
-    );
-    expect(screen.getByText(/about/i)).toBeInTheDocument();
-    await userEvent.click(await screen.findByText(/share an output/i));
-    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    await userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(
-        `/network/teams/${teamResponse.id}/create-output/article`,
-      );
-    });
-    expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
-    // Wait for the actual form to appear, not just loading to disappear
-    expect(
-      await screen.findByText(/How would you like to create your output/i),
-    ).toBeVisible();
-    jest.useFakeTimers();
   });
 
   it('does not show the share outputs button when the user does not have', async () => {
@@ -653,9 +598,6 @@ describe('Duplicate Output', () => {
   }, 30000);
 
   it('requires authors when duplicating a team-based project Article output', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const researchOutput: ResearchOutputTeamResponse = {
@@ -1082,24 +1024,13 @@ describe('The project banner', () => {
     localStorage.removeItem(dismissedKey);
   });
 
-  it('shows the banner when PROJECT_OUTPUTS is enabled and the team has a linked project', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
+  it('shows the banner when the team has a linked project', async () => {
     await renderPage(teamWithProject);
     expect(screen.getByText(bannerText)).toBeVisible();
   });
 
-  it('does not show the banner when PROJECT_OUTPUTS is disabled', async () => {
-    await renderPage(teamWithProject);
-    expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
-  });
-
   it('hides the banner and persists the dismissal when the close button is clicked', async () => {
     jest.useRealTimers();
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
     await renderPage(teamWithProject);
 
     await userEvent.click(screen.getByLabelText('Close'));
@@ -1111,9 +1042,6 @@ describe('The project banner', () => {
 
   it('does not show the banner when it was previously dismissed', async () => {
     localStorage.setItem(dismissedKey, 'true');
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
     await renderPage(teamWithProject);
     expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
   });

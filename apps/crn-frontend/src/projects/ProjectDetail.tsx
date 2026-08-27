@@ -8,7 +8,7 @@ import {
   ProjectDetailAbout,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useProjectArticlesSuggestions, useProjectById } from './state';
 import {
   useResearchOutputById,
@@ -82,21 +82,6 @@ const ProjectOutputCountsLoader: FC<ProjectOutputCountsProps> = ({
   );
 };
 
-const ProjectOutputCounts: FC<
-  ProjectOutputCountsProps & { enabled: boolean }
-> = ({ projectId, teamId, userAssociationMember, enabled, children }) =>
-  enabled ? (
-    <ProjectOutputCountsLoader
-      projectId={projectId}
-      teamId={teamId}
-      userAssociationMember={userAssociationMember}
-    >
-      {children}
-    </ProjectOutputCountsLoader>
-  ) : (
-    <>{children({})}</>
-  );
-
 const DuplicateOutput: FC<{ projectId: string; teamId?: string }> = ({
   projectId,
   teamId,
@@ -145,7 +130,6 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const projectId = rawProjectId ?? '';
   const projectDetail = useProjectById(projectId);
   const fetchArticles = useFetchAimArticles();
-  const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
   const isOpenScienceMember =
     user?.role === 'Staff' && !!user?.openScienceTeamMember;
@@ -181,15 +165,13 @@ const ProjectDetail: FC<Props> = ({ config }) => {
       expandUserTeamRoles(user.teams ?? []),
       projectDetail,
     );
-  const showWorkspace =
-    isEnabled('PROJECT_WORKSPACE') && (isMember || isOpenScienceMember);
+  const showWorkspace = isMember || isOpenScienceMember;
   const canSubmitManuscript = showWorkspace && isMember;
   const canEditOrResubmitManuscript =
     showWorkspace && (isMember || isOpenScienceMember);
   const canCreateComplianceReport = showWorkspace && isOpenScienceMember;
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
   const isTeamBased = config.getIsTeamBased(projectDetail);
 
   const hasSupplementGrant =
@@ -200,8 +182,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
       : projectDetail.originalGrantAims) || [];
 
   const isMemberOrStaff = isMember || user?.role === 'Staff';
-  const displayDraftOutputs = isProjectOutputsEnabled && isMemberOrStaff;
-  const canShareOutput = isProjectOutputsEnabled && isMember;
+  const displayDraftOutputs = isMemberOrStaff;
+  const canShareOutput = isMember;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -304,11 +286,10 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             <Route
               path="*"
               element={
-                <ProjectOutputCounts
+                <ProjectOutputCountsLoader
                   projectId={projectId}
                   teamId={outputsTeamId}
                   userAssociationMember={isMemberOrStaff}
-                  enabled={isProjectOutputsEnabled}
                 >
                   {({ publishedOutputsCount, draftOutputsCount }) => (
                     <ProjectDetailPage
@@ -319,11 +300,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       aboutHref={route.about({}).$}
                       workspaceHref={workspaceHref}
                       milestonesHref={route.milestones({}).$}
-                      outputsHref={
-                        isProjectOutputsEnabled
-                          ? route.outputs({}).$
-                          : undefined
-                      }
+                      outputsHref={route.outputs({}).$}
                       draftOutputsHref={
                         displayDraftOutputs
                           ? route.draftOutputs({}).$
@@ -420,19 +397,15 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         <Route
                           path="outputs"
                           element={
-                            isProjectOutputsEnabled ? (
-                              <Frame title="Project Outputs">
-                                <ProjectOutputs
-                                  projectId={projectId}
-                                  teamId={outputsTeamId}
-                                  projectTitle={projectDetail.title}
-                                  userAssociationMember={isMemberOrStaff}
-                                  hasOutputs={(publishedOutputsCount ?? 0) > 0}
-                                />
-                              </Frame>
-                            ) : (
-                              <NotFoundPage />
-                            )
+                            <Frame title="Project Outputs">
+                              <ProjectOutputs
+                                projectId={projectId}
+                                teamId={outputsTeamId}
+                                projectTitle={projectDetail.title}
+                                userAssociationMember={isMemberOrStaff}
+                                hasOutputs={(publishedOutputsCount ?? 0) > 0}
+                              />
+                            </Frame>
                           }
                         />
                         <Route
@@ -464,7 +437,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       </Routes>
                     </ProjectDetailPage>
                   )}
-                </ProjectOutputCounts>
+                </ProjectOutputCountsLoader>
               }
             />
           </Routes>

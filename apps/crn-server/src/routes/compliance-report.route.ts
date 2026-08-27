@@ -19,7 +19,6 @@ export const complianceReportRouteFactory = (
       status,
       manuscriptId,
       notificationList,
-      useProjectBasedEmail,
       ...createRequest
     } = validateComplianceReportPostRequestParameters(body);
 
@@ -50,7 +49,7 @@ export const complianceReportRouteFactory = (
     if (manuscript && status && manuscript.status !== status && manuscriptId) {
       await manuscriptController.update(
         manuscriptId,
-        { status, notificationList, useProjectBasedEmail },
+        { status, notificationList },
         loggedInUser.id,
       );
     }

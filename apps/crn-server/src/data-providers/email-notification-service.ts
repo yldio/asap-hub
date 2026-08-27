@@ -57,7 +57,6 @@ type TemplateModel = {
     submitterName: string;
     link: string;
   };
-  useProjectBasedEmail: boolean;
 };
 
 type DiscussionNotificationInfo = {
@@ -188,7 +187,6 @@ export class EmailNotificationService {
     discussionTitle: string;
     discussionDetails?: DiscussionNotificationInfo;
     discussionLink: string;
-    useProjectBasedEmail: boolean;
   }): NotificationDataBuilder {
     return (recipientType) => ({
       headerImage: emailHeaderImageUrl,
@@ -211,7 +209,6 @@ export class EmailNotificationService {
         submitterName: context.discussionDetails?.userName || '',
         link: context.discussionLink,
       },
-      useProjectBasedEmail: context.useProjectBasedEmail,
     });
   }
 
@@ -341,7 +338,6 @@ export class EmailNotificationService {
     manuscriptId: string,
     emailList: string,
     discussionDetails?: DiscussionNotificationInfo,
-    useProjectBasedEmail = false,
   ): Promise<void> {
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptNotificationDetailsQuery,
@@ -411,7 +407,6 @@ export class EmailNotificationService {
       discussionTitle,
       discussionDetails,
       discussionLink,
-      useProjectBasedEmail,
     });
 
     const templateDetails = emailNotificationMapping[action];

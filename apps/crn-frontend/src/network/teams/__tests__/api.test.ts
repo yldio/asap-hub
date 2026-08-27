@@ -567,15 +567,6 @@ describe('Manuscript', () => {
       expect(nock.isDone()).toBe(true);
     });
 
-    it('makes a GET request with tab and projectWorkspaceEnabled query params', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .get('/manuscripts/42/workspace-url')
-        .query({ tab: 'discussions', projectWorkspaceEnabled: 'true' })
-        .reply(200, {});
-      await getManuscriptWorkspaceUrl('42', 'Bearer x', 'discussions', true);
-      expect(nock.isDone()).toBe(true);
-    });
-
     it('returns a successfully resolved workspace url', async () => {
       const workspaceUrl = {
         url: '/network/teams/team-1/workspace#manuscript-1',

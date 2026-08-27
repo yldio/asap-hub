@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { createSentryHeaders, getTimezone } from '@asap-hub/frontend-utils';
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 
@@ -29,7 +28,7 @@ export const getReminders = async (
   const resp = await fetch(
     `${API_BASE_URL}/reminders?${new URLSearchParams({
       timezone,
-      includeProjectReminders: String(isEnabled('PROJECT_WORKSPACE')),
+      includeProjectReminders: 'true',
     })}`,
     {
       headers: {

@@ -212,30 +212,6 @@ describe('/discussions/ route', () => {
         reply,
         manuscriptId,
         notificationList,
-        undefined,
-      );
-    });
-
-    test('Should forward useProjectBasedEmail to the controller when provided', async () => {
-      const discussionId = 'discussion-id-1';
-      const text = 'test reply';
-      const manuscriptId = 'manuscript-id';
-
-      const reply: Reply = { text, isOpenScienceMember: false };
-
-      await supertest(app).patch(`/discussions/${discussionId}`).send({
-        text,
-        manuscriptId,
-        useProjectBasedEmail: true,
-      });
-
-      expect(discussionControllerMock.update).toHaveBeenCalledWith(
-        discussionId,
-        'user-id-0',
-        reply,
-        manuscriptId,
-        '',
-        true,
       );
     });
 
@@ -403,7 +379,6 @@ describe('/discussions/ route', () => {
         title,
         text,
         notificationList,
-        useProjectBasedEmail: true,
       });
 
       expect(discussionControllerMock.create).toHaveBeenCalledWith(
@@ -413,7 +388,6 @@ describe('/discussions/ route', () => {
         text,
         undefined,
         notificationList,
-        true,
       );
     });
 

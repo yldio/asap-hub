@@ -620,14 +620,6 @@ describe('a team-based project research output', () => {
     members: [{ ...baseTeamMember, role: 'Key Personnel' }],
   };
 
-  beforeEach(() => {
-    flags.enable('PROJECT_OUTPUTS');
-  });
-
-  afterEach(() => {
-    flags.disable('PROJECT_OUTPUTS');
-  });
-
   it('lets a member publish a draft when the team has no active project manager', async () => {
     mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
     mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
@@ -659,19 +651,6 @@ describe('a team-based project research output', () => {
     ).toBeVisible();
   });
 
-  it('falls back to plain team rules when PROJECT_OUTPUTS is disabled', async () => {
-    flags.disable('PROJECT_OUTPUTS');
-    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
-
-    const { queryByText } = await renderComponent(
-      researchOutputRoute.$,
-      teamMemberUser,
-    );
-
-    expect(queryByText('Publish')).not.toBeInTheDocument();
-    expect(queryByText(/Only PMs can publish this output\./i)).toBeVisible();
-  });
-
   it('requires authors when editing a team-based project Article output', async () => {
     mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
     mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
@@ -698,37 +677,6 @@ describe('a team-based project research output', () => {
 
     expect(
       await screen.findByRole('heading', { name: /Share a Project Article/i }),
-    ).toBeVisible();
-  });
-
-  it('does not require authors when editing with PROJECT_OUTPUTS disabled', async () => {
-    flags.disable('PROJECT_OUTPUTS');
-    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
-    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
-
-    await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      defaultUser,
-    );
-
-    expect(await screen.findByLabelText(/Authors\(optional\)/i)).toBeVisible();
-    expect(
-      screen.queryByLabelText(/Authors\(required\)/i),
-    ).not.toBeInTheDocument();
-  });
-
-  it('shows a Team header when editing with PROJECT_OUTPUTS disabled', async () => {
-    flags.disable('PROJECT_OUTPUTS');
-    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
-    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
-
-    await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      defaultUser,
-    );
-
-    expect(
-      await screen.findByRole('heading', { name: /Share a Team Article/i }),
     ).toBeVisible();
   });
 });

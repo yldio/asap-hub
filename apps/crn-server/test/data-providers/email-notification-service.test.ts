@@ -321,57 +321,6 @@ describe('Email Notification Service', () => {
       );
     });
 
-    test.each`
-      useProjectBasedEmail
-      ${true}
-      ${false}
-    `(
-      'passes useProjectBasedEmail through to the template model as $useProjectBasedEmail',
-      async ({ useProjectBasedEmail }: { useProjectBasedEmail: boolean }) => {
-        mockEnvironmentGetter.mockReturnValueOnce('production');
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          manuscripts: manuscript,
-        });
-
-        await emailNotificationService.sendEmailNotification(
-          'manuscript_submitted',
-          manuscript.sys.id,
-          '',
-          undefined,
-          useProjectBasedEmail,
-        );
-
-        expect(mockedPostmark).toHaveBeenCalledWith(
-          expect.objectContaining({
-            TemplateModel: expect.objectContaining({
-              useProjectBasedEmail,
-            }),
-          }),
-        );
-      },
-    );
-
-    test('defaults useProjectBasedEmail to false when the argument is omitted', async () => {
-      mockEnvironmentGetter.mockReturnValueOnce('production');
-      contentfulGraphqlClientMock.request.mockResolvedValue({
-        manuscripts: manuscript,
-      });
-
-      await emailNotificationService.sendEmailNotification(
-        'manuscript_submitted',
-        manuscript.sys.id,
-        '',
-      );
-
-      expect(mockedPostmark).toHaveBeenCalledWith(
-        expect.objectContaining({
-          TemplateModel: expect.objectContaining({
-            useProjectBasedEmail: false,
-          }),
-        }),
-      );
-    });
-
     test('Resolves project name and workspace from the submitting team project-membership chain for team-based manuscript', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       const projectLinkedManuscript =

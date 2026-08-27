@@ -12,10 +12,7 @@ import {
   ResearchOutputForm,
   Toast,
 } from '@asap-hub/react-components';
-import {
-  resolveResearchOutputAvailableActions,
-  useFlags,
-} from '@asap-hub/react-context';
+import { resolveResearchOutputAvailableActions } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
@@ -145,10 +142,8 @@ const TeamBasedOutput: React.FC<TeamBasedOutputProps> = ({
 
   const published = !!researchOutput?.published;
 
-  const { isEnabled } = useFlags();
-  const isTeamBasedProjectOutput =
-    isEnabled('PROJECT_OUTPUTS') &&
-    !!(researchOutput ?? existingOutput)?.teams?.[0]?.project;
+  const isTeamBasedProjectOutput = !!(researchOutput ?? existingOutput)
+    ?.teams?.[0]?.project;
 
   const isProjectOutput = fromProjectWorkspace || isTeamBasedProjectOutput;
 

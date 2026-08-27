@@ -1,4 +1,4 @@
-import { disable, enable, reset } from '@asap-hub/flags';
+import { reset } from '@asap-hub/flags';
 import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
   ManuscriptResponse,
@@ -230,7 +230,6 @@ describe('useReplyToDiscussion', () => {
   const patch = { text: 'Reply message', manuscriptId };
 
   it('calls updateDiscussion API with the correct parameters', async () => {
-    enable('PROJECT_WORKSPACE');
     (updateDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
     (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
 
@@ -246,30 +245,6 @@ describe('useReplyToDiscussion', () => {
       {
         ...patch,
         notificationList: undefined,
-        useProjectBasedEmail: true,
-      },
-      mockAuthorization,
-    );
-  });
-
-  it('sends useProjectBasedEmail as false when the PROJECT_WORKSPACE flag is disabled', async () => {
-    disable('PROJECT_WORKSPACE');
-    (updateDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
-    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
-
-    const { result } = renderStateHook(() => useReplyToDiscussion());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await result.current(manuscriptId, discussionId, patch);
-    });
-
-    expect(updateDiscussion).toHaveBeenCalledWith(
-      discussionId,
-      {
-        ...patch,
-        notificationList: undefined,
-        useProjectBasedEmail: false,
       },
       mockAuthorization,
     );
@@ -379,8 +354,7 @@ describe('useCreateDiscussion', () => {
     ).toEqual(mockUpdatedManuscript);
   });
 
-  it('sends useProjectBasedEmail as true when the PROJECT_WORKSPACE flag is enabled', async () => {
-    enable('PROJECT_WORKSPACE');
+  it('calls createDiscussion API with the correct parameters', async () => {
     (createDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
     (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
 
@@ -398,32 +372,6 @@ describe('useCreateDiscussion', () => {
         text: 'content',
         files: undefined,
         notificationList: undefined,
-        useProjectBasedEmail: true,
-      },
-      mockAuthorization,
-    );
-  });
-
-  it('sends useProjectBasedEmail as false when the PROJECT_WORKSPACE flag is disabled', async () => {
-    disable('PROJECT_WORKSPACE');
-    (createDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
-    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
-
-    const { result } = renderStateHook(() => useCreateDiscussion());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await result.current(manuscriptId, 'title', 'content');
-    });
-
-    expect(createDiscussion).toHaveBeenCalledWith(
-      {
-        manuscriptId,
-        title: 'title',
-        text: 'content',
-        files: undefined,
-        notificationList: undefined,
-        useProjectBasedEmail: false,
       },
       mockAuthorization,
     );
@@ -567,8 +515,7 @@ describe('useWorkspaceManuscripts', () => {
 });
 
 describe('usePutManuscript', () => {
-  it('sends useProjectBasedEmail as true when the PROJECT_WORKSPACE flag is enabled', async () => {
-    enable('PROJECT_WORKSPACE');
+  it('calls updateManuscript API with the correct parameters', async () => {
     (updateManuscript as jest.Mock).mockResolvedValue({
       id: manuscriptId,
       title: 'Renamed',
@@ -587,33 +534,6 @@ describe('usePutManuscript', () => {
       {
         status: 'Addendum Required',
         notificationList: undefined,
-        useProjectBasedEmail: true,
-      },
-      mockAuthorization,
-    );
-  });
-
-  it('sends useProjectBasedEmail as false when the PROJECT_WORKSPACE flag is disabled', async () => {
-    disable('PROJECT_WORKSPACE');
-    (updateManuscript as jest.Mock).mockResolvedValue({
-      id: manuscriptId,
-      title: 'Renamed',
-      status: 'Addendum Required',
-    });
-
-    const { result } = renderStateHook(() => usePutManuscript());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await result.current(manuscriptId, { status: 'Addendum Required' });
-    });
-
-    expect(updateManuscript).toHaveBeenCalledWith(
-      manuscriptId,
-      {
-        status: 'Addendum Required',
-        notificationList: undefined,
-        useProjectBasedEmail: false,
       },
       mockAuthorization,
     );

@@ -5,7 +5,6 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { network, projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
@@ -154,7 +153,6 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
-  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -266,14 +264,12 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
-  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
   handleUpdateAPCDetailsClick,
   handleStatusClick,
 }) => {
-  const { isEnabled } = useFlags();
   const {
     id,
     team,
@@ -293,9 +289,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     project?.projectType && project.id
       ? projectRouteByType[project.projectType](project.id).workspace({}).$
       : undefined;
-  const workspaceHref = isEnabled('PROJECT_WORKSPACE')
-    ? projectWorkspaceHref ?? teamHref
-    : teamHref;
+  const workspaceHref = projectWorkspaceHref ?? teamHref;
   const manuscriptHref = workspaceHref ? `${workspaceHref}#${id}` : undefined;
   const projectConfig = project?.projectType
     ? getProjectConfig({
@@ -327,24 +321,22 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             </span>
           </Pill>
         </td>
-        {displayProjectColumn && (
-          <td>
-            {project?.title ? (
-              <p css={projectEntityStyles}>
-                <span css={projectIconStyles}>{projectConfig?.icon}</span>
-                <span css={projectTitleStyles} title={project.title}>
-                  {projectConfig?.href ? (
-                    <Link href={projectConfig.href}>{project.title}</Link>
-                  ) : (
-                    project.title
-                  )}
-                </span>
-              </p>
-            ) : (
-              '—'
-            )}
-          </td>
-        )}
+        <td>
+          {project?.title ? (
+            <p css={projectEntityStyles}>
+              <span css={projectIconStyles}>{projectConfig?.icon}</span>
+              <span css={projectTitleStyles} title={project.title}>
+                {projectConfig?.href ? (
+                  <Link href={projectConfig.href}>{project.title}</Link>
+                ) : (
+                  project.title
+                )}
+              </span>
+            </p>
+          ) : (
+            '—'
+          )}
+        </td>
         <td>
           {isUserBasedProject ? (
             '—'

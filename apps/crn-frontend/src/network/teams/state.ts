@@ -1,4 +1,4 @@
-import { getOverrides, isEnabled } from '@asap-hub/flags';
+import { getOverrides } from '@asap-hub/flags';
 import {
   BackendError,
   createQueryKeys,
@@ -63,7 +63,6 @@ export const teamQueryKeys = createQueryKeys<GetTeamsListOptions>('teams');
 type ManuscriptWorkspaceUrlParams = {
   manuscriptId: string;
   tab?: ManuscriptWorkspaceTab;
-  projectWorkspaceEnabled?: boolean;
 };
 
 export const manuscriptQueryKeys = {
@@ -143,23 +142,16 @@ export const useManuscriptById = (
 export const useManuscriptWorkspaceUrl = (
   manuscriptId: string,
   tab?: ManuscriptWorkspaceTab,
-  projectWorkspaceEnabled?: boolean,
 ): ManuscriptWorkspaceUrlResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.workspaceUrl({
       manuscriptId,
       tab,
-      projectWorkspaceEnabled,
     }),
     queryFn: () =>
       nullOnUndefined(async () =>
-        getManuscriptWorkspaceUrl(
-          manuscriptId,
-          await getAuthorization(),
-          tab,
-          projectWorkspaceEnabled,
-        ),
+        getManuscriptWorkspaceUrl(manuscriptId, await getAuthorization(), tab),
       ),
   });
   return data ?? undefined;
@@ -219,7 +211,6 @@ export const usePostManuscript = () => {
         {
           ...payload,
           notificationList,
-          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
         },
         await getAuthorization(),
       );
@@ -249,7 +240,6 @@ export const useResubmitManuscript = () => {
         {
           ...payload,
           notificationList,
-          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
         },
         await getAuthorization(),
       );
@@ -281,7 +271,6 @@ export const usePutManuscript = () => {
         {
           ...payload,
           notificationList,
-          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
         },
         await getAuthorization(),
       );
@@ -331,7 +320,6 @@ export const usePostComplianceReport = () => {
         {
           ...payload,
           notificationList,
-          useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
         },
         await getAuthorization(),
       );
@@ -416,7 +404,6 @@ export const useReplyToDiscussion = () => {
           {
             ...patch,
             notificationList,
-            useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
           },
           authorization,
         );
@@ -595,7 +582,6 @@ export const useCreateDiscussion = () => {
             text,
             files,
             notificationList,
-            useProjectBasedEmail: isEnabled('PROJECT_WORKSPACE'),
           },
           authorization,
         );

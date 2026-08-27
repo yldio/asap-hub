@@ -7,7 +7,6 @@ import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
-  useFlags,
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
@@ -83,8 +82,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
   const user = useCurrentUserCRN();
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const [isProjectBannerDismissed, dismissProjectBanner] = useDismissable(
     'crn-team-project-banner-dismissed',
@@ -212,7 +209,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   }
                 />
               )}
-              {canShareResearchOutput && !isProjectOutputsEnabled && (
+              {canShareResearchOutput && (
                 <Route
                   path="create-output/:outputDocumentType"
                   element={
@@ -249,9 +246,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                         : undefined
                     }
                     manuscriptsCount={manuscriptCount.total || 0}
-                    showProjectBanner={
-                      isProjectOutputsEnabled && !isProjectBannerDismissed
-                    }
+                    showProjectBanner={!isProjectBannerDismissed}
                     onDismissProjectBanner={dismissProjectBanner}
                   >
                     <ProfileSwitch

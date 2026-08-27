@@ -1064,3 +1064,57 @@ describe('The compliance tab', () => {
     jest.useFakeTimers();
   });
 });
+
+describe('The project banner', () => {
+  const bannerText = /The workspace and outputs have moved/i;
+  const dismissedKey = 'crn-team-project-banner-dismissed';
+  const teamWithProject = {
+    ...createTeamResponse(),
+    linkedProjectId: 'project-1',
+    projectType: 'Discovery Project' as const,
+    projectTitle: 'Project Alpha',
+  };
+
+  beforeEach(() => {
+    localStorage.removeItem(dismissedKey);
+  });
+  afterEach(() => {
+    localStorage.removeItem(dismissedKey);
+  });
+
+  it('shows the banner when PROJECT_OUTPUTS is enabled and the team has a linked project', async () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    await renderPage(teamWithProject);
+    expect(screen.getByText(bannerText)).toBeVisible();
+  });
+
+  it('does not show the banner when PROJECT_OUTPUTS is disabled', async () => {
+    await renderPage(teamWithProject);
+    expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
+  });
+
+  it('hides the banner and persists the dismissal when the close button is clicked', async () => {
+    jest.useRealTimers();
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    await renderPage(teamWithProject);
+
+    await userEvent.click(screen.getByLabelText('Close'));
+
+    expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
+    expect(localStorage.getItem(dismissedKey)).toBe('true');
+    jest.useFakeTimers();
+  });
+
+  it('does not show the banner when it was previously dismissed', async () => {
+    localStorage.setItem(dismissedKey, 'true');
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    await renderPage(teamWithProject);
+    expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
+  });
+});

@@ -5,7 +5,12 @@
     a manuscript for {{ manuscript.type }}
     <a href="{{{ manuscript.link }}}">{{ manuscript.title }}</a> ({{
     manuscript.id }}). Please check the
-    <a href="{{{ project.workspace }}}">Project {{ project.name }} workspace</a>
+    {{#project.workspace}}<a href="{{{ project.workspace }}}"
+      >Project {{ project.name }} workspace</a
+    >{{/project.workspace}}{{^project.workspace}}<a
+      href="{{{ manuscript.link }}}"
+      >manuscript's compliance page</a
+    >{{/project.workspace}}
     on the Hub to initiate a new compliance review.
   </p>
 </div>

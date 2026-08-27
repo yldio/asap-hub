@@ -1044,9 +1044,8 @@ export const createTeamMembership = async (
 
 /**
  * Creates or updates the socials entry holding a user's social links and
- * returns a link to it, or null when the user has no social values. The entry
- * id mirrors the one used by the socials migration script so repeated imports
- * reuse the same entry.
+ * returns a link to it, or null when the user has no social values. The
+ * deterministic entry id means repeated imports reuse the same entry.
  */
 export const upsertUserSocials = async (
   env: Environment,
@@ -1067,15 +1066,16 @@ export const upsertUserSocials = async (
   }
 
   const entryId = `socials-${userId}`;
-  const fields = { ...socialFields, user: loc(createEntryLink(userId)) };
 
   let entry;
   try {
     entry = await env.getEntry(entryId);
-    entry.fields = fields;
+    entry.fields = socialFields;
     entry = await entry.update();
   } catch {
-    entry = await env.createEntryWithId('socials', entryId, { fields });
+    entry = await env.createEntryWithId('socials', entryId, {
+      fields: socialFields,
+    });
   }
 
   if (publish) {

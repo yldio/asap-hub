@@ -11395,7 +11395,6 @@ type Socials implements Entry & _Node {
   researcherId(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   twitter(locale: String, useFallbackLocale: Boolean): String
-  user(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
   website1(locale: String, useFallbackLocale: Boolean): String
   website2(locale: String, useFallbackLocale: Boolean): String
 }
@@ -11467,8 +11466,6 @@ input SocialsFilter {
   twitter_not: String
   twitter_not_contains: String
   twitter_not_in: [String]
-  user: cfUsersNestedFilter
-  user_exists: Boolean
   website1: String
   website1_contains: String
   website1_exists: Boolean
@@ -13878,8 +13875,6 @@ type UsersLinkingCollections {
   projectsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
   researchOutputsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ResearchOutputsCursorCollection
-  socialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsSocialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): SocialsCollection
-  socialsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsSocialsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): SocialsCursorCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
   tutorialsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): TutorialsCursorCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupLeadersCollection
@@ -14464,64 +14459,6 @@ enum UsersLinkingCollectionsResearchOutputsCursorCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
-}
-
-enum UsersLinkingCollectionsSocialsCollectionOrder {
-  blueSky_ASC
-  blueSky_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
-}
-
-enum UsersLinkingCollectionsSocialsCursorCollectionOrder {
-  blueSky_ASC
-  blueSky_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
 }
 
 enum UsersLinkingCollectionsTutorialsCollectionOrder {
@@ -16892,7 +16829,6 @@ input cfSocialsNestedFilter {
   twitter_not: String
   twitter_not_contains: String
   twitter_not_in: [String]
-  user_exists: Boolean
   website1: String
   website1_contains: String
   website1_exists: Boolean

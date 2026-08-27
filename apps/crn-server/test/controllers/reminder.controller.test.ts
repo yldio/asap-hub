@@ -314,7 +314,7 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description:
-            '**Genetic Determinants of Progression** published a new project Presentation version: Some Test title.',
+            '**Genetic Determinants of Progression** published a new project presentation version: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -344,7 +344,7 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** published a project Presentation for **Genetic Determinants of Progression**: Some Test title.',
+            '**Tom Hardy** published a project presentation for **Genetic Determinants of Progression**: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -403,7 +403,7 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description:
-            '**Some User** requested the PM to review a draft Article from **Genetic Determinants of Progression**: Some Test title.',
+            '**Some User** requested the PM to review a draft article from **Genetic Determinants of Progression**: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -432,7 +432,7 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description:
-            '**Some User** on team **Team A** switched to draft a project Article output: Some Test title.',
+            '**Some User** on team **Team A** switched to draft a project article output: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });

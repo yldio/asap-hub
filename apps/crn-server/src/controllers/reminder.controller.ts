@@ -45,7 +45,11 @@ export default class ReminderController {
             }).$,
             description:
               reminder.data.associationType === 'project'
-                ? `**${reminder.data.associationName}** published a new project ${reminder.data.documentType} version: ${reminder.data.title}.`
+                ? `**${
+                    reminder.data.associationName
+                  }** published a new project ${reminder.data.documentType.toLowerCase()} version: ${
+                    reminder.data.title
+                  }.`
                 : `${capitalizeFirstLetter(reminder.data.associationType)} **${
                     reminder.data.associationName
                   }** published a new ${reminder.data.associationType} ${
@@ -65,7 +69,11 @@ export default class ReminderController {
             }).$,
             description:
               reminder.data.associationType === 'project'
-                ? `**${reminder.data.statusChangedBy}** published a project ${reminder.data.documentType} for **${reminder.data.associationName}**: ${reminder.data.title}.`
+                ? `**${
+                    reminder.data.statusChangedBy
+                  }** published a project ${reminder.data.documentType.toLowerCase()} for **${
+                    reminder.data.associationName
+                  }**: ${reminder.data.title}.`
                 : `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
@@ -99,7 +107,11 @@ export default class ReminderController {
             }).$,
             description:
               reminder.data.associationType === 'project'
-                ? `**${reminder.data.statusChangedBy}** requested the PM to review a draft ${reminder.data.documentType} from **${reminder.data.associationName}**: ${reminder.data.title}.`
+                ? `**${
+                    reminder.data.statusChangedBy
+                  }** requested the PM to review a draft ${reminder.data.documentType.toLowerCase()} from **${
+                    reminder.data.associationName
+                  }**: ${reminder.data.title}.`
                 : `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
@@ -118,9 +130,9 @@ export default class ReminderController {
               reminder.data.associationType
             } **${reminder.data.associationName}** switched to draft a ${
               reminder.data.isProjectOutput
-                ? 'project'
-                : reminder.data.associationType
-            } ${reminder.data.documentType} output: ${reminder.data.title}.`,
+                ? `project ${reminder.data.documentType.toLowerCase()}`
+                : `${reminder.data.associationType} ${reminder.data.documentType}`
+            } output: ${reminder.data.title}.`,
           };
         }
 

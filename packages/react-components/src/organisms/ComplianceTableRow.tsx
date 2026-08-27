@@ -5,7 +5,6 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { network, projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
@@ -154,7 +153,6 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
-  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -171,8 +169,8 @@ type ComplianceTableRowProps = {
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
 
-const getTeamWorkspaceHref = (teamId: string) =>
-  teamId ? network({}).teams({}).team({ teamId }).workspace({}).$ : undefined;
+const getTeamHref = (teamId: string) =>
+  teamId ? network({}).teams({}).team({ teamId }).about({}).$ : undefined;
 
 const getAPCStatusLabel = (
   apcRequested?: boolean,
@@ -266,14 +264,12 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
-  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
   handleUpdateAPCDetailsClick,
   handleStatusClick,
 }) => {
-  const { isEnabled } = useFlags();
   const {
     id,
     team,
@@ -288,15 +284,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
-  const teamHref = getTeamWorkspaceHref(team.id);
+  const teamHref = getTeamHref(team.id);
   const projectWorkspaceHref =
     project?.projectType && project.id
       ? projectRouteByType[project.projectType](project.id).workspace({}).$
       : undefined;
-  const workspaceHref = isEnabled('PROJECT_WORKSPACE')
-    ? projectWorkspaceHref ?? teamHref
-    : teamHref;
-  const manuscriptHref = workspaceHref ? `${workspaceHref}#${id}` : undefined;
+  const manuscriptHref = projectWorkspaceHref
+    ? `${projectWorkspaceHref}#${id}`
+    : undefined;
   const projectConfig = project?.projectType
     ? getProjectConfig({
         projectId: project.id,
@@ -327,24 +322,22 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             </span>
           </Pill>
         </td>
-        {displayProjectColumn && (
-          <td>
-            {project?.title ? (
-              <p css={projectEntityStyles}>
-                <span css={projectIconStyles}>{projectConfig?.icon}</span>
-                <span css={projectTitleStyles} title={project.title}>
-                  {projectConfig?.href ? (
-                    <Link href={projectConfig.href}>{project.title}</Link>
-                  ) : (
-                    project.title
-                  )}
-                </span>
-              </p>
-            ) : (
-              '—'
-            )}
-          </td>
-        )}
+        <td>
+          {project?.title ? (
+            <p css={projectEntityStyles}>
+              <span css={projectIconStyles}>{projectConfig?.icon}</span>
+              <span css={projectTitleStyles} title={project.title}>
+                {projectConfig?.href ? (
+                  <Link href={projectConfig.href}>{project.title}</Link>
+                ) : (
+                  project.title
+                )}
+              </span>
+            </p>
+          ) : (
+            '—'
+          )}
+        </td>
         <td>
           {isUserBasedProject ? (
             '—'

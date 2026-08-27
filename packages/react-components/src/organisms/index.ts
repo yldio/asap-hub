@@ -123,7 +123,6 @@ export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export {
-  default as SharedOutputDropdown,
   SharedOutputDropdownBase,
   SharedOutputDropdownWrapper,
 } from './SharedOutputDropdown';

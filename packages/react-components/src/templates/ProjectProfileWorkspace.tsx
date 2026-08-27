@@ -152,7 +152,6 @@ type ProjectProfileWorkspaceProps = Pick<
   };
 
 const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
-  id,
   isProjectMember,
   isTeamBased,
   manuscripts,
@@ -267,8 +266,6 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                           <ManuscriptCard
                             manuscript={manuscript}
                             user={user}
-                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                            teamId={id}
                             isComplianceReviewer={isComplianceReviewer}
                             onUpdateManuscript={onUpdateManuscript}
                             isActiveTeam={isActiveProject}
@@ -315,8 +312,6 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                           <ManuscriptCard
                             manuscript={manuscript}
                             user={user}
-                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                            teamId={id}
                             isComplianceReviewer={isComplianceReviewer}
                             isActiveTeam={isActiveProject}
                             onUpdateManuscript={onUpdateManuscript}
@@ -355,8 +350,6 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                   <ManuscriptCard
                     manuscript={manuscript}
                     user={user}
-                    // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                    teamId={id}
                     isComplianceReviewer={isComplianceReviewer}
                     onUpdateManuscript={onUpdateManuscript}
                     isActiveTeam={isActiveProject}

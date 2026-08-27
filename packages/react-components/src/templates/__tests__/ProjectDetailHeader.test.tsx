@@ -2,12 +2,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
-const mockIsEnabled = jest.fn();
-
-jest.mock('@asap-hub/react-context', () => ({
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
 const baseProject = {
   id: 'project-1',
   title: 'Test Project',
@@ -135,10 +129,6 @@ describe('getTeamIcon', () => {
 });
 
 describe('ProjectDetailHeader', () => {
-  beforeEach(() => {
-    mockIsEnabled.mockReturnValue(false);
-  });
-
   const mockDiscoveryProject: ProjectDetail = {
     ...baseProject,
     projectType: 'Discovery Project',
@@ -405,9 +395,7 @@ describe('ProjectDetailHeader', () => {
       expect(teamText).toBeNull();
     });
 
-    it('renders share an output button when project is discovery project and PROJECT_OUTPUTS flag is enabled', () => {
-      mockIsEnabled.mockReturnValue(true);
-
+    it('renders share an output button when project is discovery project', () => {
       const { getByRole } = render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -424,9 +412,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
     });
 
-    it('does not render share an output button when project is discovery project and PROJECT_OUTPUTS flag is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-
+    it('does not render share an output button when the user cannot share an output', () => {
       const { queryByRole } = render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -479,8 +465,6 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders share an output button when the user can share an output for a resource project', () => {
-      mockIsEnabled.mockReturnValue(true);
-
       const { getByRole } = render(
         <ProjectDetailHeader
           {...mockResourceTeamProject}
@@ -495,8 +479,6 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('does not render share an output button when the user cannot share an output', () => {
-      mockIsEnabled.mockReturnValue(true);
-
       const { queryByRole } = render(
         <ProjectDetailHeader
           {...mockResourceTeamProject}
@@ -670,8 +652,6 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders share an output button when the user can share an output for a trainee project', () => {
-      mockIsEnabled.mockReturnValue(true);
-
       const { getByRole } = render(
         <ProjectDetailHeader
           {...mockTraineeProject}
@@ -727,8 +707,7 @@ describe('ProjectDetailHeader', () => {
   });
 
   describe('Workspace tab', () => {
-    it('renders Workspace tab when flag is enabled and workspaceHref is provided', () => {
-      mockIsEnabled.mockReturnValue(true);
+    it('renders Workspace tab when workspaceHref is provided', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -740,21 +719,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Workspace')).toBeInTheDocument();
     });
 
-    it('does not render Workspace tab when flag is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-          milestonesHref="/projects/discovery/1/milestones"
-          workspaceHref="/projects/discovery/1/workspace"
-        />,
-      );
-      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
-    });
-
     it('does not render Workspace tab when workspaceHref is not provided', () => {
-      mockIsEnabled.mockReturnValue(true);
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -767,8 +732,7 @@ describe('ProjectDetailHeader', () => {
   });
 
   describe('Outputs tab', () => {
-    it('renders Outputs tab when flag is enabled and outputsHref is provided', () => {
-      mockIsEnabled.mockReturnValue(true);
+    it('renders Outputs tab when outputsHref is provided', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -780,21 +744,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Outputs')).toBeInTheDocument();
     });
 
-    it('does not render Outputs tab when flag is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-          milestonesHref="/projects/discovery/1/milestones"
-          outputsHref="/projects/discovery/1/outputs"
-        />,
-      );
-      expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
-    });
-
     it('does not render Outputs tab when outputsHref is not provided', () => {
-      mockIsEnabled.mockReturnValue(true);
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -806,7 +756,6 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders Outputs tab with count when outputsCount is provided', () => {
-      mockIsEnabled.mockReturnValue(true);
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -821,8 +770,7 @@ describe('ProjectDetailHeader', () => {
   });
 
   describe('Draft Outputs tab', () => {
-    it('renders Draft Outputs tab when flag is enabled and draftOutputsHref is provided', () => {
-      mockIsEnabled.mockReturnValue(true);
+    it('renders Draft Outputs tab when draftOutputsHref is provided', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -834,21 +782,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Draft Outputs')).toBeInTheDocument();
     });
 
-    it('does not render Draft Outputs tab when flag is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-          milestonesHref="/projects/discovery/1/milestones"
-          draftOutputsHref="/projects/discovery/1/draft-outputs"
-        />,
-      );
-      expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
-    });
-
     it('does not render Draft Outputs tab when draftOutputsHref is not provided', () => {
-      mockIsEnabled.mockReturnValue(true);
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -860,7 +794,6 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders Draft Outputs tab with count when draftOutputsCount is provided', () => {
-      mockIsEnabled.mockReturnValue(true);
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}

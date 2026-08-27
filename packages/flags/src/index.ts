@@ -3,8 +3,6 @@ export type Flag =
   | 'QUERY_DEVTOOLS' // react query devtools
   | 'STAGING_MODE'
   | 'COMPLIANCE_NOTIFICATION_LIST'
-  | 'PROJECT_WORKSPACE'
-  | 'PROJECT_OUTPUTS'
   | 'NEW_EVENT_PAGE';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
@@ -12,8 +10,6 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   COMPLIANCE_NOTIFICATION_LIST: '',
-  PROJECT_WORKSPACE: false,
-  PROJECT_OUTPUTS: false,
   // must stay explicitly off by default: envDefaults turn unlisted flags ON
   // in local/test/development, and the React Query devtools icon must only
   // show when deliberately enabled

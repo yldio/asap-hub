@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { css } from '@emotion/react';
 
-import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   UserTeam,
   WorkingGroupMembership,
@@ -243,10 +242,3 @@ export const SharedOutputDropdownWrapper: React.FC<
     />
   );
 };
-
-const SharedOutputDropdown = () => {
-  const user = useCurrentUserCRN();
-  return <SharedOutputDropdownWrapper user={user} />;
-};
-
-export default SharedOutputDropdown;

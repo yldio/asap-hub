@@ -2,10 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { ProjectDetail } from '@asap-hub/model';
 import ProjectDetailPage from '../ProjectDetailPage';
 
-jest.mock('@asap-hub/react-context', () => ({
-  useFlags: () => ({ isEnabled: () => true }),
-}));
-
 const mockProject: ProjectDetail = {
   id: 'project-1',
   title: 'Test Project',

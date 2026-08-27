@@ -5,7 +5,7 @@ import {
   ManuscriptFileResponse,
   ManuscriptVersion,
 } from '@asap-hub/model';
-import { network, projectRouteByType } from '@asap-hub/routing';
+import { projectRouteByType } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
 import { ComponentProps, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -33,7 +33,6 @@ type ManuscriptCardDetailProps = Pick<
   'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
 > & {
   id: string;
-  teamId: string;
   user: User | null;
   isComplianceReviewer: boolean;
   isActiveManuscript: boolean;
@@ -178,7 +177,6 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
 
 const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
   id,
-  teamId,
   user,
   isComplianceReviewer,
   isActiveManuscript,
@@ -210,32 +208,30 @@ const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
         ).workspace({})
       : undefined;
 
-  const teamWorkspaceRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({});
-
-  const resolvedGetEditManuscriptHref = (manuscriptId: string): string =>
+  const resolvedGetEditManuscriptHref = (
+    manuscriptId: string,
+  ): string | undefined =>
     projectWorkspaceRoute?.editManuscript({ manuscriptId }).$ ??
-    getEditManuscriptHref?.(manuscriptId) ??
-    teamWorkspaceRoute.editManuscript({ manuscriptId }).$;
+    getEditManuscriptHref?.(manuscriptId);
 
   const complianceReportRoute =
     projectWorkspaceRoute?.createComplianceReport({ manuscriptId: id }).$ ??
-    getCreateComplianceReportHref?.(id) ??
-    teamWorkspaceRoute.createComplianceReport({ manuscriptId: id }).$;
+    getCreateComplianceReportHref?.(id);
 
   const resubmitManuscriptRoute =
     projectWorkspaceRoute?.resubmitManuscript({ manuscriptId: id }).$ ??
-    getResubmitManuscriptHref?.(id) ??
-    teamWorkspaceRoute.resubmitManuscript({ manuscriptId: id }).$;
+    getResubmitManuscriptHref?.(id);
 
   const handleShareComplianceReport = () => {
-    void navigate(complianceReportRoute, { state: { fromButton: true } });
+    if (complianceReportRoute) {
+      void navigate(complianceReportRoute, { state: { fromButton: true } });
+    }
   };
 
   const handleResubmitManuscript = () => {
-    void navigate(resubmitManuscriptRoute);
+    if (resubmitManuscriptRoute) {
+      void navigate(resubmitManuscriptRoute);
+    }
   };
 
   const canSubmitComplianceReport =
@@ -357,7 +353,6 @@ const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
                 <ManuscriptVersionCard
                   key={index}
                   version={version}
-                  teamId={teamId}
                   manuscriptId={id}
                   isActiveVersion={
                     isActiveManuscript &&

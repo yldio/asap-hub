@@ -4,71 +4,19 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
   createListEventResponse,
-  createListResearchOutputResponse,
-  createResearchOutputResponse,
-  createTeamManuscriptResponse,
   createTeamResponse,
-  createUserResponse,
-  createWorkspaceManuscript,
 } from '@asap-hub/fixtures';
-import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
-import { network, sharedResearch } from '@asap-hub/routing';
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { TeamResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
-import {
-  getDraftResearchOutputs,
-  getResearchOutput,
-  getResearchOutputs,
-} from '../../../shared-research/api';
-import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import { createResearchOutput, getTeam } from '../api';
-import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
-import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { useManuscriptById, useWorkspaceManuscripts } from '../state';
+import { getTeam } from '../api';
 import TeamProfile from '../TeamProfile';
-
-jest.mock('../../../shared-api/impact', () => ({
-  getImpacts: jest
-    .fn()
-    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
-}));
-
-jest.mock('../../../shared-api/category', () => ({
-  getCategories: jest.fn().mockResolvedValue({
-    items: [{ id: 'category-id-1', name: 'My Category' }],
-  }),
-}));
-
-const mockIsEnabled = jest.fn();
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
-beforeEach(() => {
-  mockIsEnabled.mockReturnValue(false);
-});
-afterAll(() => {
-  mockIsEnabled.mockClear();
-});
-
-const manuscriptResponse = {
-  id: 'manuscript-1',
-  title: 'The Manuscript',
-  versions: [{ id: 'manuscript-version-1' }],
-};
 
 const algoliaManuscriptsResponse = {
   total: 1,
@@ -88,21 +36,6 @@ const algoliaManuscriptsResponse = {
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
-  createResearchOutput: jest.fn(),
-  uploadManuscriptFileViaPresignedUrl: jest.fn().mockResolvedValue({
-    filename: 'manuscript.pdf',
-    url: 'https://example.com/manuscript.pdf',
-    id: 'file-id',
-  }),
-  uploadManuscriptFile: jest.fn().mockResolvedValue({
-    filename: 'manuscript.pdf',
-    url: 'https://example.com/manuscript.pdf',
-    id: 'file-id',
-  }),
-  createManuscript: jest
-    .fn()
-    .mockResolvedValue({ title: 'A manuscript', id: '1' }),
-  getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   getManuscripts: jest.fn().mockResolvedValue(algoliaManuscriptsResponse),
 }));
 
@@ -110,50 +43,18 @@ jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
 
-jest.mock('../state', () => ({
-  ...jest.requireActual('../state'),
-  useManuscriptById: jest.fn(),
-  useWorkspaceManuscripts: jest.fn(),
-}));
-
-jest.mock('../../../projects/state', () => ({
-  useProjectById: jest.fn().mockReturnValue(undefined),
-  usePatchProjectById: jest.fn().mockReturnValue(jest.fn()),
-}));
-
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
->;
-const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
-  typeof createResearchOutput
->;
-const mockGetDraftResearchOutputs =
-  getDraftResearchOutputs as jest.MockedFunction<
-    typeof getDraftResearchOutputs
-  >;
-
-const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
-  typeof getResearchOutput
 >;
 
 afterEach(jest.clearAllMocks);
 beforeEach(() => {
   jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-
-  (useManuscriptById as jest.Mock).mockImplementation(() => [
-    createTeamManuscriptResponse(),
-    jest.fn(),
-  ]);
-  (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
-    manuscripts: [],
-    collaborationManuscripts: [],
-  });
 });
 const renderPage = async (
   teamResponse: TeamResponse = createTeamResponse(),
   { teamId = teamResponse.id, currentTime = new Date() } = {},
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
-  initialPath?: string,
 ) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
   mockGetTeam.mockImplementation(async (id) =>
@@ -168,22 +69,11 @@ const renderPage = async (
         path: `${network.template}${network({}).teams.template}${
           network({}).teams({}).team.template
         }/*`,
-        element: (
-          <ManuscriptToastProvider>
-            <EligibilityReasonProvider>
-              <TeamProfile currentTime={currentTime} />
-            </EligibilityReasonProvider>
-          </ManuscriptToastProvider>
-        ),
-      },
-      {
-        path:
-          sharedResearch.template + sharedResearch({}).researchOutput.template,
-        element: <div>Research Output Page</div>,
+        element: <TeamProfile currentTime={currentTime} />,
       },
     ],
     {
-      initialEntries: [initialPath ?? defaultInitialPath],
+      initialEntries: [defaultInitialPath],
     },
   );
 
@@ -202,7 +92,7 @@ const renderPage = async (
     () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     { timeout: 30_000 },
   );
-  return { container, router };
+  return { container };
 };
 
 it('renders the header info', async () => {
@@ -227,599 +117,6 @@ it('renders the about info', async () => {
   expect(description).toBeVisible();
 });
 
-it('navigates to the outputs tab', async () => {
-  jest.useRealTimers();
-  const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
-    typeof getResearchOutputs
-  >;
-  mockGetResearchOutputs.mockResolvedValue({
-    ...createResearchOutputListAlgoliaResponse(1),
-  });
-  await renderPage();
-
-  await userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
-  expect(await screen.findByText(/Output 1/i)).toBeVisible();
-  jest.useFakeTimers();
-});
-
-it('navigates to the outputs tab and is able to search', async () => {
-  jest.useRealTimers();
-  const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
-    typeof getResearchOutputs
-  >;
-  mockGetResearchOutputs.mockResolvedValue({
-    ...createResearchOutputListAlgoliaResponse(1),
-  });
-  await renderPage();
-
-  await userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
-  expect(await screen.findByText(/Output 1/i)).toBeVisible();
-  expect(await screen.findByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Enter a keyword, method, resource…',
-  );
-  await userEvent.type(screen.getByRole('searchbox'), 'test');
-  expect(await screen.findByRole('searchbox')).toHaveAttribute('value', 'test');
-  jest.useFakeTimers();
-});
-
-it('does not show workspace tab if user is not part of the team and is not hub Staff', async () => {
-  await renderPage(
-    {
-      ...createTeamResponse(),
-    },
-    {},
-    {
-      role: 'Grantee',
-      teams: [
-        {
-          id: 'another-team',
-          role: 'Project Manager',
-        },
-      ],
-    },
-  );
-
-  expect(
-    screen.queryByText(/Team Workspace/i, { selector: 'nav *' }),
-  ).not.toBeInTheDocument();
-});
-
-it('shows workspace tab if user is not part of the team and is hub Staff', async () => {
-  await renderPage(
-    {
-      ...createTeamResponse(),
-    },
-    {},
-    {
-      role: 'Staff',
-      teams: [
-        {
-          id: 'another-team',
-          role: 'Project Manager',
-        },
-      ],
-    },
-  );
-
-  const workspaceTab = await screen.findByText(
-    /Team Workspace/i,
-    { selector: 'nav *' },
-    { timeout: 5000 },
-  );
-  expect(workspaceTab).toBeVisible();
-});
-
-it('navigates to the workspace tab', async () => {
-  jest.useRealTimers();
-  await renderPage(
-    {
-      ...createTeamResponse(),
-      tools: [],
-    },
-    {},
-    {
-      teams: [
-        {
-          id: 't0',
-          role: 'Project Manager',
-        },
-      ],
-    },
-  );
-
-  await userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
-  expect(await screen.findByText(/tools/i)).toBeVisible();
-  jest.useFakeTimers();
-});
-
-it('displays manuscript success toast message and user can dismiss toast', async () => {
-  jest.useRealTimers();
-  jest.spyOn(console, 'error').mockImplementation();
-  const user = userEvent.setup({ delay: null });
-
-  await renderPage(
-    {
-      ...createTeamResponse(),
-      tools: [],
-    },
-    {},
-    {
-      teams: [
-        {
-          id: 't0',
-          role: 'Project Manager',
-        },
-      ],
-    },
-  );
-
-  await user.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
-
-  expect(await screen.findByText(/tools/i)).toBeVisible();
-
-  await user.click(screen.getByText(/Submit Manuscript/i));
-
-  await user.click(screen.getByText(/Yes/i));
-
-  await user.click(
-    screen.getByText(
-      'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
-    ),
-  );
-  await user.click(screen.getByText(/Continue/i));
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-
-  const submitButton = screen.getByRole('button', { name: /^Submit$/i });
-
-  await waitFor(() => {
-    expect(submitButton).toBeVisible();
-  });
-
-  fireEvent.change(
-    screen.getByRole('textbox', { name: /Title of Manuscript/i }),
-    { target: { value: 'manuscript title' } },
-  );
-  const typeTextbox = screen.getByRole('combobox', {
-    name: /Type of Manuscript/i,
-  });
-  await user.type(typeTextbox, 'Original');
-  await user.type(typeTextbox, '{Enter}');
-  typeTextbox.blur();
-
-  const lifecycleTextbox = screen.getByRole('combobox', {
-    name: /Where is the manuscript in the life cycle/i,
-  });
-  await user.type(lifecycleTextbox, 'Typeset proof');
-  await user.type(lifecycleTextbox, '{Enter}');
-  lifecycleTextbox.blur();
-
-  const testFile = new File(['file content'], 'file.txt', {
-    type: 'text/plain',
-  });
-  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
-  const keyResourceTableInput = screen.getByLabelText(
-    /Upload Key Resource Table/i,
-  );
-
-  await user.upload(manuscriptFileInput, testFile);
-  await user.upload(keyResourceTableInput, testFile);
-
-  const descriptionTextbox = screen.getByRole('textbox', {
-    name: /Manuscript Description/i,
-  });
-  fireEvent.change(descriptionTextbox, {
-    target: { value: 'Some description' },
-  });
-
-  const impactInput = screen.getByRole('combobox', {
-    name: /Impact/i,
-  });
-  await user.type(impactInput, 'My Imp');
-  await user.click(
-    await screen.findByText(/^My Impact$/i, {}, { timeout: 5000 }),
-  );
-  await user.type(
-    screen.getByRole('textbox', { name: /Lay Impact Statement/i }),
-    'an impact statement',
-  );
-
-  const categoryInput = screen.getByRole('combobox', {
-    name: /Category/i,
-  });
-  await user.type(categoryInput, 'My Cat');
-  await user.click(
-    await screen.findByText(/^My Category$/i, {}, { timeout: 5000 }),
-  );
-
-  fireEvent.change(screen.getByLabelText(/First Authors/i), {
-    target: { value: 'Jane Doe' },
-  });
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-
-  await user.click(await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }));
-
-  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  fireEvent.change(screen.getByLabelText(/Jane Doe Email/i), {
-    target: { value: 'jane@doe.com' },
-  });
-
-  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
-  for (const button of within(quickChecks).getAllByText('Yes')) {
-    // eslint-disable-next-line no-await-in-loop -- Sequential clicks are intentional for simulating user interaction
-    await user.click(button);
-  }
-
-  await act(async () => {
-    await user.click(await screen.findByRole('button', { name: /Submit/ }));
-  });
-
-  await user.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
-
-  expect(
-    await screen.findByText('Manuscript submitted successfully.'),
-  ).toBeInTheDocument();
-
-  await user.click(screen.getByLabelText('Close'));
-
-  expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
-  jest.useFakeTimers();
-}, 90000);
-
-it('does not allow navigating to the workspace tab when team tools are not available', async () => {
-  await renderPage({
-    ...createTeamResponse(),
-    tools: undefined,
-  });
-
-  expect(
-    screen.queryByText(/workspace/i, { selector: 'nav *' }),
-  ).not.toBeInTheDocument();
-});
-
-describe('Share Output', () => {
-  it('does not show share outputs button when flag PROJECT_OUTPUTS is enabled', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
-    await renderPage(createTeamResponse());
-    expect(screen.queryByText(/share an output/i)).not.toBeInTheDocument();
-  });
-
-  it('shows share outputs button and page when the user has permissions user clicks an option and flag PROJECT_OUTPUTS is not enabled', async () => {
-    mockIsEnabled.mockReturnValue(false);
-    jest.useRealTimers();
-    jest.spyOn(console, 'error').mockImplementation(); // Suppress act() warnings from Suspense
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-
-    const { router } = await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'ASAP Staff',
-          },
-        ],
-      },
-      network({}).teams({}).team({ teamId: teamResponse.id }).$,
-    );
-    expect(screen.getByText(/about/i)).toBeInTheDocument();
-    await userEvent.click(await screen.findByText(/share an output/i));
-    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    await userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(
-        `/network/teams/${teamResponse.id}/create-output/article`,
-      );
-    });
-    expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
-    // Wait for the actual form to appear, not just loading to disappear
-    expect(
-      await screen.findByText(/How would you like to create your output/i),
-    ).toBeVisible();
-    jest.useFakeTimers();
-  });
-
-  it('does not show the share outputs button when the user does not have', async () => {
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-
-    await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [],
-      },
-      network({}).teams({}).team({ teamId: teamResponse.id }).$,
-    );
-    expect(screen.getByText(/about/i)).toBeInTheDocument();
-    expect(screen.queryByText(/share an output/i)).toBeNull();
-  });
-});
-
-describe('Duplicate Output', () => {
-  it('allows a user who is a member of the primary team duplicate the output', async () => {
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-    const researchOutput: ResearchOutputTeamResponse = {
-      ...createResearchOutputResponse(),
-      id: '123',
-      workingGroups: undefined,
-      teams: [
-        {
-          displayName: teamResponse.displayName,
-          id: teamResponse.id,
-          teamType: 'Discovery Team',
-        },
-      ],
-      title: 'Example',
-      link: 'http://example.com',
-    };
-    mockGetResearchOutput.mockResolvedValue(researchOutput);
-
-    const { router } = await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({})
-        .teams({})
-        .team({ teamId: teamResponse.id })
-        .duplicateOutput({ id: researchOutput.id }).$,
-    );
-    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
-      'Copy of Example',
-    );
-    expect(screen.getByLabelText(/URL/i)).toHaveValue('');
-    expect(router.state.location.pathname).toEqual(
-      `/network/teams/${teamResponse.id}/duplicate/${researchOutput.id}`,
-    );
-  });
-  it('will create a new research output when saved', async () => {
-    jest.useRealTimers();
-    const user = userEvent.setup({ delay: null });
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-    const researchOutput: ResearchOutputTeamResponse = {
-      ...createResearchOutputResponse(),
-      id: '123',
-      workingGroups: undefined,
-      teams: [
-        {
-          displayName: teamResponse.displayName,
-          id: teamResponse.id,
-          teamType: 'Discovery Team',
-        },
-      ],
-      labs: [{ id: 'l0', name: 'Example 1' }],
-      title: 'Example',
-      link: 'http://example.com',
-    };
-    mockGetResearchOutput.mockResolvedValue(researchOutput);
-    mockCreateResearchOutput.mockResolvedValue(researchOutput);
-
-    await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({})
-        .teams({})
-        .team({ teamId: teamResponse.id })
-        .duplicateOutput({ id: researchOutput.id }).$,
-    );
-    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
-      'Copy of Example',
-    );
-    await user.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    await user.click(screen.getByText(/save draft/i));
-    await user.click(await screen.findByText(/keep and/i));
-    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'Copy of Example',
-        link: 'http://example.com',
-      }),
-      expect.anything(),
-    );
-    jest.useFakeTimers();
-  }, 30000);
-
-  it('requires authors when duplicating a team-based project Article output', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-    const researchOutput: ResearchOutputTeamResponse = {
-      ...createResearchOutputResponse(),
-      id: '123',
-      documentType: 'Article',
-      workingGroups: undefined,
-      teams: [
-        {
-          displayName: teamResponse.displayName,
-          id: teamResponse.id,
-          teamType: 'Discovery Team',
-          project: {
-            id: 'project-1',
-            title: 'Example Project',
-            projectType: 'Trainee Project',
-            projectId: 'TP1',
-          },
-        },
-      ],
-      title: 'Example',
-      link: 'http://example.com',
-    };
-    mockGetResearchOutput.mockResolvedValue(researchOutput);
-
-    await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({})
-        .teams({})
-        .team({ teamId: teamResponse.id })
-        .duplicateOutput({ id: researchOutput.id }).$,
-    );
-
-    expect(await screen.findByLabelText(/Authors\(required\)/i)).toBeVisible();
-    expect(
-      screen.queryByLabelText(/Authors\(optional\)/i),
-    ).not.toBeInTheDocument();
-  });
-
-  it('will show a page not found if research output does not exist', async () => {
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-
-    mockGetResearchOutput.mockResolvedValue(undefined);
-
-    await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({})
-        .teams({})
-        .team({ teamId: teamResponse.id })
-        .duplicateOutput({ id: 'fake' }).$,
-    );
-    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
-  });
-});
-
-describe('Create Compliance Report', () => {
-  it('allows a user who is an ASAP staff and an Open Science Team Member to view Share Compliance Report button', async () => {
-    jest.useRealTimers();
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-
-    (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
-      manuscripts: [createWorkspaceManuscript()],
-      collaborationManuscripts: [],
-    });
-    userResponse.role = 'Staff';
-    userResponse.openScienceTeamMember = true;
-
-    await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
-    );
-
-    await userEvent.click(screen.getByTestId('collapsible-button'));
-    expect(
-      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
-    ).toBeInTheDocument();
-    jest.useFakeTimers();
-  });
-
-  it('allows a user who is an ASAP staff and an Open Science Team Member to create a compliance report', async () => {
-    jest.useRealTimers();
-    const user = userEvent.setup({ delay: null });
-    const teamResponse = createTeamResponse();
-    const userResponse = createUserResponse({}, 1);
-    const teamManuscript = createTeamManuscriptResponse();
-    (useWorkspaceManuscripts as jest.Mock).mockReturnValue({
-      manuscripts: [{ ...createWorkspaceManuscript(), id: teamManuscript.id }],
-      collaborationManuscripts: [],
-    });
-    userResponse.role = 'Staff';
-    userResponse.openScienceTeamMember = true;
-
-    const { router } = await renderPage(
-      teamResponse,
-      { teamId: teamResponse.id, currentTime: new Date() },
-      {
-        ...userResponse,
-        teams: [
-          {
-            ...userResponse.teams[0],
-            id: teamResponse.id,
-            role: 'Key Personnel',
-          },
-        ],
-      },
-      network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
-    );
-
-    await user.click(screen.getByTestId('collapsible-button'));
-
-    await user.click(
-      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
-    );
-
-    expect(
-      await screen.findByText(
-        /Share the compliance report associated with this manuscript./,
-      ),
-    ).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(
-        `/network/teams/${teamResponse.id}/workspace/create-compliance-report/${teamManuscript.id}`,
-      );
-    });
-    jest.useFakeTimers();
-  }, 30000);
-});
-
 it('renders the 404 page for a missing team', async () => {
   await renderPage({ ...createTeamResponse(), id: '42' }, { teamId: '1337' });
   const notFound = await screen.findByText(
@@ -835,6 +132,10 @@ it('deep links to the teams list', async () => {
     ...createTeamResponse({ teamMembers: 10 }),
     id: '42',
   });
+
+  expect(
+    await screen.findByRole('heading', { name: 'Team Members' }),
+  ).toBeVisible();
 
   const anchor = screen.getByLabelText(/\+\d/i).closest('a');
   expect(anchor).toBeVisible();
@@ -905,97 +206,6 @@ it.each`
     },
   });
   jest.useFakeTimers();
-});
-
-describe('The draft output tab', () => {
-  it('does not renders the draft outputs tab for non team members', async () => {
-    mockGetDraftResearchOutputs.mockResolvedValue(
-      createListResearchOutputResponse(10),
-    );
-    await renderPage(undefined, undefined, {
-      ...createUserResponse(),
-      teams: [],
-    });
-    expect(screen.queryByText('Draft Outputs')).toBeNull();
-  });
-  it('renders the draft outputs tab for team members', async () => {
-    jest.useRealTimers();
-    mockGetDraftResearchOutputs.mockResolvedValue({
-      ...createListResearchOutputResponse(10),
-      items: createListResearchOutputResponse(10).items.map(
-        (output, index) => ({ ...output, title: `Draft Output${index}` }),
-      ),
-    });
-    await renderPage(
-      {
-        ...createTeamResponse(),
-        id: 'example123',
-      },
-      {},
-      {
-        ...createUserResponse(),
-        teams: [
-          {
-            id: 'example123',
-            role: 'Key Personnel',
-          },
-        ],
-      },
-    );
-    await userEvent.click(screen.getByText('Draft Outputs (10)'));
-    await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
-    expect(await screen.findByText('Draft Output0')).toBeVisible();
-    jest.useFakeTimers();
-  });
-  it('does not render the draft outputs tab if the team is inactive', async () => {
-    mockGetDraftResearchOutputs.mockResolvedValue({
-      ...createListResearchOutputResponse(10),
-      items: createListResearchOutputResponse(10).items.map(
-        (output, index) => ({ ...output, title: `Draft Output${index}` }),
-      ),
-    });
-    await renderPage(
-      {
-        ...createTeamResponse(),
-        id: 'example123',
-        inactiveSince: '2023-01-01',
-      },
-      {},
-      {
-        ...createUserResponse(),
-        teams: [
-          {
-            id: 'example123',
-            role: 'Key Personnel',
-          },
-        ],
-      },
-    );
-    expect(screen.queryByText('Draft Outputs (10)')).not.toBeInTheDocument();
-  });
-
-  it('renders zero draft outputs tab for team members', async () => {
-    mockGetDraftResearchOutputs.mockResolvedValue(
-      createListResearchOutputResponse(0),
-    );
-    await renderPage(
-      {
-        ...createTeamResponse(),
-        id: 'example123',
-      },
-      {},
-      {
-        ...createUserResponse(),
-        teams: [
-          {
-            id: 'example123',
-            role: 'Key Personnel',
-          },
-        ],
-      },
-    );
-    expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
-  });
 });
 
 describe('The compliance tab', () => {
@@ -1082,24 +292,13 @@ describe('The project banner', () => {
     localStorage.removeItem(dismissedKey);
   });
 
-  it('shows the banner when PROJECT_OUTPUTS is enabled and the team has a linked project', async () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
+  it('shows the banner when the team has a linked project', async () => {
     await renderPage(teamWithProject);
     expect(screen.getByText(bannerText)).toBeVisible();
   });
 
-  it('does not show the banner when PROJECT_OUTPUTS is disabled', async () => {
-    await renderPage(teamWithProject);
-    expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
-  });
-
   it('hides the banner and persists the dismissal when the close button is clicked', async () => {
     jest.useRealTimers();
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
     await renderPage(teamWithProject);
 
     await userEvent.click(screen.getByLabelText('Close'));
@@ -1111,9 +310,6 @@ describe('The project banner', () => {
 
   it('does not show the banner when it was previously dismissed', async () => {
     localStorage.setItem(dismissedKey, 'true');
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
     await renderPage(teamWithProject);
     expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
   });

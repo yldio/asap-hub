@@ -39,7 +39,6 @@ afterAll(jest.clearAllMocks);
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
   version: baseVersion,
-  teamId: 'team-id-0',
   manuscriptId: 'manuscript-1',
   openDiscussionTab: jest.fn(),
 };

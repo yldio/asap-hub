@@ -26,13 +26,6 @@ import { getManuscripts, updateManuscript } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 
-const mockIsEnabled = jest.fn();
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
 mockConsoleError();
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -142,7 +135,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
   jest.resetModules();
-  mockIsEnabled.mockReturnValue(false);
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
@@ -163,11 +155,7 @@ it('renders error message when the request is not a 2XX', async () => {
   });
 });
 
-it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
-  mockIsEnabled.mockImplementation(
-    (flag: string) => flag === 'PROJECT_WORKSPACE',
-  );
-
+it('shows the project column', async () => {
   mockGetManuscripts.mockResolvedValue({
     items: [
       {
@@ -194,24 +182,7 @@ it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
   );
 });
 
-it('does not show project name in the search placeholder when PROJECT_WORKSPACE is disabled', async () => {
-  mockGetManuscripts.mockResolvedValue({
-    items: [createPartialManuscriptResponse()],
-    total: 1,
-  });
-
-  await renderCompliancePage();
-
-  expect(screen.getByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Enter team name, ID, assigned users...',
-  );
-});
-
-it('shows project name in the search placeholder when PROJECT_WORKSPACE is enabled', async () => {
-  mockIsEnabled.mockImplementation(
-    (flag: string) => flag === 'PROJECT_WORKSPACE',
-  );
+it('shows project name in the search placeholder', async () => {
   mockGetManuscripts.mockResolvedValue({
     items: [createPartialManuscriptResponse()],
     total: 1,
@@ -270,7 +241,6 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
       manuscriptId,
       {
         notificationList: '',
-        useProjectBasedEmail: false,
         status: 'Addendum Required',
       },
       expect.any(String),
@@ -351,7 +321,6 @@ it('does not display success message when apc coverage details are updated', asy
         apcAmountPaid: undefined,
         declinedReason: undefined,
         notificationList: '',
-        useProjectBasedEmail: false,
       },
       expect.any(String),
     );
@@ -407,7 +376,6 @@ it('manuscripts remain the same when there is not a match between the manuscript
       {
         notificationList: '',
         status: 'Addendum Required',
-        useProjectBasedEmail: false,
       },
       expect.any(String),
     );
@@ -469,7 +437,6 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
       {
         notificationList: '',
         status: 'Addendum Required',
-        useProjectBasedEmail: false,
       },
       expect.any(String),
     );

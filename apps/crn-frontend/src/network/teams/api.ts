@@ -442,14 +442,10 @@ export const getManuscriptWorkspaceUrl = async (
   id: string,
   authorization: string,
   tab?: ManuscriptWorkspaceTab,
-  projectWorkspaceEnabled?: boolean,
 ): Promise<ManuscriptWorkspaceUrlResponse | undefined> => {
   const params = new URLSearchParams();
   if (tab) {
     params.set('tab', tab);
-  }
-  if (projectWorkspaceEnabled) {
-    params.set('projectWorkspaceEnabled', 'true');
   }
   const query = params.toString() ? `?${params.toString()}` : '';
   const resp = await fetch(

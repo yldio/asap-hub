@@ -7,12 +7,6 @@ type ProjectDetailWithFetch = ProjectDetail & {
   fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
-const mockIsEnabled = jest.fn();
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
 const mockFetchArticles = jest.fn(() => Promise.resolve([]));
 
 const baseProject = {
@@ -38,10 +32,6 @@ const baseProject = {
 };
 
 describe('ProjectDetailAbout', () => {
-  beforeEach(() => {
-    mockIsEnabled.mockReturnValue(false);
-  });
-
   describe('Overview Section', () => {
     it('always renders the overview section', () => {
       const discoveryProject: ProjectDetailWithFetch = {

@@ -65,13 +65,11 @@ export const manuscriptRouteFactory = (
 
       const { manuscriptId } = validateManuscriptParameters(params);
       const tab = parseWorkspaceTab(query.tab);
-      const projectWorkspaceEnabled = query.projectWorkspaceEnabled === 'true';
 
       const result = await manuscriptController.fetchWorkspaceUrl(
         manuscriptId,
         loggedInUser,
         tab,
-        projectWorkspaceEnabled,
       );
 
       res.json(result);

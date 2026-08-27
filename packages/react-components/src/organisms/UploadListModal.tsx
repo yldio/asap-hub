@@ -323,6 +323,14 @@ const addSuggestionButtonStyles = css({
   ...buttonIconGapReset,
 });
 
+const emptyResultStyles = css({
+  margin: 0,
+  color: lead.rgb,
+  fontSize: rem(17),
+  fontWeight: 400,
+  lineHeight: rem(24),
+});
+
 const unmatchedHelpStyles = css({
   margin: 0,
   color: lead.rgb,
@@ -384,7 +392,13 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const allowedExtensions = getAllowedExtensions(accept);
   const maxBytes = maxFileSizeMb * 1000 * 1000;
 
-  const runUpload = (nextFiles: File[]) => {
+  // selectionError is whatever the file selection itself decided (size or
+  // extension). It is restored on success so a successful parse clears only a
+  // previous read failure, not the warning about the files that were skipped.
+  const runUpload = (
+    nextFiles: File[],
+    selectionError: string | null = null,
+  ) => {
     setFiles(nextFiles);
     // A new file set invalidates the per-team edits made against the old result.
     setAddedSuggestionIds(new Set());
@@ -402,12 +416,14 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       .then((uploadResult) => {
         if (seq === uploadSeq.current) {
           setResult(uploadResult);
+          setError(selectionError);
           setIsUploading(false);
         }
       })
       .catch(() => {
         if (seq === uploadSeq.current) {
           setResult(null);
+          setError('Something went wrong reading this file. Please try again.');
           setIsUploading(false);
         }
       });
@@ -422,18 +438,16 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       (file) =>
         hasAllowedExtension(file, allowedExtensions) && file.size > maxBytes,
     );
+    let selectionError: string | null = null;
     if (tooLarge) {
-      setError(
-        `The file size exceeds the limit of ${maxFileSizeMb} MB. Please upload a smaller file.`,
-      );
+      selectionError = `The file size exceeds the limit of ${maxFileSizeMb} MB. Please upload a smaller file.`;
     } else if (valid.length < selected.length) {
-      setError('CSV or XLSX files only.');
-    } else {
-      setError(null);
+      selectionError = 'CSV or XLSX files only.';
     }
+    setError(selectionError);
     if (valid.length > 0) {
       setIsUploading(true);
-      runUpload([...files, ...valid]);
+      runUpload([...files, ...valid], selectionError);
     }
   };
 
@@ -467,6 +481,14 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const totalTeams = result
     ? result.matched.length + result.alreadyInCount + result.unmatched.length
     : 0;
+
+  // "Already in" Teams are only ever a count, so a list whose names are all
+  // already on the attendance table leaves both sections empty.
+  const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
+  const emptyResultMessage =
+    totalTeams === 0
+      ? 'No Team names found. Check that the file has a Team column.'
+      : `All ${totalTeams} Teams in this list are already in the attendance table.`;
 
   const isDirty = files.length > 0 || matchedTeams.length > 0;
   const addEnabled = matchedTeams.length > 0 && !isSaving;
@@ -588,143 +610,153 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               <span>{result.alreadyInCount} already in</span>
             </div>
 
-            <div css={resultCardStyles(!isCancelling)}>
-              {matchedTeams.length > 0 && (
-                <>
-                  <button
-                    type="button"
-                    css={sectionHeaderStyles}
-                    aria-expanded={matchedOpen}
-                    onClick={() => setMatchedOpen((open) => !open)}
-                  >
-                    <span css={[sectionHeaderLabelStyles, matchedLabelStyles]}>
-                      {tickSmallIcon}
-                      <span>
-                        <strong>{matchedTeams.length} teams</strong> will be
-                        added and marked if attended
-                      </span>
-                    </span>
-                    <span css={chevronStyles(matchedOpen)}>
-                      {chevronDownIcon}
-                    </span>
-                  </button>
-                  {matchedOpen && (
-                    <div css={sectionBodyStyles}>
-                      {matchedTeams.map((team) => (
-                        <div key={team.teamId} css={matchedRowStyles}>
-                          <span css={matchedTeamStyles}>
-                            {teamIcon(team.teamType)}
-                            <Link
-                              href={
-                                network({})
-                                  .teams({})
-                                  .team({ teamId: team.teamId }).$
-                              }
-                            >
-                              <span css={matchedTeamNameStyles}>
-                                {team.teamName}
-                              </span>
-                            </Link>
-                          </span>
-                          <Button
-                            noMargin
-                            enabled={!isCancelling}
-                            aria-label={`Remove ${team.teamName}`}
-                            onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={deleteButtonStyles(!isCancelling)}
-                          >
-                            {binIcon}
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
+            {!hasSections && (
+              <p css={emptyResultStyles}>{emptyResultMessage}</p>
+            )}
 
-              {matchedTeams.length > 0 && remainingUnmatched.length > 0 && (
-                <div css={dividerStyles} />
-              )}
-
-              {remainingUnmatched.length > 0 && (
-                <>
-                  <button
-                    type="button"
-                    css={sectionHeaderStyles}
-                    aria-expanded={unmatchedOpen}
-                    onClick={() => setUnmatchedOpen((open) => !open)}
-                  >
-                    <span
-                      css={[sectionHeaderLabelStyles, notMatchedLabelStyles]}
+            {hasSections && (
+              <div css={resultCardStyles(!isCancelling)}>
+                {matchedTeams.length > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      css={sectionHeaderStyles}
+                      aria-expanded={matchedOpen}
+                      onClick={() => setMatchedOpen((open) => !open)}
                     >
-                      {crossSmallIcon}
-                      <span>
-                        <strong>{remainingUnmatched.length} not matched</strong>{' '}
-                        • will not be added
+                      <span
+                        css={[sectionHeaderLabelStyles, matchedLabelStyles]}
+                      >
+                        {tickSmallIcon}
+                        <span>
+                          <strong>{matchedTeams.length} teams</strong> will be
+                          added and marked if attended
+                        </span>
                       </span>
-                    </span>
-                    <span css={chevronStyles(unmatchedOpen)}>
-                      {chevronDownIcon}
-                    </span>
-                  </button>
-                  {unmatchedOpen && (
-                    <div css={sectionBodyStyles}>
-                      <div css={unmatchedRowsStyles}>
-                        {remainingUnmatched.map((team) => {
-                          const { suggestion } = team;
-                          return (
-                            <div key={team.name} css={unmatchedRowStyles}>
-                              <span css={unmatchedTextStyles}>
-                                “{team.name}”{' '}
-                                {suggestion ? (
-                                  <span css={unmatchedMetaStyles}>
-                                    • did you mean{' '}
-                                    <Link
-                                      href={
-                                        network({}).teams({}).team({
-                                          teamId: suggestion.teamId,
-                                        }).$
-                                      }
-                                    >
-                                      <span css={suggestionLinkStyles}>
-                                        {suggestion.teamName}
-                                      </span>
-                                    </Link>
-                                    ?
-                                  </span>
-                                ) : (
-                                  <span css={unmatchedMetaStyles}>
-                                    • no close match
-                                  </span>
-                                )}
-                              </span>
-                              {suggestion && (
-                                <Button
-                                  small
-                                  noMargin
-                                  enabled={!isCancelling}
-                                  overrideStyles={addSuggestionButtonStyles}
-                                  onClick={() =>
-                                    promoteSuggestion(suggestion.teamId)
-                                  }
-                                >
-                                  {plusIcon}
-                                  Add
-                                </Button>
-                              )}
-                            </div>
-                          );
-                        })}
+                      <span css={chevronStyles(matchedOpen)}>
+                        {chevronDownIcon}
+                      </span>
+                    </button>
+                    {matchedOpen && (
+                      <div css={sectionBodyStyles}>
+                        {matchedTeams.map((team) => (
+                          <div key={team.teamId} css={matchedRowStyles}>
+                            <span css={matchedTeamStyles}>
+                              {teamIcon(team.teamType)}
+                              <Link
+                                href={
+                                  network({})
+                                    .teams({})
+                                    .team({ teamId: team.teamId }).$
+                                }
+                              >
+                                <span css={matchedTeamNameStyles}>
+                                  {team.teamName}
+                                </span>
+                              </Link>
+                            </span>
+                            <Button
+                              noMargin
+                              enabled={!isCancelling}
+                              aria-label={`Remove ${team.teamName}`}
+                              onClick={() => removeMatchedTeam(team.teamId)}
+                              overrideStyles={deleteButtonStyles(!isCancelling)}
+                            >
+                              {binIcon}
+                            </Button>
+                          </div>
+                        ))}
                       </div>
-                      <p css={unmatchedHelpStyles}>
-                        Add a suggested team to include it, or fix the name in
-                        your file and upload again.
-                      </p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                    )}
+                  </>
+                )}
+
+                {matchedTeams.length > 0 && remainingUnmatched.length > 0 && (
+                  <div css={dividerStyles} />
+                )}
+
+                {remainingUnmatched.length > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      css={sectionHeaderStyles}
+                      aria-expanded={unmatchedOpen}
+                      onClick={() => setUnmatchedOpen((open) => !open)}
+                    >
+                      <span
+                        css={[sectionHeaderLabelStyles, notMatchedLabelStyles]}
+                      >
+                        {crossSmallIcon}
+                        <span>
+                          <strong>
+                            {remainingUnmatched.length} not matched
+                          </strong>{' '}
+                          • will not be added
+                        </span>
+                      </span>
+                      <span css={chevronStyles(unmatchedOpen)}>
+                        {chevronDownIcon}
+                      </span>
+                    </button>
+                    {unmatchedOpen && (
+                      <div css={sectionBodyStyles}>
+                        <div css={unmatchedRowsStyles}>
+                          {remainingUnmatched.map((team) => {
+                            const { suggestion } = team;
+                            return (
+                              <div key={team.name} css={unmatchedRowStyles}>
+                                <span css={unmatchedTextStyles}>
+                                  “{team.name}”{' '}
+                                  {suggestion ? (
+                                    <span css={unmatchedMetaStyles}>
+                                      • did you mean{' '}
+                                      <Link
+                                        href={
+                                          network({}).teams({}).team({
+                                            teamId: suggestion.teamId,
+                                          }).$
+                                        }
+                                      >
+                                        <span css={suggestionLinkStyles}>
+                                          {suggestion.teamName}
+                                        </span>
+                                      </Link>
+                                      ?
+                                    </span>
+                                  ) : (
+                                    <span css={unmatchedMetaStyles}>
+                                      • no close match
+                                    </span>
+                                  )}
+                                </span>
+                                {suggestion && (
+                                  <Button
+                                    small
+                                    noMargin
+                                    enabled={!isCancelling}
+                                    overrideStyles={addSuggestionButtonStyles}
+                                    onClick={() =>
+                                      promoteSuggestion(suggestion.teamId)
+                                    }
+                                  >
+                                    {plusIcon}
+                                    Add
+                                  </Button>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <p css={unmatchedHelpStyles}>
+                          Add a suggested team to include it, or fix the name in
+                          your file and upload again.
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

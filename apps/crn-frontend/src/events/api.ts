@@ -8,8 +8,12 @@ import {
   EventResponse,
   EventUpdateDetailsRequest,
   ListEventResponse,
+  TeamListItemResponse,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import { getAlgoliaTeams } from '../network/teams/api';
+
+const teamsForMatchingPageSize = 1000;
 
 export const getEvents = async (
   algoliaClient: AlgoliaClient<'crn'>,
@@ -86,4 +90,29 @@ export const patchEvent = async (
     );
   }
   return resp.json();
+};
+
+// One Algolia pass per upload instead of one query per uploaded name: the whole
+// corpus is resolved in memory by matchTeamNames.
+export const getTeamsForMatching = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+): Promise<TeamListItemResponse[]> => {
+  const items: TeamListItemResponse[] = [];
+  let currentPage = 0;
+  let total = 0;
+
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    const result = await getAlgoliaTeams(algoliaClient, {
+      searchQuery: '',
+      teamType: 'all',
+      currentPage,
+      pageSize: teamsForMatchingPageSize,
+    });
+    items.push(...result.items);
+    total = result.total;
+    currentPage += 1;
+  } while (items.length < total && items.length > 0);
+
+  return items;
 };

@@ -8,6 +8,7 @@ import {
   createCalendarResponse,
   createEventResponse,
   createInterestGroupResponse,
+  createTeamListItemResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 import { disable, enable } from '@asap-hub/flags';
@@ -19,7 +20,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Event from '../Event';
-import { getEvent, patchEvent } from '../api';
+import { getEvent, getTeamsForMatching, patchEvent } from '../api';
 import { downloadEventSpeakers } from '../export';
 
 jest.mock('../api');
@@ -39,10 +40,14 @@ const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
 const mockPatchEvent = patchEvent as jest.MockedFunction<typeof patchEvent>;
+const mockGetTeamsForMatching = getTeamsForMatching as jest.MockedFunction<
+  typeof getTeamsForMatching
+>;
 beforeEach(() => {
   disable('NEW_EVENT_PAGE');
   mockGetEvent.mockClear();
   mockPatchEvent.mockClear();
+  mockGetTeamsForMatching.mockClear();
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,
@@ -384,6 +389,124 @@ describe('the NEW_EVENT_PAGE flag', () => {
       await userEvent.type(getByRole('combobox'), 'zzz');
 
       expect(await findByText('Sorry, no matches for zzz.')).toBeVisible();
+    });
+
+    describe('upload a list', () => {
+      const eventWithOneTeam = () => ({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+
+      const openUploadList = async () => {
+        const rendered = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+        await userEvent.click(
+          await rendered.findByRole('button', { name: 'Edit attendance' }),
+        );
+        await userEvent.click(
+          rendered.getByRole('button', { name: /Upload a List/i }),
+        );
+        return rendered;
+      };
+
+      const uploadCsv = async (container: HTMLElement, contents: string) => {
+        const fileInput = container.querySelector(
+          'input[type="file"]',
+        ) as HTMLInputElement;
+        await userEvent.upload(
+          fileInput,
+          new File([contents], 'teams.csv', { type: 'text/csv' }),
+        );
+      };
+
+      it('hides the upload entry point from a non tech support user', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+
+        const { findByText, queryByRole } = render(<Event />, {
+          wrapper: createWrapper(),
+        });
+
+        expect(await findByText('Team One')).toBeVisible();
+        expect(
+          queryByRole('button', { name: /Upload a List/i }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('matches uploaded names and lists the ones the hub does not have', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockGetTeamsForMatching.mockResolvedValue([
+          { ...createTeamListItemResponse(), id: 't2', displayName: 'Alessi' },
+        ]);
+
+        const { container, findByRole, findByText } = await openUploadList();
+        await uploadCsv(container, 'Team Name\nTeam Alessi\nNo Such Team\n');
+
+        expect(await findByText('2 Teams')).toBeVisible();
+        expect(
+          await findByRole('button', {
+            name: /will be added and marked if attended/,
+          }),
+        ).toBeVisible();
+        expect(await findByText(/1 not matched/)).toBeVisible();
+      });
+
+      it('counts a team already on the attendance list instead of adding it', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockGetTeamsForMatching.mockResolvedValue([
+          {
+            ...createTeamListItemResponse(),
+            id: 't1',
+            displayName: 'Team One',
+          },
+        ]);
+
+        const { container, findByText } = await openUploadList();
+        await uploadCsv(container, 'Team Name\nTeam One\n');
+
+        expect(
+          await findByText(
+            'All 1 Teams in this list are already in the attendance table.',
+          ),
+        ).toBeVisible();
+      });
+
+      it('saves uploaded teams without an attendance id', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        mockGetTeamsForMatching.mockResolvedValue([
+          { ...createTeamListItemResponse(), id: 't2', displayName: 'Alessi' },
+        ]);
+
+        const { container, findByRole, getByRole } = await openUploadList();
+        await uploadCsv(container, 'Team Name\nAlessi\n');
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Add Attendees' }),
+        );
+        await userEvent.click(getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              attendance: [
+                { id: 'attendance-1', teamId: 't1', attended: false },
+                { id: undefined, teamId: 't2', attended: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
     });
 
     it('closes the attendance modal without saving when dismissed', async () => {

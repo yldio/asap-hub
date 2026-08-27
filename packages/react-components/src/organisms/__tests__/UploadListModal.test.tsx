@@ -272,6 +272,88 @@ describe('UploadListModal', () => {
     expect(screen.queryByText('5 Teams')).not.toBeInTheDocument();
   });
 
+  it('Should show a read error when the upload parse fails', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn().mockRejectedValue(new Error('nope')),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Something went wrong reading this file. Please try again.',
+    );
+  });
+
+  it('Should clear the read error once a later upload succeeds', async () => {
+    const onUploadListRetry = jest
+      .fn<Promise<UploadListResult>, [File[]]>()
+      .mockRejectedValueOnce(new Error('nope'))
+      .mockResolvedValue(uploadResult);
+    const { container } = renderModal({ onUploadList: onUploadListRetry });
+
+    await upload(makeFile('first.csv'), container);
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+
+    await upload(makeFile('second.csv'), container);
+
+    expect(await screen.findByText('5 Teams')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('Should keep the size error visible when the valid file parses', async () => {
+    const { container } = renderModal();
+
+    const fileInput = container.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    await userEvent.upload(fileInput, [
+      makeFile('huge.csv', 11 * 1000 * 1000),
+      makeFile('fine.csv'),
+    ]);
+
+    expect(await screen.findByText('5 Teams')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'The file size exceeds the limit of 10 MB. Please upload a smaller file.',
+    );
+  });
+
+  it('Should explain an empty card when every team is already in', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [],
+        alreadyInCount: 3,
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(
+      await screen.findByText(
+        'All 3 Teams in this list are already in the attendance table.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText('3 Teams')).toBeInTheDocument();
+  });
+
+  it('Should explain an empty card when no team names were found', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [],
+        alreadyInCount: 0,
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(
+      await screen.findByText(
+        'No Team names found. Check that the file has a Team column.',
+      ),
+    ).toBeInTheDocument();
+  });
+
   it('Should reset per-team edits when a new file is uploaded', async () => {
     const { container } = renderModal();
 

@@ -393,6 +393,104 @@ describe('Reminders data provider', () => {
           });
         });
 
+        test('Should return the project association when project reminders are included and the team is linked to a project', async () => {
+          publishedResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+          expectedReminder.data.associationType = 'project';
+          expectedReminder.data.associationName =
+            'Genetic Determinants of Progression';
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should prefer the output own project link over the team linked project', async () => {
+          publishedResearchOutputItem!.workingGroup = null;
+          publishedResearchOutputItem!.project = {
+            sys: { id: 'direct-project-id' },
+            title: 'Direct Project',
+          };
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+          expectedReminder.data.associationType = 'project';
+          expectedReminder.data.associationName = 'Direct Project';
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should return the team association when the output has a project link but project reminders are not included', async () => {
+          publishedResearchOutputItem!.workingGroup = null;
+          publishedResearchOutputItem!.project = {
+            sys: { id: 'direct-project-id' },
+            title: 'Direct Project',
+          };
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should return the team association when project reminders are included but the team has no linked project', async () => {
+          publishedResearchOutputItem!.workingGroup = null;
+          publishedResearchOutputItem!.teamsCollection!.items[0]!.linkedFrom =
+            null;
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
         test('Should fetch the published reminder if user is part of the working group associated with the research output', async () => {
           const researchOutputsCollection = {
             items: [publishedResearchOutputItem],
@@ -510,6 +608,30 @@ describe('Reminders data provider', () => {
           expectedReminder.data.createdDate = createdDate;
 
           expect(result.items.map((r) => r.type)).toContain('Draft');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should return the project association when project reminders are included and the team is linked to a project', async () => {
+          draftResearchOutputsItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputDraftTeamReminder();
+          expectedReminder.data.createdDate = createdDate;
+          expectedReminder.data.associationType = 'project';
+          expectedReminder.data.associationName =
+            'Genetic Determinants of Progression';
+
           expect(result).toEqual({
             total: 1,
             items: [expectedReminder],
@@ -671,6 +793,27 @@ describe('Reminders data provider', () => {
           });
         });
 
+        test('Should keep the team association but flag the reminder as a project output when project reminders are included and the team is linked to a project', async () => {
+          switchToDraftResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputSwitchToDraftTeamReminder();
+          expectedReminder.data.isProjectOutput = true;
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
         test('Should fetch the switch to draft reminder if user is not Staff but is part of the working group associated with the research output', async () => {
           const researchOutputsCollection = {
             items: [switchToDraftResearchOutputItem],
@@ -809,6 +952,40 @@ describe('Reminders data provider', () => {
           const expectedReminder = getResearchOutputInReviewTeamReminder();
 
           expect(result.items.map((r) => r.type)).toContain('In Review');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should return the project association when project reminders are included and the team is linked to a project', async () => {
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.teamsCollection!.items = [
+            {
+              role: 'Project Manager',
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+          ];
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch({
+            ...fetchRemindersOptions,
+            includeProjectReminders: true,
+          });
+
+          const expectedReminder = getResearchOutputInReviewTeamReminder();
+          expectedReminder.data.associationType = 'project';
+          expectedReminder.data.associationName =
+            'Genetic Determinants of Progression';
+
           expect(result).toEqual({
             total: 1,
             items: [expectedReminder],
@@ -1285,6 +1462,61 @@ describe('Reminders data provider', () => {
         expectedReminder.data.publishedAt = publishedAt;
 
         expect(result.items.map((r) => r.type)).toContain('Published');
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+
+      test('Should return the project association when project reminders are included and the team is linked to a project', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+          null;
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        setContentfulMock({ researchOutputVersionsCollection });
+        const result = await remindersDataProvider.fetch({
+          ...fetchRemindersOptions,
+          includeProjectReminders: true,
+        });
+
+        const expectedReminder = getResearchOutputVersionPublishedReminder();
+        expectedReminder.data.publishedAt = publishedAt;
+        expectedReminder.data.associationType = 'project';
+        expectedReminder.data.associationName =
+          'Genetic Determinants of Progression';
+
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+
+      test('Should prefer the output own project link over the team linked project', async () => {
+        const researchOutput =
+          researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!
+            .items[0]!;
+        researchOutput.workingGroup = null;
+        researchOutput.project = {
+          sys: { id: 'direct-project-id' },
+          title: 'Direct Project',
+        };
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        setContentfulMock({ researchOutputVersionsCollection });
+        const result = await remindersDataProvider.fetch({
+          ...fetchRemindersOptions,
+          includeProjectReminders: true,
+        });
+
+        const expectedReminder = getResearchOutputVersionPublishedReminder();
+        expectedReminder.data.publishedAt = publishedAt;
+        expectedReminder.data.associationType = 'project';
+        expectedReminder.data.associationName = 'Direct Project';
+
         expect(result).toEqual({
           total: 1,
           items: [expectedReminder],

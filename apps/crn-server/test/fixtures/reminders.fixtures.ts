@@ -315,6 +315,27 @@ export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   };
 };
 
+export const getTeamLinkedProjectContent = () => ({
+  projectMembershipCollection: {
+    items: [
+      {
+        linkedFrom: {
+          projectsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'project-id-1',
+                },
+                title: 'Genetic Determinants of Progression',
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
 export const getContentfulReminderResearchOutputCollectionItem =
   (): NonNullable<
     FetchRemindersQuery['researchOutputsCollection']
@@ -344,6 +365,7 @@ export const getContentfulReminderResearchOutputCollectionItem =
               id: 'team-1',
             },
             displayName: 'Team A',
+            linkedFrom: getTeamLinkedProjectContent(),
           },
         ],
       },
@@ -389,6 +411,7 @@ export const getContentfulReminderResearchOutputVersionCollectionItem =
                       id: 'team-1',
                     },
                     displayName: 'Team A',
+                    linkedFrom: getTeamLinkedProjectContent(),
                   },
                 ],
               },

@@ -1779,6 +1779,8 @@ enum DiscoverMembersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type DiscoverMembersCursorCollection {
@@ -1848,6 +1850,8 @@ enum DiscoverMembersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum DiscoverOrder {
@@ -1929,6 +1933,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type DiscoverScientificAdvisoryBoardCursorCollection {
@@ -1998,6 +2004,8 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions)"""
@@ -2209,6 +2217,8 @@ enum DiscussionsReadByCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type DiscussionsReadByCursorCollection {
@@ -2278,6 +2288,8 @@ enum DiscussionsReadByCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type DiscussionsRepliesCollection {
@@ -5110,6 +5122,8 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -5173,6 +5187,8 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum LabMembershipOrder {
@@ -5535,6 +5551,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum LabsLinkingCollectionsUsersCursorCollectionOrder {
@@ -5598,6 +5616,8 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum LabsOrder {
@@ -6521,6 +6541,8 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type ManuscriptsAssignedUsersCursorCollection {
@@ -6590,6 +6612,8 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type ManuscriptsCategoriesCollection {
@@ -8667,6 +8691,8 @@ enum ProjectsScientificFacilitatorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type ProjectsScientificFacilitatorCursorCollection {
@@ -8736,6 +8762,8 @@ enum ProjectsScientificFacilitatorCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type ProjectsToolsCollection {
@@ -11030,6 +11058,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
@@ -11093,6 +11123,8 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -11550,6 +11582,8 @@ enum SocialsLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum SocialsLinkingCollectionsUsersCursorCollectionOrder {
@@ -11613,6 +11647,8 @@ enum SocialsLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum SocialsOrder {
@@ -12050,6 +12086,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
@@ -12113,6 +12151,8 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 enum TeamMembershipOrder {
@@ -13534,6 +13574,7 @@ type Users implements Entry & _Node {
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [UsersTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TeamMembershipFilter): UsersTeamsCollection
   teamsCursorCollection(limit: Int = 100, locale: String, order: [UsersTeamsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TeamMembershipFilter): UsersTeamsCursorCollection
+  techSupport(locale: String, useFallbackLocale: Boolean): Boolean
   userSocials(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SocialsFilter): Socials
 }
 
@@ -13803,6 +13844,9 @@ input UsersFilter {
   sys: SysFilter
   teams: cfTeamMembershipNestedFilter
   teamsCollection_exists: Boolean
+  techSupport: Boolean
+  techSupport_exists: Boolean
+  techSupport_not: Boolean
   userSocials: cfSocialsNestedFilter
   userSocials_exists: Boolean
 }
@@ -14683,6 +14727,8 @@ enum UsersOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  techSupport_ASC
+  techSupport_DESC
 }
 
 type UsersResearchTagsCollection {
@@ -17326,6 +17372,9 @@ input cfUsersNestedFilter {
   stateOrProvince_not_in: [String]
   sys: SysFilter
   teamsCollection_exists: Boolean
+  techSupport: Boolean
+  techSupport_exists: Boolean
+  techSupport_not: Boolean
   userSocials_exists: Boolean
 }
 

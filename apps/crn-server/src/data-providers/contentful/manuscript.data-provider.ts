@@ -1237,6 +1237,9 @@ export const getLifecycleCode = (lifecycle: string) => {
   }
 };
 
+export const getTypeCode = (type: string): string =>
+  type === 'Original Research' ? 'org' : 'rev';
+
 export const getManuscriptVersionUID = ({
   version,
   teamIdCode,
@@ -1253,8 +1256,7 @@ export const getManuscriptVersionUID = ({
   grantId: string;
   manuscriptCount: number;
 }) => {
-  const manuscriptTypeCode =
-    version.type === 'Original Research' ? 'org' : 'rev';
+  const manuscriptTypeCode = getTypeCode(version.type || '');
 
   const lifecycleCode = getLifecycleCode(version.lifecycle || '');
   return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(

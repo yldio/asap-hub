@@ -13,7 +13,7 @@ beforeAll(() => {
   HTMLMediaElement.prototype.play = jest.fn(() => Promise.resolve());
 });
 
-export const asset = (overrides: Partial<ProjectAsset> = {}): ProjectAsset => ({
+const asset = (overrides: Partial<ProjectAsset> = {}): ProjectAsset => ({
   assetId: 'asset-a',
   kind: 'video',
   state: 'ready',

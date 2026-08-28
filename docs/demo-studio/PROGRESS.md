@@ -59,7 +59,7 @@ Acceptance criteria:
 - [x] Output follows the footage: 1080p minimum, source height above that, 60fps when the sources are
 - [x] Render controls in the editor: start, progress, cancel, failure message, link to the result
 - [x] The access route serves the versioned render output, so a re-render is not hidden by the CDN
-- [ ] The render job itself, running the plan in the container (in flight)
+- [x] The render job itself, running the plan in the container, verified end to end
 
 ## M2 Text and transitions
 
@@ -86,14 +86,33 @@ Acceptance criteria:
 
 ## M4b Cursor capture
 
-In flight: the companion snippet, its session endpoints, and the pure derivation from captured
-events into editable effects.
+- [x] A companion snippet the creator pastes into the page being demoed, carrying its credentials in
+      the URL fragment and posting batches that never trigger a CORS preflight
+- [x] Token scoped session endpoints, with the raw token stored only as a hash
+- [x] The raw event stream kept immutable in S3, derived into ordinary editable effects
+- [x] Re-deriving keeps every hand edit, and reports what changed
+- [x] A live indicator in the studio while the capture is connected
+
+## Chapters
+
+- [x] Chapter markers added at the playhead, anchored to their clip so trimming carries them
+- [x] Every title card becomes a chapter of its own
+- [x] Resolved into program time when a render starts, so the watch page needs no change
 
 ## Session log
 
 Newest first. One entry per working session: what landed, what was verified, what moved.
 
 ### 2026-08-28
+
+- Finished every milestone. The studio records, imports, edits, previews and renders a demo end to
+  end, and the watch page plays the result with chapters.
+- Verified the render for real rather than only in tests, which is what caught three bugs no unit
+  test could have: the audio format mismatch on the join, the timebase mismatch on xfade, and an
+  encoder image with no `rsvg-convert`. All three are fixed and recorded in FINDINGS.
+- Rendered a timeline of two clips, a title card, a banner and a transition inside the actual
+  container: 1920x1080 h264 at 30fps, AAC 48kHz stereo, sprite, VTT and poster beside it, item
+  flipped to ready.
 
 - Finished M2, M3 and M4a, and brought M1's editor half to done. The studio now records, imports,
   edits on a multi track timeline, and previews title cards, banners, zoom and cursor effects.

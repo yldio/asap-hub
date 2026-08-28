@@ -7,6 +7,8 @@ export type RenderAsset = {
   width?: number;
   height?: number;
   fps?: number;
+  // left undefined by an asset the ingest job has not probed yet
+  hasAudio?: boolean;
 };
 
 export type FfmpegStep = { label: string; args: string[]; output: string };

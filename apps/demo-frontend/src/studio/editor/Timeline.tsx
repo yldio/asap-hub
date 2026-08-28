@@ -1,6 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner, ClipPlacement, NarrationClip } from '@asap-hub/demo-timeline';
+import {
+  Banner,
+  ClipPlacement,
+  NarrationClip,
+  Zoom,
+} from '@asap-hub/demo-timeline';
 import {
   FC,
   PointerEvent as ReactPointerEvent,
@@ -60,6 +65,31 @@ const overlayTrackStyles = css({
   height: trackHeights.lane,
   backgroundColor: editorTheme.panel,
   borderBottom: `1px solid ${editorTheme.line}`,
+});
+
+const zoomBlockStyles = css({
+  position: 'absolute',
+  top: 4,
+  bottom: 4,
+  borderRadius: 6,
+  backgroundColor: editorTheme.zoom,
+  color: '#eceafe',
+  padding: '4px 8px',
+  fontSize: 12,
+  fontWeight: 600,
+  display: 'flex',
+  alignItems: 'center',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  border: '1px solid transparent',
+  font: 'inherit',
+  textAlign: 'left',
+  cursor: 'pointer',
+});
+
+const selectedBlockStyles = css({
+  borderColor: editorTheme.selected,
+  boxShadow: `0 0 0 1px ${editorTheme.selected}`,
 });
 
 const audioBlockStyles = css({
@@ -149,6 +179,9 @@ type Props = {
   readonly pixelsPerSecond: number;
   readonly banners: Banner[];
   readonly narration: NarrationClip[];
+  readonly zooms: Zoom[];
+  readonly selectedZoomId?: string;
+  readonly onSelectZoom: (zoomId: string) => void;
   readonly selectedClipId?: string;
   readonly selectedBannerId?: string;
   readonly readOnly: boolean;
@@ -175,6 +208,9 @@ const Timeline: FC<Props> = ({
   pixelsPerSecond,
   banners,
   narration,
+  zooms,
+  selectedZoomId,
+  onSelectZoom,
   selectedClipId,
   selectedBannerId,
   readOnly,
@@ -413,6 +449,40 @@ const Timeline: FC<Props> = ({
                   }
                 />
               ))
+            )}
+          </div>
+
+          <div css={overlayTrackStyles}>
+            {zooms.length === 0 ? (
+              <span css={laneLabelStyles}>Zoom and cursor</span>
+            ) : (
+              zooms.map((zoom) => {
+                const placement = placements.find(
+                  ({ clip }) => clip.id === zoom.clipId,
+                );
+                if (!placement) {
+                  return null;
+                }
+                const startMs = placement.startMs + zoom.startMs;
+                const lengthMs = zoom.rampInMs + zoom.holdMs + zoom.rampOutMs;
+                return (
+                  <button
+                    type="button"
+                    key={zoom.id}
+                    css={[
+                      zoomBlockStyles,
+                      zoom.id === selectedZoomId && selectedBlockStyles,
+                    ]}
+                    style={{
+                      left: msToPx(startMs, pixelsPerSecond),
+                      width: Math.max(msToPx(lengthMs, pixelsPerSecond), 18),
+                    }}
+                    onClick={() => onSelectZoom(zoom.id)}
+                  >
+                    {`Zoom ${zoom.scale}x`}
+                  </button>
+                );
+              })
             )}
           </div>
 

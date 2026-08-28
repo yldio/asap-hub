@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import {
   chooseCanvas,
+  clipLocalMs,
   layoutClips,
   placementAt,
   timelineDurationMs,
@@ -24,6 +25,7 @@ import AssetPanel from './AssetPanel';
 import BannerInspector from './BannerInspector';
 import ClipInspector from './ClipInspector';
 import TitleCardInspector from './TitleCardInspector';
+import ZoomInspector from './ZoomInspector';
 import { editorTheme } from './editorTheme';
 import { clampZoom, defaultPixelsPerSecond } from './geometry';
 import PreviewStage from './PreviewStage';
@@ -95,6 +97,7 @@ const ProjectEditor: FC<Props> = ({
 }) => {
   const [selectedClipId, setSelectedClipId] = useState<string>();
   const [selectedBannerId, setSelectedBannerId] = useState<string>();
+  const [selectedZoomId, setSelectedZoomId] = useState<string>();
   const [pixelsPerSecond, setPixelsPerSecond] = useState(
     defaultPixelsPerSecond,
   );
@@ -115,6 +118,7 @@ const ProjectEditor: FC<Props> = ({
   const selectedBanner = timeline.banners.find(
     ({ id }) => id === selectedBannerId,
   );
+  const selectedZoom = timeline.zooms.find(({ id }) => id === selectedZoomId);
   const selectedSource =
     selected?.clip.kind === 'source' ? selected.clip : undefined;
 
@@ -198,6 +202,11 @@ const ProjectEditor: FC<Props> = ({
   }, [dispatch, selected]);
 
   const removeSelected = useCallback(() => {
+    if (selectedZoom) {
+      dispatch({ type: 'removeZoom', zoomId: selectedZoom.id });
+      setSelectedZoomId(undefined);
+      return;
+    }
     if (selectedBanner) {
       dispatch({ type: 'removeBanner', bannerId: selectedBanner.id });
       setSelectedBannerId(undefined);
@@ -206,16 +215,24 @@ const ProjectEditor: FC<Props> = ({
     if (!selected) return;
     dispatch({ type: 'removeClip', clipId: selected.clip.id });
     setSelectedClipId(undefined);
-  }, [dispatch, selected, selectedBanner]);
+  }, [dispatch, selected, selectedBanner, selectedZoom]);
 
   const selectClip = useCallback((clipId: string) => {
     setSelectedClipId(clipId);
     setSelectedBannerId(undefined);
+    setSelectedZoomId(undefined);
   }, []);
 
   const selectBanner = useCallback((bannerId: string) => {
     setSelectedBannerId(bannerId);
     setSelectedClipId(undefined);
+    setSelectedZoomId(undefined);
+  }, []);
+
+  const selectZoom = useCallback((zoomId: string) => {
+    setSelectedZoomId(zoomId);
+    setSelectedClipId(undefined);
+    setSelectedBannerId(undefined);
   }, []);
 
   const addTitleCard = useCallback(() => {
@@ -229,6 +246,43 @@ const ProjectEditor: FC<Props> = ({
     });
     selectClip(clipId);
   }, [current, dispatch, placements.length, selectClip]);
+
+  // a zoom belongs to the clip under the playhead and starts where the playhead
+  // is, so it lands where the creator is actually looking
+  const addZoom = useCallback(() => {
+    if (!current) return;
+    const id = createId('zoom');
+    dispatch({
+      type: 'addZoom',
+      zoom: {
+        id,
+        clipId: current.clip.id,
+        startMs: Math.round(clipLocalMs(current, playheadMs)),
+        rampInMs: 400,
+        holdMs: 1500,
+        rampOutMs: 400,
+        focus: { x: 0.5, y: 0.5 },
+        scale: 2,
+        easing: 'easeInOut',
+      },
+    });
+    selectZoom(id);
+  }, [current, dispatch, playheadMs, selectZoom]);
+
+  const addCursorClick = useCallback(() => {
+    if (!current) return;
+    dispatch({
+      type: 'addCursorEffect',
+      clipId: current.clip.id,
+      effect: {
+        id: createId('effect'),
+        tMs: Math.round(clipLocalMs(current, playheadMs)),
+        type: 'ripple',
+        point: { x: 0.5, y: 0.5 },
+        origin: 'manual',
+      },
+    });
+  }, [current, dispatch, playheadMs]);
 
   const addBanner = useCallback(() => {
     const id = createId('banner');
@@ -322,6 +376,11 @@ const ProjectEditor: FC<Props> = ({
           <PreviewStage
             placement={current}
             banners={timeline.banners}
+            zooms={timeline.zooms}
+            cursorEffects={
+              timeline.cursor.find((layer) => layer.clipId === current?.clip.id)
+                ?.effects ?? []
+            }
             playheadMs={playheadMs}
             playing={playing}
             assets={assetsById}
@@ -340,7 +399,22 @@ const ProjectEditor: FC<Props> = ({
           onDelete={onDeleteAsset}
         />
 
-        {selectedBanner ? (
+        {selectedZoom ? (
+          <ZoomInspector
+            zoom={selectedZoom}
+            readOnly={readOnly}
+            onChange={(change) =>
+              dispatch({
+                type: 'updateZoom',
+                zoomId: selectedZoom.id,
+                change,
+              })
+            }
+            onRemove={removeSelected}
+          />
+        ) : null}
+
+        {!selectedZoom && selectedBanner ? (
           <BannerInspector
             banner={selectedBanner}
             readOnly={readOnly}
@@ -355,7 +429,7 @@ const ProjectEditor: FC<Props> = ({
           />
         ) : null}
 
-        {!selectedBanner && selected?.clip.kind === 'title' ? (
+        {!selectedZoom && !selectedBanner && selected?.clip.kind === 'title' ? (
           <TitleCardInspector
             placement={selected}
             clip={selected.clip}
@@ -371,7 +445,7 @@ const ProjectEditor: FC<Props> = ({
           />
         ) : null}
 
-        {!selectedBanner && selected?.clip.kind !== 'title' ? (
+        {!selectedZoom && !selectedBanner && selected?.clip.kind !== 'title' ? (
           <ClipInspector
             placement={selected}
             asset={
@@ -418,9 +492,14 @@ const ProjectEditor: FC<Props> = ({
       </div>
 
       <ActionBar
-        hasSelection={Boolean(selected) || Boolean(selectedBanner)}
+        hasSelection={
+          Boolean(selected) || Boolean(selectedBanner) || Boolean(selectedZoom)
+        }
+        canAddEffect={Boolean(current)}
         onAddTitleCard={addTitleCard}
         onAddBanner={addBanner}
+        onAddZoom={addZoom}
+        onAddCursorClick={addCursorClick}
         selectionMuted={selectedSource?.volume === 0}
         readOnly={readOnly}
         playheadMs={playheadMs}
@@ -441,6 +520,9 @@ const ProjectEditor: FC<Props> = ({
         pixelsPerSecond={pixelsPerSecond}
         banners={timeline.banners}
         narration={timeline.narration}
+        zooms={timeline.zooms}
+        selectedZoomId={selectedZoomId}
+        onSelectZoom={selectZoom}
         selectedClipId={selectedClipId}
         selectedBannerId={selectedBannerId}
         readOnly={readOnly}

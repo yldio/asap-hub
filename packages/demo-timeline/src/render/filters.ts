@@ -39,9 +39,6 @@ export const videoFilters = (context: VideoFilterContext): string[] =>
 // desyncs the audio, so every stage one clip is resampled to a constant rate
 export const resampleFilter = 'aresample=async=1:first_pts=0';
 
-export const clipHasAudio = (clip: Clip): boolean =>
-  clip.kind === 'title' || clip.volume > 0;
-
 export const clipAudioFilters = (clip: Clip): string[] =>
   clip.kind === 'source' && clip.volume !== 1
     ? [`volume=${clip.volume}`, resampleFilter]
@@ -49,47 +46,71 @@ export const clipAudioFilters = (clip: Clip): string[] =>
 
 export const overlayFadeMs = 300;
 
-const overlayFadeFilters = (
-  visibleStartMs: number,
-  visibleEndMs: number,
-): string[] => {
-  const fadeMs = Math.min(
-    overlayFadeMs,
-    Math.floor((visibleEndMs - visibleStartMs) / 2),
-  );
+export type OverlayWindow = { startMs: number; endMs: number };
+
+// a signed distance in pixels: the offset the overlay travels from and back to
+export type OverlaySlide = { distancePx: number };
+
+// an overlay shorter than two fades gets none, there is no room for the ramps
+export const overlayFadeDurationMs = (visible: OverlayWindow): number =>
+  Math.min(overlayFadeMs, Math.floor((visible.endMs - visible.startMs) / 2));
+
+const overlayFadeFilters = (visible: OverlayWindow): string[] => {
+  const fadeMs = overlayFadeDurationMs(visible);
   if (fadeMs <= 0) {
     return [];
   }
   return [
-    `fade=t=in:st=${secondsFromMs(visibleStartMs)}:d=${secondsFromMs(
+    `fade=t=in:st=${secondsFromMs(visible.startMs)}:d=${secondsFromMs(
       fadeMs,
     )}:alpha=1`,
-    `fade=t=out:st=${secondsFromMs(visibleEndMs - fadeMs)}:d=${secondsFromMs(
+    `fade=t=out:st=${secondsFromMs(visible.endMs - fadeMs)}:d=${secondsFromMs(
       fadeMs,
     )}:alpha=1`,
   ];
 };
 
-export const overlayInputFilters = (visible?: {
-  startMs: number;
-  endMs: number;
-}): string[] =>
-  visible
-    ? ['format=rgba', ...overlayFadeFilters(visible.startMs, visible.endMs)]
-    : ['format=rgba'];
+export const overlayInputFilters = (visible?: OverlayWindow): string[] =>
+  visible ? ['format=rgba', ...overlayFadeFilters(visible)] : ['format=rgba'];
 
 // the preset draws itself at the right place on a canvas sized PNG, so the
 // overlay always composites at the origin
 export const overlayOrigin = '0:0';
 
-export const overlayFilter = (visible?: {
-  startMs: number;
-  endMs: number;
-}): string =>
+// ramps the whole overlay from distancePx to zero over the fade in, holds it in
+// place, then ramps back out; min and max clamp each ramp to its own window
+const slideExpression = (
+  distancePx: number,
+  visible: OverlayWindow,
+  fadeMs: number,
+): string =>
+  `${distancePx}*(1-min(1,max(0,(t-${secondsFromMs(
+    visible.startMs,
+  )})/${secondsFromMs(fadeMs)}))+min(1,max(0,(t-${secondsFromMs(
+    visible.endMs - fadeMs,
+  )})/${secondsFromMs(fadeMs)})))`;
+
+const overlayPosition = (
+  visible: OverlayWindow,
+  slide: OverlaySlide | undefined,
+): string => {
+  const fadeMs = overlayFadeDurationMs(visible);
+  return slide && fadeMs > 0
+    ? `x=0:y='${slideExpression(slide.distancePx, visible, fadeMs)}'`
+    : overlayOrigin;
+};
+
+export const overlayFilter = (
+  visible?: OverlayWindow,
+  slide?: OverlaySlide,
+): string =>
   visible
-    ? `overlay=${overlayOrigin}:enable='between(t,${secondsFromMs(
-        visible.startMs,
-      )},${secondsFromMs(visible.endMs)})'`
+    ? `overlay=${overlayPosition(
+        visible,
+        slide,
+      )}:enable='between(t,${secondsFromMs(visible.startMs)},${secondsFromMs(
+        visible.endMs,
+      )})'`
     : `overlay=${overlayOrigin}`;
 
 const xfadeNames: Record<Exclude<Transition['type'], 'cut'>, string> = {

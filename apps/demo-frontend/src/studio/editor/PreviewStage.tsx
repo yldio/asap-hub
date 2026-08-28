@@ -1,10 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner, ClipPlacement, sourceTimeAt } from '@asap-hub/demo-timeline';
+import {
+  Banner,
+  clipLocalMs,
+  ClipPlacement,
+  CursorEffect,
+  sourceTimeAt,
+  Zoom,
+} from '@asap-hub/demo-timeline';
 import { FC, useEffect, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { charcoal, paper, rem, steel } from '../../ui/theme';
 import BannerLayer from './BannerLayer';
+import CursorLayer from './CursorLayer';
+import { zoomTransformAt } from './zoom';
 
 const stageStyles = css({
   containerType: 'inline-size',
@@ -63,6 +72,8 @@ const subheadingStyles = css({
 type Props = {
   readonly placement?: ClipPlacement;
   readonly banners: Banner[];
+  readonly zooms: Zoom[];
+  readonly cursorEffects: CursorEffect[];
   readonly playheadMs: number;
   readonly playing: boolean;
   readonly assets: Record<string, ProjectAsset>;
@@ -74,6 +85,8 @@ type Props = {
 const PreviewStage: FC<Props> = ({
   placement,
   banners,
+  zooms,
+  cursorEffects,
   playheadMs,
   playing,
   assets,
@@ -83,6 +96,15 @@ const PreviewStage: FC<Props> = ({
   const clip = placement?.clip;
   const asset = clip?.kind === 'source' ? assets[clip.assetId] : undefined;
   const url = asset ? assetUrl(asset) : undefined;
+
+  const localMs = placement ? clipLocalMs(placement, playheadMs) : 0;
+  const zoom = zoomTransformAt(zooms, clip?.id ?? '', localMs);
+  // the render pans by moving the crop window; the preview does the same by
+  // scaling around the focus point, so the two frame the same thing
+  const zoomStyle = {
+    transform: `scale(${zoom.scale})`,
+    transformOrigin: `${zoom.originX * 100}% ${zoom.originY * 100}%`,
+  };
 
   const sourceMs =
     placement && clip?.kind === 'source'
@@ -140,6 +162,7 @@ const PreviewStage: FC<Props> = ({
         <video
           ref={videoRef}
           css={videoStyles}
+          style={zoomStyle}
           src={url}
           preload="auto"
           muted={clip.volume === 0}
@@ -152,6 +175,7 @@ const PreviewStage: FC<Props> = ({
             : 'This clip has no playable source yet.'}
         </p>
       )}
+      <CursorLayer effects={cursorEffects} tMs={localMs} />
       <BannerLayer banners={banners} tMs={playheadMs} />
     </div>
   );

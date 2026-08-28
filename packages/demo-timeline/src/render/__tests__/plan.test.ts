@@ -20,6 +20,12 @@ const assets: RenderAsset[] = [
     fps: 30,
   },
   { assetId: 'asset-2', path: '/media/asset-2.mp4', durationMs: 60000 },
+  {
+    assetId: 'silent-1',
+    path: '/media/silent-1.mp4',
+    durationMs: 60000,
+    hasAudio: false,
+  },
   { assetId: 'voice-1', path: '/media/voice-1.m4a', durationMs: 20000 },
 ];
 
@@ -245,15 +251,92 @@ describe('buildRenderPlan', () => {
     expect(plan.steps.at(-1)?.args).toMatchSnapshot();
   });
 
-  describe('a muted clip', () => {
-    it('drops the audio track entirely', () => {
-      const plan = planFor({ clips: [source({ volume: 0 })] });
-
-      expect(plan.steps[0]?.args).toContain('-an');
-      expect(plan.steps[0]?.args).not.toContain('-c:a');
+  describe('a banner that slides', () => {
+    it('rises into place from the bottom edge', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          banners: [banner({ animation: 'slide' })],
+        }).steps,
+      ).toMatchSnapshot();
     });
 
-    it('is given generated silence when the join has to blend audio', () => {
+    it('drops into place from the top edge', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          banners: [banner({ animation: 'slide', position: 'top' })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("y='-281*(1-min(1,max(0,(t-2.000)/0.300))");
+    });
+
+    it('leaves a fading banner composited at the origin', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          banners: [banner()],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("overlay=0:0:enable='between(t,2.000,7.000)'");
+      expect(args).not.toContain("y='");
+    });
+  });
+
+  describe('every clip step carries exactly one audio stream', () => {
+    const silentFixtures: [string, Partial<Timeline>][] = [
+      ['a muted clip', { clips: [source({ volume: 0 })] }],
+      ['an asset with no audio', { clips: [source({ assetId: 'silent-1' })] }],
+      ['a title card', { clips: [title()] }],
+      [
+        'a muted clip joined with a crossfade',
+        {
+          clips: [
+            source({ id: 'a', outMs: 4000, volume: 0 }),
+            source({
+              id: 'b',
+              assetId: 'asset-2',
+              outMs: 6000,
+              transitionIn: { type: 'crossfade', durationMs: 1000 },
+            }),
+          ],
+        },
+      ],
+    ];
+
+    it.each(silentFixtures)('never emits -an for %s', (_, overrides) => {
+      planFor(overrides).steps.forEach((step) => {
+        expect(step.args).not.toContain('-an');
+      });
+    });
+
+    it.each(silentFixtures)('gives %s generated silence', (_, overrides) => {
+      expect(planFor(overrides).steps[0]?.args.join(' ')).toContain(
+        '-i anullsrc=channel_layout=stereo:sample_rate=48000',
+      );
+    });
+
+    it('replaces the source audio of a muted clip with silence', () => {
+      expect(
+        planFor({ clips: [source({ volume: 0 })] }).steps[0],
+      ).toMatchSnapshot();
+    });
+
+    it('replaces the source audio of an unprobed silent asset with silence', () => {
+      expect(
+        planFor({ clips: [source({ assetId: 'silent-1' })] }).steps[0]?.args,
+      ).toMatchSnapshot();
+    });
+
+    it('keeps the volume filter on a muted clip', () => {
+      expect(
+        planFor({ clips: [source({ volume: 0 })] }).steps[0]?.args,
+      ).toEqual(
+        expect.arrayContaining(['volume=0,aresample=async=1:first_pts=0']),
+      );
+    });
+
+    it('lets the join blend clip audio directly, with no substitute inputs', () => {
       const plan = planFor({
         clips: [
           source({ id: 'a', outMs: 4000, volume: 0 }),
@@ -265,13 +348,10 @@ describe('buildRenderPlan', () => {
           }),
         ],
       });
+      const args = plan.steps.at(-1)?.args.join(' ') ?? '';
 
-      expect(plan.steps.at(-1)?.args.join(' ')).toContain(
-        '-f lavfi -t 4.000 -i anullsrc=channel_layout=stereo:sample_rate=48000',
-      );
-      expect(plan.steps.at(-1)?.args.join(' ')).toContain(
-        '[2:a][1:a]acrossfade',
-      );
+      expect(args).toContain('[0:a][1:a]acrossfade=d=1.000');
+      expect(args).not.toContain('anullsrc');
     });
   });
 

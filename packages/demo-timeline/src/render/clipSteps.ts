@@ -1,7 +1,7 @@
 import { ClipPlacement } from '../clips';
-import { bannerSvg, titleCardSvg } from '../presets';
+import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
 import { Banner, Canvas, Clip, SourceClip, TitleClip } from '../schema';
-import { assetPath } from './assets';
+import { assetHasAudio, assetPath } from './assets';
 import {
   audioEncodeArgs,
   containerArgs,
@@ -12,10 +12,11 @@ import {
 } from './encoding';
 import {
   clipAudioFilters,
-  clipHasAudio,
   filterSegment,
   graph,
   label,
+  OverlaySlide,
+  OverlayWindow,
   overlayFilter,
   overlayInputFilters,
   secondsFromMs,
@@ -34,9 +35,7 @@ export type ClipStepInput = {
 
 export type ClipStepResult = { step: FfmpegStep; svgs: SvgFile[] };
 
-type VisibleWindow = { startMs: number; endMs: number };
-
-type Overlay = SvgFile & { visible?: VisibleWindow };
+type Overlay = SvgFile & { visible?: OverlayWindow; slide?: OverlaySlide };
 
 const sourceInput = (
   clip: SourceClip,
@@ -58,7 +57,6 @@ const titleInput = (canvas: Canvas, seconds: string): string[] => [
   seconds,
   '-i',
   `color=c=black:s=${canvas.width}x${canvas.height}:r=${canvas.fps}`,
-  ...silentAudioInput(seconds),
 ];
 
 const titleOverlay = (
@@ -75,6 +73,19 @@ const titleOverlay = (
     canvas,
   }),
 });
+
+// the banner travels the height of its own band, so it comes from the frame
+// edge it sits against: a bottom banner rises, a top banner drops
+const bannerSlide = (
+  banner: Banner,
+  canvas: Canvas,
+): OverlaySlide | undefined => {
+  if (banner.animation !== 'slide') {
+    return undefined;
+  }
+  const { height } = bannerBand(banner.preset, banner.position, canvas);
+  return { distancePx: banner.position === 'bottom' ? height : -height };
+};
 
 // a banner lives in programme time, so it is clipped to this placement and then
 // rebased, because the overlay is enabled in clip local time
@@ -103,6 +114,7 @@ const bannerOverlays = (
               startMs: startMs - placement.startMs,
               endMs: endMs - placement.startMs,
             },
+            slide: bannerSlide(banner, canvas),
           },
         ];
   });
@@ -110,14 +122,15 @@ const bannerOverlays = (
 const describeClip = (clip: Clip): string =>
   clip.kind === 'source' ? `source ${clip.assetId}` : `title "${clip.text}"`;
 
-// the title card carries its own silence on input 1, the source clip carries
-// whatever the recording had on input 0
-const audioMapFor = (clip: Clip): string | undefined => {
-  if (!clipHasAudio(clip)) {
-    return undefined;
-  }
-  return clip.kind === 'title' ? '1:a' : '0:a?';
-};
+// a title card, a muted clip and a recording with no sound all still need a
+// track, because the stage two concat demuxer refuses a mixed stream layout
+const usesSourceAudio = (
+  clip: Clip,
+  assets: Map<string, RenderAsset>,
+): boolean =>
+  clip.kind === 'source' &&
+  clip.volume > 0 &&
+  assetHasAudio(assets, clip.assetId);
 
 export const buildClipStep = ({
   placement,
@@ -129,11 +142,13 @@ export const buildClipStep = ({
   const { clip, index, durationMs } = placement;
   const seconds = secondsFromMs(durationMs);
 
-  const baseInput =
+  const videoInput =
     clip.kind === 'source'
       ? sourceInput(clip, assets)
       : titleInput(canvas, seconds);
-  const baseInputCount = clip.kind === 'source' ? 1 : 2;
+  const generatedAudio = !usesSourceAudio(clip, assets);
+  const audioMap = generatedAudio ? '1:a' : '0:a?';
+  const baseInputCount = generatedAudio ? 2 : 1;
 
   const overlays: Overlay[] = [
     ...(clip.kind === 'title'
@@ -152,13 +167,11 @@ export const buildClipStep = ({
       ),
       filterSegment(
         [`v${position}`, `o${position}`],
-        [overlayFilter(overlay.visible)],
+        [overlayFilter(overlay.visible, overlay.slide)],
         `v${position + 1}`,
       ),
     ]),
   ];
-
-  const audioMap = audioMapFor(clip);
 
   const output = clipOutputPath(workDir, index);
 
@@ -168,15 +181,17 @@ export const buildClipStep = ({
       output,
       args: [
         ...startArgs,
-        ...baseInput,
+        ...videoInput,
+        ...(generatedAudio ? silentAudioInput(seconds) : []),
         ...overlays.flatMap((overlay) => imageInput(seconds, overlay.path)),
         '-filter_complex',
         graph(segments),
         '-map',
         label(`v${overlays.length}`),
-        ...(audioMap ? ['-map', audioMap] : []),
+        '-map',
+        audioMap,
         ...videoEncodeArgs(canvas),
-        ...(audioMap ? audioEncodeArgs(clipAudioFilters(clip)) : ['-an']),
+        ...audioEncodeArgs(clipAudioFilters(clip)),
         ...containerArgs,
         output,
       ],

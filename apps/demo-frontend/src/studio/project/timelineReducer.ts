@@ -2,6 +2,7 @@ import {
   Banner,
   Canvas,
   Clip,
+  CursorEffect,
   NarrationClip,
   insertClipAt,
   moveClip,
@@ -11,6 +12,7 @@ import {
   Timeline,
   Transition,
   trimClip,
+  Zoom,
 } from '@asap-hub/demo-timeline';
 
 export type TimelineAction =
@@ -59,6 +61,18 @@ export type TimelineAction =
       change: Partial<NarrationClip>;
     }
   | { type: 'removeNarration'; narrationId: string }
+  | { type: 'addZoom'; zoom: Zoom }
+  | { type: 'updateZoom'; zoomId: string; change: Partial<Zoom> }
+  | { type: 'removeZoom'; zoomId: string }
+  | { type: 'addCursorEffect'; clipId: string; effect: CursorEffect }
+  | {
+      type: 'updateCursorEffect';
+      clipId: string;
+      effectId: string;
+      change: Partial<CursorEffect>;
+    }
+  | { type: 'removeCursorEffect'; clipId: string; effectId: string }
+  | { type: 'setCursorOffset'; clipId: string; offsetMs: number }
   | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
@@ -76,6 +90,24 @@ const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
     cursor: timeline.cursor.filter(survives),
     chapters: timeline.chapters.filter(survives),
   };
+};
+
+// a clip gains its cursor layer the first time something is put on it
+const withCursorLayer = (
+  timeline: Timeline,
+  clipId: string,
+  change: (layer: Timeline['cursor'][number]) => Timeline['cursor'][number],
+): Timeline['cursor'] => {
+  const existing = timeline.cursor.find((layer) => layer.clipId === clipId);
+  if (!existing) {
+    return [
+      ...timeline.cursor,
+      change({ clipId, offsetMs: 0, path: [], effects: [] }),
+    ];
+  }
+  return timeline.cursor.map((layer) =>
+    layer.clipId === clipId ? change(layer) : layer,
+  );
 };
 
 const mapClip = (
@@ -254,6 +286,76 @@ export const timelineReducer = (
         narration: timeline.narration.filter(
           (clip) => clip.id !== action.narrationId,
         ),
+      };
+
+    case 'addZoom':
+      return { ...timeline, zooms: [...timeline.zooms, action.zoom] };
+
+    case 'updateZoom':
+      return {
+        ...timeline,
+        zooms: timeline.zooms.map((zoom) =>
+          zoom.id === action.zoomId
+            ? { ...zoom, ...action.change, id: zoom.id, clipId: zoom.clipId }
+            : zoom,
+        ),
+      };
+
+    case 'removeZoom':
+      return {
+        ...timeline,
+        zooms: timeline.zooms.filter((zoom) => zoom.id !== action.zoomId),
+      };
+
+    case 'addCursorEffect':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          effects: [...layer.effects, action.effect],
+        })),
+      };
+
+    case 'updateCursorEffect':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          effects: layer.effects.map((effect) =>
+            effect.id === action.effectId
+              ? {
+                  ...effect,
+                  ...action.change,
+                  id: effect.id,
+                  // a hand edit protects the effect from the next re-derive
+                  origin:
+                    effect.origin === 'derived'
+                      ? 'derived-edited'
+                      : effect.origin,
+                }
+              : effect,
+          ),
+        })),
+      };
+
+    case 'removeCursorEffect':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          effects: layer.effects.filter(
+            (effect) => effect.id !== action.effectId,
+          ),
+        })),
+      };
+
+    case 'setCursorOffset':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          offsetMs: action.offsetMs,
+        })),
       };
 
     case 'setCanvas':

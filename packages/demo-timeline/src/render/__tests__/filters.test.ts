@@ -3,10 +3,10 @@ import { Canvas, SourceClip, TitleClip } from '../../schema';
 import {
   chain,
   clipAudioFilters,
-  clipHasAudio,
   filterSegment,
   fitToCanvasFilters,
   graph,
+  overlayFadeDurationMs,
   overlayFilter,
   overlayInputFilters,
   secondsFromMs,
@@ -90,20 +90,6 @@ describe('videoFilters', () => {
   });
 });
 
-describe('clipHasAudio', () => {
-  it('is false for a muted clip', () => {
-    expect(clipHasAudio(source({ volume: 0 }))).toBe(false);
-  });
-
-  it('is true for an audible clip', () => {
-    expect(clipHasAudio(source({ volume: 0.5 }))).toBe(true);
-  });
-
-  it('is true for a title card, which carries generated silence', () => {
-    expect(clipHasAudio(title())).toBe(true);
-  });
-});
-
 describe('clipAudioFilters', () => {
   it('only resamples at full volume', () => {
     expect(clipAudioFilters(source())).toEqual([
@@ -154,6 +140,50 @@ describe('overlay filters', () => {
 
   it('composites an untimed overlay at the origin', () => {
     expect(overlayFilter()).toBe('overlay=0:0');
+  });
+});
+
+describe('overlayFadeDurationMs', () => {
+  it('is the full fade when there is room for both ramps', () => {
+    expect(overlayFadeDurationMs({ startMs: 0, endMs: 5000 })).toBe(300);
+  });
+
+  it('is half of a short window', () => {
+    expect(overlayFadeDurationMs({ startMs: 0, endMs: 400 })).toBe(200);
+  });
+
+  it('is nothing at all for an empty window', () => {
+    expect(overlayFadeDurationMs({ startMs: 1000, endMs: 1000 })).toBe(0);
+  });
+});
+
+describe('a sliding overlay', () => {
+  it('rises into place from below for a bottom banner', () => {
+    expect(
+      overlayFilter({ startMs: 2000, endMs: 7000 }, { distancePx: 281 }),
+    ).toBe(
+      "overlay=x=0:y='281*(1-min(1,max(0,(t-2.000)/0.300))+min(1,max(0,(t-6.700)/0.300)))':enable='between(t,2.000,7.000)'",
+    );
+  });
+
+  it('drops into place from above for a top banner', () => {
+    expect(
+      overlayFilter({ startMs: 0, endMs: 4000 }, { distancePx: -281 }),
+    ).toBe(
+      "overlay=x=0:y='-281*(1-min(1,max(0,(t-0.000)/0.300))+min(1,max(0,(t-3.700)/0.300)))':enable='between(t,0.000,4.000)'",
+    );
+  });
+
+  it('slides over the same window as the alpha fade', () => {
+    expect(
+      overlayFilter({ startMs: 0, endMs: 400 }, { distancePx: 281 }),
+    ).toContain('/0.200)');
+  });
+
+  it('does not slide when there is no room to ramp', () => {
+    expect(
+      overlayFilter({ startMs: 1000, endMs: 1000 }, { distancePx: 281 }),
+    ).toBe("overlay=0:0:enable='between(t,1.000,1.000)'");
   });
 });
 

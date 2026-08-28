@@ -4,12 +4,10 @@ import { assetPath } from './assets';
 import {
   audioCodecArgs,
   containerArgs,
-  silentAudioInput,
   startArgs,
   videoEncodeArgs,
 } from './encoding';
 import {
-  clipHasAudio,
   filterSegment,
   graph,
   label,
@@ -107,20 +105,12 @@ const concatJoin = ({
   output,
 }: JoinStepInput): JoinStepResult => {
   const listPath = concatListPath(workDir);
-  const programAudio = placements.some((placement) =>
-    clipHasAudio(placement.clip),
-  )
-    ? ['0:a']
-    : [];
   const mixed = narration.length > 0;
   const segments = mixed
     ? [
         ...narrationSegments(narration, 1),
         mixSegment(
-          [
-            ...programAudio,
-            ...narration.map((_, position) => narrationLabel(position)),
-          ],
+          ['0:a', ...narration.map((_, position) => narrationLabel(position))],
           durationMs,
         ),
       ]
@@ -165,26 +155,6 @@ const concatJoin = ({
   };
 };
 
-type AudioInputs = { labels: string[]; args: string[]; next: number };
-
-// a muted clip carries no audio stream, so the chain gets matching silence
-// instead, keeping every acrossfade and concat pair the same shape
-const clipAudioInputs = (placements: ClipPlacement[]): AudioInputs =>
-  placements.reduce<AudioInputs>(
-    (inputs, placement) =>
-      clipHasAudio(placement.clip)
-        ? { ...inputs, labels: [...inputs.labels, `${placement.index}:a`] }
-        : {
-            labels: [...inputs.labels, `${inputs.next}:a`],
-            args: [
-              ...inputs.args,
-              ...silentAudioInput(secondsFromMs(placement.durationMs)),
-            ],
-            next: inputs.next + 1,
-          },
-    { labels: [], args: [], next: placements.length },
-  );
-
 type Chain = { segments: string[]; label: string };
 
 const foldChain = (
@@ -216,7 +186,6 @@ const xfadeJoin = ({
   output,
 }: JoinStepInput): JoinStepResult => {
   const boundaries = joinBoundaries(placements);
-  const audio = clipAudioInputs(placements);
 
   const video = foldChain(
     '0:v',
@@ -233,9 +202,9 @@ const xfadeJoin = ({
   );
 
   const programAudio = foldChain(
-    audio.labels[0] ?? '0:a',
-    boundaries.map((boundary, position) => ({
-      input: audio.labels[position + 1] ?? `${boundary.index}:a`,
+    '0:a',
+    boundaries.map((boundary) => ({
+      input: `${boundary.index}:a`,
       name: `a${boundary.index}`,
       filter:
         boundary.durationMs > 0
@@ -247,7 +216,7 @@ const xfadeJoin = ({
   const mixed = narration.length > 0;
   const mix = mixed
     ? [
-        ...narrationSegments(narration, audio.next),
+        ...narrationSegments(narration, placements.length),
         mixSegment(
           [
             programAudio.label,
@@ -268,7 +237,6 @@ const xfadeJoin = ({
           '-i',
           clipOutputPath(workDir, placement.index),
         ]),
-        ...audio.args,
         ...narrationInputArgs(narration, assets),
         '-filter_complex',
         graph([...video.segments, ...programAudio.segments, ...mix]),

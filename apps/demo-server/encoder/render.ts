@@ -6,6 +6,7 @@ import {
   RenderAsset,
   RenderPlan,
   Timeline,
+  videoChapters,
 } from '@asap-hub/demo-timeline';
 import { spawn } from 'child_process';
 import { promises as fs } from 'fs';
@@ -641,11 +642,13 @@ const render = async (env: RenderEnv): Promise<void> => {
   await runPlan(plan, stepDurationsMs(timeline, plan), report);
   const durationMs = await finishMedia(env, output, report);
 
+  // the chapters travel with the media they describe, so a watcher never sees
+  // a chapter list for an export that has not landed
   await updateVideo(
     env,
     [
       'SET durationMs = :durationMs, processingState = :processingState,',
-      'mediaPath = :mediaPath, #render.#state = :state,',
+      'mediaPath = :mediaPath, chapters = :chapters, #render.#state = :state,',
       '#render.#stage = :stage, #render.#progress = :progress,',
       '#render.#finishedAt = :finishedAt',
       'REMOVE processingError, #render.#error',
@@ -661,6 +664,14 @@ const render = async (env: RenderEnv): Promise<void> => {
       ':durationMs': { N: String(durationMs) },
       ':processingState': { S: 'ready' },
       ':mediaPath': { S: env.mediaPath },
+      ':chapters': {
+        L: videoChapters(timeline).map((chapter) => ({
+          M: {
+            startMs: { N: String(chapter.startMs) },
+            title: { S: chapter.title },
+          },
+        })),
+      },
       ':state': { S: 'done' },
       ':stage': { S: 'done' },
       ':progress': { N: '100' },

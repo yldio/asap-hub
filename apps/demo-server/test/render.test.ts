@@ -231,8 +231,10 @@ describe('POST /api/projects/:id/render', () => {
     expect(response.status).toBe(200);
   });
 
-  // resolveChapters carries an id and a kind the item's own schema does not
-  it('writes chapters in the shape the item declares', async () => {
+  // Chapters describe the media, so they land with it. Writing them when the
+  // export was queued retitled a published demo before the render existed, and
+  // left it retitled if that render then failed.
+  it('leaves the published chapters alone until the render lands', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
     const timeline = timelineWithClip();
@@ -254,9 +256,7 @@ describe('POST /api/projects/:id/render', () => {
 
     await start();
 
-    expect(setValue(0, 'chapters')).toEqual([
-      { startMs: 5000, title: 'Part two' },
-    ]);
+    expect(setValue(0, 'chapters')).toBeUndefined();
   });
 
   it('refuses a second render while one is active', async () => {

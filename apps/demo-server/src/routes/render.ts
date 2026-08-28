@@ -1,9 +1,4 @@
-import {
-  parseTimeline,
-  resolveChapters,
-  serialiseTimeline,
-  Timeline,
-} from '@asap-hub/demo-timeline';
+import { parseTimeline, serialiseTimeline } from '@asap-hub/demo-timeline';
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { Response, Router } from 'express';
@@ -110,14 +105,6 @@ const recordTaskArn = async (
   }
 };
 
-// resolveChapters carries the editor's id and kind too, and the guarded write
-// bypasses ElectroDB, so the resolved list is projected onto the shape the item
-// declares rather than going out of serialiseVideo as something else
-export const itemChapters = (
-  timeline: Timeline,
-): { startMs: number; title: string }[] =>
-  resolveChapters(timeline).map(({ startMs, title }) => ({ startMs, title }));
-
 const timelinePointerOf = (
   project: VideoItem,
 ): { key: string; timelineVersion: number } | undefined =>
@@ -184,13 +171,11 @@ export const registerRenderRoutes = (router: Router): void => {
         sub,
         now: Date.now(),
         expectedVersion: version,
-        // the watch page reads chapters off the item, so they are resolved from
-        // the snapshot being rendered rather than after the fact
-        set: {
-          render,
-          chapters: itemChapters(timeline),
-          updatedAt: requestedAt,
-        },
+        // chapters are not written here: they describe the media, so the
+        // container writes them with it when the render lands. Writing them now
+        // would retitle a published demo the moment an export was started, even
+        // if that export then failed or was cancelled.
+        set: { render, updatedAt: requestedAt },
       });
       if (!queued) {
         return;

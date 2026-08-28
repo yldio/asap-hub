@@ -23,6 +23,7 @@ import {
   serialiseVideo,
   videoKey,
   VideoItem,
+  VideoWriteConflict,
 } from './video-shared';
 
 export type RenderState = {
@@ -103,6 +104,76 @@ const recordTaskArn = async (
     // eslint-disable-next-line no-console
     console.error(`the row for ${id} no longer names the render ${renderId}`);
   }
+};
+
+type CancelOutcome =
+  | { ok: true; taskArn?: string }
+  | { ok: false; status: number; body: Record<string, unknown> };
+
+// the container reports progress every few seconds, so the version the editor
+// read is usually stale by the time the creator clicks cancel
+const maxCancelAttempts = 4;
+
+// the arn goes with the render it belonged to: the task is on its way out, and
+// nothing should try to stop it again
+const cancelledRender = (
+  render: RenderState,
+  finishedAt: string,
+): RenderState => {
+  const cancelled: RenderState = { ...render, state: 'cancelled', finishedAt };
+  delete cancelled.taskArn;
+  return cancelled;
+};
+
+// the cancellation is recorded before the task is stopped: a write that loses
+// the version race can be retried, but a task already stopped against a row
+// that still says 'rendering' blocks every later export until it ages out
+const recordCancellation = async (
+  id: string,
+  sub: string,
+  project: VideoItem,
+  version: number,
+): Promise<CancelOutcome> => {
+  let current = project;
+  let expectedVersion = version;
+
+  for (let attempt = 0; attempt < maxCancelAttempts; attempt += 1) {
+    const render = renderOf(current);
+    if (!render || !isRenderActive(render)) {
+      return { ok: false, status: 409, body: { error: 'render_inactive' } };
+    }
+
+    const finishedAt = new Date().toISOString();
+    try {
+      await guardedUpdate({
+        id,
+        sub,
+        now: Date.now(),
+        expectedVersion,
+        set: {
+          render: cancelledRender(render, finishedAt),
+          updatedAt: finishedAt,
+        },
+      });
+      return { ok: true, taskArn: render.taskArn };
+    } catch (error) {
+      if (!(error instanceof VideoWriteConflict)) {
+        throw error;
+      }
+      // a lost lease is the creator's answer; only the version is worth rereading
+      if (error.body.error !== 'conflict') {
+        return { ok: false, status: 409, body: error.body };
+      }
+      const { data } = await videoEntity.get({ id }).go();
+      if (!data) {
+        return { ok: false, status: 404, body: { error: 'not_found' } };
+      }
+      current = data as VideoItem;
+      expectedVersion = current.version as number;
+    }
+  }
+
+  return { ok: false, status: 409, body: { error: 'conflict' } };
 };
 
 const timelinePointerOf = (
@@ -228,41 +299,30 @@ export const registerRenderRoutes = (router: Router): void => {
         return;
       }
 
-      const render = renderOf(project);
-      if (!render || !isRenderActive(render)) {
-        res.status(409).json({ error: 'render_inactive' });
+      const id = pathParam(req, 'id');
+      const { version } = req.body as { version: number };
+      const outcome = await recordCancellation(
+        id,
+        currentUser(req).sub,
+        project,
+        version,
+      );
+      if (!outcome.ok) {
+        res.status(outcome.status).json(outcome.body);
         return;
       }
 
-      if (render.taskArn) {
-        // the task may already be gone; the item is what the editor believes
+      if (outcome.taskArn) {
+        // the task may already be gone; the row is what the editor believes
         await getJobRunner()
-          .stop(render.taskArn)
+          .stop(outcome.taskArn)
           .catch((error: unknown) => {
             // eslint-disable-next-line no-console
             console.error(
-              `could not stop the render task ${render.taskArn}`,
+              `could not stop the render task ${outcome.taskArn}`,
               error,
             );
           });
-      }
-
-      const id = pathParam(req, 'id');
-      const { version } = req.body as { version: number };
-      const finishedAt = new Date().toISOString();
-
-      const cancelled = await applyGuardedUpdate(res, {
-        id,
-        sub: currentUser(req).sub,
-        now: Date.now(),
-        expectedVersion: version,
-        set: {
-          render: { ...render, state: 'cancelled', finishedAt },
-          updatedAt: finishedAt,
-        },
-      });
-      if (!cancelled) {
-        return;
       }
 
       await respondWithVideo(res, id);

@@ -121,6 +121,16 @@ const mockVideoGet = (data: Record<string, unknown> | null) => {
   } as any);
 };
 
+// a cancel that loses the version race rereads the row, so the second read has
+// to hand back what the container wrote in between
+const mockVideoGets = (...items: Record<string, unknown>[]) => {
+  let call = 0;
+  jest.spyOn(videoEntity, 'get').mockReturnValue({
+    go: async () => ({ data: items[Math.min(call++, items.length - 1)] }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
 const timelineWithClip = (): Timeline => ({
   ...createEmptyTimeline(),
   clips: [
@@ -380,7 +390,10 @@ describe('DELETE /api/projects/:id/render', () => {
       .set('Authorization', creatorToken)
       .send({ version: 3 });
 
-  const rendering = (overrides: Record<string, unknown> = {}) =>
+  const rendering = (
+    overrides: Record<string, unknown> = {},
+    projectOverrides: Record<string, unknown> = {},
+  ) =>
     projectItem({
       render: {
         renderId: 'render-0',
@@ -389,6 +402,15 @@ describe('DELETE /api/projects/:id/render', () => {
         taskArn: 'task-arn-1',
         ...overrides,
       },
+      ...projectOverrides,
+    });
+
+  const conditionFailure = (item: Record<string, unknown>) =>
+    new ConditionalCheckFailedException({
+      message: 'The conditional request failed',
+      $metadata: {},
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Item: item as any,
     });
 
   it('stops the job and cancels the render', async () => {
@@ -403,6 +425,71 @@ describe('DELETE /api/projects/:id/render', () => {
       renderId: 'render-0',
       state: 'cancelled',
     });
+  });
+
+  // stopping first left the task dead and the row still 'rendering' whenever
+  // the guarded write lost the version race, and every later export then
+  // answered render_active until the row aged out
+  it('records the cancellation before it stops the task', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(rendering());
+
+    await cancel();
+
+    expect(mockSend.mock.invocationCallOrder[0]!).toBeLessThan(
+      stop.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('keeps cancelling against the version the container moved to', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGets(rendering(), rendering({ progress: 40 }, { version: 5 }));
+    mockSend
+      .mockRejectedValueOnce(
+        conditionFailure({
+          lockedBy: 'auth0|creator',
+          lockedByName: 'Ana',
+          lockExpiresAt: Date.now() + 60_000,
+        }),
+      )
+      .mockResolvedValue({});
+
+    const response = await cancel();
+
+    expect(response.status).toBe(200);
+    expect(setValue(0, 'expectedVersion')).toBe(3);
+    expect(setValue(1, 'expectedVersion')).toBe(5);
+    expect(setValue(1, 'render')).toMatchObject({ state: 'cancelled' });
+    expect(stop).toHaveBeenCalledWith('task-arn-1');
+  });
+
+  it('leaves the task alone when the cancellation cannot be recorded', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(rendering());
+    mockSend.mockRejectedValue(
+      conditionFailure({
+        lockedBy: 'auth0|other',
+        lockedByName: 'Bob',
+        lockExpiresAt: Date.now() + 60_000,
+      }),
+    );
+
+    const response = await cancel();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'locked', holderName: 'Bob' });
+    expect(stop).not.toHaveBeenCalled();
+  });
+
+  // nothing is left to stop, and a stop against a reused arn would be someone
+  // else's task
+  it('drops the task it cancelled from the row', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(rendering());
+
+    await cancel();
+
+    expect(setValue(0, 'render')).not.toHaveProperty('taskArn');
   });
 
   it('cancels even when the task can no longer be stopped', async () => {

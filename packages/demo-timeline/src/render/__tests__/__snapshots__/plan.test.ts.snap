@@ -160,6 +160,57 @@ exports[`buildRenderPlan a clip with a banner overlays the rasterised banner for
 ]
 `;
 
+exports[`buildRenderPlan a clip with a zoom ramps the picture in, holds it and ramps it out 1`] = `
+{
+  "args": [
+    "-nostdin",
+    "-y",
+    "-accurate_seek",
+    "-ss",
+    "0.000",
+    "-to",
+    "10.000",
+    "-i",
+    "/media/asset-1.mp4",
+    "-filter_complex",
+    "[0:v]scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=30,zoompan=z='1+1.000*if(between(on/30,1.000,3.300),if(lt(on/30,1.400),if(lt(((on/30-1.000)/0.400),0.5),2*((on/30-1.000)/0.400)*((on/30-1.000)/0.400),1-2*(1-((on/30-1.000)/0.400))*(1-((on/30-1.000)/0.400))),if(lt(on/30,2.900),1,1-if(lt(((on/30-2.900)/0.400),0.5),2*((on/30-2.900)/0.400)*((on/30-2.900)/0.400),1-2*(1-((on/30-2.900)/0.400))*(1-((on/30-2.900)/0.400))))),0)':x='0.5000*(iw-iw/zoom)':y='0.5000*(ih-ih/zoom)':d=1:s=1920x1080:fps=30[v0]",
+    "-map",
+    "[v0]",
+    "-map",
+    "0:a?",
+    "-fps_mode",
+    "cfr",
+    "-r",
+    "30",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "medium",
+    "-crf",
+    "20",
+    "-g",
+    "60",
+    "-keyint_min",
+    "60",
+    "-sc_threshold",
+    "0",
+    "-pix_fmt",
+    "yuv420p",
+    "-c:a",
+    "aac",
+    "-b:a",
+    "128k",
+    "-af",
+    "aresample=async=1:first_pts=0,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo",
+    "-movflags",
+    "+faststart",
+    "/work/clip-0.mp4",
+  ],
+  "label": "clip 0 (source asset-1)",
+  "output": "/work/clip-0.mp4",
+}
+`;
+
 exports[`buildRenderPlan a narration take mixes the take into the join in programme time 1`] = `
 {
   "args": [

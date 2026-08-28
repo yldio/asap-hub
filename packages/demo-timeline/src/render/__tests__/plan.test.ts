@@ -6,6 +6,7 @@ import {
   SourceClip,
   Timeline,
   TitleClip,
+  Zoom,
 } from '../../schema';
 import { buildRenderPlan, describePlan, renderDurationMs } from '../plan';
 import { RenderAsset } from '../types';
@@ -56,6 +57,19 @@ const banner = (overrides: Partial<Banner> = {}): Banner => ({
   text: 'Rebecca Nunn',
   position: 'bottom',
   animation: 'fade',
+  ...overrides,
+});
+
+const zoom = (overrides: Partial<Zoom> = {}): Zoom => ({
+  id: 'zoom-1',
+  clipId: 'clip-1',
+  startMs: 1000,
+  rampInMs: 400,
+  holdMs: 1500,
+  rampOutMs: 400,
+  focus: { x: 0.5, y: 0.5 },
+  scale: 2,
+  easing: 'easeInOut',
   ...overrides,
 });
 
@@ -280,6 +294,66 @@ describe('buildRenderPlan', () => {
 
       expect(args).toContain("overlay=0:0:enable='between(t,2.000,7.000)'");
       expect(args).not.toContain("y='");
+    });
+  });
+
+  describe('a clip with a zoom', () => {
+    const plan = planFor({ clips: [source()], zooms: [zoom()] });
+
+    it('ramps the picture in, holds it and ramps it out', () => {
+      expect(plan.steps[0]).toMatchSnapshot();
+    });
+
+    it('pins the clip to the canvas rate, because zoompan writes its own timestamps', () => {
+      expect(plan.steps[0]?.args.join(' ')).toContain(
+        'setsar=1,fps=30,zoompan=',
+      );
+    });
+
+    it('crops around the focus point the preview scales around', () => {
+      expect(plan.steps[0]?.args.join(' ')).toContain(
+        "x='0.5000*(iw-iw/zoom)':y='0.5000*(ih-ih/zoom)'",
+      );
+    });
+
+    it('reads the zoom in clip local time, whatever the clip is trimmed to', () => {
+      const args =
+        planFor({
+          clips: [source({ inMs: 2000, outMs: 12000 })],
+          zooms: [zoom({ rampInMs: 0, holdMs: 1000, rampOutMs: 0 })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain('between(on/30,1.000,2.000)');
+    });
+
+    it('leaves a clip the zoom does not belong to alone', () => {
+      expect(
+        planFor({ clips: crossfaded, zooms: [zoom({ clipId: 'b' })] })
+          .steps.slice(0, 2)
+          .map((step) => step.args.join(' ').includes('zoompan')),
+      ).toEqual([false, true]);
+    });
+
+    it.each([
+      ['never leaves 1x', zoom({ scale: 1 })],
+      ['has no time to ramp', zoom({ rampInMs: 0, holdMs: 0, rampOutMs: 0 })],
+    ])('rescales nothing for a zoom that %s', (_, unused) => {
+      expect(
+        planFor({ clips: [source()], zooms: [unused] }).steps[0]?.args.join(
+          ' ',
+        ),
+      ).not.toContain('zoompan');
+    });
+
+    it('adds up two zooms that overlap on one clip', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          zooms: [zoom(), zoom({ id: 'zoom-2', focus: { x: 0.2, y: 0.8 } })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("x='0.5000*(iw-iw/(1+1.000*if(");
+      expect(args).toContain('+0.2000*(iw-iw/(1+1.000*if(');
     });
   });
 

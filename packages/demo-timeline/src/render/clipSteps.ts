@@ -1,6 +1,6 @@
 import { ClipPlacement } from '../clips';
 import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
-import { Banner, Canvas, Clip, SourceClip, TitleClip } from '../schema';
+import { Banner, Canvas, Clip, SourceClip, TitleClip, Zoom } from '../schema';
 import { assetHasAudio, assetPath } from './assets';
 import {
   audioEncodeArgs,
@@ -24,11 +24,13 @@ import {
 } from './filters';
 import { bannerPngPath, clipOutputPath, titlePngPath } from './paths';
 import { FfmpegStep, RenderAsset, SvgFile } from './types';
+import { clipZooms, zoomFilters } from './zoom';
 
 export type ClipStepInput = {
   placement: ClipPlacement;
   canvas: Canvas;
   banners: Banner[];
+  zooms: Zoom[];
   assets: Map<string, RenderAsset>;
   workDir: string;
 };
@@ -147,6 +149,7 @@ export const buildClipStep = ({
   placement,
   canvas,
   banners,
+  zooms,
   assets,
   workDir,
 }: ClipStepInput): ClipStepResult => {
@@ -161,6 +164,8 @@ export const buildClipStep = ({
   const audioMap = generatedAudio ? '1:a' : '0:a?';
   const baseInputCount = generatedAudio ? 2 : 1;
 
+  // the zoom moves the picture the banners sit on, exactly as the preview
+  // scales the video under its own overlay layers
   const overlays: Overlay[] = [
     ...(clip.kind === 'title'
       ? [titleOverlay(clip, canvas, workDir, index, durationMs)]
@@ -169,7 +174,14 @@ export const buildClipStep = ({
   ];
 
   const segments = [
-    filterSegment(['0:v'], videoFilters({ canvas, placement }), 'v0'),
+    filterSegment(
+      ['0:v'],
+      [
+        ...videoFilters({ canvas, placement }),
+        ...zoomFilters(clipZooms(zooms, clip.id), canvas),
+      ],
+      'v0',
+    ),
     ...overlays.flatMap((overlay, position) => [
       filterSegment(
         [`${baseInputCount + position}:v`],

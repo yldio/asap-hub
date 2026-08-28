@@ -31,7 +31,7 @@ export const buildRenderPlan = ({
   workDir,
   output,
 }: RenderPlanInput): RenderPlan => {
-  const { canvas, banners, narration } = timeline;
+  const { canvas, banners, narration, zooms } = timeline;
   const placements = layoutClips(timeline.clips);
   const durationMs = placementsDurationMs(placements);
   const index = assetIndex(assets);
@@ -41,7 +41,14 @@ export const buildRenderPlan = ({
   }
 
   const clips = placements.map((placement) =>
-    buildClipStep({ placement, canvas, banners, assets: index, workDir }),
+    buildClipStep({
+      placement,
+      canvas,
+      banners,
+      zooms,
+      assets: index,
+      workDir,
+    }),
   );
   const join = buildJoinStep({
     placements,

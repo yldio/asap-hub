@@ -27,7 +27,15 @@ describe('key helpers', () => {
     expect(assetProxyKey('video-1', 'asset-1')).toBe(
       'projects/video-1/assets/asset-1/proxy.mp4',
     );
-    expect(timelineKey('video-1', 7)).toBe('projects/video-1/timeline/7.json');
+    expect(timelineKey('video-1', 7)).toMatch(
+      /^projects\/video-1\/timeline\/7-[0-9a-f-]{36}\.json$/,
+    );
+  });
+
+  // the pointer and the bytes it names have to be inseparable, or a lost CAS
+  // between two tabs leaves the winner's pointer on the loser's object
+  it('gives every timeline write its own key', () => {
+    expect(timelineKey('video-1', 7)).not.toBe(timelineKey('video-1', 7));
   });
 
   // the EventBridge encoder rule fires on every object created under raw/, so a

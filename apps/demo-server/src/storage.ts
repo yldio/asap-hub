@@ -13,6 +13,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Readable } from 'stream';
+import { v4 as uuid } from 'uuid';
 import { getBucketName, isLocal, localS3Endpoint } from './config';
 
 let client: S3Client | undefined;
@@ -66,8 +67,12 @@ export const assetKey = (
 export const assetProxyKey = (videoId: string, assetId: string): string =>
   `${assetPrefix(videoId, assetId)}proxy.mp4`;
 
+// two tabs of the same creator both pass the timelineVersion check and the
+// per-sub lease, so a key derived from the version alone would be written twice
+// and the CAS winner's pointer could end up naming the loser's bytes; the uuid
+// ties the pointer to the object it wrote and leaves the loser an orphan
 export const timelineKey = (videoId: string, timelineVersion: number): string =>
-  `${projectPrefix(videoId)}timeline/${timelineVersion}.json`;
+  `${projectPrefix(videoId)}timeline/${timelineVersion}-${uuid()}.json`;
 
 export const createMultipartUpload = async (
   key: string,
@@ -140,10 +145,17 @@ export const abortMultipartUpload = async (
   );
 };
 
+// an S3 lifecycle rule matches a literal prefix, never a wildcard in the middle
+// of one, so the intermediates that live under projects/{id}/ carry the tag the
+// rule filters on instead
+export const captureLifecycleTag = 'lifecycle=capture';
+export const renderLifecycleTag = 'lifecycle=render';
+
 export const putObject = async (
   key: string,
   body: Buffer | string,
   contentType: string,
+  tagging?: string,
 ): Promise<void> => {
   await getS3Client().send(
     new PutObjectCommand({
@@ -151,6 +163,7 @@ export const putObject = async (
       Key: key,
       Body: body,
       ContentType: contentType,
+      ...(tagging ? { Tagging: tagging } : {}),
     }),
   );
 };

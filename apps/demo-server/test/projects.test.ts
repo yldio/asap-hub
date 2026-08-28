@@ -154,7 +154,7 @@ describe('POST /api/projects', () => {
       }),
     );
     expect(storage.putObject).toHaveBeenCalledWith(
-      'projects/generated-project-id/timeline/1.json',
+      'projects/generated-project-id/timeline/1-generated-project-id.json',
       JSON.stringify(createEmptyTimeline()),
       'application/json',
     );
@@ -265,7 +265,7 @@ describe('PUT /api/projects/:id/timeline', () => {
 
     expect(response.status).toBe(200);
     expect(storage.putObject).toHaveBeenCalledWith(
-      'projects/project-1/timeline/5.json',
+      'projects/project-1/timeline/5-generated-project-id.json',
       JSON.stringify(timeline),
       'application/json',
     );
@@ -278,10 +278,59 @@ describe('PUT /api/projects/:id/timeline', () => {
     );
     expect(ExpressionAttributeValues[':expectedVersion']).toBe(3);
     expect(ExpressionAttributeValues[':timeline']).toMatchObject({
-      key: 'projects/project-1/timeline/5.json',
+      key: 'projects/project-1/timeline/5-generated-project-id.json',
       timelineVersion: 5,
       schemaVersion: 1,
     });
+  });
+
+  // the pointer must name the object this write put, never one another tab put
+  // under a key both of them derived from the same version
+  it('points at the object it wrote, not at the version alone', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    const [writtenKey] = (storage.putObject as jest.Mock).mock.calls[0] as [
+      string,
+    ];
+    const { ExpressionAttributeValues } = mockSend.mock.calls[0]![0].input;
+    expect(ExpressionAttributeValues[':timeline'].key).toBe(writtenKey);
+    expect(writtenKey).not.toBe('projects/project-1/timeline/5.json');
+  });
+
+  // pointers written before the key carried a uuid still have to read back
+  it('still reads a pointer stored in the old key format', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({
+        timeline: {
+          key: 'projects/project-1/timeline/4.json',
+          timelineVersion: 4,
+          schemaVersion: 1,
+          updatedAt: '2026-08-01T10:00:00.000Z',
+        },
+      }),
+    );
+    const timeline = timelineWithClip();
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      JSON.stringify(timeline),
+    );
+
+    const response = await api
+      .get('/api/projects/project-1/timeline')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(200);
+    expect(storage.getObjectText).toHaveBeenCalledWith(
+      'projects/project-1/timeline/4.json',
+    );
+    expect(response.body.timeline).toEqual(timeline);
   });
 
   it('rejects a timeline that fails validation', async () => {

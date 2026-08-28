@@ -123,6 +123,12 @@ export const createAssetSchema = z.object({
     .regex(/^[a-z0-9]+$/, 'invalid extension'),
 });
 
+export const renameAssetSchema = z.object({
+  // trimmed before the length check, so a name of nothing but spaces is refused
+  // rather than stored and shown as a blank row
+  label: z.string().trim().min(1).max(300),
+});
+
 export const assetPartsSchema = z.object({
   uploadId: z.string().min(1).max(256),
   partNumbers: z.array(z.number().int().positive().max(10000)).min(1).max(1000),

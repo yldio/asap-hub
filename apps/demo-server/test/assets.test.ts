@@ -446,6 +446,78 @@ describe('GET /api/projects/:id/assets', () => {
   });
 });
 
+describe('PATCH /api/projects/:id/assets/:assetId', () => {
+  const rename = (body: Record<string, unknown>) =>
+    api
+      .patch('/api/projects/project-1/assets/asset-1')
+      .set('Authorization', creatorToken)
+      .send(body);
+
+  it('renames the asset and hands the new row back', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const set = mockAssetPatch(assetItem({ label: 'The attendance flow' }));
+
+    const response = await rename({ label: 'The attendance flow' });
+
+    expect(response.status).toBe(200);
+    expect(set).toHaveBeenCalledWith(
+      expect.objectContaining({ label: 'The attendance flow' }),
+    );
+    expect(response.body.asset).toMatchObject({
+      assetId: 'asset-1',
+      label: 'The attendance flow',
+    });
+  });
+
+  it('refuses a name that is empty or nothing but spaces', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    expect((await rename({ label: '' })).status).toBe(400);
+    expect((await rename({ label: '   ' })).status).toBe(400);
+  });
+
+  it('trims the name it stores', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const set = mockAssetPatch(assetItem({ label: 'Attendance' }));
+
+    await rename({ label: '  Attendance  ' });
+
+    expect(set).toHaveBeenCalledWith(
+      expect.objectContaining({ label: 'Attendance' }),
+    );
+  });
+
+  it('refuses a name longer than the column holds', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    expect((await rename({ label: 'x'.repeat(301) })).status).toBe(400);
+  });
+
+  it('is not for a member', async () => {
+    mockUser('member', 'auth0|member');
+
+    expect(
+      (
+        await api
+          .patch('/api/projects/project-1/assets/asset-1')
+          .set('Authorization', memberToken)
+          .send({ label: 'Nope' })
+      ).status,
+    ).toBe(403);
+  });
+
+  it('answers 404 for a project that is not a studio one', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ kind: 'upload' }));
+
+    expect((await rename({ label: 'Nope' })).status).toBe(404);
+  });
+});
+
 describe('DELETE /api/projects/:id/assets/:assetId', () => {
   const remove = () =>
     api

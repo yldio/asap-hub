@@ -289,6 +289,21 @@ export const createApi = (getToken: GetToken) => ({
       )
     ).asset,
 
+  renameAsset: async (
+    id: string,
+    assetId: string,
+    label: string,
+  ): Promise<ProjectAsset> =>
+    (
+      await request<{ asset: ProjectAsset }>(
+        `/projects/${encodeURIComponent(id)}/assets/${encodeURIComponent(
+          assetId,
+        )}`,
+        await getToken(),
+        { method: 'PATCH', body: { label } },
+      )
+    ).asset,
+
   deleteAsset: async (id: string, assetId: string): Promise<void> => {
     await request<void>(
       `/projects/${encodeURIComponent(id)}/assets/${encodeURIComponent(

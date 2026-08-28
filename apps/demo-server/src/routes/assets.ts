@@ -7,6 +7,7 @@ import {
   assetPartsSchema,
   completeAssetSchema,
   createAssetSchema,
+  renameAssetSchema,
 } from '../schemas';
 import {
   abortMultipartUploadsUnder,
@@ -228,6 +229,38 @@ export const registerAssetRoutes = (router: Router): void => {
             .go()
             .catch(() => undefined);
         });
+
+      res.json({ asset: serialiseAsset(data as AssetItem) });
+    },
+  );
+
+  // the label is the creator's name for the source, not the file's: a recording
+  // arrives called "Screen recording 05:41 AM" and only they know what it is
+  router.patch(
+    '/:id/assets/:assetId',
+    videoId,
+    assetId,
+    validate(renameAssetSchema),
+    async (req, res) => {
+      const project = await loadProject(req, res);
+      if (!project) {
+        return;
+      }
+
+      const { label } = req.body as { label: string };
+      const { data } = await assetEntity
+        .patch({
+          videoId: pathParam(req, 'id'),
+          assetId: pathParam(req, 'assetId'),
+        })
+        .set({ label, updatedAt: new Date().toISOString() })
+        .go({ response: 'all_new' })
+        .catch(() => ({ data: undefined }));
+
+      if (!data) {
+        res.status(404).json({ error: 'not_found' });
+        return;
+      }
 
       res.json({ asset: serialiseAsset(data as AssetItem) });
     },

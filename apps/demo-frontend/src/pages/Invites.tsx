@@ -1,21 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { FC, FormEvent, useMemo, useState } from 'react';
+import { Link } from 'react-router';
 
 import { ApiError } from '../api/client';
 import { useCancelInvite, useCreateInvite, useInvites } from '../api/hooks';
 import type { Invite, Role } from '../api/types';
 import { useIsAdmin, useIsCreator } from '../auth/MeContext';
-import {
-  Badge,
-  Button,
-  Card,
-  Headline,
-  Modal,
-  Spinner,
-} from '../ui/components';
+import { PageHeading } from '../layout/PageHeading';
+import { Badge, Button, Card, Modal, Spinner } from '../ui/components';
 import { TableFilters } from '../ui/TableFilters';
-import { charcoal, ember, lead, paper, rem, silver, steel } from '../ui/theme';
+import {
+  charcoal,
+  ember,
+  fern,
+  lead,
+  paper,
+  pine,
+  rem,
+  silver,
+  steel,
+} from '../ui/theme';
 import { roleLabel } from '../utils/format';
 import { formatRecordedAt } from '../utils/time';
 import { useDebounced } from '../utils/useDebounced';
@@ -75,6 +80,30 @@ const tableStyles = css({
 
 const errorStyles = css({ color: ember.rgb, fontSize: rem(14), margin: 0 });
 
+const successStyles = css({ color: fern.rgb, fontSize: rem(14), margin: 0 });
+
+const deniedStyles = css({
+  padding: rem(40),
+  display: 'grid',
+  gap: rem(8),
+  justifyItems: 'start',
+});
+
+const pageHeaderStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: rem(12),
+});
+
+// the two pages answer one question between them, so each names the other
+const crossLinkStyles = css({
+  color: pine.rgb,
+  fontSize: rem(14),
+  fontWeight: 'bold',
+});
+
 const modalTitleStyles = css({
   margin: 0,
   fontSize: rem(18),
@@ -121,24 +150,40 @@ const Invites: FC = () => {
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [cancelTarget, setCancelTarget] = useState<Invite | undefined>();
+  const [sent, setSent] = useState<string>();
+  const [cancelled, setCancelled] = useState<string>();
   const debouncedQuery = useDebounced(query);
 
   const items = invites.data;
+  // the one you just sent is the one you came to look at, so it goes on top
   const visible = useMemo(() => {
     const needle = debouncedQuery.trim().toLowerCase();
-    return (items ?? []).filter((invite) => {
-      if (needle && !invite.email.toLowerCase().includes(needle)) return false;
-      if (roleFilter !== 'all' && invite.role !== roleFilter) return false;
-      const status = invite.claimedBy ? 'claimed' : 'pending';
-      if (statusFilter !== 'all' && status !== statusFilter) return false;
-      return true;
-    });
+    return (items ?? [])
+      .filter((invite) => {
+        if (needle && !invite.email.toLowerCase().includes(needle))
+          return false;
+        if (roleFilter !== 'all' && invite.role !== roleFilter) return false;
+        const status = invite.claimedBy ? 'claimed' : 'pending';
+        if (statusFilter !== 'all' && status !== statusFilter) return false;
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          b.createdAt.localeCompare(a.createdAt) ||
+          a.email.localeCompare(b.email),
+      );
   }, [items, debouncedQuery, roleFilter, statusFilter]);
 
   if (!isCreator) {
     return (
-      <Card overrideStyles={css({ padding: rem(40) })}>
-        <Headline level={3}>Only creators can manage invites</Headline>
+      <Card overrideStyles={deniedStyles}>
+        <PageHeading size={3}>Only creators can manage invites</PageHeading>
+        <p css={{ color: lead.rgb, margin: 0 }}>
+          Ask a creator to invite somebody for you.
+        </p>
+        <Link to="/" css={{ color: pine.rgb }}>
+          Back to demos
+        </Link>
       </Card>
     );
   }
@@ -146,7 +191,16 @@ const Invites: FC = () => {
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (!email) return;
-    createInvite.mutate({ email, role }, { onSuccess: () => setEmail('') });
+    createInvite.mutate(
+      { email, role },
+      {
+        onSuccess: () => {
+          setEmail('');
+          setCancelled(undefined);
+          setSent(email);
+        },
+      },
+    );
   };
 
   // a failure that stays on screen while the admin goes on to do something else
@@ -155,12 +209,20 @@ const Invites: FC = () => {
     if (createInvite.isError) {
       createInvite.reset();
     }
+    setSent(undefined);
     setEmail(next);
   };
 
   return (
     <>
-      <Headline level={2}>Invites</Headline>
+      <div css={pageHeaderStyles}>
+        <PageHeading>Invites</PageHeading>
+        {isAdmin && (
+          <Link to="/users" css={crossLinkStyles}>
+            Manage users
+          </Link>
+        )}
+      </div>
       <div css={{ height: rem(16) }} />
 
       <Card>
@@ -191,6 +253,14 @@ const Invites: FC = () => {
             {createInvite.isPending ? 'Inviting' : 'Send invite'}
           </Button>
         </form>
+        {sent && !createInvite.isError && (
+          <p
+            role="status"
+            css={[successStyles, { padding: `0 ${rem(24)} ${rem(24)}` }]}
+          >
+            Invite sent to {sent}.
+          </p>
+        )}
         {createInvite.isError && (
           <p
             role="alert"
@@ -229,6 +299,14 @@ const Invites: FC = () => {
                 },
               ]}
             />
+            {cancelled && !cancelInvite.isError && (
+              <p
+                role="status"
+                css={[successStyles, { padding: `0 ${rem(24)} ${rem(16)}` }]}
+              >
+                The invitation to {cancelled} was cancelled.
+              </p>
+            )}
             {cancelInvite.isError && (
               <p css={[errorStyles, { padding: `0 ${rem(24)} ${rem(16)}` }]}>
                 We could not cancel that invite. Try again in a moment.
@@ -263,7 +341,6 @@ const Invites: FC = () => {
                           {!invite.claimedBy && (
                             <Button
                               small
-                              danger
                               onClick={() => setCancelTarget(invite)}
                             >
                               Cancel
@@ -306,7 +383,11 @@ const Invites: FC = () => {
               disabled={cancelInvite.isPending}
               onClick={() =>
                 cancelInvite.mutate(cancelTarget.email, {
-                  onSuccess: () => setCancelTarget(undefined),
+                  onSuccess: () => {
+                    setSent(undefined);
+                    setCancelled(cancelTarget.email);
+                    setCancelTarget(undefined);
+                  },
                 })
               }
             >

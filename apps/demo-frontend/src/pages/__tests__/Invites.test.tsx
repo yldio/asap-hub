@@ -30,9 +30,12 @@ it('tells a non-creator that only creators can manage invites', async () => {
   });
 
   expect(
-    await screen.findByText('Only creators can manage invites'),
+    await screen.findByRole('heading', {
+      name: 'Only creators can manage invites',
+      level: 1,
+    }),
   ).toBeVisible();
-  expect(screen.queryByText('Invites')).toBeNull();
+  expect(screen.queryByRole('table')).toBeNull();
 });
 
 it('shows a creator the form and the invites with their status badges', async () => {
@@ -352,4 +355,78 @@ it('surfaces a failed cancellation', async () => {
       'We could not cancel that invite. Try again in a moment.',
     ),
   ).toBeVisible();
+});
+
+it('opens on one h1 and points an admin at the users', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  expect(
+    await screen.findByRole('heading', { name: 'Invites', level: 1 }),
+  ).toBeVisible();
+  expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+  expect(screen.getByRole('link', { name: 'Manage users' })).toHaveAttribute(
+    'href',
+    '/users',
+  );
+});
+
+it('lists the newest invite first', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.resolve(items) },
+  });
+
+  await screen.findByText('jane@example.com');
+  const emails = screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((row) => row.firstElementChild?.textContent);
+
+  expect(emails).toEqual(['carl@example.com', 'jane@example.com']);
+});
+
+it('confirms that the invite went out', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      createInvite: () => Promise.resolve(),
+    },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.type(
+    screen.getByLabelText('Email address'),
+    'new@example.com',
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+
+  expect(await screen.findByRole('status')).toHaveTextContent(
+    'Invite sent to new@example.com.',
+  );
+});
+
+it('confirms that the invitation was withdrawn', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      cancelInvite: () => Promise.resolve(),
+    },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Cancel' }));
+  await userEvent.click(
+    within(screen.getByRole('dialog')).getByRole('button', {
+      name: 'Cancel invite',
+    }),
+  );
+
+  expect(await screen.findByRole('status')).toHaveTextContent(
+    'The invitation to jane@example.com was cancelled.',
+  );
 });

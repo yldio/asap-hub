@@ -2,6 +2,7 @@ import {
   AbortMultipartUploadCommand,
   CompleteMultipartUploadCommand,
   CreateMultipartUploadCommand,
+  DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
   ListMultipartUploadsCommand,
@@ -204,6 +205,12 @@ export const getObjectText = async (key: string): Promise<string> => {
     body.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
     body.on('error', reject);
   });
+};
+
+export const deleteObject = async (key: string): Promise<void> => {
+  await getS3Client().send(
+    new DeleteObjectCommand({ Bucket: getBucketName(), Key: key }),
+  );
 };
 
 export const deletePrefix = async (prefix: string): Promise<void> => {

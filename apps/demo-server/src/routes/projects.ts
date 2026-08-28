@@ -11,7 +11,12 @@ import { v4 as uuid } from 'uuid';
 import { requireCreator } from '../auth';
 import { videoEntity } from '../data/entities';
 import { createProjectSchema, saveTimelineSchema } from '../schemas';
-import { getObjectText, putObject, timelineKey } from '../storage';
+import {
+  deleteObject,
+  getObjectText,
+  putObject,
+  timelineKey,
+} from '../storage';
 import { registerAssetRoutes } from './assets';
 import { asyncRouter } from './async-router';
 import { folderExists } from './folders';
@@ -174,6 +179,14 @@ export const projectsRouter = (): Router => {
         set: { timeline: pointer, updatedAt: pointer.updatedAt },
       });
       if (!written) {
+        // the render container bumps the version every few seconds while it
+        // reports progress, so losing this race is routine. The pointer never
+        // moved, so nothing will ever read the object, and the timeline prefix
+        // is deliberately outside every lifecycle rule.
+        await deleteObject(pointer.key).catch((error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error(`failed to delete the orphaned ${pointer.key}`, error);
+        });
         return;
       }
 

@@ -15,6 +15,7 @@ jest.mock('../src/storage', () => ({
   ...jest.requireActual('../src/storage'),
   putObject: jest.fn(),
   getObjectText: jest.fn(),
+  deleteObject: jest.fn(),
 }));
 
 jest.mock('uuid', () => ({ v4: () => 'generated-project-id' }));
@@ -120,6 +121,7 @@ beforeEach(() => {
   mockSend.mockReset().mockResolvedValue({});
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
+  (storage.deleteObject as jest.Mock).mockReset().mockResolvedValue(undefined);
 });
 
 describe('POST /api/projects', () => {
@@ -426,6 +428,74 @@ describe('PUT /api/projects/:id/timeline', () => {
 
     expect(response.status).toBe(409);
     expect(response.body).toEqual({ error: 'locked', holderName: 'Bo' });
+  });
+
+  // the object is put before the CAS, and the render container bumps the version
+  // every few seconds, so losing the race is routine; nothing else ever reclaims
+  // the timeline prefix
+  it('deletes the revision it wrote when the guarded write is rejected', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+        Item: {
+          lockedBy: { S: 'auth0|creator' },
+          lockedByName: { S: 'Ana' },
+          lockExpiresAt: { N: String(lockExpiresAt()) },
+        },
+      }),
+    );
+
+    const response = await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(response.status).toBe(409);
+    const [writtenKey] = (storage.putObject as jest.Mock).mock.calls[0] as [
+      string,
+    ];
+    expect(storage.deleteObject).toHaveBeenCalledWith(writtenKey);
+  });
+
+  it('leaves the revision alone when the write lands', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(storage.deleteObject).not.toHaveBeenCalled();
+  });
+
+  it('still answers 409 when the orphan cannot be deleted', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    (storage.deleteObject as jest.Mock).mockRejectedValue(
+      new Error('AccessDenied'),
+    );
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+        Item: { lockedBy: { S: 'auth0|creator' } },
+      }),
+    );
+
+    const response = await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(response.status).toBe(409);
   });
 
   it('refuses a member', async () => {

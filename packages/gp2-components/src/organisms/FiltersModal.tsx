@@ -7,7 +7,6 @@ import {
   Paragraph,
   pixels,
 } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 
 import { useState } from 'react';
@@ -69,7 +68,6 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   workingGroups,
   tags,
 }) => {
-  const { isEnabled } = useFlags();
   const entityToSelect = <T extends { title: string; id: string }>({
     title,
     id,
@@ -168,36 +166,34 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               setSelectedProjects([...newValues]);
             }}
           />
-          {isEnabled('STAGING_MODE') && (
-            <div css={membershipStatusSectionStyles}>
-              <Paragraph noMargin styles={membershipStatusTitleStyles}>
-                <strong>Type of Users</strong>
-              </Paragraph>
-              <div css={membershipStatusRowStyles}>
-                {userMembershipStatus.map((value) => (
-                  <div key={value} css={membershipStatusItemStyles}>
-                    <LabeledCheckbox
-                      wrapLabel={false}
-                      groupName="membershipStatus"
-                      title={value}
-                      checked={selectedMembershipStatus.has(value)}
-                      onSelect={() =>
-                        setSelectedMembershipStatus((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(value)) {
-                            next.delete(value);
-                          } else {
-                            next.add(value);
-                          }
-                          return next;
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
+          <div css={membershipStatusSectionStyles}>
+            <Paragraph noMargin styles={membershipStatusTitleStyles}>
+              <strong>Type of Users</strong>
+            </Paragraph>
+            <div css={membershipStatusRowStyles}>
+              {userMembershipStatus.map((value) => (
+                <div key={value} css={membershipStatusItemStyles}>
+                  <LabeledCheckbox
+                    wrapLabel={false}
+                    groupName="membershipStatus"
+                    title={value}
+                    checked={selectedMembershipStatus.has(value)}
+                    onSelect={() =>
+                      setSelectedMembershipStatus((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(value)) {
+                          next.delete(value);
+                        } else {
+                          next.add(value);
+                        }
+                        return next;
+                      })
+                    }
+                  />
+                </div>
+              ))}
             </div>
-          )}
+          </div>
           <FilterModalFooter
             onApply={() => {
               onApplyClick({

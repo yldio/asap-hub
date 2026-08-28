@@ -1,10 +1,9 @@
 import { type Asset, type Entry, type Environment } from '@asap-hub/contentful';
 import {
   getContentfulEnvironment,
-  getErrorMessage,
-  isArchivedResource,
   NON_ARCHIVED_ENTRY_QUERY,
-} from './import-utils';
+} from '@asap-hub/server-common';
+import { getErrorMessage, isArchivedResource } from './import-utils';
 
 /**
  * Publishes all draft entities related to one or more teams.

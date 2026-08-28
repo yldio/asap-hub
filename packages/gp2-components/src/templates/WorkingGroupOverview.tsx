@@ -1,18 +1,15 @@
 import { gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
   crossQuery,
   ExpandableText,
   Headline3,
-  MembersList,
   Paragraph,
   pixels,
   RichText,
   TagList,
 } from '@asap-hub/react-components';
 
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
@@ -70,9 +67,6 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   milestones,
   tags,
 }) => {
-  const { isEnabled } = useFlags();
-  const isStagingMode = isEnabled('STAGING_MODE');
-
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
 
@@ -122,45 +116,12 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           </div>
         </Card>
       ) : null}
-      {isStagingMode ? (
-        <MembersTabbedCard
-          title={`Working Group Members (${members.length})`}
-          leaders={leaders}
-          members={regularMembers}
-          isComplete={false}
-        />
-      ) : (
-        <Card overrideStyles={cardStyles}>
-          <Headline3
-            noMargin
-          >{`Working Group Members (${members.length})`}</Headline3>
-          <div css={contentStyles}>
-            <MembersList
-              members={members.map(
-                ({
-                  role,
-                  firstName,
-                  lastName,
-                  displayName,
-                  avatarUrl,
-                  alumniSinceDate,
-                  userId: id,
-                }) => ({
-                  firstLine: displayName,
-                  secondLine: role,
-                  avatarUrl,
-                  firstName,
-                  lastName,
-                  alumniSinceDate,
-                  id,
-                }),
-              )}
-              userRoute={gp2Routing.users({}).user}
-              overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-            />
-          </div>
-        </Card>
-      )}
+      <MembersTabbedCard
+        title={`Working Group Members (${members.length})`}
+        leaders={leaders}
+        members={regularMembers}
+        isComplete={false}
+      />
       <Card overrideStyles={cardStyles}>
         <Milestones
           milestones={milestones}

@@ -7,7 +7,7 @@ import {
   isEmptyRow,
   readCsv,
   validateRequiredColumns,
-} from './import-utils';
+} from '@asap-hub/server-common';
 
 const REQUIRED_AIMS_COLUMNS = [
   'Project ID',

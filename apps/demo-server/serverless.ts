@@ -127,12 +127,15 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
+            // the exact calls ElectroDB makes; a wildcard here also grants
+            // DeleteTable, UpdateTable, UpdateTimeToLive and
+            // UpdateContinuousBackups on the one table that holds everything
             Action: [
               'dynamodb:PutItem',
-              'dynamodb:Get*',
+              'dynamodb:GetItem',
               'dynamodb:Query',
-              'dynamodb:Update*',
-              'dynamodb:Delete*',
+              'dynamodb:UpdateItem',
+              'dynamodb:DeleteItem',
             ],
             Resource: [
               {
@@ -167,7 +170,6 @@ const serverlessConfig: AWS = {
               's3:DeleteObject',
               's3:AbortMultipartUpload',
               's3:ListMultipartUploadParts',
-              's3:PutObjectAcl',
             ],
             Resource: {
               'Fn::Join': [
@@ -198,8 +200,20 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            // '*' would let this lambda send from every identity the account
+            // has verified, CRN's and GP2's included
             Action: ['ses:SendEmail', 'ses:SendRawEmail'],
-            Resource: '*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:ses',
+                  sesRegion,
+                  { Ref: 'AWS::AccountId' },
+                  `identity/${emailSender}`,
+                ],
+              ],
+            },
           },
           {
             Effect: 'Allow',
@@ -923,6 +937,14 @@ const serverlessConfig: AWS = {
                     // can download anything the timeline references
                     Action: ['dynamodb:UpdateItem', 'dynamodb:Query'],
                     Resource: { 'Fn::GetAtt': ['DataTable', 'Arn'] },
+                    // this container runs ffmpeg over creator-supplied media,
+                    // so it only ever reaches the video partitions: user rows
+                    // live under USER# and must stay out of its reach
+                    Condition: {
+                      'ForAllValues:StringLike': {
+                        'dynamodb:LeadingKeys': ['VIDEO#*'],
+                      },
+                    },
                   },
                 ],
               },

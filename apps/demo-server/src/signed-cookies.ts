@@ -41,20 +41,27 @@ export const resetPrivateKeyCache = (): void => {
 
 export type SignedCookie = { name: string; value: string };
 
+// media/ holds what a render produced and a viewer watches; projects/ holds the
+// sources the studio plays while editing. Both sit behind the same key group, so
+// each is signed for its own prefix and the cookie is scoped to that path
+export type SignedPrefix = 'media' | 'projects';
+
 export const buildSignedCookies = async (
   videoId: string,
+  prefix: SignedPrefix = 'media',
   now: number = Date.now(),
 ): Promise<SignedCookie[]> => {
   const privateKey = await loadPrivateKey();
   const expires = now + signedCookieTtlMs;
+  const resource = `https://${getDemoHostname()}/${prefix}/${videoId}/*`;
   const cookies = getSignedCookies({
-    url: `https://${getDemoHostname()}/media/${videoId}/*`,
+    url: resource,
     keyPairId: getCloudFrontKeyPairId(),
     privateKey,
     policy: JSON.stringify({
       Statement: [
         {
-          Resource: `https://${getDemoHostname()}/media/${videoId}/*`,
+          Resource: resource,
           Condition: {
             DateLessThan: { 'AWS:EpochTime': Math.floor(expires / 1000) },
           },

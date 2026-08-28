@@ -21,6 +21,8 @@ import {
   partSize,
   signUploadParts,
 } from '../storage';
+import { isLocal } from '../config';
+import { buildSignedCookies } from '../signed-cookies';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { holdsLease, loadProject, lockedBody, VideoItem } from './video-shared';
@@ -104,9 +106,25 @@ export const registerAssetRoutes = (router: Router): void => {
       return;
     }
 
+    const id = pathParam(req, 'id');
     const { data } = await assetEntity.query
-      .byVideo({ videoId: pathParam(req, 'id') })
+      .byVideo({ videoId: id })
       .go({ pages: 'all' });
+
+    // this route hands out the urls the editor plays, so it hands out the
+    // credential for them too: deployed, projects/ sits behind the same key
+    // group as media/ and a source would otherwise load as a black frame
+    if (!isLocal()) {
+      const cookies = await buildSignedCookies(id, 'projects');
+      cookies.forEach(({ name, value }) => {
+        res.cookie(name, value, {
+          path: `/projects/${id}/`,
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
+        });
+      });
+    }
 
     res.json({ assets: data.map(serialiseAsset) });
   });

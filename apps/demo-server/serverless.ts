@@ -445,12 +445,23 @@ const serverlessConfig: AWS = {
                     ],
                   },
                 },
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['StorageBucket', 'Arn'] }, '/media/*'],
-                  ],
-                },
+                Resource: [
+                  {
+                    'Fn::Join': [
+                      '',
+                      [{ 'Fn::GetAtt': ['StorageBucket', 'Arn'] }, '/media/*'],
+                    ],
+                  },
+                  {
+                    'Fn::Join': [
+                      '',
+                      [
+                        { 'Fn::GetAtt': ['StorageBucket', 'Arn'] },
+                        '/projects/*',
+                      ],
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -710,6 +721,27 @@ const serverlessConfig: AWS = {
                   ],
                 },
                 TargetOriginId: 'apigw',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+              {
+                // the studio plays the ingested sources straight from storage;
+                // without this they fall through to the frontend bucket and the
+                // editor shows a black frame where the recording should be
+                PathPattern: '/projects/*',
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: false,
+                MinTTL: 0,
+                DefaultTTL: 86400,
+                MaxTTL: 31536000,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
+                  QueryString: false,
+                },
+                TrustedKeyGroups: [{ Ref: 'CloudFrontSigningKeyGroup' }],
+                TargetOriginId: 's3origin-media',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
               {

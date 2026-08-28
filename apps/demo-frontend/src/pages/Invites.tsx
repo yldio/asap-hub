@@ -51,6 +51,10 @@ const controlStyles = css({
   backgroundColor: paper.rgb,
 });
 
+// the columns have a natural minimum, so the table scrolls inside its card
+// rather than stretching the page and pushing the header off screen
+const tableScrollStyles = css({ overflowX: 'auto', maxWidth: '100%' });
+
 const tableStyles = css({
   width: '100%',
   borderCollapse: 'collapse' as const,
@@ -230,55 +234,57 @@ const Invites: FC = () => {
                 We could not cancel that invite. Try again in a moment.
               </p>
             )}
-            <table css={tableStyles}>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Invited</th>
-                  <th>Status</th>
-                  {isAdmin && <th>Actions</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {visible.map((invite) => (
-                  <tr key={invite.email}>
-                    <td>{invite.email}</td>
-                    <td>{roleLabel(invite.role)}</td>
-                    <td>{formatRecordedAt(invite.createdAt)}</td>
-                    <td>
-                      {invite.claimedBy ? (
-                        <Badge>Claimed</Badge>
-                      ) : (
-                        <Badge tone="warning">Pending</Badge>
-                      )}
-                    </td>
-                    {isAdmin && (
+            <div css={tableScrollStyles}>
+              <table css={tableStyles}>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Invited</th>
+                    <th>Status</th>
+                    {isAdmin && <th>Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((invite) => (
+                    <tr key={invite.email}>
+                      <td>{invite.email}</td>
+                      <td>{roleLabel(invite.role)}</td>
+                      <td>{formatRecordedAt(invite.createdAt)}</td>
                       <td>
-                        {!invite.claimedBy && (
-                          <Button
-                            small
-                            danger
-                            onClick={() => setCancelTarget(invite)}
-                          >
-                            Cancel
-                          </Button>
+                        {invite.claimedBy ? (
+                          <Badge>Claimed</Badge>
+                        ) : (
+                          <Badge tone="warning">Pending</Badge>
                         )}
                       </td>
-                    )}
-                  </tr>
-                ))}
-                {visible.length === 0 && (
-                  <tr>
-                    <td colSpan={isAdmin ? 5 : 4} css={{ color: lead.rgb }}>
-                      {(items ?? []).length === 0
-                        ? 'Nobody has been invited yet.'
-                        : 'No invites match'}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                      {isAdmin && (
+                        <td>
+                          {!invite.claimedBy && (
+                            <Button
+                              small
+                              danger
+                              onClick={() => setCancelTarget(invite)}
+                            >
+                              Cancel
+                            </Button>
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                  {visible.length === 0 && (
+                    <tr>
+                      <td colSpan={isAdmin ? 5 : 4} css={{ color: lead.rgb }}>
+                        {(items ?? []).length === 0
+                          ? 'Nobody has been invited yet.'
+                          : 'No invites match'}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </Card>

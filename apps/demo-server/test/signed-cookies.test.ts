@@ -81,7 +81,7 @@ describe('buildSignedCookies', () => {
   it('expires the policy twelve hours out, in whole epoch seconds', async () => {
     const now = Date.parse('2026-08-18T12:00:00.000Z');
 
-    await buildSignedCookies('video-1', now);
+    await buildSignedCookies('video-1', 'media', now);
 
     const policy = JSON.parse(
       mockGetSignedCookies.mock.calls[0]![0].policy as string,
@@ -97,7 +97,7 @@ describe('buildSignedCookies', () => {
   it('floors a sub-second now to whole epoch seconds', async () => {
     const now = Date.parse('2026-08-18T12:00:00.000Z') + 999;
 
-    await buildSignedCookies('video-1', now);
+    await buildSignedCookies('video-1', 'media', now);
 
     const policy = JSON.parse(
       mockGetSignedCookies.mock.calls[0]![0].policy as string,
@@ -191,5 +191,27 @@ describe('buildSignedCookies', () => {
     expect(mockSsmSend).toHaveBeenCalledTimes(1);
     expect(a).toHaveLength(3);
     expect(b).toHaveLength(3);
+  });
+});
+
+describe('the studio sources', () => {
+  // the editor plays projects/{id}/assets/..., which is a different CloudFront
+  // behaviour from the rendered media, so it needs its own signed prefix
+  it('signs the projects prefix for the video it was asked about', async () => {
+    await buildSignedCookies('video-1', 'projects');
+
+    const { url, policy } = mockGetSignedCookies.mock.calls[0]![0];
+    expect(url).toContain('/projects/video-1/*');
+    expect(JSON.parse(policy as string).Statement[0].Resource).toContain(
+      '/projects/video-1/*',
+    );
+  });
+
+  it('still defaults to the rendered media', async () => {
+    await buildSignedCookies('video-1');
+
+    expect(mockGetSignedCookies.mock.calls[0]![0].url).toContain(
+      '/media/video-1/*',
+    );
   });
 });

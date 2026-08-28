@@ -28,6 +28,10 @@ import {
 import { formatRecordedAt } from '../utils/time';
 import { useDebounced } from '../utils/useDebounced';
 
+// the columns have a natural minimum, so the table scrolls inside its card
+// rather than stretching the page and pushing the header off screen
+const tableScrollStyles = css({ overflowX: 'auto', maxWidth: '100%' });
+
 const tableStyles = css({
   width: '100%',
   borderCollapse: 'collapse' as const,
@@ -203,85 +207,90 @@ const Users: FC = () => {
                 },
               ]}
             />
-            <table css={tableStyles}>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Joined</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visible.map((user) => {
-                  const isSelf = user.sub === me.sub;
-                  return (
-                    <tr key={user.sub}>
-                      <td>
-                        {user.name}{' '}
-                        {isSelf && <span css={youStyles}>(you)</span>}
-                      </td>
-                      <td>{user.email}</td>
-                      <td>
-                        <select
-                          css={selectStyles}
-                          aria-label={`Role for ${user.email}`}
-                          value={user.role}
-                          disabled={isSelf || updateUser.isPending}
-                          onChange={(event) =>
-                            updateUser.mutate({
-                              sub: user.sub,
-                              role: event.currentTarget.value as Role,
-                            })
-                          }
-                        >
-                          <option value="member">Member</option>
-                          <option value="creator">Creator</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </td>
-                      <td>
-                        {user.status === 'revoked' ? (
-                          <Badge tone="error">Revoked</Badge>
-                        ) : (
-                          <Badge>Active</Badge>
-                        )}
-                      </td>
-                      <td>{formatRecordedAt(user.createdAt)}</td>
-                      <td>
-                        {!isSelf && (
-                          <div css={actionsStyles}>
-                            <Button small onClick={() => setStatusTarget(user)}>
-                              {user.status === 'revoked'
-                                ? 'Re-enable'
-                                : 'Revoke'}
-                            </Button>
-                            <Button
-                              small
-                              danger
-                              onClick={() => setDeleteTarget(user)}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        )}
+            <div css={tableScrollStyles}>
+              <table css={tableStyles}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((user) => {
+                    const isSelf = user.sub === me.sub;
+                    return (
+                      <tr key={user.sub}>
+                        <td>
+                          {user.name}{' '}
+                          {isSelf && <span css={youStyles}>(you)</span>}
+                        </td>
+                        <td>{user.email}</td>
+                        <td>
+                          <select
+                            css={selectStyles}
+                            aria-label={`Role for ${user.email}`}
+                            value={user.role}
+                            disabled={isSelf || updateUser.isPending}
+                            onChange={(event) =>
+                              updateUser.mutate({
+                                sub: user.sub,
+                                role: event.currentTarget.value as Role,
+                              })
+                            }
+                          >
+                            <option value="member">Member</option>
+                            <option value="creator">Creator</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        </td>
+                        <td>
+                          {user.status === 'revoked' ? (
+                            <Badge tone="error">Revoked</Badge>
+                          ) : (
+                            <Badge>Active</Badge>
+                          )}
+                        </td>
+                        <td>{formatRecordedAt(user.createdAt)}</td>
+                        <td>
+                          {!isSelf && (
+                            <div css={actionsStyles}>
+                              <Button
+                                small
+                                onClick={() => setStatusTarget(user)}
+                              >
+                                {user.status === 'revoked'
+                                  ? 'Re-enable'
+                                  : 'Revoke'}
+                              </Button>
+                              <Button
+                                small
+                                danger
+                                onClick={() => setDeleteTarget(user)}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {visible.length === 0 && (
+                    <tr>
+                      <td colSpan={6} css={{ color: lead.rgb }}>
+                        {(items ?? []).length === 0
+                          ? 'Nobody has signed in yet.'
+                          : 'No users match'}
                       </td>
                     </tr>
-                  );
-                })}
-                {visible.length === 0 && (
-                  <tr>
-                    <td colSpan={6} css={{ color: lead.rgb }}>
-                      {(items ?? []).length === 0
-                        ? 'Nobody has signed in yet.'
-                        : 'No users match'}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </Card>

@@ -78,14 +78,21 @@ export const bannerSchema = z.object({
   fadeOutMs: fadeSchema,
 });
 
-export const narrationClipSchema = z.object({
-  id: idSchema,
-  assetId: idSchema,
-  startMs: msSchema,
-  inMs: msSchema,
-  outMs: msSchema,
-  volume: volumeSchema,
-});
+// the same invariant the source clips carry, stated once rather than left to
+// every caller: a take that plays up to before it starts holds no audio at all
+export const narrationClipSchema = z
+  .object({
+    id: idSchema,
+    assetId: idSchema,
+    startMs: msSchema,
+    inMs: msSchema,
+    outMs: msSchema,
+    volume: volumeSchema,
+  })
+  .refine((take) => take.outMs > take.inMs, {
+    message: 'outMs must be greater than inMs',
+    path: ['outMs'],
+  });
 
 // clip-anchored, with clip-local times, so reordering and trimming carry it along
 export const zoomSchema = z.object({

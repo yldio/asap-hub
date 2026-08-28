@@ -135,6 +135,18 @@ const withCursorLayer = (
   );
 };
 
+// The same guard trimClip applies to a source clip: a take whose in point has
+// been pushed past its out point holds no audio, and the document it would make
+// is one the server rejects outright, so the change is refused instead.
+const withNarrationBounds = (
+  take: NarrationClip,
+  next: NarrationClip,
+): NarrationClip => {
+  const inMs = Math.max(0, Math.round(next.inMs));
+  const outMs = Math.round(next.outMs);
+  return outMs <= inMs ? take : { ...next, inMs, outMs };
+};
+
 const mapClip = (
   timeline: Timeline,
   clipId: string,
@@ -302,7 +314,12 @@ export const timelineReducer = (
         ...timeline,
         narration: timeline.narration.map((take) =>
           take.id === action.narrationId
-            ? { ...take, ...action.change, id: take.id, assetId: take.assetId }
+            ? withNarrationBounds(take, {
+                ...take,
+                ...action.change,
+                id: take.id,
+                assetId: take.assetId,
+              })
             : take,
         ),
       };

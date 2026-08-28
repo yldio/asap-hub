@@ -82,6 +82,42 @@ describe('parseTimeline', () => {
     ).toThrow(TimelineFormatError);
   });
 
+  it('rejects a voice over take that plays up to before it starts', () => {
+    expect(() =>
+      parseTimeline({
+        ...withClip(),
+        narration: [
+          {
+            id: 'take-1',
+            assetId: 'audio-1',
+            startMs: 0,
+            inMs: 5000,
+            outMs: 1000,
+            volume: 1,
+          },
+        ],
+      }),
+    ).toThrow(TimelineFormatError);
+  });
+
+  it('accepts a voice over take that holds some audio', () => {
+    expect(() =>
+      parseTimeline({
+        ...withClip(),
+        narration: [
+          {
+            id: 'take-1',
+            assetId: 'audio-1',
+            startMs: 0,
+            inMs: 1000,
+            outMs: 5000,
+            volume: 1,
+          },
+        ],
+      }),
+    ).not.toThrow();
+  });
+
   it('rejects duplicate ids across tracks', () => {
     const timeline = withClip();
 

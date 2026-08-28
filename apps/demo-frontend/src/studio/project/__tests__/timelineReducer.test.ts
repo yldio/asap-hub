@@ -327,6 +327,46 @@ describe('voice over', () => {
     });
   });
 
+  it('refuses a skip that would run past the point the take plays up to', () => {
+    const timeline = timelineReducer(withTake(), {
+      type: 'updateNarration',
+      narrationId: 'take-1',
+      change: { inMs: 6000 },
+    });
+
+    expect(timeline.narration[0]).toMatchObject({ inMs: 0, outMs: 4000 });
+  });
+
+  it('refuses an end that would land before the take starts playing', () => {
+    const trimmed = timelineReducer(withTake(), {
+      type: 'updateNarration',
+      narrationId: 'take-1',
+      change: { inMs: 2000 },
+    });
+
+    const timeline = timelineReducer(trimmed, {
+      type: 'updateNarration',
+      narrationId: 'take-1',
+      change: { startMs: 3000, inMs: 2000, outMs: 1000 },
+    });
+
+    expect(timeline.narration[0]).toMatchObject({
+      startMs: 1000,
+      inMs: 2000,
+      outMs: 4000,
+    });
+  });
+
+  it('keeps every take the schema will accept', () => {
+    const timeline = timelineReducer(withTake(), {
+      type: 'updateNarration',
+      narrationId: 'take-1',
+      change: { inMs: 6000 },
+    });
+
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
   it('removes a take', () => {
     expect(
       timelineReducer(withTake(), {

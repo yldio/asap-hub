@@ -5,6 +5,7 @@ import { getDemoHostname } from '../config';
 import { recordingSessionEntity } from '../data/entities';
 import { finaliseRecordingSchema, maxCaptureBatchEvents } from '../schemas';
 import {
+  captureLifecycleTag,
   deletePrefix,
   getObjectText,
   projectPrefix,
@@ -15,6 +16,11 @@ import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { loadProject } from './video-shared';
+
+export const recordingSessionKey = (sessionId: string) => ({
+  PK: `RECORDING#${sessionId}`,
+  SK: 'META',
+});
 
 export const captureSessionPrefix = (
   videoId: string,
@@ -144,6 +150,7 @@ export const recordingsRouter = (): Router => {
         eventCount: 0,
         parts: [],
         expiresAt: now + sessionTtlMs,
+        ttl: Math.floor((now + sessionTtlMs) / 1000),
         createdBy: {
           sub: currentUser(req).sub,
           name: currentUser(req).name,
@@ -249,6 +256,7 @@ export const recordingsRouter = (): Router => {
         key,
         lines.length ? `${lines.join('\n')}\n` : '',
         ndjsonContentType,
+        captureLifecycleTag,
       );
       await deletePrefix(capturePartsPrefix(id, currentSessionId));
 

@@ -213,6 +213,9 @@ export const recordingSessionEntity = new Entity(
       parts: { type: 'list', items: { type: 'string' }, default: [] },
       lastEventAt: { type: 'string' },
       expiresAt: { type: 'number', required: true },
+      // what the table's TimeToLiveSpecification points at: the same instant as
+      // expiresAt, in the epoch seconds DynamoDB insists on
+      ttl: { type: 'number', required: true },
       startedAtEpochMs: { type: 'number' },
       stoppedAtEpochMs: { type: 'number' },
       eventsKey: { type: 'string' },

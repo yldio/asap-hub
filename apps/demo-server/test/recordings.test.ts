@@ -3,6 +3,7 @@ process.env.TABLE_NAME = 'demo-hub-test-data';
 process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { createHash } from 'crypto';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
@@ -21,8 +22,11 @@ jest.mock('../src/storage', () => ({
   deletePrefix: jest.fn(),
 }));
 
+const mockSend = jest.fn();
 jest.mock('../src/data/client', () => ({
-  getDocumentClient: () => ({ send: jest.fn() }),
+  getDocumentClient: () => ({
+    send: (...args: unknown[]) => mockSend(...args),
+  }),
   setDocumentClient: jest.fn(),
 }));
 
@@ -156,8 +160,14 @@ const batch = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+// the capture endpoint writes through the document client so the idempotency
+// guard can ride on the update's own ConditionExpression
+const captureWrites = () =>
+  mockSend.mock.calls.map(([command]) => command.input);
+
 beforeEach(() => {
   jest.restoreAllMocks();
+  mockSend.mockReset().mockResolvedValue({});
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
   (storage.deletePrefix as jest.Mock).mockReset().mockResolvedValue(undefined);
@@ -192,6 +202,25 @@ describe('POST /api/projects/:id/recordings', () => {
       tokenHash: createHash('sha256').update(issued).digest('hex'),
     });
     expect(JSON.stringify(stored)).not.toContain(issued);
+  });
+
+  // DynamoDB reads a TTL attribute as epoch seconds, so the row carries the
+  // same instant twice: expiresAt in the milliseconds the routes compare, and
+  // ttl in the seconds the table's TimeToLiveSpecification points at
+  it('gives the session a ttl in the seconds dynamodb expires on', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const create = mockSessionCreate();
+
+    await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', creatorToken);
+
+    const stored = create.mock.calls[0]?.[0] as {
+      expiresAt: number;
+      ttl: number;
+    };
+    expect(stored.ttl).toBe(Math.floor(stored.expiresAt / 1000));
   });
 
   it('is not found for a plain upload', async () => {
@@ -264,7 +293,6 @@ describe('GET /api/projects/:id/recordings/:sessionId', () => {
 describe('POST /api/capture', () => {
   it('needs no authentication and writes the batch under the session', async () => {
     mockSessionGet(sessionItem());
-    const patch = mockSessionPatch();
 
     const response = await postCapture(batch());
 
@@ -274,17 +302,53 @@ describe('POST /api/capture', () => {
       'projects/project-1/capture/session-1/parts/tab-a-3.ndjson',
       '{"id":"e1","type":"move","t":1,"x":2,"y":3}\n{"id":"e2","type":"click","t":4,"x":5,"y":6}\n',
       'application/x-ndjson',
+      'lifecycle=capture',
     );
-    expect(patch.add).toHaveBeenCalledWith({ eventCount: 2 });
-    expect(patch.append).toHaveBeenCalledWith({ parts: ['tab-a:3'] });
-    expect(patch.set).toHaveBeenCalledWith(
-      expect.objectContaining({ lastEventAt: expect.any(String) }),
+
+    const [write] = captureWrites();
+    expect(write.Key).toEqual({ PK: 'RECORDING#session-1', SK: 'META' });
+    expect(write.ExpressionAttributeValues).toMatchObject({
+      ':part': ['tab-a:3'],
+      ':partId': 'tab-a:3',
+      ':events': 2,
+    });
+  });
+
+  // the snippet posts no-cors and never sees the response, so a retry of a batch
+  // that did land is ordinary traffic and must not be counted twice
+  it('makes the part id and the quotas conditions of the write itself', async () => {
+    mockSessionGet(sessionItem());
+
+    await postCapture(batch());
+
+    const [{ ConditionExpression, ExpressionAttributeValues }] =
+      captureWrites();
+    expect(ConditionExpression).toContain('NOT contains(#parts, :partId)');
+    expect(ConditionExpression).toContain('size(#parts) < :maxParts');
+    expect(ConditionExpression).toContain('eventCount <= :maxEventCount');
+    expect(ConditionExpression).toContain('#state = :open');
+    expect(ConditionExpression).toContain('expiresAt > :now');
+    expect(ExpressionAttributeValues[':maxParts']).toBe(500);
+    expect(ExpressionAttributeValues[':maxEventCount']).toBe(200_000 - 2);
+  });
+
+  it('still answers 204 when the write loses its condition to a retry', async () => {
+    mockSessionGet(sessionItem());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
     );
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(response.text).toBe('');
   });
 
   it('never writes anything under raw/', async () => {
     mockSessionGet(sessionItem());
-    mockSessionPatch();
 
     await postCapture(batch());
 
@@ -310,13 +374,12 @@ describe('POST /api/capture', () => {
     ],
   ])('answers 204 and stores nothing for %s', async (_label, session, body) => {
     mockSessionGet(session);
-    const patch = mockSessionPatch();
 
     const response = await postCapture(body);
 
     expect(response.status).toBe(204);
     expect(storage.putObject).not.toHaveBeenCalled();
-    expect(patch.set).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -348,7 +411,6 @@ describe('POST /api/capture', () => {
 
   it('rejects a batch larger than the cap', async () => {
     mockSessionGet(sessionItem());
-    mockSessionPatch();
 
     const response = await postCapture(
       batch({
@@ -391,6 +453,7 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
       'projects/project-1/capture/session-1/events.ndjson',
       '{"id":"e1","t":1}\n{"id":"e2","t":2}\n{"id":"e3","t":3}\n',
       'application/x-ndjson',
+      'lifecycle=capture',
     );
     expect(storage.deletePrefix).toHaveBeenCalledWith(
       'projects/project-1/capture/session-1/parts/',
@@ -468,20 +531,21 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
 describe('two tabs sharing one session', () => {
   it('accepts a batch from each, because the sequence guard is per tab', async () => {
     mockSessionGet(sessionItem({ parts: [] }));
-    const patch = mockSessionPatch();
 
     const first = await postCapture(batch({ clientId: 'tab-a', seq: 1 }));
     const second = await postCapture(batch({ clientId: 'tab-b', seq: 1 }));
 
     expect(first.status).toBe(204);
     expect(second.status).toBe(204);
-    expect(patch.append).toHaveBeenNthCalledWith(1, { parts: ['tab-a:1'] });
-    expect(patch.append).toHaveBeenNthCalledWith(2, { parts: ['tab-b:1'] });
+    expect(
+      captureWrites().map(
+        ({ ExpressionAttributeValues }) => ExpressionAttributeValues[':part'],
+      ),
+    ).toEqual([['tab-a:1'], ['tab-b:1']]);
   });
 
   it('writes each tab its own part object', async () => {
     mockSessionGet(sessionItem({ parts: [] }));
-    mockSessionPatch();
 
     await postCapture(batch({ clientId: 'tab-b', seq: 4 }));
 
@@ -489,6 +553,7 @@ describe('two tabs sharing one session', () => {
       'projects/project-1/capture/session-1/parts/tab-b-4.ndjson',
       expect.any(String),
       'application/x-ndjson',
+      'lifecycle=capture',
     );
   });
 
@@ -521,6 +586,7 @@ describe('two tabs sharing one session', () => {
       'projects/project-1/capture/session-1/events.ndjson',
       '{"id":"a1","t":10}\n{"id":"b1","t":20}\n{"id":"a2","t":30}\n',
       'application/x-ndjson',
+      'lifecycle=capture',
     );
   });
 });

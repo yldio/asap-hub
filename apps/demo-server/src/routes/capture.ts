@@ -1,6 +1,10 @@
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
+import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import express, { Router } from 'express';
+import { getTableName } from '../config';
 import { captureBatchSchema } from '../schemas';
-import { putObject } from '../storage';
+import { captureLifecycleTag, putObject } from '../storage';
+import { getDocumentClient } from '../data/client';
 import { recordingSessionEntity } from '../data/entities';
 import { asyncRouter } from './async-router';
 import {
@@ -9,6 +13,7 @@ import {
   captureQuota,
   captureTokenMatches,
   ndjsonContentType,
+  recordingSessionKey,
   RecordingSessionItem,
 } from './recordings';
 
@@ -56,6 +61,53 @@ const accepts = (
   session.parts.length < captureQuota.parts &&
   session.eventCount + batch.events.length <= captureQuota.events;
 
+// the snippet posts no-cors and never sees the response, so a retry of a batch
+// that did land is normal traffic; reading the session and then appending would
+// count its events twice and duplicate its part id, so every test the read made
+// is repeated as the condition on the write itself
+const appendPart = async (
+  session: RecordingSessionItem,
+  partId: string,
+  events: number,
+): Promise<void> => {
+  const timestamp = new Date().toISOString();
+  try {
+    await getDocumentClient().send(
+      new UpdateCommand({
+        TableName: getTableName(),
+        Key: recordingSessionKey(session.sessionId),
+        UpdateExpression: [
+          'SET lastEventAt = :timestamp, updatedAt = :timestamp,',
+          '#parts = list_append(#parts, :part)',
+          'ADD eventCount :events',
+        ].join(' '),
+        ConditionExpression: [
+          '#state = :open',
+          'expiresAt > :now',
+          'NOT contains(#parts, :partId)',
+          'size(#parts) < :maxParts',
+          'eventCount <= :maxEventCount',
+        ].join(' AND '),
+        ExpressionAttributeNames: { '#parts': 'parts', '#state': 'state' },
+        ExpressionAttributeValues: {
+          ':timestamp': timestamp,
+          ':part': [partId],
+          ':partId': partId,
+          ':events': events,
+          ':open': 'open',
+          ':now': Date.now(),
+          ':maxParts': captureQuota.parts,
+          ':maxEventCount': captureQuota.events - events,
+        },
+      }),
+    );
+  } catch (error) {
+    if (!(error instanceof ConditionalCheckFailedException)) {
+      throw error;
+    }
+  }
+};
+
 export const captureRouter = (): Router => {
   const router = asyncRouter();
 
@@ -83,21 +135,16 @@ export const captureRouter = (): Router => {
 
     const partId = capturePartId(batch.clientId, batch.seq);
     const lines = batch.events.map((event) => JSON.stringify(event));
+    // rewriting the same key with the same bytes is what a retry does, so the
+    // object is put before the counters that must only ever move once
     await putObject(
       capturePartKey(session.videoId, session.sessionId, partId),
       `${lines.join('\n')}\n`,
       ndjsonContentType,
+      captureLifecycleTag,
     );
 
-    await recordingSessionEntity
-      .patch({ sessionId: session.sessionId })
-      .set({
-        lastEventAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      })
-      .add({ eventCount: batch.events.length })
-      .append({ parts: [partId] })
-      .go();
+    await appendPart(session, partId, batch.events.length);
 
     res.status(204).end();
   });

@@ -1,5 +1,6 @@
 import {
   extensionForMimeType,
+  microphoneRecordingSupport,
   pickAudioMimeType,
   pickVideoMimeType,
   screenRecordingSupport,
@@ -64,7 +65,7 @@ describe('screenRecordingSupport', () => {
         { getDisplayMedia: jest.fn() } as unknown as MediaDevices,
         recorder,
       ),
-    ).toEqual({ supported: true, videoMimeType: 'video/webm;codecs=vp9,opus' });
+    ).toEqual({ supported: true, mimeType: 'video/webm;codecs=vp9,opus' });
   });
 
   it('explains a browser that cannot capture a screen', () => {
@@ -89,5 +90,38 @@ describe('screenRecordingSupport', () => {
         { isTypeSupported: () => false },
       ),
     ).toMatchObject({ supported: false });
+  });
+});
+
+describe('microphoneRecordingSupport', () => {
+  const supportsAudio = (mimeType: string) =>
+    mimeType === 'audio/webm;codecs=opus';
+
+  it('accepts a browser that can reach a microphone and record it', () => {
+    expect(
+      microphoneRecordingSupport(
+        { getUserMedia: jest.fn() },
+        { isTypeSupported: supportsAudio },
+      ),
+    ).toEqual({ supported: true, mimeType: 'audio/webm;codecs=opus' });
+  });
+
+  // the voice over button used to stay enabled and do nothing at all here
+  it('says so when there is no microphone to reach', () => {
+    const support = microphoneRecordingSupport(
+      {},
+      { isTypeSupported: supportsAudio },
+    );
+
+    expect(support.supported).toBe(false);
+  });
+
+  it('says so when no audio format can be recorded', () => {
+    const support = microphoneRecordingSupport(
+      { getUserMedia: jest.fn() },
+      { isTypeSupported: () => false },
+    );
+
+    expect(support.supported).toBe(false);
   });
 });

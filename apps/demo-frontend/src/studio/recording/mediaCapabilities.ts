@@ -43,7 +43,7 @@ export const extensionForMimeType = (mimeType: string): string => {
 };
 
 export type RecordingSupport =
-  | { supported: true; videoMimeType: string }
+  | { supported: true; mimeType: string }
   | { supported: false; reason: string };
 
 export const screenRecordingSupport = (
@@ -63,11 +63,36 @@ export const screenRecordingSupport = (
       reason: 'This browser has no MediaRecorder, so it cannot record.',
     };
   }
-  const videoMimeType = pickVideoMimeType(recorder.isTypeSupported);
-  return videoMimeType
-    ? { supported: true, videoMimeType }
+  const mimeType = pickVideoMimeType(recorder.isTypeSupported);
+  return mimeType
+    ? { supported: true, mimeType }
     : {
         supported: false,
         reason: 'This browser supports no video format the studio can record.',
+      };
+};
+
+export const microphoneRecordingSupport = (
+  mediaDevices: Partial<MediaDevices> | undefined,
+  recorder: { isTypeSupported?: IsTypeSupported } | undefined,
+): RecordingSupport => {
+  if (!mediaDevices?.getUserMedia) {
+    return {
+      supported: false,
+      reason: 'This browser cannot reach a microphone.',
+    };
+  }
+  if (!recorder?.isTypeSupported) {
+    return {
+      supported: false,
+      reason: 'This browser has no MediaRecorder, so it cannot record.',
+    };
+  }
+  const mimeType = pickAudioMimeType(recorder.isTypeSupported);
+  return mimeType
+    ? { supported: true, mimeType }
+    : {
+        supported: false,
+        reason: 'This browser supports no audio format the studio can record.',
       };
 };

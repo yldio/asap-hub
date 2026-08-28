@@ -39,6 +39,7 @@ type Props = {
   readonly error?: string;
   readonly saving: boolean;
   readonly readOnly: boolean;
+  readonly unsupportedReason?: string;
   readonly onStart: () => void;
   readonly onStop: () => void;
 };
@@ -51,31 +52,35 @@ const VoiceOverPanel: FC<Props> = ({
   error,
   saving,
   readOnly,
+  unsupportedReason,
   onStart,
   onStop,
-}) => (
-  <div css={rowStyles}>
-    {status === 'recording' ? (
-      <>
-        <span css={liveStyles}>
-          <span css={dotStyles} />
-          {formatDuration(elapsedMs)}
-        </span>
-        <EditorButton primary onClick={onStop}>
-          Stop the voice over
+}) =>
+  unsupportedReason ? (
+    <p css={errorStyles}>{unsupportedReason}</p>
+  ) : (
+    <div css={rowStyles}>
+      {status === 'recording' ? (
+        <>
+          <span css={liveStyles}>
+            <span css={dotStyles} />
+            {formatDuration(elapsedMs)}
+          </span>
+          <EditorButton primary onClick={onStop}>
+            Stop the voice over
+          </EditorButton>
+        </>
+      ) : (
+        <EditorButton
+          icon={<MicrophoneIcon size={14} />}
+          disabled={readOnly || saving}
+          onClick={onStart}
+        >
+          {saving ? 'Saving…' : 'Record a voice over'}
         </EditorButton>
-      </>
-    ) : (
-      <EditorButton
-        icon={<MicrophoneIcon size={14} />}
-        disabled={readOnly || saving}
-        onClick={onStart}
-      >
-        {saving ? 'Saving…' : 'Record a voice over'}
-      </EditorButton>
-    )}
-    {error ? <span css={errorStyles}>{error}</span> : null}
-  </div>
-);
+      )}
+      {error ? <span css={errorStyles}>{error}</span> : null}
+    </div>
+  );
 
 export default VoiceOverPanel;

@@ -15,7 +15,17 @@ import { Link } from 'react-router';
 
 import type { Folder, FolderCounts } from '../api/types';
 import { Spinner } from '../ui/components';
-import { charcoal, lead, mint, pine, rem, silver, tin } from '../ui/theme';
+import {
+  cerulean,
+  charcoal,
+  info100,
+  lead,
+  mint,
+  pine,
+  rem,
+  silver,
+  tin,
+} from '../ui/theme';
 import {
   CaretIcon,
   FolderIcon,
@@ -25,6 +35,7 @@ import {
   StackIcon,
 } from './icons';
 import { aggregateCount, buildTree, pathOf, type FolderNode } from './tree';
+import { useIsNarrow } from './useIsNarrow';
 
 const headerStyles = css({
   display: 'flex',
@@ -40,6 +51,19 @@ const headingStyles = css({
   textTransform: 'uppercase',
   color: lead.rgb,
   fontWeight: 'bold',
+});
+
+const disclosureStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(8),
+  padding: `${rem(4)} ${rem(6)}`,
+  margin: `0 0 0 ${rem(-6)}`,
+  border: 'none',
+  borderRadius: rem(4),
+  background: 'none',
+  font: 'inherit',
+  cursor: 'pointer',
 });
 
 const iconButtonStyles = css({
@@ -94,11 +118,14 @@ const activeRowStyles = css({
   ':hover': { backgroundColor: mint.rgb },
 });
 
+// the armed drop target must not borrow the green of the folder you are already
+// in, or there is no telling which row a drop would land on
 const dropTargetStyles = css({
-  backgroundColor: mint.rgb,
-  outline: `2px solid ${pine.rgb}`,
+  backgroundColor: info100.rgb,
+  outline: `2px dashed ${cerulean.rgb}`,
   outlineOffset: rem(-2),
-  color: pine.rgb,
+  color: cerulean.rgb,
+  fontWeight: 'bold',
 });
 
 const labelStyles = css({
@@ -442,6 +469,8 @@ export const Sidebar: FC<{
 }) => {
   const [expanded, toggle] = useExpandedFolders(folders, selectedFolder);
   const [homeExpanded, toggleHome] = useHomeExpanded();
+  const isNarrow = useIsNarrow();
+  const [treeOpen, setTreeOpen] = useState(false);
   // the input blurs itself shut on the press, so the click has to remember
   // whether it was open or a second press would silently reopen it
   const wasCreating = useRef(false);
@@ -515,10 +544,26 @@ export const Sidebar: FC<{
     );
   };
 
+  // the label is the landmark's own name, so it never competes with the page
+  // heading for the first entry in the heading outline
   return (
-    <aside>
+    <aside aria-label="Folders">
       <div css={headerStyles}>
-        <h2 css={headingStyles}>Folders</h2>
+        {isNarrow ? (
+          <button
+            type="button"
+            css={[disclosureStyles, headingStyles]}
+            aria-expanded={treeOpen}
+            onClick={() => setTreeOpen((open) => !open)}
+          >
+            <span css={[caretStyles, treeOpen && caretOpenStyles]}>
+              <CaretIcon size={12} />
+            </span>
+            Folders
+          </button>
+        ) : (
+          <div css={headingStyles}>Folders</div>
+        )}
         {isCreator && (
           <button
             type="button"
@@ -530,6 +575,7 @@ export const Sidebar: FC<{
               wasCreating.current = isCreatingFolder;
             }}
             onClick={() => {
+              setTreeOpen(true);
               if (wasCreating.current) onCancelCreate();
               else onStartCreate();
               wasCreating.current = false;
@@ -539,7 +585,7 @@ export const Sidebar: FC<{
           </button>
         )}
       </div>
-      {isLoading ? (
+      {isNarrow && !treeOpen ? null : isLoading ? (
         <Spinner label="Loading folders" />
       ) : (
         <>

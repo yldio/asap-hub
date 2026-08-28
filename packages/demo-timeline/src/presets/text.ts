@@ -32,7 +32,9 @@ export const charactersPerLine = (
 const ellipsis = '...';
 
 const truncateLine = (line: string, maxCharacters: number): string =>
-  `${line.slice(0, Math.max(0, maxCharacters - ellipsis.length)).trimEnd()}${ellipsis}`;
+  `${line
+    .slice(0, Math.max(0, maxCharacters - ellipsis.length))
+    .trimEnd()}${ellipsis}`;
 
 const breakLongWord = (word: string, maxCharacters: number): string[] =>
   word.length <= maxCharacters
@@ -77,17 +79,19 @@ export type SvgTextLine = {
   y: number;
   fontFamily: string;
   fontSize: number;
+  fontWeight: number;
   fill: string;
   anchor: 'start' | 'middle';
 };
 
 export const svgTextElement = (line: SvgTextLine): string =>
-  `<text x="${line.x}" y="${line.y}" font-family="${line.fontFamily}" font-size="${line.fontSize}" font-weight="600" fill="${line.fill}" text-anchor="${line.anchor}">${escapeXml(line.text)}</text>`;
+  `<text x="${line.x}" y="${line.y}" font-family="${
+    line.fontFamily
+  }" font-size="${line.fontSize}" font-weight="${line.fontWeight}" fill="${
+    line.fill
+  }" text-anchor="${line.anchor}">${escapeXml(line.text)}</text>`;
 
-export const svgDocument = (
-  canvas: PresetCanvas,
-  children: string[],
-): string =>
+export const svgDocument = (canvas: PresetCanvas, children: string[]): string =>
   [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}">`,
     ...children.map((child) => `  ${child}`),

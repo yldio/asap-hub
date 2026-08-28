@@ -8,25 +8,35 @@ import type { JobName, JobRunner } from './runner';
 
 export type EcsClientLike = Pick<ECSClient, 'send'>;
 
-const cluster = (): string => process.env.ENCODER_CLUSTER || '';
-const taskDefinition = (): string => process.env.ENCODER_TASK_DEFINITION || '';
-const containerName = (): string =>
-  process.env.ENCODER_CONTAINER_NAME || 'encoder';
+export type EcsJobOptions = {
+  cluster: string;
+  taskDefinition: string;
+  containerName: string;
+  subnets: string[];
+  securityGroups: string[];
+};
 
-const subnets = (): string[] =>
-  (process.env.ENCODER_SUBNET_IDS || '')
+// serverless.ts puts all of this on the api handler
+export const ecsOptionsFromEnv = (): EcsJobOptions => ({
+  cluster: process.env.ENCODER_CLUSTER || '',
+  taskDefinition: process.env.ENCODER_TASK_DEFINITION || '',
+  containerName: process.env.ENCODER_CONTAINER_NAME || 'encoder',
+  subnets: (process.env.ENCODER_SUBNET_IDS || '')
     .split(',')
     .map((subnet) => subnet.trim())
-    .filter(Boolean);
+    .filter(Boolean),
+  securityGroups: [process.env.ENCODER_SECURITY_GROUP_ID].filter(
+    (group): group is string => Boolean(group),
+  ),
+});
 
-const securityGroups = (): string[] =>
-  [process.env.ENCODER_SECURITY_GROUP_ID].filter((group): group is string =>
-    Boolean(group),
-  );
-
-const runTaskInput = (job: JobName, env: Record<string, string>) => ({
-  cluster: cluster(),
-  taskDefinition: taskDefinition(),
+const runTaskInput = (
+  options: EcsJobOptions,
+  job: JobName,
+  env: Record<string, string>,
+) => ({
+  cluster: options.cluster,
+  taskDefinition: options.taskDefinition,
   launchType: 'FARGATE' as const,
   count: 1,
   platformVersion: 'LATEST',
@@ -34,14 +44,14 @@ const runTaskInput = (job: JobName, env: Record<string, string>) => ({
     awsvpcConfiguration: {
       // the task pulls its image from ECR over the internet, there is no NAT
       assignPublicIp: 'ENABLED' as const,
-      subnets: subnets(),
-      securityGroups: securityGroups(),
+      subnets: options.subnets,
+      securityGroups: options.securityGroups,
     },
   },
   overrides: {
     containerOverrides: [
       {
-        name: containerName(),
+        name: options.containerName,
         environment: [
           { name: 'JOB', value: job },
           ...Object.entries(env).map(([name, value]) => ({ name, value })),
@@ -53,10 +63,11 @@ const runTaskInput = (job: JobName, env: Record<string, string>) => ({
 
 export const createEcsJobRunner = (
   client: EcsClientLike = new ECSClient({ region: getRegion() }),
+  options: EcsJobOptions = ecsOptionsFromEnv(),
 ): JobRunner => ({
   run: async (job, env) => {
     const { tasks, failures } = await client.send(
-      new RunTaskCommand(runTaskInput(job, env)),
+      new RunTaskCommand(runTaskInput(options, job, env)),
     );
     const jobId = tasks?.[0]?.taskArn;
     if (!jobId) {
@@ -69,7 +80,7 @@ export const createEcsJobRunner = (
   stop: async (jobId) => {
     await client.send(
       new StopTaskCommand({
-        cluster: cluster(),
+        cluster: options.cluster,
         task: jobId,
         reason: 'stopped by the demo hub',
       }),

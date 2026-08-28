@@ -1,12 +1,11 @@
 process.env.SLS_STAGE = 'local';
 process.env.TABLE_NAME = 'demo-hub-test-data';
 process.env.BUCKET_NAME = 'demo-hub-test-storage';
-process.env.REGION = 'us-east-1';
 
 /* eslint-disable import/first */
 import { RunTaskCommand, StopTaskCommand } from '@aws-sdk/client-ecs';
 import { EventEmitter } from 'events';
-import { isLocal } from '../src/config';
+import { getBucketName, getRegion, getTableName, isLocal } from '../src/config';
 import * as dockerRunner from '../src/jobs/docker-runner';
 import * as ecsRunner from '../src/jobs/ecs-runner';
 import { getJobRunner, JobRunner, setJobRunner } from '../src/jobs/runner';
@@ -19,12 +18,17 @@ jest.mock('../src/config', () => ({
 
 const mockIsLocal = isLocal as jest.MockedFunction<typeof isLocal>;
 
-const cluster =
-  'arn:aws:ecs:us-east-1:111111111111:cluster/demo-hub-dev-encoder';
-const taskDefinition =
-  'arn:aws:ecs:us-east-1:111111111111:task-definition/demo-hub-dev-encoder:7';
 const taskArn =
   'arn:aws:ecs:us-east-1:111111111111:task/demo-hub-dev-encoder/abc';
+
+const ecsOptions: ecsRunner.EcsJobOptions = {
+  cluster: 'arn:aws:ecs:us-east-1:111111111111:cluster/demo-hub-dev-encoder',
+  taskDefinition:
+    'arn:aws:ecs:us-east-1:111111111111:task-definition/demo-hub-dev-encoder:7',
+  containerName: 'encoder',
+  subnets: ['subnet-a', 'subnet-b'],
+  securityGroups: ['sg-1'],
+};
 
 const stubRunner = (): JobRunner => ({ run: jest.fn(), stop: jest.fn() });
 
@@ -72,10 +76,6 @@ beforeEach(() => {
   jest.restoreAllMocks();
   setJobRunner(undefined);
   mockIsLocal.mockReturnValue(true);
-  process.env.ENCODER_CLUSTER = cluster;
-  process.env.ENCODER_TASK_DEFINITION = taskDefinition;
-  process.env.ENCODER_SUBNET_IDS = 'subnet-a, subnet-b';
-  process.env.ENCODER_SECURITY_GROUP_ID = 'sg-1';
 });
 
 afterAll(() => {
@@ -145,9 +145,9 @@ describe('the docker runner', () => {
       '-e',
       'JOB=ingest',
       '-e',
-      'BUCKET_NAME=demo-hub-test-storage',
+      `BUCKET_NAME=${getBucketName()}`,
       '-e',
-      'TABLE_NAME=demo-hub-test-data',
+      `TABLE_NAME=${getTableName()}`,
       '-e',
       'S3_ENDPOINT=http://localhost:9010',
       '-e',
@@ -157,7 +157,7 @@ describe('the docker runner', () => {
       '-e',
       'AWS_SECRET_ACCESS_KEY=minioadmin',
       '-e',
-      'AWS_DEFAULT_REGION=us-east-1',
+      `AWS_DEFAULT_REGION=${getRegion()}`,
       '-e',
       'VIDEO_ID=video-1',
       '-e',
@@ -190,11 +190,12 @@ describe('the docker runner', () => {
 describe('the ECS runner', () => {
   const send = jest.fn();
   const client = { send } as unknown as ecsRunner.EcsClientLike;
+  const runner = () => ecsRunner.createEcsJobRunner(client, ecsOptions);
 
   it('runs a task with the job in the container overrides', async () => {
     send.mockResolvedValue({ tasks: [{ taskArn }] });
 
-    const { jobId } = await ecsRunner.createEcsJobRunner(client).run('ingest', {
+    const { jobId } = await runner().run('ingest', {
       VIDEO_ID: 'video-1',
       ASSET_ID: 'asset-1',
     });
@@ -203,8 +204,8 @@ describe('the ECS runner', () => {
     const command = send.mock.calls[0]?.[0];
     expect(command).toBeInstanceOf(RunTaskCommand);
     expect(command.input).toEqual({
-      cluster,
-      taskDefinition,
+      cluster: ecsOptions.cluster,
+      taskDefinition: ecsOptions.taskDefinition,
       launchType: 'FARGATE',
       count: 1,
       platformVersion: 'LATEST',
@@ -236,20 +237,18 @@ describe('the ECS runner', () => {
       failures: [{ reason: 'RESOURCE:CPU' }],
     });
 
-    await expect(
-      ecsRunner.createEcsJobRunner(client).run('render', {}),
-    ).rejects.toThrow('RESOURCE:CPU');
+    await expect(runner().run('render', {})).rejects.toThrow('RESOURCE:CPU');
   });
 
   it('stops a job by stopping its task', async () => {
     send.mockResolvedValue({});
 
-    await ecsRunner.createEcsJobRunner(client).stop(taskArn);
+    await runner().stop(taskArn);
 
     const command = send.mock.calls[0]?.[0];
     expect(command).toBeInstanceOf(StopTaskCommand);
     expect(command.input).toEqual({
-      cluster,
+      cluster: ecsOptions.cluster,
       task: taskArn,
       reason: 'stopped by the demo hub',
     });

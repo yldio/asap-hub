@@ -53,6 +53,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       pixelsPerSecond={pixelsPerSecond}
       readOnly={false}
       banners={[]}
+      narration={[]}
       onSelectBanner={onSelectBanner}
       onMoveBanner={onMoveBanner}
       assets={{

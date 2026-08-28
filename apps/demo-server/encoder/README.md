@@ -1,14 +1,26 @@
 # Demo hub encoder
 
-ARM64 Fargate image that turns a raw upload into the media a watch page needs: a faststart
-MP4, a thumbnail sprite, and a WebVTT track pointing into that sprite.
+ARM64 Fargate image that runs the studio's container jobs. `entrypoint.sh` dispatches on
+`$JOB`:
+
+| `JOB`               | Script      | What it produces                                    |
+| ------------------- | ----------- | --------------------------------------------------- |
+| `encode` or nothing | `encode.sh` | The watch page media for a raw upload               |
+| `ingest`            | `ingest.sh` | A seekable `proxy.mp4` and the probe of a new asset |
+
+An unset `JOB` has to keep meaning `encode`: the EventBridge rule below sets none.
+
+Deployed, a job is started by `ecs:RunTask` from the api lambda (`src/jobs`), except the
+upload encode, which is still started by the EventBridge rule. Locally the same image runs
+under `docker run`, pointed at MinIO and DynamoDB Local by `S3_ENDPOINT` and
+`DYNAMODB_ENDPOINT`.
+
+## encode
 
 The task is started by the `demo-hub-${stage}-encoder-raw-object-created` EventBridge rule
 whenever an object lands under `raw/` in the storage bucket. The rule injects
 `S3_OBJECT_KEY`; `BUCKET_NAME`, `TABLE_NAME` and `REGION` come from the task definition, and
 credentials come from the task role.
-
-## What it does
 
 1. Derives `videoId` from the second segment of `S3_OBJECT_KEY` (`raw/{videoId}/original.mp4`).
 2. Downloads the raw object to `/scratch`.
@@ -22,11 +34,32 @@ credentials come from the task role.
 Any failure sets `processingState = 'failed'` with a truncated `processingError` and exits
 non-zero. That runs from an `EXIT` trap, so a partial failure still records a state.
 
+Steps 5 to 7 live in `finish.sh`, which `encode.sh` sources: every job that produces a
+watchable video ends the same way, so the render job can reuse it unchanged.
+
+## ingest
+
+Started when an asset upload completes. It turns whatever the browser produced into
+something the editor can seek: MediaRecorder WebM carries neither a duration nor cues, and
+even an mp4 may not be faststart.
+
+1. Downloads `ASSET_KEY` to `/scratch`.
+2. Probes the codec, container, dimensions and `r_frame_rate` (`60000/1001` becomes 60fps).
+3. Writes `proxy.mp4`: `-c copy` when the source is already h264 in mp4 or mov, an audio only
+   remux when there is no video stream, otherwise a `veryfast` CRF 24 transcode. Always
+   `+faststart`.
+4. Uploads it to `projects/{videoId}/assets/{assetId}/proxy.mp4`.
+5. Sets `state = 'ready'` with `proxyKey`, `durationMs`, `width`, `height` and `fps` on
+   `PK=VIDEO#{videoId}, SK=ASSET#{assetId}`.
+
+Any failure sets `state = 'failed'` with a truncated `error`. Both updates are conditional on
+`attribute_exists(PK)`, so an asset deleted mid ingest is not resurrected.
+
 ## Environment
 
 | Variable                  | Required          | Notes                                                       |
 | ------------------------- | ----------------- | ----------------------------------------------------------- |
-| `S3_OBJECT_KEY`           | yes               | Injected per run by the EventBridge rule                    |
+| `S3_OBJECT_KEY`           | encode            | Injected per run by the EventBridge rule                    |
 | `BUCKET_NAME`             | yes               | Storage bucket                                              |
 | `TABLE_NAME`              | yes               | Single table                                                |
 | `S3_ENDPOINT`             | no                | Endpoint override for MinIO                                 |
@@ -37,6 +70,10 @@ non-zero. That runs from an `EXIT` trap, so a partial failure still records a st
 | `SPRITE_INTERVAL_SECONDS` | no                | Defaults to `10`                                            |
 | `SPRITE_TILE_WIDTH`       | no                | Defaults to `160`                                           |
 | `SPRITE_COLUMNS`          | no                | Defaults to `10`                                            |
+| `JOB`                     | no                | `encode` (default) or `ingest`                              |
+| `VIDEO_ID`                | ingest            | Project the asset belongs to                                |
+| `ASSET_ID`                | ingest            | Asset being ingested                                        |
+| `ASSET_KEY`               | ingest            | Key of the uploaded original                                |
 
 The AWS CLI also honours `AWS_ENDPOINT_URL_S3` and `AWS_ENDPOINT_URL_DYNAMODB` directly if you
 prefer those over `S3_ENDPOINT` / `DYNAMODB_ENDPOINT`.
@@ -66,7 +103,15 @@ is no service to redeploy.
 ## Running locally
 
 Against MinIO and DynamoDB Local (see the repo docker-compose and the
-`dynamodb:local:setup` script):
+`dynamodb:local:setup` script). Build the image the way the local job runner expects to find
+it:
+
+```sh
+docker compose build encoder
+```
+
+That tags `demo-hub-encoder:local`. The compose service is in the `jobs` profile because
+nothing should keep it running: the job runner starts one container per job. An encode:
 
 ```sh
 docker run --rm \
@@ -74,7 +119,7 @@ docker run --rm \
   -e S3_OBJECT_KEY=raw/demo-1/original.mp4 \
   -e BUCKET_NAME=demo-hub-local-storage \
   -e TABLE_NAME=demo-hub-local-data \
-  -e S3_ENDPOINT=http://localhost:9000 \
+  -e S3_ENDPOINT=http://localhost:9010 \
   -e DYNAMODB_ENDPOINT=http://localhost:8000 \
   -e AWS_ACCESS_KEY_ID=minioadmin \
   -e AWS_SECRET_ACCESS_KEY=minioadmin \
@@ -98,3 +143,22 @@ BUCKET_NAME=unused TABLE_NAME=unused \
 
 That leaves `stream.mp4`, `sprite.jpg` and `thumbnails.vtt` in `./out` and skips every AWS
 call. It needs `ffmpeg` and `ffprobe` on your PATH.
+
+An ingest, against the same local stack:
+
+```sh
+docker run --rm \
+  --network host \
+  -e JOB=ingest \
+  -e VIDEO_ID=demo-1 \
+  -e ASSET_ID=asset-1 \
+  -e ASSET_KEY=projects/demo-1/assets/asset-1/original.webm \
+  -e BUCKET_NAME=demo-hub-local-storage \
+  -e TABLE_NAME=demo-hub-local-data \
+  -e S3_ENDPOINT=http://localhost:9010 \
+  -e DYNAMODB_ENDPOINT=http://localhost:8000 \
+  -e AWS_ACCESS_KEY_ID=minioadmin \
+  -e AWS_SECRET_ACCESS_KEY=minioadmin \
+  -e AWS_DEFAULT_REGION=us-east-1 \
+  demo-hub-encoder:local
+```

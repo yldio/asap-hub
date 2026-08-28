@@ -52,6 +52,9 @@ export const joinBoundaries = (placements: ClipPlacement[]): JoinBoundary[] =>
     transition: xfadeTransition(placement.clip.transitionIn),
   }));
 
+const joinLabel = (clipCount: number, strategy: string): string =>
+  `join ${clipCount} clip${clipCount === 1 ? '' : 's'} (${strategy})`;
+
 export const concatListContent = (paths: string[]): string =>
   paths.map((path) => `file '${path.replace(/'/g, `'\\''`)}'\n`).join('');
 
@@ -131,7 +134,7 @@ const concatJoin = ({
       ),
     },
     step: {
-      label: `join ${placements.length} clips (concat)`,
+      label: joinLabel(placements.length, 'concat'),
       output,
       args: [
         ...startArgs,
@@ -192,7 +195,11 @@ const foldChain = (
     (chain, boundary) => ({
       segments: [
         ...chain.segments,
-        filterSegment([chain.label, boundary.input], [boundary.filter], boundary.name),
+        filterSegment(
+          [chain.label, boundary.input],
+          [boundary.filter],
+          boundary.name,
+        ),
       ],
       label: boundary.name,
     }),
@@ -218,7 +225,9 @@ const xfadeJoin = ({
       name: `v${boundary.index}`,
       filter:
         boundary.durationMs > 0
-          ? `xfade=transition=${boundary.transition}:duration=${secondsFromMs(boundary.durationMs)}:offset=${secondsFromMs(boundary.offsetMs)}`
+          ? `xfade=transition=${boundary.transition}:duration=${secondsFromMs(
+              boundary.durationMs,
+            )}:offset=${secondsFromMs(boundary.offsetMs)}`
           : 'concat=n=2:v=1:a=0',
     })),
   );
@@ -251,7 +260,7 @@ const xfadeJoin = ({
 
   return {
     step: {
-      label: `join ${placements.length} clips (xfade)`,
+      label: joinLabel(placements.length, 'xfade'),
       output,
       args: [
         ...startArgs,

@@ -85,6 +85,7 @@ describe('svgTextElement', () => {
         y: 20,
         fontFamily: sansFontFamily,
         fontSize: 40,
+        fontWeight: 600,
         fill: '#ffffff',
         anchor: 'start',
       }),

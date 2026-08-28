@@ -2,6 +2,7 @@ import {
   Banner,
   Canvas,
   Clip,
+  NarrationClip,
   insertClipAt,
   moveClip,
   removeClip,
@@ -51,6 +52,13 @@ export type TimelineAction =
   | { type: 'addBanner'; banner: Banner }
   | { type: 'updateBanner'; bannerId: string; change: Partial<Banner> }
   | { type: 'removeBanner'; bannerId: string }
+  | { type: 'addNarration'; narration: NarrationClip }
+  | {
+      type: 'updateNarration';
+      narrationId: string;
+      change: Partial<NarrationClip>;
+    }
+  | { type: 'removeNarration'; narrationId: string }
   | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
@@ -221,6 +229,30 @@ export const timelineReducer = (
         ...timeline,
         banners: timeline.banners.filter(
           (banner) => banner.id !== action.bannerId,
+        ),
+      };
+
+    case 'addNarration':
+      return {
+        ...timeline,
+        narration: [...timeline.narration, action.narration],
+      };
+
+    case 'updateNarration':
+      return {
+        ...timeline,
+        narration: timeline.narration.map((clip) =>
+          clip.id === action.narrationId
+            ? { ...clip, ...action.change, id: clip.id }
+            : clip,
+        ),
+      };
+
+    case 'removeNarration':
+      return {
+        ...timeline,
+        narration: timeline.narration.filter(
+          (clip) => clip.id !== action.narrationId,
         ),
       };
 

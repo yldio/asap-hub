@@ -86,10 +86,7 @@ const bannerOverlays = (
 ): Overlay[] =>
   banners.flatMap((banner, index) => {
     const startMs = Math.max(banner.startMs, placement.startMs);
-    const endMs = Math.min(
-      banner.startMs + banner.durationMs,
-      placement.endMs,
-    );
+    const endMs = Math.min(banner.startMs + banner.durationMs, placement.endMs);
     return endMs <= startMs
       ? []
       : [

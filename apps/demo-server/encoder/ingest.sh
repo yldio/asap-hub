@@ -48,7 +48,7 @@ now() {
   date -u '+%Y-%m-%dT%H:%M:%S.000Z'
 }
 
-ASSET_KEY_JSON="{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"ASSET#${ASSET_ID}\"}}"
+ITEM_KEY_JSON="{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"ASSET#${ASSET_ID}\"}}"
 
 FAILURE_REPORTED=0
 
@@ -62,7 +62,7 @@ report_failure() {
   # the condition keeps a delete that raced the ingest from resurrecting the item
   aws_dynamodb update-item \
     --table-name "$TABLE_NAME" \
-    --key "$ASSET_KEY_JSON" \
+    --key "$ITEM_KEY_JSON" \
     --update-expression 'SET #state = :state, #error = :error, #updatedAt = :updatedAt' \
     --condition-expression 'attribute_exists(PK)' \
     --expression-attribute-names '{"#state":"state","#error":"error","#updatedAt":"updatedAt"}' \
@@ -192,7 +192,7 @@ fi
 run_step "mark ASSET#${ASSET_ID} ready" \
   aws_dynamodb update-item \
   --table-name "$TABLE_NAME" \
-  --key "$ASSET_KEY_JSON" \
+  --key "$ITEM_KEY_JSON" \
   --update-expression "${UPDATE_SET} REMOVE #error" \
   --condition-expression 'attribute_exists(PK)' \
   --expression-attribute-names "{${UPDATE_NAMES}}" \

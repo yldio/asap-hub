@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, useRef } from 'react';
+import { FC, ReactNode, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
@@ -79,6 +79,7 @@ const stateLabel: Record<ProjectAsset['state'], string> = {
 
 type Props = {
   readonly assets: ProjectAsset[];
+  readonly recorder?: ReactNode;
   readonly busy: boolean;
   readonly progress?: number;
   readonly readOnly: boolean;
@@ -89,6 +90,7 @@ type Props = {
 
 const AssetPanel: FC<Props> = ({
   assets,
+  recorder,
   busy,
   progress,
   readOnly,
@@ -101,6 +103,7 @@ const AssetPanel: FC<Props> = ({
   return (
     <aside css={panelStyles} aria-label="Media">
       <h2 css={headingStyles}>Media</h2>
+      {recorder}
       <input
         ref={inputRef}
         css={hiddenInputStyles}

@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { timelineDurationMs } from '@asap-hub/demo-timeline';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useCallback } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
@@ -9,7 +10,14 @@ import { useEditableVideo } from '../api/hooks';
 import type { ProjectAsset } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import ProjectEditor from '../studio/editor/ProjectEditor';
-import { useAssetUpload } from '../studio/editor/useAssetUpload';
+import { AssetUpload, useAssetUpload } from '../studio/editor/useAssetUpload';
+import RecorderPanel from '../studio/recording/RecorderPanel';
+import { screenRecordingSupport } from '../studio/recording/mediaCapabilities';
+import {
+  TakeResult,
+  useRecordingTake,
+} from '../studio/recording/useRecordingTake';
+import { createId } from '../studio/project/ids';
 import { useProjectEditor } from '../studio/project/useProjectEditor';
 import useEditLease from '../studio/useEditLease';
 import { Spinner } from '../ui/components';
@@ -149,9 +157,8 @@ const StudioProject: FC = () => {
       markLost={markLost}
       onImport={onImport}
       onDeleteAsset={onDeleteAsset}
-      uploading={upload.busy}
-      uploadProgress={upload.progress}
-      uploadError={upload.error}
+      upload={upload}
+      onAssetsChanged={refreshAssets}
       assetUrl={assetUrlOf(id)}
     />
   );
@@ -168,9 +175,8 @@ type EditorProps = {
   readonly markLost: (holderName?: string) => void;
   readonly onImport: (file: File) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
-  readonly uploading: boolean;
-  readonly uploadProgress?: number;
-  readonly uploadError?: string;
+  readonly upload: AssetUpload;
+  readonly onAssetsChanged: () => void;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
 };
 
@@ -187,9 +193,8 @@ const Editor: FC<EditorProps> = ({
   markLost,
   onImport,
   onDeleteAsset,
-  uploading,
-  uploadProgress,
-  uploadError,
+  upload,
+  onAssetsChanged,
   assetUrl,
 }) => {
   const editor = useProjectEditor({
@@ -200,6 +205,42 @@ const Editor: FC<EditorProps> = ({
     readOnly,
     onLeaseLost: markLost,
   });
+
+  // a finished take lands as a clip at the end, with its microphone track
+  // starting at the same point on the voice over lane
+  const onTake = useCallback(
+    ({ video: recorded, durationMs, narration }: TakeResult) => {
+      const clipId = createId('clip');
+      const startMs = timelineDurationMs(editor.timeline.clips);
+      editor.dispatch({
+        type: 'addClip',
+        assetId: recorded.assetId,
+        durationMs: recorded.durationMs ?? durationMs,
+        clipId,
+      });
+      if (narration) {
+        editor.dispatch({
+          type: 'addNarration',
+          narration: {
+            id: createId('narration'),
+            assetId: narration.assetId,
+            startMs,
+            inMs: 0,
+            outMs: narration.durationMs ?? durationMs,
+            volume: 1,
+          },
+        });
+      }
+      onAssetsChanged();
+    },
+    [editor, onAssetsChanged],
+  );
+
+  const take = useRecordingTake(upload, onTake);
+  const support = screenRecordingSupport(
+    navigator.mediaDevices,
+    typeof MediaRecorder === 'undefined' ? undefined : MediaRecorder,
+  );
 
   return (
     <div css={layoutStyles}>
@@ -215,17 +256,36 @@ const Editor: FC<EditorProps> = ({
               : 'This demo is read only until the editing lock is available.'}
           </p>
         ) : null}
-        {uploadError ? <p css={errorStyles}>{uploadError}</p> : null}
+        {upload.error ? <p css={errorStyles}>{upload.error}</p> : null}
       </div>
       <ProjectEditor
         editor={editor}
+        recorder={
+          <RecorderPanel
+            status={take.status}
+            elapsedMs={take.elapsedMs}
+            error={take.error}
+            withMicrophone={take.withMicrophone}
+            readOnly={readOnly}
+            unsupportedReason={support.supported ? undefined : support.reason}
+            onMicrophoneChange={take.setWithMicrophone}
+            onStart={() => {
+              take.start().catch(() => undefined);
+            }}
+            onPause={take.pause}
+            onResume={take.resume}
+            onStop={() => {
+              take.stop().catch(() => undefined);
+            }}
+          />
+        }
         assets={assets}
         readOnly={readOnly}
         assetUrl={assetUrl}
         onImport={onImport}
         onDeleteAsset={onDeleteAsset}
-        uploading={uploading}
-        uploadProgress={uploadProgress}
+        uploading={upload.busy}
+        uploadProgress={upload.progress}
       />
     </div>
   );

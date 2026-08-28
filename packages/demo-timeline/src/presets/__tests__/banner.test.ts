@@ -22,9 +22,9 @@ describe('bannerBand', () => {
   });
 
   it('scales with the canvas', () => {
-    expect(bannerBand('lowerThird', 'top', { width: 1280, height: 720 })).toEqual(
-      { x: 0, y: 0, width: 1280, height: 187 },
-    );
+    expect(
+      bannerBand('lowerThird', 'top', { width: 1280, height: 720 }),
+    ).toEqual({ x: 0, y: 0, width: 1280, height: 187 });
   });
 });
 

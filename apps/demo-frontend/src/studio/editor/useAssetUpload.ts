@@ -11,11 +11,20 @@ const extensionOf = (file: File): string => {
 const labelOf = (file: File): string =>
   file.name.replace(/\.[^.]+$/, '').slice(0, 300) || 'Untitled';
 
+export type UploadInput = {
+  blob: Blob;
+  label: string;
+  extension: string;
+  mimeType: string;
+  kind: 'video' | 'audio';
+};
+
 export type AssetUpload = {
   busy: boolean;
   progress?: number;
   error?: string;
   importFile: (file: File) => Promise<ProjectAsset | undefined>;
+  uploadBlob: (input: UploadInput) => Promise<ProjectAsset | undefined>;
 };
 
 // the same multipart machinery the single file upload already uses, pointed at
@@ -27,8 +36,14 @@ export const useAssetUpload = (projectId: string): AssetUpload => {
   const [error, setError] = useState<string>();
   const abortRef = useRef<AbortController>();
 
-  const importFile = useCallback(
-    async (file: File): Promise<ProjectAsset | undefined> => {
+  const uploadBlob = useCallback(
+    async ({
+      blob,
+      label,
+      extension,
+      mimeType,
+      kind,
+    }: UploadInput): Promise<ProjectAsset | undefined> => {
       setBusy(true);
       setError(undefined);
       setProgress(0);
@@ -37,13 +52,13 @@ export const useAssetUpload = (projectId: string): AssetUpload => {
 
       try {
         const created = await api.createAsset(projectId, {
-          kind: 'video',
-          mimeType: file.type || 'video/mp4',
-          label: labelOf(file),
-          extension: extensionOf(file),
+          kind,
+          mimeType,
+          label,
+          extension,
         });
 
-        const plans = planParts(file.size, created.partSize);
+        const plans = planParts(blob.size, created.partSize);
         const urls = await api.createAssetPartUrls(
           projectId,
           created.assetId,
@@ -53,7 +68,7 @@ export const useAssetUpload = (projectId: string): AssetUpload => {
 
         let done = 0;
         const parts = await uploadParts({
-          file,
+          file: blob,
           plans,
           urls,
           signal: controller.signal,
@@ -81,5 +96,17 @@ export const useAssetUpload = (projectId: string): AssetUpload => {
     [api, projectId],
   );
 
-  return { busy, progress, error, importFile };
+  const importFile = useCallback(
+    (file: File): Promise<ProjectAsset | undefined> =>
+      uploadBlob({
+        blob: file,
+        label: labelOf(file),
+        extension: extensionOf(file),
+        mimeType: file.type || 'video/mp4',
+        kind: 'video',
+      }),
+    [uploadBlob],
+  );
+
+  return { busy, progress, error, importFile, uploadBlob };
 };

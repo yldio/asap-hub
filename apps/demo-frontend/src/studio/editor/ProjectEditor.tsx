@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/demo-timeline';
 import {
   FC,
+  ReactNode,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -78,6 +79,7 @@ type Props = {
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly uploading: boolean;
   readonly uploadProgress?: number;
+  readonly recorder?: ReactNode;
 };
 
 const ProjectEditor: FC<Props> = ({
@@ -89,6 +91,7 @@ const ProjectEditor: FC<Props> = ({
   onDeleteAsset,
   uploading,
   uploadProgress,
+  recorder,
 }) => {
   const [selectedClipId, setSelectedClipId] = useState<string>();
   const [selectedBannerId, setSelectedBannerId] = useState<string>();
@@ -327,6 +330,7 @@ const ProjectEditor: FC<Props> = ({
         </div>
 
         <AssetPanel
+          recorder={recorder}
           assets={assets}
           busy={uploading}
           progress={uploadProgress}
@@ -436,6 +440,7 @@ const ProjectEditor: FC<Props> = ({
         playheadMs={playheadMs}
         pixelsPerSecond={pixelsPerSecond}
         banners={timeline.banners}
+        narration={timeline.narration}
         selectedClipId={selectedClipId}
         selectedBannerId={selectedBannerId}
         readOnly={readOnly}

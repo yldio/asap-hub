@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner, ClipPlacement } from '@asap-hub/demo-timeline';
+import { Banner, ClipPlacement, NarrationClip } from '@asap-hub/demo-timeline';
 import {
   FC,
   PointerEvent as ReactPointerEvent,
@@ -60,6 +60,26 @@ const overlayTrackStyles = css({
   height: trackHeights.lane,
   backgroundColor: editorTheme.panel,
   borderBottom: `1px solid ${editorTheme.line}`,
+});
+
+const audioBlockStyles = css({
+  position: 'absolute',
+  top: 4,
+  bottom: 4,
+  borderRadius: 6,
+  backgroundColor: editorTheme.audio,
+  color: '#04201c',
+  padding: '4px 8px',
+  fontSize: 12,
+  fontWeight: 600,
+  display: 'flex',
+  alignItems: 'center',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  border: 0,
+  font: 'inherit',
+  textAlign: 'left',
+  cursor: 'pointer',
 });
 
 const laneLabelStyles = css({
@@ -128,6 +148,7 @@ type Props = {
   readonly playheadMs: number;
   readonly pixelsPerSecond: number;
   readonly banners: Banner[];
+  readonly narration: NarrationClip[];
   readonly selectedClipId?: string;
   readonly selectedBannerId?: string;
   readonly readOnly: boolean;
@@ -153,6 +174,7 @@ const Timeline: FC<Props> = ({
   playheadMs,
   pixelsPerSecond,
   banners,
+  narration,
   selectedClipId,
   selectedBannerId,
   readOnly,
@@ -390,6 +412,28 @@ const Timeline: FC<Props> = ({
                     startBannerDrag(banner, kind, event)
                   }
                 />
+              ))
+            )}
+          </div>
+
+          <div css={overlayTrackStyles}>
+            {narration.length === 0 ? (
+              <span css={laneLabelStyles}>Voice over</span>
+            ) : (
+              narration.map((clip) => (
+                <span
+                  key={clip.id}
+                  css={audioBlockStyles}
+                  style={{
+                    left: msToPx(clip.startMs, pixelsPerSecond),
+                    width: Math.max(
+                      msToPx(clip.outMs - clip.inMs, pixelsPerSecond),
+                      18,
+                    ),
+                  }}
+                >
+                  Voice over
+                </span>
               ))
             )}
           </div>

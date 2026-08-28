@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`bannerSvg renders a heading on its own at the top 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect x="0" y="0" width="1920" height="281" fill="#000000" fill-opacity="0.55"/>
+  <text x="115" y="153" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="59" font-weight="600" fill="#ffffff" text-anchor="start">Rebecca Nunn</text>
+</svg>"
+`;
+
+exports[`bannerSvg renders a lower third with a heading and a subtitle 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect x="0" y="799" width="1920" height="281" fill="#000000" fill-opacity="0.55"/>
+  <text x="115" y="925" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="59" font-weight="600" fill="#ffffff" text-anchor="start">Rebecca Nunn</text>
+  <text x="115" y="991" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="400" fill="#d5d5de" text-anchor="start">Project manager, ASAP</text>
+</svg>"
+`;
+
+exports[`bannerSvg wraps and truncates a long heading 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect x="0" y="799" width="1920" height="281" fill="#000000" fill-opacity="0.55"/>
+  <text x="115" y="890" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="59" font-weight="600" fill="#ffffff" text-anchor="start">A banner heading that runs far past the width of the</text>
+  <text x="115" y="960" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="59" font-weight="600" fill="#ffffff" text-anchor="start">frame and keeps going</text>
+  <text x="115" y="1026" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="400" fill="#d5d5de" text-anchor="start">a subtitle that also runs far past the width of the frame</text>
+</svg>"
+`;

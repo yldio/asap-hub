@@ -13,8 +13,7 @@ export const filterSegment = (
   inputs: string[],
   filters: string[],
   output: string,
-): string =>
-  `${inputs.map(label).join('')}${chain(filters)}${label(output)}`;
+): string => `${inputs.map(label).join('')}${chain(filters)}${label(output)}`;
 
 export const fitToCanvasFilters = (canvas: Canvas): string[] => [
   `scale=${canvas.width}:${canvas.height}:force_original_aspect_ratio=decrease:flags=lanczos`,
@@ -62,14 +61,19 @@ const overlayFadeFilters = (
     return [];
   }
   return [
-    `fade=t=in:st=${secondsFromMs(visibleStartMs)}:d=${secondsFromMs(fadeMs)}:alpha=1`,
-    `fade=t=out:st=${secondsFromMs(visibleEndMs - fadeMs)}:d=${secondsFromMs(fadeMs)}:alpha=1`,
+    `fade=t=in:st=${secondsFromMs(visibleStartMs)}:d=${secondsFromMs(
+      fadeMs,
+    )}:alpha=1`,
+    `fade=t=out:st=${secondsFromMs(visibleEndMs - fadeMs)}:d=${secondsFromMs(
+      fadeMs,
+    )}:alpha=1`,
   ];
 };
 
-export const overlayInputFilters = (
-  visible?: { startMs: number; endMs: number },
-): string[] =>
+export const overlayInputFilters = (visible?: {
+  startMs: number;
+  endMs: number;
+}): string[] =>
   visible
     ? ['format=rgba', ...overlayFadeFilters(visible.startMs, visible.endMs)]
     : ['format=rgba'];
@@ -83,7 +87,9 @@ export const overlayFilter = (visible?: {
   endMs: number;
 }): string =>
   visible
-    ? `overlay=${overlayOrigin}:enable='between(t,${secondsFromMs(visible.startMs)},${secondsFromMs(visible.endMs)})'`
+    ? `overlay=${overlayOrigin}:enable='between(t,${secondsFromMs(
+        visible.startMs,
+      )},${secondsFromMs(visible.endMs)})'`
     : `overlay=${overlayOrigin}`;
 
 const xfadeNames: Record<Exclude<Transition['type'], 'cut'>, string> = {

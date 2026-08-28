@@ -36,6 +36,7 @@ import {
 } from './geometry';
 import LaneBlock from './LaneBlock';
 import { isSelected, Selection } from './selection';
+import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
 import { zoomDurationMs } from './zoom';
 
 const panelStyles = css({
@@ -148,6 +149,7 @@ const playheadStyles = css({
   position: 'absolute',
   top: 0,
   bottom: 0,
+  left: 0,
   width: 2,
   marginLeft: -1,
   backgroundColor: editorTheme.playhead,
@@ -219,6 +221,39 @@ type SelectHandler = (kind: Selection['kind'], id: string) => void;
 
 // Every lane below is memoised: the playhead moves on every animation frame,
 // and redrawing the blocks underneath it sixty times a second buys nothing.
+
+// the marker is the one thing on the lane that moves with the clock, so it
+// subscribes on its own and slides with a transform rather than an offset
+const PlayheadMarker = memo<{ readonly pixelsPerSecond: number }>(
+  ({ pixelsPerSecond }) => {
+    const markerRef = useRef<HTMLDivElement>(null);
+    const playback = usePlaybackContext();
+
+    usePlayheadEffect((ms) => {
+      if (markerRef.current) {
+        markerRef.current.style.transform = `translateX(${msToPx(
+          ms,
+          pixelsPerSecond,
+        )}px)`;
+      }
+    });
+
+    return (
+      <div
+        ref={markerRef}
+        css={playheadStyles}
+        style={{
+          transform: `translateX(${msToPx(
+            playback.getPlayheadMs(),
+            pixelsPerSecond,
+          )}px)`,
+        }}
+      >
+        <span css={playheadKnobStyles} />
+      </div>
+    );
+  },
+);
 
 const Ruler = memo<{
   readonly durationMs: number;
@@ -526,7 +561,6 @@ type Drag =
 type Props = {
   readonly placements: ClipPlacement[];
   readonly durationMs: number;
-  readonly playheadMs: number;
   readonly pixelsPerSecond: number;
   readonly banners: Banner[];
   readonly narration: NarrationClip[];
@@ -560,7 +594,6 @@ type Props = {
 const Timeline: FC<Props> = ({
   placements,
   durationMs,
-  playheadMs,
   pixelsPerSecond,
   banners,
   narration,
@@ -851,16 +884,13 @@ const Timeline: FC<Props> = ({
             onNudge={nudgeSpan}
           />
 
-          <div
-            css={playheadStyles}
-            style={{ left: msToPx(playheadMs, pixelsPerSecond) }}
-          >
-            <span css={playheadKnobStyles} />
-          </div>
+          <PlayheadMarker pixelsPerSecond={pixelsPerSecond} />
         </div>
       </div>
     </div>
   );
 };
 
-export default Timeline;
+// the marker moves on its own now, so nothing on the lane has to be redrawn
+// while the clock runs
+export default memo(Timeline);

@@ -33,7 +33,6 @@ const renderStage = (clipVolume: number, previewVolume: number) => {
       banners={[]}
       zooms={[]}
       cursorEffects={[]}
-      playheadMs={0}
       playing={false}
       volume={previewVolume}
       assets={{ 'asset-a': asset }}

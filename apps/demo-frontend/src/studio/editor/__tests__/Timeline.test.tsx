@@ -81,7 +81,6 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     <Timeline
       placements={placements}
       durationMs={10000}
-      playheadMs={0}
       pixelsPerSecond={pixelsPerSecond}
       readOnly={false}
       banners={[]}

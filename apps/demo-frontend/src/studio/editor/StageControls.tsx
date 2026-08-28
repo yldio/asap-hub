@@ -4,6 +4,7 @@ import { FC, PointerEvent as ReactPointerEvent, memo, useRef } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { formatTimecode } from './geometry';
+import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
 import {
   CollapseIcon,
   ExpandIcon,
@@ -56,9 +57,18 @@ const fillStyles = css({
   backgroundColor: editorTheme.playhead,
 });
 
+// the knob rides a full width rail it can be translated along, so the playhead
+// never writes a property the browser has to lay the bar out again for
+const knobRailStyles = css({
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+});
+
 const knobStyles = css({
   position: 'absolute',
   top: '50%',
+  left: 0,
   width: 11,
   height: 11,
   marginLeft: -5,
@@ -80,7 +90,6 @@ const volumeStyles = css({ width: 80, accentColor: editorTheme.playhead });
 type Props = {
   readonly playing: boolean;
   readonly canPlay: boolean;
-  readonly playheadMs: number;
   readonly durationMs: number;
   readonly volume: number;
   readonly fullscreen?: { active: boolean; toggle: () => void };
@@ -96,7 +105,6 @@ type Props = {
 const StageControls: FC<Props> = ({
   playing,
   canPlay,
-  playheadMs,
   durationMs,
   volume,
   fullscreen,
@@ -107,7 +115,29 @@ const StageControls: FC<Props> = ({
   onVolume,
 }) => {
   const seekRef = useRef<HTMLDivElement>(null);
-  const progress = durationMs > 0 ? playheadMs / durationMs : 0;
+  const fillRef = useRef<HTMLSpanElement>(null);
+  const railRef = useRef<HTMLSpanElement>(null);
+  const timeRef = useRef<HTMLSpanElement>(null);
+  const playback = usePlaybackContext();
+  const progressAt = (ms: number) => (durationMs > 0 ? ms / durationMs : 0);
+  const progress = progressAt(playback.getPlayheadMs());
+
+  usePlayheadEffect((ms) => {
+    const ratio = progressAt(ms);
+    if (fillRef.current) {
+      fillRef.current.style.transform = `scaleX(${ratio})`;
+    }
+    if (railRef.current) {
+      railRef.current.style.transform = `translateX(${ratio * 100}%)`;
+    }
+    // the span is React's, so it is left alone on the frames it already reads
+    // the way it should
+    const at = `${formatTimecode(ms)} / ${formatTimecode(durationMs)}`;
+    if (timeRef.current && timeRef.current.textContent !== at) {
+      timeRef.current.textContent = at;
+    }
+    seekRef.current?.setAttribute('aria-valuenow', `${Math.round(ms)}`);
+  });
 
   const seekTo = (clientX: number) => {
     const bounds = seekRef.current?.getBoundingClientRect();
@@ -153,7 +183,7 @@ const StageControls: FC<Props> = ({
         aria-label="Seek"
         aria-valuemin={0}
         aria-valuemax={Math.round(durationMs)}
-        aria-valuenow={Math.round(playheadMs)}
+        aria-valuenow={Math.round(playback.getPlayheadMs())}
         onPointerDown={(event) => {
           event.currentTarget.setPointerCapture(event.pointerId);
           seekTo(event.clientX);
@@ -162,9 +192,10 @@ const StageControls: FC<Props> = ({
         onKeyDown={(event) => {
           // without this the page scrolls sideways as well as the playhead
           // moving, because the arrow keeps its default on a plain div
+          const at = playback.getPlayheadMs();
           const seeks: Record<string, number> = {
-            ArrowLeft: playheadMs - 1000,
-            ArrowRight: playheadMs + 1000,
+            ArrowLeft: at - 1000,
+            ArrowRight: at + 1000,
             Home: 0,
             End: durationMs,
           };
@@ -175,13 +206,25 @@ const StageControls: FC<Props> = ({
         }}
       >
         <span css={trackStyles}>
-          <span css={fillStyles} style={{ transform: `scaleX(${progress})` }} />
+          <span
+            ref={fillRef}
+            css={fillStyles}
+            style={{ transform: `scaleX(${progress})` }}
+          />
         </span>
-        <span css={knobStyles} style={{ left: `${progress * 100}%` }} />
+        <span
+          ref={railRef}
+          css={knobRailStyles}
+          style={{ transform: `translateX(${progress * 100}%)` }}
+        >
+          <span css={knobStyles} />
+        </span>
       </div>
 
-      <span css={timeStyles}>
-        {formatTimecode(playheadMs)} / {formatTimecode(durationMs)}
+      <span css={timeStyles} ref={timeRef}>
+        {`${formatTimecode(playback.getPlayheadMs())} / ${formatTimecode(
+          durationMs,
+        )}`}
       </span>
 
       <EditorButton

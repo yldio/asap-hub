@@ -19,9 +19,10 @@ import {
 } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { rem } from '../../ui/theme';
-import BannerLayer from './BannerLayer';
+import BannerLayer, { BannerLayerHandle } from './BannerLayer';
 import { editorTheme } from './editorTheme';
-import CursorLayer from './CursorLayer';
+import CursorLayer, { CursorLayerHandle } from './CursorLayer';
+import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
 import { panFocus, pointInBox, ZoomTransform, zoomTransformAt } from './zoom';
 
 // the size is measured and set by the editor, so the frame keeps its ratio
@@ -139,7 +140,6 @@ type Props = {
   readonly cursorEffects: CursorEffect[];
   // the layer's own nudge, applied here exactly as the render applies it
   readonly cursorOffsetMs?: number;
-  readonly playheadMs: number;
   readonly playing: boolean;
   readonly volume: number;
   readonly assets: Record<string, ProjectAsset>;
@@ -163,7 +163,6 @@ const PreviewStage: FC<Props> = ({
   zooms,
   cursorEffects,
   cursorOffsetMs,
-  playheadMs,
   playing,
   volume,
   assets,
@@ -174,17 +173,26 @@ const PreviewStage: FC<Props> = ({
   onGestureEnd,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const titleTextRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<CursorLayerHandle>(null);
+  const bannerRef = useRef<BannerLayerHandle>(null);
   const panRef = useRef<{ x: number; y: number; from: Point }>();
   const [panning, setPanning] = useState(false);
   const clip = placement?.clip;
   const asset = clip?.kind === 'source' ? assets[clip.assetId] : undefined;
   const url = asset ? assetUrl(asset) : undefined;
 
-  const localMs = placement ? clipLocalMs(placement, playheadMs) : 0;
-  // aiming a zoom means seeing it, whatever the playhead is over
-  const zoom: ZoomTransform = focus
-    ? { scale: focus.scale, originX: focus.point.x, originY: focus.point.y }
-    : zoomTransformAt(zooms, clip?.id ?? '', localMs);
+  const playhead = usePlaybackContext();
+  const startMs = playhead.getPlayheadMs();
+  const localMs = placement ? clipLocalMs(placement, startMs) : 0;
+
+  const transformAt = (atMs: number): ZoomTransform =>
+    // aiming a zoom means seeing it, whatever the playhead is over
+    focus
+      ? { scale: focus.scale, originX: focus.point.x, originY: focus.point.y }
+      : zoomTransformAt(zooms, clip?.id ?? '', atMs);
+
+  const zoom = transformAt(localMs);
   // the render pans by moving the crop window; the preview does the same by
   // scaling around the focus point, so the two frame the same thing
   const zoomStyle = {
@@ -192,23 +200,44 @@ const PreviewStage: FC<Props> = ({
     transformOrigin: `${zoom.originX * 100}% ${zoom.originY * 100}%`,
   };
 
-  const sourceMs =
-    placement && clip?.kind === 'source'
-      ? sourceTimeAt(placement, playheadMs)
-      : undefined;
-
-  useEffect(() => {
+  // every frame of playback is written straight to the DOM: re-rendering the
+  // stage sixty times a second is what used to leave the editor no headroom
+  usePlayheadEffect((ms) => {
+    const atMs = placement ? clipLocalMs(placement, ms) : 0;
     const element = videoRef.current;
-    if (!element || sourceMs === undefined) {
-      return;
+    if (element) {
+      const frame = transformAt(atMs);
+      element.style.transform = `scale(${frame.scale})`;
+      element.style.transformOrigin = `${frame.originX * 100}% ${
+        frame.originY * 100
+      }%`;
+
+      const sourceMs =
+        placement && clip?.kind === 'source'
+          ? sourceTimeAt(placement, ms)
+          : undefined;
+      // only correct real drift, otherwise every frame fights the element's own
+      // playback and the picture stutters
+      if (
+        sourceMs !== undefined &&
+        Math.abs(element.currentTime - sourceMs / 1000) > 0.25
+      ) {
+        element.currentTime = sourceMs / 1000;
+      }
     }
-    const target = sourceMs / 1000;
-    // only correct real drift, otherwise every frame fights the element's own
-    // playback and the picture stutters
-    if (Math.abs(element.currentTime - target) > 0.25) {
-      element.currentTime = target;
+
+    const text = titleTextRef.current;
+    if (text && clip?.kind === 'title') {
+      text.style.opacity = `${fadeOpacityAt(
+        clip,
+        { startMs: 0, durationMs: clip.durationMs },
+        atMs,
+      )}`;
     }
-  }, [sourceMs]);
+
+    cursorRef.current?.setTime(atMs);
+    bannerRef.current?.setTime(ms);
+  });
 
   useEffect(() => {
     const element = videoRef.current;
@@ -254,14 +283,18 @@ const PreviewStage: FC<Props> = ({
     return (
       <div css={stageStyles} style={size}>
         <div css={titleCardStyles}>
-          <div css={titleTextStyles} style={{ opacity: textOpacity }}>
+          <div
+            ref={titleTextRef}
+            css={titleTextStyles}
+            style={{ opacity: textOpacity }}
+          >
             <h2 css={headingStyles}>{clip.text}</h2>
             {clip.subtitle ? (
               <p css={subheadingStyles}>{clip.subtitle}</p>
             ) : null}
           </div>
         </div>
-        <BannerLayer banners={banners} tMs={playheadMs} />
+        <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
       </div>
     );
   }
@@ -346,11 +379,12 @@ const PreviewStage: FC<Props> = ({
         </p>
       )}
       <CursorLayer
+        ref={cursorRef}
         effects={cursorEffects}
         tMs={localMs}
         offsetMs={cursorOffsetMs}
       />
-      <BannerLayer banners={banners} tMs={playheadMs} />
+      <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
 
       {pin ? (
         <span

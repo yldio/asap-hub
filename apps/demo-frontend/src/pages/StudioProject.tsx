@@ -120,7 +120,7 @@ const StudioProject: FC = () => {
         : false,
   });
 
-  const { lease, markLost } = useEditLease(id, Boolean(id));
+  const { lease, retry, markLost } = useEditLease(id, Boolean(id));
   const readOnly = lease.status !== 'held';
 
   const upload = useAssetUpload(id);
@@ -222,6 +222,7 @@ const StudioProject: FC = () => {
           : undefined
       }
       markLost={markLost}
+      retryLease={retry}
       onImport={onImport}
       onImportAudio={onImportAudio}
       assetError={assetError}
@@ -244,6 +245,7 @@ type EditorProps = {
   readonly readOnly: boolean;
   readonly leaseHolder?: string;
   readonly markLost: (holderName?: string) => void;
+  readonly retryLease: () => void;
   readonly onImport: (file: File) => void;
   readonly onImportAudio: (file: File) => void;
   readonly assetError?: string;
@@ -266,6 +268,7 @@ const Editor: FC<EditorProps> = ({
   readOnly,
   leaseHolder,
   markLost,
+  retryLease,
   onImport,
   onImportAudio,
   assetError,
@@ -495,6 +498,7 @@ const Editor: FC<EditorProps> = ({
         dirty={editor.dirty}
         notice={upload.error ?? renderError ?? publishError}
         onLeave={() => leaving.request(() => navigate('/'))}
+        onRetryLease={retryLease}
         onRename={rename}
         onPublish={publish}
         onUnpublish={unpublish}

@@ -95,7 +95,9 @@ const RenderBar: FC<Props> = ({
         <span css={trackStyles} role="progressbar" aria-valuenow={progress}>
           <span css={fillStyles} style={{ width: `${progress}%` }} />
         </span>
-        <EditorButton onClick={onCancel}>Cancel</EditorButton>
+        <EditorButton disabled={readOnly} onClick={onCancel}>
+          Cancel
+        </EditorButton>
       </div>
     );
   }

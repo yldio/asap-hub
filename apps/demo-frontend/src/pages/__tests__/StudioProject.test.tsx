@@ -203,6 +203,73 @@ it('is read only when someone else holds the lease', async () => {
   expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
 });
 
+describe('when the editing lock is held elsewhere', () => {
+  const lockedOut = () =>
+    jest.fn().mockRejectedValue(new ApiError(409, 'locked', 'locked', 'Bo'));
+
+  it('offers a way to ask for the lock again', async () => {
+    const acquireLease = jest
+      .fn()
+      .mockRejectedValueOnce(new ApiError(409, 'locked', 'locked', 'Bo'))
+      .mockResolvedValue({
+        lockedBy: creatorMe.sub,
+        lockedByName: creatorMe.name,
+        lockExpiresAt: new Date(Date.now() + 90000).toISOString(),
+      });
+    renderStudio({ acquireLease });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Try to edit again' }),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    expect(
+      screen.queryByText(/Bo is editing this demo/),
+    ).not.toBeInTheDocument();
+  });
+
+  it('keeps the export out of reach', async () => {
+    renderStudio({
+      acquireLease: lockedOut(),
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    expect(
+      await screen.findByRole('button', { name: 'Export to a demo' }),
+    ).toBeDisabled();
+  });
+
+  // "retrying on the next edit" cannot be followed: a read only editor has no
+  // next edit
+  it('does not promise a retry it cannot make', async () => {
+    renderStudio({ saveTimeline: lockedOut() });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+
+    expect(
+      await screen.findByText(
+        /cannot be saved until it comes back/,
+        undefined,
+        {
+          timeout: 4000,
+        },
+      ),
+    ).toBeVisible();
+    expect(
+      screen.queryByText(/retrying on the next edit/),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe('leaving with edits the server has not taken', () => {
   it('asks before the demos breadcrumb navigates', async () => {
     renderStudio();

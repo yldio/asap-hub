@@ -273,11 +273,16 @@ export const useProjectEditor = ({
 
   const dirty = state.history.present !== state.settled;
 
-  // an edit is unsaved the second it is made, so the last save's verdict must
+  // An edit is unsaved the second it is made, so the last save's verdict must
   // not stand for the length of the debounce: it told the creator the work was
-  // safe while the save button beside it was offering to save it
+  // safe while the save button beside it was offering to save it. A read only
+  // editor reports nothing at all, because there is no edit left to make and
+  // "retrying on the next edit" is an instruction nobody can follow; the header
+  // explains the lock instead.
   const reportedSaveState: SaveState =
-    dirty && state.saveState === 'saved' ? 'idle' : state.saveState;
+    readOnly || (dirty && state.saveState === 'saved')
+      ? 'idle'
+      : state.saveState;
 
   const flush = useCallback(() => {
     const { history, settled } = stateRef.current;

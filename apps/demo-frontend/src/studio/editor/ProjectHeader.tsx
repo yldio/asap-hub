@@ -74,6 +74,7 @@ type Props = {
   readonly notice?: string;
   // false means the guard has taken over and the link must not navigate
   readonly onLeave: () => boolean;
+  readonly onRetryLease: () => void;
   readonly onRename: (title: string) => void;
   readonly onPublish: () => void;
   readonly onUnpublish: () => void;
@@ -90,6 +91,7 @@ const ProjectHeader: FC<Props> = ({
   dirty,
   notice,
   onLeave,
+  onRetryLease,
   onRename,
   onPublish,
   onUnpublish,
@@ -139,11 +141,17 @@ const ProjectHeader: FC<Props> = ({
       <span css={badgeStyles}>{published ? 'Published' : 'Draft'}</span>
 
       {readOnly ? (
-        <p css={noticeStyles}>
-          {leaseHolder
-            ? `${leaseHolder} is editing this demo, so it is read only for now.`
-            : 'This demo is read only until the editing lock is available.'}
-        </p>
+        <>
+          <p css={noticeStyles}>
+            {leaseHolder
+              ? `${leaseHolder} is editing this demo, so it is read only for now.`
+              : 'Someone else holds the editing lock, so this demo is read only for now.'}
+            {dirty
+              ? ' The edits made before the lock went cannot be saved until it comes back.'
+              : ''}
+          </p>
+          <EditorButton onClick={onRetryLease}>Try to edit again</EditorButton>
+        </>
       ) : null}
       {!readOnly && dirty ? <p css={dirtyStyles}>Unsaved changes</p> : null}
       {notice ? <p css={errorStyles}>{notice}</p> : null}

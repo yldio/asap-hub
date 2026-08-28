@@ -175,6 +175,7 @@ export type RecordingSession = {
 export type RecordingSessionStatus = {
   state: 'open' | 'closed' | 'expired';
   eventCount: number;
+  clientCount: number;
   lastEventAt?: string;
 };
 

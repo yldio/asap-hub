@@ -87,8 +87,9 @@ const CapturePanel: FC<Props> = ({
   return (
     <div css={panelStyles}>
       <p css={hintStyles}>
-        Paste this into the page you are demoing, then record as usual. It only
-        sends pointer positions and clicks.
+        Paste this into every page you are demoing, then record as usual. Each
+        tab reports separately and they are merged in time order. It only sends
+        pointer positions and clicks.
       </p>
       <textarea
         css={snippetStyles}
@@ -111,7 +112,9 @@ const CapturePanel: FC<Props> = ({
 
       {status && status.eventCount > 0 ? (
         <span css={liveStyles}>
-          {`Capture connected, ${status.eventCount} events`}
+          {`${status.clientCount} ${
+            status.clientCount === 1 ? 'tab' : 'tabs'
+          } connected, ${status.eventCount} events`}
         </span>
       ) : (
         <span css={waitingStyles}>Waiting for the first events…</span>

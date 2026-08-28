@@ -4,6 +4,7 @@ import { putObject } from '../storage';
 import { recordingSessionEntity } from '../data/entities';
 import { asyncRouter } from './async-router';
 import {
+  capturePartId,
   capturePartKey,
   captureQuota,
   captureTokenMatches,
@@ -19,6 +20,7 @@ export const maxCaptureBodyBytes = 1024 * 1024;
 type CaptureBatch = {
   sessionId: string;
   token: string;
+  clientId: string;
   seq: number;
   events: Record<string, unknown>[];
 };
@@ -48,9 +50,9 @@ const accepts = (
   session.state === 'open' &&
   session.expiresAt > Date.now() &&
   captureTokenMatches(batch.token, session.tokenHash) &&
-  // strictly ahead of the last batch stored: a replayed or reordered seq is
-  // dropped without keeping every number the session has ever seen
-  batch.seq > session.lastSeq &&
+  // each tab numbers its own batches, so the guard is per client: a replay is
+  // rejected while a second tab recording the same screen is not
+  !session.parts.includes(capturePartId(batch.clientId, batch.seq)) &&
   session.parts.length < captureQuota.parts &&
   session.eventCount + batch.events.length <= captureQuota.events;
 
@@ -79,9 +81,10 @@ export const captureRouter = (): Router => {
       return;
     }
 
+    const partId = capturePartId(batch.clientId, batch.seq);
     const lines = batch.events.map((event) => JSON.stringify(event));
     await putObject(
-      capturePartKey(session.videoId, session.sessionId, batch.seq),
+      capturePartKey(session.videoId, session.sessionId, partId),
       `${lines.join('\n')}\n`,
       ndjsonContentType,
     );
@@ -89,12 +92,11 @@ export const captureRouter = (): Router => {
     await recordingSessionEntity
       .patch({ sessionId: session.sessionId })
       .set({
-        lastSeq: batch.seq,
         lastEventAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       })
       .add({ eventCount: batch.events.length })
-      .append({ parts: [batch.seq] })
+      .append({ parts: [partId] })
       .go();
 
     res.status(204).end();

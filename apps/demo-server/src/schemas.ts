@@ -150,6 +150,8 @@ export const maxCaptureBatchEvents = 5000;
 export const captureBatchSchema = z.object({
   sessionId: z.string().refine(isVideoId, { message: 'invalid session id' }),
   token: z.string().min(1).max(256),
+  // one per tab: several tabs share a session when the whole screen is recorded
+  clientId: z.string().refine(isVideoId, { message: 'invalid client id' }),
   seq: z.number().int().positive().max(1_000_000),
   events: z.array(z.record(z.unknown())).min(1).max(maxCaptureBatchEvents),
 });

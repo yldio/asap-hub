@@ -10,6 +10,7 @@ import {
   projectPrefix,
   putObject,
 } from '../storage';
+import { mergeByTimestamp, partsByClient } from './capture-merge';
 import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
@@ -25,11 +26,16 @@ export const capturePartsPrefix = (
   sessionId: string,
 ): string => `${captureSessionPrefix(videoId, sessionId)}parts/`;
 
+// a part belongs to one tab's numbering, so its id carries both
+export const capturePartId = (clientId: string, seq: number): string =>
+  `${clientId}:${seq}`;
+
 export const capturePartKey = (
   videoId: string,
   sessionId: string,
-  seq: number,
-): string => `${capturePartsPrefix(videoId, sessionId)}${seq}.ndjson`;
+  partId: string,
+): string =>
+  `${capturePartsPrefix(videoId, sessionId)}${partId.replace(':', '-')}.ndjson`;
 
 export const captureEventsKey = (videoId: string, sessionId: string): string =>
   `${captureSessionPrefix(videoId, sessionId)}events.ndjson`;
@@ -63,8 +69,8 @@ export type RecordingSessionItem = {
   tokenHash: string;
   state: 'open' | 'closed';
   eventCount: number;
-  lastSeq: number;
-  parts: number[];
+  // "{clientId}:{seq}" per batch, so tabs sharing a session cannot collide
+  parts: string[];
   lastEventAt?: string;
   expiresAt: number;
   startedAtEpochMs?: number;
@@ -150,7 +156,6 @@ export const recordingsRouter = (): Router => {
         tokenHash: hashCaptureToken(token),
         state: 'open',
         eventCount: 0,
-        lastSeq: 0,
         parts: [],
         expiresAt: now + sessionTtlMs,
         createdBy: {
@@ -186,6 +191,9 @@ export const recordingsRouter = (): Router => {
       res.json({
         state: reportedState(session),
         eventCount: session.eventCount,
+        // several tabs share a session when the whole screen is recorded, and
+        // the creator needs to see each one arrive
+        clientCount: partsByClient(session.parts).size,
         lastEventAt: session.lastEventAt ?? null,
       });
     },
@@ -232,19 +240,23 @@ export const recordingsRouter = (): Router => {
       const id = pathParam(req, 'id');
       const currentSessionId = pathParam(req, 'sessionId');
 
-      const seqs = Array.from(new Set(session.parts)).sort((a, b) => a - b);
-      const bodies = await Promise.all(
-        seqs.map((seq) =>
-          // a batch that never landed must not sink the whole recording
-          getObjectText(capturePartKey(id, currentSessionId, seq)).catch(
-            () => '',
+      // several tabs can share a session when the whole screen is recorded, so
+      // each tab's parts are read in its own order and the streams are then
+      // merged on the timestamps they all took from the same clock
+      const byClient = partsByClient(session.parts);
+      const streams = await Promise.all(
+        [...byClient.values()].map((partIds) =>
+          Promise.all(
+            partIds.map((partId) =>
+              // a batch that never landed must not sink the whole recording
+              getObjectText(capturePartKey(id, currentSessionId, partId)).catch(
+                () => '',
+              ),
+            ),
           ),
         ),
       );
-      const lines = bodies
-        .flatMap((body) => body.split('\n'))
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
+      const lines = mergeByTimestamp(streams);
 
       const key = captureEventsKey(id, currentSessionId);
       await putObject(

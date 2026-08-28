@@ -208,8 +208,9 @@ export const recordingSessionEntity = new Entity(
       eventCount: { type: 'number', required: true, default: 0 },
       // batches are accepted strictly in order, which rejects a replay without
       // keeping every sequence number ever seen
-      lastSeq: { type: 'number', required: true, default: 0 },
-      parts: { type: 'list', items: { type: 'number' }, default: [] },
+      // "{clientId}:{seq}", so two tabs recording the same screen cannot
+      // collide and a replayed batch is still rejected
+      parts: { type: 'list', items: { type: 'string' }, default: [] },
       lastEventAt: { type: 'string' },
       expiresAt: { type: 'number', required: true },
       startedAtEpochMs: { type: 'number' },

@@ -87,8 +87,7 @@ const sessionItem = (overrides: Record<string, unknown> = {}) => ({
   tokenHash: createHash('sha256').update(token).digest('hex'),
   state: 'open',
   eventCount: 4,
-  lastSeq: 2,
-  parts: [1, 2],
+  parts: ['tab-a:1', 'tab-a:2'],
   lastEventAt: '2026-08-01T10:05:00.000Z',
   expiresAt: Date.now() + 60_000,
   createdBy: { sub: 'auth0|creator', name: 'Ana' },
@@ -148,6 +147,7 @@ const postCapture = (body: Record<string, unknown>) =>
 const batch = (overrides: Record<string, unknown> = {}) => ({
   sessionId: 'session-1',
   token,
+  clientId: 'tab-a',
   seq: 3,
   events: [
     { id: 'e1', type: 'move', t: 1, x: 2, y: 3 },
@@ -188,7 +188,6 @@ describe('POST /api/projects/:id/recordings', () => {
       videoId: 'project-1',
       state: 'open',
       eventCount: 0,
-      lastSeq: 0,
       parts: [],
       tokenHash: createHash('sha256').update(issued).digest('hex'),
     });
@@ -231,6 +230,8 @@ describe('GET /api/projects/:id/recordings/:sessionId', () => {
     expect(response.body).toEqual({
       state: 'open',
       eventCount: 4,
+      // one tab so far; a second one recording the same screen would say two
+      clientCount: 1,
       lastEventAt: '2026-08-01T10:05:00.000Z',
     });
   });
@@ -270,14 +271,14 @@ describe('POST /api/capture', () => {
     expect(response.status).toBe(204);
     expect(response.text).toBe('');
     expect(storage.putObject).toHaveBeenCalledWith(
-      'projects/project-1/capture/session-1/parts/3.ndjson',
+      'projects/project-1/capture/session-1/parts/tab-a-3.ndjson',
       '{"id":"e1","type":"move","t":1,"x":2,"y":3}\n{"id":"e2","type":"click","t":4,"x":5,"y":6}\n',
       'application/x-ndjson',
     );
     expect(patch.add).toHaveBeenCalledWith({ eventCount: 2 });
-    expect(patch.append).toHaveBeenCalledWith({ parts: [3] });
+    expect(patch.append).toHaveBeenCalledWith({ parts: ['tab-a:3'] });
     expect(patch.set).toHaveBeenCalledWith(
-      expect.objectContaining({ lastSeq: 3 }),
+      expect.objectContaining({ lastEventAt: expect.any(String) }),
     );
   });
 
@@ -296,7 +297,7 @@ describe('POST /api/capture', () => {
     ['a wrong token', sessionItem(), batch({ token: 'not-the-token' })],
     ['an expired session', sessionItem({ expiresAt: Date.now() - 1 }), batch()],
     ['a closed session', sessionItem({ state: 'closed' }), batch()],
-    ['a replayed sequence number', sessionItem(), batch({ seq: 2 })],
+    ['a replayed batch from the same tab', sessionItem(), batch({ seq: 2 })],
     [
       'a session over its event quota',
       sessionItem({ eventCount: 199_999 }),
@@ -304,7 +305,7 @@ describe('POST /api/capture', () => {
     ],
     [
       'a session over its batch quota',
-      sessionItem({ parts: new Array(500).fill(1) }),
+      sessionItem({ parts: new Array(500).fill('tab-a:1') }),
       batch(),
     ],
   ])('answers 204 and stores nothing for %s', async (_label, session, body) => {
@@ -370,11 +371,13 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
   it('concatenates the batches into one immutable stream and closes the session', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
-    mockSessionGet(sessionItem({ parts: [2, 1, 2] }));
+    mockSessionGet(sessionItem({ parts: ['tab-a:2', 'tab-a:1', 'tab-a:2'] }));
     const patch = mockSessionPatch();
     (storage.getObjectText as jest.Mock).mockImplementation(
       async (key: string) =>
-        key.endsWith('1.ndjson') ? '{"id":"e1"}\n' : '{"id":"e2"}\n{"id":"e3"}',
+        key.endsWith('tab-a-1.ndjson')
+          ? '{"id":"e1","t":1}\n'
+          : '{"id":"e2","t":2}\n{"id":"e3","t":3}',
     );
 
     const response = await finalise({
@@ -386,7 +389,7 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
     expect(storage.getObjectText).toHaveBeenCalledTimes(2);
     expect(storage.putObject).toHaveBeenCalledWith(
       'projects/project-1/capture/session-1/events.ndjson',
-      '{"id":"e1"}\n{"id":"e2"}\n{"id":"e3"}\n',
+      '{"id":"e1","t":1}\n{"id":"e2","t":2}\n{"id":"e3","t":3}\n',
       'application/x-ndjson',
     );
     expect(storage.deletePrefix).toHaveBeenCalledWith(
@@ -412,7 +415,7 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
   it('carries on when a batch object never landed', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
-    mockSessionGet(sessionItem({ parts: [1, 2] }));
+    mockSessionGet(sessionItem({ parts: ['tab-a:1', 'tab-a:2'] }));
     mockSessionPatch();
     (storage.getObjectText as jest.Mock).mockImplementation(
       async (key: string) => {
@@ -459,5 +462,65 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
 
     expect(response.status).toBe(400);
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+});
+
+describe('two tabs sharing one session', () => {
+  it('accepts a batch from each, because the sequence guard is per tab', async () => {
+    mockSessionGet(sessionItem({ parts: [] }));
+    const patch = mockSessionPatch();
+
+    const first = await postCapture(batch({ clientId: 'tab-a', seq: 1 }));
+    const second = await postCapture(batch({ clientId: 'tab-b', seq: 1 }));
+
+    expect(first.status).toBe(204);
+    expect(second.status).toBe(204);
+    expect(patch.append).toHaveBeenNthCalledWith(1, { parts: ['tab-a:1'] });
+    expect(patch.append).toHaveBeenNthCalledWith(2, { parts: ['tab-b:1'] });
+  });
+
+  it('writes each tab its own part object', async () => {
+    mockSessionGet(sessionItem({ parts: [] }));
+    mockSessionPatch();
+
+    await postCapture(batch({ clientId: 'tab-b', seq: 4 }));
+
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/parts/tab-b-4.ndjson',
+      expect.any(String),
+      'application/x-ndjson',
+    );
+  });
+
+  const finalise = (body: Record<string, unknown>) =>
+    api
+      .post('/api/projects/project-1/recordings/session-1/finalise')
+      .set('Authorization', creatorToken)
+      .send(body);
+
+  it('merges both streams into one, ordered by the clock they share', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1', 'tab-b:1', 'tab-a:2'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockImplementation(
+      async (key: string) => {
+        if (key.endsWith('tab-a-1.ndjson')) return '{"id":"a1","t":10}';
+        if (key.endsWith('tab-a-2.ndjson')) return '{"id":"a2","t":30}';
+        return '{"id":"b1","t":20}';
+      },
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/events.ndjson',
+      '{"id":"a1","t":10}\n{"id":"b1","t":20}\n{"id":"a2","t":30}\n',
+      'application/x-ndjson',
+    );
   });
 });

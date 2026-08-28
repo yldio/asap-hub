@@ -46,6 +46,10 @@
 
   var captureUrl = originOf(script.src) + '/api/capture';
 
+  // one id per tab: several tabs share a session when the whole screen is being
+  // recorded, and each keeps its own batch numbering
+  var clientId = randomId();
+
   var queue = [];
   var seq = 0;
   var eventId = 0;
@@ -53,6 +57,22 @@
   var stopped = false;
   var lastMove = { t: 0, x: 0, y: 0 };
   var lastCoarse = 0;
+
+  function randomId() {
+    var bytes = new Uint8Array(8);
+    if (window.crypto && window.crypto.getRandomValues) {
+      window.crypto.getRandomValues(bytes);
+    } else {
+      for (var i = 0; i < bytes.length; i += 1) {
+        bytes[i] = Math.floor(Math.random() * 256);
+      }
+    }
+    return Array.prototype.map
+      .call(bytes, function (byte) {
+        return ('0' + byte.toString(16)).slice(-2);
+      })
+      .join('');
+  }
 
   function currentScript() {
     if (document.currentScript) {
@@ -168,6 +188,7 @@
     var batch = {
       sessionId: sessionId,
       token: token,
+      clientId: clientId,
       seq: seq,
       events: queue,
     };

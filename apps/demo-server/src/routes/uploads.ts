@@ -15,6 +15,8 @@ import {
   completeMultipartUpload,
   createMultipartUpload,
   deletePrefix,
+  rawKey,
+  rawPrefix,
   signUploadParts,
 } from '../storage';
 import { serialiseVideo } from './videos';
@@ -56,7 +58,10 @@ export const uploadsRouter = (): Router => {
       })
       .go();
 
-    const { uploadId, key } = await createMultipartUpload(videoId);
+    const { uploadId, key } = await createMultipartUpload(
+      rawKey(videoId),
+      'video/mp4',
+    );
     res.json({ videoId, uploadId, key, partSize });
   });
 
@@ -82,7 +87,11 @@ export const uploadsRouter = (): Router => {
         uploadId: string;
         partNumbers: number[];
       };
-      const urls = await signUploadParts(videoId, uploadId, partNumbers);
+      const urls = await signUploadParts(
+        rawKey(videoId),
+        uploadId,
+        partNumbers,
+      );
       res.json({ urls });
     },
   );
@@ -102,7 +111,7 @@ export const uploadsRouter = (): Router => {
         parts: { partNumber: number; eTag: string }[];
       };
 
-      await completeMultipartUpload(videoId, uploadId, parts);
+      await completeMultipartUpload(rawKey(videoId), uploadId, parts);
 
       const { data } = await videoEntity
         .patch({ id: videoId })
@@ -127,16 +136,18 @@ export const uploadsRouter = (): Router => {
       const videoId = pathParam(req, 'videoId');
       const { uploadId } = req.query;
       if (typeof uploadId === 'string' && uploadId) {
-        await abortMultipartUpload(videoId, uploadId).catch(() => undefined);
+        await abortMultipartUpload(rawKey(videoId), uploadId).catch(
+          () => undefined,
+        );
       }
       const { data } = await videoEntity.get({ id: videoId }).go();
       if (data?.processingState === 'uploading') {
         // a retried upload can leave earlier attempts open on the same key and
         // the client only ever knows the id of its own latest one
-        await abortMultipartUploadsUnder(`raw/${videoId}/`).catch(
+        await abortMultipartUploadsUnder(rawPrefix(videoId)).catch(
           () => undefined,
         );
-        await deletePrefix(`raw/${videoId}/`).catch(() => undefined);
+        await deletePrefix(rawPrefix(videoId)).catch(() => undefined);
         await videoEntity.delete({ id: videoId }).go();
       }
       res.status(204).end();

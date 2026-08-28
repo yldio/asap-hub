@@ -168,7 +168,8 @@ describe('POST /api/uploads', () => {
       }),
     );
     expect(storage.createMultipartUpload).toHaveBeenCalledWith(
-      'generated-video-id',
+      'raw/generated-video-id/original.mp4',
+      'video/mp4',
     );
   });
 
@@ -271,7 +272,7 @@ describe('POST /api/uploads/:videoId/parts', () => {
       ],
     });
     expect(storage.signUploadParts).toHaveBeenCalledWith(
-      'video-1',
+      'raw/video-1/original.mp4',
       'upload-1',
       [1, 2],
     );
@@ -335,7 +336,7 @@ describe('POST /api/uploads/:videoId/complete', () => {
 
     expect(response.status).toBe(200);
     expect(storage.completeMultipartUpload).toHaveBeenCalledWith(
-      'video-1',
+      'raw/video-1/original.mp4',
       'upload-1',
       [{ partNumber: 1, eTag: 'abc' }],
     );
@@ -430,7 +431,7 @@ describe('DELETE /api/uploads/:videoId', () => {
 
     expect(response.status).toBe(204);
     expect(storage.abortMultipartUpload).toHaveBeenCalledWith(
-      'video-1',
+      'raw/video-1/original.mp4',
       'upload-1',
     );
     expect(remove).toHaveBeenCalledWith({ id: 'video-1' });

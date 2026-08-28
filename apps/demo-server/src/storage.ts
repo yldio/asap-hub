@@ -39,27 +39,49 @@ export const setS3Client = (next: S3Client | undefined): void => {
   client = next;
 };
 
+// raw/ is the only prefix the EventBridge encoder rule watches, so nothing the
+// studio writes may live under it or every asset would start a Fargate encode
 export const rawKey = (videoId: string): string =>
   `raw/${videoId}/original.mp4`;
 
+export const rawPrefix = (videoId: string): string => `raw/${videoId}/`;
+
 export const mediaPrefix = (videoId: string): string => `media/${videoId}/`;
 
-export const createMultipartUpload = async (
+export const projectPrefix = (videoId: string): string =>
+  `projects/${videoId}/`;
+
+export const assetPrefix = (videoId: string, assetId: string): string =>
+  `${projectPrefix(videoId)}assets/${assetId}/`;
+
+export const assetKey = (
   videoId: string,
+  assetId: string,
+  extension: string,
+): string => `${assetPrefix(videoId, assetId)}original.${extension}`;
+
+export const assetProxyKey = (videoId: string, assetId: string): string =>
+  `${assetPrefix(videoId, assetId)}proxy.mp4`;
+
+export const timelineKey = (videoId: string, timelineVersion: number): string =>
+  `${projectPrefix(videoId)}timeline/${timelineVersion}.json`;
+
+export const createMultipartUpload = async (
+  key: string,
+  contentType: string,
 ): Promise<{ uploadId: string; key: string }> => {
-  const key = rawKey(videoId);
   const response = await getS3Client().send(
     new CreateMultipartUploadCommand({
       Bucket: getBucketName(),
       Key: key,
-      ContentType: 'video/mp4',
+      ContentType: contentType,
     }),
   );
   return { uploadId: response.UploadId ?? '', key };
 };
 
 export const signUploadParts = async (
-  videoId: string,
+  key: string,
   uploadId: string,
   partNumbers: number[],
 ): Promise<{ partNumber: number; url: string }[]> =>
@@ -70,7 +92,7 @@ export const signUploadParts = async (
         getS3Client(),
         new UploadPartCommand({
           Bucket: getBucketName(),
-          Key: rawKey(videoId),
+          Key: key,
           UploadId: uploadId,
           PartNumber: partNumber,
         }),
@@ -80,14 +102,14 @@ export const signUploadParts = async (
   );
 
 export const completeMultipartUpload = async (
-  videoId: string,
+  key: string,
   uploadId: string,
   parts: { partNumber: number; eTag: string }[],
 ): Promise<void> => {
   await getS3Client().send(
     new CompleteMultipartUploadCommand({
       Bucket: getBucketName(),
-      Key: rawKey(videoId),
+      Key: key,
       UploadId: uploadId,
       MultipartUpload: {
         Parts: parts
@@ -103,13 +125,13 @@ export const completeMultipartUpload = async (
 };
 
 export const abortMultipartUpload = async (
-  videoId: string,
+  key: string,
   uploadId: string,
 ): Promise<void> => {
   await getS3Client().send(
     new AbortMultipartUploadCommand({
       Bucket: getBucketName(),
-      Key: rawKey(videoId),
+      Key: key,
       UploadId: uploadId,
     }),
   );

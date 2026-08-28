@@ -551,7 +551,7 @@ describe('uploads', () => {
 
     expect(response.status).toBe(200);
     expect(storage.completeMultipartUpload).toHaveBeenCalledWith(
-      'video-1',
+      'raw/video-1/original.mp4',
       'upload-1',
       [{ partNumber: 1, eTag: 'abc' }],
     );

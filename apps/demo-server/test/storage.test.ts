@@ -18,9 +18,7 @@ import {
   deletePrefix,
   getObject,
   getS3Client,
-  mediaPrefix,
   putObject,
-  rawKey,
   setS3Client,
   signUploadParts,
 } from '../src/storage';
@@ -51,13 +49,6 @@ beforeEach(() => {
 
 afterEach(() => {
   setS3Client(undefined);
-});
-
-describe('key helpers', () => {
-  it('builds the raw and media keys from the video id', () => {
-    expect(rawKey('video-1')).toBe('raw/video-1/original.mp4');
-    expect(mediaPrefix('video-1')).toBe('media/video-1/');
-  });
 });
 
 describe('client configuration', () => {
@@ -93,10 +84,13 @@ describe('client configuration', () => {
 });
 
 describe('createMultipartUpload', () => {
-  it('creates the upload against the raw key as video/mp4', async () => {
+  it('creates the upload for the key and content type it is given', async () => {
     send.mockResolvedValue({ UploadId: 'upload-1' });
 
-    const result = await createMultipartUpload('video-1');
+    const result = await createMultipartUpload(
+      'raw/video-1/original.mp4',
+      'video/mp4',
+    );
 
     expect(result).toEqual({
       uploadId: 'upload-1',
@@ -112,7 +106,9 @@ describe('createMultipartUpload', () => {
   it('falls back to an empty upload id when S3 omits it', async () => {
     send.mockResolvedValue({});
 
-    await expect(createMultipartUpload('video-1')).resolves.toMatchObject({
+    await expect(
+      createMultipartUpload('raw/video-1/original.mp4', 'video/mp4'),
+    ).resolves.toMatchObject({
       uploadId: '',
     });
   });
@@ -127,7 +123,11 @@ describe('signUploadParts', () => {
       return `https://signed.example/part-${PartNumber}`;
     });
 
-    const urls = await signUploadParts('video-1', 'upload-1', [1, 3]);
+    const urls = await signUploadParts(
+      'raw/video-1/original.mp4',
+      'upload-1',
+      [1, 3],
+    );
 
     expect(urls).toEqual([
       { partNumber: 1, url: 'https://signed.example/part-1' },
@@ -149,7 +149,7 @@ describe('signUploadParts', () => {
 
 describe('completeMultipartUpload', () => {
   it('sorts the parts by number before completing', async () => {
-    await completeMultipartUpload('video-1', 'upload-1', [
+    await completeMultipartUpload('raw/video-1/original.mp4', 'upload-1', [
       { partNumber: 3, eTag: 'c' },
       { partNumber: 1, eTag: 'a' },
       { partNumber: 2, eTag: 'b' },
@@ -175,15 +175,19 @@ describe('completeMultipartUpload', () => {
       { partNumber: 1, eTag: 'a' },
     ];
 
-    await completeMultipartUpload('video-1', 'upload-1', parts);
+    await completeMultipartUpload(
+      'raw/video-1/original.mp4',
+      'upload-1',
+      parts,
+    );
 
     expect(parts[0]!.partNumber).toBe(2);
   });
 });
 
 describe('abortMultipartUpload', () => {
-  it('aborts the upload for the raw key', async () => {
-    await abortMultipartUpload('video-1', 'upload-1');
+  it('aborts the upload for the key it is given', async () => {
+    await abortMultipartUpload('raw/video-1/original.mp4', 'upload-1');
 
     expect(lastInput()).toEqual({
       Bucket: bucket,

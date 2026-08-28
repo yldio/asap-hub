@@ -67,6 +67,50 @@ it('shows the elapsed time, the duration and the current chapter', () => {
   expect(screen.getByText('Event attendance')).toBeVisible();
 });
 
+it('names no chapter before the first one starts', async () => {
+  renderPlayer({
+    chapters: [{ startMs: 5000, title: 'Late start' }],
+    currentSeconds: 0,
+  });
+
+  expect(screen.queryByText('Late start')).toBeNull();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Chapters' }));
+  const [row] = await screen.findAllByRole('button', { name: /Late start/ });
+  expect(row).toHaveAttribute('aria-current', 'false');
+});
+
+describe('playback failure', () => {
+  it('explains a stream that stops and retries the access on request', async () => {
+    const onRequestAccess = jest.fn();
+    const { video } = renderPlayer({ onRequestAccess });
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Playback stopped',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    expect(onRequestAccess).toHaveBeenCalled();
+    expect(video.load).toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+  });
+
+  it('clears the panel once the stream loads again', async () => {
+    const { video } = renderPlayer();
+
+    fireEvent.error(video);
+    expect(await screen.findByRole('alert')).toBeVisible();
+
+    fireEvent.loadedData(video);
+
+    await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+  });
+});
+
 it('plays and pauses from the control bar', async () => {
   const { video } = renderPlayer();
 
@@ -209,7 +253,7 @@ describe('keyboard shortcuts', () => {
 });
 
 describe('chapters panel', () => {
-  it('opens from the chapters button and seeks from a row', async () => {
+  it('opens from the chapters button, seeks from a row and closes itself', async () => {
     const { setCurrentTime } = renderPlayer();
 
     await userEvent.click(screen.getByRole('button', { name: 'Chapters' }));
@@ -222,6 +266,10 @@ describe('chapters panel', () => {
     );
 
     expect(setCurrentTime).toHaveBeenLastCalledWith(60);
+    // it sits over the picture, so it has to get out of the way once used
+    await waitFor(() =>
+      expect(screen.queryByTestId('chapters-panel')).toBeNull(),
+    );
   });
 
   it('highlights the chapter that covers the playhead', async () => {

@@ -6,17 +6,28 @@ export const clamp = (value: number, min: number, max: number): number =>
 export const ratioAt = (clientX: number, bounds: DOMRect): number =>
   bounds.width <= 0 ? 0 : clamp((clientX - bounds.left) / bounds.width, 0, 1);
 
-export const chapterAt = (
-  chapters: Chapter[],
+/**
+ * The single answer to "which chapter is at time t", shared by the control bar,
+ * the in-player panel and the side list. Time before the first chapter starts
+ * belongs to no chapter (-1): claiming chapter 1 there would label the picture
+ * with a chapter that has not begun.
+ */
+export const activeChapterIndex = (
+  chapters: readonly Chapter[],
   seconds: number,
-): Chapter | undefined => {
+): number => {
   const ms = seconds * 1000;
-  let found: Chapter | undefined;
-  chapters.forEach((chapter) => {
-    if (chapter.startMs <= ms) found = chapter;
+  let active = -1;
+  chapters.forEach((chapter, index) => {
+    if (chapter.startMs <= ms) active = index;
   });
-  return found ?? chapters[0];
+  return active;
 };
+
+export const chapterAt = (
+  chapters: readonly Chapter[],
+  seconds: number,
+): Chapter | undefined => chapters[activeChapterIndex(chapters, seconds)];
 
 export const chapterEndMs = (
   chapters: Chapter[],

@@ -5,7 +5,12 @@ import SeekBar from '../SeekBar';
 
 // jsdom has no PointerEvent, so clientX has to be set on the event by hand
 const firePointer = (
-  type: 'pointerDown' | 'pointerMove' | 'pointerUp' | 'pointerLeave',
+  type:
+    | 'pointerDown'
+    | 'pointerMove'
+    | 'pointerUp'
+    | 'pointerLeave'
+    | 'pointerCancel',
   node: HTMLElement,
   init: { clientX?: number; pointerId?: number } = {},
 ) => {
@@ -148,6 +153,71 @@ it('ignores pointer input when the duration is unknown', () => {
 
   expect(onSeek).not.toHaveBeenCalled();
   expect(onHover).not.toHaveBeenCalled();
+});
+
+// without this the bar stays "scrubbing" for ever: the player then drops every
+// time update and the controls never hide again
+it('stops scrubbing when the pointer stream is cancelled', () => {
+  const { bar, onScrubbingChange, onSeek } = renderBar();
+
+  firePointer('pointerDown', bar, { clientX: BAR_LEFT + 10, pointerId: 1 });
+  expect(onScrubbingChange).toHaveBeenLastCalledWith(true);
+
+  firePointer('pointerCancel', bar, { pointerId: 1 });
+
+  expect(onScrubbingChange).toHaveBeenLastCalledWith(false);
+  onSeek.mockClear();
+  firePointer('pointerMove', bar, { clientX: BAR_LEFT + 200, pointerId: 1 });
+  expect(onSeek).not.toHaveBeenCalled();
+});
+
+it('stops scrubbing when the pointer capture is lost', () => {
+  const { bar, onScrubbingChange } = renderBar();
+
+  firePointer('pointerDown', bar, { clientX: BAR_LEFT + 10, pointerId: 1 });
+  fireEvent.lostPointerCapture(bar);
+
+  expect(onScrubbingChange).toHaveBeenLastCalledWith(false);
+});
+
+describe('keyboard', () => {
+  it('is reachable by tab', () => {
+    const { bar } = renderBar();
+
+    expect(bar).toHaveAttribute('tabindex', '0');
+  });
+
+  it('steps with the arrow keys and jumps with home and end', () => {
+    const { bar, onSeek } = renderBar({ currentSeconds: 50 });
+
+    fireEvent.keyDown(bar, { key: 'ArrowRight' });
+    expect(onSeek).toHaveBeenLastCalledWith(55);
+
+    fireEvent.keyDown(bar, { key: 'ArrowLeft' });
+    expect(onSeek).toHaveBeenLastCalledWith(45);
+
+    fireEvent.keyDown(bar, { key: 'Home' });
+    expect(onSeek).toHaveBeenLastCalledWith(0);
+
+    fireEvent.keyDown(bar, { key: 'End' });
+    expect(onSeek).toHaveBeenLastCalledWith(100);
+  });
+
+  it('clamps a step to the ends of the video', () => {
+    const { bar, onSeek } = renderBar({ currentSeconds: 2 });
+
+    fireEvent.keyDown(bar, { key: 'ArrowLeft' });
+
+    expect(onSeek).toHaveBeenLastCalledWith(0);
+  });
+
+  it('ignores keys that are not seek keys', () => {
+    const { bar, onSeek } = renderBar();
+
+    fireEvent.keyDown(bar, { key: 'a' });
+
+    expect(onSeek).not.toHaveBeenCalled();
+  });
 });
 
 // a zero width bar has no meaningful ratio, so ratioAt clamps to 0 and the

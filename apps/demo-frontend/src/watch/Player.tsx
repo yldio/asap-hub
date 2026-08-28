@@ -10,7 +10,7 @@ import {
 } from 'react';
 
 import type { Chapter, VideoAccess } from '../api/types';
-import { charcoal, paper, rem } from '../ui/theme';
+import { charcoal, fern, paper, rem } from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import ChaptersPanel from './ChaptersPanel';
 import {
@@ -22,7 +22,7 @@ import {
   VolumeHighIcon,
   VolumeMutedIcon,
 } from './icons';
-import { chapterAt, clamp } from './playback';
+import { activeChapterIndex, clamp } from './playback';
 import SeekBar from './SeekBar';
 import SeekTooltip from './SeekTooltip';
 import useThumbnails from './useThumbnails';
@@ -106,7 +106,7 @@ const volumeSliderStyles = css({
   opacity: 0,
   marginLeft: 0,
   transition: 'width 150ms, opacity 150ms, margin 150ms',
-  accentColor: '#34A270',
+  accentColor: fern.rgb,
   cursor: 'pointer',
 });
 
@@ -150,6 +150,41 @@ const centerPlayStyles = css({
 
 const seekWrapperStyles = css({ position: 'relative' });
 
+const failurePanelStyles = css({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  display: 'grid',
+  justifyItems: 'center',
+  gap: rem(8),
+  maxWidth: 'calc(100% - 32px)',
+  padding: `${rem(20)} ${rem(24)}`,
+  borderRadius: rem(8),
+  backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  // over the picture, like the rest of the player chrome, so the literals stay
+  color: 'rgb(255, 255, 255)',
+  textAlign: 'center',
+});
+
+const failureBodyStyles = css({
+  fontSize: rem(14),
+  color: 'rgba(255, 255, 255, 0.85)',
+});
+
+const retryButtonStyles = css({
+  padding: `${rem(8)} ${rem(18)}`,
+  border: '1px solid rgba(255, 255, 255, 0.35)',
+  borderRadius: rem(4),
+  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  color: 'rgb(255, 255, 255)',
+  font: 'inherit',
+  fontSize: rem(14),
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.25)' },
+});
+
 type Hover = { seconds: number; left: number } | null;
 
 const Player: FC<{
@@ -160,6 +195,7 @@ const Player: FC<{
   readonly currentSeconds: number;
   readonly onTimeChange: (seconds: number) => void;
   readonly registerSeek?: (seek: (seconds: number) => void) => void;
+  readonly onRequestAccess?: () => void;
 }> = ({
   access,
   chapters,
@@ -168,6 +204,7 @@ const Player: FC<{
   currentSeconds,
   onTimeChange,
   registerSeek,
+  onRequestAccess,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -185,18 +222,19 @@ const Player: FC<{
   const [panelOpen, setPanelOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [playerWidth, setPlayerWidth] = useState(0);
+  const [failed, setFailed] = useState(false);
 
   const thumbnails = useThumbnails(access.thumbnailsVttUrl);
   const durationSeconds = durationMs / 1000;
   const hasChapters = chapters.length > 0;
-  const activeIndex = chapters.findIndex(
-    (chapter, index) =>
-      chapter.startMs <= currentSeconds * 1000 &&
-      (chapters[index + 1]?.startMs ?? Infinity) > currentSeconds * 1000,
-  );
-  const currentChapter = hasChapters
-    ? chapterAt(chapters, currentSeconds)
-    : undefined;
+  const activeIndex = activeChapterIndex(chapters, currentSeconds);
+  const currentChapter = chapters[activeIndex];
+
+  const retryPlayback = useCallback(() => {
+    setFailed(false);
+    onRequestAccess?.();
+    videoRef.current?.load();
+  }, [onRequestAccess]);
 
   const seekTo = useCallback(
     (seconds: number) => {
@@ -211,6 +249,9 @@ const Player: FC<{
   useEffect(() => {
     registerSeek?.(seekTo);
   }, [registerSeek, seekTo]);
+
+  // a fresh url means fresh credentials, so the failure panel steps aside
+  useEffect(() => setFailed(false), [access.streamUrl]);
 
   useEffect(() => {
     if (!initialSeconds || !Number.isFinite(initialSeconds)) return;
@@ -380,6 +421,11 @@ const Player: FC<{
           wake();
         }}
         onPause={() => setPlaying(false)}
+        onError={() => {
+          setPlaying(false);
+          setFailed(true);
+        }}
+        onLoadedData={() => setFailed(false)}
         onVolumeChange={(event) => {
           setMuted(event.currentTarget.muted);
           setVolume(event.currentTarget.volume);
@@ -394,7 +440,7 @@ const Player: FC<{
         }}
       />
 
-      {!started && (
+      {!started && !failed && (
         <button
           type="button"
           css={centerPlayStyles}
@@ -403,6 +449,18 @@ const Player: FC<{
         >
           <PlayIcon />
         </button>
+      )}
+
+      {failed && (
+        <div css={failurePanelStyles} role="alert">
+          <strong>Playback stopped</strong>
+          <span css={failureBodyStyles}>
+            The stream stopped responding. Your access may have expired.
+          </span>
+          <button type="button" css={retryButtonStyles} onClick={retryPlayback}>
+            Retry
+          </button>
+        </div>
       )}
 
       <div css={[controlsStyles, controlsHidden && hiddenControlsStyles]}>
@@ -511,7 +569,10 @@ const Player: FC<{
           chapters={chapters}
           durationMs={durationMs}
           activeIndex={activeIndex}
-          onSelect={(chapter) => seekTo(chapter.startMs / 1000)}
+          onSelect={(chapter) => {
+            seekTo(chapter.startMs / 1000);
+            setPanelOpen(false);
+          }}
         />
       )}
     </div>

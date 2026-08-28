@@ -48,4 +48,29 @@ describe('cueAt', () => {
   it('falls back to the last cue past the end', () => {
     expect(cueAt(cues, 999)?.x).toEqual(160);
   });
+
+  it('falls back to the nearest cue before the sheet starts', () => {
+    const late = parseThumbnailsVtt(
+      'WEBVTT\n\n00:30.000 --> 00:40.000\nsprite.jpg#xywh=0,0,160,90\n\n00:40.000 --> 00:50.000\nsprite.jpg#xywh=160,0,160,90',
+    );
+
+    expect(cueAt(late, 0)?.x).toEqual(0);
+  });
+
+  // a short demo gets a single 10s cue from the server, so every preview shows
+  // the same frame; the parser and lookup must still answer rather than throw
+  it('answers from a sparse sheet with a single cue', () => {
+    const sparse = parseThumbnailsVtt(
+      'WEBVTT\n\n00:00.000 --> 00:10.000\nsprite.jpg#xywh=0,0,160,90',
+    );
+
+    expect(sparse).toHaveLength(1);
+    expect(cueAt(sparse, 0)?.x).toEqual(0);
+    expect(cueAt(sparse, 9.9)?.x).toEqual(0);
+    expect(cueAt(sparse, 30)?.x).toEqual(0);
+  });
+
+  it('has no cue to offer for an empty sheet', () => {
+    expect(cueAt([], 5)).toBeUndefined();
+  });
 });

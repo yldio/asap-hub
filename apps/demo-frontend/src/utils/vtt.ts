@@ -44,9 +44,29 @@ export const parseThumbnailsVtt = (source: string): ThumbnailCue[] => {
   return cues;
 };
 
+const distanceTo = (cue: ThumbnailCue, seconds: number): number =>
+  seconds < cue.startSeconds
+    ? cue.startSeconds - seconds
+    : Math.max(0, seconds - cue.endSeconds);
+
+/**
+ * The covering cue, or the nearest one when the sheet is sparse: a short demo
+ * gets very few cues, so every preview outside them falls back to the closest
+ * frame instead of always the last one.
+ */
 export const cueAt = (
   cues: ThumbnailCue[],
   seconds: number,
-): ThumbnailCue | undefined =>
-  cues.find((cue) => seconds >= cue.startSeconds && seconds < cue.endSeconds) ??
-  cues[cues.length - 1];
+): ThumbnailCue | undefined => {
+  const covering = cues.find(
+    (cue) => seconds >= cue.startSeconds && seconds < cue.endSeconds,
+  );
+  if (covering) return covering;
+  return cues.reduce<ThumbnailCue | undefined>(
+    (nearest, cue) =>
+      nearest && distanceTo(nearest, seconds) <= distanceTo(cue, seconds)
+        ? nearest
+        : cue,
+    undefined,
+  );
+};

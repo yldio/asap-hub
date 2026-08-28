@@ -14,6 +14,7 @@ import {
   steel,
 } from '../ui/theme';
 import { formatDuration } from '../utils/time';
+import { activeChapterIndex } from './playback';
 
 const panelStyles = css({
   backgroundColor: paper.rgb,
@@ -76,18 +77,6 @@ const emptyStyles = css({
   color: lead.rgb,
   fontSize: rem(14),
 });
-
-export const activeChapterIndex = (
-  chapters: Chapter[],
-  currentSeconds: number,
-): number => {
-  const currentMs = currentSeconds * 1000;
-  let active = -1;
-  chapters.forEach((chapter, index) => {
-    if (chapter.startMs <= currentMs) active = index;
-  });
-  return active;
-};
 
 const ChapterList: FC<{
   readonly chapters: Chapter[];

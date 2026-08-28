@@ -1,11 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, PointerEvent, useRef, useState } from 'react';
+import { FC, KeyboardEvent, PointerEvent, useRef, useState } from 'react';
 
 import type { Chapter } from '../api/types';
 import { fern, rem } from '../ui/theme';
 import { toSegments } from './ChapterProgress';
-import { ratioAt } from './playback';
+import { clamp, ratioAt } from './playback';
+
+const KEY_STEP = 5;
 
 const barStyles = css({
   position: 'relative',
@@ -107,16 +109,51 @@ const SeekBar: FC<{
     return position;
   };
 
+  // a cancelled or lost pointer stream never sends pointerup, so without this
+  // the bar would stay "scrubbing" for the rest of the session
+  const stopScrubbing = () => {
+    setScrubbing(false);
+    onScrubbingChange(false);
+  };
+
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (durationSeconds <= 0) return;
+    const seekToKey = (seconds: number) => {
+      event.preventDefault();
+      // the player also seeks with the arrow keys while it is engaged
+      event.stopPropagation();
+      onSeek(clamp(seconds, 0, durationSeconds));
+    };
+    switch (event.key) {
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        seekToKey(currentSeconds - KEY_STEP);
+        break;
+      case 'ArrowRight':
+      case 'ArrowUp':
+        seekToKey(currentSeconds + KEY_STEP);
+        break;
+      case 'Home':
+        seekToKey(0);
+        break;
+      case 'End':
+        seekToKey(durationSeconds);
+        break;
+      default:
+    }
+  };
+
   return (
     <div
       ref={barRef}
       css={barStyles}
       role="slider"
-      tabIndex={-1}
+      tabIndex={0}
       aria-label="Seek"
       aria-valuemin={0}
       aria-valuemax={Math.round(durationSeconds)}
       aria-valuenow={Math.round(currentSeconds)}
+      onKeyDown={onKeyDown}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);
         setScrubbing(true);
@@ -132,9 +169,10 @@ const SeekBar: FC<{
         if (event.currentTarget.hasPointerCapture(event.pointerId)) {
           event.currentTarget.releasePointerCapture(event.pointerId);
         }
-        setScrubbing(false);
-        onScrubbingChange(false);
+        stopScrubbing();
       }}
+      onPointerCancel={stopScrubbing}
+      onLostPointerCapture={stopScrubbing}
       onPointerLeave={() => {
         if (scrubbing) return;
         setHovered(null);

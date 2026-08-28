@@ -202,6 +202,19 @@ const ProjectEditor: FC<Props> = ({
   );
   const cursorEffects = cursorLayer?.effects ?? noCursorEffects;
 
+  // a recording adds itself as soon as it is saved, so the media list has to be
+  // able to say which sources are already in use
+  const usedAssetIds = useMemo(
+    () =>
+      new Set([
+        ...timeline.clips.flatMap((clip) =>
+          clip.kind === 'source' ? [clip.assetId] : [],
+        ),
+        ...timeline.narration.map((take) => take.assetId),
+      ]),
+    [timeline.clips, timeline.narration],
+  );
+
   const probedDurations = useAssetDurations(assets, assetUrl);
 
   // the server value wins once the ingest has probed the file; until then the
@@ -638,6 +651,7 @@ const ProjectEditor: FC<Props> = ({
               />
             }
             assets={assets}
+            used={usedAssetIds}
             busy={uploading}
             progress={uploadProgress}
             readOnly={readOnly}

@@ -223,6 +223,62 @@ describe('the side panels', () => {
   });
 });
 
+describe('a source already on the timeline', () => {
+  // a recording puts itself on the timeline, and the card went on saying "Add
+  // to timeline", so clicking again quietly made a second copy of it
+  it('says so on the card', () => {
+    renderEditor({ timeline: withClip() });
+
+    const media = screen.getByRole('complementary', { name: 'Media' });
+    expect(media).toHaveTextContent('on the timeline');
+    expect(
+      screen.getByRole('button', { name: 'Add another copy' }),
+    ).toBeInTheDocument();
+  });
+
+  it('still offers to add the first copy of one that is not', () => {
+    renderEditor();
+
+    expect(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    ).toBeInTheDocument();
+  });
+
+  it('says a voice over is on the timeline in its own words', () => {
+    renderEditor({
+      assets: [asset({ kind: 'audio' })],
+      timeline: {
+        ...createEmptyTimeline(),
+        narration: [
+          {
+            id: 'take-a',
+            assetId: 'asset-a',
+            startMs: 0,
+            inMs: 0,
+            outMs: 4000,
+            volume: 1,
+          },
+        ],
+      },
+    });
+
+    expect(
+      screen.getByRole('button', { name: 'Add another voice over' }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('the name of a source', () => {
+  it('says it can be renamed rather than looking like a heading', () => {
+    renderEditor();
+
+    expect(screen.getByLabelText('Name of Sprint demo')).toHaveAttribute(
+      'title',
+      'Rename Sprint demo',
+    );
+  });
+});
+
 describe('where a new thing lands', () => {
   // a title card is a clip, so it can only go between clips, while everything
   // else drops exactly on the playhead; the buttons gave no hint which

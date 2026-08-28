@@ -54,8 +54,10 @@ const itemStyles = css({
   gap: 8,
 });
 
-// the label reads as plain text until it is focused, so the list stays quiet
-// while still being editable in place
+// The label reads as plain text until it is focused, so the list stays quiet,
+// but a heading that happens to be a text box is a heading as far as anyone can
+// tell: the dashed rule underneath it is what says it can be typed into. The
+// ellipsis is for the recording names, which are longer than the column.
 const labelStyles = css({
   fontSize: 13,
   fontWeight: 600,
@@ -64,13 +66,18 @@ const labelStyles = css({
   color: editorTheme.text,
   backgroundColor: 'transparent',
   border: '1px solid transparent',
+  borderBottomColor: editorTheme.line,
+  borderBottomStyle: 'dashed',
   borderRadius: 4,
   padding: '2px 4px',
   margin: '-2px -4px',
   font: 'inherit',
-  ':hover:not(:disabled)': { borderColor: editorTheme.line },
+  cursor: 'text',
+  textOverflow: 'ellipsis',
+  ':hover:not(:disabled)': { borderColor: editorTheme.muted },
   ':focus': {
     borderColor: editorTheme.selected,
+    borderBottomStyle: 'solid',
     outline: 'none',
     backgroundColor: editorTheme.surface,
   },
@@ -102,6 +109,16 @@ const stateLabel: Record<ProjectAsset['state'], string> = {
   failed: 'Failed',
 };
 
+// A recording puts itself on the timeline as soon as it is saved, and the card
+// went on offering to add it, so clicking again quietly made a second copy.
+// Adding another is still allowed; it just says that is what it would be.
+const addLabel = (asset: ProjectAsset, used: boolean): string => {
+  if (asset.kind === 'audio') {
+    return used ? 'Add another voice over' : 'Add as voice over';
+  }
+  return used ? 'Add another copy' : 'Add to timeline';
+};
+
 // a rename only reaches the server when it has actually changed and is not
 // empty, so a stray focus costs nothing and a cleared field falls back
 const AssetLabel: FC<{
@@ -118,6 +135,7 @@ const AssetLabel: FC<{
       value={draft}
       disabled={readOnly}
       aria-label={`Name of ${asset.label}`}
+      title={`Rename ${asset.label}`}
       maxLength={limits.textLength}
       autoComplete="off"
       onChange={(event) => setDraft(event.target.value)}
@@ -142,6 +160,8 @@ const AssetLabel: FC<{
 
 type Props = {
   readonly assets: ProjectAsset[];
+  // the assets the timeline already uses, so a card can say so
+  readonly used: ReadonlySet<string>;
   readonly recorder?: ReactNode;
   readonly chapters?: ReactNode;
   readonly busy: boolean;
@@ -157,6 +177,7 @@ type Props = {
 
 const AssetPanel: FC<Props> = ({
   assets,
+  used,
   recorder,
   chapters,
   busy,
@@ -250,6 +271,7 @@ const AssetPanel: FC<Props> = ({
                 {asset.durationMs
                   ? ` · ${formatDuration(asset.durationMs)}`
                   : ''}
+                {used.has(asset.assetId) ? ' · on the timeline' : ''}
               </span>
               {asset.error ? (
                 <span css={errorStyles}>{asset.error}</span>
@@ -259,9 +281,7 @@ const AssetPanel: FC<Props> = ({
                   disabled={readOnly || asset.state === 'failed'}
                   onClick={() => onAdd(asset)}
                 >
-                  {asset.kind === 'audio'
-                    ? 'Add as voice over'
-                    : 'Add to timeline'}
+                  {addLabel(asset, used.has(asset.assetId))}
                 </EditorButton>
                 <EditorButton
                   aria-label={`Remove ${asset.label}`}

@@ -29,7 +29,13 @@ Goal: the plumbing every later milestone needs, with today's upload flow behavin
       legacy upload and by a studio project
 - [x] Shared video helpers extracted, including one `guardedUpdate` for the lease-and-version write
 - [x] Project endpoints: create a project, read and write the timeline document (13 route tests)
-- [ ] Asset endpoints: open, sign, complete and delete a source asset
+- [x] Asset endpoints: open, sign, complete and delete a source asset, with the
+      delete refusing while a clip or narration take still references it (16 tests)
+- [x] Studio editor (brought forward from M1 so there is something to use): dark
+      editor chrome, media panel, preview, timeline with drag to reorder and drag
+      edges to trim, split, duplicate, mute, undo and redo, autosave under the lease
+- [x] Output follows the footage: 60fps sources render at 60, sources above 1080p
+      keep their height, everything smaller is lifted to 1080p
 - [ ] Job runner abstraction with the ECS and Docker implementations
 - [ ] Ingest job producing a seekable `proxy.mp4` plus probed metadata
 - [ ] `serverless.ts` infrastructure changes written (product owner deploys)
@@ -65,6 +71,13 @@ Not started.
 Newest first. One entry per working session: what landed, what was verified, what moved.
 
 ### 2026-08-28
+
+- Built the editor itself: `packages/demo-timeline` grew `chooseCanvas`, the frontend
+  grew a timeline reducer with undo, and the studio page now edits a real timeline.
+- Restyled the editor to the dark studio chrome the product owner asked for, with
+  drag to reorder, drag edges to trim, and S/D/M/Delete shortcuts.
+- Added 60fps support end to end: assets carry their frame rate, the canvas adopts
+  it, and the transport bar exposes it.
 
 - Unblocked local media: the hub's MinIO had no published ports because another project owns
   9000/9001, which is what made uploads fail with a 500. Remapped to 9010/9011 and verified a

@@ -41,6 +41,9 @@ export const setS3Client = (next: S3Client | undefined): void => {
 
 // raw/ is the only prefix the EventBridge encoder rule watches, so nothing the
 // studio writes may live under it or every asset would start a Fargate encode
+// S3 requires every part but the last to be at least 5MiB
+export const partSize = 10485760;
+
 export const rawKey = (videoId: string): string =>
   `raw/${videoId}/original.mp4`;
 

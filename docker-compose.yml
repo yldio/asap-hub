@@ -16,8 +16,10 @@ services:
     container_name: minio
     command: 'server /data --console-address ":9001"'
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      # 9000/9001 are commonly taken by another local S3; the container
+      # still listens on 9000 inside the network
+      - '9010:9000'
+      - '9011:9001'
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin

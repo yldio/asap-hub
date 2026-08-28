@@ -15,7 +15,7 @@ export const localDynamodbEndpoint = (): string =>
   process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000';
 
 export const localS3Endpoint = (): string =>
-  process.env.LOCAL_S3_ENDPOINT || 'http://localhost:9000';
+  process.env.LOCAL_S3_ENDPOINT || 'http://localhost:9010';
 
 export const getDemoHostname = (): string => process.env.DEMO_HOSTNAME || '';
 

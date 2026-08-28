@@ -15,6 +15,7 @@ import {
   completeMultipartUpload,
   createMultipartUpload,
   deletePrefix,
+  partSize,
   rawKey,
   rawPrefix,
   signUploadParts,
@@ -25,7 +26,7 @@ import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
 
-export const partSize = 10485760;
+export { partSize };
 
 export const uploadsRouter = (): Router => {
   const router = asyncRouter();

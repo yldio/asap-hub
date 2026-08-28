@@ -53,7 +53,9 @@ Notes on the local setup:
   honoured; an unverified address is treated as not invited.
 - Sign in without an invite and you get the not-invited screen. Invite yourself first with the
   `invite` script above; the second argument is `creator` or `member` and defaults to `member`.
-- S3 is MinIO (console at http://localhost:9001, `minioadmin` / `minioadmin`) with the same
+- S3 is MinIO, published on host ports 9010 (API) and 9011 (console at http://localhost:9011,
+  `minioadmin` / `minioadmin`) because 9000/9001 are so often taken by another local S3. Override
+  with `LOCAL_S3_ENDPOINT` if you remap it again. It uses the same
   presigned multipart flow as deployed. `/media/*` is streamed through Express with range
   pass-through instead of CloudFront, and the cookie signer is a no-op.
 - Encoding runs inline in the backend process: the same ffmpeg command when ffmpeg is present,

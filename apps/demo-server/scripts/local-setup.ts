@@ -17,7 +17,7 @@ const tableName = process.env.TABLE_NAME || 'demo-hub-local-data';
 const bucketName = process.env.BUCKET_NAME || 'demo-hub-local-storage';
 const dynamodbEndpoint =
   process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000';
-const s3Endpoint = process.env.LOCAL_S3_ENDPOINT || 'http://localhost:9000';
+const s3Endpoint = process.env.LOCAL_S3_ENDPOINT || 'http://localhost:9010';
 
 const dynamodb = new DynamoDBClient({
   endpoint: dynamodbEndpoint,

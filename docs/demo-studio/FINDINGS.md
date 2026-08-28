@@ -86,18 +86,24 @@ code path.
 **Decided.** The Docker job runner makes the container the primary local path. `local-encoder.ts`
 survives only as the fallback when Docker is unavailable, and is not extended with new features.
 
-## F-002 (P1) MinIO has no published ports on this machine
+## F-002 (P1, resolved) MinIO had no published ports, which broke every upload
 
 **Observed.** `rec-rustfs` from an unrelated project owns host ports 9000 and 9001, so the hub's
-`minio` container starts with none published. `yarn demo:local:setup` fails its bucket step with
-`InvalidAccessKeyId`, because `localhost:9000` is the other service answering.
+`minio` container started with none published (`docker inspect minio` showed `ports=map[]`). Every S3
+call therefore reached rustfs, which rejects the `minioadmin` credentials. That surfaced as
+`yarn demo:local:setup` failing its bucket step with `InvalidAccessKeyId`, a 500 from
+`POST /api/uploads` in the app, and 403s on `/media/.../thumb.jpg`.
 
-**Why it matters.** No media upload, no playback, no ingest and no render can be verified locally
-until this is resolved, which blocks every acceptance check in the plan.
+**Why it matters.** It looked like a missing environment variable but was a port collision, and it
+blocked media upload, playback, ingest and render, which is every acceptance check in the plan.
 
-**Decided.** Not changed unilaterally, since the conflicting container belongs to another project.
-Either stop `rec-rustfs` while working on the hub, or remap MinIO to free ports and set
-`LOCAL_S3_ENDPOINT`. To be settled before the first end to end M0 check.
+**Resolved.** The hub's MinIO is published on **9010** (API) and **9011** (console) instead, so both
+projects run at once: `docker-compose.yml`, the `LOCAL_S3_ENDPOINT` default in
+`apps/demo-server/src/config.ts` and `scripts/local-setup.ts`, the Vite `/media` proxy target and the
+README all moved together. `LOCAL_S3_ENDPOINT` still overrides it. Verified by running
+`yarn demo:local:setup` clean and by a presigned multipart round trip (create, presigned part PUT,
+complete, head, delete) against the bucket. Anyone with a running dev server has to restart it to
+pick up the new endpoint.
 
 ## F-001 (P1) `PATCH /videos/:id` uses a hand-written update expression
 

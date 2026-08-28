@@ -50,7 +50,7 @@ export default defineConfig({
       // straight to MinIO: the lambda emulation buffers whole responses, so
       // streaming video through the API handler hangs on large files
       '/media': {
-        target: 'http://localhost:9000',
+        target: 'http://localhost:9010',
         changeOrigin: true,
         rewrite: (proxyPath) => `/demo-hub-local-storage${proxyPath}`,
       },

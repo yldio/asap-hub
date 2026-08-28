@@ -1,5 +1,13 @@
 import { makeVideo } from '../../test-utils';
-import { matchesQuery, matchesStatusFilter, sortVideos } from '../state';
+import {
+  deleteTitle,
+  deleteWarning,
+  matchesQuery,
+  matchesStatusFilter,
+  parseSort,
+  parseStatusFilter,
+  sortVideos,
+} from '../state';
 
 // three of the four share a recorded date, which is what used to make the two
 // directions disagree
@@ -96,6 +104,59 @@ describe('matchesStatusFilter', () => {
     ).toBe(published);
     expect(matchesStatusFilter(makeVideo({ status: 'draft' }), filter)).toBe(
       draft,
+    );
+  });
+});
+
+describe('reading sort and status out of the url', () => {
+  it.each([
+    ['newest', 'newest'],
+    ['oldest', 'oldest'],
+    ['title', 'title'],
+  ])('reads sort=%s', (value, expected) => {
+    expect(parseSort(value)).toBe(expected);
+  });
+
+  it.each([null, '', 'sideways'])('falls back to newest for %p', (value) => {
+    expect(parseSort(value)).toBe('newest');
+  });
+
+  it.each([
+    ['all', 'all'],
+    ['published', 'published'],
+    ['drafts', 'drafts'],
+  ])('reads status=%s', (value, expected) => {
+    expect(parseStatusFilter(value)).toBe(expected);
+  });
+
+  it.each([null, '', 'archived'])(
+    'falls back to every status for %p',
+    (value) => {
+      expect(parseStatusFilter(value)).toBe('all');
+    },
+  );
+});
+
+describe('naming what a delete would remove', () => {
+  it('names the one demo rather than counting it', () => {
+    expect(deleteTitle(['Untitled demo'])).toBe('Delete “Untitled demo”?');
+    expect(deleteWarning(['Untitled demo'])).toBe(
+      '“Untitled demo” and its file will be permanently removed and cannot be recovered.',
+    );
+  });
+
+  it('counts a multi-selection and still names a few of them', () => {
+    const titles = ['Untitled demo', 'Sprint 41', 'Sprint 42'];
+
+    expect(deleteTitle(titles)).toBe('Delete 3 videos?');
+    expect(deleteWarning(titles)).toBe(
+      '“Untitled demo”, “Sprint 41”, “Sprint 42” and their files will be permanently removed and cannot be recovered.',
+    );
+  });
+
+  it('stops naming them once the list is long', () => {
+    expect(deleteWarning(['a', 'b', 'c', 'd', 'e'])).toBe(
+      '“a”, “b”, “c” and 2 more and their files will be permanently removed and cannot be recovered.',
     );
   });
 });

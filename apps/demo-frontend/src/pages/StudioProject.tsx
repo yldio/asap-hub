@@ -397,6 +397,7 @@ const Editor: FC<EditorProps> = ({
   const leaving = useLeaveGuard(editor.dirty);
 
   const [renderError, setRenderError] = useState<string>();
+  const [confirmingExport, setConfirmingExport] = useState(false);
 
   // the export writes to the same row the autosave does, so it takes the
   // version the editor holds and hands the one it gets back straight to it
@@ -412,6 +413,7 @@ const Editor: FC<EditorProps> = ({
   // heard about the render or the version behind it can only be put right by
   // reading the row again
   const startRender = useCallback(() => {
+    setConfirmingExport(false);
     setRenderError(undefined);
     // no flush here: the button is only live once the document is settled, and
     // a save from this point would move the version the render is about to send
@@ -423,6 +425,18 @@ const Editor: FC<EditorProps> = ({
         void api.getVideo(id).then(applyWrite).catch(noop);
       });
   }, [api, applyWrite, editor.version, id]);
+
+  const exported = video.processingState === 'ready';
+
+  // a second export replaces the demo that is already out there, and for a
+  // published one that is what people are watching right now
+  const requestRender = useCallback(() => {
+    if (exported) {
+      setConfirmingExport(true);
+      return;
+    }
+    startRender();
+  }, [exported, startRender]);
 
   const cancelRender = useCallback(() => {
     api
@@ -507,7 +521,7 @@ const Editor: FC<EditorProps> = ({
           videoId={id}
           render={video.render}
           status={video.status}
-          hasOutput={video.processingState === 'ready'}
+          hasOutput={exported}
           // an export started while a save is in flight would race it for the
           // row version and lose, so it waits for the timeline to settle
           canRender={
@@ -517,7 +531,7 @@ const Editor: FC<EditorProps> = ({
           }
           readOnly={readOnly}
           onLeave={() => leaving.request(() => navigate(`/videos/${id}`))}
-          onRender={startRender}
+          onRender={requestRender}
           onCancel={cancelRender}
         />
       </ProjectHeader>
@@ -613,6 +627,28 @@ const Editor: FC<EditorProps> = ({
                 Save and leave
               </Button>
             )}
+          </div>
+        </Modal>
+      )}
+
+      {confirmingExport && (
+        <Modal
+          onClose={() => setConfirmingExport(false)}
+          label="Export this demo again"
+        >
+          <h2 css={dialogTitleStyles}>Export this demo again?</h2>
+          <p css={dialogBodyStyles}>
+            {video.status === 'published'
+              ? 'The new export replaces the demo members are watching now, as soon as it lands.'
+              : 'The new export replaces the one you exported before, as soon as it lands.'}
+          </p>
+          <div css={dialogActionsStyles}>
+            <Button small onClick={() => setConfirmingExport(false)}>
+              Keep the current one
+            </Button>
+            <Button small primary onClick={startRender}>
+              Export again
+            </Button>
           </div>
         </Modal>
       )}

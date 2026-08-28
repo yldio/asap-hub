@@ -59,6 +59,20 @@ export const stageLabel = (stage: string): string => {
 
 const draftStyles = css({ fontSize: 13, color: editorTheme.muted });
 
+// exporting and publishing are two different things and the buttons alone read
+// as one, so the bar says who can see the demo as it stands
+export const whoCanSeeIt = (
+  hasOutput: boolean,
+  status: VideoStatus,
+): string => {
+  if (!hasOutput) {
+    return 'Draft. Exporting makes a video only you can see.';
+  }
+  return status === 'published'
+    ? 'Published. Anyone signed in can watch it.'
+    : 'Exported. Only you can see it until you publish.';
+};
+
 type Props = {
   readonly videoId: string;
   readonly render?: RenderJob;
@@ -109,6 +123,7 @@ const RenderBar: FC<Props> = ({
           {render.error ? `Export failed: ${render.error}` : 'Export failed'}
         </span>
       ) : null}
+      <span css={draftStyles}>{whoCanSeeIt(hasOutput, status)}</span>
       {hasOutput ? (
         <Link
           css={linkStyles}
@@ -121,9 +136,7 @@ const RenderBar: FC<Props> = ({
         >
           {status === 'published' ? 'View the demo' : 'Preview the demo'}
         </Link>
-      ) : (
-        <span css={draftStyles}>Draft, not yet a demo</span>
-      )}
+      ) : null}
       <EditorButton
         primary
         disabled={readOnly || !canRender}

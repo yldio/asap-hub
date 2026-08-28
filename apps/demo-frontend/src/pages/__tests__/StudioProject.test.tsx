@@ -429,6 +429,79 @@ describe('rendering', () => {
     expect(await screen.findByText(message)).toBeVisible();
   });
 
+  // three buttons and no word about who can see what
+  it('says who can see the demo at each step', async () => {
+    renderStudio();
+
+    expect(
+      await screen.findByText(/Exporting makes a video only you can see/),
+    ).toBeVisible();
+  });
+
+  it('says an exported demo is private until it is published', async () => {
+    renderStudio({
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+    });
+
+    expect(
+      await screen.findByText(
+        'Exported. Only you can see it until you publish.',
+      ),
+    ).toBeVisible();
+  });
+
+  it('says a published demo can be watched', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        processingState: 'ready',
+        status: 'published',
+      }),
+    });
+
+    expect(
+      await screen.findByText('Published. Anyone signed in can watch it.'),
+    ).toBeVisible();
+  });
+
+  // a re-export overwrites what people are watching, so it is not a click away
+  it('confirms an export that replaces a published demo', async () => {
+    const startRender = jest
+      .fn()
+      .mockResolvedValue({ ...project, render: { state: 'queued' } });
+    renderStudio({
+      startRender,
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        processingState: 'ready',
+        status: 'published',
+      }),
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Export again' }),
+    );
+
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Export this demo again',
+    });
+    expect(
+      within(dialog).getByText(/replaces the demo members are watching now/),
+    ).toBeVisible();
+    expect(startRender).not.toHaveBeenCalled();
+
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Export again' }),
+    );
+
+    expect(startRender).toHaveBeenCalledWith('project-1', 3);
+  });
+
   it('shows progress and a way out while a render runs', async () => {
     renderStudio({
       getVideo: jest.fn().mockResolvedValue({

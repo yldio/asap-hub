@@ -249,6 +249,103 @@ describe('dragging a trim handle', () => {
   });
 });
 
+// the handles were focusable buttons that answered to nothing but a pointer
+// press, so trimming could not be done from a keyboard at all
+describe('trimming from the keyboard', () => {
+  it('takes the end of a clip in with the left arrow', () => {
+    const { onTrim } = renderTimeline();
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Trim the end of A' }),
+      {
+        key: 'ArrowLeft',
+      },
+    );
+
+    expect(onTrim).toHaveBeenCalledWith('clip-a', { outMs: 3900 });
+  });
+
+  it('takes a bigger step when Shift is held', () => {
+    const { onTrim } = renderTimeline();
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Trim the end of A' }),
+      {
+        key: 'ArrowRight',
+        shiftKey: true,
+      },
+    );
+
+    expect(onTrim).toHaveBeenCalledWith('clip-a', { outMs: 5000 });
+  });
+
+  it('moves the start of a clip with the right arrow', () => {
+    const { onTrim } = renderTimeline();
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Trim the start of A' }),
+      { key: 'ArrowRight' },
+    );
+
+    expect(onTrim).toHaveBeenCalledWith('clip-a', { inMs: 100 });
+  });
+
+  it('changes where a banner ends from its handle', () => {
+    const { onSpanChange } = renderTimeline({ banners: [banner] });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Change where Banner Hello ends' }),
+      { key: 'ArrowRight' },
+    );
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'banner',
+      'banner-a',
+      { startMs: 2000, durationMs: 2100 },
+      'trimEnd',
+    );
+  });
+
+  it('keeps a zoom off its own ramps from the keyboard too', () => {
+    const { onSpanChange } = renderTimeline({ zooms: [zoom] });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Change where Zoom 2x starts' }),
+      { key: 'ArrowRight', shiftKey: true },
+    );
+
+    const [, , span] = onSpanChange.mock.calls.at(-1) ?? [];
+    expect(span).toEqual({ startMs: 6000, durationMs: 1000 });
+  });
+});
+
+describe('reordering from the keyboard', () => {
+  // dragging was the only way to change the order on the lane itself
+  it('moves a clip along with Alt and an arrow', () => {
+    const { onMove } = renderTimeline();
+
+    fireEvent.keyDown(clipBlock('A'), { key: 'ArrowRight', altKey: true });
+
+    expect(onMove).toHaveBeenCalledWith('clip-a', 1);
+  });
+
+  it('will not move the first clip any earlier', () => {
+    const { onMove } = renderTimeline();
+
+    fireEvent.keyDown(clipBlock('A'), { key: 'ArrowLeft', altKey: true });
+
+    expect(onMove).not.toHaveBeenCalled();
+  });
+
+  it('leaves a plain arrow to the page', () => {
+    const { onMove } = renderTimeline();
+
+    fireEvent.keyDown(clipBlock('A'), { key: 'ArrowRight' });
+
+    expect(onMove).not.toHaveBeenCalled();
+  });
+});
+
 describe('the overlay lanes', () => {
   it('moves a banner along its lane', () => {
     const { onSpanChange } = renderTimeline({ banners: [banner] });
@@ -269,7 +366,7 @@ describe('the overlay lanes', () => {
     const { onSpanChange } = renderTimeline({ banners: [banner] });
 
     const handle = screen.getByRole('button', {
-      name: 'Drag to change where Banner Hello ends',
+      name: 'Change where Banner Hello ends',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
     pointerMove(handle, { pointerId: 1, clientX: 700 });
@@ -287,7 +384,7 @@ describe('the overlay lanes', () => {
 
     // clip B starts at 4000ms, so the zoom sits at 5000ms and runs for 2000ms
     const handle = screen.getByRole('button', {
-      name: 'Drag to change where Zoom 2x ends',
+      name: 'Change where Zoom 2x ends',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 700 });
     pointerMove(handle, { pointerId: 1, clientX: 900 });
@@ -306,7 +403,7 @@ describe('the overlay lanes', () => {
     const { onSpanChange } = renderTimeline({ zooms: [zoom] });
 
     const handle = screen.getByRole('button', {
-      name: 'Drag to change where Zoom 2x starts',
+      name: 'Change where Zoom 2x starts',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 500 });
     pointerMove(handle, { pointerId: 1, clientX: 700 });

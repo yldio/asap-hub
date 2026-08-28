@@ -189,6 +189,21 @@ type StartClipDrag = (
   event: ReactPointerEvent<HTMLElement>,
 ) => void;
 
+type NudgeClip = (
+  placement: ClipPlacement,
+  kind: DragKind,
+  deltaMs: number,
+) => void;
+
+type NudgeSpan = (
+  kind: SpanKind,
+  id: string,
+  span: Span,
+  dragKind: DragKind,
+  deltaMs: number,
+  minMs?: number,
+) => void;
+
 type StartSpanDrag = (
   kind: SpanKind,
   id: string,
@@ -251,6 +266,7 @@ const ClipTrack = memo<{
   readonly dropIndex?: number;
   readonly onSelect: SelectHandler;
   readonly onDragStart: StartClipDrag;
+  readonly onNudge: NudgeClip;
   readonly onToggleMute: (clipId: string) => void;
 }>(
   ({
@@ -263,6 +279,7 @@ const ClipTrack = memo<{
     dropIndex,
     onSelect,
     onDragStart,
+    onNudge,
     onToggleMute,
   }) => (
     <div css={trackStyles}>
@@ -286,6 +303,7 @@ const ClipTrack = memo<{
             readOnly={readOnly}
             onSelect={() => onSelect('clip', placement.clip.id)}
             onDragStart={(kind, event) => onDragStart(placement, kind, event)}
+            onNudge={(kind, deltaMs) => onNudge(placement, kind, deltaMs)}
             onToggleMute={() => onToggleMute(placement.clip.id)}
           />
         ))
@@ -313,6 +331,7 @@ const BannerTrack = memo<{
   readonly readOnly: boolean;
   readonly onSelect: SelectHandler;
   readonly onDragStart: StartSpanDrag;
+  readonly onNudge: NudgeSpan;
 }>(
   ({
     banners,
@@ -321,6 +340,7 @@ const BannerTrack = memo<{
     readOnly,
     onSelect,
     onDragStart,
+    onNudge,
   }) => (
     <div css={overlayTrackStyles}>
       {banners.map((banner) => (
@@ -336,6 +356,9 @@ const BannerTrack = memo<{
           onSelect={() => onSelect('banner', banner.id)}
           onDragStart={(kind, event) =>
             onDragStart('banner', banner.id, banner, kind, event)
+          }
+          onNudge={(kind, deltaMs) =>
+            onNudge('banner', banner.id, banner, kind, deltaMs)
           }
         />
       ))}
@@ -354,6 +377,7 @@ const EffectTrack = memo<{
   readonly readOnly: boolean;
   readonly onSelect: SelectHandler;
   readonly onDragStart: StartSpanDrag;
+  readonly onNudge: NudgeSpan;
 }>(
   ({
     zooms,
@@ -364,6 +388,7 @@ const EffectTrack = memo<{
     readOnly,
     onSelect,
     onDragStart,
+    onNudge,
   }) => {
     const startOf = (clipId: string): number | undefined =>
       placements.find(({ clip }) => clip.id === clipId)?.startMs;
@@ -379,6 +404,10 @@ const EffectTrack = memo<{
             startMs: clipStartMs + zoom.startMs,
             durationMs: zoomDurationMs(zoom),
           };
+          const shortestZoom = Math.max(
+            limits.minClipMs,
+            zoom.rampInMs + zoom.rampOutMs,
+          );
           return (
             <LaneBlock
               key={zoom.id}
@@ -391,14 +420,10 @@ const EffectTrack = memo<{
               readOnly={readOnly}
               onSelect={() => onSelect('zoom', zoom.id)}
               onDragStart={(kind, event) =>
-                onDragStart(
-                  'zoom',
-                  zoom.id,
-                  span,
-                  kind,
-                  event,
-                  Math.max(limits.minClipMs, zoom.rampInMs + zoom.rampOutMs),
-                )
+                onDragStart('zoom', zoom.id, span, kind, event, shortestZoom)
+              }
+              onNudge={(kind, deltaMs) =>
+                onNudge('zoom', zoom.id, span, kind, deltaMs, shortestZoom)
               }
             />
           );
@@ -439,6 +464,7 @@ const NarrationTrack = memo<{
   readonly readOnly: boolean;
   readonly onSelect: SelectHandler;
   readonly onDragStart: StartSpanDrag;
+  readonly onNudge: NudgeSpan;
 }>(
   ({
     narration,
@@ -448,6 +474,7 @@ const NarrationTrack = memo<{
     readOnly,
     onSelect,
     onDragStart,
+    onNudge,
   }) => (
     <div css={overlayTrackStyles}>
       {narration.length === 0 ? (
@@ -474,6 +501,9 @@ const NarrationTrack = memo<{
               onSelect={() => onSelect('narration', take.id)}
               onDragStart={(kind, event) =>
                 onDragStart('narration', take.id, span, kind, event)
+              }
+              onNudge={(kind, deltaMs) =>
+                onNudge('narration', take.id, span, kind, deltaMs)
               }
             />
           );
@@ -683,6 +713,57 @@ const Timeline: FC<Props> = ({
     [capture, msAt, onGestureStart],
   );
 
+  // A keyboard makes the same edits the pointer does, by handing the drag
+  // helpers an origin of zero and the step as the position moved to.
+  const nudgeClip = useCallback<NudgeClip>(
+    (placement, kind, deltaMs) => {
+      const { clip } = placement;
+      if (kind === 'move') {
+        const toIndex = placement.index + (deltaMs > 0 ? 1 : -1);
+        if (toIndex >= 0 && toIndex < placements.length) {
+          onMove(clip.id, toIndex);
+        }
+        return;
+      }
+      if (clip.kind === 'source') {
+        onTrim(
+          clip.id,
+          trimAfterDrag(
+            { kind, originMs: 0, inMs: clip.inMs, outMs: clip.outMs },
+            deltaMs,
+          ),
+        );
+        return;
+      }
+      onSpanChange(
+        'title',
+        clip.id,
+        spanAfterDrag(
+          {
+            kind,
+            originMs: 0,
+            startMs: placement.startMs,
+            durationMs: placement.durationMs,
+          },
+          deltaMs,
+        ),
+        kind,
+      );
+    },
+    [onMove, onSpanChange, onTrim, placements.length],
+  );
+
+  const nudgeSpan = useCallback<NudgeSpan>(
+    (spanKind, id, span, kind, deltaMs, minMs) =>
+      onSpanChange(
+        spanKind,
+        id,
+        spanAfterDrag({ kind, originMs: 0, ...span }, deltaMs, minMs),
+        kind,
+      ),
+    [onSpanChange],
+  );
+
   const laneWidth = Math.max(
     msToPx(durationMs, pixelsPerSecond) + lanePaddingPx,
     480,
@@ -733,6 +814,7 @@ const Timeline: FC<Props> = ({
             dropIndex={dropIndex}
             onSelect={onSelect}
             onDragStart={startClipDrag}
+            onNudge={nudgeClip}
             onToggleMute={onToggleMute}
           />
 
@@ -743,6 +825,7 @@ const Timeline: FC<Props> = ({
             readOnly={readOnly}
             onSelect={onSelect}
             onDragStart={startSpanDrag}
+            onNudge={nudgeSpan}
           />
 
           <EffectTrack
@@ -754,6 +837,7 @@ const Timeline: FC<Props> = ({
             readOnly={readOnly}
             onSelect={onSelect}
             onDragStart={startSpanDrag}
+            onNudge={nudgeSpan}
           />
 
           <NarrationTrack
@@ -764,6 +848,7 @@ const Timeline: FC<Props> = ({
             readOnly={readOnly}
             onSelect={onSelect}
             onDragStart={startSpanDrag}
+            onNudge={nudgeSpan}
           />
 
           <div

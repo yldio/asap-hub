@@ -57,7 +57,7 @@ describe('an inspector field', () => {
   });
 
   it('makes one gesture of a whole slider drag', async () => {
-    const { begin, end } = renderTyping();
+    const { begin } = renderTyping();
 
     await userEvent.click(screen.getByLabelText(/^Volume/));
     await userEvent.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}');

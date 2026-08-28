@@ -117,7 +117,23 @@ type Props = {
     kind: DragKind,
     event: ReactPointerEvent<HTMLElement>,
   ) => void;
+  // the same edits the pointer makes, for a keyboard: the handles were
+  // focusable buttons that answered to nothing but a pointer press
+  readonly onNudge: (kind: DragKind, deltaMs: number) => void;
   readonly onToggleMute: () => void;
+};
+
+const nudgeStepMs = 100;
+const coarseStepMs = 1000;
+
+const arrowDeltaMs = (event: {
+  key: string;
+  shiftKey: boolean;
+}): number | undefined => {
+  const step = event.shiftKey ? coarseStepMs : nudgeStepMs;
+  if (event.key === 'ArrowLeft') return -step;
+  if (event.key === 'ArrowRight') return step;
+  return undefined;
 };
 
 const ClipBlock: FC<Props> = ({
@@ -129,6 +145,7 @@ const ClipBlock: FC<Props> = ({
   readOnly,
   onSelect,
   onDragStart,
+  onNudge,
   onToggleMute,
 }) => {
   const { clip } = placement;
@@ -174,7 +191,13 @@ const ClipBlock: FC<Props> = ({
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           onSelect();
+          return;
         }
+        // Alt and an arrow reorders, which was otherwise a drag or nothing
+        const delta = arrowDeltaMs(event);
+        if (delta === undefined || !event.altKey || readOnly) return;
+        event.preventDefault();
+        onNudge('move', delta);
       }}
     >
       <span css={labelStyles}>{label}</span>
@@ -207,6 +230,12 @@ const ClipBlock: FC<Props> = ({
           onSelect();
           onDragStart('trimStart', event);
         }}
+        onKeyDown={(event) => {
+          const delta = arrowDeltaMs(event);
+          if (delta === undefined) return;
+          event.preventDefault();
+          onNudge('trimStart', delta);
+        }}
       />
       <button
         type="button"
@@ -218,6 +247,12 @@ const ClipBlock: FC<Props> = ({
           event.stopPropagation();
           onSelect();
           onDragStart('trimEnd', event);
+        }}
+        onKeyDown={(event) => {
+          const delta = arrowDeltaMs(event);
+          if (delta === undefined) return;
+          event.preventDefault();
+          onNudge('trimEnd', delta);
         }}
       />
     </div>

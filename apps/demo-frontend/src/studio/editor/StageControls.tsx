@@ -160,8 +160,18 @@ const StageControls: FC<Props> = ({
         }}
         onPointerMove={onPointerMove}
         onKeyDown={(event) => {
-          if (event.key === 'ArrowLeft') onSeek(playheadMs - 1000);
-          if (event.key === 'ArrowRight') onSeek(playheadMs + 1000);
+          // without this the page scrolls sideways as well as the playhead
+          // moving, because the arrow keeps its default on a plain div
+          const seeks: Record<string, number> = {
+            ArrowLeft: playheadMs - 1000,
+            ArrowRight: playheadMs + 1000,
+            Home: 0,
+            End: durationMs,
+          };
+          const target = seeks[event.key];
+          if (target === undefined) return;
+          event.preventDefault();
+          onSeek(Math.min(durationMs, Math.max(0, target)));
         }}
       >
         <span css={trackStyles}>

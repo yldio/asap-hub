@@ -77,6 +77,21 @@ type Props = {
     kind: DragKind,
     event: ReactPointerEvent<HTMLElement>,
   ) => void;
+  // the same edits the pointer makes, for a keyboard
+  readonly onNudge: (kind: DragKind, deltaMs: number) => void;
+};
+
+const nudgeStepMs = 100;
+const coarseStepMs = 1000;
+
+const arrowDeltaMs = (event: {
+  key: string;
+  shiftKey: boolean;
+}): number | undefined => {
+  const step = event.shiftKey ? coarseStepMs : nudgeStepMs;
+  if (event.key === 'ArrowLeft') return -step;
+  if (event.key === 'ArrowRight') return step;
+  return undefined;
 };
 
 // Banners, zooms and voice over are the same thing on the timeline: a labelled
@@ -91,6 +106,7 @@ const LaneBlock: FC<Props> = ({
   readOnly,
   onSelect,
   onDragStart,
+  onNudge,
 }) => (
   <div
     role="button"
@@ -109,13 +125,18 @@ const LaneBlock: FC<Props> = ({
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         onSelect();
+        return;
       }
+      const delta = arrowDeltaMs(event);
+      if (delta === undefined || readOnly) return;
+      event.preventDefault();
+      onNudge('move', delta);
     }}
   >
     {label}
     <button
       type="button"
-      aria-label={`Drag to change where ${name} starts`}
+      aria-label={`Change where ${name} starts`}
       css={handleStyles}
       style={{ left: 0 }}
       disabled={readOnly}
@@ -124,10 +145,18 @@ const LaneBlock: FC<Props> = ({
         onSelect();
         onDragStart('trimStart', event);
       }}
+      onKeyDown={(event) => {
+        const delta = arrowDeltaMs(event);
+        if (delta === undefined) return;
+        event.preventDefault();
+        // the block behind the handle answers to arrows as well
+        event.stopPropagation();
+        onNudge('trimStart', delta);
+      }}
     />
     <button
       type="button"
-      aria-label={`Drag to change where ${name} ends`}
+      aria-label={`Change where ${name} ends`}
       css={handleStyles}
       style={{ right: 0 }}
       disabled={readOnly}
@@ -135,6 +164,14 @@ const LaneBlock: FC<Props> = ({
         event.stopPropagation();
         onSelect();
         onDragStart('trimEnd', event);
+      }}
+      onKeyDown={(event) => {
+        const delta = arrowDeltaMs(event);
+        if (delta === undefined) return;
+        event.preventDefault();
+        // the block behind the handle answers to arrows as well
+        event.stopPropagation();
+        onNudge('trimEnd', delta);
       }}
     />
   </div>

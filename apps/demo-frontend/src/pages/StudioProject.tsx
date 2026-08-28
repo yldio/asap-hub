@@ -23,7 +23,10 @@ import CapturePanel from '../studio/recording/CapturePanel';
 import RecorderPanel from '../studio/recording/RecorderPanel';
 import VoiceOverPanel from '../studio/recording/VoiceOverPanel';
 import { useCursorCapture } from '../studio/recording/useCursorCapture';
-import { screenRecordingSupport } from '../studio/recording/mediaCapabilities';
+import {
+  microphoneRecordingSupport,
+  screenRecordingSupport,
+} from '../studio/recording/mediaCapabilities';
 import {
   TakeResult,
   useRecordingTake,
@@ -332,6 +335,9 @@ const Editor: FC<EditorProps> = ({
 
   const startRender = useCallback(() => {
     setRenderError(undefined);
+    // an edit inside the autosave debounce is not on the server yet, and the
+    // container renders the server's copy
+    editor.flush();
     api
       .startRender(id, editor.version)
       .then(applyWrite)
@@ -342,7 +348,7 @@ const Editor: FC<EditorProps> = ({
             : 'Could not start the export.',
         ),
       );
-  }, [api, applyWrite, editor.version, id]);
+  }, [api, applyWrite, editor, id]);
 
   const cancelRender = useCallback(() => {
     api
@@ -394,9 +400,12 @@ const Editor: FC<EditorProps> = ({
       ),
     [unpublishVideo, write],
   );
-  const support = screenRecordingSupport(
+  const recorderApi =
+    typeof MediaRecorder === 'undefined' ? undefined : MediaRecorder;
+  const support = screenRecordingSupport(navigator.mediaDevices, recorderApi);
+  const micSupport = microphoneRecordingSupport(
     navigator.mediaDevices,
-    typeof MediaRecorder === 'undefined' ? undefined : MediaRecorder,
+    recorderApi,
   );
 
   return (
@@ -418,7 +427,9 @@ const Editor: FC<EditorProps> = ({
           // an export started while a save is in flight would race it for the
           // row version and lose, so it waits for the timeline to settle
           canRender={
-            editor.timeline.clips.length > 0 && editor.saveState !== 'saving'
+            editor.timeline.clips.length > 0 &&
+            !editor.dirty &&
+            editor.saveState !== 'saving'
           }
           readOnly={readOnly}
           onRender={startRender}
@@ -452,6 +463,9 @@ const Editor: FC<EditorProps> = ({
               error={voice.error}
               saving={savingVoice}
               readOnly={readOnly}
+              unsupportedReason={
+                micSupport.supported ? undefined : micSupport.reason
+              }
               onStart={() => {
                 voice.start().catch(() => undefined);
               }}

@@ -33,6 +33,23 @@ it('cycles the theme through light, dark and system', async () => {
   expect(window.localStorage.getItem(themeStorageKey)).toBe('system');
 });
 
+// with no attribute the prefers-color-scheme rules own the palette, so System
+// keeps following the OS long after the menu that set it has closed
+it('leaves the theme attribute off in system mode', async () => {
+  window.localStorage.setItem(themeStorageKey, 'dark');
+  renderApp(<Header />, { me: memberMe });
+  await openMenu();
+
+  document.documentElement.dataset.theme = 'dark';
+
+  await userEvent.click(screen.getByRole('button', { name: /change theme/i }));
+
+  expect(
+    screen.getByRole('button', { name: /change theme/i }),
+  ).toHaveTextContent('System');
+  expect(document.documentElement.dataset.theme).toBeUndefined();
+});
+
 it('starts from the persisted theme', async () => {
   window.localStorage.setItem(themeStorageKey, 'dark');
   renderApp(<Header />, { me: memberMe });

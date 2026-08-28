@@ -5,8 +5,8 @@ import { Link } from 'react-router';
 
 import { useAuth } from '../auth/AuthProvider';
 import { useIsAdmin, useIsCreator, useMeContext } from '../auth/MeContext';
-import { AutoThemeIcon, MoonIcon, SunIcon } from '../library/icons';
 import { Button } from '../ui/components';
+import { AutoThemeIcon, MoonIcon, SunIcon } from '../ui/icons';
 import {
   charcoal,
   lead,
@@ -17,8 +17,6 @@ import {
   steel,
 } from '../ui/theme';
 import {
-  applyThemeMode,
-  darkMediaQuery,
   nextThemeMode,
   readThemeMode,
   themeModeLabels,
@@ -129,14 +127,6 @@ const themeIcons: Record<ThemeMode, FC<{ readonly size?: number }>> = {
 const ThemeToggle: FC = () => {
   const [mode, setMode] = useState<ThemeMode>(readThemeMode);
   const Icon = themeIcons[mode];
-
-  useEffect(() => {
-    const media = darkMediaQuery();
-    if (!media || mode !== 'system') return undefined;
-    const onChange = () => applyThemeMode('system');
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
-  }, [mode]);
 
   return (
     <button

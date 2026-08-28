@@ -16,21 +16,12 @@ export const readThemeMode = (): ThemeMode => {
   }
 };
 
-export const darkMediaQuery = (): MediaQueryList | undefined => {
-  try {
-    return window.matchMedia?.('(prefers-color-scheme: dark)');
-  } catch {
-    return undefined;
-  }
-};
-
-export const prefersDark = (): boolean => darkMediaQuery()?.matches ?? false;
-
-export const resolveTheme = (mode: ThemeMode): 'light' | 'dark' =>
-  mode === 'system' ? (prefersDark() ? 'dark' : 'light') : mode;
-
+// In system mode the attribute is removed rather than stamped with a resolved
+// value, so the prefers-color-scheme fallback in GlobalStyles keeps following
+// the OS for the whole session without anything subscribing to matchMedia.
 export const applyThemeMode = (mode: ThemeMode): void => {
-  document.documentElement.dataset.theme = resolveTheme(mode);
+  if (mode === 'system') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = mode;
 };
 
 export const writeThemeMode = (mode: ThemeMode): void => {

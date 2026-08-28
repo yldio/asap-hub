@@ -13,15 +13,18 @@
     <title>ASAP Demos</title>
     <script>
       (function () {
+        // system mode leaves the attribute off so the prefers-color-scheme
+        // rules own the palette; only an explicit choice is stamped
+        var mode = 'system';
         try {
-          var mode = localStorage.getItem('demo-hub.theme') || 'system';
-          var dark =
-            mode === 'dark' ||
-            (mode === 'system' &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          mode = localStorage.getItem('demo-hub.theme') || 'system';
         } catch (error) {
-          document.documentElement.dataset.theme = 'light';
+          mode = 'system';
+        }
+        if (mode === 'dark' || mode === 'light') {
+          document.documentElement.dataset.theme = mode;
+        } else {
+          delete document.documentElement.dataset.theme;
         }
       })();
     </script>

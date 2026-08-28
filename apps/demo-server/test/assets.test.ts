@@ -72,6 +72,8 @@ const mockUser = (role: 'creator' | 'member' | 'admin', sub: string) => {
   } as any);
 };
 
+const lockExpiresAt = () => Date.now() + 60_000;
+
 const projectItem = (overrides: Record<string, unknown> = {}) => ({
   id: 'project-1',
   title: 'Sprint 12 demo',
@@ -82,6 +84,9 @@ const projectItem = (overrides: Record<string, unknown> = {}) => ({
   processingState: 'empty',
   version: 3,
   createdBy: { sub: 'auth0|creator', name: 'Ana' },
+  lockedBy: 'auth0|creator',
+  lockedByName: 'Ana',
+  lockExpiresAt: lockExpiresAt(),
   timeline: {
     key: 'projects/project-1/timeline/4.json',
     timelineVersion: 4,
@@ -476,6 +481,27 @@ describe('PATCH /api/projects/:id/assets/:assetId', () => {
 
     expect((await rename({ label: '' })).status).toBe(400);
     expect((await rename({ label: '   ' })).status).toBe(400);
+  });
+
+  it('leaves the sources alone while someone else is editing', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({ lockedBy: 'auth0|someone-else', lockedByName: 'Bo' }),
+    );
+    const set = mockAssetPatch(assetItem());
+
+    const response = await rename({ label: 'The attendance flow' });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({ error: 'locked' });
+    expect(set).not.toHaveBeenCalled();
+  });
+
+  it('refuses once the lease has run out', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ lockExpiresAt: Date.now() - 1000 }));
+
+    expect((await rename({ label: 'Attendance' })).status).toBe(409);
   });
 
   it('trims the name it stores', async () => {

@@ -23,12 +23,7 @@ import {
 } from '../storage';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
-import {
-  holdsLease,
-  loadProject,
-  lockedBody,
-  VideoItem,
-} from './video-shared';
+import { holdsLease, loadProject, lockedBody, VideoItem } from './video-shared';
 
 export type AssetItem = Record<string, unknown>;
 

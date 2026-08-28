@@ -653,3 +653,35 @@ describe('when a source cannot be changed', () => {
     );
   });
 });
+
+describe('a source the asset list has not caught up with', () => {
+  // a recording puts its clip on the timeline before the list refetches, and the
+  // poll used to look only at what was already listed, so nothing brought the
+  // new source in and the clip stayed unplayable until a manual reload
+  it('keeps asking until the source the timeline names turns up', async () => {
+    const listAssets = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValue([asset()]);
+    renderStudio({
+      listAssets,
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    expect(await screen.findByText(/no playable source yet/)).toBeVisible();
+
+    await waitFor(
+      () => expect(listAssets.mock.calls.length).toBeGreaterThan(1),
+      {
+        timeout: 8000,
+      },
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByText(/no playable source yet/),
+      ).not.toBeInTheDocument(),
+    );
+  });
+});

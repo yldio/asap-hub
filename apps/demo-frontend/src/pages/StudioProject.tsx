@@ -152,14 +152,22 @@ const StudioProject: FC = () => {
     queryKey: ['project-assets', id],
     queryFn: () => api.listAssets(id),
     enabled: Boolean(id),
-    // the ingest runs in a container and writes the probed duration back onto
-    // the asset, so the editor keeps asking until nothing is in flight
-    refetchInterval: (query) =>
-      query.state.data?.some(
+    // The ingest runs in a container and writes the probed duration back onto
+    // the asset, so the editor keeps asking until nothing is in flight. It also
+    // keeps asking while the timeline names a source this list has never seen:
+    // a recording puts its clip up before the list has caught up, and polling
+    // only on what is already listed left that clip unplayable until a reload.
+    refetchInterval: (query) => {
+      const listed = query.state.data;
+      const inFlight = listed?.some(
         (asset) => asset.state === 'uploading' || asset.state === 'preparing',
-      )
-        ? assetPollMs
-        : false,
+      );
+      const known = new Set((listed ?? []).map((asset) => asset.assetId));
+      const missing = (timelineQuery.data?.timeline.clips ?? []).some(
+        (clip) => clip.kind === 'source' && !known.has(clip.assetId),
+      );
+      return inFlight || missing ? assetPollMs : false;
+    },
   });
 
   const { lease, retry, markLost } = useEditLease(id, Boolean(id));

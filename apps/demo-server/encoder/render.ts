@@ -419,15 +419,13 @@ const probeDurationMs = async (path: string): Promise<number> => {
     'csv=p=0',
     path,
   ]);
-  return Math.round(Number(seconds) * 1000);
+  const ms = Math.round(Number(seconds) * 1000);
+  return Number.isFinite(ms) ? ms : 0;
 };
 
-const rasterise = async (
-  plan: RenderPlan,
-  svgs: RenderPlan['svgs'],
-): Promise<void> => {
+const rasterise = async (plan: RenderPlan): Promise<void> => {
   await Promise.all(
-    svgs.map(async ({ path, svg }) => {
+    plan.svgs.map(async ({ path, svg }) => {
       const source = svgSourcePath(path);
       await fs.writeFile(source, svg, 'utf8');
       await run('rsvg-convert', [
@@ -585,13 +583,15 @@ const render = async (env: RenderEnv): Promise<void> => {
 
   const assetIds = timelineAssetIds(timeline);
   const localPath = (assetId: string): string => `${workDir}/assets/${assetId}`;
-  const rows = await queryAssetRows(env);
-  const assets = toRenderAssets(rows, assetIds, localPath);
+  const sources = (await queryAssetRows(env)).filter(({ assetId }) =>
+    assetIds.includes(assetId),
+  );
+  const assets = toRenderAssets(sources, assetIds, localPath);
 
   report('sources', 0);
-  for (const row of rows.filter(({ assetId }) => assetIds.includes(assetId))) {
-    log(`download ${row.key}`);
-    await download(env, row.key, localPath(row.assetId));
+  for (const source of sources) {
+    log(`download ${source.key}`);
+    await download(env, source.key, localPath(source.assetId));
   }
 
   const output = `${workDir}/stream.mp4`;
@@ -601,7 +601,7 @@ const render = async (env: RenderEnv): Promise<void> => {
   }
   describePlan(plan).forEach(log);
 
-  await rasterise(plan, plan.svgs);
+  await rasterise(plan);
   if (plan.listFile) {
     await fs.writeFile(plan.listFile.path, plan.listFile.content, 'utf8');
   }

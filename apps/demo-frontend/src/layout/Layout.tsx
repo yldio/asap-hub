@@ -34,6 +34,10 @@ const fullBleedMainStyles = css({
   maxWidth: 'none',
   padding: 0,
   minHeight: 0,
+  // a grid child defaults to min-width auto, which lets a wide timeline push
+  // the whole page sideways
+  minWidth: 0,
+  overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
 });

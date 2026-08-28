@@ -833,7 +833,9 @@ const serverlessConfig: AWS = {
                   },
                   {
                     Effect: 'Allow',
-                    Action: ['dynamodb:UpdateItem'],
+                    // the render job queries the project's asset rows before it
+                    // can download anything the timeline references
+                    Action: ['dynamodb:UpdateItem', 'dynamodb:Query'],
                     Resource: { 'Fn::GetAtt': ['DataTable', 'Arn'] },
                   },
                 ],

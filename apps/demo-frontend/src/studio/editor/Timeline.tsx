@@ -535,9 +535,6 @@ const Timeline: FC<Props> = ({
                 </button>
               );
             })}
-          </div>
-
-          <div css={overlayTrackStyles}>
             {cursorLayers.flatMap((layer) => {
               const placement = placements.find(
                 ({ clip }) => clip.id === layer.clipId,

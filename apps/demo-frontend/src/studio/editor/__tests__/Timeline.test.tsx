@@ -47,7 +47,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onToggleMute = jest.fn();
   const placements = layoutClips(clips);
 
-  render(
+  const view = render(
     <Timeline
       placements={placements}
       durationMs={10000}
@@ -76,6 +76,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   );
 
   return {
+    container: view.container,
     onMove,
     onTrim,
     onSeek,
@@ -208,5 +209,25 @@ describe('the ruler', () => {
     });
 
     expect(onSeek).toHaveBeenCalledWith(2500);
+  });
+});
+
+describe('the track headers', () => {
+  it('names every lane, in the order the lanes are drawn', () => {
+    const { container } = renderTimeline();
+
+    const headers = Array.from(
+      container.querySelectorAll('[aria-hidden="true"] > div'),
+    ).map((cell) => cell.textContent);
+
+    // the first cell is the spacer beside the ruler; the rest must match the
+    // lanes one for one or the tracks stop lining up with their names
+    expect(headers).toEqual([
+      '',
+      'Clips',
+      'Banners',
+      'Zoom, cursor',
+      'Voice over',
+    ]);
   });
 });

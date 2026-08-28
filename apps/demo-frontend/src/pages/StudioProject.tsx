@@ -32,6 +32,8 @@ const layoutStyles = css({
   flexDirection: 'column',
   flex: 1,
   minHeight: 0,
+  minWidth: 0,
+  overflow: 'hidden',
 });
 
 const headerStyles = css({

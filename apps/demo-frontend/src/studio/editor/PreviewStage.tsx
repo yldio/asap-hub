@@ -17,14 +17,15 @@ import { zoomTransformAt } from './zoom';
 
 const pickingStyles = css({ cursor: 'crosshair' });
 
-// height first: the stage fills whatever the panels and timeline leave and
-// takes its width from the aspect ratio, so a wide window cannot stretch it
+// the stage keeps 16:9 and shrinks to whatever the panels and the timeline
+// leave, in either direction, rather than stretching the window
 const stageStyles = css({
   containerType: 'inline-size',
   position: 'relative',
-  height: '100%',
-  width: 'auto',
+  width: '100%',
+  height: 'auto',
   maxWidth: '100%',
+  maxHeight: '100%',
   aspectRatio: '16 / 9',
   backgroundColor: charcoal.rgb,
   borderRadius: rem(8),

@@ -47,14 +47,17 @@ const shellStyles = css({
   color: editorTheme.text,
 });
 
+// an explicit grid, not flex: the centre column is minmax(0, 1fr) so a wide
+// preview or timeline can never push the side panels off the screen
 const bodyStyles = css({
-  display: 'flex',
+  display: 'grid',
+  gridTemplateColumns: '280px minmax(0, 1fr) 260px',
   flex: 1,
   minHeight: 0,
   minWidth: 0,
   overflow: 'hidden',
   '@media (max-width: 1100px)': {
-    flexDirection: 'column',
+    gridTemplateColumns: 'minmax(0, 1fr)',
     flex: 'none',
     overflow: 'auto',
   },
@@ -63,6 +66,8 @@ const bodyStyles = css({
 // the stage takes whatever the panels and the timeline leave, and the preview
 // is centred in it rather than stretched
 const centreStyles = css({
+  gridColumn: 2,
+  '@media (max-width: 1100px)': { gridColumn: 1 },
   flex: 1,
   display: 'flex',
   flexDirection: 'column',

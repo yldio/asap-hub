@@ -10,6 +10,7 @@ import { formatTimecode } from './geometry';
 import { TrashIcon } from './icons';
 
 const panelStyles = css({
+  gridColumn: 3,
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
@@ -19,7 +20,7 @@ const panelStyles = css({
   width: 260,
   flexShrink: 0,
   overflowY: 'auto',
-  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0 },
+  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0, gridColumn: 1 },
 });
 
 const headingStyles = css({

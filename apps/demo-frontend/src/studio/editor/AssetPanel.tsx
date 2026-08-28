@@ -8,16 +8,21 @@ import { formatDuration } from './geometry';
 import { PlusIcon, TrashIcon } from './icons';
 
 const panelStyles = css({
+  gridColumn: 1,
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
   padding: 16,
-  borderLeft: `1px solid ${editorTheme.line}`,
+  borderRight: `1px solid ${editorTheme.line}`,
   backgroundColor: editorTheme.panel,
   width: 280,
   flexShrink: 0,
   overflowY: 'auto',
-  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0 },
+  '@media (max-width: 1100px)': {
+    width: 'auto',
+    borderRight: 0,
+    gridColumn: 1,
+  },
 });
 
 const headingStyles = css({

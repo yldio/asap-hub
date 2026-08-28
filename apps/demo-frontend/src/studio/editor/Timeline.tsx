@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   Banner,
   ClipPlacement,
+  CursorEffect,
   CursorLayer,
   limits,
   NarrationClip,
@@ -29,12 +30,13 @@ import {
 import { editorTheme, trackHeaders, trackHeights } from './editorTheme';
 import {
   formatDuration,
+  formatTimecode,
   lanePaddingPx,
   msToPx,
   pxToMs,
   tickIntervalMs,
 } from './geometry';
-import LaneBlock from './LaneBlock';
+import LaneBlock, { arrowDeltaMs } from './LaneBlock';
 import { isSelected, Selection } from './selection';
 import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
 import { zoomDurationMs } from './zoom';
@@ -128,7 +130,9 @@ const effectMarkerStyles = css({
   border: `2px solid ${editorTheme.panel}`,
   backgroundColor: editorTheme.clipEdge,
   padding: 0,
-  cursor: 'pointer',
+  cursor: 'grab',
+  touchAction: 'none',
+  ':active': { cursor: 'grabbing' },
 });
 
 const selectedMarkerStyles = css({
@@ -181,9 +185,11 @@ const dropMarkerStyles = css({
 
 type MsAt = (clientX: number) => number;
 
-// a title card has no footage to trim, so both its edges just change how long
-// it stays on screen; every other span sits on a lane of its own
-export type SpanKind = 'banner' | 'zoom' | 'narration' | 'title';
+// A title card has no footage to trim, so both its edges just change how long
+// it stays on screen; every other span sits on a lane of its own. A cursor
+// effect is a point rather than a span, so it rides along as a span of no
+// length whose only legal drag is a move.
+export type SpanKind = 'banner' | 'zoom' | 'narration' | 'title' | 'effect';
 
 type StartClipDrag = (
   placement: ClipPlacement,
@@ -401,6 +407,56 @@ const BannerTrack = memo<{
   ),
 );
 
+// A cursor effect has no length to resize, so its dot answers to the one drag
+// that means anything to it: sliding it along the lane to the moment it should
+// fire. Typing into the inspector used to be the only way to retime one.
+const EffectMarker: FC<{
+  readonly effect: CursorEffect;
+  readonly atMs: number;
+  readonly pixelsPerSecond: number;
+  readonly selected: boolean;
+  readonly readOnly: boolean;
+  readonly onSelect: () => void;
+  readonly onDragStart: (event: ReactPointerEvent<HTMLElement>) => void;
+  readonly onNudge: (deltaMs: number) => void;
+}> = ({
+  effect,
+  atMs,
+  pixelsPerSecond,
+  selected,
+  readOnly,
+  onSelect,
+  onDragStart,
+  onNudge,
+}) => (
+  <button
+    type="button"
+    aria-label={`${effect.type} effect at ${formatTimecode(atMs)}`}
+    aria-pressed={selected}
+    css={[effectMarkerStyles, selected && selectedMarkerStyles]}
+    style={{ left: msToPx(atMs, pixelsPerSecond) }}
+    onPointerDown={(event) => {
+      onSelect();
+      if (!readOnly) {
+        onDragStart(event);
+      }
+    }}
+    // the press already selected it, so Enter and Space must not let a click
+    // through as well
+    onKeyDown={(event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        onSelect();
+        return;
+      }
+      const delta = arrowDeltaMs(event);
+      if (delta === undefined || readOnly) return;
+      event.preventDefault();
+      onNudge(delta);
+    }}
+  />
+);
+
 // zooms and cursor effects share a lane: both are things done to the clip they
 // sit over, rather than clips of their own
 const EffectTrack = memo<{
@@ -469,22 +525,29 @@ const EffectTrack = memo<{
           if (clipStartMs === undefined) {
             return [];
           }
-          return layer.effects.map((effect) => (
-            <button
-              type="button"
-              key={effect.id}
-              aria-label={`${effect.type} effect`}
-              css={[
-                effectMarkerStyles,
-                isSelected(selection, 'effect', effect.id) &&
-                  selectedMarkerStyles,
-              ]}
-              style={{
-                left: msToPx(clipStartMs + effect.tMs, pixelsPerSecond),
-              }}
-              onClick={() => onSelect('effect', effect.id)}
-            />
-          ));
+          return layer.effects.map((effect) => {
+            // the lane speaks programme time; the effect is stored against its
+            // clip, and the editor converts back
+            const atMs = clipStartMs + effect.tMs;
+            const point = { startMs: atMs, durationMs: 0 };
+            return (
+              <EffectMarker
+                key={effect.id}
+                effect={effect}
+                atMs={atMs}
+                pixelsPerSecond={pixelsPerSecond}
+                selected={isSelected(selection, 'effect', effect.id)}
+                readOnly={readOnly}
+                onSelect={() => onSelect('effect', effect.id)}
+                onDragStart={(event) =>
+                  onDragStart('effect', effect.id, point, 'move', event)
+                }
+                onNudge={(deltaMs) =>
+                  onNudge('effect', effect.id, point, 'move', deltaMs)
+                }
+              />
+            );
+          });
         })}
       </div>
     );

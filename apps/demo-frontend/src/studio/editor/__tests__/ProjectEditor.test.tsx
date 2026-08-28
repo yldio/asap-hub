@@ -1,5 +1,5 @@
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ProjectAsset } from '../../../api/types';
@@ -347,6 +347,109 @@ describe('where a new thing lands', () => {
       ).toBeInTheDocument();
     },
   );
+});
+
+// clip A runs 0..8000ms from the start of the programme, so an effect 1000ms
+// into it sits at 0:01.00 on the lane
+describe('retiming a cursor effect on the lane', () => {
+  const withEffect = (tMs: number): Timeline => ({
+    ...withClip(),
+    cursor: [
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        path: [],
+        effects: [
+          {
+            id: 'effect-a',
+            tMs,
+            type: 'ripple',
+            point: { x: 0.5, y: 0.5 },
+            origin: 'manual',
+          },
+        ],
+      },
+    ],
+  });
+
+  const marker = (label: string) =>
+    screen.getByRole('button', { name: `ripple effect at ${label}` });
+
+  const changes = (calls: Call[]) =>
+    calls.flatMap((call) =>
+      call.action?.type === 'updateCursorEffect' ? [call.action.change] : [],
+    );
+
+  // jsdom implements neither PointerEvent nor pointer capture, so without
+  // these the lane never sees a coordinate
+  class TestPointerEvent extends MouseEvent {
+    readonly pointerId: number;
+
+    constructor(type: string, props: PointerEventInit = {}) {
+      super(type, props);
+      this.pointerId = props.pointerId ?? 1;
+    }
+  }
+
+  beforeAll(() => {
+    window.PointerEvent = TestPointerEvent as unknown as typeof PointerEvent;
+    Element.prototype.setPointerCapture = jest.fn();
+    Element.prototype.releasePointerCapture = jest.fn();
+    Element.prototype.hasPointerCapture = jest.fn(() => true);
+  });
+
+  it('stores the new moment against the clip the effect belongs to', () => {
+    const { calls } = renderEditor({ timeline: withEffect(1000) });
+
+    fireEvent.keyDown(marker('0:01.00'), { key: 'ArrowRight' });
+
+    expect(calls.map((call) => call.action).filter(Boolean)).toContainEqual({
+      type: 'updateCursorEffect',
+      clipId: 'clip-a',
+      effectId: 'effect-a',
+      change: { tMs: 1100 },
+    });
+  });
+
+  // a moment outside the clip, or one with a fraction of a millisecond in it,
+  // is a document the server refuses in full, and every later save fails
+  it('will not push an effect past the end of its clip', () => {
+    const { calls } = renderEditor({ timeline: withEffect(8000) });
+
+    fireEvent.keyDown(marker('0:08.00'), { key: 'ArrowRight', shiftKey: true });
+
+    expect(changes(calls)).toEqual([{ tMs: 8000 }]);
+  });
+
+  it('will not pull an effect back before its clip starts', () => {
+    const { calls } = renderEditor({ timeline: withEffect(0) });
+
+    fireEvent.keyDown(marker('0:00.00'), { key: 'ArrowLeft' });
+
+    expect(changes(calls)).toEqual([{ tMs: 0 }]);
+  });
+
+  // one entry per pointer move would leave the whole undo history holding a
+  // single drag
+  it('makes one undoable gesture of a whole drag', () => {
+    const { calls } = renderEditor({ timeline: withEffect(1000) });
+    const dot = marker('0:01.00');
+    const from = calls.length;
+
+    fireEvent.pointerDown(dot, { pointerId: 1, clientX: 100 });
+    fireEvent.pointerMove(dot, { pointerId: 1, clientX: 300, buttons: 1 });
+    fireEvent.pointerMove(dot, { pointerId: 1, clientX: 200, buttons: 1 });
+    fireEvent.pointerUp(dot, { pointerId: 1, clientX: 200 });
+
+    const drag = calls.slice(from);
+    expect(drag.filter((call) => call.name === 'beginGesture')).toHaveLength(1);
+    expect(drag.at(0)?.name).toBe('beginGesture');
+    expect(drag.at(-1)?.name).toBe('endGesture');
+
+    const moved = changes(drag).map((change) => change.tMs);
+    expect(moved.length).toBeGreaterThan(0);
+    expect(moved.every((tMs) => Number.isInteger(tMs))).toBe(true);
+  });
 });
 
 describe('the undo shortcuts', () => {

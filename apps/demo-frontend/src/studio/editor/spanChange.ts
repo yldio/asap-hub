@@ -1,4 +1,4 @@
-import { NarrationClip, Zoom } from '@asap-hub/demo-timeline';
+import { CursorEffect, NarrationClip, Zoom } from '@asap-hub/demo-timeline';
 import { DragKind, Span } from './dragging';
 
 // Moving a block carries the same audio to a new time; only trimming its start
@@ -38,5 +38,19 @@ export const zoomChange = (
   holdMs: Math.max(
     0,
     Math.round(span.durationMs) - zoom.rampInMs - zoom.rampOutMs,
+  ),
+});
+
+// A cursor effect is a point on its clip rather than a block on the lane, so a
+// drag comes back as one whole millisecond inside that clip. A fraction, or a
+// moment outside the clip, is a document the server refuses in full.
+export const effectChange = (
+  span: Span,
+  clipStartMs: number,
+  clipDurationMs: number,
+): Partial<CursorEffect> => ({
+  tMs: Math.min(
+    Math.max(0, Math.round(span.startMs - clipStartMs)),
+    Math.max(0, Math.round(clipDurationMs)),
   ),
 });

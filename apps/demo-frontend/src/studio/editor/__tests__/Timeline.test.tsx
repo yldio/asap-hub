@@ -64,6 +64,21 @@ const narration: TimelineDoc['narration'][number] = {
   volume: 1,
 };
 
+const cursorLayer: TimelineDoc['cursor'][number] = {
+  clipId: 'clip-b',
+  offsetMs: 0,
+  path: [],
+  effects: [
+    {
+      id: 'effect-a',
+      tMs: 1000,
+      type: 'ripple',
+      point: { x: 0.5, y: 0.5 },
+      origin: 'manual',
+    },
+  ],
+};
+
 const pixelsPerSecond = 100;
 
 const renderTimeline = (overrides: Record<string, unknown> = {}) => {
@@ -526,6 +541,168 @@ describe('a clip block', () => {
       'title',
       'Uses 0:02.50 to 0:06.00 of A',
     );
+  });
+});
+
+// clip B starts at 4000ms, so its effect at 1000ms into the clip sits at
+// 5000ms on the lane, which is 500px across
+describe('a cursor effect marker', () => {
+  const marker = () =>
+    screen.getByRole('button', { name: 'ripple effect at 0:05.00' });
+
+  // the dot said only what kind of effect it was, so a lane of them all read
+  // the same and none of them said when it fired
+  it('says on the dot when the effect happens', () => {
+    renderTimeline({ cursorLayers: [cursorLayer] });
+
+    expect(marker()).toBeInTheDocument();
+  });
+
+  it('selects the effect when it is pressed', () => {
+    const { onSelect } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+
+    expect(onSelect).toHaveBeenCalledWith('effect', 'effect-a');
+  });
+
+  it('says which dot is the selected one', () => {
+    renderTimeline({
+      cursorLayers: [cursorLayer],
+      selection: { kind: 'effect', id: 'effect-a' },
+    });
+
+    expect(marker()).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  // typing into the inspector used to be the only way to retime one
+  it('moves along the lane as it is dragged', () => {
+    const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+    pointerMove(marker(), { pointerId: 1, clientX: 700 });
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'effect',
+      'effect-a',
+      { startMs: 7000, durationMs: 0 },
+      'move',
+    );
+  });
+
+  // measuring each frame against where the dot now is feeds its own movement
+  // back in, and the dot runs away from the pointer
+  it('follows the pointer back and forth within one drag', () => {
+    const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+    pointerMove(marker(), { pointerId: 1, clientX: 800 });
+    pointerMove(marker(), { pointerId: 1, clientX: 550 });
+
+    const [, , span] = onSpanChange.mock.calls.at(-1) ?? [];
+    expect(span).toEqual({ startMs: 5500, durationMs: 0 });
+  });
+
+  it('is never dragged to before the start of the programme', () => {
+    const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+    pointerMove(marker(), { pointerId: 1, clientX: -400 });
+
+    const [, , span] = onSpanChange.mock.calls.at(-1) ?? [];
+    expect(span).toEqual({ startMs: 0, durationMs: 0 });
+  });
+
+  // one entry per pointer move would fill the whole undo history with a single
+  // drag
+  it('is one undoable gesture however many frames it takes', () => {
+    const { onGestureStart, onGestureEnd } = renderTimeline({
+      cursorLayers: [cursorLayer],
+    });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+    pointerMove(marker(), { pointerId: 1, clientX: 600 });
+    pointerMove(marker(), { pointerId: 1, clientX: 700 });
+    fireEvent.pointerUp(marker(), { pointerId: 1, clientX: 700 });
+
+    expect(onGestureStart).toHaveBeenCalledTimes(1);
+    expect(onGestureEnd).toHaveBeenCalledTimes(1);
+  });
+
+  it('still selects but does not move while the project is read only', () => {
+    const { onSelect, onSpanChange } = renderTimeline({
+      cursorLayers: [cursorLayer],
+      readOnly: true,
+    });
+
+    fireEvent.pointerDown(marker(), { pointerId: 1, clientX: 500 });
+    pointerMove(marker(), { pointerId: 1, clientX: 700 });
+
+    expect(onSelect).toHaveBeenCalledWith('effect', 'effect-a');
+    expect(onSpanChange).not.toHaveBeenCalled();
+  });
+
+  it('leaves an effect whose clip is gone off the lane', () => {
+    renderTimeline({
+      cursorLayers: [{ ...cursorLayer, clipId: 'clip-gone' }],
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /ripple effect/ }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('retiming a cursor effect from the keyboard', () => {
+  const marker = () =>
+    screen.getByRole('button', { name: 'ripple effect at 0:05.00' });
+
+  it('takes a step later with the right arrow', () => {
+    const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.keyDown(marker(), { key: 'ArrowRight' });
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'effect',
+      'effect-a',
+      { startMs: 5100, durationMs: 0 },
+      'move',
+    );
+  });
+
+  it('takes a bigger step when Shift is held', () => {
+    const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
+
+    fireEvent.keyDown(marker(), { key: 'ArrowLeft', shiftKey: true });
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'effect',
+      'effect-a',
+      { startMs: 4000, durationMs: 0 },
+      'move',
+    );
+  });
+
+  it('selects the effect with Enter without moving it', () => {
+    const { onSelect, onSpanChange } = renderTimeline({
+      cursorLayers: [cursorLayer],
+    });
+
+    fireEvent.keyDown(marker(), { key: 'Enter' });
+
+    expect(onSelect).toHaveBeenCalledWith('effect', 'effect-a');
+    expect(onSpanChange).not.toHaveBeenCalled();
+  });
+
+  it('does not move one while the project is read only', () => {
+    const { onSpanChange } = renderTimeline({
+      cursorLayers: [cursorLayer],
+      readOnly: true,
+    });
+
+    fireEvent.keyDown(marker(), { key: 'ArrowRight' });
+
+    expect(onSpanChange).not.toHaveBeenCalled();
   });
 });
 

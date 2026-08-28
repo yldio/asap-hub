@@ -84,7 +84,8 @@ type Props = {
 const nudgeStepMs = 100;
 const coarseStepMs = 1000;
 
-const arrowDeltaMs = (event: {
+// the same step every draggable thing on a lane answers an arrow with
+export const arrowDeltaMs = (event: {
   key: string;
   shiftKey: boolean;
 }): number | undefined => {

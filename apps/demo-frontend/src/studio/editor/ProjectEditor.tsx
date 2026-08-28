@@ -41,7 +41,7 @@ import { dragGesture, GestureProvider, useGestures } from './gesture';
 import InspectorPanel from './InspectorPanel';
 import PreviewStage from './PreviewStage';
 import { hasResolvedSelection, resolveSelection, Selection } from './selection';
-import { narrationChange, zoomChange } from './spanChange';
+import { effectChange, narrationChange, zoomChange } from './spanChange';
 import StageControls from './StageControls';
 import Timeline, { SpanKind } from './Timeline';
 import TransportBar from './TransportBar';
@@ -533,8 +533,8 @@ const ProjectEditor: FC<Props> = ({
     [assetDurationOf, dispatch, timeline.clips],
   );
 
-  // The timeline speaks programme time for everything it drags. Only the zoom
-  // lane is anchored to a clip, so this is the one place that converts.
+  // The timeline speaks programme time for everything it drags. Zooms and
+  // cursor effects are anchored to a clip, so this is where they convert back.
   const changeSpan = useCallback(
     (kind: SpanKind, id: string, span: Span, drag: DragKind) => {
       const startMs = Math.round(span.startMs);
@@ -574,6 +574,21 @@ const ProjectEditor: FC<Props> = ({
         return;
       }
 
+      if (kind === 'effect') {
+        const layer = timeline.cursor.find((item) =>
+          item.effects.some((effect) => effect.id === id),
+        );
+        const onClip = placements.find(({ clip }) => clip.id === layer?.clipId);
+        if (!layer || !onClip) return;
+        dispatch({
+          type: 'updateCursorEffect',
+          clipId: layer.clipId,
+          effectId: id,
+          change: effectChange(span, onClip.startMs, onClip.durationMs),
+        });
+        return;
+      }
+
       const target = timeline.zooms.find((item) => item.id === id);
       const placement = placements.find(
         ({ clip }) => clip.id === target?.clipId,
@@ -585,7 +600,14 @@ const ProjectEditor: FC<Props> = ({
         change: zoomChange(target, span, placement.startMs),
       });
     },
-    [assetDurationOf, dispatch, placements, timeline.narration, timeline.zooms],
+    [
+      assetDurationOf,
+      dispatch,
+      placements,
+      timeline.cursor,
+      timeline.narration,
+      timeline.zooms,
+    ],
   );
 
   const toggleMuteClip = useCallback(

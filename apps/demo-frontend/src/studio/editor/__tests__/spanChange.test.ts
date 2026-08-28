@@ -1,5 +1,5 @@
 import { NarrationClip, Zoom } from '@asap-hub/demo-timeline';
-import { narrationChange, zoomChange } from '../spanChange';
+import { effectChange, narrationChange, zoomChange } from '../spanChange';
 
 const take: NarrationClip = {
   id: 'take-1',
@@ -90,5 +90,37 @@ describe('zoomChange', () => {
     expect(
       zoomChange(zoom, { startMs: 1000, durationMs: 2000 }, 4000).startMs,
     ).toBe(0);
+  });
+});
+
+describe('effectChange', () => {
+  // the dot is placed in programme time and stored against its clip, so a drag
+  // that did not convert would move the effect onto another clip's clock
+  it('converts programme time back to the clip it belongs to', () => {
+    expect(effectChange({ startMs: 5000, durationMs: 0 }, 4000, 6000)).toEqual({
+      tMs: 1000,
+    });
+  });
+
+  // a fractional millisecond is rejected by the server, and every later save
+  // of the project fails with it
+  it('lands on a whole millisecond', () => {
+    expect(
+      effectChange({ startMs: 5400.6, durationMs: 0 }, 4000, 6000),
+    ).toEqual({ tMs: 1401 });
+  });
+
+  it('never moves earlier than the clip starts', () => {
+    expect(effectChange({ startMs: 1000, durationMs: 0 }, 4000, 6000)).toEqual({
+      tMs: 0,
+    });
+  });
+
+  it('never moves past the end of the clip', () => {
+    expect(effectChange({ startMs: 20000, durationMs: 0 }, 4000, 6000)).toEqual(
+      {
+        tMs: 6000,
+      },
+    );
   });
 });

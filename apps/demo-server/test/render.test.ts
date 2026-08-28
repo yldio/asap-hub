@@ -25,11 +25,7 @@ import {
 import { appFactory } from '../src/app';
 import { userEntity, videoEntity } from '../src/data/entities';
 import { setJobRunner } from '../src/jobs/runner';
-import {
-  isRenderActive,
-  maxRenderAgeMs,
-  nextMediaPath,
-} from '../src/routes/render';
+import { isRenderActive, maxRenderAgeMs } from '../src/routes/render';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -198,17 +194,20 @@ describe('POST /api/projects/:id/render', () => {
 
   it('starts the render job and records the task it started', async () => {
     mockUser('creator', 'auth0|creator');
-    mockVideoGet(projectItem({ mediaPath: 'r2' }));
+    mockVideoGet(projectItem({ mediaPath: 'an-earlier-render' }));
 
     await start();
 
+    // the output directory is the render id: a cancelled or failed run leaves
+    // mediaPath where it was, so anything derived from the last success would
+    // hand the next render a directory a task still running could overwrite
     expect(run).toHaveBeenCalledWith('render', {
       JOB: 'render',
       VIDEO_ID: 'project-1',
       RENDER_ID: 'generated-render-id',
       TIMELINE_KEY:
         'projects/project-1/renders/generated-render-id/timeline.json',
-      MEDIA_PATH: 'r3',
+      MEDIA_PATH: 'generated-render-id',
     });
     // the render map this request built is already stale by now: the container
     // may have written progress into it, so only taskArn moves, and only while
@@ -646,17 +645,6 @@ describe('the writes the container makes', () => {
       ':queued': { S: 'queued' },
       ':rendering': { S: 'rendering' },
     });
-  });
-});
-
-describe('nextMediaPath', () => {
-  it.each([
-    [undefined, 'r1'],
-    ['r1', 'r2'],
-    ['r9', 'r10'],
-    ['stream', 'r1'],
-  ])('turns %s into %s', (current, expected) => {
-    expect(nextMediaPath(current)).toBe(expected);
   });
 });
 

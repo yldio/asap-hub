@@ -56,12 +56,12 @@ export const isRenderActive = (
   return Number.isNaN(requestedAt) || now - requestedAt < maxRenderAgeMs;
 };
 
-// a render writes to media/{id}/{mediaPath}/, so each one gets its own directory
-// and a re-render is not hidden behind the day-long CloudFront TTL on the last
-export const nextMediaPath = (current?: string): string => {
-  const revision = /^r(\d+)$/.exec(current ?? '')?.[1];
-  return `r${revision ? Number(revision) + 1 : 1}`;
-};
+// A render writes to media/{id}/{mediaPath}/, so each one gets its own
+// directory and a re-render is not hidden behind the day-long CloudFront TTL on
+// the last. The directory is the render id rather than a counter derived from
+// the last success: a cancelled or failed render leaves mediaPath where it was,
+// so a counter handed the next render the same directory, and a task the cancel
+// could not actually stop would then overwrite the published media in place.
 
 export const renderTimelineKey = (videoId: string, renderId: string): string =>
   `${projectPrefix(videoId)}renders/${renderId}/timeline.json`;
@@ -259,7 +259,7 @@ export const registerRenderRoutes = (router: Router): void => {
           VIDEO_ID: id,
           RENDER_ID: renderId,
           TIMELINE_KEY: timelineKey,
-          MEDIA_PATH: nextMediaPath(project.mediaPath as string | undefined),
+          MEDIA_PATH: renderId,
         }));
       } catch (error) {
         // a render nobody started must not sit queued, blocking every later one

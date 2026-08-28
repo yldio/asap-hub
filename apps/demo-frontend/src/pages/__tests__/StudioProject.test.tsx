@@ -95,7 +95,9 @@ it('shows the editor once the project and its timeline load', async () => {
   expect(
     screen.getByRole('button', { name: 'Import a video' }),
   ).toBeInTheDocument();
-  expect(await screen.findByText('Intro take')).toBeVisible();
+  expect(await screen.findByLabelText('Name of Intro take')).toHaveValue(
+    'Intro take',
+  );
 });
 
 it('starts with an empty preview and no clips', async () => {
@@ -151,6 +153,13 @@ it('saves the timeline after an edit', async () => {
   });
   jest.useFakeTimers({ advanceTimers: true });
   renderStudio({ saveTimeline });
+
+  // nothing is scheduled while the editor is read only, and it is read only
+  // until the lease lands; editing before then leaves the timer to be set after
+  // the clock has already been advanced
+  await waitFor(() =>
+    expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+  );
 
   await userEvent.click(
     await screen.findByRole('button', { name: 'Add to timeline' }),

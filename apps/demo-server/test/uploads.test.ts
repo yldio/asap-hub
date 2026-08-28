@@ -6,7 +6,7 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { isLocal } from '../src/config';
-import { userEntity, videoEntity } from '../src/data/entities';
+import { folderEntity, userEntity, videoEntity } from '../src/data/entities';
 import { startLocalEncode } from '../src/local-encoder';
 import { partSize } from '../src/storage';
 import * as storage from '../src/storage';
@@ -108,6 +108,12 @@ const mockVideoGet = (data: Record<string, unknown> | null) => {
   } as any);
 };
 
+const mockFolderGet = (data: Record<string, unknown> | null) =>
+  jest.spyOn(folderEntity, 'get').mockReturnValue({
+    go: async () => ({ data }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+
 beforeEach(() => {
   jest.restoreAllMocks();
   mockSend.mockReset();
@@ -175,6 +181,7 @@ describe('POST /api/uploads', () => {
 
   it('honours an explicit folder and recorded date', async () => {
     mockUser('creator', 'auth0|creator');
+    mockFolderGet({ id: 'folder-9', name: 'Nine' });
     const create = jest
       .spyOn(videoEntity, 'create')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -196,6 +203,24 @@ describe('POST /api/uploads', () => {
         recordedAt: '2026-07-01T09:00:00.000Z',
       }),
     );
+  });
+
+  // an upload created into a folder that does not exist is invisible in every
+  // listing and outlives the folder cleanup
+  it('404s a folder that does not exist, without creating a row', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockFolderGet(null);
+    const create = jest.spyOn(videoEntity, 'create');
+
+    const response = await api
+      .post('/api/uploads')
+      .set('Authorization', creatorToken)
+      .send({ title: 'Sprint 12 demo', folderId: 'ghost' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(create).not.toHaveBeenCalled();
+    expect(storage.createMultipartUpload).not.toHaveBeenCalled();
   });
 
   it('defaults recordedAt to now when it is omitted', async () => {

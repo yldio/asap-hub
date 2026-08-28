@@ -14,6 +14,7 @@ import { createProjectSchema, saveTimelineSchema } from '../schemas';
 import { getObjectText, putObject, timelineKey } from '../storage';
 import { registerAssetRoutes } from './assets';
 import { asyncRouter } from './async-router';
+import { folderExists } from './folders';
 import { registerRenderRoutes } from './render';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
@@ -66,6 +67,11 @@ export const projectsRouter = (): Router => {
       folderId?: string;
       recordedAt?: string;
     };
+    if (folderId !== undefined && !(await folderExists(folderId))) {
+      res.status(404).json({ error: 'not_found' });
+      return;
+    }
+
     const id = uuid();
 
     await createVideoRow({

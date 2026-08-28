@@ -7,7 +7,7 @@ import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
-import { userEntity, videoEntity } from '../src/data/entities';
+import { folderEntity, userEntity, videoEntity } from '../src/data/entities';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -160,6 +160,27 @@ describe('POST /api/projects', () => {
     );
     expect(response.body.timeline).toEqual(createEmptyTimeline());
     expect(response.body.timelineVersion).toBe(1);
+  });
+
+  // a project created into a folder that does not exist is invisible in every
+  // listing and outlives the folder cleanup
+  it('404s a folder that does not exist, without creating a row', async () => {
+    mockUser('creator', 'auth0|creator');
+    jest
+      .spyOn(folderEntity, 'get')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: null }) } as any);
+    const create = jest.spyOn(videoEntity, 'create');
+
+    const response = await api
+      .post('/api/projects')
+      .set('Authorization', creatorToken)
+      .send({ title: 'Sprint 12 demo', folderId: 'ghost' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(create).not.toHaveBeenCalled();
+    expect(storage.putObject).not.toHaveBeenCalled();
   });
 
   it('refuses a member', async () => {

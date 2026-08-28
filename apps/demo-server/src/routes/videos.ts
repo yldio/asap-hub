@@ -13,7 +13,7 @@ import {
 } from '../schemas';
 import { buildSignedCookies } from '../signed-cookies';
 import { deleteVideoCascade } from './cascade';
-import { rootFolderId } from './folders';
+import { folderExists, rootFolderId } from './folders';
 import {
   currentUser,
   isFolderId,
@@ -95,12 +95,9 @@ export const videosRouter = (): Router => {
     async (req: Request, res: Response) => {
       const { ids, folderId } = req.body as { ids: string[]; folderId: string };
 
-      if (folderId !== rootFolderId) {
-        const folder = await folderEntity.get({ id: folderId }).go();
-        if (!folder.data) {
-          res.status(404).json({ error: 'not_found' });
-          return;
-        }
+      if (!(await folderExists(folderId))) {
+        res.status(404).json({ error: 'not_found' });
+        return;
       }
 
       const moved: string[] = [];
@@ -232,6 +229,15 @@ export const videosRouter = (): Router => {
       const now = Date.now();
       const existing = await readHeldVideo(req, res, now);
       if (!existing) {
+        return;
+      }
+
+      if (
+        changes.folderId !== undefined &&
+        changes.folderId !== existing.folderId &&
+        !(await folderExists(changes.folderId))
+      ) {
+        res.status(404).json({ error: 'not_found' });
         return;
       }
 

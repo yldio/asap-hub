@@ -20,6 +20,7 @@ import {
   rawPrefix,
   signUploadParts,
 } from '../storage';
+import { folderExists } from './folders';
 import { createVideoRow } from './video-create';
 import { serialiseVideo } from './video-shared';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
@@ -37,6 +38,11 @@ export const uploadsRouter = (): Router => {
       folderId?: string;
       recordedAt?: string;
     };
+    if (folderId !== undefined && !(await folderExists(folderId))) {
+      res.status(404).json({ error: 'not_found' });
+      return;
+    }
+
     const videoId = uuid();
 
     await createVideoRow({

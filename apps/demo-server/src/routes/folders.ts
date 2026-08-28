@@ -18,6 +18,16 @@ export const topLevelParentId = 'TOP';
 
 type FolderRow = { id: string; name: string; parentId?: string };
 
+// a video whose folderId names no row appears in no listing and survives every
+// cleanup path, so every write that sets one checks the destination first
+export const folderExists = async (folderId: string): Promise<boolean> => {
+  if (folderId === rootFolderId) {
+    return true;
+  }
+  const { data } = await folderEntity.get({ id: folderId }).go();
+  return Boolean(data);
+};
+
 const depthOf = (id: string, byId: Map<string, FolderRow>): number => {
   let depth = 1;
   let current = byId.get(id);

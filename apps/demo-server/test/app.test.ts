@@ -6,7 +6,12 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
-import { inviteEntity, userEntity, videoEntity } from '../src/data/entities';
+import {
+  folderEntity,
+  inviteEntity,
+  userEntity,
+  videoEntity,
+} from '../src/data/entities';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -107,6 +112,12 @@ const mockVideoGet = (data: Record<string, unknown> | null) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any);
 };
+
+const mockFolderGet = (data: Record<string, unknown> | null) =>
+  jest.spyOn(folderEntity, 'get').mockReturnValue({
+    go: async () => ({ data }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
 
 beforeEach(() => {
   jest.restoreAllMocks();
@@ -346,6 +357,7 @@ describe('PATCH /api/videos/:id', () => {
         lockExpiresAt: Date.now() + 60000,
       }),
     );
+    mockFolderGet({ id: 'folder-9', name: 'Nine' });
     mockSend.mockResolvedValue({});
 
     await api
@@ -356,6 +368,51 @@ describe('PATCH /api/videos/:id', () => {
     const values = mockSend.mock.calls[0][0].input.ExpressionAttributeValues;
     expect(values[':GSI1PK']).toBe('FOLDER#folder-9');
     expect(values[':GSI1SK']).toBe('DRAFT#2026-08-01T10:00:00.000Z#video-1');
+  });
+
+  // a video moved into a folder that does not exist shows up in no listing and
+  // survives every cleanup path, so the destination is checked before the write
+  it('404s a destination folder that does not exist, without writing', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|creator',
+        lockedByName: 'Ana',
+        lockExpiresAt: Date.now() + 60000,
+      }),
+    );
+    mockFolderGet(null);
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ folderId: 'ghost', version: 1 });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('does not look the folder up when the video already sits in it', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|creator',
+        lockedByName: 'Ana',
+        lockExpiresAt: Date.now() + 60000,
+      }),
+    );
+    const folderGet = mockFolderGet(null);
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ folderId: 'ROOT', version: 1 });
+
+    expect(response.status).toBe(200);
+    expect(folderGet).not.toHaveBeenCalled();
   });
 
   it('rejects an invalid body', async () => {

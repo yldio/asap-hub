@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { ChangeEvent, FC, ReactNode } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { editorTheme } from './editorTheme';
 
-const fieldStyles = css({
+// the label and its control, for the fields below and for the one-off controls
+// an inspector needs that are not worth a component of their own
+export const fieldStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
@@ -107,7 +109,6 @@ export const SelectField: FC<{
   readonly disabled?: boolean;
   readonly options: { value: string; label: string }[];
   readonly onChange: (value: string) => void;
-  readonly children?: ReactNode;
 }> = ({ label, value, disabled, options, onChange }) => (
   <label css={fieldStyles}>
     {label}

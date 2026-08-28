@@ -6,7 +6,7 @@ import {
   Timeline,
   TimelineFormatError,
 } from '@asap-hub/demo-timeline';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { requireCreator } from '../auth';
 import { videoEntity } from '../data/entities';
@@ -19,10 +19,10 @@ import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { createVideoRow } from './video-create';
 import {
-  guardedUpdate,
+  applyGuardedUpdate,
+  loadProject,
   serialiseVideo,
   VideoItem,
-  VideoWriteConflict,
 } from './video-shared';
 
 // a timeline document is small next to the media, but big next to a DynamoDB
@@ -93,18 +93,6 @@ export const projectsRouter = (): Router => {
     });
   });
 
-  const loadProject = async (
-    req: Request,
-    res: Response,
-  ): Promise<VideoItem | undefined> => {
-    const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
-    if (!data || data.kind !== 'studio') {
-      res.status(404).json({ error: 'not_found' });
-      return undefined;
-    }
-    return data as VideoItem;
-  };
-
   router.get('/:id/timeline', videoId, async (req, res) => {
     const project = await loadProject(req, res);
     if (!project) {
@@ -172,20 +160,15 @@ export const projectsRouter = (): Router => {
         current + 1,
       );
 
-      try {
-        await guardedUpdate({
-          id: pathParam(req, 'id'),
-          sub: currentUser(req).sub,
-          now: Date.now(),
-          expectedVersion: version,
-          set: { timeline: pointer, updatedAt: pointer.updatedAt },
-        });
-      } catch (error) {
-        if (error instanceof VideoWriteConflict) {
-          res.status(409).json(error.body);
-          return;
-        }
-        throw error;
+      const written = await applyGuardedUpdate(res, {
+        id: pathParam(req, 'id'),
+        sub: currentUser(req).sub,
+        now: Date.now(),
+        expectedVersion: version,
+        set: { timeline: pointer, updatedAt: pointer.updatedAt },
+      });
+      if (!written) {
+        return;
       }
 
       const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
@@ -197,8 +180,8 @@ export const projectsRouter = (): Router => {
     },
   );
 
-  registerAssetRoutes(router, loadProject);
-  registerRenderRoutes(router, loadProject);
+  registerAssetRoutes(router);
+  registerRenderRoutes(router);
 
   return router;
 };

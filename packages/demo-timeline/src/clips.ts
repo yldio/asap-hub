@@ -14,7 +14,9 @@ export const clipDurationMs = (clip: Clip): number =>
     ? Math.max(0, clip.outMs - clip.inMs)
     : clip.durationMs;
 
-const isVisualTransition = (transition: Transition | undefined): boolean =>
+const isVisualTransition = (
+  transition: Transition | undefined,
+): transition is Transition =>
   transition !== undefined && transition.type !== 'cut';
 
 // a transition plays over both neighbours, so it can never eat more than half of either
@@ -22,35 +24,43 @@ export const transitionOverlapMs = (
   clip: Clip,
   previous: Clip | undefined,
 ): number => {
-  if (!previous || !isVisualTransition(clip.transitionIn)) {
+  const { transitionIn } = clip;
+  if (!previous || !isVisualTransition(transitionIn)) {
     return 0;
   }
   const shortest = Math.min(clipDurationMs(clip), clipDurationMs(previous));
-  return Math.min(clip.transitionIn?.durationMs ?? 0, Math.floor(shortest / 2));
+  return Math.min(transitionIn.durationMs, Math.floor(shortest / 2));
 };
 
-export const layoutClips = (clips: Clip[]): ClipPlacement[] =>
-  clips.reduce<ClipPlacement[]>((placements, clip, index) => {
+export const layoutClips = (clips: Clip[]): ClipPlacement[] => {
+  const placements: ClipPlacement[] = [];
+
+  clips.forEach((clip, index) => {
     const previous = placements[index - 1];
     const overlapMs = transitionOverlapMs(clip, clips[index - 1]);
     const durationMs = clipDurationMs(clip);
     const startMs = previous ? previous.endMs - overlapMs : 0;
 
-    return [
-      ...placements,
-      {
-        clip,
-        index,
-        startMs,
-        endMs: startMs + durationMs,
-        durationMs,
-        overlapMs,
-      },
-    ];
-  }, []);
+    placements.push({
+      clip,
+      index,
+      startMs,
+      endMs: startMs + durationMs,
+      durationMs,
+      overlapMs,
+    });
+  });
+
+  return placements;
+};
+
+// a clip only ever overlaps its immediate neighbour, so the last placement ends
+// last even when transitions have pulled the ones before it backwards
+export const placementsDurationMs = (placements: ClipPlacement[]): number =>
+  placements.at(-1)?.endMs ?? 0;
 
 export const timelineDurationMs = (clips: Clip[]): number =>
-  layoutClips(clips).at(-1)?.endMs ?? 0;
+  placementsDurationMs(layoutClips(clips));
 
 export const placementAt = (
   placements: ClipPlacement[],

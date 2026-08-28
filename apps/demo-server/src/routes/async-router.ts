@@ -6,7 +6,8 @@ import {
   Router,
 } from 'express';
 
-const wrap =
+// express 4 does not forward rejected promises to the error handler
+export const asyncHandler =
   (handler: RequestHandler): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
     const result = handler(req, res, next) as unknown;
@@ -17,7 +18,7 @@ const wrap =
 
 const methods = ['get', 'post', 'patch', 'put', 'delete'] as const;
 
-// express 4 does not forward rejected promises to the error handler
+// a router whose handlers may all be async, without asyncHandler at every route
 export const asyncRouter = (): Router => {
   const router = Router();
   methods.forEach((method) => {
@@ -28,7 +29,7 @@ export const asyncRouter = (): Router => {
     (router as any)[method] = (...args: unknown[]) =>
       original(
         ...args.map((arg) =>
-          typeof arg === 'function' ? wrap(arg as RequestHandler) : arg,
+          typeof arg === 'function' ? asyncHandler(arg as RequestHandler) : arg,
         ),
       );
   });

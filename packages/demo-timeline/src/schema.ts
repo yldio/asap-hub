@@ -138,8 +138,23 @@ const timelineShape = z.object({
   chapters: z.array(chapterMarkerSchema).max(limits.chapters),
 });
 
-const duplicates = (ids: string[]): string[] =>
-  ids.filter((id, index) => ids.indexOf(id) !== index);
+type TrackedId = { id: string; path: (string | number)[] };
+
+const trackIds = <T extends { id: string }>(
+  entries: T[],
+  track: string,
+): TrackedId[] =>
+  entries.map((entry, index) => ({ id: entry.id, path: [track, index, 'id'] }));
+
+// the second and later occurrences: the first one is the id's rightful owner
+const repeats = (tracked: TrackedId[]): TrackedId[] => {
+  const seen = new Set<string>();
+  return tracked.filter(({ id }) => {
+    const repeat = seen.has(id);
+    seen.add(id);
+    return repeat;
+  });
+};
 
 // structural rules live in the schemas; these are the rules that need the whole document
 export const timelineSchema = timelineShape.superRefine((timeline, context) => {
@@ -154,15 +169,15 @@ export const timelineSchema = timelineShape.superRefine((timeline, context) => {
   });
 
   const ids = [
-    ...timeline.clips.map((clip) => clip.id),
-    ...timeline.banners.map((banner) => banner.id),
-    ...timeline.narration.map((clip) => clip.id),
-    ...timeline.zooms.map((zoom) => zoom.id),
+    ...trackIds(timeline.clips, 'clips'),
+    ...trackIds(timeline.banners, 'banners'),
+    ...trackIds(timeline.narration, 'narration'),
+    ...trackIds(timeline.zooms, 'zooms'),
   ];
-  duplicates(ids).forEach((id) => {
+  repeats(ids).forEach(({ id, path }) => {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      path: ['clips'],
+      path,
       message: `duplicate id ${id}`,
     });
   });

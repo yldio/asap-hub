@@ -1,4 +1,8 @@
-import { layoutClips, timelineDurationMs } from '../clips';
+import {
+  layoutClips,
+  placementsDurationMs,
+  timelineDurationMs,
+} from '../clips';
 import { Timeline } from '../schema';
 import { assetIndex } from './assets';
 import { buildClipStep } from './clipSteps';
@@ -8,12 +12,11 @@ import { RenderAsset, RenderPlan, SvgFile } from './types';
 export const renderDurationMs = (timeline: Timeline): number =>
   timelineDurationMs(timeline.clips);
 
-// a banner spanning a transition is rasterised once and overlaid on both clips
-const uniqueByPath = (svgs: SvgFile[]): SvgFile[] =>
-  svgs.filter(
-    (svg, position) =>
-      svgs.findIndex((other) => other.path === svg.path) === position,
-  );
+// a banner spanning a transition is overlaid on every clip it reaches, and each
+// of those clips asks for the same file, so the caller rasterises it once
+const uniqueByPath = (svgs: SvgFile[]): SvgFile[] => [
+  ...new Map(svgs.map((svg) => [svg.path, svg])).values(),
+];
 
 export type RenderPlanInput = {
   timeline: Timeline;
@@ -30,7 +33,7 @@ export const buildRenderPlan = ({
 }: RenderPlanInput): RenderPlan => {
   const { canvas, banners, narration } = timeline;
   const placements = layoutClips(timeline.clips);
-  const durationMs = renderDurationMs(timeline);
+  const durationMs = placementsDurationMs(placements);
   const index = assetIndex(assets);
 
   if (placements.length === 0) {

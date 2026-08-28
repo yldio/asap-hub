@@ -8,7 +8,7 @@ import { appFactory } from '../src/app';
 import { isLocal } from '../src/config';
 import { userEntity, videoEntity } from '../src/data/entities';
 import { startLocalEncode } from '../src/local-encoder';
-import { partSize } from '../src/routes/uploads';
+import { partSize } from '../src/storage';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 

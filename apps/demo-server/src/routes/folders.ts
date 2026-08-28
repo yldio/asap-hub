@@ -7,6 +7,7 @@ import { deleteVideoCascade } from './cascade';
 import { pathParam, requireFolderIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
+import { videosInFolder } from './video-shared';
 
 export const rootFolderId = 'ROOT';
 
@@ -62,12 +63,9 @@ export const foldersRouter = (): Router => {
 
     const entries = await Promise.all(
       folderIds.map(async (folderId) => {
-        const query = isCreator
-          ? videoEntity.query.byFolder({ folderId })
-          : videoEntity.query
-              .byFolder({ folderId })
-              .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
-        const { data: videos } = await query.go({ pages: 'all' });
+        const videos = await videosInFolder(folderId, isCreator);
+        // a published video still being encoded has nothing to watch yet, so it
+        // is not counted for a member
         const visible = isCreator
           ? videos
           : videos.filter(({ processingState }) => processingState === 'ready');

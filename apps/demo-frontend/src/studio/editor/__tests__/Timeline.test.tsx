@@ -40,9 +40,6 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onTrim = jest.fn();
   const onSeek = jest.fn();
   const onSelect = jest.fn();
-  const onSelectBanner = jest.fn();
-  const onSelectZoom = jest.fn();
-  const onSelectEffect = jest.fn();
   const onMoveBanner = jest.fn();
   const onToggleMute = jest.fn();
   const placements = layoutClips(clips);
@@ -57,10 +54,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       banners={[]}
       narration={[]}
       zooms={[]}
-      onSelectZoom={onSelectZoom}
       cursorLayers={[]}
-      onSelectEffect={onSelectEffect}
-      onSelectBanner={onSelectBanner}
       onMoveBanner={onMoveBanner}
       assets={{
         'asset-a': asset('asset-a', 'A'),
@@ -81,9 +75,6 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     onTrim,
     onSeek,
     onSelect,
-    onSelectBanner,
-    onSelectZoom,
-    onSelectEffect,
     onMoveBanner,
     onToggleMute,
   };

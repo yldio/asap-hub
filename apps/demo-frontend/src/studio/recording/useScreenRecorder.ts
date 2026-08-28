@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   extensionForMimeType,
   pickAudioMimeType,
@@ -87,6 +87,9 @@ const session = (
 const stopTracks = (stream?: MediaStream) =>
   stream?.getTracks().forEach((track) => track.stop());
 
+// a stable default so the hook's callbacks keep their identity between renders
+const systemNow = () => Date.now();
+
 // Everything here is driven by MediaRecorder callbacks rather than a frame
 // loop, because the studio tab sits in the background for the whole recording
 // while the creator is on the tab being demoed, and background tabs are
@@ -97,7 +100,7 @@ export const useScreenRecorder = ({
   getUserMedia,
   createRecorder,
   isTypeSupported,
-  now = () => Date.now(),
+  now = systemNow,
 }: ScreenRecorderOptions): ScreenRecorder => {
   const [status, setStatus] = useState<RecorderStatus>('idle');
   const [error, setError] = useState<string>();
@@ -108,19 +111,32 @@ export const useScreenRecorder = ({
   const startedAtRef = useRef(0);
   const tickRef = useRef<ReturnType<typeof setInterval>>();
 
-  const startTicking = useCallback(() => {
-    tickRef.current = setInterval(
-      () => setElapsedMs(now() - startedAtRef.current),
-      500,
-    );
-  }, [now]);
-
   const stopTicking = useCallback(() => {
     if (tickRef.current) {
       clearInterval(tickRef.current);
       tickRef.current = undefined;
     }
   }, []);
+
+  const startTicking = useCallback(() => {
+    stopTicking();
+    tickRef.current = setInterval(
+      () => setElapsedMs(now() - startedAtRef.current),
+      500,
+    );
+  }, [now, stopTicking]);
+
+  // leaving the editor mid take must not leave the browser sharing the screen
+  useEffect(
+    () => () => {
+      if (tickRef.current) {
+        clearInterval(tickRef.current);
+      }
+      stopTracks(screenRef.current?.stream);
+      stopTracks(micRef.current?.stream);
+    },
+    [],
+  );
 
   const start = useCallback(async () => {
     setError(undefined);

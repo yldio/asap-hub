@@ -51,7 +51,3 @@ export const redo = <T>(history: History<T>): History<T> => {
     future: rest,
   };
 };
-
-// a fresh document from the server replaces the whole stack; the old entries
-// describe a document that no longer exists
-export const reset = initialHistory;

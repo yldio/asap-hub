@@ -34,6 +34,8 @@ export const hasVisualTransition = (placements: ClipPlacement[]): boolean =>
   placements.some((placement) => placement.overlapMs > 0);
 
 export type JoinBoundary = {
+  // the ffmpeg input the incoming clip is read from: the join opens one input
+  // per placement, in order, so it is that placement's position in the list
   index: number;
   offsetMs: number;
   durationMs: number;
@@ -44,8 +46,8 @@ export type JoinBoundary = {
 // ends at the previous clip's endMs, which is this clip's startMs plus its
 // overlap, so the xfade offset is exactly this clip's startMs
 export const joinBoundaries = (placements: ClipPlacement[]): JoinBoundary[] =>
-  placements.slice(1).map((placement) => ({
-    index: placement.index,
+  placements.slice(1).map((placement, position) => ({
+    index: position + 1,
     offsetMs: placement.startMs,
     durationMs: placement.overlapMs,
     transition: xfadeTransition(placement.clip.transitionIn),
@@ -156,26 +158,23 @@ const concatJoin = ({
   };
 };
 
+type ChainLink = { input: string; name: string; filter: string };
+
 type Chain = { segments: string[]; label: string };
 
-const foldChain = (
-  first: string,
-  boundaries: { input: string; name: string; filter: string }[],
-): Chain =>
-  boundaries.reduce<Chain>(
-    (chain, boundary) => ({
-      segments: [
-        ...chain.segments,
-        filterSegment(
-          [chain.label, boundary.input],
-          [boundary.filter],
-          boundary.name,
-        ),
-      ],
-      label: boundary.name,
-    }),
-    { segments: [], label: first },
-  );
+// ffmpeg's xfade and acrossfade take two inputs, so a join of n clips is a
+// left-leaning spine: each link blends everything built so far with one more
+const foldChain = (first: string, links: ChainLink[]): Chain => {
+  const segments: string[] = [];
+  let last = first;
+
+  links.forEach((link) => {
+    segments.push(filterSegment([last, link.input], [link.filter], link.name));
+    last = link.name;
+  });
+
+  return { segments, label: last };
+};
 
 const xfadeJoin = ({
   placements,
@@ -215,11 +214,6 @@ const xfadeJoin = ({
     })),
   );
 
-  const videoWithTimebase: Chain = {
-    segments: [...normalised, ...video.segments],
-    label: video.label,
-  };
-
   const programAudio = foldChain(
     '0:a',
     boundaries.map((boundary) => ({
@@ -258,9 +252,14 @@ const xfadeJoin = ({
         ]),
         ...narrationInputArgs(narration, assets),
         '-filter_complex',
-        graph([...videoWithTimebase.segments, ...programAudio.segments, ...mix]),
+        graph([
+          ...normalised,
+          ...video.segments,
+          ...programAudio.segments,
+          ...mix,
+        ]),
         '-map',
-        label(videoWithTimebase.label),
+        label(video.label),
         '-map',
         label(mixed ? 'a' : programAudio.label),
         ...videoEncodeArgs(canvas),

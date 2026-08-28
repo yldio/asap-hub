@@ -48,10 +48,15 @@ const place = (
     .sort((a, b) => a.tMs - b.tMs);
 };
 
-const spacedOut = (
+const never = (): boolean => false;
+
+// drops an event that lands within gapMs of the one before it, or that repeats
+// whatever the caller counts as the same subject; comparing against the last
+// kept event rather than the last seen one keeps a long burst collapsed to one
+const collapseRepeats = (
   placed: PlacedEvent[],
   gapMs: number,
-  sameSubject: (previous: PlacedEvent, current: PlacedEvent) => boolean,
+  sameSubject: (previous: PlacedEvent, current: PlacedEvent) => boolean = never,
 ): PlacedEvent[] => {
   const kept: PlacedEvent[] = [];
   placed.forEach((current) => {
@@ -123,15 +128,14 @@ export const deriveCursorEffects = (
     limits.cursorPathPoints,
   );
 
-  const clicks = spacedOut(
+  const clicks = collapseRepeats(
     placed.filter(({ event }) => event.type === 'click'),
     dedupeWindowMs,
-    () => false,
   );
 
   // a hover spotlight repeats while the pointer wanders inside one element, so
   // the same target in a row is collapsed as well as a rapid repeat
-  const hovers = spacedOut(
+  const hovers = collapseRepeats(
     placed.filter(({ event }) => event.type === 'over'),
     dedupeWindowMs,
     (previous, current) =>

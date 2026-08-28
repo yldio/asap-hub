@@ -1,5 +1,5 @@
 import { parseTimeline } from '@asap-hub/demo-timeline';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { assetEntity } from '../data/entities';
 import { getJobRunner } from '../jobs/runner';
@@ -21,14 +21,9 @@ import {
 } from '../storage';
 import { pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
-import { VideoItem } from './video-shared';
+import { loadProject, VideoItem } from './video-shared';
 
 export type AssetItem = Record<string, unknown>;
-
-type LoadProject = (
-  req: Request,
-  res: Response,
-) => Promise<VideoItem | undefined>;
 
 // the editor plays the proxy once the ingest has written one, and the original
 // until then; the storage key itself never crosses the wire
@@ -71,10 +66,7 @@ const referencedAssetIds = async (project: VideoItem): Promise<Set<string>> => {
   ]);
 };
 
-export const registerAssetRoutes = (
-  router: Router,
-  loadProject: LoadProject,
-): void => {
+export const registerAssetRoutes = (router: Router): void => {
   const videoId = requireVideoIdParam('id');
   // an asset id is concatenated into an S3 key just like a video id is
   const assetId = requireVideoIdParam('assetId');

@@ -1,14 +1,9 @@
 import { BannerPreset } from '../schema';
-import { blockHeight, stackLines } from './layout';
-import {
-  charactersPerLine,
-  PresetCanvas,
-  sansFontFamily,
-  svgDocument,
-  svgTextElement,
-  wrapText,
-} from './text';
+import { PresetCanvas, sansFontFamily, svgDocument } from './text';
+import { textBlockElements } from './textBlock';
 
+// every size is a fraction of the canvas, so a banner looks the same at 1080p
+// and at 4K
 const lowerThird = {
   scrim: '#000000',
   scrimOpacity: 0.55,
@@ -68,60 +63,35 @@ export const bannerSvg = ({
   const style = presets[preset];
   const band = bannerBand(preset, position, canvas);
   const padding = Math.round(canvas.width * style.padding);
-  const headingSize = Math.round(canvas.height * style.headingSize);
-  const subtitleSize = Math.round(canvas.height * style.subtitleSize);
-  const textWidth = canvas.width - padding * 2;
-
-  const headingLines = wrapText(
-    text,
-    charactersPerLine(textWidth, headingSize, 'sans'),
-    style.headingLines,
-  );
-  const subtitleLines = subtitle
-    ? wrapText(
-        subtitle,
-        charactersPerLine(textWidth, subtitleSize, 'sans'),
-        style.subtitleLines,
-      )
-    : [];
-
-  const gap =
-    subtitleLines.length > 0 ? Math.round(canvas.height * style.gap) : 0;
-  const total =
-    blockHeight(headingLines.length, headingSize) +
-    gap +
-    blockHeight(subtitleLines.length, subtitleSize);
-  const top = band.y + (band.height - total) / 2;
 
   return svgDocument(canvas, [
     `<rect x="${band.x}" y="${band.y}" width="${band.width}" height="${band.height}" fill="${style.scrim}" fill-opacity="${style.scrimOpacity}"/>`,
-    ...stackLines(headingLines, headingSize, top).map((line) =>
-      svgTextElement({
-        text: line.text,
-        x: padding,
-        y: line.baseline,
+    ...textBlockElements({
+      heading: {
+        text,
         fontFamily: sansFontFamily,
-        fontSize: headingSize,
+        fontSize: Math.round(canvas.height * style.headingSize),
         fontWeight: style.headingWeight,
         fill: style.heading,
-        anchor: 'start',
-      }),
-    ),
-    ...stackLines(
-      subtitleLines,
-      subtitleSize,
-      top + blockHeight(headingLines.length, headingSize) + gap,
-    ).map((line) =>
-      svgTextElement({
-        text: line.text,
-        x: padding,
-        y: line.baseline,
-        fontFamily: sansFontFamily,
-        fontSize: subtitleSize,
-        fontWeight: style.subtitleWeight,
-        fill: style.subtitle,
-        anchor: 'start',
-      }),
-    ),
+        glyph: 'sans',
+        maxLines: style.headingLines,
+      },
+      subtitle: subtitle
+        ? {
+            text: subtitle,
+            fontFamily: sansFontFamily,
+            fontSize: Math.round(canvas.height * style.subtitleSize),
+            fontWeight: style.subtitleWeight,
+            fill: style.subtitle,
+            glyph: 'sans',
+            maxLines: style.subtitleLines,
+          }
+        : undefined,
+      box: { y: band.y, height: band.height },
+      widthPx: canvas.width - padding * 2,
+      gapPx: Math.round(canvas.height * style.gap),
+      x: padding,
+      anchor: 'start',
+    }),
   ]);
 };

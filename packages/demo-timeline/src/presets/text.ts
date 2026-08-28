@@ -57,20 +57,23 @@ export const wrapText = (
   maxCharacters: number,
   maxLines: number,
 ): string[] => {
+  // a line has to hold at least one character, or breaking a long word never ends
+  const width = Math.max(1, Math.floor(maxCharacters));
+
   const words = text
     .trim()
     .split(/\s+/)
     .filter((word) => word.length > 0)
-    .flatMap((word) => breakLongWord(word, maxCharacters));
+    .flatMap((word) => breakLongWord(word, width));
 
-  const lines = packWords(words, maxCharacters);
+  const lines = packWords(words, width);
   if (lines.length <= maxLines) {
     return lines;
   }
 
   const kept = lines.slice(0, maxLines);
   const last = kept.at(-1) ?? '';
-  return [...kept.slice(0, -1), truncateLine(last, maxCharacters)];
+  return [...kept.slice(0, -1), truncateLine(last, width)];
 };
 
 export type SvgTextLine = {

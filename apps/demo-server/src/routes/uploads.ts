@@ -21,12 +21,10 @@ import {
   signUploadParts,
 } from '../storage';
 import { createVideoRow } from './video-create';
-import { serialiseVideo } from './videos';
+import { serialiseVideo } from './video-shared';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
-
-export { partSize };
 
 export const uploadsRouter = (): Router => {
   const router = asyncRouter();

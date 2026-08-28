@@ -2,6 +2,10 @@ export const minPixelsPerSecond = 4;
 export const maxPixelsPerSecond = 160;
 export const defaultPixelsPerSecond = 24;
 
+// room left after the last clip so it does not sit flush against the edge, and
+// the same room the fit-to-window zoom leaves itself
+export const lanePaddingPx = 48;
+
 export const clampZoom = (pixelsPerSecond: number): number =>
   Math.min(maxPixelsPerSecond, Math.max(minPixelsPerSecond, pixelsPerSecond));
 

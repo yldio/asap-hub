@@ -12,47 +12,51 @@ import {
   updateVideoSchema,
 } from '../schemas';
 import { buildSignedCookies } from '../signed-cookies';
-import { rawKey } from '../storage';
 import { deleteVideoCascade } from './cascade';
 import { rootFolderId } from './folders';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
 import {
-  conflictBody,
-  failedItem,
+  applyGuardedUpdate,
   holdsLease,
   holderNameOf,
-  leaseCondition,
+  failedItem,
   leaseDurationMs,
+  lockedBody,
   serialiseVideo,
   videoKey,
   VideoItem,
+  VideoRow,
+  videosInFolder,
 } from './video-shared';
 
-export { leaseDurationMs, serialiseVideo };
+const byRecordedAtDescending = (a: VideoItem, b: VideoItem): number =>
+  String(b.recordedAt).localeCompare(String(a.recordedAt));
+
+// folderId and recordedAt are both composed into GSI1, so a write that moves
+// either has to carry the recomputed keys; ElectroDB owns the templates, so they
+// are read off a put that is never sent rather than rebuilt by hand here
+const gsi1KeysOf = (row: VideoRow): Record<string, string> => {
+  const { Item } = videoEntity.put(row).params() as {
+    Item: Record<string, string>;
+  };
+  return { GSI1PK: Item.GSI1PK ?? '', GSI1SK: Item.GSI1SK ?? '' };
+};
 
 export const videosRouter = (): Router => {
   const router = asyncRouter();
 
   router.get('/', async (req: Request, res: Response) => {
     const folderId = (req.query.folderId as string | undefined) || 'ROOT';
-    const isCreator = canViewDrafts(req.user?.role);
+    const data = await videosInFolder(folderId, canViewDrafts(req.user?.role));
 
-    const query = isCreator
-      ? videoEntity.query.byFolder({ folderId })
-      : videoEntity.query
-          .byFolder({ folderId })
-          // the empty recordedAt makes the prefix 'PUBLISHED#', so DRAFT can never match
-          .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
-
-    const { data } = await query.go({ pages: 'all' });
-    const items = (data as VideoItem[])
-      .slice()
-      .sort((a, b) => String(b.recordedAt).localeCompare(String(a.recordedAt)))
-      .map(serialiseVideo);
-
-    res.json({ items });
+    res.json({
+      items: (data as VideoItem[])
+        .slice()
+        .sort(byRecordedAtDescending)
+        .map(serialiseVideo),
+    });
   });
 
   router.get('/all', async (req: Request, res: Response) => {
@@ -63,23 +67,14 @@ export const videosRouter = (): Router => {
     const folderIds = [rootFolderId, ...folders.map(({ id }) => id)];
 
     const lists = await Promise.all(
-      folderIds.map(async (folderId) => {
-        const query = isCreator
-          ? videoEntity.query.byFolder({ folderId })
-          : videoEntity.query
-              .byFolder({ folderId })
-              .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
-        const { data } = await query.go({ pages: 'all' });
-        return data as VideoItem[];
-      }),
+      folderIds.map((folderId) => videosInFolder(folderId, isCreator)),
     );
 
-    const items = lists
-      .flat()
-      .sort((a, b) => String(b.recordedAt).localeCompare(String(a.recordedAt)))
-      .map(serialiseVideo);
-
-    res.json({ items });
+    res.json({
+      items: (lists.flat() as VideoItem[])
+        .sort(byRecordedAtDescending)
+        .map(serialiseVideo),
+    });
   });
 
   router.post(
@@ -170,6 +165,31 @@ export const videosRouter = (): Router => {
 
   const videoId = requireVideoIdParam('id');
 
+  // the read that every guarded write starts from: 404 when the row is gone,
+  // 409 naming the holder when the caller does not hold the lease the write
+  // will be conditioned on anyway
+  const readHeldVideo = async (
+    req: Request,
+    res: Response,
+    now: number,
+  ): Promise<VideoRow | undefined> => {
+    const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
+    if (!data) {
+      res.status(404).json({ error: 'not_found' });
+      return undefined;
+    }
+    if (!holdsLease(data, currentUser(req).sub, now)) {
+      res.status(409).json(lockedBody(data));
+      return undefined;
+    }
+    return data;
+  };
+
+  const respondWithVideo = async (res: Response, id: string): Promise<void> => {
+    const { data } = await videoEntity.get({ id }).go();
+    res.json({ video: serialiseVideo(data as VideoItem) });
+  };
+
   router.get('/:id', videoId, async (req: Request, res: Response) => {
     const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
     if (!data) {
@@ -198,161 +218,77 @@ export const videosRouter = (): Router => {
         recordedAt?: string;
       };
 
-      const existing = await videoEntity.get({ id }).go();
-      if (!existing.data) {
-        res.status(404).json({ error: 'not_found' });
-        return;
-      }
-
       const now = Date.now();
-      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
-        res.status(409).json({
-          error: 'locked',
-          ...(existing.data.lockedByName
-            ? { holderName: existing.data.lockedByName }
-            : {}),
-        });
+      const existing = await readHeldVideo(req, res, now);
+      if (!existing) {
         return;
       }
 
       const next = {
-        title: changes.title ?? existing.data.title,
-        folderId: changes.folderId ?? existing.data.folderId,
-        recordedAt: changes.recordedAt ?? existing.data.recordedAt,
-        chapters: changes.chapters ?? existing.data.chapters,
+        title: changes.title ?? existing.title,
+        folderId: changes.folderId ?? existing.folderId,
+        recordedAt: changes.recordedAt ?? existing.recordedAt,
+        chapters: changes.chapters ?? existing.chapters,
       };
 
-      // the whole item is rewritten so ElectroDB recomputes GSI1 when folderId or recordedAt move
-      const params = videoEntity
-        .put({
-          ...existing.data,
+      const written = await applyGuardedUpdate(res, {
+        id,
+        sub: currentUser(req).sub,
+        now,
+        expectedVersion: version,
+        set: {
           ...next,
-          version: version + 1,
           updatedAt: new Date().toISOString(),
-        })
-        .params() as Record<string, unknown>;
-
-      try {
-        await getDocumentClient().send(
-          new UpdateCommand({
-            TableName: getTableName(),
-            Key: videoKey(id),
-            UpdateExpression:
-              'SET #title = :title, #folderId = :folderId, #recordedAt = :recordedAt, #chapters = :chapters, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
-            ExpressionAttributeNames: {
-              '#title': 'title',
-              '#folderId': 'folderId',
-              '#recordedAt': 'recordedAt',
-              '#chapters': 'chapters',
-              '#version': 'version',
-              '#updatedAt': 'updatedAt',
-            },
-            ExpressionAttributeValues: {
-              ':title': next.title,
-              ':folderId': next.folderId,
-              ':recordedAt': next.recordedAt,
-              ':chapters': next.chapters,
-              ':one': 1,
-              ':updatedAt': new Date().toISOString(),
-              ':sub': currentUser(req).sub,
-              ':now': now,
-              ':expectedVersion': version,
-              ':gsi1pk': (params.Item as Record<string, string>).GSI1PK,
-              ':gsi1sk': (params.Item as Record<string, string>).GSI1SK,
-            },
-            ReturnValuesOnConditionCheckFailure: 'ALL_OLD',
-          }),
-        );
-      } catch (error) {
-        const item = failedItem(error);
-        if (item) {
-          res.status(409).json(conflictBody(item, currentUser(req).sub, now));
-          return;
-        }
-        throw error;
+          ...gsi1KeysOf({ ...existing, ...next }),
+        },
+      });
+      if (!written) {
+        return;
       }
 
-      const updated = await videoEntity.get({ id }).go();
-      res.json({ video: serialiseVideo(updated.data as VideoItem) });
+      await respondWithVideo(res, id);
     },
   );
+
+  // publishing is the same guarded write as unpublishing, down to the GSI sort
+  // key the status is composed into
+  const setStatus =
+    (status: 'draft' | 'published') =>
+    async (req: Request, res: Response): Promise<void> => {
+      const id = pathParam(req, 'id');
+      const { version } = req.body as { version: number };
+
+      const now = Date.now();
+      const existing = await readHeldVideo(req, res, now);
+      if (!existing) {
+        return;
+      }
+
+      const written = await applyGuardedUpdate(res, {
+        id,
+        sub: currentUser(req).sub,
+        now,
+        expectedVersion: version,
+        set: {
+          status,
+          statusKey: status.toUpperCase(),
+          updatedAt: new Date().toISOString(),
+          ...gsi1KeysOf({ ...existing, status }),
+        },
+      });
+      if (!written) {
+        return;
+      }
+
+      await respondWithVideo(res, id);
+    };
 
   router.post(
     '/:id/publish',
     videoId,
     requireCreator,
     validate(publishVideoSchema),
-    async (req: Request, res: Response) => {
-      const id = pathParam(req, 'id');
-      const { version } = req.body as { version: number };
-
-      const existing = await videoEntity.get({ id }).go();
-      if (!existing.data) {
-        res.status(404).json({ error: 'not_found' });
-        return;
-      }
-
-      const now = Date.now();
-      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
-        res.status(409).json({
-          error: 'locked',
-          ...(existing.data.lockedByName
-            ? { holderName: existing.data.lockedByName }
-            : {}),
-        });
-        return;
-      }
-
-      const params = videoEntity
-        .put({
-          ...existing.data,
-          status: 'published',
-          version: version + 1,
-          updatedAt: new Date().toISOString(),
-        })
-        .params() as Record<string, unknown>;
-      const item = params.Item as Record<string, string>;
-
-      try {
-        await getDocumentClient().send(
-          new UpdateCommand({
-            TableName: getTableName(),
-            Key: videoKey(id),
-            UpdateExpression:
-              'SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
-            ExpressionAttributeNames: {
-              '#status': 'status',
-              '#version': 'version',
-              '#updatedAt': 'updatedAt',
-            },
-            ExpressionAttributeValues: {
-              ':status': 'published',
-              ':statusKey': 'PUBLISHED',
-              ':one': 1,
-              ':updatedAt': new Date().toISOString(),
-              ':sub': currentUser(req).sub,
-              ':now': now,
-              ':expectedVersion': version,
-              ':gsi1pk': item.GSI1PK,
-              ':gsi1sk': item.GSI1SK,
-            },
-            ReturnValuesOnConditionCheckFailure: 'ALL_OLD',
-          }),
-        );
-      } catch (error) {
-        const failed = failedItem(error);
-        if (failed) {
-          res.status(409).json(conflictBody(failed, currentUser(req).sub, now));
-          return;
-        }
-        throw error;
-      }
-
-      const updated = await videoEntity.get({ id }).go();
-      res.json({ video: serialiseVideo(updated.data as VideoItem) });
-    },
+    setStatus('published'),
   );
 
   router.post(
@@ -360,76 +296,7 @@ export const videosRouter = (): Router => {
     videoId,
     requireCreator,
     validate(publishVideoSchema),
-    async (req: Request, res: Response) => {
-      const id = pathParam(req, 'id');
-      const { version } = req.body as { version: number };
-
-      const existing = await videoEntity.get({ id }).go();
-      if (!existing.data) {
-        res.status(404).json({ error: 'not_found' });
-        return;
-      }
-
-      const now = Date.now();
-      if (!holdsLease(existing.data as VideoItem, currentUser(req).sub, now)) {
-        res.status(409).json({
-          error: 'locked',
-          ...(existing.data.lockedByName
-            ? { holderName: existing.data.lockedByName }
-            : {}),
-        });
-        return;
-      }
-
-      const params = videoEntity
-        .put({
-          ...existing.data,
-          status: 'draft',
-          version: version + 1,
-          updatedAt: new Date().toISOString(),
-        })
-        .params() as Record<string, unknown>;
-      const item = params.Item as Record<string, string>;
-
-      try {
-        await getDocumentClient().send(
-          new UpdateCommand({
-            TableName: getTableName(),
-            Key: videoKey(id),
-            UpdateExpression:
-              'SET #status = :status, statusKey = :statusKey, #version = #version + :one, #updatedAt = :updatedAt, GSI1PK = :gsi1pk, GSI1SK = :gsi1sk',
-            ConditionExpression: `${leaseCondition} AND #version = :expectedVersion`,
-            ExpressionAttributeNames: {
-              '#status': 'status',
-              '#version': 'version',
-              '#updatedAt': 'updatedAt',
-            },
-            ExpressionAttributeValues: {
-              ':status': 'draft',
-              ':statusKey': 'DRAFT',
-              ':one': 1,
-              ':updatedAt': new Date().toISOString(),
-              ':sub': currentUser(req).sub,
-              ':now': now,
-              ':expectedVersion': version,
-              ':gsi1pk': item.GSI1PK,
-              ':gsi1sk': item.GSI1SK,
-            },
-            ReturnValuesOnConditionCheckFailure: 'ALL_OLD',
-          }),
-        );
-      } catch (error) {
-        const failed = failedItem(error);
-        if (failed) {
-          res.status(409).json(conflictBody(failed, currentUser(req).sub, now));
-          return;
-        }
-        throw error;
-      }
-
-      const updated = await videoEntity.get({ id }).go();
-      res.json({ video: serialiseVideo(updated.data as VideoItem) });
-    },
+    setStatus('draft'),
   );
 
   router.post('/:id/lease', videoId, requireCreator, async (req, res) => {
@@ -496,23 +363,16 @@ export const videosRouter = (): Router => {
   router.delete('/:id', videoId, requireCreator, async (req, res) => {
     const id = pathParam(req, 'id');
 
-    const existing = await videoEntity.get({ id }).go();
-    if (!existing.data) {
+    const { data } = await videoEntity.get({ id }).go();
+    if (!data) {
       res.status(204).end();
       return;
     }
 
     // deleting destroys the row and its media, so it needs the same lease the
     // other writes take; otherwise a second creator can wipe a demo mid-edit
-    if (
-      !holdsLease(existing.data as VideoItem, currentUser(req).sub, Date.now())
-    ) {
-      res.status(409).json({
-        error: 'locked',
-        ...(existing.data.lockedByName
-          ? { holderName: existing.data.lockedByName }
-          : {}),
-      });
+    if (!holdsLease(data, currentUser(req).sub, Date.now())) {
+      res.status(409).json(lockedBody(data));
       return;
     }
 
@@ -560,5 +420,3 @@ export const videosRouter = (): Router => {
 
   return router;
 };
-
-export { rawKey };

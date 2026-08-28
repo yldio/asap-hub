@@ -1,6 +1,12 @@
-import { RefObject, useEffect, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 export type Box = { width: number; height: number };
+
+export type FittedBox = {
+  // goes on the element the box has to fit inside
+  ref: RefObject<HTMLDivElement>;
+  box: Box;
+};
 
 export const fitBox = (available: Box, ratio: number): Box => {
   if (available.width <= 0 || available.height <= 0 || ratio <= 0) {
@@ -14,10 +20,8 @@ export const fitBox = (available: Box, ratio: number): Box => {
 // CSS cannot shrink a box in both directions from an aspect ratio: a max-height
 // clamps the height and leaves the width alone, which is what stretched the
 // preview. Measuring and sizing it keeps the frame honest in both directions.
-export const useFittedBox = (
-  ref: RefObject<HTMLElement>,
-  ratio: number,
-): Box => {
+export const useFittedBox = (ratio: number): FittedBox => {
+  const ref = useRef<HTMLDivElement>(null);
   const [available, setAvailable] = useState<Box>({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export const useFittedBox = (
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [ref]);
+  }, []);
 
-  return fitBox(available, ratio);
+  return { ref, box: fitBox(available, ratio) };
 };

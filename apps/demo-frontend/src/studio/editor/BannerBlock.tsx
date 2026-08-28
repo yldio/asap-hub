@@ -12,7 +12,7 @@ const blockStyles = css({
   borderRadius: 6,
   border: '1px solid transparent',
   backgroundColor: editorTheme.banner,
-  color: '#2a0a18',
+  color: editorTheme.onBanner,
   padding: '4px 8px',
   overflow: 'hidden',
   cursor: 'grab',

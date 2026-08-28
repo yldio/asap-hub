@@ -195,19 +195,6 @@ describe('setTransition', () => {
   });
 });
 
-describe('replaceTimeline', () => {
-  it('swaps the whole document', () => {
-    const replacement = createEmptyTimeline();
-
-    expect(
-      timelineReducer(withClips(), {
-        type: 'replaceTimeline',
-        timeline: replacement,
-      }),
-    ).toBe(replacement);
-  });
-});
-
 describe('title cards', () => {
   it('inserts a title card at the given index', () => {
     const timeline = timelineReducer(withClips(), {

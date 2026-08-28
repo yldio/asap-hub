@@ -28,11 +28,10 @@ const readSchemaVersion = (value: unknown): number => {
   if (typeof value !== 'object' || value === null) {
     throw new TimelineFormatError('timeline must be an object');
   }
-  const { schemaVersion } = value as { schemaVersion?: unknown };
-  if (typeof schemaVersion !== 'number') {
+  if (!('schemaVersion' in value) || typeof value.schemaVersion !== 'number') {
     throw new TimelineFormatError('timeline is missing schemaVersion');
   }
-  return schemaVersion;
+  return value.schemaVersion;
 };
 
 // each future version adds a step here; a document only ever moves forward
@@ -50,7 +49,14 @@ export const migrateTimeline = (value: unknown): unknown => {
       );
     }
     migrated = migration(migrated);
-    version = readSchemaVersion(migrated);
+    const migratedVersion = readSchemaVersion(migrated);
+    // a step that forgets to stamp the new version would loop here forever
+    if (migratedVersion <= version) {
+      throw new TimelineFormatError(
+        `migration from schema version ${version} did not advance it`,
+      );
+    }
+    version = migratedVersion;
   }
 
   if (version > currentSchemaVersion) {

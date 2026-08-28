@@ -142,6 +142,17 @@ it('releases the capture when it stops', async () => {
   expect(stream.track.stop).toHaveBeenCalled();
 });
 
+it('releases the capture when the editor goes away mid take', async () => {
+  const { view, stream } = setup();
+
+  await act(async () => {
+    await view.result.current.start();
+  });
+  view.unmount();
+
+  expect(stream.track.stop).toHaveBeenCalled();
+});
+
 it('pauses and resumes', async () => {
   const { view } = setup();
 

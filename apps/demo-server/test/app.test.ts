@@ -335,8 +335,8 @@ describe('PATCH /api/videos/:id', () => {
       .send({ folderId: 'folder-9', version: 1 });
 
     const values = mockSend.mock.calls[0][0].input.ExpressionAttributeValues;
-    expect(values[':gsi1pk']).toBe('FOLDER#folder-9');
-    expect(values[':gsi1sk']).toBe('DRAFT#2026-08-01T10:00:00.000Z#video-1');
+    expect(values[':GSI1PK']).toBe('FOLDER#folder-9');
+    expect(values[':GSI1SK']).toBe('DRAFT#2026-08-01T10:00:00.000Z#video-1');
   });
 
   it('rejects an invalid body', async () => {
@@ -374,7 +374,7 @@ describe('POST /api/videos/:id/publish', () => {
     expect(response.status).toBe(200);
     const values = mockSend.mock.calls[0][0].input.ExpressionAttributeValues;
     expect(values[':status']).toBe('published');
-    expect(values[':gsi1sk']).toBe(
+    expect(values[':GSI1SK']).toBe(
       'PUBLISHED#2026-08-01T10:00:00.000Z#video-1',
     );
     expect(storage.putObject).not.toHaveBeenCalled();

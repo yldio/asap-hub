@@ -59,6 +59,13 @@ const lightTokens = {
   '--demo-editor-playhead': 'rgb(0, 122, 204)',
   '--demo-editor-selected': 'rgb(0, 34, 44)',
   '--demo-editor-on-accent': 'rgb(255, 255, 255)',
+  // text sitting on an accent that keeps its hue in both themes, so these keep
+  // their value too: only the accent underneath decides what reads on it
+  '--demo-editor-on-stage': 'rgb(233, 236, 243)',
+  '--demo-editor-on-zoom': 'rgb(236, 234, 254)',
+  '--demo-editor-on-audio': 'rgb(4, 32, 28)',
+  '--demo-editor-on-banner': 'rgb(42, 10, 24)',
+  '--demo-editor-on-record': 'rgb(255, 255, 255)',
 };
 
 const darkTokens = {
@@ -114,6 +121,11 @@ const darkTokens = {
   '--demo-editor-playhead': 'rgb(94, 176, 255)',
   '--demo-editor-selected': 'rgb(255, 255, 255)',
   '--demo-editor-on-accent': 'rgb(4, 18, 31)',
+  '--demo-editor-on-stage': 'rgb(233, 236, 243)',
+  '--demo-editor-on-zoom': 'rgb(236, 234, 254)',
+  '--demo-editor-on-audio': 'rgb(4, 32, 28)',
+  '--demo-editor-on-banner': 'rgb(42, 10, 24)',
+  '--demo-editor-on-record': 'rgb(255, 255, 255)',
 };
 
 const styles = {

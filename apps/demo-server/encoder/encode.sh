@@ -5,10 +5,14 @@ set -Eeuo pipefail
 : "${BUCKET_NAME:?BUCKET_NAME is required}"
 : "${TABLE_NAME:?TABLE_NAME is required}"
 
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+# logging, the aws wrappers, json escaping and the failure trap
+# shellcheck source=common.sh
+. "${SCRIPT_DIR}/common.sh"
 # the sprite, poster, upload and ready flip are shared with the other jobs that
 # produce a watchable video
 # shellcheck source=finish.sh
-. "$(dirname "${BASH_SOURCE[0]}")/finish.sh"
+. "${SCRIPT_DIR}/finish.sh"
 
 SPRITE_INTERVAL_SECONDS="${SPRITE_INTERVAL_SECONDS:-10}"
 SPRITE_TILE_WIDTH="${SPRITE_TILE_WIDTH:-160}"
@@ -16,35 +20,12 @@ SPRITE_COLUMNS="${SPRITE_COLUMNS:-10}"
 SKIP_AWS="${SKIP_AWS:-0}"
 WORK_DIR="${WORK_DIR:-/scratch}"
 
-log() {
-  printf '%s %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
-}
-
-# wrappers rather than arrays: an empty array expansion trips `set -u` on older bash
-aws_s3() {
-  if [[ -n "${S3_ENDPOINT:-}" ]]; then
-    aws --endpoint-url "$S3_ENDPOINT" s3 "$@"
-  else
-    aws s3 "$@"
-  fi
-}
-
-aws_dynamodb() {
-  if [[ -n "${DYNAMODB_ENDPOINT:-}" ]]; then
-    aws --endpoint-url "$DYNAMODB_ENDPOINT" dynamodb "$@"
-  else
-    aws dynamodb "$@"
-  fi
-}
-
 # raw/{videoId}/original.mp4
 VIDEO_ID="$(printf '%s' "$S3_OBJECT_KEY" | cut -d/ -f2)"
 if [[ -z "$VIDEO_ID" || "$VIDEO_ID" == "$S3_OBJECT_KEY" ]]; then
   log "ERROR cannot derive videoId from S3_OBJECT_KEY=$S3_OBJECT_KEY"
   exit 1
 fi
-
-FAILURE_REPORTED=0
 
 report_failure() {
   local message="$1"
@@ -67,46 +48,8 @@ report_failure() {
     >/dev/null || log "WARN could not record the failure on VIDEO#${VIDEO_ID}"
 }
 
-# aws cli takes raw JSON, so the message has to survive quotes and newlines
-json_string() {
-  printf '%s' "$1" | tr -cd '\11\12\15\40-\176' | awk 'BEGIN { printf "\"" }
-    {
-      gsub(/\\/, "\\\\")
-      gsub(/"/, "\\\"")
-      gsub(/\t/, " ")
-      if (NR > 1) printf "\\n"
-      printf "%s", $0
-    }
-    END { printf "\"" }'
-}
-
-FAILED_LINE=''
-
-# EXIT rather than ERR alone, so an unexpected exit still records a state
-on_exit() {
-  local status=$?
-  if [[ "$status" -ne 0 ]]; then
-    report_failure "encode.sh exited ${status}${FAILED_LINE:+ at line ${FAILED_LINE}}: $(tail -c 400 "$LOG_TAIL_FILE" 2>/dev/null || true)"
-  fi
-  rm -f "$LOG_TAIL_FILE"
-  exit "$status"
-}
-
-LOG_TAIL_FILE="$(mktemp)"
-trap 'FAILED_LINE=$LINENO' ERR
-trap on_exit EXIT
-
-run_step() {
-  local label="$1"
-  local status=0
-  shift
-  log "$label"
-  "$@" >"$LOG_TAIL_FILE" 2>&1 || status=$?
-  if [[ "$status" -ne 0 ]]; then
-    log "$(tail -n 20 "$LOG_TAIL_FILE")"
-  fi
-  return "$status"
-}
+JOB_SCRIPT='encode.sh'
+install_failure_trap
 
 mkdir -p "$WORK_DIR"
 INPUT_FILE="${WORK_DIR}/original"

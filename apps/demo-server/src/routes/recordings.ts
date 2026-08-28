@@ -2,7 +2,7 @@ import { createHash, randomBytes, timingSafeEqual } from 'crypto';
 import { Request, Response, Router } from 'express';
 import { requireCreator } from '../auth';
 import { getDemoHostname } from '../config';
-import { recordingSessionEntity, videoEntity } from '../data/entities';
+import { recordingSessionEntity } from '../data/entities';
 import { finaliseRecordingSchema, maxCaptureBatchEvents } from '../schemas';
 import {
   deletePrefix,
@@ -14,7 +14,7 @@ import { mergeByTimestamp, partsByClient } from './capture-merge';
 import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
-import { VideoItem } from './video-shared';
+import { loadProject } from './video-shared';
 
 export const captureSessionPrefix = (
   videoId: string,
@@ -97,20 +97,6 @@ const reportedState = (session: RecordingSessionItem): string =>
   session.state === 'open' && session.expiresAt <= Date.now()
     ? 'expired'
     : session.state;
-
-// a recording only ever hangs off a studio project, so a plain upload and a
-// missing row are the same 404, exactly as the project routes answer
-const loadProject = async (
-  req: Request,
-  res: Response,
-): Promise<VideoItem | undefined> => {
-  const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
-  if (!data || data.kind !== 'studio') {
-    res.status(404).json({ error: 'not_found' });
-    return undefined;
-  }
-  return data as VideoItem;
-};
 
 export const recordingsRouter = (): Router => {
   const router = asyncRouter();

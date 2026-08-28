@@ -36,20 +36,20 @@ export const audioEncodeArgs = (filters: string[]): string[] => [
 
 export const containerArgs = ['-movflags', '+faststart'];
 
-export const silentAudioInput = (durationMs: string): string[] => [
+export const silentAudioInput = (seconds: string): string[] => [
   '-f',
   'lavfi',
   '-t',
-  durationMs,
+  seconds,
   '-i',
   'anullsrc=channel_layout=stereo:sample_rate=48000',
 ];
 
-export const imageInput = (durationMs: string, path: string): string[] => [
+export const imageInput = (seconds: string, path: string): string[] => [
   '-loop',
   '1',
   '-t',
-  durationMs,
+  seconds,
   '-i',
   path,
 ];

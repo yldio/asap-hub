@@ -34,7 +34,7 @@ const primaryStyles = css({
 const dangerStyles = css({
   backgroundColor: editorTheme.record,
   borderColor: editorTheme.record,
-  color: '#fff',
+  color: editorTheme.onRecord,
   fontWeight: 600,
 });
 

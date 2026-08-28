@@ -27,8 +27,11 @@ export const resolveChapters = (
   { includeUntitled = false }: ResolveOptions = {},
 ): ResolvedChapter[] => {
   const placements = layoutClips(timeline.clips);
-  const startOf = (clipId: string): number | undefined =>
-    placements.find((placement) => placement.clip.id === clipId)?.startMs;
+  // the editor re-resolves on every keystroke, so the markers are looked up
+  // against an index rather than scanned against the clip list one by one
+  const startByClipId = new Map(
+    placements.map((placement) => [placement.clip.id, placement.startMs]),
+  );
 
   const fromTitles = placements.flatMap((placement) =>
     placement.clip.kind === 'title' && placement.clip.text.trim()
@@ -44,7 +47,7 @@ export const resolveChapters = (
   );
 
   const fromMarkers = timeline.chapters.flatMap((marker) => {
-    const start = startOf(marker.clipId);
+    const start = startByClipId.get(marker.clipId);
     return start === undefined || (!marker.title.trim() && !includeUntitled)
       ? []
       : [

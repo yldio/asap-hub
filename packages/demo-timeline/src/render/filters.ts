@@ -23,17 +23,13 @@ export const fitToCanvasFilters = (canvas: Canvas): string[] => [
 
 export type VideoFilterContext = { canvas: Canvas; placement: ClipPlacement };
 
-export type VideoFilterContributor = (context: VideoFilterContext) => string[];
-
-const fitToCanvas: VideoFilterContributor = ({ canvas, placement }) =>
+// every filter a clip's own video needs, in chain order; a title card's
+// background is generated at canvas size already, so it only needs square pixels
+export const videoFilters = ({
+  canvas,
+  placement,
+}: VideoFilterContext): string[] =>
   placement.clip.kind === 'source' ? fitToCanvasFilters(canvas) : ['setsar=1'];
-
-// zooms and cursor effects join this list later; every contributor returns the
-// filters it needs on the clip's own video, in chain order
-export const videoFilterContributors: VideoFilterContributor[] = [fitToCanvas];
-
-export const videoFilters = (context: VideoFilterContext): string[] =>
-  videoFilterContributors.flatMap((contribute) => contribute(context));
 
 // screen recordings are variable frame rate, and concat or xfade over VFR
 // desyncs the audio, so every stage one clip is resampled to a constant rate

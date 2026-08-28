@@ -38,10 +38,13 @@ const videoStyles = css({
 });
 
 const emptyStyles = css({
-  color: '#e9ecf3',
+  color: editorTheme.onStage,
   textAlign: 'center',
   padding: rem(24),
 });
+
+// the title card is artwork, not chrome: these are the colours the renderer
+// burns into the video, so they stay literal in both themes
 
 const titleCardStyles = css({
   position: 'absolute',
@@ -188,7 +191,6 @@ const PreviewStage: FC<Props> = ({
       role={pick ? 'button' : undefined}
       tabIndex={pick ? 0 : undefined}
       aria-label={pick ? 'Click to place the selected effect' : undefined}
-      onKeyDown={undefined}
     >
       {url ? (
         <video

@@ -5,63 +5,19 @@ import { FC } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
-import { SelectField } from './fields';
+import {
+  fieldStyles,
+  mutedStyles,
+  NumberField,
+  panelHeadingStyles,
+  panelStyles,
+  readingStyles,
+  SelectField,
+} from './fields';
 import { formatTimecode } from './geometry';
 import { TrashIcon } from './icons';
 
-const panelStyles = css({
-  gridColumn: 3,
-  gridRow: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 12,
-  padding: 16,
-  borderLeft: `1px solid ${editorTheme.line}`,
-  backgroundColor: editorTheme.panel,
-  width: 260,
-  flexShrink: 0,
-  overflowY: 'auto',
-  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0, gridColumn: 1 },
-});
-
-const headingStyles = css({
-  margin: 0,
-  fontSize: 12,
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  color: editorTheme.muted,
-});
-
 const nameStyles = css({ fontSize: 14, fontWeight: 600 });
-
-const rowStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: 8,
-  fontSize: 13,
-  fontVariantNumeric: 'tabular-nums',
-});
-
-const mutedStyles = css({ color: editorTheme.muted, fontSize: 13 });
-
-const fieldStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
-  fontSize: 13,
-  color: editorTheme.muted,
-});
-
-const inputStyles = css({
-  height: 30,
-  borderRadius: 6,
-  border: `1px solid ${editorTheme.line}`,
-  backgroundColor: editorTheme.raised,
-  color: editorTheme.text,
-  padding: '0 8px',
-  font: 'inherit',
-  fontSize: 13,
-});
 
 const rangeStyles = css({ accentColor: editorTheme.playhead });
 
@@ -106,7 +62,7 @@ const ClipInspector: FC<Props> = ({
   if (!placement) {
     return (
       <aside css={panelStyles} aria-label="Clip">
-        <h2 css={headingStyles}>Clip</h2>
+        <h2 css={panelHeadingStyles}>Clip</h2>
         <p css={mutedStyles}>Select a clip on the timeline to edit it.</p>
       </aside>
     );
@@ -117,46 +73,32 @@ const ClipInspector: FC<Props> = ({
 
   return (
     <aside css={panelStyles} aria-label="Clip">
-      <h2 css={headingStyles}>Clip</h2>
+      <h2 css={panelHeadingStyles}>Clip</h2>
       <span css={nameStyles}>{clipName(clip, asset)}</span>
 
-      <div css={rowStyles}>
+      <div css={readingStyles}>
         <span css={mutedStyles}>Starts</span>
         <span>{formatTimecode(placement.startMs)}</span>
       </div>
-      <div css={rowStyles}>
+      <div css={readingStyles}>
         <span css={mutedStyles}>Length</span>
         <span>{formatTimecode(placement.durationMs)}</span>
       </div>
 
       {source ? (
         <>
-          <label css={fieldStyles}>
-            Trim start
-            <input
-              css={inputStyles}
-              type="number"
-              min={0}
-              step={100}
-              disabled={readOnly}
-              value={source.inMs}
-              onChange={(event) => onTrim({ inMs: Number(event.target.value) })}
-            />
-          </label>
-          <label css={fieldStyles}>
-            Trim end
-            <input
-              css={inputStyles}
-              type="number"
-              min={0}
-              step={100}
-              disabled={readOnly}
-              value={source.outMs}
-              onChange={(event) =>
-                onTrim({ outMs: Number(event.target.value) })
-              }
-            />
-          </label>
+          <NumberField
+            label="Trim start"
+            value={source.inMs}
+            disabled={readOnly}
+            onChange={(inMs) => onTrim({ inMs })}
+          />
+          <NumberField
+            label="Trim end"
+            value={source.outMs}
+            disabled={readOnly}
+            onChange={(outMs) => onTrim({ outMs })}
+          />
           <label css={fieldStyles}>
             {`Volume ${Math.round(source.volume * 100)}%`}
             <input

@@ -28,7 +28,6 @@ type EditorEvent =
   | { type: 'edit'; action: TimelineAction }
   | { type: 'undo' }
   | { type: 'redo' }
-  | { type: 'loaded'; timeline: Timeline; timelineVersion: number }
   | { type: 'saving' }
   | { type: 'saved'; timelineVersion: number; version: number }
   | { type: 'saveFailed' }
@@ -52,13 +51,6 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
       return canRedo(state.history)
         ? { ...state, history: redo(state.history) }
         : state;
-
-    case 'loaded':
-      return {
-        ...state,
-        history: initialHistory(event.timeline),
-        timelineVersion: event.timelineVersion,
-      };
 
     case 'saving':
       return { ...state, saveState: 'saving' };

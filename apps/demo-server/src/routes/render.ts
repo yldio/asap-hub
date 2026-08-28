@@ -3,7 +3,7 @@ import {
   resolveChapters,
   serialiseTimeline,
 } from '@asap-hub/demo-timeline';
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { videoEntity } from '../data/entities';
 import { getJobRunner } from '../jobs/runner';
@@ -12,16 +12,12 @@ import { getObjectText, projectPrefix, putObject } from '../storage';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import {
+  applyGuardedUpdate,
   guardedUpdate,
+  loadProject,
   serialiseVideo,
   VideoItem,
-  VideoWriteConflict,
 } from './video-shared';
-
-type LoadProject = (
-  req: Request,
-  res: Response,
-) => Promise<VideoItem | undefined>;
 
 export type RenderState = {
   renderId: string;
@@ -58,29 +54,8 @@ const timelinePointerOf = (
 ): { key: string; timelineVersion: number } | undefined =>
   project.timeline as { key: string; timelineVersion: number } | undefined;
 
-export const registerRenderRoutes = (
-  router: Router,
-  loadProject: LoadProject,
-): void => {
+export const registerRenderRoutes = (router: Router): void => {
   const videoId = requireVideoIdParam('id');
-
-  // guardedUpdate is the only thing in these handlers that answers 409, so the
-  // conflict body is turned into a response in one place
-  const guarded = async (
-    res: Response,
-    update: Parameters<typeof guardedUpdate>[0],
-  ): Promise<boolean> => {
-    try {
-      await guardedUpdate(update);
-      return true;
-    } catch (error) {
-      if (error instanceof VideoWriteConflict) {
-        res.status(409).json(error.body);
-        return false;
-      }
-      throw error;
-    }
-  };
 
   const respondWithVideo = async (res: Response, id: string): Promise<void> => {
     const { data } = await videoEntity.get({ id }).go();
@@ -134,7 +109,7 @@ export const registerRenderRoutes = (
         requestedAt,
       };
 
-      const queued = await guarded(res, {
+      const queued = await applyGuardedUpdate(res, {
         id,
         sub,
         now: Date.now(),
@@ -182,7 +157,7 @@ export const registerRenderRoutes = (
         return;
       }
 
-      const tracked = await guarded(res, {
+      const tracked = await applyGuardedUpdate(res, {
         id,
         sub,
         now: Date.now(),
@@ -230,7 +205,7 @@ export const registerRenderRoutes = (
       const { version } = req.body as { version: number };
       const finishedAt = new Date().toISOString();
 
-      const cancelled = await guarded(res, {
+      const cancelled = await applyGuardedUpdate(res, {
         id,
         sub: currentUser(req).sub,
         now: Date.now(),

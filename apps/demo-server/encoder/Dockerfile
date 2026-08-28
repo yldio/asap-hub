@@ -17,9 +17,9 @@ RUN for tool in bash ffmpeg ffprobe aws node rsvg-convert; do \
   command -v "$tool" >/dev/null || { echo "missing $tool"; exit 1; }; \
   done
 
-COPY entrypoint.sh encode.sh finish.sh ingest.sh /usr/local/bin/
+COPY entrypoint.sh common.sh encode.sh finish.sh ingest.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/encode.sh \
-  /usr/local/bin/finish.sh /usr/local/bin/ingest.sh
+  /usr/local/bin/ingest.sh
 
 # the render job is one esbuild bundle of encoder/render.ts, so the container
 # builds a timeline with the very same code the browser previews it with.

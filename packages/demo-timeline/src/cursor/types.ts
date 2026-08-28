@@ -35,6 +35,8 @@ export type AutoZoomOptions = {
 
 export type DeriveOptions = {
   startedAtEpochMs: number;
+  // shifts every derived time, for a take whose capture and whose clip did not
+  // start together; anything pushed before the clip start is dropped
   offsetMs?: number;
   frame: { width: number; height: number };
   ripples?: boolean;

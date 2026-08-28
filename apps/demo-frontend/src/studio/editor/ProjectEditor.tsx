@@ -8,35 +8,27 @@ import {
   placementAt,
   timelineDurationMs,
 } from '@asap-hub/demo-timeline';
-import {
-  FC,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
-import { ProjectEditor as Editor } from '../project/useProjectEditor';
+import {
+  ProjectEditor as Editor,
+  SaveState,
+} from '../project/useProjectEditor';
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
-import BannerInspector from './BannerInspector';
 import ChapterList from './ChapterList';
-import ClipInspector from './ClipInspector';
-import CursorEffectInspector from './CursorEffectInspector';
-import TitleCardInspector from './TitleCardInspector';
-import ZoomInspector from './ZoomInspector';
-import { editorTheme, trackHeaders } from './editorTheme';
-import { clampZoom, defaultPixelsPerSecond } from './geometry';
+import { editorTheme } from './editorTheme';
+import InspectorPanel from './InspectorPanel';
 import PreviewStage from './PreviewStage';
+import { hasResolvedSelection, resolveSelection, Selection } from './selection';
 import Timeline from './Timeline';
 import TransportBar from './TransportBar';
 import { useAssetDurations } from './useAssetDurations';
+import { useEditorShortcuts } from './useEditorShortcuts';
 import { useFittedBox } from './useFittedBox';
 import { usePlayback } from './usePlayback';
+import { useTimelineZoom } from './useTimelineZoom';
 
 const shellStyles = css({
   display: 'flex',
@@ -86,12 +78,17 @@ const centreStyles = css({
   overflow: 'hidden',
 });
 
-const saveLabels: Record<string, string> = {
+const saveLabels: Record<SaveState, string> = {
   idle: '',
   saving: 'Saving…',
   saved: 'All changes saved',
   error: 'Could not save, retrying on the next edit',
 };
+
+const newBannerMs = 4000;
+const newTitleCardMs = 3000;
+// a provisional length for an asset the ingest has not probed yet
+const unknownAssetMs = 10000;
 
 type Props = {
   readonly editor: Editor;
@@ -116,50 +113,39 @@ const ProjectEditor: FC<Props> = ({
   uploadProgress,
   recorder,
 }) => {
-  const [selectedClipId, setSelectedClipId] = useState<string>();
-  const [selectedBannerId, setSelectedBannerId] = useState<string>();
-  const [selectedZoomId, setSelectedZoomId] = useState<string>();
-  const [selectedEffectId, setSelectedEffectId] = useState<string>();
-  const [pixelsPerSecond, setPixelsPerSecond] = useState(
-    defaultPixelsPerSecond,
-  );
-  const stageRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-  const [shellWidth, setShellWidth] = useState(0);
-
   const { timeline, dispatch } = editor;
-  const placements = useMemo(() => layoutClips(timeline.clips), [timeline]);
+  const [selection, setSelection] = useState<Selection>();
+  const select = useCallback(
+    (kind: Selection['kind'], id: string) => setSelection({ kind, id }),
+    [],
+  );
+
+  const placements = useMemo(
+    () => layoutClips(timeline.clips),
+    [timeline.clips],
+  );
   const durationMs = useMemo(
     () => timelineDurationMs(timeline.clips),
-    [timeline],
+    [timeline.clips],
   );
-  const { playheadMs, playing, toggle, seek, nudge } = usePlayback({
-    durationMs,
-  });
-  const previewBox = useFittedBox(
-    stageRef,
-    timeline.canvas.width / timeline.canvas.height,
-  );
-
-  const current = placementAt(placements, playheadMs);
-  const selected = placements.find(({ clip }) => clip.id === selectedClipId);
-  const selectedBanner = timeline.banners.find(
-    ({ id }) => id === selectedBannerId,
-  );
-  const selectedZoom = timeline.zooms.find(({ id }) => id === selectedZoomId);
-  const cursorLayer = timeline.cursor.find(
-    (layer) => layer.clipId === current?.clip.id,
-  );
-  const selectedEffect = cursorLayer?.effects.find(
-    ({ id }) => id === selectedEffectId,
-  );
-  const selectedSource =
-    selected?.clip.kind === 'source' ? selected.clip : undefined;
-
   const assetsById = useMemo(
     () => Object.fromEntries(assets.map((asset) => [asset.assetId, asset])),
     [assets],
   );
+
+  const { playheadMs, playing, toggle, seek, nudge } = usePlayback({
+    durationMs,
+  });
+  const zoom = useTimelineZoom(durationMs);
+  const stage = useFittedBox(timeline.canvas.width / timeline.canvas.height);
+
+  const current = placementAt(placements, playheadMs);
+  const selected = resolveSelection(selection, timeline, placements, current);
+  const selectedSource =
+    selected.clip?.clip.kind === 'source' ? selected.clip.clip : undefined;
+  const cursorEffects =
+    timeline.cursor.find((layer) => layer.clipId === current?.clip.id)
+      ?.effects ?? [];
 
   const probedDurations = useAssetDurations(assets, assetUrl);
 
@@ -171,49 +157,13 @@ const ProjectEditor: FC<Props> = ({
     [assetsById, probedDurations],
   );
 
-  // the lane starts after the track header gutter, and a little room is left so
-  // the last clip does not sit flush against the edge
-  const laneWidthOf = (width: number) => width - trackHeaders - 48;
-
-  const zoomToFit = useCallback(() => {
-    const lane = laneWidthOf(shellRef.current?.clientWidth ?? shellWidth);
-    if (lane <= 0 || durationMs === 0) {
-      setPixelsPerSecond(defaultPixelsPerSecond);
-      return;
-    }
-    setPixelsPerSecond(clampZoom((lane / durationMs) * 1000));
-  }, [durationMs, shellWidth]);
-
-  useLayoutEffect(() => {
-    const shell = shellRef.current;
-    if (!shell || typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-    const observer = new ResizeObserver(([entry]) => {
-      setShellWidth(entry?.contentRect.width ?? 0);
-    });
-    observer.observe(shell);
-    return () => observer.disconnect();
-  }, []);
-
-  // the whole demo should be visible without hunting for the right zoom first,
-  // and the width is only known once the panels have laid out
-  const fitted = useRef(false);
-  useLayoutEffect(() => {
-    if (!fitted.current && durationMs > 0 && laneWidthOf(shellWidth) > 0) {
-      fitted.current = true;
-      zoomToFit();
-    }
-  }, [durationMs, shellWidth, zoomToFit]);
-
   const addAsset = useCallback(
     (asset: ProjectAsset) => {
       dispatch({
         type: 'addClip',
         assetId: asset.assetId,
-        // an asset still being prepared lands at a provisional length that the
-        // ingest corrects once it has probed the file
-        durationMs: asset.durationMs ?? probedDurations[asset.assetId] ?? 10000,
+        durationMs:
+          asset.durationMs ?? probedDurations[asset.assetId] ?? unknownAssetMs,
         clipId: createId('clip'),
       });
       // the output follows the footage: 60fps sources render at 60, and a
@@ -239,76 +189,37 @@ const ProjectEditor: FC<Props> = ({
   }, [current, dispatch, playheadMs]);
 
   const duplicateSelected = useCallback(() => {
-    if (!selected) return;
+    if (!selected.clip) return;
     dispatch({
       type: 'duplicateClip',
-      clipId: selected.clip.id,
+      clipId: selected.clip.clip.id,
       newClipId: createId('clip'),
     });
-  }, [dispatch, selected]);
+  }, [dispatch, selected.clip]);
 
   const toggleMuteSelected = useCallback(() => {
-    if (!selected) return;
-    dispatch({ type: 'toggleMute', clipId: selected.clip.id });
-  }, [dispatch, selected]);
+    if (!selected.clip) return;
+    dispatch({ type: 'toggleMute', clipId: selected.clip.clip.id });
+  }, [dispatch, selected.clip]);
 
   const removeSelected = useCallback(() => {
-    if (selectedEffect && current) {
+    if (selected.effect && current) {
       dispatch({
         type: 'removeCursorEffect',
         clipId: current.clip.id,
-        effectId: selectedEffect.id,
+        effectId: selected.effect.id,
       });
-      setSelectedEffectId(undefined);
+    } else if (selected.zoom) {
+      dispatch({ type: 'removeZoom', zoomId: selected.zoom.id });
+    } else if (selected.banner) {
+      dispatch({ type: 'removeBanner', bannerId: selected.banner.id });
+    } else if (selected.clip) {
+      dispatch({ type: 'removeClip', clipId: selected.clip.clip.id });
+    } else {
       return;
     }
-    if (selectedZoom) {
-      dispatch({ type: 'removeZoom', zoomId: selectedZoom.id });
-      setSelectedZoomId(undefined);
-      return;
-    }
-    if (selectedBanner) {
-      dispatch({ type: 'removeBanner', bannerId: selectedBanner.id });
-      setSelectedBannerId(undefined);
-      return;
-    }
-    if (!selected) return;
-    dispatch({ type: 'removeClip', clipId: selected.clip.id });
-    setSelectedClipId(undefined);
-  }, [
-    current,
-    dispatch,
-    selected,
-    selectedBanner,
-    selectedEffect,
-    selectedZoom,
-  ]);
-
-  const selectClip = useCallback((clipId: string) => {
-    setSelectedClipId(clipId);
-    setSelectedBannerId(undefined);
-    setSelectedZoomId(undefined);
-  }, []);
-
-  const selectBanner = useCallback((bannerId: string) => {
-    setSelectedBannerId(bannerId);
-    setSelectedClipId(undefined);
-    setSelectedZoomId(undefined);
-  }, []);
-
-  const selectZoom = useCallback((zoomId: string) => {
-    setSelectedZoomId(zoomId);
-    setSelectedClipId(undefined);
-    setSelectedBannerId(undefined);
-    setSelectedEffectId(undefined);
-  }, []);
-
-  const selectEffect = useCallback((effectId: string) => {
-    setSelectedEffectId(effectId);
-    setSelectedClipId(undefined);
-    setSelectedBannerId(undefined);
-    setSelectedZoomId(undefined);
-  }, []);
+    setSelection(undefined);
+  }, [current, dispatch, selected]);
 
   const addTitleCard = useCallback(() => {
     const clipId = createId('title');
@@ -317,10 +228,10 @@ const ProjectEditor: FC<Props> = ({
       clipId,
       index: current ? current.index + 1 : placements.length,
       text: 'New section',
-      durationMs: 3000,
+      durationMs: newTitleCardMs,
     });
-    selectClip(clipId);
-  }, [current, dispatch, placements.length, selectClip]);
+    select('clip', clipId);
+  }, [current, dispatch, placements.length, select]);
 
   // a zoom belongs to the clip under the playhead and starts where the playhead
   // is, so it lands where the creator is actually looking
@@ -341,8 +252,8 @@ const ProjectEditor: FC<Props> = ({
         easing: 'easeInOut',
       },
     });
-    selectZoom(id);
-  }, [current, dispatch, playheadMs, selectZoom]);
+    select('zoom', id);
+  }, [current, dispatch, playheadMs, select]);
 
   const addCursorClick = useCallback(() => {
     if (!current) return;
@@ -358,8 +269,8 @@ const ProjectEditor: FC<Props> = ({
         origin: 'manual',
       },
     });
-    selectEffect(effectId);
-  }, [current, dispatch, playheadMs, selectEffect]);
+    select('effect', effectId);
+  }, [current, dispatch, playheadMs, select]);
 
   const addChapter = useCallback(() => {
     if (!current) return;
@@ -379,74 +290,85 @@ const ProjectEditor: FC<Props> = ({
       banner: {
         id,
         startMs: Math.round(playheadMs),
-        durationMs: 4000,
+        durationMs: newBannerMs,
         preset: 'lowerThird',
         text: 'New banner',
         position: 'bottom',
         animation: 'fade',
       },
     });
-    selectBanner(id);
-  }, [dispatch, playheadMs, selectBanner]);
+    select('banner', id);
+  }, [dispatch, playheadMs, select]);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.isContentEditable)
-      ) {
-        return;
+  const moveClip = useCallback(
+    (clipId: string, toIndex: number) =>
+      dispatch({ type: 'moveClip', clipId, toIndex }),
+    [dispatch],
+  );
+
+  const trimClip = useCallback(
+    (clipId: string, change: { inMs?: number; outMs?: number }) => {
+      const clip = timeline.clips.find((candidate) => candidate.id === clipId);
+      if (!clip || clip.kind !== 'source') return;
+      dispatch({
+        type: 'trimClip',
+        clipId,
+        ...change,
+        assetDurationMs: assetDurationOf(clip.assetId, clip.outMs),
+      });
+    },
+    [assetDurationOf, dispatch, timeline.clips],
+  );
+
+  const toggleMuteClip = useCallback(
+    (clipId: string) => dispatch({ type: 'toggleMute', clipId }),
+    [dispatch],
+  );
+
+  const moveBanner = useCallback(
+    (bannerId: string, change: { startMs?: number; durationMs?: number }) =>
+      dispatch({ type: 'updateBanner', bannerId, change }),
+    [dispatch],
+  );
+
+  const pickPoint = useCallback(
+    (point: { x: number; y: number }) => {
+      if (selected.zoom) {
+        dispatch({
+          type: 'updateZoom',
+          zoomId: selected.zoom.id,
+          change: { focus: point },
+        });
+      } else if (selected.effect && current) {
+        dispatch({
+          type: 'updateCursorEffect',
+          clipId: current.clip.id,
+          effectId: selected.effect.id,
+          change: { point },
+        });
       }
+    },
+    [current, dispatch, selected.effect, selected.zoom],
+  );
 
-      const transport: Record<string, () => void> = {
-        Space: toggle,
-        ArrowLeft: () => nudge(event.shiftKey ? -1000 : -100),
-        ArrowRight: () => nudge(event.shiftKey ? 1000 : 100),
-      };
-      const editing: Record<string, () => void> = {
-        KeyS: splitAtPlayhead,
-        KeyD: duplicateSelected,
-        KeyM: toggleMuteSelected,
-        Delete: removeSelected,
-        Backspace: removeSelected,
-      };
-
-      const move = transport[event.code];
-      if (move) {
-        event.preventDefault();
-        move();
-        return;
-      }
-
-      const edit = editing[event.code];
-      if (edit && !readOnly) {
-        edit();
-      }
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [
-    duplicateSelected,
-    nudge,
+  useEditorShortcuts({
     readOnly,
-    removeSelected,
-    splitAtPlayhead,
-    toggle,
-    toggleMuteSelected,
-  ]);
+    onToggle: toggle,
+    onNudge: nudge,
+    onSplit: splitAtPlayhead,
+    onDuplicate: duplicateSelected,
+    onToggleMute: toggleMuteSelected,
+    onRemove: removeSelected,
+  });
 
   return (
-    <div css={shellStyles} ref={shellRef}>
+    <div css={shellStyles} ref={zoom.shellRef}>
       <TransportBar
         playing={playing}
         canPlay={durationMs > 0}
         canUndo={!readOnly && editor.canUndo}
         canRedo={!readOnly && editor.canRedo}
-        saveLabel={saveLabels[editor.saveState] ?? ''}
+        saveLabel={saveLabels[editor.saveState]}
         canvasHeight={timeline.canvas.height}
         canvasFps={timeline.canvas.fps}
         onFpsChange={(fps) =>
@@ -485,164 +407,35 @@ const ProjectEditor: FC<Props> = ({
           onDelete={onDeleteAsset}
         />
 
-        <div css={centreStyles} ref={stageRef}>
+        <div css={centreStyles} ref={stage.ref}>
           <PreviewStage
-            box={previewBox}
+            box={stage.box}
             placement={current}
             banners={timeline.banners}
             zooms={timeline.zooms}
-            cursorEffects={
-              timeline.cursor.find((layer) => layer.clipId === current?.clip.id)
-                ?.effects ?? []
-            }
+            cursorEffects={cursorEffects}
             playheadMs={playheadMs}
             playing={playing}
             assets={assetsById}
             assetUrl={assetUrl}
-            onPickPoint={
-              readOnly
-                ? undefined
-                : (point) => {
-                    if (selectedZoom) {
-                      dispatch({
-                        type: 'updateZoom',
-                        zoomId: selectedZoom.id,
-                        change: { focus: point },
-                      });
-                    } else if (selectedEffect && current) {
-                      dispatch({
-                        type: 'updateCursorEffect',
-                        clipId: current.clip.id,
-                        effectId: selectedEffect.id,
-                        change: { point },
-                      });
-                    }
-                  }
-            }
+            onPickPoint={readOnly ? undefined : pickPoint}
           />
         </div>
 
-        {selectedEffect && current ? (
-          <CursorEffectInspector
-            effect={selectedEffect}
-            readOnly={readOnly}
-            onChange={(change) =>
-              dispatch({
-                type: 'updateCursorEffect',
-                clipId: current.clip.id,
-                effectId: selectedEffect.id,
-                change,
-              })
-            }
-            onRemove={removeSelected}
-          />
-        ) : null}
-
-        {!selectedEffect && selectedZoom ? (
-          <ZoomInspector
-            zoom={selectedZoom}
-            readOnly={readOnly}
-            onChange={(change) =>
-              dispatch({
-                type: 'updateZoom',
-                zoomId: selectedZoom.id,
-                change,
-              })
-            }
-            onRemove={removeSelected}
-          />
-        ) : null}
-
-        {!selectedEffect && !selectedZoom && selectedBanner ? (
-          <BannerInspector
-            banner={selectedBanner}
-            readOnly={readOnly}
-            onChange={(change) =>
-              dispatch({
-                type: 'updateBanner',
-                bannerId: selectedBanner.id,
-                change,
-              })
-            }
-            onRemove={removeSelected}
-          />
-        ) : null}
-
-        {!selectedEffect &&
-        !selectedZoom &&
-        !selectedBanner &&
-        selected?.clip.kind === 'title' ? (
-          <TitleCardInspector
-            placement={selected}
-            clip={selected.clip}
-            readOnly={readOnly}
-            onChange={(change) =>
-              dispatch({
-                type: 'updateTitleCard',
-                clipId: selected.clip.id,
-                ...change,
-              })
-            }
-            onRemove={removeSelected}
-          />
-        ) : null}
-
-        {!selectedEffect &&
-        !selectedZoom &&
-        !selectedBanner &&
-        selected?.clip.kind !== 'title' ? (
-          <ClipInspector
-            placement={selected}
-            asset={
-              selectedSource ? assetsById[selectedSource.assetId] : undefined
-            }
-            readOnly={readOnly}
-            index={selected?.index ?? 0}
-            clipCount={placements.length}
-            onTrim={(change) => {
-              if (!selectedSource) return;
-              dispatch({
-                type: 'trimClip',
-                clipId: selectedSource.id,
-                ...change,
-                assetDurationMs: assetDurationOf(
-                  selectedSource.assetId,
-                  selectedSource.outMs,
-                ),
-              });
-            }}
-            onVolume={(volume) => {
-              if (!selected) return;
-              dispatch({
-                type: 'setClipVolume',
-                clipId: selected.clip.id,
-                volume,
-              });
-            }}
-            onMove={(toIndex) => {
-              if (!selected) return;
-              dispatch({ type: 'moveClip', clipId: selected.clip.id, toIndex });
-            }}
-            onRemove={removeSelected}
-            onTransition={(transition) => {
-              if (!selected) return;
-              dispatch({
-                type: 'setTransition',
-                clipId: selected.clip.id,
-                transition,
-              });
-            }}
-          />
-        ) : null}
+        <InspectorPanel
+          selected={selected}
+          current={current}
+          assets={assetsById}
+          clipCount={placements.length}
+          readOnly={readOnly}
+          assetDurationOf={assetDurationOf}
+          dispatch={dispatch}
+          onRemove={removeSelected}
+        />
       </div>
 
       <ActionBar
-        hasSelection={
-          Boolean(selected) ||
-          Boolean(selectedBanner) ||
-          Boolean(selectedZoom) ||
-          Boolean(selectedEffect)
-        }
+        hasSelection={hasResolvedSelection(selected)}
         canAddEffect={Boolean(current)}
         onAddTitleCard={addTitleCard}
         onAddBanner={addBanner}
@@ -656,50 +449,29 @@ const ProjectEditor: FC<Props> = ({
         onDuplicate={duplicateSelected}
         onToggleMute={toggleMuteSelected}
         onRemove={removeSelected}
-        onZoomIn={() => setPixelsPerSecond((value) => clampZoom(value * 1.5))}
-        onZoomOut={() => setPixelsPerSecond((value) => clampZoom(value / 1.5))}
-        onZoomFit={zoomToFit}
+        onZoomIn={zoom.zoomIn}
+        onZoomOut={zoom.zoomOut}
+        onZoomFit={zoom.zoomToFit}
       />
 
       <Timeline
         placements={placements}
         durationMs={durationMs}
         playheadMs={playheadMs}
-        pixelsPerSecond={pixelsPerSecond}
+        pixelsPerSecond={zoom.pixelsPerSecond}
         banners={timeline.banners}
         narration={timeline.narration}
         zooms={timeline.zooms}
-        selectedZoomId={selectedZoomId}
-        onSelectZoom={selectZoom}
         cursorLayers={timeline.cursor}
-        selectedEffectId={selectedEffectId}
-        onSelectEffect={selectEffect}
-        selectedClipId={selectedClipId}
-        selectedBannerId={selectedBannerId}
+        selection={selection}
         readOnly={readOnly}
         assets={assetsById}
-        onSelect={selectClip}
-        onSelectBanner={selectBanner}
+        onSelect={select}
         onSeek={seek}
-        onMoveBanner={(bannerId, change) =>
-          dispatch({ type: 'updateBanner', bannerId, change })
-        }
-        onMove={(clipId, toIndex) =>
-          dispatch({ type: 'moveClip', clipId, toIndex })
-        }
-        onTrim={(clipId, change) => {
-          const clip = timeline.clips.find(
-            (candidate) => candidate.id === clipId,
-          );
-          if (!clip || clip.kind !== 'source') return;
-          dispatch({
-            type: 'trimClip',
-            clipId,
-            ...change,
-            assetDurationMs: assetDurationOf(clip.assetId, clip.outMs),
-          });
-        }}
-        onToggleMute={(clipId) => dispatch({ type: 'toggleMute', clipId })}
+        onMoveBanner={moveBanner}
+        onMove={moveClip}
+        onTrim={trimClip}
+        onToggleMute={toggleMuteClip}
       />
     </div>
   );

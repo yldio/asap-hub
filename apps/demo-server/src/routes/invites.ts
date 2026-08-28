@@ -27,8 +27,9 @@ export const invitesRouter = (): Router => {
     requireCreator,
     validate(createInviteSchema),
     async (req, res) => {
-      const { role } = req.body as { role: Role };
-      const email = (req.body as { email: string }).email.toLowerCase();
+      const body = req.body as { email: string; role: Role };
+      const { role } = body;
+      const email = body.email.toLowerCase();
 
       if (role === 'admin' && currentUser(req).role !== 'admin') {
         res.status(403).json({ error: 'forbidden' });

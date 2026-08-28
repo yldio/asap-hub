@@ -24,6 +24,12 @@ export const editorTheme = {
   selected: token('selected'),
   // text sitting on an accent, which flips as the accent lightens or darkens
   onAccent: token('on-accent'),
+  // text on the accents that keep their hue in both themes
+  onStage: token('on-stage'),
+  onZoom: token('on-zoom'),
+  onAudio: token('on-audio'),
+  onBanner: token('on-banner'),
+  onRecord: token('on-record'),
 } as const;
 
 export const trackHeights = {

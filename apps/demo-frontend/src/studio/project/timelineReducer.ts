@@ -56,12 +56,6 @@ export type TimelineAction =
   | { type: 'updateBanner'; bannerId: string; change: Partial<Banner> }
   | { type: 'removeBanner'; bannerId: string }
   | { type: 'addNarration'; narration: NarrationClip }
-  | {
-      type: 'updateNarration';
-      narrationId: string;
-      change: Partial<NarrationClip>;
-    }
-  | { type: 'removeNarration'; narrationId: string }
   | { type: 'addZoom'; zoom: Zoom }
   | { type: 'updateZoom'; zoomId: string; change: Partial<Zoom> }
   | { type: 'removeZoom'; zoomId: string }
@@ -73,7 +67,6 @@ export type TimelineAction =
       change: Partial<CursorEffect>;
     }
   | { type: 'removeCursorEffect'; clipId: string; effectId: string }
-  | { type: 'setCursorOffset'; clipId: string; offsetMs: number }
   | {
       type: 'applyCapture';
       clipId: string;
@@ -89,8 +82,7 @@ export type TimelineAction =
     }
   | { type: 'updateChapter'; chapterId: string; title: string }
   | { type: 'removeChapter'; chapterId: string }
-  | { type: 'setCanvas'; canvas: Canvas }
-  | { type: 'replaceTimeline'; timeline: Timeline };
+  | { type: 'setCanvas'; canvas: Canvas };
 
 const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
   const clipIds = new Set(clips.map((clip) => clip.id));
@@ -286,24 +278,6 @@ export const timelineReducer = (
         narration: [...timeline.narration, action.narration],
       };
 
-    case 'updateNarration':
-      return {
-        ...timeline,
-        narration: timeline.narration.map((clip) =>
-          clip.id === action.narrationId
-            ? { ...clip, ...action.change, id: clip.id }
-            : clip,
-        ),
-      };
-
-    case 'removeNarration':
-      return {
-        ...timeline,
-        narration: timeline.narration.filter(
-          (clip) => clip.id !== action.narrationId,
-        ),
-      };
-
     case 'addZoom':
       return { ...timeline, zooms: [...timeline.zooms, action.zoom] };
 
@@ -375,15 +349,6 @@ export const timelineReducer = (
         })),
       };
 
-    case 'setCursorOffset':
-      return {
-        ...timeline,
-        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
-          ...layer,
-          offsetMs: action.offsetMs,
-        })),
-      };
-
     case 'addChapter':
       return {
         ...timeline,
@@ -422,9 +387,6 @@ export const timelineReducer = (
         timeline.canvas.fps === action.canvas.fps
         ? timeline
         : { ...timeline, canvas: action.canvas };
-
-    case 'replaceTimeline':
-      return action.timeline;
 
     default:
       return timeline;

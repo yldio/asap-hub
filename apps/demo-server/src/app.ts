@@ -1,6 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { claimsMiddleware, userMiddleware } from './auth';
 import { isLocal } from './config';
+import { asyncHandler } from './routes/async-router';
 import { foldersRouter } from './routes/folders';
 import { currentUser } from './routes/request';
 import { invitesRouter } from './routes/invites';
@@ -11,18 +12,6 @@ import { recordingsRouter } from './routes/recordings';
 import { uploadsRouter } from './routes/uploads';
 import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
-
-type AsyncHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Promise<void>;
-
-const asyncHandler =
-  (handler: AsyncHandler) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    handler(req, res, next).catch(next);
-  };
 
 export const appFactory = (): Express => {
   const app = express();

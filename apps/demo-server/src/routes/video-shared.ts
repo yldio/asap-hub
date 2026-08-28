@@ -1,11 +1,22 @@
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { EntityItem } from 'electrodb';
+import { Request, Response } from 'express';
 import { getTableName } from '../config';
 import { getDocumentClient } from '../data/client';
+import { videoEntity } from '../data/entities';
+import { pathParam } from './request';
 
 export const leaseDurationMs = 90 * 1000;
 
+// ElectroDB types each response differently (a get returns the whole row, an
+// all_new patch a partial one), so the routes agree on the widest of them and
+// the serialiser is what pins down the shape that leaves the process
 export type VideoItem = Record<string, unknown>;
+
+// the whole row as DynamoDB holds it: a get hands one back and a put takes one,
+// which is how a write recomputes the GSI keys without restating the templates
+export type VideoRow = EntityItem<typeof videoEntity>;
 
 export const videoKey = (id: string) => ({ PK: `VIDEO#${id}`, SK: 'META' });
 
@@ -37,16 +48,23 @@ export const failedItem = (error: unknown): VideoItem | undefined =>
     ? (error.Item as VideoItem | undefined)
     : undefined;
 
+// a row read back from DynamoDB and an ALL_OLD item off a failed condition
+// carry the lease differently, and only these two fields decide it
+type Lease = { lockedBy?: unknown; lockExpiresAt?: unknown };
+
 // an unexpired lease held by the caller; the same test is repeated as a
 // condition on every write so a takeover between the read and the write loses
-export const holdsLease = (
-  item: VideoItem,
-  sub: string,
-  now: number,
-): boolean =>
+export const holdsLease = (item: Lease, sub: string, now: number): boolean =>
   item.lockedBy === sub &&
   typeof item.lockExpiresAt === 'number' &&
   item.lockExpiresAt > now;
+
+// the pre-flight answer for a caller that does not hold the lease: the write
+// condition would reject it anyway, and this names the holder first
+export const lockedBody = (item: VideoItem): Record<string, unknown> => ({
+  error: 'locked',
+  ...(item.lockedByName ? { holderName: item.lockedByName } : {}),
+});
 
 export const leaseCondition = 'lockedBy = :sub AND lockExpiresAt > :now';
 
@@ -94,7 +112,7 @@ export class VideoWriteConflict extends Error {
   }
 }
 
-type GuardedUpdate = {
+export type GuardedUpdate = {
   id: string;
   sub: string;
   now: number;
@@ -166,4 +184,56 @@ export const guardedUpdate = async ({
     }
     throw error;
   }
+};
+
+// a lost condition is the only 409 the guarded writes produce, so the conflict
+// body becomes a response in one place; true means the write landed
+export const applyGuardedUpdate = async (
+  res: Response,
+  update: GuardedUpdate,
+): Promise<boolean> => {
+  try {
+    await guardedUpdate(update);
+    return true;
+  } catch (error) {
+    if (error instanceof VideoWriteConflict) {
+      res.status(409).json(error.body);
+      return false;
+    }
+    throw error;
+  }
+};
+
+// a member only ever sees published videos, and the exclusion belongs in the
+// query rather than in a filter, so a folder full of drafts cannot be read out
+// of DynamoDB and then dropped on the way to the response
+export const videosInFolder = async (
+  folderId: string,
+  canSeeDrafts: boolean,
+): Promise<VideoRow[]> => {
+  const query = canSeeDrafts
+    ? videoEntity.query.byFolder({ folderId })
+    : videoEntity.query
+        .byFolder({ folderId })
+        // the empty recordedAt makes the prefix 'PUBLISHED#', so DRAFT can never match
+        .begins({ statusKey: 'PUBLISHED', recordedAt: '' });
+
+  const { data } = await query.go({ pages: 'all' });
+  return data;
+};
+
+export type LoadProject = (
+  req: Request,
+  res: Response,
+) => Promise<VideoItem | undefined>;
+
+// a plain upload has no timeline, assets, recordings or renders, so every studio
+// route reads its project through here and answers the same 404 for both
+export const loadProject: LoadProject = async (req, res) => {
+  const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
+  if (!data || data.kind !== 'studio') {
+    res.status(404).json({ error: 'not_found' });
+    return undefined;
+  }
+  return data as VideoItem;
 };

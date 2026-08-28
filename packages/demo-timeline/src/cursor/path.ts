@@ -5,7 +5,10 @@ import { CursorPathPoint } from '../schema';
 export const pathSampleMs = 100;
 
 // the snippet already throttles, but a 20Hz stream over a ten minute demo is
-// still tens of thousands of points, so one sample per window is kept
+// still tens of thousands of points, so one sample per window is kept.
+// Points must already be in time order, which is how the derivation places them.
+// A take long enough to blow maxPoints even at this rate loses its tail rather
+// than its detail, on the grounds that no single take should get near it.
 export const resamplePath = (
   points: CursorPathPoint[],
   maxPoints: number,

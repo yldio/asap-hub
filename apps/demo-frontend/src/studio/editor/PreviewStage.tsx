@@ -1,11 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { ClipPlacement, sourceTimeAt } from '@asap-hub/demo-timeline';
+import { Banner, ClipPlacement, sourceTimeAt } from '@asap-hub/demo-timeline';
 import { FC, useEffect, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { charcoal, paper, rem, steel } from '../../ui/theme';
+import BannerLayer from './BannerLayer';
 
 const stageStyles = css({
+  containerType: 'inline-size',
   position: 'relative',
   width: '100%',
   maxWidth: '100%',
@@ -60,6 +62,7 @@ const subheadingStyles = css({
 
 type Props = {
   readonly placement?: ClipPlacement;
+  readonly banners: Banner[];
   readonly playheadMs: number;
   readonly playing: boolean;
   readonly assets: Record<string, ProjectAsset>;
@@ -70,6 +73,7 @@ type Props = {
 // timeline clock owns the time; the element is told where to be, never asked.
 const PreviewStage: FC<Props> = ({
   placement,
+  banners,
   playheadMs,
   playing,
   assets,
@@ -125,6 +129,7 @@ const PreviewStage: FC<Props> = ({
           <h2 css={headingStyles}>{clip.text}</h2>
           {clip.subtitle ? <p css={subheadingStyles}>{clip.subtitle}</p> : null}
         </div>
+        <BannerLayer banners={banners} tMs={playheadMs} />
       </div>
     );
   }
@@ -147,6 +152,7 @@ const PreviewStage: FC<Props> = ({
             : 'This clip has no playable source yet.'}
         </p>
       )}
+      <BannerLayer banners={banners} tMs={playheadMs} />
     </div>
   );
 };

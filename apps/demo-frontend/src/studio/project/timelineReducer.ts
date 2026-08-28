@@ -1,4 +1,5 @@
 import {
+  Banner,
   Canvas,
   Clip,
   insertClipAt,
@@ -33,6 +34,23 @@ export type TimelineAction =
   | { type: 'toggleMute'; clipId: string }
   | { type: 'setClipVolume'; clipId: string; volume: number }
   | { type: 'setTransition'; clipId: string; transition?: Transition }
+  | {
+      type: 'addTitleCard';
+      clipId: string;
+      index: number;
+      text: string;
+      durationMs: number;
+    }
+  | {
+      type: 'updateTitleCard';
+      clipId: string;
+      text?: string;
+      subtitle?: string;
+      durationMs?: number;
+    }
+  | { type: 'addBanner'; banner: Banner }
+  | { type: 'updateBanner'; bannerId: string; change: Partial<Banner> }
+  | { type: 'removeBanner'; bannerId: string }
   | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
@@ -153,6 +171,58 @@ export const timelineReducer = (
             : clip,
         ),
       );
+
+    case 'addTitleCard':
+      return withClips(
+        timeline,
+        insertClipAt(
+          timeline.clips,
+          {
+            kind: 'title',
+            id: action.clipId,
+            durationMs: action.durationMs,
+            preset: 'centered',
+            text: action.text,
+          },
+          action.index,
+        ),
+      );
+
+    case 'updateTitleCard':
+      return withClips(
+        timeline,
+        timeline.clips.map((clip) =>
+          clip.id === action.clipId && clip.kind === 'title'
+            ? {
+                ...clip,
+                text: action.text ?? clip.text,
+                subtitle: action.subtitle ?? clip.subtitle,
+                durationMs: action.durationMs ?? clip.durationMs,
+              }
+            : clip,
+        ),
+      );
+
+    case 'addBanner':
+      return { ...timeline, banners: [...timeline.banners, action.banner] };
+
+    case 'updateBanner':
+      return {
+        ...timeline,
+        banners: timeline.banners.map((banner) =>
+          banner.id === action.bannerId
+            ? { ...banner, ...action.change, id: banner.id }
+            : banner,
+        ),
+      };
+
+    case 'removeBanner':
+      return {
+        ...timeline,
+        banners: timeline.banners.filter(
+          (banner) => banner.id !== action.bannerId,
+        ),
+      };
 
     case 'setCanvas':
       return timeline.canvas.width === action.canvas.width &&

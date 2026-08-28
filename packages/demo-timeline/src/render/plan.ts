@@ -1,0 +1,67 @@
+import { layoutClips, timelineDurationMs } from '../clips';
+import { Timeline } from '../schema';
+import { assetIndex } from './assets';
+import { buildClipStep } from './clipSteps';
+import { buildJoinStep } from './joinStep';
+import { RenderAsset, RenderPlan, SvgFile } from './types';
+
+export const renderDurationMs = (timeline: Timeline): number =>
+  timelineDurationMs(timeline.clips);
+
+// a banner spanning a transition is rasterised once and overlaid on both clips
+const uniqueByPath = (svgs: SvgFile[]): SvgFile[] =>
+  svgs.filter(
+    (svg, position) =>
+      svgs.findIndex((other) => other.path === svg.path) === position,
+  );
+
+export type RenderPlanInput = {
+  timeline: Timeline;
+  assets: RenderAsset[];
+  workDir: string;
+  output: string;
+};
+
+export const buildRenderPlan = ({
+  timeline,
+  assets,
+  workDir,
+  output,
+}: RenderPlanInput): RenderPlan => {
+  const { canvas, banners, narration } = timeline;
+  const placements = layoutClips(timeline.clips);
+  const durationMs = renderDurationMs(timeline);
+  const index = assetIndex(assets);
+
+  if (placements.length === 0) {
+    return { canvas, durationMs, steps: [], output, svgs: [] };
+  }
+
+  const clips = placements.map((placement) =>
+    buildClipStep({ placement, canvas, banners, assets: index, workDir }),
+  );
+  const join = buildJoinStep({
+    placements,
+    canvas,
+    narration,
+    assets: index,
+    durationMs,
+    workDir,
+    output,
+  });
+
+  return {
+    canvas,
+    durationMs,
+    steps: [...clips.map(({ step }) => step), join.step],
+    output,
+    svgs: uniqueByPath(clips.flatMap(({ svgs }) => svgs)),
+    ...(join.listFile ? { listFile: join.listFile } : {}),
+  };
+};
+
+export const describePlan = (plan: RenderPlan): string[] =>
+  plan.steps.map(
+    (step, position) =>
+      `${position + 1}/${plan.steps.length} ${step.label} -> ${step.output}`,
+  );

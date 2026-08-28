@@ -1,0 +1,77 @@
+/** @jsxImportSource @emotion/react */
+import { ClipPlacement, TitleClip } from '@asap-hub/demo-timeline';
+import { FC } from 'react';
+import EditorButton from './EditorButton';
+import {
+  NumberField,
+  panelHeadingStyles,
+  panelStyles,
+  readingStyles,
+  mutedStyles,
+  TextField,
+} from './fields';
+import { formatTimecode } from './geometry';
+import { TrashIcon } from './icons';
+
+type Props = {
+  readonly placement: ClipPlacement;
+  readonly clip: TitleClip;
+  readonly readOnly: boolean;
+  readonly onChange: (change: {
+    text?: string;
+    subtitle?: string;
+    durationMs?: number;
+  }) => void;
+  readonly onRemove: () => void;
+};
+
+const TitleCardInspector: FC<Props> = ({
+  placement,
+  clip,
+  readOnly,
+  onChange,
+  onRemove,
+}) => (
+  <aside css={panelStyles} aria-label="Title card">
+    <h2 css={panelHeadingStyles}>Title card</h2>
+
+    <div css={readingStyles}>
+      <span css={mutedStyles}>Starts</span>
+      <span>{formatTimecode(placement.startMs)}</span>
+    </div>
+
+    <TextField
+      label="Heading"
+      value={clip.text}
+      disabled={readOnly}
+      placeholder="Attendance"
+      onChange={(text) => onChange({ text })}
+    />
+    <TextField
+      label="Subtitle"
+      value={clip.subtitle ?? ''}
+      disabled={readOnly}
+      placeholder="Under feature flag"
+      onChange={(subtitle) => onChange({ subtitle })}
+    />
+    <NumberField
+      label="Length in milliseconds"
+      value={clip.durationMs}
+      min={500}
+      step={250}
+      disabled={readOnly}
+      onChange={(durationMs) => onChange({ durationMs })}
+    />
+
+    <EditorButton
+      danger
+      icon={<TrashIcon size={15} />}
+      disabled={readOnly}
+      onClick={onRemove}
+    >
+      Remove title card
+    </EditorButton>
+  </aside>
+);
+
+export default TitleCardInspector;

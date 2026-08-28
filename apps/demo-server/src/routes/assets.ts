@@ -2,6 +2,7 @@ import { parseTimeline } from '@asap-hub/demo-timeline';
 import { Request, Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { assetEntity } from '../data/entities';
+import { getJobRunner } from '../jobs/runner';
 import {
   assetPartsSchema,
   completeAssetSchema,
@@ -203,12 +204,27 @@ export const registerAssetRoutes = (
       };
       await completeMultipartUpload(asset.key as string, uploadId, parts);
 
-      // 'preparing' is where the ingest job that writes proxy.mp4 and fills in the
-      // probed duration and dimensions will be queued, in a later change
       const { data } = await assetEntity
         .patch({ videoId: id, assetId: currentAssetId })
         .set({ state: 'preparing', updatedAt: new Date().toISOString() })
         .go({ response: 'all_new' });
+
+      // the ingest job writes proxy.mp4 and fills in the probed duration and
+      // dimensions; a job that cannot start must not fail the upload, the asset
+      // stays usable at the url of the original
+      void getJobRunner()
+        .run('ingest', {
+          VIDEO_ID: id,
+          ASSET_ID: currentAssetId,
+          ASSET_KEY: asset.key as string,
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error(
+            `could not start the ingest job for asset ${currentAssetId}`,
+            error,
+          );
+        });
 
       res.json({ asset: serialiseAsset(data as AssetItem) });
     },

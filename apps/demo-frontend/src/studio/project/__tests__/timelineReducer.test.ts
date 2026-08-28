@@ -207,3 +207,101 @@ describe('replaceTimeline', () => {
     ).toBe(replacement);
   });
 });
+
+describe('title cards', () => {
+  it('inserts a title card at the given index', () => {
+    const timeline = timelineReducer(withClips(), {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 1,
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+
+    expect(timeline.clips.map((clip) => clip.id)).toEqual([
+      'clip-1',
+      'title-1',
+      'clip-2',
+    ]);
+    expect(timeline.clips[1]).toMatchObject({
+      kind: 'title',
+      preset: 'centered',
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+  });
+
+  it('edits its text and length', () => {
+    const withTitle = timelineReducer(withClips(), {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 0,
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+
+    const timeline = timelineReducer(withTitle, {
+      type: 'updateTitleCard',
+      clipId: 'title-1',
+      subtitle: 'Under a feature flag',
+      durationMs: 5000,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({
+      text: 'Attendance',
+      subtitle: 'Under a feature flag',
+      durationMs: 5000,
+    });
+  });
+});
+
+describe('banners', () => {
+  const banner = {
+    id: 'banner-1',
+    startMs: 1000,
+    durationMs: 4000,
+    preset: 'lowerThird' as const,
+    text: 'Attendance',
+    position: 'bottom' as const,
+    animation: 'fade' as const,
+  };
+
+  it('adds one to the overlay track', () => {
+    expect(
+      timelineReducer(withClips(), { type: 'addBanner', banner }).banners,
+    ).toEqual([banner]);
+  });
+
+  it('updates one without letting its id change', () => {
+    const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+
+    const timeline = timelineReducer(added, {
+      type: 'updateBanner',
+      bannerId: 'banner-1',
+      change: { text: 'Speakers', startMs: 2000, id: 'hacked' },
+    });
+
+    expect(timeline.banners[0]).toMatchObject({
+      id: 'banner-1',
+      text: 'Speakers',
+      startMs: 2000,
+    });
+  });
+
+  it('removes one', () => {
+    const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+
+    expect(
+      timelineReducer(added, { type: 'removeBanner', bannerId: 'banner-1' })
+        .banners,
+    ).toEqual([]);
+  });
+
+  it('leaves banners alone when a clip is removed, because they are program timed', () => {
+    const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+
+    expect(
+      timelineReducer(added, { type: 'removeClip', clipId: 'clip-1' }).banners,
+    ).toEqual([banner]);
+  });
+});

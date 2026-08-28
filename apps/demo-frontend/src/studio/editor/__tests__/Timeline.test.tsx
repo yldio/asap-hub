@@ -40,6 +40,8 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onTrim = jest.fn();
   const onSeek = jest.fn();
   const onSelect = jest.fn();
+  const onSelectBanner = jest.fn();
+  const onMoveBanner = jest.fn();
   const onToggleMute = jest.fn();
   const placements = layoutClips(clips);
 
@@ -50,6 +52,9 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       playheadMs={0}
       pixelsPerSecond={pixelsPerSecond}
       readOnly={false}
+      banners={[]}
+      onSelectBanner={onSelectBanner}
+      onMoveBanner={onMoveBanner}
       assets={{
         'asset-a': asset('asset-a', 'A'),
         'asset-b': asset('asset-b', 'B'),
@@ -63,7 +68,15 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     />,
   );
 
-  return { onMove, onTrim, onSeek, onSelect, onToggleMute };
+  return {
+    onMove,
+    onTrim,
+    onSeek,
+    onSelect,
+    onSelectBanner,
+    onMoveBanner,
+    onToggleMute,
+  };
 };
 
 // the lane is positioned by the browser; jsdom reports zeroes unless told

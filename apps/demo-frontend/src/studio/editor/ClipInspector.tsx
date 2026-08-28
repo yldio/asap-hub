@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Clip, ClipPlacement } from '@asap-hub/demo-timeline';
+import { Clip, ClipPlacement, Transition } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
+import { SelectField } from './fields';
 import { formatTimecode } from './geometry';
 import { TrashIcon } from './icons';
 
@@ -74,7 +75,16 @@ type Props = {
   readonly onVolume: (volume: number) => void;
   readonly onMove: (toIndex: number) => void;
   readonly onRemove: () => void;
+  readonly onTransition: (transition?: Transition) => void;
 };
+
+const transitionOptions = [
+  { value: 'cut', label: 'Cut' },
+  { value: 'crossfade', label: 'Crossfade' },
+  { value: 'slide', label: 'Slide' },
+];
+
+const defaultTransitionMs = 500;
 
 const clipName = (clip: Clip, asset?: ProjectAsset): string =>
   clip.kind === 'title' ? clip.text || 'Title card' : asset?.label ?? 'Clip';
@@ -89,6 +99,7 @@ const ClipInspector: FC<Props> = ({
   onVolume,
   onMove,
   onRemove,
+  onTransition,
 }) => {
   if (!placement) {
     return (
@@ -158,6 +169,26 @@ const ClipInspector: FC<Props> = ({
             />
           </label>
         </>
+      ) : null}
+
+      {index > 0 ? (
+        <SelectField
+          label="Transition from the clip before"
+          value={clip.transitionIn?.type ?? 'cut'}
+          disabled={readOnly}
+          options={transitionOptions}
+          onChange={(type) =>
+            onTransition(
+              type === 'cut'
+                ? undefined
+                : {
+                    type: type as Transition['type'],
+                    durationMs:
+                      clip.transitionIn?.durationMs ?? defaultTransitionMs,
+                  },
+            )
+          }
+        />
       ) : null}
 
       <div css={rowButtonsStyles}>

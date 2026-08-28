@@ -41,6 +41,8 @@ const groupStyles = css({ display: 'flex', alignItems: 'center', gap: 6 });
 
 type Props = {
   readonly hasSelection: boolean;
+  readonly onAddTitleCard: () => void;
+  readonly onAddBanner: () => void;
   readonly selectionMuted: boolean;
   readonly readOnly: boolean;
   readonly playheadMs: number;
@@ -56,6 +58,8 @@ type Props = {
 
 const ActionBar: FC<Props> = ({
   hasSelection,
+  onAddTitleCard,
+  onAddBanner,
   selectionMuted,
   readOnly,
   playheadMs,
@@ -69,6 +73,20 @@ const ActionBar: FC<Props> = ({
   onZoomFit,
 }) => (
   <div css={barStyles}>
+    <EditorButton
+      icon={<PlusIcon size={15} />}
+      disabled={readOnly}
+      onClick={onAddTitleCard}
+    >
+      Title card
+    </EditorButton>
+    <EditorButton
+      icon={<PlusIcon size={15} />}
+      disabled={readOnly}
+      onClick={onAddBanner}
+    >
+      Banner
+    </EditorButton>
     <EditorButton
       icon={<SplitIcon size={15} />}
       disabled={readOnly || !hasSelection}

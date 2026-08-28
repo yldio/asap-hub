@@ -201,6 +201,34 @@ const serverlessConfig: AWS = {
             Action: ['ses:SendEmail', 'ses:SendRawEmail'],
             Resource: '*',
           },
+          {
+            Effect: 'Allow',
+            Action: ['ecs:RunTask'],
+            Resource: { Ref: 'EncoderTaskDefinition' },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['ecs:StopTask'],
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:ecs',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  `task/${encoderName}/*`,
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['iam:PassRole'],
+            Resource: [
+              { 'Fn::GetAtt': ['EncoderTaskRole', 'Arn'] },
+              { 'Fn::GetAtt': ['EncoderTaskExecutionRole', 'Arn'] },
+            ],
+          },
         ],
       },
     },
@@ -242,6 +270,13 @@ const serverlessConfig: AWS = {
       handler: './src/handlers/api-handler.apiHandler',
       environment: {
         CLOUDFRONT_KEY_PAIR_ID: { Ref: 'CloudFrontSigningPublicKey' },
+        // what the ECS job runner needs to start a task on the encoder cluster
+        ENCODER_CLUSTER: { 'Fn::GetAtt': ['EncoderCluster', 'Arn'] },
+        ENCODER_TASK_DEFINITION: { Ref: 'EncoderTaskDefinition' },
+        ENCODER_SUBNET_IDS: subnetIds.join(','),
+        ENCODER_SECURITY_GROUP_ID: {
+          'Fn::GetAtt': ['EncoderSecurityGroup', 'GroupId'],
+        },
       },
       events: [
         {
@@ -775,6 +810,20 @@ const serverlessConfig: AWS = {
                     },
                   },
                   {
+                    // studio sources, proxies and renders all live under projects/
+                    Effect: 'Allow',
+                    Action: ['s3:GetObject', 's3:PutObject'],
+                    Resource: {
+                      'Fn::Join': [
+                        '',
+                        [
+                          { 'Fn::GetAtt': ['StorageBucket', 'Arn'] },
+                          '/projects/*',
+                        ],
+                      ],
+                    },
+                  },
+                  {
                     Effect: 'Allow',
                     Action: ['dynamodb:UpdateItem'],
                     Resource: { 'Fn::GetAtt': ['DataTable', 'Arn'] },
@@ -793,6 +842,9 @@ const serverlessConfig: AWS = {
           NetworkMode: 'awsvpc',
           Cpu: '4096',
           Memory: '8192',
+          // a render pulls every source of a project onto the task, the 20 GiB
+          // Fargate default is not enough for that
+          EphemeralStorage: { SizeInGiB: 100 },
           RuntimePlatform: {
             CpuArchitecture: 'ARM64',
             OperatingSystemFamily: 'LINUX',

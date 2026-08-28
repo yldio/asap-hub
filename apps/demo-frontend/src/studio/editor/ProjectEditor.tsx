@@ -20,7 +20,9 @@ import { createId } from '../project/ids';
 import { ProjectEditor as Editor } from '../project/useProjectEditor';
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
+import BannerInspector from './BannerInspector';
 import ClipInspector from './ClipInspector';
+import TitleCardInspector from './TitleCardInspector';
 import { editorTheme } from './editorTheme';
 import { clampZoom, defaultPixelsPerSecond } from './geometry';
 import PreviewStage from './PreviewStage';
@@ -89,6 +91,7 @@ const ProjectEditor: FC<Props> = ({
   uploadProgress,
 }) => {
   const [selectedClipId, setSelectedClipId] = useState<string>();
+  const [selectedBannerId, setSelectedBannerId] = useState<string>();
   const [pixelsPerSecond, setPixelsPerSecond] = useState(
     defaultPixelsPerSecond,
   );
@@ -106,6 +109,9 @@ const ProjectEditor: FC<Props> = ({
 
   const current = placementAt(placements, playheadMs);
   const selected = placements.find(({ clip }) => clip.id === selectedClipId);
+  const selectedBanner = timeline.banners.find(
+    ({ id }) => id === selectedBannerId,
+  );
   const selectedSource =
     selected?.clip.kind === 'source' ? selected.clip : undefined;
 
@@ -189,10 +195,54 @@ const ProjectEditor: FC<Props> = ({
   }, [dispatch, selected]);
 
   const removeSelected = useCallback(() => {
+    if (selectedBanner) {
+      dispatch({ type: 'removeBanner', bannerId: selectedBanner.id });
+      setSelectedBannerId(undefined);
+      return;
+    }
     if (!selected) return;
     dispatch({ type: 'removeClip', clipId: selected.clip.id });
     setSelectedClipId(undefined);
-  }, [dispatch, selected]);
+  }, [dispatch, selected, selectedBanner]);
+
+  const selectClip = useCallback((clipId: string) => {
+    setSelectedClipId(clipId);
+    setSelectedBannerId(undefined);
+  }, []);
+
+  const selectBanner = useCallback((bannerId: string) => {
+    setSelectedBannerId(bannerId);
+    setSelectedClipId(undefined);
+  }, []);
+
+  const addTitleCard = useCallback(() => {
+    const clipId = createId('title');
+    dispatch({
+      type: 'addTitleCard',
+      clipId,
+      index: current ? current.index + 1 : placements.length,
+      text: 'New section',
+      durationMs: 3000,
+    });
+    selectClip(clipId);
+  }, [current, dispatch, placements.length, selectClip]);
+
+  const addBanner = useCallback(() => {
+    const id = createId('banner');
+    dispatch({
+      type: 'addBanner',
+      banner: {
+        id,
+        startMs: Math.round(playheadMs),
+        durationMs: 4000,
+        preset: 'lowerThird',
+        text: 'New banner',
+        position: 'bottom',
+        animation: 'fade',
+      },
+    });
+    selectBanner(id);
+  }, [dispatch, playheadMs, selectBanner]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -268,6 +318,7 @@ const ProjectEditor: FC<Props> = ({
         <div css={centreStyles} ref={stageRef}>
           <PreviewStage
             placement={current}
+            banners={timeline.banners}
             playheadMs={playheadMs}
             playing={playing}
             assets={assetsById}
@@ -285,44 +336,87 @@ const ProjectEditor: FC<Props> = ({
           onDelete={onDeleteAsset}
         />
 
-        <ClipInspector
-          placement={selected}
-          asset={
-            selectedSource ? assetsById[selectedSource.assetId] : undefined
-          }
-          readOnly={readOnly}
-          index={selected?.index ?? 0}
-          clipCount={placements.length}
-          onTrim={(change) => {
-            if (!selectedSource) return;
-            dispatch({
-              type: 'trimClip',
-              clipId: selectedSource.id,
-              ...change,
-              assetDurationMs: assetDurationOf(
-                selectedSource.assetId,
-                selectedSource.outMs,
-              ),
-            });
-          }}
-          onVolume={(volume) => {
-            if (!selected) return;
-            dispatch({
-              type: 'setClipVolume',
-              clipId: selected.clip.id,
-              volume,
-            });
-          }}
-          onMove={(toIndex) => {
-            if (!selected) return;
-            dispatch({ type: 'moveClip', clipId: selected.clip.id, toIndex });
-          }}
-          onRemove={removeSelected}
-        />
+        {selectedBanner ? (
+          <BannerInspector
+            banner={selectedBanner}
+            readOnly={readOnly}
+            onChange={(change) =>
+              dispatch({
+                type: 'updateBanner',
+                bannerId: selectedBanner.id,
+                change,
+              })
+            }
+            onRemove={removeSelected}
+          />
+        ) : null}
+
+        {!selectedBanner && selected?.clip.kind === 'title' ? (
+          <TitleCardInspector
+            placement={selected}
+            clip={selected.clip}
+            readOnly={readOnly}
+            onChange={(change) =>
+              dispatch({
+                type: 'updateTitleCard',
+                clipId: selected.clip.id,
+                ...change,
+              })
+            }
+            onRemove={removeSelected}
+          />
+        ) : null}
+
+        {!selectedBanner && selected?.clip.kind !== 'title' ? (
+          <ClipInspector
+            placement={selected}
+            asset={
+              selectedSource ? assetsById[selectedSource.assetId] : undefined
+            }
+            readOnly={readOnly}
+            index={selected?.index ?? 0}
+            clipCount={placements.length}
+            onTrim={(change) => {
+              if (!selectedSource) return;
+              dispatch({
+                type: 'trimClip',
+                clipId: selectedSource.id,
+                ...change,
+                assetDurationMs: assetDurationOf(
+                  selectedSource.assetId,
+                  selectedSource.outMs,
+                ),
+              });
+            }}
+            onVolume={(volume) => {
+              if (!selected) return;
+              dispatch({
+                type: 'setClipVolume',
+                clipId: selected.clip.id,
+                volume,
+              });
+            }}
+            onMove={(toIndex) => {
+              if (!selected) return;
+              dispatch({ type: 'moveClip', clipId: selected.clip.id, toIndex });
+            }}
+            onRemove={removeSelected}
+            onTransition={(transition) => {
+              if (!selected) return;
+              dispatch({
+                type: 'setTransition',
+                clipId: selected.clip.id,
+                transition,
+              });
+            }}
+          />
+        ) : null}
       </div>
 
       <ActionBar
-        hasSelection={Boolean(selected)}
+        hasSelection={Boolean(selected) || Boolean(selectedBanner)}
+        onAddTitleCard={addTitleCard}
+        onAddBanner={addBanner}
         selectionMuted={selectedSource?.volume === 0}
         readOnly={readOnly}
         playheadMs={playheadMs}
@@ -341,11 +435,17 @@ const ProjectEditor: FC<Props> = ({
         durationMs={durationMs}
         playheadMs={playheadMs}
         pixelsPerSecond={pixelsPerSecond}
+        banners={timeline.banners}
         selectedClipId={selectedClipId}
+        selectedBannerId={selectedBannerId}
         readOnly={readOnly}
         assets={assetsById}
-        onSelect={setSelectedClipId}
+        onSelect={selectClip}
+        onSelectBanner={selectBanner}
         onSeek={seek}
+        onMoveBanner={(bannerId, change) =>
+          dispatch({ type: 'updateBanner', bannerId, change })
+        }
         onMove={(clipId, toIndex) =>
           dispatch({ type: 'moveClip', clipId, toIndex })
         }

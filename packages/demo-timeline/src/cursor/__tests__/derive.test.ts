@@ -316,10 +316,10 @@ describe('a capture with no start time given', () => {
       viewportH: 100,
     },
   ];
-  const frame = { width: 1920, height: 1080 };
+  const canvas = { width: 1920, height: 1080 };
 
   it('takes its origin from the first event', () => {
-    const derived = deriveCursorEffects(events, { frame });
+    const derived = deriveCursorEffects(events, { frame: canvas });
 
     expect(derived.effects.length).toBeGreaterThan(0);
     expect(derived.effects[0]?.tMs).toBe(0);
@@ -327,11 +327,13 @@ describe('a capture with no start time given', () => {
 
   it('keeps every event rather than dropping the lot', () => {
     const wrongOrigin = deriveCursorEffects(events, {
-      frame,
+      frame: canvas,
       startedAtEpochMs: Date.now(),
     });
 
     expect(wrongOrigin.effects).toHaveLength(0);
-    expect(deriveCursorEffects(events, { frame }).effects).not.toHaveLength(0);
+    expect(
+      deriveCursorEffects(events, { frame: canvas }).effects,
+    ).not.toHaveLength(0);
   });
 });

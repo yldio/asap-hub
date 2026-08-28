@@ -5,8 +5,11 @@ import {
   Timeline,
 } from '@asap-hub/demo-timeline';
 
+// The time origin is not guessed here. Working it back from the timeline put it
+// minutes away from when the capture actually ran and every event fell before
+// zero and was dropped; the derivation takes it from the events themselves.
 export type CaptureRequest = {
-  startedAtEpochMs: number;
+  startedAtEpochMs?: number;
   stoppedAtEpochMs: number;
   frame: { width: number; height: number };
   existing: CursorEffect[];
@@ -25,8 +28,7 @@ export type CaptureTarget = { clipId: string; request: CaptureRequest };
 
 // The capture belongs to whichever clip is under the playhead, because that is
 // the recording the creator just made, rather than whatever happens to be first
-// on the timeline. Its events are stamped in wall clock time, so the origin is
-// where that one clip began and not where the whole programme did.
+// on the timeline.
 export const captureTarget = (
   timeline: Timeline,
   placement: ClipPlacement | undefined,
@@ -41,7 +43,6 @@ export const captureTarget = (
   return {
     clipId: placement.clip.id,
     request: {
-      startedAtEpochMs: stoppedAtEpochMs - placement.durationMs,
       stoppedAtEpochMs,
       frame: { width: timeline.canvas.width, height: timeline.canvas.height },
       // a hand edited effect survives the merge, so re-applying a capture does

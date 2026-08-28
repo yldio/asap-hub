@@ -61,13 +61,11 @@ describe('captureTarget', () => {
     expect(targetAt(1000)?.clipId).toBe('clip-a');
   });
 
-  // the origin used to be taken from the whole programme, as if one capture
-  // spanned every clip on the timeline
-  it('takes its time origin from that clip alone', () => {
-    expect(targetAt(5000)?.request).toMatchObject({
-      startedAtEpochMs: 94000,
-      stoppedAtEpochMs: 100000,
-    });
+  // working the origin back from the timeline put it minutes away from when the
+  // capture ran, and every event fell before zero and was thrown away
+  it('leaves the time origin to the events themselves', () => {
+    expect(targetAt(5000)?.request.startedAtEpochMs).toBeUndefined();
+    expect(targetAt(5000)?.request.stoppedAtEpochMs).toBe(100000);
   });
 
   it('carries the effects already on that clip so hand edits survive', () => {

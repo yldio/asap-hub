@@ -383,6 +383,7 @@ const PreviewStage: FC<Props> = ({
         effects={cursorEffects}
         tMs={localMs}
         offsetMs={cursorOffsetMs}
+        playing={playing}
       />
       <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
 

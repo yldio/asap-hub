@@ -38,3 +38,21 @@ describe('the cursor layer', () => {
     expect(rippleCount(1000 + rippleMs, -400)).toBe(0);
   });
 });
+
+describe('a click the creator is parked on', () => {
+  // the ring is a wall clock animation ending on opacity 0, so while paused it
+  // used to flash once and vanish: exactly when the creator is looking at it
+  const hasRipple = (playing: boolean) => {
+    const { container, unmount } = render(
+      <CursorLayer effects={[ripple]} tMs={1000} playing={playing} />,
+    );
+    const found = container.querySelector('[data-testid="cursor-ripple"]');
+    unmount();
+    return Boolean(found);
+  };
+
+  it('holds the ring on screen whether the demo is playing or not', () => {
+    expect(hasRipple(false)).toBe(true);
+    expect(hasRipple(true)).toBe(true);
+  });
+});

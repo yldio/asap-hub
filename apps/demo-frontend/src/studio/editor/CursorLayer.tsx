@@ -28,6 +28,14 @@ const rippleStyles = css({
   borderRadius: '50%',
   border: '2px solid rgba(255, 255, 255, 0.9)',
   backgroundColor: 'rgba(255, 255, 255, 0.18)',
+  transform: 'translate(-50%, -50%)',
+});
+
+// The animation is wall clock, and it ends on opacity 0. Parked on an effect to
+// place it, the creator saw it flash once and then nothing at all, which is the
+// whole time they are actually looking at it. So it only animates while the
+// demo is playing; paused, it holds the ring the export burns in.
+const playingRippleStyles = css({
   animation: `${ripple} 600ms ease-out forwards`,
 });
 
@@ -81,10 +89,11 @@ type Props = {
   // where the layer starts; the stage drives it from there
   readonly tMs?: number;
   readonly offsetMs?: number;
+  readonly playing?: boolean;
 };
 
 const CursorLayer = forwardRef<CursorLayerHandle, Props>(
-  ({ effects, tMs = 0, offsetMs = 0 }, ref) => {
+  ({ effects, tMs = 0, offsetMs = 0, playing = false }, ref) => {
     const [timeMs, setTimeMs] = useState(tMs);
     const shown = shownAt(effects, timeMs, offsetMs);
     const shownKey = keyOf(shown);
@@ -130,8 +139,11 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           .filter((effect) => effect.type === 'ripple')
           .map((effect) => (
             <span
-              key={`${effect.id}-${Math.round(effect.tMs)}`}
-              css={rippleStyles}
+              key={`${effect.id}-${Math.round(effect.tMs)}-${
+                playing ? 'playing' : 'held'
+              }`}
+              data-testid="cursor-ripple"
+              css={[rippleStyles, playing && playingRippleStyles]}
               style={{
                 left: `${effect.point.x * 100}%`,
                 top: `${effect.point.y * 100}%`,

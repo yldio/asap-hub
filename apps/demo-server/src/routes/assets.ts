@@ -203,20 +203,30 @@ export const registerAssetRoutes = (router: Router): void => {
         .go({ response: 'all_new' });
 
       // the ingest job writes proxy.mp4 and fills in the probed duration and
-      // dimensions; a job that cannot start must not fail the upload, the asset
-      // stays usable at the url of the original
+      // dimensions; a job that cannot start must not fail the upload, but the
+      // asset has to say so rather than sit in 'preparing' for ever, because a
+      // clip with no probed length cannot be trimmed back out again
       void getJobRunner()
         .run('ingest', {
           VIDEO_ID: id,
           ASSET_ID: currentAssetId,
           ASSET_KEY: asset.key as string,
         })
-        .catch((error) => {
+        .catch(async (error: unknown) => {
           // eslint-disable-next-line no-console
           console.error(
             `could not start the ingest job for asset ${currentAssetId}`,
             error,
           );
+          await assetEntity
+            .patch({ videoId: id, assetId: currentAssetId })
+            .set({
+              state: 'failed',
+              error: 'the file could not be prepared for editing',
+              updatedAt: new Date().toISOString(),
+            })
+            .go()
+            .catch(() => undefined);
         });
 
       res.json({ asset: serialiseAsset(data as AssetItem) });

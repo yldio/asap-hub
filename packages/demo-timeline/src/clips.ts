@@ -124,11 +124,14 @@ export const moveClip = (
 
 export type TrimChange = { inMs?: number; outMs?: number };
 
+// The upper bound is the footage the asset actually holds. Until the ingest has
+// probed it that length is unknown, and pinning the bound to the clip's own out
+// point would mean a trim could only ever be taken further, never given back.
 export const trimClip = (
   clips: Clip[],
   clipId: string,
   change: TrimChange,
-  assetDurationMs: number,
+  assetDurationMs?: number,
 ): Clip[] =>
   clips.map((clip) => {
     if (clip.id !== clipId || clip.kind !== 'source') {
@@ -137,7 +140,7 @@ export const trimClip = (
 
     const inMs = Math.max(0, Math.round(change.inMs ?? clip.inMs));
     const outMs = Math.min(
-      assetDurationMs,
+      assetDurationMs ?? limits.maxTimelineMs,
       Math.round(change.outMs ?? clip.outMs),
     );
 

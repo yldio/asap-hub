@@ -18,86 +18,19 @@ import { rootFolderId } from './folders';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
+import {
+  conflictBody,
+  failedItem,
+  holdsLease,
+  holderNameOf,
+  leaseCondition,
+  leaseDurationMs,
+  serialiseVideo,
+  videoKey,
+  VideoItem,
+} from './video-shared';
 
-export const leaseDurationMs = 90 * 1000;
-
-type VideoItem = Record<string, unknown>;
-
-export const serialiseVideo = (item: VideoItem) => ({
-  id: item.id,
-  title: item.title,
-  status: item.status,
-  folderId: item.folderId,
-  recordedAt: item.recordedAt,
-  durationMs: item.durationMs ?? 0,
-  chapters: item.chapters ?? [],
-  processingState: item.processingState,
-  ...(item.processingError ? { processingError: item.processingError } : {}),
-  createdBy: item.createdBy,
-  ...(item.lockedBy ? { lockedBy: item.lockedBy } : {}),
-  ...(item.lockedByName ? { lockedByName: item.lockedByName } : {}),
-  ...(typeof item.lockExpiresAt === 'number'
-    ? { lockExpiresAt: new Date(item.lockExpiresAt).toISOString() }
-    : {}),
-  version: item.version,
-});
-
-const videoKey = (id: string) => ({ PK: `VIDEO#${id}`, SK: 'META' });
-
-const failedItem = (error: unknown): Record<string, unknown> | undefined =>
-  error instanceof ConditionalCheckFailedException
-    ? (error.Item as Record<string, unknown> | undefined)
-    : undefined;
-
-// an unexpired lease held by the caller; the same test is repeated as a
-// condition on every write so a takeover between the read and the write loses
-const holdsLease = (
-  item: Record<string, unknown>,
-  sub: string,
-  now: number,
-): boolean =>
-  item.lockedBy === sub &&
-  typeof item.lockExpiresAt === 'number' &&
-  item.lockExpiresAt > now;
-
-const leaseCondition = 'lockedBy = :sub AND lockExpiresAt > :now';
-
-// ReturnValuesOnConditionCheckFailure hands back raw AttributeValues, while a
-// stubbed client in tests may hand back plain values
-const unwrap = (raw: unknown): unknown => {
-  if (raw && typeof raw === 'object') {
-    if ('S' in raw) return String((raw as { S: unknown }).S);
-    if ('N' in raw) return Number((raw as { N: unknown }).N);
-  }
-  return raw;
-};
-
-const holderNameOf = (item?: Record<string, unknown>): string | undefined => {
-  const name = unwrap(item?.lockedByName);
-  return typeof name === 'string' ? name : undefined;
-};
-
-// the write condition bundles the lease and the version, so the item returned
-// on failure is what tells the client whether to warn about a takeover or rebase
-const conflictBody = (
-  item: Record<string, unknown>,
-  sub: string,
-  now: number,
-): Record<string, unknown> => {
-  const lost = !holdsLease(
-    {
-      lockedBy: unwrap(item.lockedBy),
-      lockExpiresAt: unwrap(item.lockExpiresAt),
-    },
-    sub,
-    now,
-  );
-  const holderName = holderNameOf(item);
-  return {
-    error: lost ? 'locked' : 'conflict',
-    ...(holderName ? { holderName } : {}),
-  };
-};
+export { leaseDurationMs, serialiseVideo };
 
 export const videosRouter = (): Router => {
   const router = asyncRouter();

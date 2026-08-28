@@ -200,7 +200,7 @@ export const useProjectEditor = ({
   const dirty = state.history.present !== saved.current;
 
   const flush = useCallback(() => {
-    const present = stateRef.current.history.present;
+    const { present } = stateRef.current.history;
     if (present === saved.current) {
       return;
     }

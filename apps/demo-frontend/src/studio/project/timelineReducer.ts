@@ -31,7 +31,8 @@ export type TimelineAction =
       clipId: string;
       inMs?: number;
       outMs?: number;
-      assetDurationMs: number;
+      // absent until the ingest has probed the asset
+      assetDurationMs?: number;
     }
   | { type: 'splitAt'; tMs: number; clipId: string }
   | { type: 'duplicateClip'; clipId: string; newClipId: string }
@@ -56,6 +57,12 @@ export type TimelineAction =
   | { type: 'updateBanner'; bannerId: string; change: Partial<Banner> }
   | { type: 'removeBanner'; bannerId: string }
   | { type: 'addNarration'; narration: NarrationClip }
+  | {
+      type: 'updateNarration';
+      narrationId: string;
+      change: Partial<NarrationClip>;
+    }
+  | { type: 'removeNarration'; narrationId: string }
   | { type: 'addZoom'; zoom: Zoom }
   | { type: 'updateZoom'; zoomId: string; change: Partial<Zoom> }
   | { type: 'removeZoom'; zoomId: string }
@@ -276,6 +283,24 @@ export const timelineReducer = (
       return {
         ...timeline,
         narration: [...timeline.narration, action.narration],
+      };
+
+    case 'updateNarration':
+      return {
+        ...timeline,
+        narration: timeline.narration.map((take) =>
+          take.id === action.narrationId
+            ? { ...take, ...action.change, id: take.id, assetId: take.assetId }
+            : take,
+        ),
+      };
+
+    case 'removeNarration':
+      return {
+        ...timeline,
+        narration: timeline.narration.filter(
+          (take) => take.id !== action.narrationId,
+        ),
       };
 
     case 'addZoom':

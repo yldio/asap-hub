@@ -110,3 +110,39 @@ export const RedoIcon = svg(
 export const RecordIcon = svg(
   <circle cx="12" cy="12" r="6" fill="currentColor" />,
 );
+
+export const ExpandIcon = svg(
+  <>
+    <path d="M9 4H4v5" />
+    <path d="M15 4h5v5" />
+    <path d="M15 20h5v-5" />
+    <path d="M9 20H4v-5" />
+  </>,
+);
+
+export const CollapseIcon = svg(
+  <>
+    <path d="M4 9h5V4" />
+    <path d="M20 9h-5V4" />
+    <path d="M20 15h-5v5" />
+    <path d="M4 15h5v5" />
+  </>,
+);
+
+export const MicrophoneIcon = svg(
+  <>
+    <path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z" />
+    <path d="M5 11a7 7 0 0 0 14 0" />
+    <path d="M12 18v3" />
+  </>,
+);
+
+export const AudioIcon = svg(
+  <>
+    <path d="M4 10v4" />
+    <path d="M8 7v10" />
+    <path d="M12 4v16" />
+    <path d="M16 8v8" />
+    <path d="M20 11v2" />
+  </>,
+);

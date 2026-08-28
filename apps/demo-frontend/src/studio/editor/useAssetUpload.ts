@@ -23,7 +23,10 @@ export type AssetUpload = {
   busy: boolean;
   progress?: number;
   error?: string;
-  importFile: (file: File) => Promise<ProjectAsset | undefined>;
+  importFile: (
+    file: File,
+    kind?: 'video' | 'audio',
+  ) => Promise<ProjectAsset | undefined>;
   uploadBlob: (input: UploadInput) => Promise<ProjectAsset | undefined>;
 };
 
@@ -97,13 +100,16 @@ export const useAssetUpload = (projectId: string): AssetUpload => {
   );
 
   const importFile = useCallback(
-    (file: File): Promise<ProjectAsset | undefined> =>
+    (
+      file: File,
+      kind: 'video' | 'audio' = 'video',
+    ): Promise<ProjectAsset | undefined> =>
       uploadBlob({
         blob: file,
         label: labelOf(file),
         extension: extensionOf(file),
-        mimeType: file.type || 'video/mp4',
-        kind: 'video',
+        mimeType: file.type || (kind === 'audio' ? 'audio/mpeg' : 'video/mp4'),
+        kind,
       }),
     [uploadBlob],
   );

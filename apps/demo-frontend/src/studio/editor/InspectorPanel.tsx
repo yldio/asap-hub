@@ -5,6 +5,7 @@ import { TimelineAction } from '../project/timelineReducer';
 import BannerInspector from './BannerInspector';
 import ClipInspector from './ClipInspector';
 import CursorEffectInspector from './CursorEffectInspector';
+import NarrationInspector from './NarrationInspector';
 import { ResolvedSelection } from './selection';
 import TitleCardInspector from './TitleCardInspector';
 import ZoomInspector from './ZoomInspector';
@@ -15,7 +16,7 @@ type Props = {
   readonly assets: Record<string, ProjectAsset>;
   readonly clipCount: number;
   readonly readOnly: boolean;
-  readonly assetDurationOf: (assetId: string, fallbackMs: number) => number;
+  readonly assetDurationOf: (assetId: string) => number | undefined;
   readonly dispatch: (action: TimelineAction) => void;
   readonly onRemove: () => void;
 };
@@ -32,7 +33,25 @@ const InspectorPanel: FC<Props> = ({
   dispatch,
   onRemove,
 }) => {
-  const { effect, zoom, banner, clip } = selected;
+  const { effect, zoom, banner, clip, narration } = selected;
+
+  if (narration) {
+    return (
+      <NarrationInspector
+        narration={narration}
+        asset={assets[narration.assetId]}
+        readOnly={readOnly}
+        onChange={(change) =>
+          dispatch({
+            type: 'updateNarration',
+            narrationId: narration.id,
+            change,
+          })
+        }
+        onRemove={onRemove}
+      />
+    );
+  }
 
   if (effect && current) {
     return (
@@ -108,7 +127,7 @@ const InspectorPanel: FC<Props> = ({
           type: 'trimClip',
           clipId: source.id,
           ...change,
-          assetDurationMs: assetDurationOf(source.assetId, source.outMs),
+          assetDurationMs: assetDurationOf(source.assetId),
         });
       }}
       onVolume={(volume) => {

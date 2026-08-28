@@ -2,6 +2,7 @@ import {
   Banner,
   ClipPlacement,
   CursorEffect,
+  NarrationClip,
   Timeline,
   Zoom,
 } from '@asap-hub/demo-timeline';
@@ -10,7 +11,7 @@ import {
 // clip and a cursor effect be selected at once, which showed the wrong
 // inspector and pointed Delete at the wrong item.
 export type Selection = {
-  kind: 'clip' | 'banner' | 'zoom' | 'effect';
+  kind: 'clip' | 'banner' | 'zoom' | 'effect' | 'narration';
   id: string;
 };
 
@@ -25,6 +26,7 @@ export type ResolvedSelection = {
   banner?: Banner;
   zoom?: Zoom;
   effect?: CursorEffect;
+  narration?: NarrationClip;
 };
 
 // A selection can outlive what it points at: an effect belongs to the clip
@@ -50,6 +52,11 @@ export const resolveSelection = (
     case 'zoom':
       return { zoom: timeline.zooms.find(({ id }) => id === selection.id) };
 
+    case 'narration':
+      return {
+        narration: timeline.narration.find(({ id }) => id === selection.id),
+      };
+
     case 'effect':
       return {
         effect: timeline.cursor
@@ -63,4 +70,10 @@ export const resolveSelection = (
 };
 
 export const hasResolvedSelection = (resolved: ResolvedSelection): boolean =>
-  Boolean(resolved.clip ?? resolved.banner ?? resolved.zoom ?? resolved.effect);
+  Boolean(
+    resolved.clip ??
+      resolved.banner ??
+      resolved.zoom ??
+      resolved.effect ??
+      resolved.narration,
+  );

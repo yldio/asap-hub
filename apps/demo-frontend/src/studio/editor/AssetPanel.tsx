@@ -5,7 +5,7 @@ import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { formatDuration } from './geometry';
-import { PlusIcon, TrashIcon } from './icons';
+import { AudioIcon, PlusIcon, TrashIcon } from './icons';
 
 const panelStyles = css({
   gridColumn: 1,
@@ -72,6 +72,8 @@ const emptyStyles = css({
   lineHeight: 1.5,
 });
 
+const errorStyles = css({ fontSize: 12, color: editorTheme.record });
+
 const rowStyles = css({ display: 'flex', gap: 6 });
 
 const hiddenInputStyles = css({ display: 'none' });
@@ -91,6 +93,7 @@ type Props = {
   readonly progress?: number;
   readonly readOnly: boolean;
   readonly onImport: (file: File) => void;
+  readonly onImportAudio: (file: File) => void;
   readonly onAdd: (asset: ProjectAsset) => void;
   readonly onDelete: (asset: ProjectAsset) => void;
 };
@@ -103,40 +106,60 @@ const AssetPanel: FC<Props> = ({
   progress,
   readOnly,
   onImport,
+  onImportAudio,
   onAdd,
   onDelete,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLInputElement>(null);
+
+  const pick =
+    (handle: (file: File) => void) => (event: { target: HTMLInputElement }) => {
+      const input = event.target;
+      const file = input.files?.[0];
+      if (file) {
+        handle(file);
+      }
+      // let the same file be picked again straight after
+      input.value = '';
+    };
 
   return (
     <aside css={panelStyles} aria-label="Media">
       <h2 css={headingStyles}>Media</h2>
       {recorder}
       <input
-        ref={inputRef}
+        ref={videoRef}
         css={hiddenInputStyles}
         type="file"
         accept="video/*"
         aria-label="Import a video"
-        onChange={(event) => {
-          const input = event.target;
-          const file = input.files?.[0];
-          if (file) {
-            onImport(file);
-          }
-          // let the same file be picked again straight after
-          input.value = '';
-        }}
+        onChange={pick(onImport)}
+      />
+      <input
+        ref={audioRef}
+        css={hiddenInputStyles}
+        type="file"
+        accept="audio/*"
+        aria-label="Import an audio file"
+        onChange={pick(onImportAudio)}
       />
       <EditorButton
         primary
         icon={<PlusIcon size={15} />}
         disabled={readOnly || busy}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => videoRef.current?.click()}
       >
         {busy
           ? `Uploading${progress === undefined ? '' : ` ${progress}%`}`
           : 'Import a video'}
+      </EditorButton>
+      <EditorButton
+        icon={<AudioIcon size={15} />}
+        disabled={readOnly || busy}
+        onClick={() => audioRef.current?.click()}
+      >
+        Import audio
       </EditorButton>
 
       <h2 css={headingStyles}>Chapters</h2>
@@ -154,17 +177,23 @@ const AssetPanel: FC<Props> = ({
             <li key={asset.assetId} css={itemStyles}>
               <span css={labelStyles}>{asset.label}</span>
               <span css={metaStyles}>
+                {asset.kind === 'audio' ? 'Audio · ' : ''}
                 {stateLabel[asset.state]}
                 {asset.durationMs
                   ? ` · ${formatDuration(asset.durationMs)}`
                   : ''}
               </span>
+              {asset.error ? (
+                <span css={errorStyles}>{asset.error}</span>
+              ) : null}
               <div css={rowStyles}>
                 <EditorButton
                   disabled={readOnly || asset.state === 'failed'}
                   onClick={() => onAdd(asset)}
                 >
-                  Add to timeline
+                  {asset.kind === 'audio'
+                    ? 'Add as voice over'
+                    : 'Add to timeline'}
                 </EditorButton>
                 <EditorButton
                   aria-label={`Remove ${asset.label}`}

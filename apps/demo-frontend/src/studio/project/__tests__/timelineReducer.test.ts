@@ -292,3 +292,50 @@ describe('banners', () => {
     ).toEqual([banner]);
   });
 });
+
+describe('voice over', () => {
+  const take = {
+    id: 'take-1',
+    assetId: 'audio-1',
+    startMs: 1000,
+    inMs: 0,
+    outMs: 4000,
+    volume: 1,
+  };
+
+  const withTake = () =>
+    timelineReducer(withClips(), { type: 'addNarration', narration: take });
+
+  it('adds a take to the voice over lane', () => {
+    expect(withTake().narration).toEqual([take]);
+  });
+
+  it('retimes a take without letting it change recording', () => {
+    const timeline = timelineReducer(withTake(), {
+      type: 'updateNarration',
+      narrationId: 'take-1',
+      change: { startMs: 2500, assetId: 'somewhere-else' } as never,
+    });
+
+    expect(timeline.narration[0]).toMatchObject({
+      startMs: 2500,
+      assetId: 'audio-1',
+    });
+  });
+
+  it('removes a take', () => {
+    expect(
+      timelineReducer(withTake(), {
+        type: 'removeNarration',
+        narrationId: 'take-1',
+      }).narration,
+    ).toEqual([]);
+  });
+
+  it('keeps a take when a clip goes, because it is program timed', () => {
+    expect(
+      timelineReducer(withTake(), { type: 'removeClip', clipId: 'clip-1' })
+        .narration,
+    ).toEqual([take]);
+  });
+});

@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
+import { redoHint, undoHint } from './shortcuts';
 import {
   DuplicateIcon,
   MinusIcon,
@@ -31,6 +32,12 @@ const hintStyles = css({
 });
 
 const groupStyles = css({ display: 'flex', alignItems: 'center', gap: 6 });
+
+// A title card is a clip of its own, so it can only go between clips; the rest
+// sit on their own lane and land exactly where the playhead is. Saying which is
+// which on the button itself is the only way to know before clicking.
+const atThePlayhead = 'Goes at the playhead';
+const afterTheClip = 'Goes in after the clip under the playhead';
 
 // Each of these is enabled by what it actually acts on: Split works on the clip
 // under the playhead whether or not anything is selected, Duplicate needs a
@@ -79,6 +86,8 @@ const ActionBar: FC<Props> = ({
   <div css={barStyles}>
     <EditorButton
       icon={<PlusIcon size={15} />}
+      title={afterTheClip}
+      aria-label={`Title card, ${afterTheClip.toLowerCase()}`}
       disabled={readOnly}
       onClick={onAddTitleCard}
     >
@@ -86,6 +95,8 @@ const ActionBar: FC<Props> = ({
     </EditorButton>
     <EditorButton
       icon={<PlusIcon size={15} />}
+      title={atThePlayhead}
+      aria-label={`Banner, ${atThePlayhead.toLowerCase()}`}
       disabled={readOnly}
       onClick={onAddBanner}
     >
@@ -93,6 +104,8 @@ const ActionBar: FC<Props> = ({
     </EditorButton>
     <EditorButton
       icon={<PlusIcon size={15} />}
+      title={atThePlayhead}
+      aria-label={`Zoom, ${atThePlayhead.toLowerCase()}`}
       disabled={readOnly || !canAddEffect}
       onClick={onAddZoom}
     >
@@ -100,6 +113,8 @@ const ActionBar: FC<Props> = ({
     </EditorButton>
     <EditorButton
       icon={<PlusIcon size={15} />}
+      title={atThePlayhead}
+      aria-label={`Mouse click, ${atThePlayhead.toLowerCase()}`}
       disabled={readOnly || !canAddEffect}
       onClick={onAddCursorClick}
     >
@@ -136,7 +151,8 @@ const ActionBar: FC<Props> = ({
 
     <span css={hintStyles}>
       Drag anything along its lane to move it, or drag either edge to change how
-      long it lasts. S splits, D duplicates, M mutes.
+      long it lasts. S splits, D duplicates, M mutes, {undoHint} undoes and{' '}
+      {redoHint} redoes.
     </span>
 
     <div css={groupStyles}>

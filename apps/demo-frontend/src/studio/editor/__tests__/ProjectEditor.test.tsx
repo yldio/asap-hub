@@ -223,6 +223,44 @@ describe('the side panels', () => {
   });
 });
 
+describe('where a new thing lands', () => {
+  // a title card is a clip, so it can only go between clips, while everything
+  // else drops exactly on the playhead; the buttons gave no hint which
+  it('says on the button that a title card goes in after a clip', () => {
+    renderEditor({ timeline: withClip() });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Title card, goes in after the clip under the playhead',
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it.each(['Banner', 'Zoom', 'Mouse click'])(
+    'says on the button that %s goes at the playhead',
+    (name) => {
+      renderEditor({ timeline: withClip() });
+
+      expect(
+        screen.getByRole('button', { name: `${name}, goes at the playhead` }),
+      ).toBeInTheDocument();
+    },
+  );
+});
+
+describe('the undo shortcuts', () => {
+  it('are named on the buttons that do the same thing', () => {
+    renderEditor({ timeline: withClip() });
+
+    expect(
+      screen.getByRole('button', { name: /^Undo \(.*Z\)$/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /^Redo \(.*Shift\+Z\)$/ }),
+    ).toBeInTheDocument();
+  });
+});
+
 describe('the action bar', () => {
   // Split acts on the clip under the playhead, so it was disabled while the S
   // key it duplicates went on working

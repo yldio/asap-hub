@@ -234,6 +234,28 @@ export const createApi = (getToken: GetToken) => ({
       { method: 'PUT', body: input },
     ),
 
+  // an unloading page waits for nothing, so the caller hands in a token it is
+  // already holding and the request goes out with keepalive, the same shape the
+  // lease release uses
+  saveTimelineOnUnload: (
+    id: string,
+    token: string,
+    input: { timeline: Timeline; timelineVersion: number; version: number },
+  ): void => {
+    void fetch(
+      `${API_BASE_URL}/api/projects/${encodeURIComponent(id)}/timeline`,
+      {
+        method: 'PUT',
+        keepalive: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      },
+    ).catch(() => undefined);
+  },
+
   listAssets: async (id: string): Promise<ProjectAsset[]> =>
     (
       await request<{ assets: ProjectAsset[] }>(

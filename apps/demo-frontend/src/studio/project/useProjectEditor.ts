@@ -2,6 +2,7 @@ import { Timeline } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useApi } from '../../api/ApiProvider';
 import { ApiError } from '../../api/client';
+import { useAuth } from '../../auth/AuthProvider';
 import { TimelineAction, timelineReducer } from './timelineReducer';
 import {
   canRedo,
@@ -149,6 +150,7 @@ export const useProjectEditor = ({
   onLeaseLost,
 }: Options): ProjectEditor => {
   const api = useApi();
+  const { getToken } = useAuth();
   const [state, send] = useReducer(editorReducer, undefined, () => ({
     history: initialHistory(timeline),
     settled: timeline,
@@ -290,12 +292,33 @@ export const useProjectEditor = ({
   flushRef.current = flush;
   dirtyRef.current = dirty && !readOnly;
 
+  // the unloading page will not wait on a token promise, so one is kept here
+  // ready to be spent synchronously
+  const tokenRef = useRef<string>();
+  const holdToken = useCallback(() => {
+    void getToken()
+      .then((token) => {
+        tokenRef.current = token;
+      })
+      .catch(() => undefined);
+  }, [getToken]);
+
+  useEffect(holdToken, [holdToken]);
+
   useEffect(() => {
     const onLeaving = (event: BeforeUnloadEvent) => {
       if (!dirtyRef.current) {
         return;
       }
-      flushRef.current();
+      const token = tokenRef.current;
+      if (token) {
+        api.saveTimelineOnUnload(id, token, {
+          timeline: stateRef.current.history.present,
+          ...versionsRef.current,
+        });
+      } else {
+        flushRef.current();
+      }
       event.preventDefault();
       // eslint-disable-next-line no-param-reassign
       event.returnValue = '';
@@ -308,7 +331,7 @@ export const useProjectEditor = ({
         flushRef.current();
       }
     };
-  }, []);
+  }, [api, id]);
 
   const dispatch = useCallback(
     (action: TimelineAction) => send({ type: 'edit', action }),

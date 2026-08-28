@@ -392,6 +392,43 @@ describe('createApi endpoints', () => {
     );
   });
 
+  it('saves a timeline on unload with keepalive and no token await', () => {
+    fetchMock.mockResolvedValueOnce({ ok: true, status: 200 });
+    getToken.mockClear();
+    const input = {
+      timeline: { clips: [] } as never,
+      timelineVersion: 4,
+      version: 3,
+    };
+    api.saveTimelineOnUnload('v1', 'unload-token', input);
+
+    // awaiting the token is an async boundary the unloading page never reaches
+    expect(getToken).not.toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${API_BASE_URL}/api/projects/v1/timeline`,
+      {
+        method: 'PUT',
+        keepalive: true,
+        headers: {
+          Authorization: 'Bearer unload-token',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      },
+    );
+  });
+
+  it('swallows failures when saving a timeline on unload', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('network'));
+    api.saveTimelineOnUnload('v1', 'unload-token', {
+      timeline: { clips: [] } as never,
+      timelineVersion: 4,
+      version: 3,
+    });
+    await Promise.resolve();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it('swallows failures when releasing a lease on unload', async () => {
     fetchMock.mockRejectedValueOnce(new Error('network'));
     api.releaseLeaseOnUnload('v1', 'unload-token');

@@ -311,6 +311,47 @@ describe('discarding on the way out', () => {
   });
 });
 
+describe('leaving the page', () => {
+  const unload = async () => {
+    await act(async () => {
+      window.dispatchEvent(new Event('beforeunload'));
+    });
+  };
+
+  // awaiting the token before the fetch is an async boundary the unloading page
+  // never comes back from, so the save has to be issued from a held token
+  it('sends the pending edit with a token it already holds', async () => {
+    const saveTimeline = jest.fn();
+    const saveTimelineOnUnload = jest.fn();
+    const { view } = renderEditor({ saveTimeline, saveTimelineOnUnload });
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await unload();
+
+    expect(saveTimelineOnUnload).toHaveBeenCalledWith(
+      'project-1',
+      'token',
+      expect.objectContaining({ timelineVersion: 4, version: 3 }),
+    );
+    expect(saveTimeline).not.toHaveBeenCalled();
+  });
+
+  it('sends nothing when there is nothing to save', async () => {
+    const saveTimelineOnUnload = jest.fn();
+    renderEditor({ saveTimeline: jest.fn(), saveTimelineOnUnload });
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    await unload();
+
+    expect(saveTimelineOnUnload).not.toHaveBeenCalled();
+  });
+});
+
 describe('a drag', () => {
   // a pointer drag fires on every animation frame, so without a gesture each
   // sample became its own undo step and the 100 entry history was evicted by a

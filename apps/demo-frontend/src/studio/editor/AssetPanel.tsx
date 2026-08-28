@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { limits } from '@asap-hub/demo-timeline';
 import { FC, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
+import { useCaptureHolder } from '../recording/captureLock';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { scrollingStyles } from './fields';
@@ -192,6 +193,9 @@ const AssetPanel: FC<Props> = ({
 }) => {
   const videoRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLInputElement>(null);
+  // picking a file mid take steals the screen being shared, and the upload
+  // competes with the recording for the same connection
+  const recording = useCaptureHolder();
 
   const pick =
     (handle: (file: File) => void) => (event: { target: HTMLInputElement }) => {
@@ -232,7 +236,8 @@ const AssetPanel: FC<Props> = ({
       <EditorButton
         primary
         icon={<PlusIcon size={15} />}
-        disabled={readOnly || busy}
+        disabled={readOnly || busy || Boolean(recording)}
+        title={recording ? `${recording} is running` : undefined}
         onClick={() => videoRef.current?.click()}
       >
         {busy
@@ -241,7 +246,8 @@ const AssetPanel: FC<Props> = ({
       </EditorButton>
       <EditorButton
         icon={<AudioIcon size={15} />}
-        disabled={readOnly || busy}
+        disabled={readOnly || busy || Boolean(recording)}
+        title={recording ? `${recording} is running` : undefined}
         onClick={() => audioRef.current?.click()}
       >
         Import audio

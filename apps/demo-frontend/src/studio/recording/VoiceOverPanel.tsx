@@ -5,6 +5,7 @@ import EditorButton from '../editor/EditorButton';
 import { editorTheme } from '../editor/editorTheme';
 import { formatDuration } from '../editor/geometry';
 import { MicrophoneIcon } from '../editor/icons';
+import { useCaptureHolder, useHoldCapture, voiceCapture } from './captureLock';
 import { VoiceRecorderStatus } from './useVoiceRecorder';
 
 const rowStyles = css({
@@ -55,8 +56,12 @@ const VoiceOverPanel: FC<Props> = ({
   unsupportedReason,
   onStart,
   onStop,
-}) =>
-  unsupportedReason ? (
+}) => {
+  useHoldCapture(voiceCapture, status === 'recording' || saving);
+  const holder = useCaptureHolder();
+  const busyElsewhere = holder !== undefined && holder !== voiceCapture;
+
+  return unsupportedReason ? (
     <p css={errorStyles}>{unsupportedReason}</p>
   ) : (
     <div css={rowStyles}>
@@ -73,7 +78,8 @@ const VoiceOverPanel: FC<Props> = ({
       ) : (
         <EditorButton
           icon={<MicrophoneIcon size={14} />}
-          disabled={readOnly || saving}
+          disabled={readOnly || saving || busyElsewhere}
+          title={busyElsewhere ? `${holder} is already running` : undefined}
           onClick={onStart}
         >
           {saving ? 'Saving…' : 'Record a voice over'}
@@ -82,5 +88,6 @@ const VoiceOverPanel: FC<Props> = ({
       {error ? <span css={errorStyles}>{error}</span> : null}
     </div>
   );
+};
 
 export default VoiceOverPanel;

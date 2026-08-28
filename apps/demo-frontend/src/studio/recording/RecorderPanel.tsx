@@ -5,6 +5,7 @@ import EditorButton from '../editor/EditorButton';
 import { editorTheme } from '../editor/editorTheme';
 import { formatDuration } from '../editor/geometry';
 import { PauseIcon, PlayIcon, RecordIcon } from '../editor/icons';
+import { screenCapture, useCaptureHolder, useHoldCapture } from './captureLock';
 import { RecorderStatus } from './useScreenRecorder';
 
 const rowStyles = css({
@@ -73,11 +74,14 @@ const RecorderPanel: FC<Props> = ({
   onResume,
   onStop,
 }) => {
+  const idle = status === 'idle';
+  useHoldCapture(screenCapture, !idle);
+  const holder = useCaptureHolder();
+  const busyElsewhere = holder !== undefined && holder !== screenCapture;
+
   if (unsupportedReason) {
     return <p css={errorStyles}>{unsupportedReason}</p>;
   }
-
-  const idle = status === 'idle';
 
   return (
     <div css={rowStyles}>
@@ -86,7 +90,8 @@ const RecorderPanel: FC<Props> = ({
           <EditorButton
             danger
             icon={<RecordIcon size={14} />}
-            disabled={readOnly}
+            disabled={readOnly || busyElsewhere}
+            title={busyElsewhere ? `${holder} is already running` : undefined}
             onClick={onStart}
           >
             Record screen
@@ -95,7 +100,7 @@ const RecorderPanel: FC<Props> = ({
             <input
               type="checkbox"
               checked={withMicrophone}
-              disabled={readOnly}
+              disabled={readOnly || busyElsewhere}
               onChange={(event) => onMicrophoneChange(event.target.checked)}
             />
             Microphone

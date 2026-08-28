@@ -20,6 +20,7 @@ import {
 } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
+import { useCaptureHolder } from '../recording/captureLock';
 import { CaptureApply, captureTarget } from '../recording/cursorPlacement';
 import {
   ProjectEditor as Editor,
@@ -105,6 +106,27 @@ const stageAreaStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+});
+
+// A take used to show only as a line inside the media panel, which scrolls, so
+// scrolling past it left nothing in the studio saying anything was recording.
+const recordingStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  margin: 0,
+  padding: '6px 14px',
+  fontSize: 13,
+  fontWeight: 600,
+  backgroundColor: editorTheme.record,
+  color: editorTheme.onRecord,
+});
+
+const recordingDotStyles = css({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: 'currentColor',
 });
 
 const saveLabels: Record<SaveState, string> = {
@@ -590,6 +612,8 @@ const ProjectEditor: FC<Props> = ({
     Boolean(current) &&
     !chapters.some((chapter) => chapter.startMs === Math.round(playheadMs));
 
+  const recording = useCaptureHolder();
+
   const recorderPanels = useMemo(
     () => recorder?.(addAsset, applyCursorCapture),
     [addAsset, applyCursorCapture, recorder],
@@ -610,6 +634,12 @@ const ProjectEditor: FC<Props> = ({
   return (
     <GestureProvider value={gesture}>
       <div css={shellStyles} ref={zoom.shellRef}>
+        {recording ? (
+          <p css={recordingStyles} role="status">
+            <span css={recordingDotStyles} />
+            {`${recording} is running.`}
+          </p>
+        ) : null}
         <TransportBar
           dirty={editor.dirty}
           saving={editor.saveState === 'saving'}

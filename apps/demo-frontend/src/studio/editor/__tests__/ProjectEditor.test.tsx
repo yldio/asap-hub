@@ -1,8 +1,9 @@
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ProjectAsset } from '../../../api/types';
+import { screenCapture, useHoldCapture } from '../../recording/captureLock';
 import { TimelineAction, timelineReducer } from '../../project/timelineReducer';
 import { ProjectEditor as Editor } from '../../project/useProjectEditor';
 import ProjectEditor from '../ProjectEditor';
@@ -36,10 +37,12 @@ const renderEditor = ({
   timeline = createEmptyTimeline(),
   assets = [asset()],
   readOnly = false,
+  recorder,
 }: {
   timeline?: Timeline;
   assets?: ProjectAsset[];
   readOnly?: boolean;
+  recorder?: () => ReactNode;
 } = {}) => {
   const calls: Call[] = [];
   const editor: Editor = {
@@ -70,6 +73,7 @@ const renderEditor = ({
       onRenameAsset={jest.fn()}
       onDeleteAsset={jest.fn()}
       uploading={false}
+      recorder={recorder}
     />,
   );
 
@@ -220,6 +224,47 @@ describe('the side panels', () => {
     expect(inspector).toHaveTextContent('Volume');
     expect(inspector).toHaveTextContent('Move earlier');
     expect(inspector).toHaveTextContent('Remove clip');
+  });
+});
+
+describe('while something is recording', () => {
+  const Live1: FC = () => {
+    useHoldCapture(screenCapture, true);
+    return <span>recorder</span>;
+  };
+
+  // the panel gives the lock up as it unmounts, so cleanup needs nothing here
+
+  // it used to show as one line inside the media panel, which scrolls, so
+  // scrolling past it left nothing in the studio saying a take was running
+  it('the studio says so outside the panel that scrolls', () => {
+    act(() => {
+      renderEditor({ recorder: () => <Live1 /> });
+    });
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'A screen recording is running.',
+    );
+  });
+
+  it('importing is held back until the take is over', () => {
+    act(() => {
+      renderEditor({ recorder: () => <Live1 /> });
+    });
+
+    expect(
+      screen.getByRole('button', { name: 'Import a video' }),
+    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Import audio' })).toBeDisabled();
+  });
+
+  it('says nothing at all when nothing is recording', () => {
+    renderEditor();
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Import a video' }),
+    ).toBeEnabled();
   });
 });
 

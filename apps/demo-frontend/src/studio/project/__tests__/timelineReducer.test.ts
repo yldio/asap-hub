@@ -468,14 +468,11 @@ describe('a playhead that is not on a whole millisecond', () => {
       clipId: 'clip-3',
     });
 
-    next.clips.forEach((clip) => {
-      if (clip.kind === 'source') {
-        expect(Number.isInteger(clip.inMs)).toBe(true);
-        expect(Number.isInteger(clip.outMs)).toBe(true);
-      } else {
-        expect(Number.isInteger(clip.durationMs)).toBe(true);
-      }
-    });
+    const times = next.clips.flatMap((clip) =>
+      clip.kind === 'source' ? [clip.inMs, clip.outMs] : [clip.durationMs ?? 0],
+    );
+
+    expect(times.filter((ms) => !Number.isInteger(ms))).toEqual([]);
   });
 
   it('keeps the document valid for the server', () => {

@@ -384,11 +384,10 @@ describe('splitting at a fractional time', () => {
     const split = splitAt(clips, 5123.400000000001, 'c2');
 
     expect(split).toHaveLength(2);
-    split.forEach((clip) => {
-      if (clip.kind === 'source') {
-        expect(Number.isInteger(clip.inMs)).toBe(true);
-        expect(Number.isInteger(clip.outMs)).toBe(true);
-      }
-    });
+    const times = split.flatMap((clip) =>
+      clip.kind === 'source' ? [clip.inMs, clip.outMs] : [],
+    );
+
+    expect(times.filter((ms) => !Number.isInteger(ms))).toEqual([]);
   });
 });

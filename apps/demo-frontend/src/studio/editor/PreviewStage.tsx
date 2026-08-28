@@ -137,6 +137,8 @@ type Props = {
   readonly banners: Banner[];
   readonly zooms: Zoom[];
   readonly cursorEffects: CursorEffect[];
+  // the layer's own nudge, applied here exactly as the render applies it
+  readonly cursorOffsetMs?: number;
   readonly playheadMs: number;
   readonly playing: boolean;
   readonly volume: number;
@@ -160,6 +162,7 @@ const PreviewStage: FC<Props> = ({
   banners,
   zooms,
   cursorEffects,
+  cursorOffsetMs,
   playheadMs,
   playing,
   volume,
@@ -342,7 +345,11 @@ const PreviewStage: FC<Props> = ({
             : 'This clip has no playable source yet.'}
         </p>
       )}
-      <CursorLayer effects={cursorEffects} tMs={localMs} />
+      <CursorLayer
+        effects={cursorEffects}
+        tMs={localMs}
+        offsetMs={cursorOffsetMs}
+      />
       <BannerLayer banners={banners} tMs={playheadMs} />
 
       {pin ? (

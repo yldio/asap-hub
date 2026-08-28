@@ -34,21 +34,29 @@ const spotlightStyles = css({
 export const rippleMs = 600;
 export const spotlightMs = 1200;
 
+// the layer's nudge is what lines a capture up with the footage, and the render
+// applies it when it places every effect, so the preview has to as well
 const visible = (
   effect: CursorEffect,
   tMs: number,
   windowMs: number,
-): boolean => tMs >= effect.tMs && tMs <= effect.tMs + windowMs;
+  offsetMs: number,
+): boolean => {
+  const atMs = effect.tMs + offsetMs;
+  return tMs >= atMs && tMs <= atMs + windowMs;
+};
 
 type Props = {
   readonly effects: CursorEffect[];
   readonly tMs: number;
+  readonly offsetMs?: number;
 };
 
-const CursorLayer: FC<Props> = ({ effects, tMs }) => {
+const CursorLayer: FC<Props> = ({ effects, tMs, offsetMs = 0 }) => {
   const spotlight = effects.find(
     (effect) =>
-      effect.type === 'spotlight' && visible(effect, tMs, spotlightMs),
+      effect.type === 'spotlight' &&
+      visible(effect, tMs, spotlightMs, offsetMs),
   );
 
   return (
@@ -69,7 +77,8 @@ const CursorLayer: FC<Props> = ({ effects, tMs }) => {
       {effects
         .filter(
           (effect) =>
-            effect.type === 'ripple' && visible(effect, tMs, rippleMs),
+            effect.type === 'ripple' &&
+            visible(effect, tMs, rippleMs, offsetMs),
         )
         .map((effect) => (
           <span

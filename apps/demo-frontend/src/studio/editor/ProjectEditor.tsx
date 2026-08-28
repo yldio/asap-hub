@@ -193,9 +193,10 @@ const ProjectEditor: FC<Props> = ({
   );
   const selectedSource =
     selected.clip?.clip.kind === 'source' ? selected.clip.clip : undefined;
-  const cursorEffects =
-    timeline.cursor.find((layer) => layer.clipId === current?.clip.id)
-      ?.effects ?? noCursorEffects;
+  const cursorLayer = timeline.cursor.find(
+    (layer) => layer.clipId === current?.clip.id,
+  );
+  const cursorEffects = cursorLayer?.effects ?? noCursorEffects;
 
   const probedDurations = useAssetDurations(assets, assetUrl);
 
@@ -630,6 +631,7 @@ const ProjectEditor: FC<Props> = ({
                 banners={timeline.banners}
                 zooms={timeline.zooms}
                 cursorEffects={cursorEffects}
+                cursorOffsetMs={cursorLayer?.offsetMs}
                 playheadMs={playheadMs}
                 playing={playing}
                 volume={volume}

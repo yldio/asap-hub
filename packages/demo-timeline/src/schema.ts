@@ -48,10 +48,20 @@ export const sourceClipSchema = z.object({
 // how long the text takes to appear and to leave; absent means the default
 const fadeSchema = z.number().int().min(0).max(limits.fadeMs).optional();
 
+// A card with no length at all becomes `-t 0.000` in the render and ffmpeg
+// writes an empty file, so the export fails after the whole job has been paid
+// for. minClipMs is the floor every edit path already clamps to, so no saved
+// card can be under it.
+const clipDurationSchema = z
+  .number()
+  .int()
+  .min(limits.minClipMs)
+  .max(limits.maxTimelineMs);
+
 export const titleClipSchema = z.object({
   kind: z.literal('title'),
   id: idSchema,
-  durationMs: msSchema,
+  durationMs: clipDurationSchema,
   preset: z.enum(titlePresets),
   text: textSchema,
   subtitle: textSchema.optional(),

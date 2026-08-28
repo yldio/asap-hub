@@ -44,6 +44,18 @@ describe('addClip', () => {
     ]);
   });
 
+  it('never makes a clip too short for the render, whatever the ingest reports', () => {
+    const timeline = timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 0,
+      clipId: 'clip-1',
+    });
+
+    expect(timeline.clips[0]).toMatchObject({ inMs: 0, outMs: 100 });
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
   it('inserts at a given index', () => {
     const timeline = timelineReducer(withClips(), {
       type: 'addClip',
@@ -220,6 +232,25 @@ describe('title cards', () => {
       text: 'Attendance',
       durationMs: 3000,
     });
+  });
+
+  it('never lets a card be shortened out of existence', () => {
+    const withTitle = timelineReducer(withClips(), {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 0,
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+
+    const timeline = timelineReducer(withTitle, {
+      type: 'updateTitleCard',
+      clipId: 'title-1',
+      durationMs: 0,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({ durationMs: 100 });
+    expect(() => parseTimeline(timeline)).not.toThrow();
   });
 
   it('edits its text and length', () => {

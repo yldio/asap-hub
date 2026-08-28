@@ -4,7 +4,7 @@ import {
   serialiseTimeline,
   TimelineFormatError,
 } from '../document';
-import { Timeline } from '../schema';
+import { limits, Timeline } from '../schema';
 
 const parseFailure = (value: unknown): TimelineFormatError => {
   try {
@@ -80,6 +80,40 @@ describe('parseTimeline', () => {
         clips: [{ ...clip, inMs: 5000, outMs: 5000 }],
       }),
     ).toThrow(TimelineFormatError);
+  });
+
+  it('rejects a title card with no length, which renders as an empty file', () => {
+    expect(() =>
+      parseTimeline({
+        ...withClip(),
+        clips: [
+          {
+            kind: 'title',
+            id: 'title-1',
+            durationMs: 0,
+            preset: 'centered',
+            text: 'Attendance',
+          },
+        ],
+      }),
+    ).toThrow(TimelineFormatError);
+  });
+
+  it('accepts a title card as short as the shortest clip the editor can make', () => {
+    expect(() =>
+      parseTimeline({
+        ...withClip(),
+        clips: [
+          {
+            kind: 'title',
+            id: 'title-1',
+            durationMs: limits.minClipMs,
+            preset: 'centered',
+            text: 'Attendance',
+          },
+        ],
+      }),
+    ).not.toThrow();
   });
 
   it('rejects a voice over take that plays up to before it starts', () => {

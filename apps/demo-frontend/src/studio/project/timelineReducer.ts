@@ -4,6 +4,7 @@ import {
   Clip,
   CursorEffect,
   CursorLayer,
+  limits,
   NarrationClip,
   insertClipAt,
   moveClip,
@@ -135,6 +136,11 @@ const withCursorLayer = (
   );
 };
 
+// A clip the render would be given no time to draw fails the whole export, and
+// an asset the ingest reported as empty used to make one nothing could save
+const atLeastMinimum = (durationMs: number): number =>
+  Math.max(limits.minClipMs, Math.round(durationMs));
+
 // The same guard trimClip applies to a source clip: a take whose in point has
 // been pushed past its out point holds no audio, and the document it would make
 // is one the server rejects outright, so the change is refused instead.
@@ -170,7 +176,7 @@ export const timelineReducer = (
         id: action.clipId,
         assetId: action.assetId,
         inMs: 0,
-        outMs: action.durationMs,
+        outMs: atLeastMinimum(action.durationMs),
         volume: 1,
       };
       return withClips(
@@ -257,7 +263,7 @@ export const timelineReducer = (
           {
             kind: 'title',
             id: action.clipId,
-            durationMs: action.durationMs,
+            durationMs: atLeastMinimum(action.durationMs),
             preset: 'centered',
             text: action.text,
           },
@@ -274,7 +280,10 @@ export const timelineReducer = (
                 ...clip,
                 text: action.text ?? clip.text,
                 subtitle: action.subtitle ?? clip.subtitle,
-                durationMs: action.durationMs ?? clip.durationMs,
+                durationMs:
+                  action.durationMs === undefined
+                    ? clip.durationMs
+                    : atLeastMinimum(action.durationMs),
                 fadeInMs: action.fadeInMs ?? clip.fadeInMs,
                 fadeOutMs: action.fadeOutMs ?? clip.fadeOutMs,
               }

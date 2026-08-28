@@ -4,6 +4,7 @@ import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { RedoIcon, SaveIcon, UndoIcon } from './icons';
+import { redoHint, undoHint } from './shortcuts';
 
 const barStyles = css({
   display: 'flex',
@@ -95,13 +96,15 @@ const TransportBar: FC<Props> = ({
       </label>
     </span>
     <EditorButton
-      aria-label="Undo"
+      aria-label={`Undo (${undoHint})`}
+      title={`Undo (${undoHint})`}
       icon={<UndoIcon size={15} />}
       disabled={!canUndo}
       onClick={onUndo}
     />
     <EditorButton
-      aria-label="Redo"
+      aria-label={`Redo (${redoHint})`}
+      title={`Redo (${redoHint})`}
       icon={<RedoIcon size={15} />}
       disabled={!canRedo}
       onClick={onRedo}

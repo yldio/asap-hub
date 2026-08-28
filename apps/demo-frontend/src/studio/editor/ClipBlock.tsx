@@ -141,7 +141,7 @@ const ClipBlock: FC<Props> = ({
     <div
       role="button"
       tabIndex={0}
-      aria-label={`${label}, ${span}`}
+      aria-label={`${label}, ${span}${muted ? ', muted' : ''}`}
       title={trim}
       aria-pressed={selected}
       css={[
@@ -165,7 +165,8 @@ const ClipBlock: FC<Props> = ({
       }}
     >
       <span css={labelStyles}>{label}</span>
-      <span css={rangeStyles}>{span}</span>
+      {/* a 14px crossed speaker was the only sign a clip had been silenced */}
+      <span css={rangeStyles}>{muted ? `${span} · muted` : span}</span>
 
       {source ? (
         <button

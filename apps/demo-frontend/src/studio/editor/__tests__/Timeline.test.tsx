@@ -406,6 +406,19 @@ describe('a clip block', () => {
     );
   });
 
+  // a 14px crossed speaker was the only sign a clip had been silenced
+  it('says in words that a clip has been muted', () => {
+    renderTimeline({
+      placements: layoutClips([
+        { ...clips[0], volume: 0 } as (typeof clips)[number],
+      ]),
+    });
+
+    expect(
+      screen.getByRole('button', { name: /^A, .*muted$/ }),
+    ).toHaveTextContent('muted');
+  });
+
   it('still says which part of the source it uses', () => {
     renderTimeline({
       placements: layoutClips([

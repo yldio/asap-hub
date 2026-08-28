@@ -36,6 +36,8 @@ const snippetStyles = css({
   resize: 'vertical',
 });
 
+const tabsStyles = css({ display: 'flex', gap: 4, flexWrap: 'wrap' });
+
 const liveStyles = css({
   fontSize: 12,
   color: editorTheme.audio,
@@ -44,8 +46,36 @@ const liveStyles = css({
 
 const waitingStyles = css({ fontSize: 12, color: editorTheme.muted });
 
-const scriptTag = (session: RecordingSession): string =>
-  `<script src="${session.snippetUrl}"></script>`;
+type Method = 'bookmarklet' | 'console' | 'script';
+
+const methods: { id: Method; label: string }[] = [
+  { id: 'bookmarklet', label: 'Bookmark' },
+  { id: 'console', label: 'Console' },
+  { id: 'script', label: 'Script tag' },
+];
+
+// Capturing clicks means running code in the page being demoed, but nothing
+// says that code has to live in its HTML: a bookmark or one line pasted into
+// the console loads the same file for one visit and leaves no trace.
+const loader = (session: RecordingSession): Record<Method, string> => ({
+  bookmarklet:
+    // eslint-disable-next-line no-script-url -- a bookmarklet address is literally a javascript: URL
+    `javascript:(function(){var s=document.createElement('script');` +
+    `s.src='${session.snippetUrl}';document.body.appendChild(s);})();`,
+  console:
+    `var s=document.createElement('script');` +
+    `s.src='${session.snippetUrl}';document.body.appendChild(s);`,
+  script: `<script src="${session.snippetUrl}"></script>`,
+});
+
+const instructions: Record<Method, string> = {
+  bookmarklet:
+    'Make a new bookmark and paste this as its address. On the site you are demoing, click the bookmark once and start recording. Nothing is added to the site itself.',
+  console:
+    'Open the developer console on the site you are demoing and paste this in. It lasts until the page is reloaded, and changes nothing on the site.',
+  script:
+    'For a site you control: paste this into the page. Each tab reports separately and they are merged in time order.',
+};
 
 type Props = {
   readonly session?: RecordingSession;
@@ -64,6 +94,7 @@ const CapturePanel: FC<Props> = ({
   onApply,
   applying,
 }) => {
+  const [method, setMethod] = useState<Method>('bookmarklet');
   const [copied, setCopied] = useState(false);
 
   if (!session) {
@@ -84,30 +115,43 @@ const CapturePanel: FC<Props> = ({
     );
   }
 
+  const text = loader(session)[method];
+
   return (
     <div css={panelStyles}>
-      <p css={hintStyles}>
-        Paste this into every page you are demoing, then record as usual. Each
-        tab reports separately and they are merged in time order. It only sends
-        pointer positions and clicks.
-      </p>
+      <div css={tabsStyles} role="group" aria-label="How to load the capture">
+        {methods.map(({ id, label }) => (
+          <EditorButton
+            key={id}
+            primary={id === method}
+            onClick={() => {
+              setMethod(id);
+              setCopied(false);
+            }}
+          >
+            {label}
+          </EditorButton>
+        ))}
+      </div>
+
+      <p css={hintStyles}>{instructions[method]}</p>
       <textarea
         css={snippetStyles}
         readOnly
         rows={3}
-        value={scriptTag(session)}
+        value={text}
         aria-label="Capture snippet"
         onFocus={(event) => event.target.select()}
       />
       <EditorButton
         onClick={() => {
           void navigator.clipboard
-            ?.writeText(scriptTag(session))
+            ?.writeText(text)
             .then(() => setCopied(true))
             .catch(() => setCopied(false));
         }}
       >
-        {copied ? 'Copied' : 'Copy the snippet'}
+        {copied ? 'Copied' : 'Copy'}
       </EditorButton>
 
       {status && status.eventCount > 0 ? (

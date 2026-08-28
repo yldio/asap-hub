@@ -74,12 +74,11 @@ export const usersRouter = (): Router => {
       return;
     }
 
+    // the invite goes first, and its failure fails the request: userMiddleware
+    // rebuilds a user from a surviving invite on the very next request, so a
+    // swallowed error here undoes the deletion moments later
+    await inviteEntity.delete({ email: existing.data.email }).go();
     await userEntity.delete({ sub }).go();
-    // the invite goes with the user so the address cannot be re-claimed
-    await inviteEntity
-      .delete({ email: existing.data.email })
-      .go()
-      .catch(() => undefined);
 
     res.status(204).end();
   });

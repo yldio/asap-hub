@@ -451,18 +451,25 @@ describe('DELETE /api/users/:sub', () => {
     expect(remove).not.toHaveBeenCalled();
   });
 
-  it('still returns 204 when the invite delete fails', async () => {
+  // userMiddleware rebuilds a user from a surviving invite on the very next
+  // request, so the invite has to be gone before the user row is
+  it('deletes the invite before the user', async () => {
     callerThen('admin', 'auth0|admin', {
       sub: 'auth0|member',
       email: 'bob@example.com',
     });
-    jest
-      .spyOn(userEntity, 'delete')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
-    jest.spyOn(inviteEntity, 'delete').mockReturnValue({
+    const order: string[] = [];
+    jest.spyOn(userEntity, 'delete').mockReturnValue({
       go: async () => {
-        throw new Error('ResourceNotFound');
+        order.push('user');
+        return { data: {} };
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    const removeInvite = jest.spyOn(inviteEntity, 'delete').mockReturnValue({
+      go: async () => {
+        order.push('invite');
+        return { data: {} };
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
@@ -472,6 +479,33 @@ describe('DELETE /api/users/:sub', () => {
       .set('Authorization', adminToken);
 
     expect(response.status).toBe(204);
+    expect(removeInvite).toHaveBeenCalledWith({ email: 'bob@example.com' });
+    expect(order).toEqual(['invite', 'user']);
+  });
+
+  it('fails the request and keeps the user when the invite cannot be deleted', async () => {
+    callerThen('admin', 'auth0|admin', {
+      sub: 'auth0|member',
+      email: 'bob@example.com',
+    });
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const removeUser = jest
+      .spyOn(userEntity, 'delete')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+    jest.spyOn(inviteEntity, 'delete').mockReturnValue({
+      go: async () => {
+        throw new Error('ThrottlingException');
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await api
+      .delete('/api/users/auth0%7Cmember')
+      .set('Authorization', adminToken);
+
+    expect(response.status).toBe(500);
+    expect(removeUser).not.toHaveBeenCalled();
   });
 
   it('refuses a creator', async () => {

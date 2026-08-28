@@ -127,6 +127,15 @@ STREAM_INFO="$(ffprobe -v error -select_streams v:0 \
   -of default=noprint_wrappers=1 "$INPUT_FILE" || true)"
 FORMAT_NAME="$(ffprobe -v error -show_entries format=format_name -of csv=p=0 "$INPUT_FILE" || true)"
 
+# the render mixes every clip into one uniform audio layout, so it has to know
+# which sources carry a track at all
+AUDIO_CODEC="$(ffprobe -v error -select_streams a:0 \
+  -show_entries stream=codec_name -of csv=p=0 "$INPUT_FILE" || true)"
+HAS_AUDIO=false
+if [[ -n "$AUDIO_CODEC" && "$AUDIO_CODEC" != "N/A" ]]; then
+  HAS_AUDIO=true
+fi
+
 CODEC_NAME="$(stream_value codec_name)"
 WIDTH="$(stream_value width)"
 HEIGHT="$(stream_value height)"
@@ -142,7 +151,7 @@ FPS="$(awk -v r="${FRAME_RATE:-0}" 'BEGIN {
 }')"
 
 DURATION_MS="$(probe_duration_ms "$INPUT_FILE")"
-log "probed codec=${CODEC_NAME:-none} format=${FORMAT_NAME:-unknown} ${WIDTH}x${HEIGHT} ${FPS}fps ${DURATION_MS}ms"
+log "probed codec=${CODEC_NAME:-none} format=${FORMAT_NAME:-unknown} ${WIDTH}x${HEIGHT} ${FPS}fps ${DURATION_MS}ms audio=${HAS_AUDIO}"
 
 # the editor seeks the proxy, so it is always a faststart mp4: MediaRecorder WebM
 # carries neither a duration nor cues, and even an mp4 may not be faststart
@@ -174,9 +183,9 @@ run_step "upload proxy.mp4" \
   aws_s3 cp "$PROXY_FILE" "s3://${BUCKET_NAME}/${PROXY_KEY}" \
   --content-type video/mp4
 
-UPDATE_SET='SET #state = :state, #proxyKey = :proxyKey, #durationMs = :durationMs, #updatedAt = :updatedAt'
-UPDATE_NAMES='"#state":"state","#proxyKey":"proxyKey","#durationMs":"durationMs","#updatedAt":"updatedAt","#error":"error"'
-UPDATE_VALUES="\":state\":{\"S\":\"ready\"},\":proxyKey\":{\"S\":\"${PROXY_KEY}\"},\":durationMs\":{\"N\":\"${DURATION_MS}\"},\":updatedAt\":{\"S\":\"$(now)\"}"
+UPDATE_SET='SET #state = :state, #proxyKey = :proxyKey, #durationMs = :durationMs, #hasAudio = :hasAudio, #updatedAt = :updatedAt'
+UPDATE_NAMES='"#state":"state","#proxyKey":"proxyKey","#durationMs":"durationMs","#hasAudio":"hasAudio","#updatedAt":"updatedAt","#error":"error"'
+UPDATE_VALUES="\":state\":{\"S\":\"ready\"},\":proxyKey\":{\"S\":\"${PROXY_KEY}\"},\":durationMs\":{\"N\":\"${DURATION_MS}\"},\":hasAudio\":{\"BOOL\":${HAS_AUDIO}},\":updatedAt\":{\"S\":\"$(now)\"}"
 
 if [[ "$WIDTH" -gt 0 && "$HEIGHT" -gt 0 ]]; then
   UPDATE_SET="${UPDATE_SET}, #width = :width, #height = :height"

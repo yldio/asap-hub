@@ -22,6 +22,13 @@ jest.mock('../src/storage', () => ({
 
 jest.mock('uuid', () => ({ v4: () => 'generated-asset-id' }));
 
+// the complete handler queues the ingest job; the runner is stubbed so no
+// container is ever started from a test
+const mockRun = jest.fn().mockResolvedValue({ jobId: 'job-1' });
+jest.mock('../src/jobs/runner', () => ({
+  getJobRunner: () => ({ run: mockRun, stop: jest.fn() }),
+}));
+
 jest.mock('../src/data/client', () => ({
   getDocumentClient: () => ({ send: jest.fn() }),
   setDocumentClient: jest.fn(),

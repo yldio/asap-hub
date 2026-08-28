@@ -161,6 +161,9 @@ export const assetEntity = new Entity(
       width: { type: 'number' },
       height: { type: 'number' },
       fps: { type: 'number' },
+      // the render needs a uniform audio layout across clips, so it has to know
+      // which sources actually carry a track
+      hasAudio: { type: 'boolean' },
       error: { type: 'string' },
       createdAt: { type: 'string', required: true },
       updatedAt: { type: 'string', required: true },

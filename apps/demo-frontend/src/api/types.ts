@@ -149,6 +149,7 @@ export type ProjectAsset = {
   width?: number;
   height?: number;
   fps?: number;
+  hasAudio?: boolean;
   error?: string;
   // server-issued playable path; the editor never builds media urls itself
   url?: string;

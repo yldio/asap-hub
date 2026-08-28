@@ -5,18 +5,23 @@ import {
   clipLocalMs,
   ClipPlacement,
   CursorEffect,
+  Point,
   sourceTimeAt,
   Zoom,
 } from '@asap-hub/demo-timeline';
-import { FC, MouseEvent as ReactMouseEvent, useEffect, useRef } from 'react';
+import {
+  FC,
+  PointerEvent as ReactPointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ProjectAsset } from '../../api/types';
 import { rem } from '../../ui/theme';
 import BannerLayer from './BannerLayer';
 import { editorTheme } from './editorTheme';
 import CursorLayer from './CursorLayer';
-import { zoomTransformAt } from './zoom';
-
-const pickingStyles = css({ cursor: 'crosshair' });
+import { panFocus, pointInBox, ZoomTransform, zoomTransformAt } from './zoom';
 
 // the size is measured and set by the editor, so the frame keeps its ratio
 // whichever way the window is constrained
@@ -29,7 +34,11 @@ const stageStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  touchAction: 'none',
 });
+
+const grabStyles = css({ cursor: 'grab', ':active': { cursor: 'grabbing' } });
+const pinStyles = css({ cursor: 'crosshair' });
 
 const videoStyles = css({
   width: '100%',
@@ -73,6 +82,47 @@ const subheadingStyles = css({
   color: '#d5d5de',
 });
 
+const hintStyles = css({
+  position: 'absolute',
+  left: rem(10),
+  bottom: rem(10),
+  padding: `${rem(4)} ${rem(10)}`,
+  borderRadius: rem(6),
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  color: '#ffffff',
+  fontSize: rem(12),
+  pointerEvents: 'none',
+});
+
+// the handle that says where a click effect fires, shown whenever one is
+// selected so it can be seen and moved without hunting for its 600ms window
+const markerStyles = css({
+  position: 'absolute',
+  width: rem(28),
+  height: rem(28),
+  marginLeft: rem(-14),
+  marginTop: rem(-14),
+  borderRadius: '50%',
+  border: '2px solid #ffffff',
+  backgroundColor: 'rgba(255, 255, 255, 0.25)',
+  boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.45)',
+  cursor: 'grab',
+  padding: 0,
+  touchAction: 'none',
+  ':active': { cursor: 'grabbing' },
+});
+
+export type StagePin = {
+  point: Point;
+  onChange: (point: Point) => void;
+};
+
+export type StageFocus = {
+  point: Point;
+  scale: number;
+  onChange: (point: Point) => void;
+};
+
 type Props = {
   readonly box: { width: number; height: number };
   readonly placement?: ClipPlacement;
@@ -81,9 +131,13 @@ type Props = {
   readonly cursorEffects: CursorEffect[];
   readonly playheadMs: number;
   readonly playing: boolean;
+  readonly volume: number;
   readonly assets: Record<string, ProjectAsset>;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
-  readonly onPickPoint?: (point: { x: number; y: number }) => void;
+  // set while a zoom is selected: the stage holds that zoom so it can be aimed
+  readonly focus?: StageFocus;
+  // set while a click effect is selected: its marker can be dropped anywhere
+  readonly pin?: StagePin;
 };
 
 // one video element, re-pointed as the playhead crosses a clip boundary. The
@@ -96,17 +150,24 @@ const PreviewStage: FC<Props> = ({
   cursorEffects,
   playheadMs,
   playing,
+  volume,
   assets,
   assetUrl,
-  onPickPoint,
+  focus,
+  pin,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const panRef = useRef<{ x: number; y: number; from: Point }>();
+  const [panning, setPanning] = useState(false);
   const clip = placement?.clip;
   const asset = clip?.kind === 'source' ? assets[clip.assetId] : undefined;
   const url = asset ? assetUrl(asset) : undefined;
 
   const localMs = placement ? clipLocalMs(placement, playheadMs) : 0;
-  const zoom = zoomTransformAt(zooms, clip?.id ?? '', localMs);
+  // aiming a zoom means seeing it, whatever the playhead is over
+  const zoom: ZoomTransform = focus
+    ? { scale: focus.scale, originX: focus.point.x, originY: focus.point.y }
+    : zoomTransformAt(zooms, clip?.id ?? '', localMs);
   // the render pans by moving the crop window; the preview does the same by
   // scaling around the focus point, so the two frame the same thing
   const zoomStyle = {
@@ -144,6 +205,13 @@ const PreviewStage: FC<Props> = ({
     }
   }, [playing, url]);
 
+  useEffect(() => {
+    const element = videoRef.current;
+    if (element) {
+      element.volume = Math.min(1, Math.max(0, volume));
+    }
+  }, [volume]);
+
   const size = { width: box.width, height: box.height };
 
   if (!clip) {
@@ -166,31 +234,62 @@ const PreviewStage: FC<Props> = ({
     );
   }
 
-  const pick = onPickPoint
-    ? (event: ReactMouseEvent<HTMLDivElement>) => {
-        const bounds = event.currentTarget.getBoundingClientRect();
-        if (bounds.width === 0 || bounds.height === 0) return;
-        onPickPoint({
-          x: Math.min(
-            1,
-            Math.max(0, (event.clientX - bounds.left) / bounds.width),
-          ),
-          y: Math.min(
-            1,
-            Math.max(0, (event.clientY - bounds.top) / bounds.height),
-          ),
-        });
-      }
-    : undefined;
+  const startPan = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!focus) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    panRef.current = { x: event.clientX, y: event.clientY, from: focus.point };
+    setPanning(true);
+  };
+
+  const movePan = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const pan = panRef.current;
+    if (!pan || !focus) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    focus.onChange(
+      panFocus(
+        pan.from,
+        { dx: event.clientX - pan.x, dy: event.clientY - pan.y },
+        bounds,
+        focus.scale,
+      ),
+    );
+  };
+
+  const endPan = () => {
+    panRef.current = undefined;
+    setPanning(false);
+  };
+
+  const dropPin = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!pin) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    pin.onChange(pointInBox(event.clientX, event.clientY, bounds));
+  };
 
   return (
     <div
-      css={[stageStyles, pick && pickingStyles]}
+      css={[stageStyles, focus && grabStyles, pin && pinStyles]}
       style={size}
-      onClick={pick}
-      role={pick ? 'button' : undefined}
-      tabIndex={pick ? 0 : undefined}
-      aria-label={pick ? 'Click to place the selected effect' : undefined}
+      onPointerDown={(event) => {
+        if (focus) {
+          startPan(event);
+        } else if (pin) {
+          event.currentTarget.setPointerCapture(event.pointerId);
+          dropPin(event);
+        }
+      }}
+      onPointerMove={(event) => {
+        if (panRef.current) {
+          movePan(event);
+        } else if (
+          pin &&
+          event.currentTarget.hasPointerCapture(event.pointerId)
+        ) {
+          dropPin(event);
+        }
+      }}
+      onPointerUp={endPan}
+      onPointerCancel={endPan}
     >
       {url ? (
         <video
@@ -211,6 +310,24 @@ const PreviewStage: FC<Props> = ({
       )}
       <CursorLayer effects={cursorEffects} tMs={localMs} />
       <BannerLayer banners={banners} tMs={playheadMs} />
+
+      {pin ? (
+        <span
+          css={markerStyles}
+          style={{
+            left: `${pin.point.x * 100}%`,
+            top: `${pin.point.y * 100}%`,
+          }}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      {focus && !panning ? (
+        <span css={hintStyles}>Drag the picture to aim the zoom</span>
+      ) : null}
+      {pin ? (
+        <span css={hintStyles}>Click or drag to place the click</span>
+      ) : null}
     </div>
   );
 };

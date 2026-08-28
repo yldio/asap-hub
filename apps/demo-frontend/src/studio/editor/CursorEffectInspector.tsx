@@ -54,7 +54,11 @@ const CursorEffectInspector: FC<Props> = ({
     <p css={mutedStyles}>
       {`Placed ${Math.round(effect.point.x * 100)}% across, ${Math.round(
         effect.point.y * 100,
-      )}% down. Click the preview to move it.`}
+      )}% down. Drag its ring on the preview to move it.`}
+    </p>
+    <p css={mutedStyles}>
+      It plays for about half a second as the playhead reaches it, and its dot
+      on the zoom and cursor lane is what you click to find it again.
     </p>
     <p css={mutedStyles}>{originLabels[effect.origin]}</p>
 

@@ -74,7 +74,12 @@ const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
     <p css={mutedStyles}>
       {`Focus ${Math.round(zoom.focus.x * 100)}% across, ${Math.round(
         zoom.focus.y * 100,
-      )}% down. Click the preview to move it.`}
+      )}% down. Drag the picture to aim it.`}
+    </p>
+    <p css={mutedStyles}>
+      The preview holds this zoom while it is selected, so what you see is what
+      the export frames. Drag either edge of its block to change how long it
+      lasts.
     </p>
 
     <EditorButton

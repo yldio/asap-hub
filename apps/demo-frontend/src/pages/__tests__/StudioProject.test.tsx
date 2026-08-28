@@ -89,7 +89,9 @@ beforeAll(() => {
 it('shows the editor once the project and its timeline load', async () => {
   renderStudio();
 
-  expect(await screen.findByText('Sprint 16 demo')).toBeVisible();
+  expect(await screen.findByLabelText('Demo title')).toHaveValue(
+    'Sprint 16 demo',
+  );
   expect(
     screen.getByRole('button', { name: 'Import a video' }),
   ).toBeInTheDocument();
@@ -183,14 +185,16 @@ describe('rendering', () => {
         .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
     });
 
-    expect(await screen.findByRole('button', { name: 'Render' })).toBeEnabled();
+    expect(
+      await screen.findByRole('button', { name: 'Export to a demo' }),
+    ).toBeEnabled();
   });
 
   it('cannot render an empty timeline', async () => {
     renderStudio();
 
     expect(
-      await screen.findByRole('button', { name: 'Render' }),
+      await screen.findByRole('button', { name: 'Export to a demo' }),
     ).toBeDisabled();
   });
 
@@ -206,7 +210,7 @@ describe('rendering', () => {
     });
 
     await userEvent.click(
-      await screen.findByRole('button', { name: 'Render' }),
+      await screen.findByRole('button', { name: 'Export to a demo' }),
     );
 
     expect(startRender).toHaveBeenCalledWith('project-1', 3);
@@ -248,7 +252,7 @@ describe('rendering', () => {
     });
 
     expect(
-      await screen.findByText(/Render failed: ffmpeg exited 1/),
+      await screen.findByText(/Export failed: ffmpeg exited 1/),
     ).toBeVisible();
   });
 
@@ -260,7 +264,7 @@ describe('rendering', () => {
     });
 
     expect(
-      await screen.findByRole('link', { name: 'Preview the render' }),
+      await screen.findByRole('link', { name: 'Preview the demo' }),
     ).toHaveAttribute('href', '/videos/project-1');
   });
 });

@@ -3,29 +3,37 @@ import { css } from '@emotion/react';
 import { timelineDurationMs } from '@asap-hub/demo-timeline';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useCallback, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import { ApiError } from '../api/client';
-import { useEditableVideo } from '../api/hooks';
+import {
+  useEditableVideo,
+  usePublishVideo,
+  useUnpublishVideo,
+  useUpdateVideo,
+} from '../api/hooks';
 import type { ProjectAsset, Video } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import ProjectEditor from '../studio/editor/ProjectEditor';
+import ProjectHeader from '../studio/editor/ProjectHeader';
 import { AssetUpload, useAssetUpload } from '../studio/editor/useAssetUpload';
 import RenderBar from '../studio/editor/RenderBar';
 import CapturePanel from '../studio/recording/CapturePanel';
 import RecorderPanel from '../studio/recording/RecorderPanel';
+import VoiceOverPanel from '../studio/recording/VoiceOverPanel';
 import { useCursorCapture } from '../studio/recording/useCursorCapture';
 import { screenRecordingSupport } from '../studio/recording/mediaCapabilities';
 import {
   TakeResult,
   useRecordingTake,
 } from '../studio/recording/useRecordingTake';
+import { useVoiceRecorder } from '../studio/recording/useVoiceRecorder';
 import { createId } from '../studio/project/ids';
 import { useProjectEditor } from '../studio/project/useProjectEditor';
 import useEditLease from '../studio/useEditLease';
 import { Spinner } from '../ui/components';
-import { ember, paper, pearl, rem, silver, steel } from '../ui/theme';
+import { ember, rem } from '../ui/theme';
 
 const layoutStyles = css({
   display: 'flex',
@@ -36,41 +44,11 @@ const layoutStyles = css({
   overflow: 'hidden',
 });
 
-const headerStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(12),
-  padding: `${rem(10)} ${rem(16)}`,
-  borderBottom: `1px solid ${silver.rgb}`,
-  backgroundColor: paper.rgb,
-  flexWrap: 'wrap',
-});
-
-const titleStyles = css({
-  margin: 0,
-  fontSize: rem(16),
-  fontWeight: 600,
-});
-
-const backStyles = css({
-  color: steel.rgb,
-  textDecoration: 'none',
-  fontSize: rem(14),
-  ':hover': { textDecoration: 'underline' },
-});
-
-const noticeStyles = css({
-  backgroundColor: pearl.rgb,
-  borderRadius: rem(6),
-  padding: `${rem(4)} ${rem(10)}`,
-  color: steel.rgb,
-  fontSize: rem(13),
-  margin: 0,
-});
-
 const errorStyles = css({ color: ember.rgb, margin: 0, fontSize: rem(13) });
 
 const centredStyles = css({ padding: rem(24) });
+
+const assetPollMs = 3000;
 
 // locally the assets are served straight from MinIO through the Vite proxy, and
 // in the deployed stack from the same CloudFront path behind a signed cookie
@@ -99,6 +77,14 @@ const StudioProject: FC = () => {
     queryKey: ['project-assets', id],
     queryFn: () => api.listAssets(id),
     enabled: Boolean(id),
+    // the ingest runs in a container and writes the probed duration back onto
+    // the asset, so the editor keeps asking until nothing is in flight
+    refetchInterval: (query) =>
+      query.state.data?.some(
+        (asset) => asset.state === 'uploading' || asset.state === 'preparing',
+      )
+        ? assetPollMs
+        : false,
   });
 
   const { lease, markLost } = useEditLease(id, Boolean(id));
@@ -119,6 +105,13 @@ const StudioProject: FC = () => {
   const onImport = useCallback(
     (file: File) => {
       void upload.importFile(file).then(() => refreshAssets());
+    },
+    [refreshAssets, upload],
+  );
+
+  const onImportAudio = useCallback(
+    (file: File) => {
+      void upload.importFile(file, 'audio').then(() => refreshAssets());
     },
     [refreshAssets, upload],
   );
@@ -167,6 +160,7 @@ const StudioProject: FC = () => {
       }
       markLost={markLost}
       onImport={onImport}
+      onImportAudio={onImportAudio}
       onDeleteAsset={onDeleteAsset}
       upload={upload}
       onAssetsChanged={refreshAssets}
@@ -186,6 +180,7 @@ type EditorProps = {
   readonly leaseHolder?: string;
   readonly markLost: (holderName?: string) => void;
   readonly onImport: (file: File) => void;
+  readonly onImportAudio: (file: File) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly upload: AssetUpload;
   readonly onAssetsChanged: () => void;
@@ -205,6 +200,7 @@ const Editor: FC<EditorProps> = ({
   leaseHolder,
   markLost,
   onImport,
+  onImportAudio,
   onDeleteAsset,
   upload,
   onAssetsChanged,
@@ -253,6 +249,43 @@ const Editor: FC<EditorProps> = ({
 
   const take = useRecordingTake(upload, onTake);
 
+  const voice = useVoiceRecorder();
+  const [savingVoice, setSavingVoice] = useState(false);
+
+  // the finished take becomes an asset first, then the editor drops it on the
+  // voice over lane at the playhead
+  const saveVoice = useCallback(
+    async (addAsset: (asset: ProjectAsset) => void) => {
+      const recorded = await voice.stop();
+      if (!recorded) {
+        return;
+      }
+      setSavingVoice(true);
+      try {
+        const asset = await upload.uploadBlob({
+          blob: recorded.blob,
+          label: `Voice over ${new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`,
+          extension: recorded.extension,
+          mimeType: recorded.mimeType,
+          kind: 'audio',
+        });
+        if (asset) {
+          onAssetsChanged();
+          addAsset({
+            ...asset,
+            durationMs: asset.durationMs ?? recorded.durationMs,
+          });
+        }
+      } finally {
+        setSavingVoice(false);
+      }
+    },
+    [onAssetsChanged, upload, voice],
+  );
+
   const capture = useCursorCapture(id);
 
   // the capture belongs to whichever clip is under the playhead, because that is
@@ -286,26 +319,81 @@ const Editor: FC<EditorProps> = ({
   }, [capture, editor]);
 
   const [renderError, setRenderError] = useState<string>();
+
+  // the export writes to the same row the autosave does, so it takes the
+  // version the editor holds and hands the one it gets back straight to it
+  const applyWrite = useCallback(
+    (fresh: Video) => {
+      onVideoChanged(fresh);
+      editor.rebase(fresh.version);
+    },
+    [editor, onVideoChanged],
+  );
+
   const startRender = useCallback(() => {
     setRenderError(undefined);
     api
-      .startRender(id, video.version)
-      .then(onVideoChanged)
+      .startRender(id, editor.version)
+      .then(applyWrite)
       .catch((cause: unknown) =>
         setRenderError(
           cause instanceof ApiError && cause.code === 'render_active'
-            ? 'A render is already running for this demo.'
-            : 'Could not start the render.',
+            ? 'An export is already running for this demo.'
+            : 'Could not start the export.',
         ),
       );
-  }, [api, id, onVideoChanged, video.version]);
+  }, [api, applyWrite, editor.version, id]);
 
   const cancelRender = useCallback(() => {
     api
-      .cancelRender(id, video.version)
-      .then(onVideoChanged)
-      .catch(() => setRenderError('Could not cancel the render.'));
-  }, [api, id, onVideoChanged, video.version]);
+      .cancelRender(id, editor.version)
+      .then(applyWrite)
+      .catch(() => setRenderError('Could not cancel the export.'));
+  }, [api, applyWrite, editor.version, id]);
+
+  const updateVideo = useUpdateVideo(id);
+  const publishVideo = usePublishVideo(id);
+  const unpublishVideo = useUnpublishVideo(id);
+  const [publishError, setPublishError] = useState<string>();
+
+  // these write to the same guarded row the timeline does, so they take the
+  // editor's version and hand the one that comes back straight back to it
+  const write = useCallback(
+    (run: (version: number) => Promise<Video>, failure: string): void => {
+      setPublishError(undefined);
+      run(editor.version)
+        .then((fresh) => editor.rebase(fresh.version))
+        .catch(() => setPublishError(failure));
+    },
+    [editor],
+  );
+
+  const rename = useCallback(
+    (title: string) =>
+      write(
+        (version) => updateVideo.mutateAsync({ title, version }),
+        'Could not rename this demo.',
+      ),
+    [updateVideo, write],
+  );
+
+  const publish = useCallback(
+    () =>
+      write(
+        (version) => publishVideo.mutateAsync(version),
+        'Could not publish this demo.',
+      ),
+    [publishVideo, write],
+  );
+
+  const unpublish = useCallback(
+    () =>
+      write(
+        (version) => unpublishVideo.mutateAsync(version),
+        'Could not unpublish this demo.',
+      ),
+    [unpublishVideo, write],
+  );
   const support = screenRecordingSupport(
     navigator.mediaDevices,
     typeof MediaRecorder === 'undefined' ? undefined : MediaRecorder,
@@ -313,34 +401,33 @@ const Editor: FC<EditorProps> = ({
 
   return (
     <div css={layoutStyles}>
-      <div css={headerStyles}>
-        <Link css={backStyles} to="/">
-          Demos
-        </Link>
-        <h1 css={titleStyles}>{video.title}</h1>
-        {readOnly ? (
-          <p css={noticeStyles}>
-            {leaseHolder
-              ? `${leaseHolder} is editing this demo, so it is read only for now.`
-              : 'This demo is read only until the editing lock is available.'}
-          </p>
-        ) : null}
-        {upload.error ? <p css={errorStyles}>{upload.error}</p> : null}
-        {renderError ? <p css={errorStyles}>{renderError}</p> : null}
+      <ProjectHeader
+        video={video}
+        readOnly={readOnly}
+        leaseHolder={leaseHolder}
+        notice={upload.error ?? renderError ?? publishError}
+        onRename={rename}
+        onPublish={publish}
+        onUnpublish={unpublish}
+      >
         <RenderBar
           videoId={id}
           render={video.render}
           status={video.status}
           hasOutput={video.processingState === 'ready'}
-          canRender={editor.timeline.clips.length > 0}
+          // an export started while a save is in flight would race it for the
+          // row version and lose, so it waits for the timeline to settle
+          canRender={
+            editor.timeline.clips.length > 0 && editor.saveState !== 'saving'
+          }
           readOnly={readOnly}
           onRender={startRender}
           onCancel={cancelRender}
         />
-      </div>
+      </ProjectHeader>
       <ProjectEditor
         editor={editor}
-        recorder={
+        recorder={(addAsset) => (
           <>
             <RecorderPanel
               status={take.status}
@@ -359,6 +446,19 @@ const Editor: FC<EditorProps> = ({
                 take.stop().catch(() => undefined);
               }}
             />
+            <VoiceOverPanel
+              status={voice.status}
+              elapsedMs={voice.elapsedMs}
+              error={voice.error}
+              saving={savingVoice}
+              readOnly={readOnly}
+              onStart={() => {
+                voice.start().catch(() => undefined);
+              }}
+              onStop={() => {
+                saveVoice(addAsset).catch(() => undefined);
+              }}
+            />
             <CapturePanel
               session={capture.session}
               status={capture.status}
@@ -368,11 +468,12 @@ const Editor: FC<EditorProps> = ({
               onApply={applyCapture}
             />
           </>
-        }
+        )}
         assets={assets}
         readOnly={readOnly}
         assetUrl={assetUrl}
         onImport={onImport}
+        onImportAudio={onImportAudio}
         onDeleteAsset={onDeleteAsset}
         uploading={upload.busy}
         uploadProgress={upload.progress}

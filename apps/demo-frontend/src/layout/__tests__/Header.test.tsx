@@ -1,7 +1,7 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { memberMe, renderApp } from '../../test-utils';
+import { adminMe, memberMe, renderApp } from '../../test-utils';
 import { themeStorageKey } from '../../ui/themeMode';
 import Header from '../Header';
 
@@ -18,18 +18,22 @@ it('cycles the theme through light, dark and system', async () => {
   renderApp(<Header />, { me: memberMe });
   await openMenu();
 
-  const toggle = screen.getByRole('button', { name: /change theme/i });
+  const toggle = screen.getByRole('menuitem', { name: /change theme/i });
   expect(toggle).toHaveTextContent('System');
 
   await userEvent.click(toggle);
   expect(window.localStorage.getItem(themeStorageKey)).toBe('light');
   expect(document.documentElement.dataset.theme).toBe('light');
 
-  await userEvent.click(screen.getByRole('button', { name: /change theme/i }));
+  await userEvent.click(
+    screen.getByRole('menuitem', { name: /change theme/i }),
+  );
   expect(window.localStorage.getItem(themeStorageKey)).toBe('dark');
   expect(document.documentElement.dataset.theme).toBe('dark');
 
-  await userEvent.click(screen.getByRole('button', { name: /change theme/i }));
+  await userEvent.click(
+    screen.getByRole('menuitem', { name: /change theme/i }),
+  );
   expect(window.localStorage.getItem(themeStorageKey)).toBe('system');
 });
 
@@ -42,10 +46,12 @@ it('leaves the theme attribute off in system mode', async () => {
 
   document.documentElement.dataset.theme = 'dark';
 
-  await userEvent.click(screen.getByRole('button', { name: /change theme/i }));
+  await userEvent.click(
+    screen.getByRole('menuitem', { name: /change theme/i }),
+  );
 
   expect(
-    screen.getByRole('button', { name: /change theme/i }),
+    screen.getByRole('menuitem', { name: /change theme/i }),
   ).toHaveTextContent('System');
   expect(document.documentElement.dataset.theme).toBeUndefined();
 });
@@ -56,6 +62,28 @@ it('starts from the persisted theme', async () => {
   await openMenu();
 
   expect(
-    screen.getByRole('button', { name: /change theme/i }),
+    screen.getByRole('menuitem', { name: /change theme/i }),
   ).toHaveTextContent('Dark');
+});
+
+it('offers the account menu as menu items rather than loose links', async () => {
+  renderApp(<Header />, { me: adminMe });
+  await userEvent.click(screen.getByRole('button', { name: adminMe.name }));
+
+  const menu = screen.getByRole('menu');
+  expect(
+    within(menu).getByRole('menuitem', { name: 'Upload a demo' }),
+  ).toBeVisible();
+  expect(within(menu).getByRole('menuitem', { name: 'Invites' })).toBeVisible();
+  expect(
+    within(menu).getByRole('menuitem', { name: 'Manage users' }),
+  ).toBeVisible();
+  expect(
+    within(menu).getByRole('menuitem', { name: /change theme/i }),
+  ).toBeVisible();
+  expect(
+    within(menu).getByRole('menuitem', { name: 'Sign out' }),
+  ).toBeVisible();
+  // nothing inside the menu is left as a plain link or button
+  expect(within(menu).queryByRole('link')).toBeNull();
 });

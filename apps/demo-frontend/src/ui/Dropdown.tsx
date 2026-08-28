@@ -140,7 +140,8 @@ const Dropdown = <T extends string>({
       {open && (
         <ul role="listbox" aria-label={label} css={panelStyles}>
           {options.map((option) => (
-            <li key={option.value}>
+            // a listbox takes options, so the li itself carries no role
+            <li key={option.value} role="none">
               <button
                 type="button"
                 role="option"

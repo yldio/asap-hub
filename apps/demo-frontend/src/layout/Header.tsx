@@ -131,6 +131,7 @@ const ThemeToggle: FC = () => {
   return (
     <button
       type="button"
+      role="menuitem"
       css={themeToggleStyles}
       aria-label={`Theme: ${themeModeLabels[mode]}. Change theme`}
       onClick={() => {
@@ -181,7 +182,7 @@ const Header: FC = () => {
           </Button>
           {open && (
             <div css={menuStyles} role="menu">
-              <div css={identityStyles}>
+              <div css={identityStyles} role="presentation">
                 <span css={nameStyles}>{me.name}</span>
                 <span css={emailStyles}>{me.email}</span>
               </div>
@@ -189,6 +190,7 @@ const Header: FC = () => {
                 <>
                   <Link
                     to="/studio/upload"
+                    role="menuitem"
                     css={menuLinkStyles}
                     onClick={() => setOpen(false)}
                   >
@@ -196,6 +198,7 @@ const Header: FC = () => {
                   </Link>
                   <Link
                     to="/invites"
+                    role="menuitem"
                     css={menuLinkStyles}
                     onClick={() => setOpen(false)}
                   >
@@ -206,6 +209,7 @@ const Header: FC = () => {
               {isAdmin && (
                 <Link
                   to="/users"
+                  role="menuitem"
                   css={menuLinkStyles}
                   onClick={() => setOpen(false)}
                 >
@@ -213,7 +217,7 @@ const Header: FC = () => {
                 </Link>
               )}
               <ThemeToggle />
-              <Button small onClick={logout}>
+              <Button small role="menuitem" onClick={logout}>
                 Sign out
               </Button>
             </div>

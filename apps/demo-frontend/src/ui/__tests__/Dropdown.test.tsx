@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Dropdown from '../Dropdown';
@@ -109,4 +109,24 @@ it('falls back to the label when the value matches no option', () => {
   expect(screen.getByRole('button', { name: 'Sort videos' })).toHaveTextContent(
     'Sort videos',
   );
+});
+
+it('lists options directly, without a list item wrapping each one', async () => {
+  render(
+    <Dropdown
+      label="Sort videos"
+      value="newest"
+      options={[
+        { value: 'newest', label: 'Newest first' },
+        { value: 'title', label: 'Title A-Z' },
+      ]}
+      onChange={jest.fn()}
+    />,
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
+
+  const listbox = screen.getByRole('listbox', { name: 'Sort videos' });
+  expect(within(listbox).queryAllByRole('listitem')).toHaveLength(0);
+  expect(within(listbox).getAllByRole('option')).toHaveLength(2);
 });

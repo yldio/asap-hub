@@ -13,6 +13,78 @@ dropped.
 
 ---
 
+## F-014 (P1, fixed) A studio project looked like a demo stuck in encoding
+
+**Observed.** Creating a project writes a `Video` row straight away with `processingState: 'empty'`,
+and `VideoStatusBadge` mapped anything other than `ready` to **Processing**. Three projects in the
+local library had sat that way for hours with `render: null`, showing a `0:00` running time. The
+card also linked every video to `/studio/videos/:id`, the upload editor, which answers "This demo is
+still processing" for a project it can never encode.
+
+**Why it matters.** The creator had no way to tell a draft they had not finished from a demo the
+encoder had lost, and following the card led to a dead end rather than back into the studio.
+
+**Fixed.** `empty` now reads **Studio draft**; `editPathOf` sends a project to `/studio/projects/:id`
+and an upload to `/studio/videos/:id`; `StudioVideo` redirects a project to the editor; the running
+time and the poster request are both dropped when there is no output; and the watch page says the
+demo has not been exported rather than inviting the viewer to wait. The render control is now an
+explicit **Export to a demo**, and the studio header carries the title, the draft badge and
+publish/unpublish, so a project reaches members from inside the studio.
+
+## F-013 (P0, fixed) The export was rejected by its own autosave
+
+**Observed.** `POST /projects/:id/render` answered 409 every time. The page passed
+`video.version` from the React Query cache, but each autosave bumps the row version through
+`useProjectEditor`'s own state without writing it back to that cache, so the version sent was stale
+from the first save onwards.
+
+**Why it matters.** Nothing could be exported after a single edit, which is every real project. It
+surfaced only as "Could not start the render".
+
+**Fixed.** `useProjectEditor` exposes `version` and `rebase`, and the export, cancel, rename,
+publish and unpublish calls all take the editor's version and hand the one that comes back straight
+back to it. The export button is also disabled while a save is in flight, so the two cannot race.
+
+## F-012 (P1, fixed) An ingest that never started stranded the asset for good
+
+**Observed.** Two assets sat in `preparing` indefinitely. `docker run` had failed at upload time
+(the encoder image did not exist yet) and the error was logged and swallowed, so the asset kept a
+state that says "a container is working on this". Running the same job by hand finished in seconds.
+
+**Why it matters.** Without a probed duration the trim upper bound collapsed to the clip's own out
+point, so the clip could only ever be shortened; and the editor never re-fetched the asset, so even
+a job that did finish went unnoticed until a reload.
+
+**Fixed.** A job that cannot start marks the asset `failed` with a reason the media panel shows, the
+editor polls the asset list while anything is uploading or preparing, and `trimClip` treats an
+unknown asset length as no upper bound rather than as the current out point.
+
+## F-011 (P1, fixed) A trim handle ran away from the pointer
+
+**Observed.** Dragging a clip's start recomputed `inMs` from `placement.startMs` on every pointer
+move. On a gapless track that edge never moves, so the offset was added again each frame instead of
+converging, and the edge accelerated away. Trimming could only ever shorten a clip.
+
+**Why it matters.** Trimming is the most used gesture in the editor and it could not be undone by
+hand.
+
+**Fixed.** Every drag now records where it began and what the item measured then, and each frame is
+computed from that origin (`studio/editor/dragging.ts`). One `spanAfterDrag` moves and resizes
+banners, zooms, voice over takes and title cards; `trimAfterDrag` does the same for source clips.
+
+## F-010 (P2, fixed) Zoom focus could only be pinned, not aimed
+
+**Observed.** A zoom's focus was set by clicking a crosshair on the preview, with no feedback about
+what the zoom would actually frame, and its length could only be changed by typing milliseconds into
+the inspector.
+
+**Why it matters.** Aiming a zoom is a judgement about framing, and it cannot be made without seeing
+the frame.
+
+**Fixed.** Selecting a zoom holds it on the preview so the stage shows exactly what the export will
+frame, and the picture is dragged with a grab cursor to aim it (`panFocus`). Zooms, banners and
+title cards all resize from either edge on the timeline.
+
 ## F-009 (P1, fixed) The encoder image had no `rsvg-convert`
 
 **Observed.** The image installed Alpine's `librsvg`, which ships the library but not the command

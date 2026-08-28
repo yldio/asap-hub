@@ -7,14 +7,14 @@ See [PLAN.md](./PLAN.md) for the design and [FINDINGS.md](./FINDINGS.md) for iss
 
 ## Status
 
-| Milestone                   | State                             |
-| --------------------------- | --------------------------------- |
-| M0 Foundations              | done                              |
-| M1 Timeline and render      | editor done, render job in flight |
-| M2 Text and transitions     | editor and renderer done          |
-| M3 Recording and voice-over | done                              |
-| M4a Zoom and manual effects | done                              |
-| M4b Cursor capture          | in flight                         |
+| Milestone                   | State |
+| --------------------------- | ----- |
+| M0 Foundations              | done  |
+| M1 Timeline and render      | done  |
+| M2 Text and transitions     | done  |
+| M3 Recording and voice-over | done  |
+| M4a Zoom and manual effects | done  |
+| M4b Cursor capture          | done  |
 
 ## M0 Foundations
 
@@ -107,10 +107,50 @@ Acceptance criteria:
 - [x] The studio follows the app's light and dark themes, through `--demo-editor-*` tokens. Only the
       preview stage stays a dark matte in both, the way every editor frames footage, and the artwork
       inside it (title cards, banners, cursor effects) keeps the palette the renderer burns in
+- [x] Every timeline item moves and resizes by dragging: clips, title cards, banners, zooms and
+      voice over takes all share one origin-anchored drag model
+- [x] A zoom is aimed by dragging the picture itself, with the preview holding that zoom while it is
+      selected so the framing on screen is the framing that gets exported
+- [x] The voice over lane is a real track: takes can be selected, retimed, trimmed, levelled and
+      removed, recorded from the microphone in the studio, or imported from disk
+- [x] Playback controls under the stage: scrub bar, running time, volume and fullscreen
+- [x] A studio project is a **draft** until it is exported, and the studio header carries the title,
+      the draft badge and publish/unpublish
+- [x] Cursor capture can be loaded as a bookmarklet or a console one-liner, so a site being demoed
+      never has to have a script added to its HTML
 
 ## Session log
 
 Newest first. One entry per working session: what landed, what was verified, what moved.
+
+### 2026-08-28, second session
+
+Worked through the product owner's list of eight problems found in the studio, and verified each one
+against the running stack rather than only in tests.
+
+- **Trim could only shrink** (F-011). Every drag is now measured from where it began rather than
+  from the item's own moving edge. One `spanAfterDrag` serves banners, zooms, voice over and title
+  cards; `trimAfterDrag` serves source clips. Verified in the browser: 0:08 → 0:04 → 0:06 → 0:12,
+  capping at the real 12.3s of footage.
+- **Zoom could be pinned but not aimed** (F-010). Selecting a zoom holds it on the preview and the
+  picture is dragged to aim it. Verified: dragging right moved the focus from 50% to 23% across,
+  which is the direction a grabbed picture should move.
+- **Voice over could not be managed.** The lane is now selectable, draggable and trimmable, with an
+  inspector for level and timing, a microphone-only recorder, and audio import.
+- **Cursor clicks were invisible.** A selected click effect draws a ring on the preview that can be
+  dragged, and its inspector says how it behaves.
+- **A project looked like a stuck encode** (F-014). `empty` reads Studio draft, the card links into
+  the editor, and there is an explicit Export to a demo followed by Publish.
+- **The player had no controls.** Scrub, time, volume and fullscreen sit under the stage.
+- **Exports never finished.** Two real bugs behind it: the export was 409'd by its own autosave
+  (F-013) and the ingest could strand an asset in `preparing` for ever (F-012).
+- **The capture snippet needed the site's HTML.** It can now be loaded as a bookmarklet or a console
+  one-liner instead.
+
+Verified end to end on the local stack, which runs the same container as production: created,
+recorded, imported, edited, exported, published and watched. The export produced 1920x1080 h264 at
+**60fps**, AAC 48kHz stereo, 14.97s, with sprite, poster, `thumbnails.vtt` and the title card's
+chapter on the item; the watch page played it with the chapter list.
 
 ### 2026-08-28
 

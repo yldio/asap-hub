@@ -50,7 +50,8 @@ const previewWrapperStyles = css({ position: 'relative' });
 const WatchPlayer: FC<{
   readonly video: Video;
   readonly access: VideoAccess;
-}> = ({ video, access }) => {
+  readonly onRequestAccess: () => void;
+}> = ({ video, access, onRequestAccess }) => {
   const isCreator = useIsCreator();
   const [searchParams] = useSearchParams();
   const [currentTime, setCurrentTime] = useState(0);
@@ -82,6 +83,7 @@ const WatchPlayer: FC<{
           currentSeconds={currentTime}
           onTimeChange={setCurrentTime}
           registerSeek={registerSeek}
+          onRequestAccess={onRequestAccess}
         />
         <div css={metaStyles}>
           <span>{formatRecordedAt(video.recordedAt)}</span>
@@ -219,7 +221,13 @@ const Watch: FC = () => {
     <>
       <Headline level={2}>{video.data.title}</Headline>
       <div css={{ height: rem(16) }} />
-      <WatchPlayer video={video.data} access={access.data} />
+      <WatchPlayer
+        video={video.data}
+        access={access.data}
+        onRequestAccess={() => {
+          void access.refetch();
+        }}
+      />
     </>
   );
 };

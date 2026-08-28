@@ -3,7 +3,8 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 import { Link } from 'react-router';
 
-import { Card, Headline } from '../ui/components';
+import { PageHeading } from '../layout/PageHeading';
+import { Card } from '../ui/components';
 import { lead, pine, rem } from '../ui/theme';
 
 const panelStyles = css({
@@ -15,7 +16,7 @@ const panelStyles = css({
 
 const NotFound: FC = () => (
   <Card overrideStyles={panelStyles}>
-    <Headline level={3}>Page not found</Headline>
+    <PageHeading size={3}>Page not found</PageHeading>
     <p css={{ color: lead.rgb, margin: 0 }}>
       That page does not exist.{' '}
       <Link to="/" css={{ color: pine.rgb }}>

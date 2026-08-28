@@ -16,7 +16,7 @@ dropped.
 ## F-020 (P2, backlog) Structural work the architecture review called for
 
 Three reviewers went over the whole codebase. Everything they found that was a
-*correctness* problem is fixed and logged below. These are the structural ones,
+_correctness_ problem is fixed and logged below. These are the structural ones,
 recorded here rather than done, because each is a refactor with no behaviour
 change and they are better done deliberately than in the middle of a bug-fix
 pass.

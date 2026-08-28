@@ -65,6 +65,24 @@ const dialogActionsStyles = css({
   flexWrap: 'wrap',
 });
 
+const noop = () => undefined;
+
+// the codes the render route answers with, in the words of the thing the
+// creator has to do about each one
+const renderRefusals: Record<string, string> = {
+  render_active: 'An export is already running for this demo.',
+  empty_timeline: 'Add a clip before exporting.',
+  locked: 'Someone else is editing this demo, so it cannot be exported.',
+  conflict: 'This demo changed somewhere else. Try the export again.',
+  not_found: 'This demo is no longer there.',
+  render_start_failed: 'The export could not be started. Try again.',
+};
+
+const renderRefusal = (cause: unknown): string =>
+  (cause instanceof ApiError && cause.code
+    ? renderRefusals[cause.code]
+    : undefined) ?? 'Could not start the export.';
+
 // locally the assets are served straight from MinIO through the Vite proxy, and
 // in the deployed stack from the same CloudFront path behind a signed cookie
 const assetUrlOf =
@@ -387,6 +405,9 @@ const Editor: FC<EditorProps> = ({
     [editor, onVideoChanged],
   );
 
+  // every refusal has a reason the creator can act on, and a page that has not
+  // heard about the render or the version behind it can only be put right by
+  // reading the row again
   const startRender = useCallback(() => {
     setRenderError(undefined);
     // no flush here: the button is only live once the document is settled, and
@@ -394,20 +415,24 @@ const Editor: FC<EditorProps> = ({
     api
       .startRender(id, editor.version)
       .then(applyWrite)
-      .catch((cause: unknown) =>
-        setRenderError(
-          cause instanceof ApiError && cause.code === 'render_active'
-            ? 'An export is already running for this demo.'
-            : 'Could not start the export.',
-        ),
-      );
+      .catch((cause: unknown) => {
+        setRenderError(renderRefusal(cause));
+        void api.getVideo(id).then(applyWrite).catch(noop);
+      });
   }, [api, applyWrite, editor.version, id]);
 
   const cancelRender = useCallback(() => {
     api
       .cancelRender(id, editor.version)
       .then(applyWrite)
-      .catch(() => setRenderError('Could not cancel the export.'));
+      .catch((cause: unknown) => {
+        setRenderError(
+          cause instanceof ApiError && cause.code === 'render_inactive'
+            ? 'That export has already finished.'
+            : 'Could not cancel the export.',
+        );
+        void api.getVideo(id).then(applyWrite).catch(noop);
+      });
   }, [api, applyWrite, editor.version, id]);
 
   const updateVideo = useUpdateVideo(id);

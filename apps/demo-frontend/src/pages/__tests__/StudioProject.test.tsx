@@ -316,6 +316,52 @@ describe('rendering', () => {
     expect(startRender).toHaveBeenCalledWith('project-1', 3);
   });
 
+  // the page can hold a render state and a row version the server has moved
+  // past, and only reading the row again puts that right
+  it('reads the demo again when the export is refused', async () => {
+    const getVideo = jest.fn().mockResolvedValue(project);
+    const startRender = jest
+      .fn()
+      .mockRejectedValue(new ApiError(409, 'render_active', 'render_active'));
+    renderStudio({
+      getVideo,
+      startRender,
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Export to a demo' }),
+    );
+
+    expect(
+      await screen.findByText('An export is already running for this demo.'),
+    ).toBeVisible();
+    await waitFor(() => expect(getVideo).toHaveBeenCalledTimes(2));
+  });
+
+  it.each`
+    code                | message
+    ${'empty_timeline'} | ${'Add a clip before exporting.'}
+    ${'locked'}         | ${'Someone else is editing this demo, so it cannot be exported.'}
+    ${'conflict'}       | ${'This demo changed somewhere else. Try the export again.'}
+    ${'anything_else'}  | ${'Could not start the export.'}
+  `('explains a $code refusal', async ({ code, message }) => {
+    renderStudio({
+      startRender: jest.fn().mockRejectedValue(new ApiError(400, code, code)),
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Export to a demo' }),
+    );
+
+    expect(await screen.findByText(message)).toBeVisible();
+  });
+
   it('shows progress and a way out while a render runs', async () => {
     renderStudio({
       getVideo: jest.fn().mockResolvedValue({

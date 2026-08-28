@@ -4,6 +4,7 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -54,13 +55,18 @@ import {
   realFolders,
   subtreeIds,
 } from '../library/tree';
+import { followCursor } from '../library/dragOverlay';
 import {
+  defaultSort,
+  defaultStatusFilter,
+  deleteTitle,
+  deleteWarning,
   matchesQuery,
   matchesStatusFilter,
+  parseSort,
+  parseStatusFilter,
   sortVideos,
   useViewMode,
-  type SortMode,
-  type StatusFilter,
 } from '../library/state';
 import { Button, Modal, Spinner } from '../ui/components';
 import {
@@ -74,6 +80,7 @@ import {
   charcoal,
   ember,
   lead,
+  mint,
   paper,
   pine,
   rem,
@@ -91,13 +98,20 @@ import {
   type SelectionState,
 } from './selection';
 
+// two columns survive down to a tablet: at 768px the grid still fits two demos
+// beside the tree, and only a phone is narrow enough to stack them
 const layoutStyles = css({
   display: 'grid',
   gridTemplateColumns: `minmax(${rem(200)}, ${rem(240)}) 1fr`,
   gap: rem(32),
   alignItems: 'start',
-  '@media (max-width: 800px)': {
+  '@media (max-width: 900px)': {
+    gridTemplateColumns: `minmax(${rem(160)}, ${rem(200)}) 1fr`,
+    gap: rem(20),
+  },
+  '@media (max-width: 700px)': {
     gridTemplateColumns: '1fr',
+    gap: rem(12),
   },
 });
 
@@ -136,8 +150,26 @@ const folderGridStyles = css({
 
 const videoGridStyles = css({
   display: 'grid',
-  gridTemplateColumns: `repeat(auto-fill, minmax(${rem(230)}, 1fr))`,
+  gridTemplateColumns: `repeat(auto-fill, minmax(${rem(210)}, 1fr))`,
   gap: rem(16),
+});
+
+const selectionBarStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: rem(12),
+  marginBottom: rem(12),
+  padding: `${rem(8)} ${rem(12)}`,
+  borderRadius: rem(8),
+  border: `1px solid ${pine.rgb}`,
+  backgroundColor: mint.rgb,
+});
+
+const selectionCountStyles = css({
+  fontSize: rem(14),
+  fontWeight: 'bold',
+  color: pine.rgb,
 });
 
 const videoListStyles = css({ display: 'grid', gap: rem(10) });
@@ -193,6 +225,7 @@ const modalActionsStyles = css({
 });
 
 const dragOverlayStyles = css({
+  width: 'fit-content',
   padding: `${rem(10)} ${rem(16)}`,
   borderRadius: rem(6),
   backgroundColor: pine.rgb,
@@ -212,7 +245,7 @@ const folderIdFromDropTarget = (id: string): string =>
 const folderDragPrefix = 'folder:';
 
 const Home: FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const isAllVideos = searchParams.get('view') === 'all';
   const folderParam = isAllVideos
     ? undefined
@@ -249,9 +282,21 @@ const Home: FC = () => {
   const [creatingChildOf, setCreatingChildOf] = useState<string>();
   const [draggingFolderId, setDraggingFolderId] = useState<string>();
 
-  const [sort, setSort] = useState<SortMode>('newest');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const sort = parseSort(searchParams.get('sort'));
+  const statusFilter = parseStatusFilter(searchParams.get('status'));
   const [view, setView] = useViewMode();
+
+  const setParam = useCallback(
+    (key: string, value: string, fallback: string) => {
+      setSearchParams((current) => {
+        const next = new URLSearchParams(current);
+        if (value === fallback) next.delete(key);
+        else next.set(key, value);
+        return next;
+      });
+    },
+    [setSearchParams],
+  );
 
   const folderList = useMemo(
     () => realFolders(folders.data ?? []),
@@ -342,16 +387,10 @@ const Home: FC = () => {
     );
   };
 
-  const onCardContextMenu = (id: string) => (event: ReactMouseEvent) => {
-    event.preventDefault();
+  const onCardOpenMenu = (id: string) => (position: MenuPosition) => {
     setFolderMenu(undefined);
     setSelection((current) => selectionForContextMenu(current, id));
-    setVideoMenu({ position: { x: event.clientX, y: event.clientY } });
-  };
-
-  const onCardDelete = (id: string) => () => {
-    setSelection((current) => selectionForContextMenu(current, id));
-    setIsDeletingVideos(true);
+    setVideoMenu({ position });
   };
 
   const onFolderContextMenu = (folder: Folder) => (event: ReactMouseEvent) => {
@@ -362,6 +401,10 @@ const Home: FC = () => {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    // a browser without pointer events still has to be able to drag a card
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 8 },
+    }),
   );
 
   const draggingIdsRef = useRef<string[]>([]);
@@ -473,6 +516,14 @@ const Home: FC = () => {
   const singleSelected =
     selectedVideos.length === 1 ? selectedVideos[0] : undefined;
 
+  const selectedTitles = selectedVideos.map(({ title }) => title);
+
+  const openSelectionMenu = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    setFolderMenu(undefined);
+    setVideoMenu({ position: { x: bounds.left, y: bounds.bottom + 4 } });
+  };
+
   const dragLabel =
     draggingIds.length === 1
       ? visibleVideos.find(({ id }) => id === draggingIds[0])?.title ??
@@ -567,8 +618,13 @@ const Home: FC = () => {
   const isLoadingList = usesAllVideos ? allVideos.isLoading : videos.isLoading;
   const hasListError = usesAllVideos ? allVideos.isError : videos.isError;
   const isEmpty = !isLoadingList && !hasListError && visibleVideos.length === 0;
+  // a folder card is a video listing in disguise, so it has no place in a list
+  // that has been narrowed to drafts or to published demos
   const showsFolderCards =
-    !isSearching && !isAllVideos && childFolders.length > 0;
+    !isSearching &&
+    !isAllVideos &&
+    childFolders.length > 0 &&
+    statusFilter === defaultStatusFilter;
 
   if (folderParam === rootFolderId) return <Navigate to="/" replace />;
 
@@ -628,11 +684,13 @@ const Home: FC = () => {
             query={query}
             onQueryChange={setQuery}
             sort={sort}
-            onSortChange={setSort}
+            onSortChange={(next) => setParam('sort', next, defaultSort)}
             view={view}
             onViewChange={setView}
             statusFilter={statusFilter}
-            onStatusFilterChange={setStatusFilter}
+            onStatusFilterChange={(next) =>
+              setParam('status', next, defaultStatusFilter)
+            }
             isCreator={isCreator}
             currentLocationName={currentFolderName}
             canCreateHere={canCreateHere}
@@ -640,13 +698,13 @@ const Home: FC = () => {
           />
 
           <div css={breadcrumbStyles}>
-            <h2 css={breadcrumbNameStyles}>
+            <h1 css={breadcrumbNameStyles}>
               {isSearching
                 ? `Results for "${debouncedQuery}"`
                 : isAllVideos
                   ? 'All videos'
                   : currentFolderName}
-            </h2>
+            </h1>
             <span css={summaryStyles}>
               {videoCount(visibleVideos.length)}
               {showsFolderCards && ` · ${folderCount(childFolders.length)}`}
@@ -696,6 +754,22 @@ const Home: FC = () => {
             </div>
           )}
 
+          {isCreator && selectedVideos.length > 0 && (
+            <div css={selectionBarStyles}>
+              <span css={selectionCountStyles} role="status">
+                {`${selectedVideos.length} selected`}
+              </span>
+              <span css={{ marginLeft: 'auto', display: 'flex', gap: rem(8) }}>
+                <Button small aria-haspopup="menu" onClick={openSelectionMenu}>
+                  Actions
+                </Button>
+                <Button small onClick={clearSelection}>
+                  Clear
+                </Button>
+              </span>
+            </div>
+          )}
+
           <div css={view === 'grid' ? videoGridStyles : videoListStyles}>
             {visibleVideos.map((video) => (
               <VideoCard
@@ -708,15 +782,14 @@ const Home: FC = () => {
                   showsFolderPath ? folderPathLabel(video.folderId) : undefined
                 }
                 onSelect={onCardSelect(video.id)}
-                onContextMenu={onCardContextMenu(video.id)}
-                onDelete={onCardDelete(video.id)}
+                onOpenMenu={onCardOpenMenu(video.id)}
               />
             ))}
           </div>
         </section>
       </div>
 
-      <DragOverlay dropAnimation={null}>
+      <DragOverlay dropAnimation={null} modifiers={[followCursor]}>
         {draggingFolderId ? (
           <div css={dragOverlayStyles}>
             {folderNames.get(draggingFolderId) ?? 'Folder'}
@@ -790,7 +863,7 @@ const Home: FC = () => {
               Edit
             </ContextMenuItem>
           )}
-          <ContextMenuSubmenu label="Move to">
+          <ContextMenuSubmenu label="Move to folder">
             {moveTargets.map(({ folder, depth }) => (
               <ContextMenuItem
                 key={folder.id}
@@ -896,15 +969,12 @@ const Home: FC = () => {
       )}
 
       {isDeletingVideos && (
-        <Modal label="Delete videos" onClose={() => setIsDeletingVideos(false)}>
-          <h2 css={dangerTitleStyles}>
-            Delete {videoCount(selection.ids.length)}?
-          </h2>
-          <div css={dangerNoticeStyles}>
-            {videoCount(selection.ids.length)} and{' '}
-            {selection.ids.length === 1 ? 'its file' : 'their files'} will be
-            permanently removed and cannot be recovered.
-          </div>
+        <Modal
+          label={deleteTitle(selectedTitles)}
+          onClose={() => setIsDeletingVideos(false)}
+        >
+          <h2 css={dangerTitleStyles}>{deleteTitle(selectedTitles)}</h2>
+          <div css={dangerNoticeStyles}>{deleteWarning(selectedTitles)}</div>
           <div css={modalActionsStyles}>
             <Button onClick={() => setIsDeletingVideos(false)}>Cancel</Button>
             <Button

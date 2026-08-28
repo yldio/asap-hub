@@ -1,5 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router';
 
 import type { Folder, Video } from '../../api/types';
 import { creatorMe, makeVideo, memberMe, renderApp } from '../../test-utils';
@@ -68,17 +69,31 @@ type RenderOptions = {
   route?: string;
 };
 
+// the router is in memory, so the query string is read back off the location
+const QueryProbe = () => {
+  const { search } = useLocation();
+  return <span data-testid="query-string">{search}</span>;
+};
+
+const queryString = () => screen.getByTestId('query-string').textContent ?? '';
+
 const renderHome = ({
   api = {},
   me = creatorMe,
   route = '/',
 }: RenderOptions = {}) =>
-  renderApp(<Home />, {
-    api: { ...baseApi(), ...api } as never,
-    me,
-    route,
-    routePath: '/',
-  });
+  renderApp(
+    <>
+      <Home />
+      <QueryProbe />
+    </>,
+    {
+      api: { ...baseApi(), ...api } as never,
+      me,
+      route,
+      routePath: '/',
+    },
+  );
 
 const sidebar = () => screen.getByRole('complementary');
 
@@ -97,6 +112,13 @@ const videoTitles = (): string[] =>
 
 const openVideoMenu = async (title: string) => {
   await userEvent.pointer({ target: cardFor(title), keys: '[MouseRight]' });
+  return screen.findByRole('menu', { name: 'Video actions' });
+};
+
+const openCardMenu = async (title: string) => {
+  await userEvent.click(
+    screen.getByRole('button', { name: `Actions for ${title}` }),
+  );
   return screen.findByRole('menu', { name: 'Video actions' });
 };
 
@@ -150,7 +172,7 @@ describe('folder tree and listing', () => {
     renderHome({ route: '/?folder=f-sprint' });
 
     expect(await screen.findByText('Sprint retro')).toBeVisible();
-    const heading = within(contentSection()).getByRole('heading', { level: 2 });
+    const heading = within(contentSection()).getByRole('heading', { level: 1 });
     expect(heading).toHaveTextContent('Sprints');
     // the ancestors belong to the shared breadcrumb, not to a second trail here
     expect(within(heading).queryByRole('link')).toBeNull();
@@ -213,7 +235,9 @@ describe('creator vs member affordances', () => {
       within(contentSection()).getByRole('button', { name: /New folder/ }),
     ).toBeVisible();
     expect(
-      await screen.findByRole('link', { name: 'Edit Unfiled walkthrough' }),
+      await screen.findByRole('button', {
+        name: 'Actions for Unfiled walkthrough',
+      }),
     ).toBeInTheDocument();
   });
 
@@ -227,7 +251,7 @@ describe('creator vs member affordances', () => {
     ).toBeNull();
     expect(screen.queryByRole('button', { name: /New folder/ })).toBeNull();
     expect(
-      screen.queryByRole('link', { name: 'Edit Unfiled walkthrough' }),
+      screen.queryByRole('button', { name: 'Actions for Unfiled walkthrough' }),
     ).toBeNull();
   });
 
@@ -374,7 +398,7 @@ describe('all videos view', () => {
     renderHome({ route: '/?view=all' });
 
     expect(
-      await screen.findByRole('heading', { name: 'All videos', level: 2 }),
+      await screen.findByRole('heading', { name: 'All videos', level: 1 }),
     ).toBeVisible();
     expect(await screen.findByText('Unfiled walkthrough')).toBeVisible();
     expect(screen.getByText('Engineering standup')).toBeVisible();
@@ -407,19 +431,19 @@ describe('selection', () => {
 
     await screen.findByText('Sprint retro');
     await userEvent.click(cardFor('Sprint retro'));
-    expect(cardFor('Sprint retro')).toHaveAttribute('aria-selected', 'true');
+    expect(cardFor('Sprint retro')).toHaveAttribute('data-selected', 'true');
 
     await userEvent.click(cardFor('Engineering standup'));
-    expect(cardFor('Sprint retro')).toHaveAttribute('aria-selected', 'false');
+    expect(cardFor('Sprint retro')).toHaveAttribute('data-selected', 'false');
     expect(cardFor('Engineering standup')).toHaveAttribute(
-      'aria-selected',
+      'data-selected',
       'true',
     );
 
     await userEvent.keyboard('{Escape}');
     await waitFor(() =>
       expect(cardFor('Engineering standup')).toHaveAttribute(
-        'aria-selected',
+        'data-selected',
         'false',
       ),
     );
@@ -437,16 +461,16 @@ describe('selection', () => {
     await user.click(cardFor(third));
     await user.keyboard('{/Control}');
 
-    expect(cardFor(first)).toHaveAttribute('aria-selected', 'true');
-    expect(cardFor(third)).toHaveAttribute('aria-selected', 'true');
-    expect(cardFor(second)).toHaveAttribute('aria-selected', 'false');
+    expect(cardFor(first)).toHaveAttribute('data-selected', 'true');
+    expect(cardFor(third)).toHaveAttribute('data-selected', 'true');
+    expect(cardFor(second)).toHaveAttribute('data-selected', 'false');
 
     await user.click(cardFor(first));
     await user.keyboard('{Shift>}');
     await user.click(cardFor(third));
     await user.keyboard('{/Shift}');
 
-    expect(cardFor(second)).toHaveAttribute('aria-selected', 'true');
+    expect(cardFor(second)).toHaveAttribute('data-selected', 'true');
   });
 
   it('does not select for a member', async () => {
@@ -454,7 +478,7 @@ describe('selection', () => {
 
     await screen.findByText('Unfiled walkthrough');
     await userEvent.click(cardFor('Unfiled walkthrough'));
-    expect(cardFor('Unfiled walkthrough')).not.toHaveAttribute('aria-selected');
+    expect(cardFor('Unfiled walkthrough')).not.toHaveAttribute('data-selected');
   });
 });
 
@@ -489,7 +513,7 @@ describe('video context menu', () => {
     const menu = await openVideoMenu('Unfiled walkthrough');
 
     await userEvent.hover(
-      within(menu).getByRole('menuitem', { name: 'Move to' }),
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
     );
     await userEvent.click(
       await within(menu).findByRole('menuitem', { name: 'Design' }),
@@ -504,7 +528,7 @@ describe('video context menu', () => {
     await screen.findByText('Unfiled walkthrough');
     const menu = await openVideoMenu('Unfiled walkthrough');
     await userEvent.hover(
-      within(menu).getByRole('menuitem', { name: 'Move to' }),
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
     );
 
     expect(
@@ -525,9 +549,11 @@ describe('video context menu', () => {
     );
 
     const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText('Delete 1 video?')).toBeVisible();
     expect(
-      within(dialog).getByText(/1 video and its file will be/),
+      within(dialog).getByText('Delete “Unfiled walkthrough”?'),
+    ).toBeVisible();
+    expect(
+      within(dialog).getByText(/“Unfiled walkthrough” and its file will be/),
     ).toBeVisible();
     await userEvent.click(
       within(dialog).getByRole('button', { name: 'Delete' }),
@@ -579,19 +605,22 @@ describe('video context menu', () => {
 
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('Delete 2 videos?')).toBeVisible();
+    // several cards read "Untitled demo", so the modal has to name them
     expect(
-      within(dialog).getByText(/2 videos and their files will be/),
+      within(dialog).getByText(new RegExp(`“${first}”, “${second}”`)),
     ).toBeVisible();
   });
 
-  it('deletes straight from the card trash button', async () => {
+  it('deletes from the card actions menu', async () => {
     const bulkDeleteVideos = jest.fn(() =>
       Promise.resolve({ deleted: ['v-unfiled'], missing: [], locked: [] }),
     );
     renderHome({ api: { bulkDeleteVideos } });
 
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openCardMenu('Unfiled walkthrough');
     await userEvent.click(
-      await screen.findByRole('button', { name: 'Delete Unfiled walkthrough' }),
+      within(menu).getByRole('menuitem', { name: 'Delete' }),
     );
 
     const dialog = await screen.findByRole('dialog');
@@ -849,5 +878,138 @@ describe('folder create, rename and delete', () => {
 
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(deleteFolder).not.toHaveBeenCalled();
+  });
+});
+
+describe('a shareable list', () => {
+  it('opens the sort and status named in the url', async () => {
+    renderHome({ route: '/?view=all&sort=title&status=drafts' });
+
+    expect(await screen.findByText('Sprint retro')).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Sort videos' }),
+    ).toHaveTextContent('Title A-Z');
+    expect(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    ).toHaveTextContent('Drafts');
+    expect(screen.queryByText('Engineering standup')).toBeNull();
+  });
+
+  it('writes the sort and the status back into the url', async () => {
+    renderHome({ route: '/?view=all' });
+
+    await screen.findByText('Sprint retro');
+    await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Oldest first' }));
+
+    await waitFor(() => expect(queryString()).toContain('sort=oldest'));
+    expect(queryString()).toContain('view=all');
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    );
+    await userEvent.click(screen.getByRole('option', { name: 'Drafts' }));
+
+    await waitFor(() => expect(queryString()).toContain('status=drafts'));
+  });
+
+  it('leaves the defaults out of the url', async () => {
+    renderHome({ route: '/?view=all&sort=title' });
+
+    await screen.findByText('Sprint retro');
+    await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Newest first' }));
+
+    await waitFor(() => expect(queryString()).not.toContain('sort'));
+  });
+});
+
+describe('bulk selection', () => {
+  it('counts the selection and offers its actions in one bar', async () => {
+    renderHome({ route: '/?view=all' });
+
+    await screen.findByText('Sprint retro');
+    const [first, second] = videoTitles() as [string, string];
+    const user = userEvent.setup();
+    await user.click(cardFor(first));
+    await user.keyboard('{Control>}');
+    await user.click(cardFor(second));
+    await user.keyboard('{/Control}');
+
+    const count = await screen.findByText('2 selected');
+    expect(count).toHaveAttribute('role', 'status');
+
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    const menu = await screen.findByRole('menu', { name: 'Video actions' });
+    expect(
+      within(menu).getByRole('menuitem', { name: 'Delete 2 videos' }),
+    ).toBeVisible();
+  });
+
+  it('drops the selection from the bar', async () => {
+    renderHome({ route: '/?view=all' });
+
+    await screen.findByText('Sprint retro');
+    await userEvent.click(cardFor('Sprint retro'));
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: 'Clear' })).toBeNull(),
+    );
+    expect(cardFor('Sprint retro')).toHaveAttribute('data-selected', 'false');
+  });
+});
+
+describe('moving a demo without a mouse', () => {
+  it('moves it from the card actions menu', async () => {
+    const bulkMoveVideos = jest.fn(() =>
+      Promise.resolve({ moved: ['v-unfiled'], missing: [] }),
+    );
+    renderHome({ api: { bulkMoveVideos } });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openCardMenu('Unfiled walkthrough');
+    await userEvent.hover(
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
+    );
+    await userEvent.click(
+      await within(menu).findByRole('menuitem', { name: 'Design' }),
+    );
+
+    expect(bulkMoveVideos).toHaveBeenCalledWith(['v-unfiled'], 'f-design');
+  });
+});
+
+describe('folder cards under a status filter', () => {
+  it('hides them while the list is narrowed to drafts', async () => {
+    renderHome({ route: '/?status=drafts' });
+
+    await screen.findByRole('heading', { name: 'Home', level: 1 });
+    const section = contentSection();
+    await waitFor(() =>
+      expect(within(section).queryByText('Engineering')).toBeNull(),
+    );
+    expect(within(section).queryByText('Folders')).toBeNull();
+  });
+
+  it('brings them back with every status', async () => {
+    renderHome();
+
+    await screen.findByText('Unfiled walkthrough');
+    expect(within(contentSection()).getByText('Engineering')).toBeVisible();
+  });
+});
+
+describe('headings', () => {
+  it('starts the page at a single h1, ahead of the folder tree', async () => {
+    renderHome();
+
+    await screen.findByText('Unfiled walkthrough');
+    const first = screen.getAllByRole('heading')[0] as HTMLElement;
+    expect(first.tagName).toBe('H1');
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    // the tree names the landmark instead of opening the outline
+    expect(within(sidebar()).queryByRole('heading')).toBeNull();
+    expect(sidebar()).toHaveAccessibleName('Folders');
   });
 });

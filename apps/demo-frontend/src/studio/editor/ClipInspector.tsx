@@ -47,7 +47,7 @@ type Props = {
 };
 
 const clipName = (clip: Clip, asset?: ProjectAsset): string =>
-  clip.kind === 'title' ? clip.text || 'Title card' : (asset?.label ?? 'Clip');
+  clip.kind === 'title' ? clip.text || 'Title card' : asset?.label ?? 'Clip';
 
 const ClipInspector: FC<Props> = ({
   placement,
@@ -62,7 +62,7 @@ const ClipInspector: FC<Props> = ({
 }) => {
   if (!placement) {
     return (
-      <aside css={panelStyles}>
+      <aside css={panelStyles} aria-label="Clip">
         <Caption>Clip</Caption>
         <p css={mutedStyles}>Select a clip on the timeline to edit it.</p>
       </aside>
@@ -73,7 +73,7 @@ const ClipInspector: FC<Props> = ({
   const source = clip.kind === 'source' ? clip : undefined;
 
   return (
-    <aside css={panelStyles}>
+    <aside css={panelStyles} aria-label="Clip">
       <Caption>Clip</Caption>
       <strong>{clipName(clip, asset)}</strong>
 

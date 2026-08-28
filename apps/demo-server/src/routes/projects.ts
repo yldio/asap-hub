@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { requireCreator } from '../auth';
 import { videoEntity } from '../data/entities';
 import { createProjectSchema, saveTimelineSchema } from '../schemas';
-import { getObject, putObject, timelineKey } from '../storage';
+import { getObjectText, putObject, timelineKey } from '../storage';
 import { registerAssetRoutes } from './assets';
 import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
@@ -27,14 +27,6 @@ import {
 // a timeline document is small next to the media, but big next to a DynamoDB
 // item, so the item only ever holds a pointer to the revision in S3
 const maxTimelineBytes = 512 * 1024;
-
-const readStream = async (stream: NodeJS.ReadableStream): Promise<string> => {
-  const chunks: Buffer[] = [];
-  for await (const chunk of stream) {
-    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-  }
-  return Buffer.concat(chunks).toString('utf8');
-};
 
 type TimelinePointer = {
   key: string;
@@ -124,9 +116,8 @@ export const projectsRouter = (): Router => {
       return;
     }
 
-    const { body } = await getObject(pointer.key);
     res.json({
-      timeline: parseTimeline(JSON.parse(await readStream(body))),
+      timeline: parseTimeline(JSON.parse(await getObjectText(pointer.key))),
       timelineVersion: pointer.timelineVersion,
     });
   });

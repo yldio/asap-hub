@@ -195,7 +195,7 @@ const Timeline: FC<Props> = ({
                   <span css={clipLabelStyles}>
                     {clip.kind === 'title'
                       ? clip.text || 'Title card'
-                      : (asset?.label ?? 'Clip')}
+                      : asset?.label ?? 'Clip'}
                   </span>
                   <span>{formatDuration(placement.durationMs)}</span>
                 </button>

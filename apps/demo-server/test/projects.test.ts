@@ -5,7 +5,6 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 /* eslint-disable import/first */
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
-import { Readable } from 'stream';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { userEntity, videoEntity } from '../src/data/entities';
@@ -15,7 +14,7 @@ import * as storage from '../src/storage';
 jest.mock('../src/storage', () => ({
   ...jest.requireActual('../src/storage'),
   putObject: jest.fn(),
-  getObject: jest.fn(),
+  getObjectText: jest.fn(),
 }));
 
 jest.mock('uuid', () => ({ v4: () => 'generated-project-id' }));
@@ -120,7 +119,7 @@ beforeEach(() => {
   jest.restoreAllMocks();
   mockSend.mockReset().mockResolvedValue({});
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
-  (storage.getObject as jest.Mock).mockReset();
+  (storage.getObjectText as jest.Mock).mockReset();
 });
 
 describe('POST /api/projects', () => {
@@ -192,16 +191,16 @@ describe('GET /api/projects/:id/timeline', () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
     const timeline = timelineWithClip();
-    (storage.getObject as jest.Mock).mockResolvedValue({
-      body: Readable.from([JSON.stringify(timeline)]),
-    });
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      JSON.stringify(timeline),
+    );
 
     const response = await api
       .get('/api/projects/project-1/timeline')
       .set('Authorization', creatorToken);
 
     expect(response.status).toBe(200);
-    expect(storage.getObject).toHaveBeenCalledWith(
+    expect(storage.getObjectText).toHaveBeenCalledWith(
       'projects/project-1/timeline/4.json',
     );
     expect(response.body).toEqual({ timeline, timelineVersion: 4 });
@@ -220,7 +219,7 @@ describe('GET /api/projects/:id/timeline', () => {
       timeline: createEmptyTimeline(),
       timelineVersion: 0,
     });
-    expect(storage.getObject).not.toHaveBeenCalled();
+    expect(storage.getObjectText).not.toHaveBeenCalled();
   });
 
   it('is not found for a plain upload', async () => {

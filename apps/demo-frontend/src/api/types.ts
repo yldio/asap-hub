@@ -48,12 +48,20 @@ export type VideoStatus = 'draft' | 'published';
 
 // 'empty' is a studio project that has never been rendered
 export type ProcessingState =
-  'empty' | 'uploading' | 'processing' | 'ready' | 'failed';
+  | 'empty'
+  | 'uploading'
+  | 'processing'
+  | 'ready'
+  | 'failed';
 
 export type VideoKind = 'upload' | 'studio';
 
 export type RenderState =
-  'queued' | 'rendering' | 'done' | 'failed' | 'cancelled';
+  | 'queued'
+  | 'rendering'
+  | 'done'
+  | 'failed'
+  | 'cancelled';
 
 export type TimelinePointer = {
   key: string;

@@ -11,12 +11,15 @@ export const msToPx = (ms: number, pixelsPerSecond: number): number =>
 export const pxToMs = (px: number, pixelsPerSecond: number): number =>
   (px / pixelsPerSecond) * 1000;
 
+const widestTickStep = 600;
+const tickSteps = [1, 2, 5, 10, 15, 30, 60, 120, 300, widestTickStep];
+
 // a ruler tick every 1, 2, 5, 10 … seconds, whichever first clears the label
 export const tickIntervalMs = (pixelsPerSecond: number): number => {
   const targetPx = 80;
-  const steps = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600];
   const seconds =
-    steps.find((step) => step * pixelsPerSecond >= targetPx) ?? steps.at(-1)!;
+    tickSteps.find((step) => step * pixelsPerSecond >= targetPx) ??
+    widestTickStep;
   return seconds * 1000;
 };
 

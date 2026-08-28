@@ -1,6 +1,5 @@
 import { parseTimeline } from '@asap-hub/demo-timeline';
 import { Request, Response, Router } from 'express';
-import { Readable } from 'stream';
 import { v4 as uuid } from 'uuid';
 import { assetEntity } from '../data/entities';
 import {
@@ -15,7 +14,7 @@ import {
   completeMultipartUpload,
   createMultipartUpload,
   deletePrefix,
-  getObject,
+  getObjectText,
   partSize,
   signUploadParts,
 } from '../storage';
@@ -30,12 +29,20 @@ type LoadProject = (
   res: Response,
 ) => Promise<VideoItem | undefined>;
 
+// the editor plays the proxy once the ingest has written one, and the original
+// until then; the storage key itself never crosses the wire
+const playableUrl = (item: AssetItem): string | undefined => {
+  const key = (item.proxyKey ?? item.key) as string | undefined;
+  return key ? `/${key}` : undefined;
+};
+
 export const serialiseAsset = (item: AssetItem) => ({
   assetId: item.assetId,
   kind: item.kind,
   state: item.state,
   mimeType: item.mimeType,
   label: item.label,
+  ...(playableUrl(item) ? { url: playableUrl(item) } : {}),
   ...(item.bytes !== undefined ? { bytes: item.bytes } : {}),
   ...(item.durationMs !== undefined ? { durationMs: item.durationMs } : {}),
   ...(item.width !== undefined ? { width: item.width } : {}),
@@ -46,22 +53,13 @@ export const serialiseAsset = (item: AssetItem) => ({
   updatedAt: item.updatedAt,
 });
 
-const readStream = (stream: Readable): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    stream.on('data', (chunk: Buffer) => chunks.push(Buffer.from(chunk)));
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-    stream.on('error', reject);
-  });
-
 const referencedAssetIds = async (project: VideoItem): Promise<Set<string>> => {
   const pointer = project.timeline as { key: string } | undefined;
   if (!pointer) {
     return new Set();
   }
 
-  const { body } = await getObject(pointer.key);
-  const timeline = parseTimeline(JSON.parse(await readStream(body)));
+  const timeline = parseTimeline(JSON.parse(await getObjectText(pointer.key)));
   return new Set([
     ...timeline.clips.flatMap((clip) =>
       clip.kind === 'source' ? [clip.assetId] : [],

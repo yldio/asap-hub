@@ -4,7 +4,6 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
-import { Readable } from 'stream';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { assetEntity, userEntity, videoEntity } from '../src/data/entities';
@@ -13,7 +12,7 @@ import * as storage from '../src/storage';
 
 jest.mock('../src/storage', () => ({
   ...jest.requireActual('../src/storage'),
-  getObject: jest.fn(),
+  getObjectText: jest.fn(),
   createMultipartUpload: jest.fn(),
   signUploadParts: jest.fn(),
   completeMultipartUpload: jest.fn(),
@@ -143,9 +142,9 @@ const mockAssetQuery = (data: Record<string, unknown>[]) => {
 };
 
 const mockTimeline = (timeline: Timeline) => {
-  (storage.getObject as jest.Mock).mockResolvedValue({
-    body: Readable.from([JSON.stringify(timeline)]),
-  });
+  (storage.getObjectText as jest.Mock).mockResolvedValue(
+    JSON.stringify(timeline),
+  );
 };
 
 const timelineUsing = (assetId: string, where: 'clip' | 'narration') =>
@@ -179,7 +178,7 @@ const timelineUsing = (assetId: string, where: 'clip' | 'narration') =>
 
 beforeEach(() => {
   jest.restoreAllMocks();
-  (storage.getObject as jest.Mock).mockReset();
+  (storage.getObjectText as jest.Mock).mockReset();
   (storage.createMultipartUpload as jest.Mock)
     .mockReset()
     .mockResolvedValue({ uploadId: 'upload-1', key: 'ignored' });
@@ -405,6 +404,7 @@ describe('GET /api/projects/:id/assets', () => {
         state: 'uploading',
         mimeType: 'video/webm',
         label: 'Screen recording',
+        url: '/projects/project-1/assets/asset-1/original.webm',
         createdAt: '2026-08-01T10:00:00.000Z',
         updatedAt: '2026-08-01T10:00:00.000Z',
       },
@@ -414,6 +414,8 @@ describe('GET /api/projects/:id/assets', () => {
         state: 'ready',
         mimeType: 'video/webm',
         label: 'Screen recording',
+        // once the ingest has written a proxy the editor plays that instead
+        url: '/projects/project-1/assets/asset-2/proxy.mp4',
         bytes: 4096,
         durationMs: 12000,
         width: 1920,
@@ -472,7 +474,7 @@ describe('DELETE /api/projects/:id/assets/:assetId', () => {
     const response = await remove();
 
     expect(response.status).toBe(204);
-    expect(storage.getObject).not.toHaveBeenCalled();
+    expect(storage.getObjectText).not.toHaveBeenCalled();
     expect(deleteRow).toHaveBeenCalled();
   });
 

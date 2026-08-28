@@ -179,6 +179,20 @@ export const getObject = async (
   };
 };
 
+// callers that want a whole small object (the timeline document) rather than a
+// stream to pipe at a client
+export const getObjectText = async (key: string): Promise<string> => {
+  const { body } = await getObject(key);
+  return new Promise<string>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    body.on('data', (chunk: Buffer | string) =>
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)),
+    );
+    body.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    body.on('error', reject);
+  });
+};
+
 export const deletePrefix = async (prefix: string): Promise<void> => {
   let continuationToken: string | undefined;
   do {

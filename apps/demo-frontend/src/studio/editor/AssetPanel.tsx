@@ -77,7 +77,7 @@ const AssetPanel: FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <aside css={panelStyles}>
+    <aside css={panelStyles} aria-label="Media">
       <Caption>Media</Caption>
       <input
         ref={inputRef}
@@ -86,11 +86,13 @@ const AssetPanel: FC<Props> = ({
         accept="video/*"
         aria-label="Import a video"
         onChange={(event) => {
-          const file = event.target.files?.[0];
+          const input = event.target;
+          const file = input.files?.[0];
           if (file) {
             onImport(file);
           }
-          event.target.value = '';
+          // let the same file be picked again straight after
+          input.value = '';
         }}
       />
       <Button

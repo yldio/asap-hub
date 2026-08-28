@@ -175,7 +175,6 @@ const Editor: FC<EditorProps> = ({
       ) : null}
       {uploadError ? <p css={errorStyles}>{uploadError}</p> : null}
       <ProjectEditor
-        video={video}
         editor={editor}
         assets={assets}
         readOnly={readOnly}

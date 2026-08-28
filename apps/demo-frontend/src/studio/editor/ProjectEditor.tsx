@@ -6,7 +6,7 @@ import {
   timelineDurationMs,
 } from '@asap-hub/demo-timeline';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { ProjectAsset, Video } from '../../api/types';
+import { ProjectAsset } from '../../api/types';
 import { Button, Caption } from '../../ui/components';
 import { paper, pearl, rem, silver, steel } from '../../ui/theme';
 import { createId } from '../project/ids';
@@ -78,7 +78,6 @@ const saveLabels: Record<string, string> = {
 };
 
 type Props = {
-  readonly video: Video;
   readonly editor: Editor;
   readonly assets: ProjectAsset[];
   readonly readOnly: boolean;
@@ -90,7 +89,6 @@ type Props = {
 };
 
 const ProjectEditor: FC<Props> = ({
-  video,
   editor,
   assets,
   readOnly,
@@ -222,7 +220,6 @@ const ProjectEditor: FC<Props> = ({
               {formatTimecode(playheadMs)} / {formatTimecode(durationMs)}
             </span>
             <span css={spacerStyles} />
-            <Caption>{video.title}</Caption>
             <Button
               small
               onClick={() =>

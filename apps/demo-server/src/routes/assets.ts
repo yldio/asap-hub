@@ -1,4 +1,5 @@
 import { parseTimeline } from '@asap-hub/demo-timeline';
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { assetEntity } from '../data/entities';
@@ -20,9 +21,14 @@ import {
   partSize,
   signUploadParts,
 } from '../storage';
-import { pathParam, requireVideoIdParam } from './request';
+import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
-import { loadProject, VideoItem } from './video-shared';
+import {
+  holdsLease,
+  loadProject,
+  lockedBody,
+  VideoItem,
+} from './video-shared';
 
 export type AssetItem = Record<string, unknown>;
 
@@ -247,6 +253,13 @@ export const registerAssetRoutes = (router: Router): void => {
         return;
       }
 
+      // renaming a source is an edit like any other, so it belongs to whoever
+      // holds the lease rather than to whichever creator asks first
+      if (!holdsLease(project, currentUser(req).sub, Date.now())) {
+        res.status(409).json(lockedBody(project));
+        return;
+      }
+
       const { label } = req.body as { label: string };
       const { data } = await assetEntity
         .patch({
@@ -254,8 +267,15 @@ export const registerAssetRoutes = (router: Router): void => {
           assetId: pathParam(req, 'assetId'),
         })
         .set({ label, updatedAt: new Date().toISOString() })
-        .go({ response: 'all_new' })
-        .catch(() => ({ data: undefined }));
+        // the raw error comes back so a throttle or a timeout is not read as a
+        // row that is not there
+        .go({ response: 'all_new', originalErr: true })
+        .catch((error: unknown) => {
+          if (error instanceof ConditionalCheckFailedException) {
+            return { data: undefined };
+          }
+          throw error;
+        });
 
       if (!data) {
         res.status(404).json({ error: 'not_found' });

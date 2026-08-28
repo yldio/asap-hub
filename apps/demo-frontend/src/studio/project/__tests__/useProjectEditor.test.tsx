@@ -25,16 +25,16 @@ const renderEditor = (api: Partial<Api>, onLeaseLost = jest.fn()) => {
     </AuthContext.Provider>
   );
   const view = renderHook(
-    () =>
+    ({ version }: { version: number }) =>
       useProjectEditor({
         id: 'project-1',
         timeline: createEmptyTimeline(),
         timelineVersion: 4,
-        version: 3,
+        version,
         readOnly: false,
         onLeaseLost,
       }),
-    { wrapper },
+    { wrapper, initialProps: { version: 3 } },
   );
   return { view, onLeaseLost };
 };
@@ -156,6 +156,44 @@ describe('saving', () => {
     await settle();
 
     await waitFor(() => expect(onLeaseLost).toHaveBeenCalledWith('Bo'));
+  });
+});
+
+describe('the row version', () => {
+  // a render bumps the row every few seconds, and only the poll hears about it;
+  // an editor still holding the version it loaded with had every write refused
+  it('follows the one the page has been handed', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 13 },
+      timelineVersion: 5,
+    });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.rerender({ version: 12 }));
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    expect(saveTimeline).toHaveBeenCalledWith(
+      'project-1',
+      expect.objectContaining({ version: 12 }),
+    );
+  });
+
+  it('ignores a version older than the one it holds', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 13 },
+      timelineVersion: 5,
+    });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.rerender({ version: 1 }));
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    expect(saveTimeline).toHaveBeenCalledWith(
+      'project-1',
+      expect.objectContaining({ version: 3 }),
+    );
   });
 });
 

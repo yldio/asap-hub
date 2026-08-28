@@ -184,6 +184,18 @@ export const useProjectEditor = ({
   const versionsRef = useRef({ timelineVersion, version });
   const conflictsRef = useRef(0);
 
+  // A render reports its progress onto the same row every few seconds, so by the
+  // time it is over the version the editor holds is many writes behind and every
+  // write it tries next is refused. The poll is the only place that news
+  // arrives; without this the creator had to reload before exporting again.
+  useEffect(() => {
+    if (savingRef.current || version <= versionsRef.current.version) {
+      return;
+    }
+    versionsRef.current = { ...versionsRef.current, version };
+    send({ type: 'rebase', version });
+  }, [version]);
+
   const save = useCallback(
     async (next: Timeline): Promise<void> => {
       if (savingRef.current) {

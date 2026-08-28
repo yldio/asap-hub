@@ -247,7 +247,7 @@ export const useProjectEditor = ({
         }
       }
     },
-    [api, id, onLeaseLost],
+    [api, id, markSettled, onLeaseLost],
   );
 
   const dirty = state.history.present !== state.settled;

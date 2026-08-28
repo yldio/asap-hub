@@ -20,6 +20,8 @@ export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 type EditorState = {
   history: History<Timeline>;
+  // the revision the server is believed to hold; anything else is unsaved
+  settled: Timeline;
   timelineVersion: number;
   version: number;
   saveState: SaveState;
@@ -35,10 +37,11 @@ type EditorEvent =
   | { type: 'redo' }
   | { type: 'beginGesture' }
   | { type: 'endGesture' }
+  | { type: 'settle'; timeline: Timeline }
   | { type: 'saving' }
   | { type: 'saved'; timelineVersion: number; version: number }
   | { type: 'saveFailed' }
-  | { type: 'rebase'; version: number };
+  | { type: 'rebase'; version: number; timelineVersion?: number };
 
 const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
   switch (event.type) {
@@ -56,6 +59,9 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
           : record(state.history, next),
       };
     }
+
+    case 'settle':
+      return { ...state, settled: event.timeline };
 
     case 'beginGesture':
       return { ...state, gesture: true, gestureRecorded: false };
@@ -88,7 +94,11 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
       return { ...state, saveState: 'error' };
 
     case 'rebase':
-      return { ...state, version: event.version };
+      return {
+        ...state,
+        version: event.version,
+        timelineVersion: event.timelineVersion ?? state.timelineVersion,
+      };
 
     default:
       return state;
@@ -122,6 +132,9 @@ export type ProjectEditor = {
   redo: () => void;
   rebase: (version: number) => void;
   flush: () => void;
+  // give up on the edits the server has not taken; the last saved revision
+  // stands and nothing further is sent, not even by the flush on the way out
+  discard: () => void;
 };
 
 // the save model is the one already proven by the chapter editor: debounce, one
@@ -137,6 +150,7 @@ export const useProjectEditor = ({
   const api = useApi();
   const [state, send] = useReducer(editorReducer, undefined, () => ({
     history: initialHistory(timeline),
+    settled: timeline,
     timelineVersion,
     version,
     saveState: 'idle' as SaveState,
@@ -148,6 +162,13 @@ export const useProjectEditor = ({
   const pendingRef = useRef<Timeline>();
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  // The versions a request must carry live in a ref, not in the reducer state.
+  // A save queued behind another one runs inside the first one's `finally`,
+  // before React has re-rendered with the result, so reading them from state
+  // sent the version the server had already moved past and every save from then
+  // on came back 409.
+  const versionsRef = useRef({ timelineVersion, version });
 
   const save = useCallback(
     async (next: Timeline): Promise<void> => {
@@ -161,25 +182,40 @@ export const useProjectEditor = ({
       try {
         const saved = await api.saveTimeline(id, {
           timeline: next,
-          timelineVersion: stateRef.current.timelineVersion,
-          version: stateRef.current.version,
+          ...versionsRef.current,
         });
-        send({
-          type: 'saved',
+        versionsRef.current = {
           timelineVersion: saved.timelineVersion,
           version: saved.video.version,
-        });
+        };
+        send({ type: 'saved', ...versionsRef.current });
       } catch (error) {
         if (error instanceof ApiError && error.status === 409) {
           if (error.code === 'locked') {
             onLeaseLost(error.holderName);
           } else {
-            // another tab moved the document on; take the fresh version and let
-            // the next autosave carry the same edits up again
+            // Another writer moved the document on. Both versions have to come
+            // back: rebasing only the row version left the timeline version
+            // stale, so the retry conflicted exactly as the first attempt did.
             const fresh = await api.getVideo(id).catch(() => undefined);
+            const ahead =
+              fresh &&
+              fresh.timeline &&
+              fresh.timeline.timelineVersion !==
+                versionsRef.current.timelineVersion;
             if (fresh) {
-              send({ type: 'rebase', version: fresh.version });
-              pendingRef.current = next;
+              versionsRef.current = {
+                timelineVersion:
+                  fresh.timeline?.timelineVersion ??
+                  versionsRef.current.timelineVersion,
+                version: fresh.version,
+              };
+              send({ type: 'rebase', ...versionsRef.current });
+              // only worth carrying the edit up again if the rebase actually
+              // moved; retrying on the same versions would spin
+              if (ahead) {
+                pendingRef.current = next;
+              }
             }
           }
         }
@@ -196,17 +232,21 @@ export const useProjectEditor = ({
     [api, id, onLeaseLost],
   );
 
-  const saved = useRef(timeline);
-  const dirty = state.history.present !== saved.current;
+  const dirty = state.history.present !== state.settled;
 
   const flush = useCallback(() => {
-    const { present } = stateRef.current.history;
-    if (present === saved.current) {
+    const { history, settled } = stateRef.current;
+    if (history.present === settled) {
       return;
     }
-    saved.current = present;
-    void save(present);
+    send({ type: 'settle', timeline: history.present });
+    void save(history.present);
   }, [save]);
+
+  const discard = useCallback(() => {
+    send({ type: 'settle', timeline: stateRef.current.history.present });
+    pendingRef.current = undefined;
+  }, []);
 
   useEffect(() => {
     if (readOnly || !dirty) {
@@ -252,10 +292,15 @@ export const useProjectEditor = ({
   const endGesture = useCallback(() => send({ type: 'endGesture' }), []);
   const undoEdit = useCallback(() => send({ type: 'undo' }), []);
   const redoEdit = useCallback(() => send({ type: 'redo' }), []);
-  const rebase = useCallback(
-    (nextVersion: number) => send({ type: 'rebase', version: nextVersion }),
-    [],
-  );
+  // the export and the publish write to the same row, so they hand back the
+  // version they left it on
+  const rebase = useCallback((nextVersion: number) => {
+    versionsRef.current = {
+      ...versionsRef.current,
+      version: nextVersion,
+    };
+    send({ type: 'rebase', version: nextVersion });
+  }, []);
 
   return useMemo(
     () => ({
@@ -272,10 +317,12 @@ export const useProjectEditor = ({
       redo: redoEdit,
       rebase,
       flush,
+      discard,
     }),
     [
       beginGesture,
       dirty,
+      discard,
       dispatch,
       endGesture,
       flush,

@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { limits } from '@asap-hub/demo-timeline';
 import { FC, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
@@ -117,6 +118,8 @@ const AssetLabel: FC<{
       value={draft}
       disabled={readOnly}
       aria-label={`Name of ${asset.label}`}
+      maxLength={limits.textLength}
+      autoComplete="off"
       onChange={(event) => setDraft(event.target.value)}
       onBlur={() => {
         const next = draft.trim();

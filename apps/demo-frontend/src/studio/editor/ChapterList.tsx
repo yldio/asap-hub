@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { ResolvedChapter } from '@asap-hub/demo-timeline';
+import { limits, ResolvedChapter } from '@asap-hub/demo-timeline';
 import { FC, useEffect, useState } from 'react';
 import { formatDuration, parseTimecode } from '../../utils/time';
 import EditorButton from './EditorButton';
@@ -112,6 +112,7 @@ const ChapterTime: FC<{
       aria-label={`Start of ${label}`}
       value={draft}
       disabled={readOnly}
+      autoComplete="off"
       onFocus={() => setEditing(true)}
       onChange={(event) => setDraft(event.target.value)}
       onBlur={() => {
@@ -188,6 +189,8 @@ const ChapterList: FC<Props> = ({
                     value={chapter.title}
                     disabled={readOnly}
                     placeholder="Chapter name"
+                    maxLength={limits.textLength}
+                    autoComplete="off"
                     aria-label={`Name of the chapter at ${formatDuration(
                       chapter.startMs,
                     )}`}

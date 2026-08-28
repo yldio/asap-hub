@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { limits } from '@asap-hub/demo-timeline';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { editorTheme } from './editorTheme';
 import { formatMs, parseMs } from './timecode';
@@ -62,6 +63,8 @@ export const readingStyles = css({
   fontVariantNumeric: 'tabular-nums',
 });
 
+// The server rejects any text past this, and it rejects the whole document, so
+// a pasted heading that is too long used to make every later save fail as well.
 export const TextField: FC<{
   readonly label: string;
   readonly value: string;
@@ -77,6 +80,8 @@ export const TextField: FC<{
       value={value}
       disabled={disabled}
       placeholder={placeholder}
+      maxLength={limits.textLength}
+      autoComplete="off"
       onChange={(event: ChangeEvent<HTMLInputElement>) =>
         onChange(event.target.value)
       }
@@ -167,6 +172,7 @@ export const TimecodeField: FC<{
         value={draft}
         disabled={disabled}
         inputMode="decimal"
+        autoComplete="off"
         aria-invalid={editing && parsed === undefined}
         onFocus={() => setEditing(true)}
         onChange={(event: ChangeEvent<HTMLInputElement>) =>

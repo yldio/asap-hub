@@ -55,6 +55,12 @@ const badgeStyles = css({
 
 const noticeStyles = css({ fontSize: 13, color: editorTheme.muted, margin: 0 });
 
+const dirtyStyles = css({
+  fontSize: 13,
+  color: editorTheme.text,
+  margin: 0,
+});
+
 const errorStyles = css({ fontSize: 13, color: editorTheme.record, margin: 0 });
 
 const spacerStyles = css({ marginLeft: 'auto' });
@@ -63,6 +69,8 @@ type Props = {
   readonly video: Video;
   readonly readOnly: boolean;
   readonly leaseHolder?: string;
+  // edits the server has not taken yet
+  readonly dirty: boolean;
   readonly notice?: string;
   // false means the guard has taken over and the link must not navigate
   readonly onLeave: () => boolean;
@@ -79,6 +87,7 @@ const ProjectHeader: FC<Props> = ({
   video,
   readOnly,
   leaseHolder,
+  dirty,
   notice,
   onLeave,
   onRename,
@@ -136,6 +145,7 @@ const ProjectHeader: FC<Props> = ({
             : 'This demo is read only until the editing lock is available.'}
         </p>
       ) : null}
+      {!readOnly && dirty ? <p css={dirtyStyles}>Unsaved changes</p> : null}
       {notice ? <p css={errorStyles}>{notice}</p> : null}
 
       <span css={spacerStyles} />

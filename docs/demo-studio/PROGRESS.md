@@ -7,13 +7,14 @@ See [PLAN.md](./PLAN.md) for the design and [FINDINGS.md](./FINDINGS.md) for iss
 
 ## Status
 
-| Milestone                   | State       |
-| --------------------------- | ----------- |
-| M0 Foundations              | in progress |
-| M1 Timeline and render      | not started |
-| M2 Text and transitions     | not started |
-| M3 Recording and voice-over | not started |
-| M4 Cursor and zoom          | not started |
+| Milestone                   | State                             |
+| --------------------------- | --------------------------------- |
+| M0 Foundations              | done                              |
+| M1 Timeline and render      | editor done, render job in flight |
+| M2 Text and transitions     | editor and renderer done          |
+| M3 Recording and voice-over | done                              |
+| M4a Zoom and manual effects | done                              |
+| M4b Cursor capture          | in flight                         |
 
 ## M0 Foundations
 
@@ -51,26 +52,56 @@ Acceptance criteria:
 
 ## M1 Timeline and render
 
-Not started. Goal: import several clips, trim, split, reorder, preview, autosave, render at 1080p,
-publish.
+- [x] Import several clips, trim, split, duplicate, reorder, mute, undo and redo
+- [x] Drag clips to reorder and drag their edges to trim, on a dark studio timeline
+- [x] Preview with a clock-driven playhead that crosses clip boundaries
+- [x] Autosave through the existing lease and version guard
+- [x] Output follows the footage: 1080p minimum, source height above that, 60fps when the sources are
+- [x] Render controls in the editor: start, progress, cancel, failure message, link to the result
+- [x] The access route serves the versioned render output, so a re-render is not hidden by the CDN
+- [ ] The render job itself, running the plan in the container (in flight)
 
 ## M2 Text and transitions
 
-Not started.
+- [x] Title cards between clips, with heading, subtitle and length
+- [x] Banners over the video, draggable and trimmable on their own lane, fade or slide
+- [x] Transitions between clips: cut, crossfade, slide
+- [x] Renderer support for all three, including the ffmpeg filtergraph and the SVG presets shared
+      with the preview
 
 ## M3 Recording and voice-over
 
-Not started.
+- [x] Screen recording with a codec chosen per browser and a clear message where it is unsupported
+- [x] Pause and resume, and the picker's own stop ending the take
+- [x] Microphone recorded as a separate narration asset so it can be retimed on its own
+- [x] A finished take lands as a clip plus its voice over on the audio lane
+- [ ] Streaming the upload while recording rather than at stop (backlog, see FINDINGS)
 
-## M4 Cursor and zoom
+## M4a Zoom and manual effects
 
-Not started.
+- [x] Zoom keyframes with ramp in, hold, ramp out, easing and a focus point
+- [x] Preview applies the zoom transform, and the strongest of two overlapping zooms wins
+- [x] Click highlights and spotlight, hand placed, on their own lane
+- [x] Editing a derived effect marks it so a later re-derive keeps the change
+
+## M4b Cursor capture
+
+In flight: the companion snippet, its session endpoints, and the pure derivation from captured
+events into editable effects.
 
 ## Session log
 
 Newest first. One entry per working session: what landed, what was verified, what moved.
 
 ### 2026-08-28
+
+- Finished M2, M3 and M4a, and brought M1's editor half to done. The studio now records, imports,
+  edits on a multi track timeline, and previews title cards, banners, zoom and cursor effects.
+- The shared package grew the render layer: `buildRenderPlan` turns a timeline into an ffmpeg plan
+  (168 tests, full coverage), and the SVG presets are the single source of truth for how text looks
+  in both the preview and the output.
+- The container grew a job runner with matching Docker and ECS implementations, an asset ingest job,
+  and a shared finishing stage so an upload and a render produce identical artefacts.
 
 - Built the editor itself: `packages/demo-timeline` grew `chooseCanvas`, the frontend
   grew a timeline reducer with undo, and the studio page now edits a real timeline.

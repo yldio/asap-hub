@@ -29,6 +29,20 @@ const asset = (overrides: Partial<ProjectAsset> = {}): ProjectAsset => ({
   ...overrides,
 });
 
+const timelineWithClip = {
+  ...createEmptyTimeline(),
+  clips: [
+    {
+      kind: 'source' as const,
+      id: 'clip-1',
+      assetId: 'asset-1',
+      inMs: 0,
+      outMs: 8000,
+      volume: 1,
+    },
+  ],
+};
+
 const api = (overrides = {}) => ({
   getVideo: jest.fn().mockResolvedValue(project),
   getTimeline: jest
@@ -159,4 +173,94 @@ it('is read only when someone else holds the lease', async () => {
   });
 
   expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
+});
+
+describe('rendering', () => {
+  it('offers a render once the timeline has a clip', async () => {
+    renderStudio({
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    expect(await screen.findByRole('button', { name: 'Render' })).toBeEnabled();
+  });
+
+  it('cannot render an empty timeline', async () => {
+    renderStudio();
+
+    expect(
+      await screen.findByRole('button', { name: 'Render' }),
+    ).toBeDisabled();
+  });
+
+  it('starts a render at the version it read', async () => {
+    const startRender = jest
+      .fn()
+      .mockResolvedValue({ ...project, render: { state: 'queued' } });
+    renderStudio({
+      startRender,
+      getTimeline: jest
+        .fn()
+        .mockResolvedValue({ timeline: timelineWithClip, timelineVersion: 4 }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Render' }),
+    );
+
+    expect(startRender).toHaveBeenCalledWith('project-1', 3);
+  });
+
+  it('shows progress and a way out while a render runs', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'rendering',
+          timelineVersion: 4,
+          stage: 'clips',
+          progress: 40,
+        },
+      }),
+    });
+
+    expect(await screen.findByText('Rendering the clips')).toBeVisible();
+    expect(screen.getByRole('progressbar')).toHaveAttribute(
+      'aria-valuenow',
+      '40',
+    );
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
+  });
+
+  it('explains a failed render', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'failed',
+          timelineVersion: 4,
+          error: 'ffmpeg exited 1',
+        },
+      }),
+    });
+
+    expect(
+      await screen.findByText(/Render failed: ffmpeg exited 1/),
+    ).toBeVisible();
+  });
+
+  it('links to the finished demo once there is output', async () => {
+    renderStudio({
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+    });
+
+    expect(
+      await screen.findByRole('link', { name: 'Preview the render' }),
+    ).toHaveAttribute('href', '/videos/project-1');
+  });
 });

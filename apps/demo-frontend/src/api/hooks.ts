@@ -107,8 +107,13 @@ export const useEditableVideo = (
     enabled: Boolean(id),
     retry: noRetryOnClientError,
     refetchInterval: (query) => {
-      const state = query.state.data?.processingState;
-      return state === 'uploading' || state === 'processing' ? 5000 : false;
+      const video = query.state.data;
+      const busy =
+        video?.processingState === 'uploading' ||
+        video?.processingState === 'processing' ||
+        video?.render?.state === 'queued' ||
+        video?.render?.state === 'rendering';
+      return busy ? 5000 : false;
     },
   });
 };

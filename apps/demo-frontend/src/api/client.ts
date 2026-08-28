@@ -297,6 +297,24 @@ export const createApi = (getToken: GetToken) => ({
     );
   },
 
+  startRender: async (id: string, version: number): Promise<Video> =>
+    (
+      await request<{ video: Video }>(
+        `/projects/${encodeURIComponent(id)}/render`,
+        await getToken(),
+        { method: 'POST', body: { version } },
+      )
+    ).video,
+
+  cancelRender: async (id: string, version: number): Promise<Video> =>
+    (
+      await request<{ video: Video }>(
+        `/projects/${encodeURIComponent(id)}/render`,
+        await getToken(),
+        { method: 'DELETE', body: { version } },
+      )
+    ).video,
+
   createUpload: async (input: {
     title: string;
     folderId?: string;

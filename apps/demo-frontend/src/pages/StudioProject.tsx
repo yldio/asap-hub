@@ -2,15 +2,17 @@
 import { css } from '@emotion/react';
 import { timelineDurationMs } from '@asap-hub/demo-timeline';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
+import { ApiError } from '../api/client';
 import { useEditableVideo } from '../api/hooks';
-import type { ProjectAsset } from '../api/types';
+import type { ProjectAsset, Video } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
 import ProjectEditor from '../studio/editor/ProjectEditor';
 import { AssetUpload, useAssetUpload } from '../studio/editor/useAssetUpload';
+import RenderBar from '../studio/editor/RenderBar';
 import RecorderPanel from '../studio/recording/RecorderPanel';
 import { screenRecordingSupport } from '../studio/recording/mediaCapabilities';
 import {
@@ -105,6 +107,11 @@ const StudioProject: FC = () => {
     [id, queryClient],
   );
 
+  const refreshVideo = useCallback(
+    (fresh: Video) => queryClient.setQueryData(['video', id], fresh),
+    [id, queryClient],
+  );
+
   const onImport = useCallback(
     (file: File) => {
       void upload.importFile(file).then(() => refreshAssets());
@@ -159,6 +166,7 @@ const StudioProject: FC = () => {
       onDeleteAsset={onDeleteAsset}
       upload={upload}
       onAssetsChanged={refreshAssets}
+      onVideoChanged={refreshVideo}
       assetUrl={assetUrlOf(id)}
     />
   );
@@ -177,6 +185,7 @@ type EditorProps = {
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly upload: AssetUpload;
   readonly onAssetsChanged: () => void;
+  readonly onVideoChanged: (video: Video) => void;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
 };
 
@@ -195,8 +204,10 @@ const Editor: FC<EditorProps> = ({
   onDeleteAsset,
   upload,
   onAssetsChanged,
+  onVideoChanged,
   assetUrl,
 }) => {
+  const api = useApi();
   const editor = useProjectEditor({
     id,
     timeline,
@@ -237,6 +248,28 @@ const Editor: FC<EditorProps> = ({
   );
 
   const take = useRecordingTake(upload, onTake);
+
+  const [renderError, setRenderError] = useState<string>();
+  const startRender = useCallback(() => {
+    setRenderError(undefined);
+    api
+      .startRender(id, video.version)
+      .then(onVideoChanged)
+      .catch((cause: unknown) =>
+        setRenderError(
+          cause instanceof ApiError && cause.code === 'render_active'
+            ? 'A render is already running for this demo.'
+            : 'Could not start the render.',
+        ),
+      );
+  }, [api, id, onVideoChanged, video.version]);
+
+  const cancelRender = useCallback(() => {
+    api
+      .cancelRender(id, video.version)
+      .then(onVideoChanged)
+      .catch(() => setRenderError('Could not cancel the render.'));
+  }, [api, id, onVideoChanged, video.version]);
   const support = screenRecordingSupport(
     navigator.mediaDevices,
     typeof MediaRecorder === 'undefined' ? undefined : MediaRecorder,
@@ -257,6 +290,17 @@ const Editor: FC<EditorProps> = ({
           </p>
         ) : null}
         {upload.error ? <p css={errorStyles}>{upload.error}</p> : null}
+        {renderError ? <p css={errorStyles}>{renderError}</p> : null}
+        <RenderBar
+          videoId={id}
+          render={video.render}
+          status={video.status}
+          hasOutput={video.processingState === 'ready'}
+          canRender={editor.timeline.clips.length > 0}
+          readOnly={readOnly}
+          onRender={startRender}
+          onCancel={cancelRender}
+        />
       </div>
       <ProjectEditor
         editor={editor}

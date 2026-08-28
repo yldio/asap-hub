@@ -1,7 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from '@emotion/react';
 import { CursorEffect } from '@asap-hub/demo-timeline';
-import { FC } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 const layerStyles = css({
   position: 'absolute',
@@ -46,52 +52,95 @@ const visible = (
   return tMs >= atMs && tMs <= atMs + windowMs;
 };
 
+const shownAt = (
+  effects: CursorEffect[],
+  tMs: number,
+  offsetMs: number,
+): CursorEffect[] =>
+  effects.filter((effect) =>
+    visible(
+      effect,
+      tMs,
+      effect.type === 'spotlight' ? spotlightMs : rippleMs,
+      offsetMs,
+    ),
+  );
+
+// nothing on this layer changes while an effect is on screen: a ripple is a CSS
+// animation and a spotlight stands still, so the only moments worth a render
+// are the ones where the set of effects on screen changes
+const keyOf = (shown: CursorEffect[]): string =>
+  shown.map((effect) => effect.id).join(' ');
+
+export type CursorLayerHandle = {
+  setTime: (ms: number) => void;
+};
+
 type Props = {
   readonly effects: CursorEffect[];
-  readonly tMs: number;
+  // where the layer starts; the stage drives it from there
+  readonly tMs?: number;
   readonly offsetMs?: number;
 };
 
-const CursorLayer: FC<Props> = ({ effects, tMs, offsetMs = 0 }) => {
-  const spotlight = effects.find(
-    (effect) =>
-      effect.type === 'spotlight' &&
-      visible(effect, tMs, spotlightMs, offsetMs),
-  );
+const CursorLayer = forwardRef<CursorLayerHandle, Props>(
+  ({ effects, tMs = 0, offsetMs = 0 }, ref) => {
+    const [timeMs, setTimeMs] = useState(tMs);
+    const shown = shownAt(effects, timeMs, offsetMs);
+    const shownKey = keyOf(shown);
+    const shownKeyRef = useRef(shownKey);
 
-  return (
-    <div css={layerStyles}>
-      {spotlight ? (
-        <div
-          css={spotlightStyles}
-          style={{
-            background: `radial-gradient(circle at ${
-              spotlight.point.x * 100
-            }% ${
-              spotlight.point.y * 100
-            }%, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0.55) 26%)`,
-          }}
-        />
-      ) : null}
+    useEffect(() => {
+      shownKeyRef.current = shownKey;
+    }, [shownKey]);
 
-      {effects
-        .filter(
-          (effect) =>
-            effect.type === 'ripple' &&
-            visible(effect, tMs, rippleMs, offsetMs),
-        )
-        .map((effect) => (
-          <span
-            key={`${effect.id}-${Math.round(effect.tMs)}`}
-            css={rippleStyles}
+    useImperativeHandle(
+      ref,
+      () => ({
+        setTime: (ms: number) => {
+          const key = keyOf(shownAt(effects, ms, offsetMs));
+          if (key === shownKeyRef.current) {
+            return;
+          }
+          shownKeyRef.current = key;
+          setTimeMs(ms);
+        },
+      }),
+      [effects, offsetMs],
+    );
+
+    const spotlight = shown.find((effect) => effect.type === 'spotlight');
+
+    return (
+      <div css={layerStyles}>
+        {spotlight ? (
+          <div
+            css={spotlightStyles}
             style={{
-              left: `${effect.point.x * 100}%`,
-              top: `${effect.point.y * 100}%`,
+              background: `radial-gradient(circle at ${
+                spotlight.point.x * 100
+              }% ${
+                spotlight.point.y * 100
+              }%, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0.55) 26%)`,
             }}
           />
-        ))}
-    </div>
-  );
-};
+        ) : null}
+
+        {shown
+          .filter((effect) => effect.type === 'ripple')
+          .map((effect) => (
+            <span
+              key={`${effect.id}-${Math.round(effect.tMs)}`}
+              css={rippleStyles}
+              style={{
+                left: `${effect.point.x * 100}%`,
+                top: `${effect.point.y * 100}%`,
+              }}
+            />
+          ))}
+      </div>
+    );
+  },
+);
 
 export default CursorLayer;

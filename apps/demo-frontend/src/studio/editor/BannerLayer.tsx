@@ -1,7 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Banner, fadeOpacityAt } from '@asap-hub/demo-timeline';
-import { FC } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 const layerStyles = css({
   position: 'absolute',
@@ -49,35 +56,94 @@ const offsetAt = (banner: Banner, opacity: number): string =>
     ? `translateY(${(1 - opacity) * (banner.position === 'top' ? -30 : 30)}%)`
     : 'none';
 
-type Props = {
-  readonly banners: Banner[];
-  readonly tMs: number;
+const shownAt = (banners: Banner[], tMs: number): Banner[] =>
+  banners.filter((banner) => fadeOpacityAt(banner, banner, tMs) > 0);
+
+const keyOf = (shown: Banner[]): string =>
+  shown.map((banner) => banner.id).join(' ');
+
+export type BannerLayerHandle = {
+  setTime: (ms: number) => void;
 };
 
-const BannerLayer: FC<Props> = ({ banners, tMs }) => (
-  <div css={layerStyles}>
-    {banners.map((banner) => {
-      const opacity = fadeOpacityAt(banner, banner, tMs);
-      if (opacity <= 0) {
-        return null;
-      }
-      return (
-        <div
-          key={banner.id}
-          css={[
-            bandStyles,
-            banner.position === 'top' ? topStyles : bottomStyles,
-          ]}
-          style={{ opacity, transform: offsetAt(banner, opacity) }}
-        >
-          <p css={headingStyles}>{banner.text}</p>
-          {banner.subtitle ? (
-            <p css={subtitleStyles}>{banner.subtitle}</p>
-          ) : null}
-        </div>
-      );
-    })}
-  </div>
+type Props = {
+  readonly banners: Banner[];
+  // where the layer starts; the stage drives it from there
+  readonly tMs?: number;
+};
+
+// a banner fades rather than snapping on, so its own frames are written to the
+// DOM; only a banner arriving or leaving is worth a render
+const BannerLayer = forwardRef<BannerLayerHandle, Props>(
+  ({ banners, tMs = 0 }, ref) => {
+    const [timeMs, setTimeMs] = useState(tMs);
+    const nodesRef = useRef(new Map<string, HTMLDivElement>());
+    const shown = shownAt(banners, timeMs);
+    const shownKey = keyOf(shown);
+    const shownKeyRef = useRef(shownKey);
+
+    useEffect(() => {
+      shownKeyRef.current = shownKey;
+    }, [shownKey]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        setTime: (ms: number) => {
+          const next = shownAt(banners, ms);
+          const key = keyOf(next);
+          if (key !== shownKeyRef.current) {
+            shownKeyRef.current = key;
+            setTimeMs(ms);
+            return;
+          }
+          next.forEach((banner) => {
+            const node = nodesRef.current.get(banner.id);
+            if (!node) return;
+            const opacity = fadeOpacityAt(banner, banner, ms);
+            node.style.opacity = `${opacity}`;
+            node.style.transform = offsetAt(banner, opacity);
+          });
+        },
+      }),
+      [banners],
+    );
+
+    const hold = useCallback(
+      (id: string) => (node: HTMLDivElement | null) => {
+        if (node) {
+          nodesRef.current.set(id, node);
+        } else {
+          nodesRef.current.delete(id);
+        }
+      },
+      [],
+    );
+
+    return (
+      <div css={layerStyles}>
+        {shown.map((banner) => {
+          const opacity = fadeOpacityAt(banner, banner, timeMs);
+          return (
+            <div
+              key={banner.id}
+              ref={hold(banner.id)}
+              css={[
+                bandStyles,
+                banner.position === 'top' ? topStyles : bottomStyles,
+              ]}
+              style={{ opacity, transform: offsetAt(banner, opacity) }}
+            >
+              <p css={headingStyles}>{banner.text}</p>
+              {banner.subtitle ? (
+                <p css={subtitleStyles}>{banner.subtitle}</p>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
 );
 
 export default BannerLayer;

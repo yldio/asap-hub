@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useRef, useState } from 'react';
 import { Link } from 'react-router';
 
 import Dropdown from '../ui/Dropdown';
-
+import { SearchIcon } from '../ui/icons';
 import {
   charcoal,
   lead,
@@ -17,17 +17,11 @@ import {
   steel,
   tin,
 } from '../ui/theme';
-import {
-  FilterIcon,
-  FolderPlusIcon,
-  GridIcon,
-  ListIcon,
-  SearchIcon,
-  UploadIcon,
-} from './icons';
+import { FolderPlusIcon, GridIcon, ListIcon, UploadIcon } from './icons';
 import {
   sortLabels,
   statusFilterLabels,
+  statusFilters,
   type SortMode,
   type StatusFilter,
   type ViewMode,
@@ -98,30 +92,6 @@ const toggleActiveStyles = css({
   ':hover': { backgroundColor: mint.rgb },
 });
 
-const chipStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: rem(8),
-  padding: `${rem(8)} ${rem(14)}`,
-  borderRadius: rem(18),
-  border: `1px solid ${steel.rgb}`,
-  backgroundColor: paper.rgb,
-  font: 'inherit',
-  fontSize: rem(14),
-  color: charcoal.rgb,
-  cursor: 'pointer',
-  whiteSpace: 'nowrap',
-  ':hover': { backgroundColor: silver.rgb },
-});
-
-const chipActiveStyles = css({
-  backgroundColor: mint.rgb,
-  borderColor: pine.rgb,
-  color: pine.rgb,
-  fontWeight: 'bold',
-  ':hover': { backgroundColor: mint.rgb },
-});
-
 const uploadStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
@@ -189,6 +159,10 @@ const NewFolderButton: FC<{
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
+  // the input blurs itself shut on the press, so the click has to remember
+  // whether the popover was open or a second press would silently reopen it
+  const wasOpen = useRef(false);
+
   const close = () => {
     setOpen(false);
     setValue('');
@@ -200,12 +174,20 @@ const NewFolderButton: FC<{
         type="button"
         css={newFolderStyles}
         disabled={disabled}
+        aria-expanded={open}
         title={
           disabled
             ? 'This folder is already at the deepest level'
             : `New folder in ${locationName}`
         }
-        onClick={() => setOpen((current) => !current)}
+        onMouseDown={() => {
+          wasOpen.current = open;
+        }}
+        onClick={() => {
+          if (wasOpen.current) close();
+          else setOpen(true);
+          wasOpen.current = false;
+        }}
       >
         <FolderPlusIcon size={15} />
         New folder
@@ -251,7 +233,7 @@ export const Toolbar: FC<{
   readonly view: ViewMode;
   readonly onViewChange: (view: ViewMode) => void;
   readonly statusFilter: StatusFilter;
-  readonly onStatusFilterClick: () => void;
+  readonly onStatusFilterChange: (filter: StatusFilter) => void;
   readonly isCreator: boolean;
   readonly currentLocationName: string;
   readonly canCreateHere: boolean;
@@ -264,7 +246,7 @@ export const Toolbar: FC<{
   view,
   onViewChange,
   statusFilter,
-  onStatusFilterClick,
+  onStatusFilterChange,
   isCreator,
   currentLocationName,
   canCreateHere,
@@ -317,14 +299,15 @@ export const Toolbar: FC<{
     </div>
 
     {isCreator && (
-      <button
-        type="button"
-        css={[chipStyles, statusFilter !== 'all' && chipActiveStyles]}
-        onClick={onStatusFilterClick}
-      >
-        <FilterIcon size={14} />
-        {statusFilterLabels[statusFilter]}
-      </button>
+      <Dropdown
+        label="Filter by status"
+        value={statusFilter}
+        options={statusFilters.map((option) => ({
+          value: option,
+          label: statusFilterLabels[option],
+        }))}
+        onChange={onStatusFilterChange}
+      />
     )}
 
     {isCreator && (

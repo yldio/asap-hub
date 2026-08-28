@@ -8,6 +8,7 @@ import {
   ReactNode,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Link } from 'react-router';
@@ -71,9 +72,19 @@ const rowStyles = css({
   padding: `${rem(8)} ${rem(12)}`,
   borderRadius: rem(6),
   color: charcoal.rgb,
-  textDecoration: 'none',
   fontSize: rem(15),
   ':hover': { backgroundColor: silver.rgb },
+});
+
+const rowLinkStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(10),
+  flex: 1,
+  minWidth: 0,
+  color: 'inherit',
+  font: 'inherit',
+  textDecoration: 'none',
 });
 
 const activeRowStyles = css({
@@ -160,9 +171,10 @@ const inputStyles = css({
 export const InlineFolderInput: FC<{
   readonly initialValue?: string;
   readonly label: string;
+  readonly placeholder?: string;
   readonly onSubmit: (name: string) => void;
   readonly onCancel: () => void;
-}> = ({ initialValue = '', label, onSubmit, onCancel }) => {
+}> = ({ initialValue = '', label, placeholder, onSubmit, onCancel }) => {
   const [value, setValue] = useState(initialValue);
   return (
     <form
@@ -176,6 +188,7 @@ export const InlineFolderInput: FC<{
       <input
         autoFocus
         aria-label={label}
+        placeholder={placeholder}
         css={inputStyles}
         value={value}
         onChange={(event) => setValue(event.target.value)}
@@ -226,8 +239,9 @@ const SidebarRow: FC<{
     id: droppableId ?? `sidebar-${name}`,
     disabled: droppableId === undefined,
   });
+  // the drag a11y attributes are deliberately not spread: they would put
+  // role="button" back on the row, and no keyboard sensor is registered
   const {
-    attributes,
     listeners,
     setNodeRef: setDragRef,
     isDragging,
@@ -235,18 +249,16 @@ const SidebarRow: FC<{
     id: draggableId ?? `sidebar-drag-${name}`,
     disabled: draggableId === undefined,
   });
+  // the row is a container, not a link: the caret and the kebab are siblings of
+  // the link rather than buttons nested inside it
   return (
-    <Link
-      ref={(node: HTMLAnchorElement | null) => {
+    <div
+      ref={(node: HTMLDivElement | null) => {
         setNodeRef(node);
         if (draggableId !== undefined) setDragRef(node);
       }}
-      to={to}
-      draggable={false}
       onContextMenu={onContextMenu}
-      {...(draggableId !== undefined ? attributes : {})}
       {...(draggableId !== undefined ? listeners : {})}
-      onClick={onNavClick}
       css={[
         rowStyles,
         rowHoverStyles,
@@ -262,36 +274,36 @@ const SidebarRow: FC<{
           aria-label={isExpanded ? `Collapse ${name}` : `Expand ${name}`}
           aria-expanded={isExpanded}
           css={[caretStyles, isExpanded && caretOpenStyles]}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            onToggle();
-          }}
+          onClick={onToggle}
         >
           <CaretIcon size={12} />
         </button>
       ) : (
         <span css={caretSpacerStyles} aria-hidden />
       )}
-      <span css={{ display: 'flex', color: 'inherit' }}>{icon}</span>
-      <span css={labelStyles}>{name}</span>
+      <Link
+        to={to}
+        draggable={false}
+        onClick={onNavClick}
+        css={rowLinkStyles}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        <span css={{ display: 'flex', color: 'inherit' }}>{icon}</span>
+        <span css={labelStyles}>{name}</span>
+      </Link>
       {onMenuButton && (
         <button
           type="button"
           className="row-kebab"
           aria-label={`Actions for ${name}`}
           css={kebabStyles}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            onMenuButton(event);
-          }}
+          onClick={onMenuButton}
         >
           <KebabIcon size={14} />
         </button>
       )}
       {count !== undefined && <span css={countStyles}>{count}</span>}
-    </Link>
+    </div>
   );
 };
 
@@ -430,6 +442,9 @@ export const Sidebar: FC<{
 }) => {
   const [expanded, toggle] = useExpandedFolders(folders, selectedFolder);
   const [homeExpanded, toggleHome] = useHomeExpanded();
+  // the input blurs itself shut on the press, so the click has to remember
+  // whether it was open or a second press would silently reopen it
+  const wasCreating = useRef(false);
   const tree = useMemo(() => buildTree(folders), [folders]);
 
   // Home occupies depth 0, so every real folder renders one level deeper
@@ -487,6 +502,7 @@ export const Sidebar: FC<{
               <li css={{ paddingLeft: rem((depth + 1) * 16) }}>
                 <InlineFolderInput
                   label={`New subfolder in ${folder.name}`}
+                  placeholder="Folder name"
                   onCancel={onCancelCreateChild}
                   onSubmit={(name) => onCreateChild(folder.id, name)}
                 />
@@ -507,9 +523,17 @@ export const Sidebar: FC<{
           <button
             type="button"
             css={iconButtonStyles}
-            aria-label="New folder"
-            title="New folder"
-            onClick={onStartCreate}
+            aria-label="New top-level folder"
+            title="New top-level folder"
+            aria-expanded={isCreatingFolder}
+            onMouseDown={() => {
+              wasCreating.current = isCreatingFolder;
+            }}
+            onClick={() => {
+              if (wasCreating.current) onCancelCreate();
+              else onStartCreate();
+              wasCreating.current = false;
+            }}
           >
             <PlusIcon />
           </button>
@@ -523,6 +547,7 @@ export const Sidebar: FC<{
             <div css={{ paddingBottom: rem(6) }}>
               <InlineFolderInput
                 label="New folder name"
+                placeholder="Folder name"
                 onCancel={onCancelCreate}
                 onSubmit={onCreate}
               />

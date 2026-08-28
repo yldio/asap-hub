@@ -2,14 +2,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 
-import { nextStatusFilter, type StatusFilter } from '../state';
+import { type StatusFilter } from '../state';
 import { Toolbar } from '../Toolbar';
 
 const renderToolbar = (props: Partial<Parameters<typeof Toolbar>[0]> = {}) => {
   const onQueryChange = jest.fn();
   const onSortChange = jest.fn();
   const onViewChange = jest.fn();
-  const onStatusFilterClick = jest.fn();
+  const onStatusFilterChange = jest.fn();
   const onCreateFolderHere = jest.fn();
 
   render(
@@ -22,7 +22,7 @@ const renderToolbar = (props: Partial<Parameters<typeof Toolbar>[0]> = {}) => {
         view="grid"
         onViewChange={onViewChange}
         statusFilter="all"
-        onStatusFilterClick={onStatusFilterClick}
+        onStatusFilterChange={onStatusFilterChange}
         isCreator
         currentLocationName="Engineering"
         canCreateHere
@@ -36,7 +36,7 @@ const renderToolbar = (props: Partial<Parameters<typeof Toolbar>[0]> = {}) => {
     onQueryChange,
     onSortChange,
     onViewChange,
-    onStatusFilterClick,
+    onStatusFilterChange,
     onCreateFolderHere,
   };
 };
@@ -79,28 +79,32 @@ it('marks the active view and reports a switch', async () => {
   expect(onViewChange).toHaveBeenCalledWith('grid');
 });
 
-describe('status chip', () => {
+describe('status filter', () => {
   it.each<[StatusFilter, string]>([
     ['all', 'All statuses'],
     ['published', 'Published'],
     ['drafts', 'Drafts'],
-  ])('labels the %s filter', (statusFilter, label) => {
+  ])('shows the %s filter on the trigger', (statusFilter, label) => {
     renderToolbar({ statusFilter });
-    expect(screen.getByRole('button', { name: label })).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    ).toHaveTextContent(label);
   });
 
-  it('cycles all to published to drafts and back', () => {
-    expect(nextStatusFilter('all')).toBe('published');
-    expect(nextStatusFilter('published')).toBe('drafts');
-    expect(nextStatusFilter('drafts')).toBe('all');
-  });
+  it('opens a menu of every status, like its neighbours', async () => {
+    const { onStatusFilterChange } = renderToolbar();
 
-  it('asks for the next filter when clicked', async () => {
-    const { onStatusFilterClick } = renderToolbar();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    );
 
-    await userEvent.click(screen.getByRole('button', { name: 'All statuses' }));
+    expect(
+      screen.getAllByRole('option').map((node) => node.textContent),
+    ).toEqual(['All statuses', 'Published', 'Drafts']);
 
-    expect(onStatusFilterClick).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('option', { name: 'Drafts' }));
+
+    expect(onStatusFilterChange).toHaveBeenCalledWith('drafts');
   });
 });
 
@@ -127,6 +131,23 @@ describe('new folder popover', () => {
     );
 
     expect(onCreateFolderHere).not.toHaveBeenCalled();
+  });
+
+  // pressing the button again used to blur the input shut and reopen it, which
+  // reads as nothing happening
+  it('closes the popover when the button is pressed again', async () => {
+    renderToolbar();
+    const button = screen.getByRole('button', { name: /New folder/ });
+
+    await userEvent.click(button);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+
+    await userEvent.click(button);
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    expect(
+      screen.queryByLabelText('New folder name in Engineering'),
+    ).toBeNull();
   });
 
   it('closes the popover on Escape', async () => {
@@ -156,7 +177,7 @@ it('hides the creator-only controls from a member', () => {
 
   expect(screen.getByLabelText('Search videos')).toBeVisible();
   expect(screen.getByRole('button', { name: 'Sort videos' })).toBeVisible();
-  expect(screen.queryByRole('button', { name: 'All statuses' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Filter by status' })).toBeNull();
   expect(screen.queryByRole('button', { name: /New folder/ })).toBeNull();
   expect(screen.queryByRole('link', { name: /Upload/ })).toBeNull();
 });

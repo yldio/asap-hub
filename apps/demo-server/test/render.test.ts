@@ -644,16 +644,27 @@ describe('parseProgressMs', () => {
 describe('the sprite sheet', () => {
   it('lays one tile per interval out in rows of ten', () => {
     expect(spriteGrid(95_000)).toEqual({
-      tileCount: 10,
+      tileCount: 95,
       columns: 10,
+      rows: 10,
+      intervalSeconds: 1,
+    });
+    expect(spriteGrid(0)).toEqual({
+      tileCount: 1,
+      columns: 1,
       rows: 1,
+      intervalSeconds: 1,
     });
-    expect(spriteGrid(105_000)).toEqual({
-      tileCount: 11,
-      columns: 10,
-      rows: 2,
+  });
+
+  // a fixed ten second interval left a ten second demo with a single tile, so
+  // the scrub preview showed one frame from end to end
+  it('samples a short demo closely and a long one sparsely', () => {
+    expect(spriteGrid(10_000).intervalSeconds).toBe(1);
+    expect(spriteGrid(4 * 60 * 60 * 1000)).toMatchObject({
+      tileCount: 100,
+      intervalSeconds: 144,
     });
-    expect(spriteGrid(0)).toEqual({ tileCount: 1, columns: 1, rows: 1 });
   });
 
   it('formats a timestamp the way WebVTT wants it', () => {
@@ -669,6 +680,7 @@ describe('the sprite sheet', () => {
         rows: 1,
         tileHeight: 90,
         durationMs: 15_000,
+        intervalSeconds: 10,
       }),
     ).toBe(
       [

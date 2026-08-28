@@ -42,9 +42,15 @@ export const parseRenderEnv = (env: NodeJS.ProcessEnv): RenderEnv => ({
   workDir: env.WORK_DIR || '/scratch',
 });
 
-export const spriteIntervalSeconds = 10;
+export const spriteTargetTiles = 100;
 export const spriteTileWidth = 160;
 export const spriteColumns = 10;
+
+// A fixed interval gives a short demo a single tile, so the scrub preview shows
+// one frame end to end. Aim for a tile count instead, floored at one second so
+// a long demo does not grow an enormous sheet.
+export const spriteIntervalSeconds = (durationMs: number): number =>
+  Math.max(1, Math.ceil(durationMs / 1000 / spriteTargetTiles));
 
 export const maxErrorLength = 500;
 
@@ -104,15 +110,25 @@ export const parseProgressMs = (chunk: string): number | undefined => {
 
 /* the sprite sheet and its WebVTT track, ported from finish.sh */
 
-export type SpriteGrid = { tileCount: number; columns: number; rows: number };
+export type SpriteGrid = {
+  tileCount: number;
+  columns: number;
+  rows: number;
+  // the sheet, the cue times and the ffmpeg sample rate all have to agree, so
+  // the interval travels with the grid rather than being recomputed
+  intervalSeconds: number;
+};
 
 export const spriteGrid = (durationMs: number): SpriteGrid => {
-  const tileCount = Math.max(
-    Math.ceil(durationMs / 1000 / spriteIntervalSeconds),
-    1,
-  );
+  const intervalSeconds = spriteIntervalSeconds(durationMs);
+  const tileCount = Math.max(Math.ceil(durationMs / 1000 / intervalSeconds), 1);
   const columns = Math.min(spriteColumns, tileCount);
-  return { tileCount, columns, rows: Math.ceil(tileCount / columns) };
+  return {
+    tileCount,
+    columns,
+    rows: Math.ceil(tileCount / columns),
+    intervalSeconds,
+  };
 };
 
 const pad = (value: number, length: number): string =>
@@ -133,13 +149,11 @@ export const thumbnailsVtt = ({
   columns,
   tileHeight,
   durationMs,
+  intervalSeconds,
 }: VttInput): string => {
   const cues = Array.from({ length: tileCount }, (_unused, index) => {
-    const startMs = index * spriteIntervalSeconds * 1000;
-    const endMs = Math.min(
-      (index + 1) * spriteIntervalSeconds * 1000,
-      durationMs,
-    );
+    const startMs = index * intervalSeconds * 1000;
+    const endMs = Math.min((index + 1) * intervalSeconds * 1000, durationMs);
     const x = (index % columns) * spriteTileWidth;
     const y = Math.floor(index / columns) * tileHeight;
     return [
@@ -519,7 +533,7 @@ const finishMedia = async (
     '-frames:v',
     '1',
     '-vf',
-    `fps=1/${spriteIntervalSeconds},scale=${spriteTileWidth}:-2,tile=${grid.columns}x${grid.rows}`,
+    `fps=1/${grid.intervalSeconds},scale=${spriteTileWidth}:-2,tile=${grid.columns}x${grid.rows}`,
     '-q:v',
     '4',
     spriteFile,

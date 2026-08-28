@@ -25,6 +25,14 @@ finish_media() {
   VTT_FILE="${WORK_DIR}/thumbnails.vtt"
   THUMB_FILE="${WORK_DIR}/thumb.jpg"
 
+  # A fixed interval gives a short demo a single tile, so the scrub preview
+  # shows one frame end to end. Aim for a tile count instead, floored at one
+  # second so a long demo does not grow an enormous sheet.
+  if [[ -z "${SPRITE_INTERVAL_SECONDS:-}" ]]; then
+    SPRITE_INTERVAL_SECONDS="$(awk -v ms="$DURATION_MS" -v t="$SPRITE_TARGET_TILES" \
+      'BEGIN { i = int(((ms / 1000) + t - 1) / t); if (i < 1) i = 1; print i }')"
+  fi
+
   # one tile per interval, ceil so the final partial interval still gets a frame
   TILE_COUNT="$(awk -v ms="$DURATION_MS" -v i="$SPRITE_INTERVAL_SECONDS" \
     'BEGIN { n = int((ms / 1000) / i); if ((ms / 1000) > n * i) n += 1; if (n < 1) n = 1; print n }')"

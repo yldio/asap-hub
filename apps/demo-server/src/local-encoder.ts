@@ -6,7 +6,12 @@ import { pipeline } from 'stream/promises';
 import { videoEntity } from './data/entities';
 import { getObject, mediaPrefix, putObject, rawKey } from './storage';
 
-const spriteIntervalSeconds = 10;
+const spriteTargetTiles = 100;
+
+// the same rule the container uses: a short demo needs closer tiles or its
+// scrub preview is one frame end to end
+const spriteIntervalSeconds = (durationMs: number): number =>
+  Math.max(1, Math.ceil(durationMs / 1000 / spriteTargetTiles));
 const spriteTileWidth = 160;
 const spriteColumns = 10;
 
@@ -83,13 +88,11 @@ export const buildThumbnailsVtt = ({
   columns: number;
   tileHeight: number;
 }): string => {
+  const intervalSeconds = spriteIntervalSeconds(durationMs);
   const lines = ['WEBVTT', ''];
   for (let index = 0; index < tileCount; index += 1) {
-    const startMs = index * spriteIntervalSeconds * 1000;
-    const endMs = Math.min(
-      (index + 1) * spriteIntervalSeconds * 1000,
-      durationMs,
-    );
+    const startMs = index * intervalSeconds * 1000;
+    const endMs = Math.min((index + 1) * intervalSeconds * 1000, durationMs);
     const x = (index % columns) * spriteTileWidth;
     const y = Math.floor(index / columns) * tileHeight;
     lines.push(`${formatTimestamp(startMs)} --> ${formatTimestamp(endMs)}`);
@@ -101,10 +104,16 @@ export const buildThumbnailsVtt = ({
 
 export const spriteGrid = (
   durationMs: number,
-): { tileCount: number; columns: number; rows: number } => {
+): {
+  tileCount: number;
+  columns: number;
+  rows: number;
+  intervalSeconds: number;
+} => {
+  const intervalSeconds = spriteIntervalSeconds(durationMs);
   const durationSeconds = durationMs / 1000;
-  let tileCount = Math.floor(durationSeconds / spriteIntervalSeconds);
-  if (durationSeconds > tileCount * spriteIntervalSeconds) {
+  let tileCount = Math.floor(durationSeconds / intervalSeconds);
+  if (durationSeconds > tileCount * intervalSeconds) {
     tileCount += 1;
   }
   if (tileCount < 1) {
@@ -112,7 +121,7 @@ export const spriteGrid = (
   }
   const columns = Math.min(spriteColumns, tileCount);
   const rows = Math.ceil(tileCount / columns);
-  return { tileCount, columns, rows };
+  return { tileCount, columns, rows, intervalSeconds };
 };
 
 const probeDurationMs = async (input: string): Promise<number> => {
@@ -217,7 +226,7 @@ const encodeWithFfmpeg = async (
   }
 
   const durationMs = await probeDurationMs(inputFile);
-  const { tileCount, columns, rows } = spriteGrid(durationMs);
+  const { tileCount, columns, rows, intervalSeconds } = spriteGrid(durationMs);
 
   const sprited = await run('ffmpeg', [
     '-nostdin',
@@ -227,7 +236,7 @@ const encodeWithFfmpeg = async (
     '-frames:v',
     '1',
     '-vf',
-    `fps=1/${spriteIntervalSeconds},scale=${spriteTileWidth}:-2,tile=${columns}x${rows}`,
+    `fps=1/${intervalSeconds},scale=${spriteTileWidth}:-2,tile=${columns}x${rows}`,
     '-q:v',
     '4',
     spriteFile,

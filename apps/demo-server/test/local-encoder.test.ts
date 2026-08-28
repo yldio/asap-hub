@@ -139,43 +139,48 @@ describe('spriteGrid', () => {
       tileCount: 1,
       columns: 1,
       rows: 1,
+      intervalSeconds: 1,
     });
-    expect(encoder.spriteGrid(5000)).toEqual({
-      tileCount: 1,
-      columns: 1,
+  });
+
+  // a fixed ten second interval gave a short demo a single tile, so the scrub
+  // preview showed one frame from end to end
+  it('samples a short demo every second', () => {
+    expect(encoder.spriteGrid(10000)).toEqual({
+      tileCount: 10,
+      columns: 10,
       rows: 1,
+      intervalSeconds: 1,
     });
   });
 
   it('adds a partial tile for the trailing remainder', () => {
-    expect(encoder.spriteGrid(95000)).toEqual({
+    expect(encoder.spriteGrid(9500)).toMatchObject({
       tileCount: 10,
-      columns: 10,
-      rows: 1,
+      intervalSeconds: 1,
     });
   });
 
   it('does not add a tile when the duration divides evenly', () => {
-    expect(encoder.spriteGrid(100000)).toEqual({
-      tileCount: 10,
-      columns: 10,
-      rows: 1,
+    expect(encoder.spriteGrid(9000)).toMatchObject({
+      tileCount: 9,
+      intervalSeconds: 1,
     });
   });
 
-  it('wraps onto multiple rows past ten tiles', () => {
-    expect(encoder.spriteGrid(250000)).toEqual({
-      tileCount: 25,
-      columns: 10,
-      rows: 3,
-    });
+  it('stretches the interval rather than the sheet on a long demo', () => {
+    const grid = encoder.spriteGrid(4 * 60 * 60 * 1000);
+
+    expect(grid.intervalSeconds).toBe(144);
+    expect(grid.tileCount).toBe(100);
+    expect(grid.rows).toBe(10);
   });
 });
 
 describe('buildThumbnailsVtt', () => {
   it('builds cues with sprite coordinates and clamps the last cue end', () => {
     const vtt = encoder.buildThumbnailsVtt({
-      durationMs: 15000,
+      durationMs: 1500,
       tileCount: 2,
       columns: 2,
       tileHeight: 90,
@@ -185,10 +190,10 @@ describe('buildThumbnailsVtt', () => {
       [
         'WEBVTT',
         '',
-        '00:00:00.000 --> 00:00:10.000',
+        '00:00:00.000 --> 00:00:01.000',
         'sprite.jpg#xywh=0,0,160,90',
         '',
-        '00:00:10.000 --> 00:00:15.000',
+        '00:00:01.000 --> 00:00:01.500',
         'sprite.jpg#xywh=160,0,160,90',
         '',
       ].join('\n'),
@@ -198,13 +203,13 @@ describe('buildThumbnailsVtt', () => {
   it('formats hours and milliseconds and advances rows', () => {
     const vtt = encoder.buildThumbnailsVtt({
       durationMs: 3600500,
-      tileCount: 361,
+      tileCount: 100,
       columns: 10,
       tileHeight: 90,
     });
 
-    expect(vtt).toContain('01:00:00.000 --> 01:00:00.500');
-    expect(vtt).toContain('sprite.jpg#xywh=0,3240,160,90');
+    expect(vtt).toContain('00:59:49.000 --> 01:00:00.500');
+    expect(vtt).toContain('sprite.jpg#xywh=1120,810,160,90');
   });
 });
 

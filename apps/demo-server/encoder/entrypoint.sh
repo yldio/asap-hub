@@ -9,6 +9,9 @@ encode)
 ingest)
   exec /usr/local/bin/ingest.sh "$@"
   ;;
+render)
+  exec node /usr/local/lib/encoder/render.js "$@"
+  ;;
 *)
   printf 'unknown JOB %s\n' "$JOB" >&2
   exit 1

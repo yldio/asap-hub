@@ -5,7 +5,9 @@ import { foldersRouter } from './routes/folders';
 import { currentUser } from './routes/request';
 import { invitesRouter } from './routes/invites';
 import { mediaRouter } from './routes/media';
+import { captureRouter } from './routes/capture';
 import { projectsRouter } from './routes/projects';
+import { recordingsRouter } from './routes/recordings';
 import { uploadsRouter } from './routes/uploads';
 import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
@@ -31,6 +33,10 @@ export const appFactory = (): Express => {
     res.json({ status: 'ok' });
   });
 
+  // the capture snippet runs on someone else's site and carries a session token
+  // rather than a user, so it is mounted ahead of the auth middleware
+  app.use('/api/capture', captureRouter());
+
   if (isLocal()) {
     app.use('/media', mediaRouter());
   }
@@ -52,6 +58,7 @@ export const appFactory = (): Express => {
 
   api.use('/folders', foldersRouter());
   api.use('/projects', projectsRouter());
+  api.use('/projects', recordingsRouter());
   api.use('/videos', videosRouter());
   api.use('/uploads', uploadsRouter());
   api.use('/invites', invitesRouter());

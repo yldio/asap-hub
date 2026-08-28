@@ -24,9 +24,10 @@ import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
 import BannerInspector from './BannerInspector';
 import ClipInspector from './ClipInspector';
+import CursorEffectInspector from './CursorEffectInspector';
 import TitleCardInspector from './TitleCardInspector';
 import ZoomInspector from './ZoomInspector';
-import { editorTheme } from './editorTheme';
+import { editorTheme, trackHeaders } from './editorTheme';
 import { clampZoom, defaultPixelsPerSecond } from './geometry';
 import PreviewStage from './PreviewStage';
 import Timeline from './Timeline';
@@ -39,6 +40,9 @@ const shellStyles = css({
   flexDirection: 'column',
   flex: 1,
   minHeight: 0,
+  minWidth: 0,
+  // the timeline scrolls inside itself; nothing here may widen the page
+  overflow: 'hidden',
   backgroundColor: editorTheme.surface,
   color: editorTheme.text,
 });
@@ -47,7 +51,13 @@ const bodyStyles = css({
   display: 'flex',
   flex: 1,
   minHeight: 0,
-  '@media (max-width: 1100px)': { flexDirection: 'column', flex: 'none' },
+  minWidth: 0,
+  overflow: 'hidden',
+  '@media (max-width: 1100px)': {
+    flexDirection: 'column',
+    flex: 'none',
+    overflow: 'auto',
+  },
 });
 
 // the stage takes whatever the panels and the timeline leave, and the preview
@@ -98,10 +108,13 @@ const ProjectEditor: FC<Props> = ({
   const [selectedClipId, setSelectedClipId] = useState<string>();
   const [selectedBannerId, setSelectedBannerId] = useState<string>();
   const [selectedZoomId, setSelectedZoomId] = useState<string>();
+  const [selectedEffectId, setSelectedEffectId] = useState<string>();
   const [pixelsPerSecond, setPixelsPerSecond] = useState(
     defaultPixelsPerSecond,
   );
   const stageRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [shellWidth, setShellWidth] = useState(0);
 
   const { timeline, dispatch } = editor;
   const placements = useMemo(() => layoutClips(timeline.clips), [timeline]);
@@ -119,6 +132,12 @@ const ProjectEditor: FC<Props> = ({
     ({ id }) => id === selectedBannerId,
   );
   const selectedZoom = timeline.zooms.find(({ id }) => id === selectedZoomId);
+  const cursorLayer = timeline.cursor.find(
+    (layer) => layer.clipId === current?.clip.id,
+  );
+  const selectedEffect = cursorLayer?.effects.find(
+    ({ id }) => id === selectedEffectId,
+  );
   const selectedSource =
     selected?.clip.kind === 'source' ? selected.clip : undefined;
 
@@ -137,23 +156,40 @@ const ProjectEditor: FC<Props> = ({
     [assetsById, probedDurations],
   );
 
+  // the lane starts after the track header gutter, and a little room is left so
+  // the last clip does not sit flush against the edge
+  const laneWidthOf = (width: number) => width - trackHeaders - 48;
+
   const zoomToFit = useCallback(() => {
-    const width = stageRef.current?.clientWidth ?? 0;
-    if (width === 0 || durationMs === 0) {
+    const lane = laneWidthOf(shellRef.current?.clientWidth ?? shellWidth);
+    if (lane <= 0 || durationMs === 0) {
       setPixelsPerSecond(defaultPixelsPerSecond);
       return;
     }
-    setPixelsPerSecond(clampZoom(((width - 64) / durationMs) * 1000));
-  }, [durationMs]);
+    setPixelsPerSecond(clampZoom((lane / durationMs) * 1000));
+  }, [durationMs, shellWidth]);
 
-  // the whole demo should be visible without hunting for the right zoom first
+  useLayoutEffect(() => {
+    const shell = shellRef.current;
+    if (!shell || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+      setShellWidth(entry?.contentRect.width ?? 0);
+    });
+    observer.observe(shell);
+    return () => observer.disconnect();
+  }, []);
+
+  // the whole demo should be visible without hunting for the right zoom first,
+  // and the width is only known once the panels have laid out
   const fitted = useRef(false);
   useLayoutEffect(() => {
-    if (!fitted.current && durationMs > 0) {
+    if (!fitted.current && durationMs > 0 && laneWidthOf(shellWidth) > 0) {
       fitted.current = true;
       zoomToFit();
     }
-  }, [durationMs, zoomToFit]);
+  }, [durationMs, shellWidth, zoomToFit]);
 
   const addAsset = useCallback(
     (asset: ProjectAsset) => {
@@ -202,6 +238,15 @@ const ProjectEditor: FC<Props> = ({
   }, [dispatch, selected]);
 
   const removeSelected = useCallback(() => {
+    if (selectedEffect && current) {
+      dispatch({
+        type: 'removeCursorEffect',
+        clipId: current.clip.id,
+        effectId: selectedEffect.id,
+      });
+      setSelectedEffectId(undefined);
+      return;
+    }
     if (selectedZoom) {
       dispatch({ type: 'removeZoom', zoomId: selectedZoom.id });
       setSelectedZoomId(undefined);
@@ -215,7 +260,14 @@ const ProjectEditor: FC<Props> = ({
     if (!selected) return;
     dispatch({ type: 'removeClip', clipId: selected.clip.id });
     setSelectedClipId(undefined);
-  }, [dispatch, selected, selectedBanner, selectedZoom]);
+  }, [
+    current,
+    dispatch,
+    selected,
+    selectedBanner,
+    selectedEffect,
+    selectedZoom,
+  ]);
 
   const selectClip = useCallback((clipId: string) => {
     setSelectedClipId(clipId);
@@ -233,6 +285,14 @@ const ProjectEditor: FC<Props> = ({
     setSelectedZoomId(zoomId);
     setSelectedClipId(undefined);
     setSelectedBannerId(undefined);
+    setSelectedEffectId(undefined);
+  }, []);
+
+  const selectEffect = useCallback((effectId: string) => {
+    setSelectedEffectId(effectId);
+    setSelectedClipId(undefined);
+    setSelectedBannerId(undefined);
+    setSelectedZoomId(undefined);
   }, []);
 
   const addTitleCard = useCallback(() => {
@@ -271,18 +331,20 @@ const ProjectEditor: FC<Props> = ({
 
   const addCursorClick = useCallback(() => {
     if (!current) return;
+    const effectId = createId('effect');
     dispatch({
       type: 'addCursorEffect',
       clipId: current.clip.id,
       effect: {
-        id: createId('effect'),
+        id: effectId,
         tMs: Math.round(clipLocalMs(current, playheadMs)),
         type: 'ripple',
         point: { x: 0.5, y: 0.5 },
         origin: 'manual',
       },
     });
-  }, [current, dispatch, playheadMs]);
+    selectEffect(effectId);
+  }, [current, dispatch, playheadMs, selectEffect]);
 
   const addBanner = useCallback(() => {
     const id = createId('banner');
@@ -352,7 +414,7 @@ const ProjectEditor: FC<Props> = ({
   ]);
 
   return (
-    <div css={shellStyles}>
+    <div css={shellStyles} ref={shellRef}>
       <TransportBar
         playing={playing}
         canPlay={durationMs > 0}
@@ -385,6 +447,26 @@ const ProjectEditor: FC<Props> = ({
             playing={playing}
             assets={assetsById}
             assetUrl={assetUrl}
+            onPickPoint={
+              readOnly
+                ? undefined
+                : (point) => {
+                    if (selectedZoom) {
+                      dispatch({
+                        type: 'updateZoom',
+                        zoomId: selectedZoom.id,
+                        change: { focus: point },
+                      });
+                    } else if (selectedEffect && current) {
+                      dispatch({
+                        type: 'updateCursorEffect',
+                        clipId: current.clip.id,
+                        effectId: selectedEffect.id,
+                        change: { point },
+                      });
+                    }
+                  }
+            }
           />
         </div>
 
@@ -399,7 +481,23 @@ const ProjectEditor: FC<Props> = ({
           onDelete={onDeleteAsset}
         />
 
-        {selectedZoom ? (
+        {selectedEffect && current ? (
+          <CursorEffectInspector
+            effect={selectedEffect}
+            readOnly={readOnly}
+            onChange={(change) =>
+              dispatch({
+                type: 'updateCursorEffect',
+                clipId: current.clip.id,
+                effectId: selectedEffect.id,
+                change,
+              })
+            }
+            onRemove={removeSelected}
+          />
+        ) : null}
+
+        {!selectedEffect && selectedZoom ? (
           <ZoomInspector
             zoom={selectedZoom}
             readOnly={readOnly}
@@ -414,7 +512,7 @@ const ProjectEditor: FC<Props> = ({
           />
         ) : null}
 
-        {!selectedZoom && selectedBanner ? (
+        {!selectedEffect && !selectedZoom && selectedBanner ? (
           <BannerInspector
             banner={selectedBanner}
             readOnly={readOnly}
@@ -429,7 +527,10 @@ const ProjectEditor: FC<Props> = ({
           />
         ) : null}
 
-        {!selectedZoom && !selectedBanner && selected?.clip.kind === 'title' ? (
+        {!selectedEffect &&
+        !selectedZoom &&
+        !selectedBanner &&
+        selected?.clip.kind === 'title' ? (
           <TitleCardInspector
             placement={selected}
             clip={selected.clip}
@@ -445,7 +546,10 @@ const ProjectEditor: FC<Props> = ({
           />
         ) : null}
 
-        {!selectedZoom && !selectedBanner && selected?.clip.kind !== 'title' ? (
+        {!selectedEffect &&
+        !selectedZoom &&
+        !selectedBanner &&
+        selected?.clip.kind !== 'title' ? (
           <ClipInspector
             placement={selected}
             asset={
@@ -493,7 +597,10 @@ const ProjectEditor: FC<Props> = ({
 
       <ActionBar
         hasSelection={
-          Boolean(selected) || Boolean(selectedBanner) || Boolean(selectedZoom)
+          Boolean(selected) ||
+          Boolean(selectedBanner) ||
+          Boolean(selectedZoom) ||
+          Boolean(selectedEffect)
         }
         canAddEffect={Boolean(current)}
         onAddTitleCard={addTitleCard}
@@ -523,6 +630,9 @@ const ProjectEditor: FC<Props> = ({
         zooms={timeline.zooms}
         selectedZoomId={selectedZoomId}
         onSelectZoom={selectZoom}
+        cursorLayers={timeline.cursor}
+        selectedEffectId={selectedEffectId}
+        onSelectEffect={selectEffect}
         selectedClipId={selectedClipId}
         selectedBannerId={selectedBannerId}
         readOnly={readOnly}

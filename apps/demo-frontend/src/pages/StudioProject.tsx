@@ -13,7 +13,9 @@ import { useIsCreator } from '../auth/MeContext';
 import ProjectEditor from '../studio/editor/ProjectEditor';
 import { AssetUpload, useAssetUpload } from '../studio/editor/useAssetUpload';
 import RenderBar from '../studio/editor/RenderBar';
+import CapturePanel from '../studio/recording/CapturePanel';
 import RecorderPanel from '../studio/recording/RecorderPanel';
+import { useCursorCapture } from '../studio/recording/useCursorCapture';
 import { screenRecordingSupport } from '../studio/recording/mediaCapabilities';
 import {
   TakeResult,
@@ -249,6 +251,38 @@ const Editor: FC<EditorProps> = ({
 
   const take = useRecordingTake(upload, onTake);
 
+  const capture = useCursorCapture(id);
+
+  // the capture belongs to whichever clip is under the playhead, because that is
+  // the recording the creator just made
+  const applyCapture = useCallback(() => {
+    const clip = editor.timeline.clips[0];
+    if (!clip) return;
+    const layer = editor.timeline.cursor.find(
+      (candidate) => candidate.clipId === clip.id,
+    );
+    void capture
+      .apply({
+        startedAtEpochMs:
+          Date.now() - timelineDurationMs(editor.timeline.clips),
+        stoppedAtEpochMs: Date.now(),
+        frame: {
+          width: editor.timeline.canvas.width,
+          height: editor.timeline.canvas.height,
+        },
+        existing: layer?.effects ?? [],
+      })
+      .then((applied) => {
+        if (!applied) return;
+        editor.dispatch({
+          type: 'applyCapture',
+          clipId: clip.id,
+          path: applied.path,
+          effects: applied.effects,
+        });
+      });
+  }, [capture, editor]);
+
   const [renderError, setRenderError] = useState<string>();
   const startRender = useCallback(() => {
     setRenderError(undefined);
@@ -305,23 +339,33 @@ const Editor: FC<EditorProps> = ({
       <ProjectEditor
         editor={editor}
         recorder={
-          <RecorderPanel
-            status={take.status}
-            elapsedMs={take.elapsedMs}
-            error={take.error}
-            withMicrophone={take.withMicrophone}
-            readOnly={readOnly}
-            unsupportedReason={support.supported ? undefined : support.reason}
-            onMicrophoneChange={take.setWithMicrophone}
-            onStart={() => {
-              take.start().catch(() => undefined);
-            }}
-            onPause={take.pause}
-            onResume={take.resume}
-            onStop={() => {
-              take.stop().catch(() => undefined);
-            }}
-          />
+          <>
+            <RecorderPanel
+              status={take.status}
+              elapsedMs={take.elapsedMs}
+              error={take.error}
+              withMicrophone={take.withMicrophone}
+              readOnly={readOnly}
+              unsupportedReason={support.supported ? undefined : support.reason}
+              onMicrophoneChange={take.setWithMicrophone}
+              onStart={() => {
+                take.start().catch(() => undefined);
+              }}
+              onPause={take.pause}
+              onResume={take.resume}
+              onStop={() => {
+                take.stop().catch(() => undefined);
+              }}
+            />
+            <CapturePanel
+              session={capture.session}
+              status={capture.status}
+              readOnly={readOnly}
+              applying={capture.applying}
+              onStart={capture.start}
+              onApply={applyCapture}
+            />
+          </>
         }
         assets={assets}
         readOnly={readOnly}

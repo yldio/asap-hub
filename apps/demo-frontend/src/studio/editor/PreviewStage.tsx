@@ -8,19 +8,23 @@ import {
   sourceTimeAt,
   Zoom,
 } from '@asap-hub/demo-timeline';
-import { FC, useEffect, useRef } from 'react';
+import { FC, MouseEvent as ReactMouseEvent, useEffect, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { charcoal, paper, rem, steel } from '../../ui/theme';
 import BannerLayer from './BannerLayer';
 import CursorLayer from './CursorLayer';
 import { zoomTransformAt } from './zoom';
 
+const pickingStyles = css({ cursor: 'crosshair' });
+
+// height first: the stage fills whatever the panels and timeline leave and
+// takes its width from the aspect ratio, so a wide window cannot stretch it
 const stageStyles = css({
   containerType: 'inline-size',
   position: 'relative',
-  width: '100%',
+  height: '100%',
+  width: 'auto',
   maxWidth: '100%',
-  maxHeight: '100%',
   aspectRatio: '16 / 9',
   backgroundColor: charcoal.rgb,
   borderRadius: rem(8),
@@ -78,6 +82,7 @@ type Props = {
   readonly playing: boolean;
   readonly assets: Record<string, ProjectAsset>;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
+  readonly onPickPoint?: (point: { x: number; y: number }) => void;
 };
 
 // one video element, re-pointed as the playhead crosses a clip boundary. The
@@ -91,6 +96,7 @@ const PreviewStage: FC<Props> = ({
   playing,
   assets,
   assetUrl,
+  onPickPoint,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const clip = placement?.clip;
@@ -156,8 +162,32 @@ const PreviewStage: FC<Props> = ({
     );
   }
 
+  const pick = onPickPoint
+    ? (event: ReactMouseEvent<HTMLDivElement>) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (bounds.width === 0 || bounds.height === 0) return;
+        onPickPoint({
+          x: Math.min(
+            1,
+            Math.max(0, (event.clientX - bounds.left) / bounds.width),
+          ),
+          y: Math.min(
+            1,
+            Math.max(0, (event.clientY - bounds.top) / bounds.height),
+          ),
+        });
+      }
+    : undefined;
+
   return (
-    <div css={stageStyles}>
+    <div
+      css={[stageStyles, pick && pickingStyles]}
+      onClick={pick}
+      role={pick ? 'button' : undefined}
+      tabIndex={pick ? 0 : undefined}
+      aria-label={pick ? 'Click to place the selected effect' : undefined}
+      onKeyDown={undefined}
+    >
       {url ? (
         <video
           ref={videoRef}

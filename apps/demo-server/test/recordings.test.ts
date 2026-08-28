@@ -1,0 +1,463 @@
+process.env.SLS_STAGE = 'local';
+process.env.TABLE_NAME = 'demo-hub-test-data';
+process.env.BUCKET_NAME = 'demo-hub-test-storage';
+
+/* eslint-disable import/first */
+import { createHash } from 'crypto';
+import supertest from 'supertest';
+import { appFactory } from '../src/app';
+import {
+  recordingSessionEntity,
+  userEntity,
+  videoEntity,
+} from '../src/data/entities';
+import * as storage from '../src/storage';
+/* eslint-enable import/first */
+
+jest.mock('../src/storage', () => ({
+  ...jest.requireActual('../src/storage'),
+  putObject: jest.fn(),
+  getObjectText: jest.fn(),
+  deletePrefix: jest.fn(),
+}));
+
+jest.mock('../src/data/client', () => ({
+  getDocumentClient: () => ({ send: jest.fn() }),
+  setDocumentClient: jest.fn(),
+}));
+
+const bearer = (claims: Record<string, unknown>): string => {
+  const encode = (value: unknown) =>
+    Buffer.from(JSON.stringify(value)).toString('base64url');
+  return `Bearer ${encode({ alg: 'none' })}.${encode(claims)}.signature`;
+};
+
+const creatorToken = bearer({
+  sub: 'auth0|creator',
+  email: 'ana@example.com',
+  email_verified: true,
+  name: 'Ana',
+});
+
+const memberToken = bearer({
+  sub: 'auth0|member',
+  email: 'bob@example.com',
+  email_verified: true,
+  name: 'Bob',
+});
+
+const api = supertest(appFactory());
+
+const mockUser = (role: 'creator' | 'member' | 'admin', sub: string) => {
+  jest.spyOn(userEntity, 'get').mockReturnValue({
+    go: async () => ({
+      data: {
+        sub,
+        name: 'Ana',
+        email: 'ana@example.com',
+        role,
+        status: 'active',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      },
+    }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
+const projectItem = (overrides: Record<string, unknown> = {}) => ({
+  id: 'project-1',
+  title: 'Sprint 12 demo',
+  status: 'draft',
+  folderId: 'ROOT',
+  recordedAt: '2026-08-01T10:00:00.000Z',
+  kind: 'studio',
+  processingState: 'empty',
+  version: 3,
+  createdBy: { sub: 'auth0|creator', name: 'Ana' },
+  createdAt: '2026-08-01T10:00:00.000Z',
+  updatedAt: '2026-08-01T10:00:00.000Z',
+  ...overrides,
+});
+
+const token = 'a-capture-token';
+
+const sessionItem = (overrides: Record<string, unknown> = {}) => ({
+  sessionId: 'session-1',
+  videoId: 'project-1',
+  tokenHash: createHash('sha256').update(token).digest('hex'),
+  state: 'open',
+  eventCount: 4,
+  lastSeq: 2,
+  parts: [1, 2],
+  lastEventAt: '2026-08-01T10:05:00.000Z',
+  expiresAt: Date.now() + 60_000,
+  createdBy: { sub: 'auth0|creator', name: 'Ana' },
+  createdAt: '2026-08-01T10:00:00.000Z',
+  updatedAt: '2026-08-01T10:05:00.000Z',
+  ...overrides,
+});
+
+const mockVideoGet = (data: Record<string, unknown> | null) => {
+  jest.spyOn(videoEntity, 'get').mockReturnValue({
+    go: async () => ({ data }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
+const mockSessionGet = (data: Record<string, unknown> | null) => {
+  jest.spyOn(recordingSessionEntity, 'get').mockReturnValue({
+    go: async () => ({ data }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
+const mockSessionCreate = () =>
+  jest
+    .spyOn(recordingSessionEntity, 'create')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .mockReturnValue({ go: async () => ({ data: {} }) } as any);
+
+// patch chains .set().add().append().go(); each link is recorded so a test can
+// assert on the counters the capture endpoint bumped
+const mockSessionPatch = () => {
+  const calls = {
+    set: jest.fn(),
+    add: jest.fn(),
+    append: jest.fn(),
+  };
+  const chain: Record<string, unknown> = { go: async () => ({ data: {} }) };
+  (['set', 'add', 'append'] as const).forEach((method) => {
+    chain[method] = (value: unknown) => {
+      calls[method](value);
+      return chain;
+    };
+  });
+  jest
+    .spyOn(recordingSessionEntity, 'patch')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .mockReturnValue(chain as any);
+  return calls;
+};
+
+const postCapture = (body: Record<string, unknown>) =>
+  api
+    .post('/api/capture')
+    .set('Content-Type', 'text/plain;charset=UTF-8')
+    .send(JSON.stringify(body));
+
+const batch = (overrides: Record<string, unknown> = {}) => ({
+  sessionId: 'session-1',
+  token,
+  seq: 3,
+  events: [
+    { id: 'e1', type: 'move', t: 1, x: 2, y: 3 },
+    { id: 'e2', type: 'click', t: 4, x: 5, y: 6 },
+  ],
+  ...overrides,
+});
+
+beforeEach(() => {
+  jest.restoreAllMocks();
+  (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
+  (storage.getObjectText as jest.Mock).mockReset();
+  (storage.deletePrefix as jest.Mock).mockReset().mockResolvedValue(undefined);
+});
+
+describe('POST /api/projects/:id/recordings', () => {
+  it('hands the token back once and stores only its hash', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const create = mockSessionCreate();
+
+    const response = await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(201);
+    const { sessionId, token: issued, snippetUrl, captureUrl } = response.body;
+    expect(sessionId).toMatch(/^[0-9a-f]{32}$/);
+    expect(issued).toEqual(expect.any(String));
+    expect(snippetUrl).toBe(
+      `http://localhost:3500/capture/v1.js#${sessionId}.${issued}`,
+    );
+    expect(captureUrl).toBe('http://localhost:3500/api/capture');
+
+    const stored = create.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(stored).toMatchObject({
+      sessionId,
+      videoId: 'project-1',
+      state: 'open',
+      eventCount: 0,
+      lastSeq: 0,
+      parts: [],
+      tokenHash: createHash('sha256').update(issued).digest('hex'),
+    });
+    expect(JSON.stringify(stored)).not.toContain(issued);
+  });
+
+  it('is not found for a plain upload', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ kind: 'upload' }));
+
+    const response = await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+  });
+
+  it('refuses a member', async () => {
+    mockUser('member', 'auth0|member');
+
+    const response = await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', memberToken);
+
+    expect(response.status).toBe(403);
+  });
+});
+
+describe('GET /api/projects/:id/recordings/:sessionId', () => {
+  it('reports what the studio indicator shows', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem());
+
+    const response = await api
+      .get('/api/projects/project-1/recordings/session-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      state: 'open',
+      eventCount: 4,
+      lastEventAt: '2026-08-01T10:05:00.000Z',
+    });
+  });
+
+  it('reports an open session past its lifetime as expired', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ expiresAt: Date.now() - 1 }));
+
+    const response = await api
+      .get('/api/projects/project-1/recordings/session-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.body.state).toBe('expired');
+  });
+
+  it('is not found for a session belonging to another project', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ videoId: 'project-2' }));
+
+    const response = await api
+      .get('/api/projects/project-1/recordings/session-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+  });
+});
+
+describe('POST /api/capture', () => {
+  it('needs no authentication and writes the batch under the session', async () => {
+    mockSessionGet(sessionItem());
+    const patch = mockSessionPatch();
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(response.text).toBe('');
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/parts/3.ndjson',
+      '{"id":"e1","type":"move","t":1,"x":2,"y":3}\n{"id":"e2","type":"click","t":4,"x":5,"y":6}\n',
+      'application/x-ndjson',
+    );
+    expect(patch.add).toHaveBeenCalledWith({ eventCount: 2 });
+    expect(patch.append).toHaveBeenCalledWith({ parts: [3] });
+    expect(patch.set).toHaveBeenCalledWith(
+      expect.objectContaining({ lastSeq: 3 }),
+    );
+  });
+
+  it('never writes anything under raw/', async () => {
+    mockSessionGet(sessionItem());
+    mockSessionPatch();
+
+    await postCapture(batch());
+
+    const [key] = (storage.putObject as jest.Mock).mock.calls[0] as string[];
+    expect(key).toMatch(/^projects\//);
+  });
+
+  it.each([
+    ['an unknown session', null, batch()],
+    ['a wrong token', sessionItem(), batch({ token: 'not-the-token' })],
+    ['an expired session', sessionItem({ expiresAt: Date.now() - 1 }), batch()],
+    ['a closed session', sessionItem({ state: 'closed' }), batch()],
+    ['a replayed sequence number', sessionItem(), batch({ seq: 2 })],
+    [
+      'a session over its event quota',
+      sessionItem({ eventCount: 199_999 }),
+      batch(),
+    ],
+    [
+      'a session over its batch quota',
+      sessionItem({ parts: new Array(500).fill(1) }),
+      batch(),
+    ],
+  ])('answers 204 and stores nothing for %s', async (_label, session, body) => {
+    mockSessionGet(session);
+    const patch = mockSessionPatch();
+
+    const response = await postCapture(body);
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(patch.set).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['a body that is not json', 'not json at all'],
+    ['a batch with no events', JSON.stringify(batch({ events: [] }))],
+    [
+      'a session id outside the safe alphabet',
+      JSON.stringify(batch({ sessionId: '../../etc' })),
+    ],
+    [
+      'a sequence number that is not positive',
+      JSON.stringify(batch({ seq: 0 })),
+    ],
+  ])(
+    'answers 400 for %s without touching the session',
+    async (_label, body) => {
+      const get = jest.spyOn(recordingSessionEntity, 'get');
+
+      const response = await api
+        .post('/api/capture')
+        .set('Content-Type', 'text/plain;charset=UTF-8')
+        .send(body);
+
+      expect(response.status).toBe(400);
+      expect(get).not.toHaveBeenCalled();
+      expect(storage.putObject).not.toHaveBeenCalled();
+    },
+  );
+
+  it('rejects a batch larger than the cap', async () => {
+    mockSessionGet(sessionItem());
+    mockSessionPatch();
+
+    const response = await postCapture(
+      batch({
+        events: new Array(5001).fill({ id: 'e', type: 'move', t: 1 }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+});
+
+describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
+  const finalise = (body: Record<string, unknown>) =>
+    api
+      .post('/api/projects/project-1/recordings/session-1/finalise')
+      .set('Authorization', creatorToken)
+      .send(body);
+
+  it('concatenates the batches into one immutable stream and closes the session', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: [2, 1, 2] }));
+    const patch = mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockImplementation(
+      async (key: string) =>
+        key.endsWith('1.ndjson') ? '{"id":"e1"}\n' : '{"id":"e2"}\n{"id":"e3"}',
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(storage.getObjectText).toHaveBeenCalledTimes(2);
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/events.ndjson',
+      '{"id":"e1"}\n{"id":"e2"}\n{"id":"e3"}\n',
+      'application/x-ndjson',
+    );
+    expect(storage.deletePrefix).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/parts/',
+    );
+    expect(patch.set).toHaveBeenCalledWith(
+      expect.objectContaining({
+        state: 'closed',
+        eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+        startedAtEpochMs: 1_700_000_000_000,
+        stoppedAtEpochMs: 1_700_000_060_000,
+      }),
+    );
+    expect(response.body).toEqual({
+      state: 'closed',
+      eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      eventCount: 3,
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+  });
+
+  it('carries on when a batch object never landed', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: [1, 2] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockImplementation(
+      async (key: string) => {
+        if (key.endsWith('1.ndjson')) {
+          throw new Error('NoSuchKey');
+        }
+        return '{"id":"e2"}\n';
+      },
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.eventCount).toBe(1);
+  });
+
+  it('refuses to finalise a session twice', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ state: 'closed' }));
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'already_finalised' });
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('rejects a window that stops before it started', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem());
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_060_000,
+      stoppedAtEpochMs: 1_700_000_000_000,
+    });
+
+    expect(response.status).toBe(400);
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+});

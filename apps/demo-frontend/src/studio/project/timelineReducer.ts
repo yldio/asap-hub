@@ -3,6 +3,7 @@ import {
   Canvas,
   Clip,
   CursorEffect,
+  CursorLayer,
   NarrationClip,
   insertClipAt,
   moveClip,
@@ -73,6 +74,12 @@ export type TimelineAction =
     }
   | { type: 'removeCursorEffect'; clipId: string; effectId: string }
   | { type: 'setCursorOffset'; clipId: string; offsetMs: number }
+  | {
+      type: 'applyCapture';
+      clipId: string;
+      path: CursorLayer['path'];
+      effects: CursorEffect[];
+    }
   | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
@@ -346,6 +353,16 @@ export const timelineReducer = (
           effects: layer.effects.filter(
             (effect) => effect.id !== action.effectId,
           ),
+        })),
+      };
+
+    case 'applyCapture':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          path: action.path,
+          effects: action.effects,
         })),
       };
 

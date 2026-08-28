@@ -16,6 +16,11 @@ COPY entrypoint.sh encode.sh finish.sh ingest.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/encode.sh \
   /usr/local/bin/finish.sh /usr/local/bin/ingest.sh
 
+# the render job is one esbuild bundle of encoder/render.ts, so the container
+# builds a timeline with the very same code the browser previews it with.
+# `yarn workspace @asap-hub/demo-server build:encoder` writes it before a build
+COPY dist/render.js /usr/local/lib/encoder/render.js
+
 WORKDIR /scratch
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

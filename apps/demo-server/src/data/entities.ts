@@ -188,6 +188,64 @@ export const assetEntity = new Entity(
   entityConfiguration(),
 );
 
+// one browser take of the site being demoed. The capture endpoint is
+// unauthenticated and only ever holds a session id and a token, so the session
+// is keyed by its id alone and carries the project it belongs to.
+export const recordingSessionEntity = new Entity(
+  {
+    model: { entity: 'recordingSession', version: '1', service: 'demo' },
+    attributes: {
+      sessionId: { type: 'string', required: true },
+      videoId: { type: 'string', required: true },
+      // only the SHA-256 of the token is ever stored; the token itself is
+      // handed out once, at creation, and never again
+      tokenHash: { type: 'string', required: true },
+      state: {
+        type: ['open', 'closed'] as const,
+        required: true,
+        default: 'open',
+      },
+      eventCount: { type: 'number', required: true, default: 0 },
+      // batches are accepted strictly in order, which rejects a replay without
+      // keeping every sequence number ever seen
+      lastSeq: { type: 'number', required: true, default: 0 },
+      parts: { type: 'list', items: { type: 'number' }, default: [] },
+      lastEventAt: { type: 'string' },
+      expiresAt: { type: 'number', required: true },
+      startedAtEpochMs: { type: 'number' },
+      stoppedAtEpochMs: { type: 'number' },
+      eventsKey: { type: 'string' },
+      createdBy: {
+        type: 'map',
+        required: true,
+        properties: {
+          sub: { type: 'string', required: true },
+          name: { type: 'string', required: true },
+        },
+      },
+      createdAt: { type: 'string', required: true },
+      updatedAt: { type: 'string', required: true },
+    },
+    indexes: {
+      bySession: {
+        pk: {
+          casing: 'none' as const,
+          field: 'PK',
+          composite: ['sessionId'],
+          template: 'RECORDING#${sessionId}',
+        },
+        sk: {
+          casing: 'none' as const,
+          field: 'SK',
+          composite: [],
+          template: 'META',
+        },
+      },
+    },
+  },
+  entityConfiguration(),
+);
+
 export const folderEntity = new Entity(
   {
     model: { entity: 'folder', version: '1', service: 'demo' },

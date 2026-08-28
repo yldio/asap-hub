@@ -102,6 +102,16 @@ export const saveTimelineSchema = z.object({
   version: z.number().int().nonnegative(),
 });
 
+// both render endpoints only ever carry the item version the caller read, which
+// is what guards the write against a takeover or a concurrent edit
+export const startRenderSchema = z.object({
+  version: z.number().int().nonnegative(),
+});
+
+export const cancelRenderSchema = z.object({
+  version: z.number().int().nonnegative(),
+});
+
 export const createAssetSchema = z.object({
   kind: z.enum(['video', 'audio']),
   mimeType: z.string().min(1).max(120),
@@ -130,6 +140,32 @@ export const completeAssetSchema = z.object({
     .min(1)
     .max(10000),
 });
+
+// a batch is written to S3 as one object, so the batch size bounds both the
+// object and the DynamoDB counters the capture endpoint bumps
+export const maxCaptureBatchEvents = 5000;
+
+// the capture endpoint is unauthenticated, so the session id is held to the
+// same safe alphabet as a path param before it reaches a key template
+export const captureBatchSchema = z.object({
+  sessionId: z.string().refine(isVideoId, { message: 'invalid session id' }),
+  token: z.string().min(1).max(256),
+  seq: z.number().int().positive().max(1_000_000),
+  events: z.array(z.record(z.unknown())).min(1).max(maxCaptureBatchEvents),
+});
+
+export const finaliseRecordingSchema = z
+  .object({
+    startedAtEpochMs: z.number().int().positive(),
+    stoppedAtEpochMs: z.number().int().positive(),
+  })
+  .refine(
+    ({ startedAtEpochMs, stoppedAtEpochMs }) =>
+      stoppedAtEpochMs >= startedAtEpochMs,
+    {
+      message: 'stoppedAtEpochMs must not precede startedAtEpochMs',
+    },
+  );
 
 export const createInviteSchema = z.object({
   email: z.string().email(),

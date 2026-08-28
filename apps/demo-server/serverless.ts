@@ -285,6 +285,14 @@ const serverlessConfig: AWS = {
             path: '/api/health',
           },
         },
+        // the capture snippet runs on the site being demoed, so it carries a
+        // short lived session token instead of the creator's Auth0 token
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/api/capture',
+          },
+        },
         // deployed, /media/* is served by CloudFront with signed cookies and never reaches lambda
         ...(stage === 'local'
           ? [

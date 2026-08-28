@@ -26,3 +26,6 @@ export const trackHeights = {
   lane: 40,
   header: 132,
 } as const;
+
+// the fixed track name column beside the scrolling lanes
+export const trackHeaders = 116;

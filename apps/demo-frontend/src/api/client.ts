@@ -14,6 +14,8 @@ import type {
   Me,
   PartUrl,
   ProjectAsset,
+  RecordingSession,
+  RecordingSessionStatus,
   Role,
   SavedTimeline,
   UploadedPart,
@@ -296,6 +298,45 @@ export const createApi = (getToken: GetToken) => ({
       { method: 'DELETE' },
     );
   },
+
+  startCapture: async (id: string): Promise<RecordingSession> =>
+    request<RecordingSession>(
+      `/projects/${encodeURIComponent(id)}/recordings`,
+      await getToken(),
+      { method: 'POST' },
+    ),
+
+  captureStatus: async (
+    id: string,
+    sessionId: string,
+  ): Promise<RecordingSessionStatus> =>
+    request<RecordingSessionStatus>(
+      `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(
+        sessionId,
+      )}`,
+      await getToken(),
+    ),
+
+  finaliseCapture: async (
+    id: string,
+    sessionId: string,
+    window: { startedAtEpochMs: number; stoppedAtEpochMs: number },
+  ): Promise<{ eventsKey: string }> =>
+    request<{ eventsKey: string }>(
+      `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(
+        sessionId,
+      )}/finalise`,
+      await getToken(),
+      { method: 'POST', body: window },
+    ),
+
+  captureEvents: async (id: string, sessionId: string): Promise<string> =>
+    request<string>(
+      `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(
+        sessionId,
+      )}/events`,
+      await getToken(),
+    ),
 
   startRender: async (id: string, version: number): Promise<Video> =>
     (

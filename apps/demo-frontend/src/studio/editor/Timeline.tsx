@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   Banner,
   ClipPlacement,
+  CursorLayer,
   NarrationClip,
   Zoom,
 } from '@asap-hub/demo-timeline';
@@ -24,11 +25,42 @@ const panelStyles = css({
   borderTop: `1px solid ${editorTheme.line}`,
   color: editorTheme.text,
   display: 'flex',
-  flexDirection: 'column',
+  // a long demo makes the lane far wider than the window; without this the
+  // flex item grows to fit it and drags the whole page sideways
+  minWidth: 0,
+  maxWidth: '100%',
   overflow: 'hidden',
 });
 
-const scrollStyles = css({ overflowX: 'auto', overflowY: 'hidden' });
+// the track names stay put while the lanes scroll under them
+const headerColumnStyles = css({
+  flexShrink: 0,
+  width: 116,
+  borderRight: `1px solid ${editorTheme.line}`,
+  backgroundColor: editorTheme.panel,
+  zIndex: 1,
+});
+
+const headerCellStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  padding: '0 10px',
+  borderBottom: `1px solid ${editorTheme.line}`,
+  fontSize: 11,
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  color: editorTheme.muted,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
+
+const scrollStyles = css({
+  flex: 1,
+  minWidth: 0,
+  overflowX: 'auto',
+  overflowY: 'hidden',
+});
 
 const laneStyles = css({ position: 'relative', minWidth: '100%' });
 
@@ -92,6 +124,23 @@ const selectedBlockStyles = css({
   boxShadow: `0 0 0 1px ${editorTheme.selected}`,
 });
 
+const effectMarkerStyles = css({
+  position: 'absolute',
+  top: 8,
+  width: 12,
+  height: 12,
+  marginLeft: -6,
+  borderRadius: '50%',
+  border: `2px solid ${editorTheme.panel}`,
+  backgroundColor: editorTheme.clipEdge,
+  padding: 0,
+  cursor: 'pointer',
+});
+
+const selectedMarkerStyles = css({
+  outline: `2px solid ${editorTheme.selected}`,
+});
+
 const audioBlockStyles = css({
   position: 'absolute',
   top: 4,
@@ -110,18 +159,6 @@ const audioBlockStyles = css({
   font: 'inherit',
   textAlign: 'left',
   cursor: 'pointer',
-});
-
-const laneLabelStyles = css({
-  position: 'absolute',
-  left: 8,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  fontSize: 11,
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  color: editorTheme.muted,
-  pointerEvents: 'none',
 });
 
 const emptyTrackStyles = css({
@@ -182,6 +219,9 @@ type Props = {
   readonly zooms: Zoom[];
   readonly selectedZoomId?: string;
   readonly onSelectZoom: (zoomId: string) => void;
+  readonly cursorLayers: CursorLayer[];
+  readonly selectedEffectId?: string;
+  readonly onSelectEffect: (effectId: string) => void;
   readonly selectedClipId?: string;
   readonly selectedBannerId?: string;
   readonly readOnly: boolean;
@@ -211,6 +251,9 @@ const Timeline: FC<Props> = ({
   zooms,
   selectedZoomId,
   onSelectZoom,
+  cursorLayers,
+  selectedEffectId,
+  onSelectEffect,
   selectedClipId,
   selectedBannerId,
   readOnly,
@@ -363,6 +406,22 @@ const Timeline: FC<Props> = ({
 
   return (
     <div css={panelStyles}>
+      <div css={headerColumnStyles} aria-hidden="true">
+        <div css={headerCellStyles} style={{ height: trackHeights.ruler }} />
+        <div css={headerCellStyles} style={{ height: trackHeights.clip }}>
+          Clips
+        </div>
+        <div css={headerCellStyles} style={{ height: trackHeights.lane }}>
+          Banners
+        </div>
+        <div css={headerCellStyles} style={{ height: trackHeights.lane }}>
+          Zoom, cursor
+        </div>
+        <div css={headerCellStyles} style={{ height: trackHeights.lane }}>
+          Voice over
+        </div>
+      </div>
+
       <div css={scrollStyles}>
         <div
           css={laneStyles}
@@ -432,80 +491,97 @@ const Timeline: FC<Props> = ({
           </div>
 
           <div css={overlayTrackStyles}>
-            {banners.length === 0 ? (
-              <span css={laneLabelStyles}>Banners</span>
-            ) : (
-              banners.map((banner) => (
-                <BannerBlock
-                  key={banner.id}
-                  banner={banner}
-                  left={msToPx(banner.startMs, pixelsPerSecond)}
-                  width={msToPx(banner.durationMs, pixelsPerSecond)}
-                  selected={banner.id === selectedBannerId}
-                  readOnly={readOnly}
-                  onSelect={() => onSelectBanner(banner.id)}
-                  onDragStart={(kind, event) =>
-                    startBannerDrag(banner, kind, event)
-                  }
-                />
-              ))
-            )}
-          </div>
-
-          <div css={overlayTrackStyles}>
-            {zooms.length === 0 ? (
-              <span css={laneLabelStyles}>Zoom and cursor</span>
-            ) : (
-              zooms.map((zoom) => {
-                const placement = placements.find(
-                  ({ clip }) => clip.id === zoom.clipId,
-                );
-                if (!placement) {
-                  return null;
+            {banners.map((banner) => (
+              <BannerBlock
+                key={banner.id}
+                banner={banner}
+                left={msToPx(banner.startMs, pixelsPerSecond)}
+                width={msToPx(banner.durationMs, pixelsPerSecond)}
+                selected={banner.id === selectedBannerId}
+                readOnly={readOnly}
+                onSelect={() => onSelectBanner(banner.id)}
+                onDragStart={(kind, event) =>
+                  startBannerDrag(banner, kind, event)
                 }
-                const startMs = placement.startMs + zoom.startMs;
-                const lengthMs = zoom.rampInMs + zoom.holdMs + zoom.rampOutMs;
-                return (
-                  <button
-                    type="button"
-                    key={zoom.id}
-                    css={[
-                      zoomBlockStyles,
-                      zoom.id === selectedZoomId && selectedBlockStyles,
-                    ]}
-                    style={{
-                      left: msToPx(startMs, pixelsPerSecond),
-                      width: Math.max(msToPx(lengthMs, pixelsPerSecond), 18),
-                    }}
-                    onClick={() => onSelectZoom(zoom.id)}
-                  >
-                    {`Zoom ${zoom.scale}x`}
-                  </button>
-                );
-              })
-            )}
+              />
+            ))}
           </div>
 
           <div css={overlayTrackStyles}>
-            {narration.length === 0 ? (
-              <span css={laneLabelStyles}>Voice over</span>
-            ) : (
-              narration.map((clip) => (
-                <span
-                  key={clip.id}
-                  css={audioBlockStyles}
+            {zooms.map((zoom) => {
+              const placement = placements.find(
+                ({ clip }) => clip.id === zoom.clipId,
+              );
+              if (!placement) {
+                return null;
+              }
+              const startMs = placement.startMs + zoom.startMs;
+              const lengthMs = zoom.rampInMs + zoom.holdMs + zoom.rampOutMs;
+              return (
+                <button
+                  type="button"
+                  key={zoom.id}
+                  css={[
+                    zoomBlockStyles,
+                    zoom.id === selectedZoomId && selectedBlockStyles,
+                  ]}
                   style={{
-                    left: msToPx(clip.startMs, pixelsPerSecond),
-                    width: Math.max(
-                      msToPx(clip.outMs - clip.inMs, pixelsPerSecond),
-                      18,
+                    left: msToPx(startMs, pixelsPerSecond),
+                    width: Math.max(msToPx(lengthMs, pixelsPerSecond), 18),
+                  }}
+                  onClick={() => onSelectZoom(zoom.id)}
+                >
+                  {`Zoom ${zoom.scale}x`}
+                </button>
+              );
+            })}
+          </div>
+
+          <div css={overlayTrackStyles}>
+            {cursorLayers.flatMap((layer) => {
+              const placement = placements.find(
+                ({ clip }) => clip.id === layer.clipId,
+              );
+              if (!placement) {
+                return [];
+              }
+              return layer.effects.map((effect) => (
+                <button
+                  type="button"
+                  key={effect.id}
+                  aria-label={`${effect.type} effect`}
+                  css={[
+                    effectMarkerStyles,
+                    effect.id === selectedEffectId && selectedMarkerStyles,
+                  ]}
+                  style={{
+                    left: msToPx(
+                      placement.startMs + effect.tMs,
+                      pixelsPerSecond,
                     ),
                   }}
-                >
-                  Voice over
-                </span>
-              ))
-            )}
+                  onClick={() => onSelectEffect(effect.id)}
+                />
+              ));
+            })}
+          </div>
+
+          <div css={overlayTrackStyles}>
+            {narration.map((clip) => (
+              <span
+                key={clip.id}
+                css={audioBlockStyles}
+                style={{
+                  left: msToPx(clip.startMs, pixelsPerSecond),
+                  width: Math.max(
+                    msToPx(clip.outMs - clip.inMs, pixelsPerSecond),
+                    18,
+                  ),
+                }}
+              >
+                Voice over
+              </span>
+            ))}
           </div>
 
           <div

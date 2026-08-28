@@ -164,6 +164,20 @@ export type CreatedAsset = {
   partSize: number;
 };
 
+export type RecordingSession = {
+  sessionId: string;
+  token: string;
+  snippetUrl: string;
+  captureUrl: string;
+  expiresAt: string;
+};
+
+export type RecordingSessionStatus = {
+  state: 'open' | 'closed' | 'expired';
+  eventCount: number;
+  lastEventAt?: string;
+};
+
 export type SavedTimeline = {
   video: Video;
   timelineVersion: number;

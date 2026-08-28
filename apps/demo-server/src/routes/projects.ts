@@ -14,6 +14,7 @@ import { createProjectSchema, saveTimelineSchema } from '../schemas';
 import { getObjectText, putObject, timelineKey } from '../storage';
 import { registerAssetRoutes } from './assets';
 import { asyncRouter } from './async-router';
+import { registerRenderRoutes } from './render';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import { createVideoRow } from './video-create';
@@ -197,6 +198,7 @@ export const projectsRouter = (): Router => {
   );
 
   registerAssetRoutes(router, loadProject);
+  registerRenderRoutes(router, loadProject);
 
   return router;
 };

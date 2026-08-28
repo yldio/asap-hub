@@ -29,9 +29,20 @@ import type { ViewMode } from './state';
 export const isWatchable = (video: Video): boolean =>
   video.processingState === 'ready' && video.status === 'published';
 
+// a studio project is edited, not encoded, so it goes straight to its editor
+export const editPathOf = (video: Video): string =>
+  video.kind === 'studio'
+    ? `/studio/projects/${video.id}`
+    : `/studio/videos/${video.id}`;
+
 export const VideoStatusBadge: FC<{ readonly video: Video }> = ({ video }) => {
   if (video.processingState === 'failed') {
     return <Badge tone="error">Failed</Badge>;
+  }
+  // 'empty' is a project that has never been exported: it is a draft waiting to
+  // be worked on, not something the encoder is busy with
+  if (video.processingState === 'empty') {
+    return <Badge tone="neutral">Studio draft</Badge>;
   }
   if (video.processingState !== 'ready') {
     return <Badge tone="warning">Processing</Badge>;
@@ -155,7 +166,7 @@ export const VideoCard: FC<VideoCardProps> = ({
   onDelete,
 }) => {
   const navigate = useNavigate();
-  const editPath = `/studio/videos/${video.id}`;
+  const editPath = editPathOf(video);
   const titlePath =
     isCreator && !isWatchable(video) ? editPath : `/videos/${video.id}`;
 
@@ -164,7 +175,9 @@ export const VideoCard: FC<VideoCardProps> = ({
     disabled: !isCreator,
   });
 
-  const duration = formatDuration(video.durationMs);
+  // a project with no export has no running time to show, and a 0:00 badge
+  // reads as a broken video rather than as one that has not been made yet
+  const duration = video.durationMs > 0 ? formatDuration(video.durationMs) : '';
 
   const meta = (
     <div css={[metaStyles, isCreator && selectableStyles]}>
@@ -278,8 +291,10 @@ export const VideoCard: FC<VideoCardProps> = ({
           <>
             <Thumbnail
               videoId={video.id}
+              mediaPath={video.mediaPath}
               creatorName={video.createdBy.name}
               duration={duration}
+              hasPoster={video.processingState === 'ready'}
             />
             <div css={{ display: 'grid', gap: rem(6), padding: `0 ${rem(2)}` }}>
               {title}
@@ -290,8 +305,10 @@ export const VideoCard: FC<VideoCardProps> = ({
           <>
             <Thumbnail
               videoId={video.id}
+              mediaPath={video.mediaPath}
               creatorName={video.createdBy.name}
               duration={duration}
+              hasPoster={video.processingState === 'ready'}
               width={120}
               radius={6}
             />

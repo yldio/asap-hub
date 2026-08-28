@@ -53,15 +53,21 @@ const badgeStyles = css({
  */
 export const Thumbnail: FC<{
   readonly videoId: string;
+  readonly mediaPath?: string;
   readonly creatorName: string;
   readonly duration: string;
+  // a video with no encoded output has no poster to ask for, and asking anyway
+  // fills the console with 404s for every draft in the library
+  readonly hasPoster?: boolean;
   readonly radius?: number;
   readonly aspectRatio?: string;
   readonly width?: number;
 }> = ({
   videoId,
+  mediaPath,
   creatorName,
   duration,
+  hasPoster = true,
   radius = 8,
   aspectRatio = '16 / 9',
   width,
@@ -79,15 +85,17 @@ export const Thumbnail: FC<{
       ]}
     >
       {!loaded && <span css={fallbackStyles}>{creatorName}</span>}
-      <img
-        src={thumbnailUrl(videoId)}
-        alt=""
-        draggable={false}
-        css={[imageStyles, { opacity: loaded ? 1 : 0 }]}
-        onLoad={() => setLoaded(true)}
-        onError={() => setLoaded(false)}
-      />
-      <span css={badgeStyles}>{duration}</span>
+      {hasPoster && (
+        <img
+          src={thumbnailUrl(videoId, mediaPath)}
+          alt=""
+          draggable={false}
+          css={[imageStyles, { opacity: loaded ? 1 : 0 }]}
+          onLoad={() => setLoaded(true)}
+          onError={() => setLoaded(false)}
+        />
+      )}
+      {duration ? <span css={badgeStyles}>{duration}</span> : null}
     </div>
   );
 };

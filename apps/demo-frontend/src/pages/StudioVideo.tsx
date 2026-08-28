@@ -794,6 +794,12 @@ const StudioVideo: FC = () => {
     );
   }
 
+  // a studio project belongs in the editor: it has no upload to encode, and
+  // this page would otherwise show it as forever processing
+  if (video.data.kind === 'studio') {
+    return <Navigate to={`/studio/projects/${id}`} replace />;
+  }
+
   const { processingState, processingError, title } = video.data;
 
   if (processingState === 'failed') {

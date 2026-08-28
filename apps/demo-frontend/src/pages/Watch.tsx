@@ -6,6 +6,7 @@ import { Link, useParams, useSearchParams } from 'react-router';
 import { useVideo, useVideoAccess } from '../api/hooks';
 import type { Chapter, Video, VideoAccess } from '../api/types';
 import { useIsCreator } from '../auth/MeContext';
+import { editPathOf } from '../library/VideoCard';
 import ChapterList from '../watch/ChapterList';
 import Player from '../watch/Player';
 import SpritePreview from '../watch/SpritePreview';
@@ -95,10 +96,7 @@ const WatchPlayer: FC<{
             Download
           </ButtonLink>
           {isCreator && (
-            <Link
-              to={`/studio/videos/${video.id}`}
-              css={{ fontWeight: 'bold' }}
-            >
+            <Link to={editPathOf(video)} css={{ fontWeight: 'bold' }}>
               Edit demo
             </Link>
           )}
@@ -153,22 +151,32 @@ const Watch: FC = () => {
 
   if (video.data.processingState !== 'ready') {
     const failed = video.data.processingState === 'failed';
+    // a studio project that has never been exported has nothing to play, and
+    // no amount of waiting will change that
+    const unexported = video.data.processingState === 'empty';
+    const settled = failed || unexported;
     return (
       <>
         <Headline level={2}>{video.data.title}</Headline>
         <div css={{ height: rem(16) }} />
         <Card overrideStyles={statePanelStyles}>
           <Headline level={3}>
-            {failed
-              ? 'This demo failed to process'
-              : 'This demo is still processing'}
+            {failed ? 'This demo failed to process' : null}
+            {unexported ? 'This demo has not been exported yet' : null}
+            {settled ? null : 'This demo is still processing'}
           </Headline>
           <p css={{ color: lead.rgb, margin: 0 }}>
             {failed
               ? 'The recording could not be encoded. Ask a creator to upload it again.'
+              : null}
+            {unexported
+              ? 'It is still a draft in the studio. A creator has to export it before it can be watched.'
+              : null}
+            {settled
+              ? null
               : 'Encoding usually takes a few minutes. Check back shortly.'}
           </p>
-          {!failed && (
+          {!settled && (
             <Button
               onClick={() => {
                 void video.refetch();

@@ -45,6 +45,8 @@ const stageLabels: Record<string, string> = {
   finishing: 'Building the preview images',
 };
 
+const draftStyles = css({ fontSize: 13, color: editorTheme.muted });
+
 type Props = {
   readonly videoId: string;
   readonly render?: RenderJob;
@@ -87,20 +89,22 @@ const RenderBar: FC<Props> = ({
     <div css={barStyles}>
       {render?.state === 'failed' ? (
         <span css={errorStyles}>
-          {render.error ? `Render failed: ${render.error}` : 'Render failed'}
+          {render.error ? `Export failed: ${render.error}` : 'Export failed'}
         </span>
       ) : null}
       {hasOutput ? (
         <Link css={linkStyles} to={`/videos/${videoId}`}>
-          {status === 'published' ? 'View the demo' : 'Preview the render'}
+          {status === 'published' ? 'View the demo' : 'Preview the demo'}
         </Link>
-      ) : null}
+      ) : (
+        <span css={draftStyles}>Draft, not yet a demo</span>
+      )}
       <EditorButton
         primary
         disabled={readOnly || !canRender}
         onClick={onRender}
       >
-        {hasOutput ? 'Render again' : 'Render'}
+        {hasOutput ? 'Export again' : 'Export to a demo'}
       </EditorButton>
     </div>
   );

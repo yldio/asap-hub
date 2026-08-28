@@ -87,5 +87,12 @@ export const matchesStatusFilter = (
 export const matchesQuery = (video: Video, query: string): boolean =>
   video.title.toLowerCase().includes(query.toLowerCase());
 
-export const thumbnailUrl = (videoId: string): string =>
-  `/media/${encodeURIComponent(videoId)}/thumb.jpg`;
+// a studio render writes into media/{id}/r{n}/, so the poster only sits at the
+// bare path for an upload the encoder produced
+export const thumbnailUrl = (videoId: string, mediaPath?: string): string =>
+  [
+    '/media',
+    encodeURIComponent(videoId),
+    ...(mediaPath ? [encodeURIComponent(mediaPath)] : []),
+    'thumb.jpg',
+  ].join('/');

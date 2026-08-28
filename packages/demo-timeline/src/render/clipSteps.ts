@@ -1,7 +1,16 @@
 import { ClipPlacement } from '../clips';
 import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
-import { Banner, Canvas, Clip, SourceClip, TitleClip, Zoom } from '../schema';
+import {
+  Banner,
+  Canvas,
+  Clip,
+  CursorLayer,
+  SourceClip,
+  TitleClip,
+  Zoom,
+} from '../schema';
 import { assetHasAudio, assetPath } from './assets';
+import { cursorArt } from './cursorArt';
 import {
   audioEncodeArgs,
   containerArgs,
@@ -22,7 +31,12 @@ import {
   secondsFromMs,
   videoFilters,
 } from './filters';
-import { bannerPngPath, clipOutputPath, titlePngPath } from './paths';
+import {
+  bannerPngPath,
+  clipOutputPath,
+  cursorPngPath,
+  titlePngPath,
+} from './paths';
 import { FfmpegStep, RenderAsset, SvgFile } from './types';
 import { clipZooms, zoomFilters } from './zoom';
 
@@ -30,6 +44,7 @@ export type ClipStepInput = {
   placement: ClipPlacement;
   canvas: Canvas;
   banners: Banner[];
+  cursor: CursorLayer[];
   zooms: Zoom[];
   assets: Map<string, RenderAsset>;
   workDir: string;
@@ -132,6 +147,50 @@ const bannerOverlays = (
         ];
   });
 
+// every effect costs an ffmpeg input and a full frame composite, so a clip
+// draws the ones a viewer sees first rather than failing to render at all
+export const maxCursorOverlays = 60;
+
+// the effects are timed against the capture, and the layer's offset is what
+// lines that capture up with the clip
+const cursorOverlays = (
+  cursor: CursorLayer[],
+  placement: ClipPlacement,
+  canvas: Canvas,
+  workDir: string,
+): Overlay[] =>
+  cursor
+    .filter((layer) => layer.clipId === placement.clip.id)
+    .flatMap((layer) =>
+      layer.effects.flatMap((effect) => {
+        const art = cursorArt(effect, canvas);
+        if (!art) {
+          return [];
+        }
+        const atMs = effect.tMs + layer.offsetMs;
+        const startMs = Math.max(0, atMs);
+        const endMs = Math.min(placement.durationMs, atMs + art.durationMs);
+        return endMs <= startMs
+          ? []
+          : [
+              {
+                svg: art.svg,
+                visible: {
+                  startMs,
+                  endMs,
+                  fadeInMs: art.fadeInMs,
+                  fadeOutMs: art.fadeOutMs,
+                },
+              },
+            ];
+      }),
+    )
+    .slice(0, maxCursorOverlays)
+    .map((overlay, position) => ({
+      ...overlay,
+      path: cursorPngPath(workDir, placement.index, position),
+    }));
+
 const describeClip = (clip: Clip): string =>
   clip.kind === 'source' ? `source ${clip.assetId}` : `title "${clip.text}"`;
 
@@ -149,6 +208,7 @@ export const buildClipStep = ({
   placement,
   canvas,
   banners,
+  cursor,
   zooms,
   assets,
   workDir,
@@ -164,12 +224,13 @@ export const buildClipStep = ({
   const audioMap = generatedAudio ? '1:a' : '0:a?';
   const baseInputCount = generatedAudio ? 2 : 1;
 
-  // the zoom moves the picture the banners sit on, exactly as the preview
-  // scales the video under its own overlay layers
+  // the zoom moves the picture the effects and the banners sit on, exactly as
+  // the preview scales the video under its own overlay layers
   const overlays: Overlay[] = [
     ...(clip.kind === 'title'
       ? [titleOverlay(clip, canvas, workDir, index, durationMs)]
       : []),
+    ...cursorOverlays(cursor, placement, canvas, workDir),
     ...bannerOverlays(banners, placement, canvas, workDir),
   ];
 

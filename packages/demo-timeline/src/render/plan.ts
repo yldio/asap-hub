@@ -31,7 +31,7 @@ export const buildRenderPlan = ({
   workDir,
   output,
 }: RenderPlanInput): RenderPlan => {
-  const { canvas, banners, narration, zooms } = timeline;
+  const { canvas, banners, narration, cursor, zooms } = timeline;
   const placements = layoutClips(timeline.clips);
   const durationMs = placementsDurationMs(placements);
   const index = assetIndex(assets);
@@ -45,6 +45,7 @@ export const buildRenderPlan = ({
       placement,
       canvas,
       banners,
+      cursor,
       zooms,
       assets: index,
       workDir,

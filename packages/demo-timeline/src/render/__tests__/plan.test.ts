@@ -2,6 +2,8 @@ import { createEmptyTimeline } from '../../document';
 import {
   Banner,
   Clip,
+  CursorEffect,
+  CursorLayer,
   NarrationClip,
   SourceClip,
   Timeline,
@@ -70,6 +72,23 @@ const zoom = (overrides: Partial<Zoom> = {}): Zoom => ({
   focus: { x: 0.5, y: 0.5 },
   scale: 2,
   easing: 'easeInOut',
+  ...overrides,
+});
+
+const effect = (overrides: Partial<CursorEffect> = {}): CursorEffect => ({
+  id: 'effect-1',
+  tMs: 2000,
+  type: 'ripple',
+  point: { x: 0.25, y: 0.75 },
+  origin: 'manual',
+  ...overrides,
+});
+
+const cursorLayer = (overrides: Partial<CursorLayer> = {}): CursorLayer => ({
+  clipId: 'clip-1',
+  offsetMs: 0,
+  path: [],
+  effects: [effect()],
   ...overrides,
 });
 
@@ -354,6 +373,100 @@ describe('buildRenderPlan', () => {
 
       expect(args).toContain("x='0.5000*(iw-iw/(1+1.000*if(");
       expect(args).toContain('+0.2000*(iw-iw/(1+1.000*if(');
+    });
+  });
+
+  describe('a clip with cursor effects', () => {
+    const plan = planFor({
+      clips: [source()],
+      cursor: [
+        cursorLayer({
+          effects: [
+            effect(),
+            effect({
+              id: 'effect-2',
+              tMs: 5000,
+              type: 'spotlight',
+              point: { x: 0.6, y: 0.4 },
+            }),
+          ],
+        }),
+      ],
+    });
+
+    it('overlays each effect for its own window', () => {
+      expect(plan.steps[0]).toMatchSnapshot();
+    });
+
+    it('hands the caller one image per effect to rasterise', () => {
+      expect(plan.svgs.map(({ path }) => path)).toEqual([
+        '/work/cursor-0-0.png',
+        '/work/cursor-0-1.png',
+      ]);
+    });
+
+    it('draws the ripple on the click point', () => {
+      expect(plan.svgs[0]?.svg).toContain('<circle cx="480" cy="810"');
+    });
+
+    it('holds a spotlight longer than a ripple', () => {
+      const args = plan.steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("enable='between(t,2.000,2.600)'");
+      expect(args).toContain("enable='between(t,5.000,6.200)'");
+    });
+
+    it('nudges the effects by the layer offset', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer({ offsetMs: 500 })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("enable='between(t,2.500,3.100)'");
+    });
+
+    it('ignores a zoom marker, which the editor materialises as a zoom', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer({ effects: [effect({ type: 'zoom' })] })],
+        }).svgs,
+      ).toEqual([]);
+    });
+
+    it('drops an effect that lands past the end of the clip', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer({ effects: [effect({ tMs: 10000 })] })],
+        }).svgs,
+      ).toEqual([]);
+    });
+
+    it('composites a banner over the effects, as the preview stacks them', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer()],
+          banners: [banner()],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args.indexOf('/work/cursor-0-0.png')).toBeLessThan(
+        args.indexOf('/work/banner-0.png'),
+      );
+    });
+  });
+
+  describe('a clip with a zoom and cursor effects', () => {
+    const plan = planFor({
+      clips: [source()],
+      zooms: [zoom({ focus: { x: 0.25, y: 0.75 } })],
+      cursor: [cursorLayer()],
+    });
+
+    it('zooms the picture and composites the effects over it', () => {
+      expect(plan.steps[0]).toMatchSnapshot();
     });
   });
 

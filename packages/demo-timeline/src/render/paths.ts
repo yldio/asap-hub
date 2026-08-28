@@ -10,5 +10,11 @@ export const titlePngPath = (workDir: string, clipIndex: number): string =>
 export const bannerPngPath = (workDir: string, bannerIndex: number): string =>
   inWorkDir(workDir, `banner-${bannerIndex}.png`);
 
+export const cursorPngPath = (
+  workDir: string,
+  clipIndex: number,
+  effectIndex: number,
+): string => inWorkDir(workDir, `cursor-${clipIndex}-${effectIndex}.png`);
+
 export const concatListPath = (workDir: string): string =>
   inWorkDir(workDir, 'concat.txt');

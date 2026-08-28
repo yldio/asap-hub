@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rippleSvg draws a ring on the click point 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <circle cx="480" cy="810" r="86" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.9" stroke-width="4"/>
+</svg>"
+`;
+
+exports[`spotlightSvg darkens the frame around the point 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs><radialGradient id="spotlight" gradientUnits="userSpaceOnUse" cx="480" cy="810" r="1652"><stop offset="0.08" stop-color="#000000" stop-opacity="0"/><stop offset="0.26" stop-color="#000000" stop-opacity="0.55"/></radialGradient></defs>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#spotlight)"/>
+</svg>"
+`;

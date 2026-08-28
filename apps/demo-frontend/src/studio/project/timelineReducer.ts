@@ -1,4 +1,5 @@
 import {
+  Canvas,
   Clip,
   insertClipAt,
   moveClip,
@@ -28,8 +29,11 @@ export type TimelineAction =
       assetDurationMs: number;
     }
   | { type: 'splitAt'; tMs: number; clipId: string }
+  | { type: 'duplicateClip'; clipId: string; newClipId: string }
+  | { type: 'toggleMute'; clipId: string }
   | { type: 'setClipVolume'; clipId: string; volume: number }
   | { type: 'setTransition'; clipId: string; transition?: Transition }
+  | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
 const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
@@ -110,6 +114,30 @@ export const timelineReducer = (
         splitAt(timeline.clips, action.tMs, action.clipId),
       );
 
+    case 'duplicateClip': {
+      const index = timeline.clips.findIndex(
+        (clip) => clip.id === action.clipId,
+      );
+      const original = timeline.clips[index];
+      if (!original) {
+        return timeline;
+      }
+      // the copy follows the original and starts on a cut, whatever the
+      // original blended into
+      const copy = {
+        ...original,
+        id: action.newClipId,
+        transitionIn: undefined,
+      };
+      return withClips(timeline, insertClipAt(timeline.clips, copy, index + 1));
+    }
+
+    case 'toggleMute':
+      return mapClip(timeline, action.clipId, (clip) => ({
+        ...clip,
+        volume: clip.volume === 0 ? 1 : 0,
+      }));
+
     case 'setClipVolume':
       return mapClip(timeline, action.clipId, (clip) => ({
         ...clip,
@@ -125,6 +153,13 @@ export const timelineReducer = (
             : clip,
         ),
       );
+
+    case 'setCanvas':
+      return timeline.canvas.width === action.canvas.width &&
+        timeline.canvas.height === action.canvas.height &&
+        timeline.canvas.fps === action.canvas.fps
+        ? timeline
+        : { ...timeline, canvas: action.canvas };
 
     case 'replaceTimeline':
       return action.timeline;

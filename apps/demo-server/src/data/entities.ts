@@ -160,6 +160,7 @@ export const assetEntity = new Entity(
       durationMs: { type: 'number' },
       width: { type: 'number' },
       height: { type: 'number' },
+      fps: { type: 'number' },
       error: { type: 'string' },
       createdAt: { type: 'string', required: true },
       updatedAt: { type: 'string', required: true },

@@ -1,80 +1,64 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import {
+  chooseCanvas,
   layoutClips,
   placementAt,
   timelineDurationMs,
 } from '@asap-hub/demo-timeline';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ProjectAsset } from '../../api/types';
-import { Button, Caption } from '../../ui/components';
-import { paper, pearl, rem, silver, steel } from '../../ui/theme';
 import { createId } from '../project/ids';
 import { ProjectEditor as Editor } from '../project/useProjectEditor';
+import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
 import ClipInspector from './ClipInspector';
-import { clampZoom, defaultPixelsPerSecond, formatTimecode } from './geometry';
+import { editorTheme } from './editorTheme';
+import { clampZoom, defaultPixelsPerSecond } from './geometry';
 import PreviewStage from './PreviewStage';
 import Timeline from './Timeline';
+import TransportBar from './TransportBar';
 import { usePlayback } from './usePlayback';
 
 const shellStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  height: `calc(100vh - ${rem(140)})`,
-  minHeight: rem(560),
-  backgroundColor: paper.rgb,
-  border: `1px solid ${silver.rgb}`,
-  borderRadius: rem(8),
+  minHeight: 560,
+  backgroundColor: editorTheme.surface,
+  borderRadius: 10,
+  border: `1px solid ${editorTheme.line}`,
   overflow: 'hidden',
+  color: editorTheme.text,
 });
 
 const bodyStyles = css({
   display: 'flex',
-  flex: 1,
   minHeight: 0,
+  '@media (max-width: 1100px)': { flexDirection: 'column' },
 });
 
 const centreStyles = css({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(12),
-  padding: rem(16),
+  gap: 12,
+  padding: 16,
   minWidth: 0,
-  overflow: 'auto',
-});
-
-const transportStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(12),
-  flexWrap: 'wrap',
-});
-
-const toolbarStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-  padding: `${rem(10)} ${rem(16)}`,
-  borderBottom: `1px solid ${silver.rgb}`,
-  backgroundColor: pearl.rgb,
-  flexWrap: 'wrap',
-});
-
-const spacerStyles = css({ marginLeft: 'auto' });
-
-const timecodeStyles = css({
-  fontVariantNumeric: 'tabular-nums',
-  fontSize: rem(14),
-  color: steel.rgb,
 });
 
 const saveLabels: Record<string, string> = {
   idle: '',
   saving: 'Saving…',
   saved: 'All changes saved',
-  error: 'Could not save',
+  error: 'Could not save, retrying on the next edit',
 };
 
 type Props = {
@@ -102,6 +86,7 @@ const ProjectEditor: FC<Props> = ({
   const [pixelsPerSecond, setPixelsPerSecond] = useState(
     defaultPixelsPerSecond,
   );
+  const stageRef = useRef<HTMLDivElement>(null);
 
   const { timeline, dispatch } = editor;
   const placements = useMemo(() => layoutClips(timeline.clips), [timeline]);
@@ -109,29 +94,95 @@ const ProjectEditor: FC<Props> = ({
     () => timelineDurationMs(timeline.clips),
     [timeline],
   );
-  const playback = usePlayback({ durationMs });
-  const { playheadMs, playing, toggle, seek, nudge } = playback;
+  const { playheadMs, playing, toggle, seek, nudge } = usePlayback({
+    durationMs,
+  });
 
   const current = placementAt(placements, playheadMs);
   const selected = placements.find(({ clip }) => clip.id === selectedClipId);
+  const selectedSource =
+    selected?.clip.kind === 'source' ? selected.clip : undefined;
+
   const assetsById = useMemo(
     () => Object.fromEntries(assets.map((asset) => [asset.assetId, asset])),
     [assets],
   );
+
+  const assetDurationOf = useCallback(
+    (assetId: string, fallbackMs: number): number =>
+      assetsById[assetId]?.durationMs ?? fallbackMs,
+    [assetsById],
+  );
+
+  const zoomToFit = useCallback(() => {
+    const width = stageRef.current?.clientWidth ?? 0;
+    if (width === 0 || durationMs === 0) {
+      setPixelsPerSecond(defaultPixelsPerSecond);
+      return;
+    }
+    setPixelsPerSecond(clampZoom(((width - 64) / durationMs) * 1000));
+  }, [durationMs]);
+
+  // the whole demo should be visible without hunting for the right zoom first
+  const fitted = useRef(false);
+  useLayoutEffect(() => {
+    if (!fitted.current && durationMs > 0) {
+      fitted.current = true;
+      zoomToFit();
+    }
+  }, [durationMs, zoomToFit]);
 
   const addAsset = useCallback(
     (asset: ProjectAsset) => {
       dispatch({
         type: 'addClip',
         assetId: asset.assetId,
-        // an asset that has not been probed yet still lands on the timeline, at
-        // a provisional length the ingest corrects
+        // an asset still being prepared lands at a provisional length that the
+        // ingest corrects once it has probed the file
         durationMs: asset.durationMs ?? 10000,
         clipId: createId('clip'),
       });
+      // the output follows the footage: 60fps sources render at 60, and a
+      // source taller than 1080p keeps its height
+      dispatch({
+        type: 'setCanvas',
+        canvas: chooseCanvas([
+          ...timeline.clips.flatMap((clip) => {
+            const used =
+              clip.kind === 'source' ? assetsById[clip.assetId] : undefined;
+            return used ? [used] : [];
+          }),
+          asset,
+        ]),
+      });
     },
-    [dispatch],
+    [assetsById, dispatch, timeline.clips],
   );
+
+  const splitAtPlayhead = useCallback(() => {
+    if (!current) return;
+    dispatch({ type: 'splitAt', tMs: playheadMs, clipId: createId('clip') });
+  }, [current, dispatch, playheadMs]);
+
+  const duplicateSelected = useCallback(() => {
+    if (!selected) return;
+    dispatch({
+      type: 'duplicateClip',
+      clipId: selected.clip.id,
+      newClipId: createId('clip'),
+    });
+  }, [dispatch, selected]);
+
+  const toggleMuteSelected = useCallback(() => {
+    if (!selected) return;
+    dispatch({ type: 'toggleMute', clipId: selected.clip.id });
+  }, [dispatch, selected]);
+
+  const removeSelected = useCallback(() => {
+    if (!selected) return;
+    dispatch({ type: 'removeClip', clipId: selected.clip.id });
+    setSelectedClipId(undefined);
+  }, [dispatch, selected]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -144,56 +195,76 @@ const ProjectEditor: FC<Props> = ({
       ) {
         return;
       }
-      if (event.code === 'Space') {
+
+      const transport: Record<string, () => void> = {
+        Space: toggle,
+        ArrowLeft: () => nudge(event.shiftKey ? -1000 : -100),
+        ArrowRight: () => nudge(event.shiftKey ? 1000 : 100),
+      };
+      const editing: Record<string, () => void> = {
+        KeyS: splitAtPlayhead,
+        KeyD: duplicateSelected,
+        KeyM: toggleMuteSelected,
+        Delete: removeSelected,
+        Backspace: removeSelected,
+      };
+
+      const move = transport[event.code];
+      if (move) {
         event.preventDefault();
-        toggle();
+        move();
+        return;
       }
-      if (event.key === 'ArrowLeft') {
-        nudge(event.shiftKey ? -1000 : -100);
-      }
-      if (event.key === 'ArrowRight') {
-        nudge(event.shiftKey ? 1000 : 100);
+
+      const edit = editing[event.code];
+      if (edit && !readOnly) {
+        edit();
       }
     };
+
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [nudge, toggle]);
+  }, [
+    duplicateSelected,
+    nudge,
+    readOnly,
+    removeSelected,
+    splitAtPlayhead,
+    toggle,
+    toggleMuteSelected,
+  ]);
 
   return (
     <div css={shellStyles}>
-      <div css={toolbarStyles}>
-        <Button
-          small
-          disabled={readOnly || !editor.canUndo}
-          onClick={editor.undo}
-        >
-          Undo
-        </Button>
-        <Button
-          small
-          disabled={readOnly || !editor.canRedo}
-          onClick={editor.redo}
-        >
-          Redo
-        </Button>
-        <Button
-          small
-          disabled={readOnly || !current}
-          onClick={() =>
-            dispatch({
-              type: 'splitAt',
-              tMs: playheadMs,
-              clipId: createId('clip'),
-            })
-          }
-        >
-          Split at playhead
-        </Button>
-        <span css={spacerStyles} />
-        <Caption>{saveLabels[editor.saveState]}</Caption>
-      </div>
+      <TransportBar
+        playing={playing}
+        canPlay={durationMs > 0}
+        canUndo={!readOnly && editor.canUndo}
+        canRedo={!readOnly && editor.canRedo}
+        saveLabel={saveLabels[editor.saveState] ?? ''}
+        canvasHeight={timeline.canvas.height}
+        canvasFps={timeline.canvas.fps}
+        onFpsChange={(fps) =>
+          dispatch({ type: 'setCanvas', canvas: { ...timeline.canvas, fps } })
+        }
+        onToggle={toggle}
+        onSkipStart={() => seek(0)}
+        onSkipEnd={() => seek(durationMs)}
+        onUndo={editor.undo}
+        onRedo={editor.redo}
+      />
 
       <div css={bodyStyles}>
+        <div css={centreStyles} ref={stageRef}>
+          <PreviewStage
+            placement={current}
+            playheadMs={playheadMs}
+            playing={playing}
+            assets={assetsById}
+            assetUrl={assetUrl}
+          />
+        </div>
+
         <AssetPanel
           assets={assets}
           busy={uploading}
@@ -204,60 +275,24 @@ const ProjectEditor: FC<Props> = ({
           onDelete={onDeleteAsset}
         />
 
-        <div css={centreStyles}>
-          <PreviewStage
-            placement={current}
-            playheadMs={playheadMs}
-            playing={playing}
-            assets={assetsById}
-            assetUrl={assetUrl}
-          />
-          <div css={transportStyles}>
-            <Button small onClick={toggle} disabled={durationMs === 0}>
-              {playing ? 'Pause' : 'Play'}
-            </Button>
-            <span css={timecodeStyles}>
-              {formatTimecode(playheadMs)} / {formatTimecode(durationMs)}
-            </span>
-            <span css={spacerStyles} />
-            <Button
-              small
-              onClick={() =>
-                setPixelsPerSecond((value) => clampZoom(value / 1.5))
-              }
-            >
-              Zoom out
-            </Button>
-            <Button
-              small
-              onClick={() =>
-                setPixelsPerSecond((value) => clampZoom(value * 1.5))
-              }
-            >
-              Zoom in
-            </Button>
-          </div>
-        </div>
-
         <ClipInspector
           placement={selected}
           asset={
-            selected?.clip.kind === 'source'
-              ? assetsById[selected.clip.assetId]
-              : undefined
+            selectedSource ? assetsById[selectedSource.assetId] : undefined
           }
           readOnly={readOnly}
           index={selected?.index ?? 0}
           clipCount={placements.length}
           onTrim={(change) => {
-            if (!selected || selected.clip.kind !== 'source') return;
-            const asset = assetsById[selected.clip.assetId];
+            if (!selectedSource) return;
             dispatch({
               type: 'trimClip',
-              clipId: selected.clip.id,
+              clipId: selectedSource.id,
               ...change,
-              assetDurationMs:
-                asset?.durationMs ?? selected.clip.outMs + 60 * 60 * 1000,
+              assetDurationMs: assetDurationOf(
+                selectedSource.assetId,
+                selectedSource.outMs,
+              ),
             });
           }}
           onVolume={(volume) => {
@@ -272,13 +307,24 @@ const ProjectEditor: FC<Props> = ({
             if (!selected) return;
             dispatch({ type: 'moveClip', clipId: selected.clip.id, toIndex });
           }}
-          onRemove={() => {
-            if (!selected) return;
-            dispatch({ type: 'removeClip', clipId: selected.clip.id });
-            setSelectedClipId(undefined);
-          }}
+          onRemove={removeSelected}
         />
       </div>
+
+      <ActionBar
+        hasSelection={Boolean(selected)}
+        selectionMuted={selectedSource?.volume === 0}
+        readOnly={readOnly}
+        playheadMs={playheadMs}
+        durationMs={durationMs}
+        onSplit={splitAtPlayhead}
+        onDuplicate={duplicateSelected}
+        onToggleMute={toggleMuteSelected}
+        onRemove={removeSelected}
+        onZoomIn={() => setPixelsPerSecond((value) => clampZoom(value * 1.5))}
+        onZoomOut={() => setPixelsPerSecond((value) => clampZoom(value / 1.5))}
+        onZoomFit={zoomToFit}
+      />
 
       <Timeline
         placements={placements}
@@ -286,9 +332,26 @@ const ProjectEditor: FC<Props> = ({
         playheadMs={playheadMs}
         pixelsPerSecond={pixelsPerSecond}
         selectedClipId={selectedClipId}
+        readOnly={readOnly}
         assets={assetsById}
         onSelect={setSelectedClipId}
         onSeek={seek}
+        onMove={(clipId, toIndex) =>
+          dispatch({ type: 'moveClip', clipId, toIndex })
+        }
+        onTrim={(clipId, change) => {
+          const clip = timeline.clips.find(
+            (candidate) => candidate.id === clipId,
+          );
+          if (!clip || clip.kind !== 'source') return;
+          dispatch({
+            type: 'trimClip',
+            clipId,
+            ...change,
+            assetDurationMs: assetDurationOf(clip.assetId, clip.outMs),
+          });
+        }}
+        onToggleMute={(clipId) => dispatch({ type: 'toggleMute', clipId })}
       />
     </div>
   );

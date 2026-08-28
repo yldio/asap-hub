@@ -3,36 +3,66 @@ import { css } from '@emotion/react';
 import { Clip, ClipPlacement } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import { ProjectAsset } from '../../api/types';
-import { Button, Caption } from '../../ui/components';
-import { rem, silver, steel } from '../../ui/theme';
+import EditorButton from './EditorButton';
+import { editorTheme } from './editorTheme';
 import { formatTimecode } from './geometry';
+import { TrashIcon } from './icons';
 
 const panelStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(12),
-  padding: rem(16),
-  borderLeft: `1px solid ${silver.rgb}`,
-  minWidth: rem(240),
-  maxWidth: rem(300),
+  gap: 12,
+  padding: 16,
+  borderLeft: `1px solid ${editorTheme.line}`,
+  backgroundColor: editorTheme.panel,
+  width: 260,
+  flexShrink: 0,
   overflowY: 'auto',
+  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0 },
 });
+
+const headingStyles = css({
+  margin: 0,
+  fontSize: 12,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: editorTheme.muted,
+});
+
+const nameStyles = css({ fontSize: 14, fontWeight: 600 });
 
 const rowStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
-  gap: rem(8),
-  fontSize: rem(13),
+  gap: 8,
+  fontSize: 13,
+  fontVariantNumeric: 'tabular-nums',
 });
 
-const mutedStyles = css({ color: steel.rgb, fontSize: rem(13) });
+const mutedStyles = css({ color: editorTheme.muted, fontSize: 13 });
 
 const fieldStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(4),
-  fontSize: rem(13),
+  gap: 4,
+  fontSize: 13,
+  color: editorTheme.muted,
 });
+
+const inputStyles = css({
+  height: 30,
+  borderRadius: 6,
+  border: `1px solid ${editorTheme.line}`,
+  backgroundColor: editorTheme.raised,
+  color: editorTheme.text,
+  padding: '0 8px',
+  font: 'inherit',
+  fontSize: 13,
+});
+
+const rangeStyles = css({ accentColor: editorTheme.playhead });
+
+const rowButtonsStyles = css({ display: 'flex', gap: 6 });
 
 type Props = {
   readonly placement?: ClipPlacement;
@@ -63,7 +93,7 @@ const ClipInspector: FC<Props> = ({
   if (!placement) {
     return (
       <aside css={panelStyles} aria-label="Clip">
-        <Caption>Clip</Caption>
+        <h2 css={headingStyles}>Clip</h2>
         <p css={mutedStyles}>Select a clip on the timeline to edit it.</p>
       </aside>
     );
@@ -74,8 +104,8 @@ const ClipInspector: FC<Props> = ({
 
   return (
     <aside css={panelStyles} aria-label="Clip">
-      <Caption>Clip</Caption>
-      <strong>{clipName(clip, asset)}</strong>
+      <h2 css={headingStyles}>Clip</h2>
+      <span css={nameStyles}>{clipName(clip, asset)}</span>
 
       <div css={rowStyles}>
         <span css={mutedStyles}>Starts</span>
@@ -91,6 +121,7 @@ const ClipInspector: FC<Props> = ({
           <label css={fieldStyles}>
             Trim start
             <input
+              css={inputStyles}
               type="number"
               min={0}
               step={100}
@@ -102,6 +133,7 @@ const ClipInspector: FC<Props> = ({
           <label css={fieldStyles}>
             Trim end
             <input
+              css={inputStyles}
               type="number"
               min={0}
               step={100}
@@ -113,8 +145,9 @@ const ClipInspector: FC<Props> = ({
             />
           </label>
           <label css={fieldStyles}>
-            Volume
+            {`Volume ${Math.round(source.volume * 100)}%`}
             <input
+              css={rangeStyles}
               type="range"
               min={0}
               max={2}
@@ -127,26 +160,29 @@ const ClipInspector: FC<Props> = ({
         </>
       ) : null}
 
-      <div css={{ display: 'flex', gap: rem(8) }}>
-        <Button
-          small
+      <div css={rowButtonsStyles}>
+        <EditorButton
           disabled={readOnly || index === 0}
           onClick={() => onMove(index - 1)}
         >
           Move earlier
-        </Button>
-        <Button
-          small
+        </EditorButton>
+        <EditorButton
           disabled={readOnly || index >= clipCount - 1}
           onClick={() => onMove(index + 1)}
         >
           Move later
-        </Button>
+        </EditorButton>
       </div>
 
-      <Button small danger disabled={readOnly} onClick={onRemove}>
+      <EditorButton
+        danger
+        icon={<TrashIcon size={15} />}
+        disabled={readOnly}
+        onClick={onRemove}
+      >
         Remove clip
-      </Button>
+      </EditorButton>
     </aside>
   );
 };

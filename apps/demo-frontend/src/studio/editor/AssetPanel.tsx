@@ -2,19 +2,30 @@
 import { css } from '@emotion/react';
 import { FC, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
-import { Button, Caption } from '../../ui/components';
-import { pearl, rem, silver, steel } from '../../ui/theme';
+import EditorButton from './EditorButton';
+import { editorTheme } from './editorTheme';
 import { formatDuration } from './geometry';
+import { PlusIcon, TrashIcon } from './icons';
 
 const panelStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(12),
-  padding: rem(16),
-  borderRight: `1px solid ${silver.rgb}`,
-  minWidth: rem(240),
-  maxWidth: rem(280),
+  gap: 12,
+  padding: 16,
+  borderLeft: `1px solid ${editorTheme.line}`,
+  backgroundColor: editorTheme.panel,
+  width: 280,
+  flexShrink: 0,
   overflowY: 'auto',
+  '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0 },
+});
+
+const headingStyles = css({
+  margin: 0,
+  fontSize: 12,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: editorTheme.muted,
 });
 
 const listStyles = css({
@@ -23,28 +34,39 @@ const listStyles = css({
   padding: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(8),
+  gap: 8,
 });
 
 const itemStyles = css({
-  backgroundColor: pearl.rgb,
-  borderRadius: rem(6),
-  padding: rem(10),
+  backgroundColor: editorTheme.raised,
+  border: `1px solid ${editorTheme.line}`,
+  borderRadius: 8,
+  padding: 10,
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(6),
+  gap: 8,
 });
 
 const labelStyles = css({
-  fontSize: rem(13),
+  fontSize: 13,
   fontWeight: 600,
   wordBreak: 'break-word',
 });
 
 const metaStyles = css({
-  fontSize: rem(12),
-  color: steel.rgb,
+  fontSize: 12,
+  color: editorTheme.muted,
+  fontVariantNumeric: 'tabular-nums',
 });
+
+const emptyStyles = css({
+  fontSize: 13,
+  color: editorTheme.muted,
+  margin: 0,
+  lineHeight: 1.5,
+});
+
+const rowStyles = css({ display: 'flex', gap: 6 });
 
 const hiddenInputStyles = css({ display: 'none' });
 
@@ -78,7 +100,7 @@ const AssetPanel: FC<Props> = ({
 
   return (
     <aside css={panelStyles} aria-label="Media">
-      <Caption>Media</Caption>
+      <h2 css={headingStyles}>Media</h2>
       <input
         ref={inputRef}
         css={hiddenInputStyles}
@@ -95,20 +117,21 @@ const AssetPanel: FC<Props> = ({
           input.value = '';
         }}
       />
-      <Button
+      <EditorButton
         primary
-        small
+        icon={<PlusIcon size={15} />}
         disabled={readOnly || busy}
         onClick={() => inputRef.current?.click()}
       >
         {busy
           ? `Uploading${progress === undefined ? '' : ` ${progress}%`}`
           : 'Import a video'}
-      </Button>
+      </EditorButton>
 
       {assets.length === 0 ? (
-        <p css={metaStyles}>
-          Nothing here yet. Import a video to start building the demo.
+        <p css={emptyStyles}>
+          Nothing here yet. Import a video, then add it to the timeline to start
+          building the demo.
         </p>
       ) : (
         <ul css={listStyles}>
@@ -121,22 +144,19 @@ const AssetPanel: FC<Props> = ({
                   ? ` · ${formatDuration(asset.durationMs)}`
                   : ''}
               </span>
-              <div css={{ display: 'flex', gap: rem(8) }}>
-                <Button
-                  small
+              <div css={rowStyles}>
+                <EditorButton
                   disabled={readOnly || asset.state === 'failed'}
                   onClick={() => onAdd(asset)}
                 >
                   Add to timeline
-                </Button>
-                <Button
-                  small
-                  danger
+                </EditorButton>
+                <EditorButton
+                  aria-label={`Remove ${asset.label}`}
+                  icon={<TrashIcon size={15} />}
                   disabled={readOnly}
                   onClick={() => onDelete(asset)}
-                >
-                  Remove
-                </Button>
+                />
               </div>
             </li>
           ))}

@@ -148,6 +148,7 @@ export type ProjectAsset = {
   durationMs?: number;
   width?: number;
   height?: number;
+  fps?: number;
   error?: string;
   // server-issued playable path; the editor never builds media urls itself
   url?: string;

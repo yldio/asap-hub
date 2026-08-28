@@ -1,110 +1,105 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { ClipPlacement } from '@asap-hub/demo-timeline';
-import { FC, PointerEvent as ReactPointerEvent, useRef } from 'react';
-import { ProjectAsset } from '../../api/types';
 import {
-  charcoal,
-  cerulean,
-  fern,
-  paper,
-  pearl,
-  rem,
-  silver,
-  steel,
-  tin,
-} from '../../ui/theme';
+  FC,
+  PointerEvent as ReactPointerEvent,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
+import { ProjectAsset } from '../../api/types';
+import ClipBlock, { ClipDragKind } from './ClipBlock';
+import { editorTheme, trackHeights } from './editorTheme';
 import { formatDuration, msToPx, pxToMs, tickIntervalMs } from './geometry';
 
 const panelStyles = css({
-  backgroundColor: pearl.rgb,
-  borderTop: `1px solid ${silver.rgb}`,
+  backgroundColor: editorTheme.panel,
+  borderTop: `1px solid ${editorTheme.line}`,
+  color: editorTheme.text,
   display: 'flex',
   flexDirection: 'column',
-  minHeight: rem(180),
+  overflow: 'hidden',
 });
 
-const scrollStyles = css({
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  position: 'relative',
-});
+const scrollStyles = css({ overflowX: 'auto', overflowY: 'hidden' });
 
-const laneStyles = css({
-  position: 'relative',
-  minWidth: '100%',
-});
+const laneStyles = css({ position: 'relative', minWidth: '100%' });
 
 const rulerStyles = css({
   position: 'relative',
-  height: rem(24),
-  borderBottom: `1px solid ${silver.rgb}`,
+  height: trackHeights.ruler,
+  borderBottom: `1px solid ${editorTheme.line}`,
+  cursor: 'pointer',
+  touchAction: 'none',
 });
 
 const tickStyles = css({
   position: 'absolute',
   top: 0,
   bottom: 0,
-  borderLeft: `1px solid ${silver.rgb}`,
-  paddingLeft: rem(4),
-  fontSize: rem(11),
-  color: steel.rgb,
-  lineHeight: rem(24),
+  borderLeft: `1px solid ${editorTheme.line}`,
+  paddingLeft: 4,
+  fontSize: 11,
+  lineHeight: `${trackHeights.ruler}px`,
+  color: editorTheme.muted,
   userSelect: 'none',
+  fontVariantNumeric: 'tabular-nums',
 });
 
 const trackStyles = css({
   position: 'relative',
-  height: rem(72),
-  padding: `${rem(8)} 0`,
+  height: trackHeights.clip,
+  backgroundColor: editorTheme.track,
+  borderBottom: `1px solid ${editorTheme.line}`,
 });
 
-const clipStyles = css({
-  position: 'absolute',
-  top: rem(8),
-  bottom: rem(8),
-  borderRadius: rem(6),
-  border: `1px solid ${cerulean.rgb}`,
-  backgroundColor: tin.rgb,
-  color: charcoal.rgb,
-  padding: `${rem(6)} ${rem(8)}`,
-  fontSize: rem(12),
-  textAlign: 'left',
-  overflow: 'hidden',
-  cursor: 'pointer',
+const emptyTrackStyles = css({
   display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  gap: rem(4),
-});
-
-const selectedClipStyles = css({
-  borderColor: fern.rgb,
-  borderWidth: rem(2),
-  backgroundColor: paper.rgb,
-});
-
-const titleClipStyles = css({
-  backgroundColor: charcoal.rgb,
-  color: paper.rgb,
-  borderColor: charcoal.rgb,
-});
-
-const clipLabelStyles = css({
-  fontWeight: 600,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: editorTheme.muted,
+  fontSize: 13,
+  height: '100%',
+  margin: 0,
 });
 
 const playheadStyles = css({
   position: 'absolute',
   top: 0,
   bottom: 0,
-  width: rem(2),
-  backgroundColor: fern.rgb,
+  width: 2,
+  marginLeft: -1,
+  backgroundColor: editorTheme.playhead,
   pointerEvents: 'none',
+  zIndex: 2,
 });
+
+const playheadKnobStyles = css({
+  position: 'absolute',
+  top: 0,
+  left: -5,
+  width: 12,
+  height: 12,
+  borderRadius: '0 0 6px 6px',
+  backgroundColor: editorTheme.playhead,
+});
+
+const dropMarkerStyles = css({
+  position: 'absolute',
+  top: 4,
+  bottom: 4,
+  width: 3,
+  marginLeft: -1,
+  borderRadius: 2,
+  backgroundColor: editorTheme.selected,
+  pointerEvents: 'none',
+  zIndex: 3,
+});
+
+type Drag =
+  | { kind: 'move'; clipId: string; index: number }
+  | { kind: 'trimStart' | 'trimEnd'; clipId: string };
 
 type Props = {
   readonly placements: ClipPlacement[];
@@ -112,9 +107,16 @@ type Props = {
   readonly playheadMs: number;
   readonly pixelsPerSecond: number;
   readonly selectedClipId?: string;
+  readonly readOnly: boolean;
   readonly assets: Record<string, ProjectAsset>;
   readonly onSelect: (clipId: string) => void;
   readonly onSeek: (ms: number) => void;
+  readonly onMove: (clipId: string, toIndex: number) => void;
+  readonly onTrim: (
+    clipId: string,
+    change: { inMs?: number; outMs?: number },
+  ) => void;
+  readonly onToggleMute: (clipId: string) => void;
 };
 
 const Timeline: FC<Props> = ({
@@ -123,42 +125,128 @@ const Timeline: FC<Props> = ({
   playheadMs,
   pixelsPerSecond,
   selectedClipId,
+  readOnly,
   assets,
   onSelect,
   onSeek,
+  onMove,
+  onTrim,
+  onToggleMute,
 }) => {
   const laneRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<Drag>();
+  const [dropIndex, setDropIndex] = useState<number>();
 
-  const seekFromPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const msAt = useCallback(
+    (clientX: number): number => {
+      const lane = laneRef.current;
+      if (!lane) return 0;
+      return pxToMs(
+        clientX - lane.getBoundingClientRect().left,
+        pixelsPerSecond,
+      );
+    },
+    [pixelsPerSecond],
+  );
+
+  // the drop lands before the first clip whose midpoint the pointer has not passed
+  const indexAt = useCallback(
+    (tMs: number): number =>
+      placements.filter(
+        (placement) => tMs > placement.startMs + placement.durationMs / 2,
+      ).length,
+    [placements],
+  );
+
+  const onLanePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+    const tMs = msAt(event.clientX);
+
+    if (drag.kind === 'move') {
+      setDropIndex(indexAt(tMs));
+      return;
+    }
+
+    const placement = placements.find(({ clip }) => clip.id === drag.clipId);
+    if (!placement || placement.clip.kind !== 'source') return;
+
+    if (drag.kind === 'trimStart') {
+      onTrim(drag.clipId, {
+        inMs: placement.clip.inMs + (tMs - placement.startMs),
+      });
+    } else {
+      onTrim(drag.clipId, {
+        outMs:
+          placement.clip.outMs +
+          (tMs - (placement.startMs + placement.durationMs)),
+      });
+    }
+  };
+
+  const endDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    dragRef.current = undefined;
+
+    if (drag?.kind === 'move' && dropIndex !== undefined) {
+      const toIndex = dropIndex > drag.index ? dropIndex - 1 : dropIndex;
+      if (toIndex !== drag.index) {
+        onMove(drag.clipId, toIndex);
+      }
+    }
+
+    setDropIndex(undefined);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const startClipDrag = (
+    placement: ClipPlacement,
+    kind: ClipDragKind,
+    event: ReactPointerEvent<HTMLElement>,
+  ) => {
     const lane = laneRef.current;
     if (!lane) return;
-    const { left } = lane.getBoundingClientRect();
-    onSeek(pxToMs(event.clientX - left, pixelsPerSecond));
+    lane.setPointerCapture(event.pointerId);
+    dragRef.current =
+      kind === 'move'
+        ? { kind, clipId: placement.clip.id, index: placement.index }
+        : { kind, clipId: placement.clip.id };
   };
 
   const scrub = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
-    seekFromPointer(event);
+    onSeek(msAt(event.clientX));
   };
 
   const interval = tickIntervalMs(pixelsPerSecond);
-  const tickCount = Math.max(1, Math.ceil(durationMs / interval) + 1);
-  const laneWidth = Math.max(msToPx(durationMs, pixelsPerSecond), 320);
+  const tickCount = Math.max(2, Math.ceil(durationMs / interval) + 1);
+  const laneWidth = Math.max(msToPx(durationMs, pixelsPerSecond) + 48, 480);
+  const dropAt = dropIndex === undefined ? undefined : placements[dropIndex];
 
   return (
     <div css={panelStyles}>
       <div css={scrollStyles}>
-        <div css={laneStyles} style={{ width: laneWidth }} ref={laneRef}>
+        <div
+          css={laneStyles}
+          style={{ width: laneWidth }}
+          ref={laneRef}
+          onPointerMove={onLanePointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+        >
           <div
             css={rulerStyles}
+            role="presentation"
             onPointerDown={scrub}
             onPointerMove={(event) => {
               if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-                seekFromPointer(event);
+                onSeek(msAt(event.clientX));
               }
             }}
           >
-            {Array.from({ length: tickCount }, (_, index) => (
+            {Array.from({ length: tickCount }, (unused, index) => (
               <span
                 key={index}
                 css={tickStyles}
@@ -170,43 +258,49 @@ const Timeline: FC<Props> = ({
           </div>
 
           <div css={trackStyles}>
-            {placements.map((placement) => {
-              const { clip } = placement;
-              const asset =
-                clip.kind === 'source' ? assets[clip.assetId] : undefined;
-              return (
-                <button
-                  type="button"
-                  key={clip.id}
-                  css={[
-                    clipStyles,
-                    clip.kind === 'title' && titleClipStyles,
-                    clip.id === selectedClipId && selectedClipStyles,
-                  ]}
-                  style={{
-                    left: msToPx(placement.startMs, pixelsPerSecond),
-                    width: Math.max(
-                      msToPx(placement.durationMs, pixelsPerSecond),
-                      12,
-                    ),
-                  }}
-                  onClick={() => onSelect(clip.id)}
-                >
-                  <span css={clipLabelStyles}>
-                    {clip.kind === 'title'
-                      ? clip.text || 'Title card'
-                      : asset?.label ?? 'Clip'}
-                  </span>
-                  <span>{formatDuration(placement.durationMs)}</span>
-                </button>
-              );
-            })}
+            {placements.length === 0 ? (
+              <p css={emptyTrackStyles}>
+                Import a video, then add it here to start the demo.
+              </p>
+            ) : (
+              placements.map((placement) => (
+                <ClipBlock
+                  key={placement.clip.id}
+                  placement={placement}
+                  asset={
+                    placement.clip.kind === 'source'
+                      ? assets[placement.clip.assetId]
+                      : undefined
+                  }
+                  left={msToPx(placement.startMs, pixelsPerSecond)}
+                  width={msToPx(placement.durationMs, pixelsPerSecond)}
+                  selected={placement.clip.id === selectedClipId}
+                  readOnly={readOnly}
+                  onSelect={() => onSelect(placement.clip.id)}
+                  onDragStart={(kind, event) =>
+                    startClipDrag(placement, kind, event)
+                  }
+                  onToggleMute={() => onToggleMute(placement.clip.id)}
+                />
+              ))
+            )}
+
+            {dropIndex === undefined ? null : (
+              <div
+                css={dropMarkerStyles}
+                style={{
+                  left: msToPx(dropAt?.startMs ?? durationMs, pixelsPerSecond),
+                }}
+              />
+            )}
           </div>
 
           <div
             css={playheadStyles}
             style={{ left: msToPx(playheadMs, pixelsPerSecond) }}
-          />
+          >
+            <span css={playheadKnobStyles} />
+          </div>
         </div>
       </div>
     </div>

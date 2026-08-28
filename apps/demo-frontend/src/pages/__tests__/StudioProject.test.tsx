@@ -56,13 +56,20 @@ const renderStudio = (overrides = {}) =>
     routePath: '/studio/projects/:id',
   });
 
-const timelineTrack = () => screen.getByRole('button', { name: /Intro take/ });
+// the clip block on the timeline announces itself as "<label>, <length>"
+const timelineClip = () =>
+  screen.getByRole('button', { name: /^Intro take, / });
+const timelineClips = () =>
+  screen.queryAllByRole('button', { name: /^Intro take, / });
 
-// jsdom has no media playback, and the preview element is told to play as soon
-// as a clip is under the playhead
+// jsdom implements neither media playback nor pointer capture, both of which
+// the editor uses as soon as a clip is on the timeline
 beforeAll(() => {
   HTMLMediaElement.prototype.play = jest.fn(() => Promise.resolve());
   HTMLMediaElement.prototype.pause = jest.fn();
+  Element.prototype.setPointerCapture = jest.fn();
+  Element.prototype.releasePointerCapture = jest.fn();
+  Element.prototype.hasPointerCapture = jest.fn(() => false);
 });
 
 it('shows the editor once the project and its timeline load', async () => {
@@ -89,7 +96,7 @@ it('adds an asset to the timeline and shows its length', async () => {
     await screen.findByRole('button', { name: 'Add to timeline' }),
   );
 
-  expect(timelineTrack()).toBeVisible();
+  expect(timelineClip()).toBeVisible();
   expect(screen.getByText('0:00.00 / 0:08.00')).toBeVisible();
 });
 
@@ -99,10 +106,10 @@ it('splits the clip under the playhead into two', async () => {
   await userEvent.click(
     await screen.findByRole('button', { name: 'Add to timeline' }),
   );
-  await userEvent.click(screen.getByRole('button', { name: /Split at/ }));
+  await userEvent.click(screen.getByRole('button', { name: 'Split' }));
 
   // the playhead sits at zero, which is too close to the head to split
-  expect(screen.getAllByRole('button', { name: /Intro take/ })).toHaveLength(1);
+  expect(timelineClips()).toHaveLength(1);
 });
 
 it('selects a clip and removes it again', async () => {
@@ -111,16 +118,14 @@ it('selects a clip and removes it again', async () => {
   await userEvent.click(
     await screen.findByRole('button', { name: 'Add to timeline' }),
   );
-  await userEvent.click(timelineTrack());
+  await userEvent.click(timelineClip());
 
   const inspector = screen.getByRole('complementary', { name: 'Clip' });
   expect(within(inspector).getByText('Starts')).toBeVisible();
 
   await userEvent.click(screen.getByRole('button', { name: 'Remove clip' }));
 
-  expect(
-    screen.queryByRole('button', { name: /Intro take/ }),
-  ).not.toBeInTheDocument();
+  expect(timelineClips()).toHaveLength(0);
 });
 
 it('saves the timeline after an edit', async () => {

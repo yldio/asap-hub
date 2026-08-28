@@ -47,6 +47,7 @@ export const serialiseAsset = (item: AssetItem) => ({
   ...(item.durationMs !== undefined ? { durationMs: item.durationMs } : {}),
   ...(item.width !== undefined ? { width: item.width } : {}),
   ...(item.height !== undefined ? { height: item.height } : {}),
+  ...(item.fps !== undefined ? { fps: item.fps } : {}),
   ...(item.proxyKey !== undefined ? { proxyKey: item.proxyKey } : {}),
   ...(item.error !== undefined ? { error: item.error } : {}),
   createdAt: item.createdAt,

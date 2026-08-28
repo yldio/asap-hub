@@ -19,12 +19,17 @@ See [PLAN.md](./PLAN.md) for the design and [FINDINGS.md](./FINDINGS.md) for iss
 
 Goal: the plumbing every later milestone needs, with today's upload flow behaving exactly as before.
 
-- [ ] `packages/demo-timeline` package: types, zod schemas, pure timeline math, wired into the
-      frontend (source alias), the server (babel build) and jest
-- [ ] Asset entity (`VIDEO#{id}` / `ASSET#{assetId}`) and the studio attributes on the video item
-- [ ] Storage key layout for `sources/` and `projects/`, outside the `raw/` encoder trigger
-- [ ] Upload decoupled: `openMultipartUpload` shared by the legacy upload and the new asset endpoint
-- [ ] Project and asset endpoints with zod schemas and route tests
+- [x] `packages/demo-timeline` package: types, zod schemas, pure timeline math, wired into the
+      frontend (source alias), the server (babel build) and jest. 50 tests.
+- [x] Asset entity (`VIDEO#{id}` / `ASSET#{assetId}`) and the studio attributes on the video item
+      (`kind`, `timeline` pointer, `mediaPath`, `render`, and the `empty` processing state)
+- [x] Storage key layout under `projects/`, outside the `raw/` encoder trigger, with a test that
+      fails if any studio key ever lands under `raw/`
+- [x] Upload decoupled: the multipart helpers take a key, and `createVideoRow` is shared by the
+      legacy upload and by a studio project
+- [x] Shared video helpers extracted, including one `guardedUpdate` for the lease-and-version write
+- [x] Project endpoints: create a project, read and write the timeline document (13 route tests)
+- [ ] Asset endpoints: open, sign, complete and delete a source asset
 - [ ] Job runner abstraction with the ECS and Docker implementations
 - [ ] Ingest job producing a seekable `proxy.mp4` plus probed metadata
 - [ ] `serverless.ts` infrastructure changes written (product owner deploys)
@@ -60,6 +65,18 @@ Not started.
 Newest first. One entry per working session: what landed, what was verified, what moved.
 
 ### 2026-08-28
+
+- Unblocked local media: the hub's MinIO had no published ports because another project owns
+  9000/9001, which is what made uploads fail with a 500. Remapped to 9010/9011 and verified a
+  presigned multipart round trip end to end (F-002 resolved).
+- Landed the shared timeline package, the studio data model, the `projects/` key layout, the shared
+  video write helpers and the project timeline endpoints. Nine commits, all scoped tests green,
+  format, typecheck and full lint clean.
+- Found and logged two pre-existing local environment problems that limit verification: package
+  builds cannot run (F-005) and `test/storage.test.ts` cannot parse (F-006). Both need a decision
+  from the product owner.
+
+### Planning, earlier that day
 
 - Explored the existing demo hub end to end and wrote the plan; the product owner approved it.
 - Decisions taken: companion snippet for cursor capture with the events editable afterwards; sources

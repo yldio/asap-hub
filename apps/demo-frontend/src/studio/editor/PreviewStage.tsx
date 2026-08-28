@@ -10,8 +10,9 @@ import {
 } from '@asap-hub/demo-timeline';
 import { FC, MouseEvent as ReactMouseEvent, useEffect, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
-import { charcoal, paper, rem, steel } from '../../ui/theme';
+import { rem } from '../../ui/theme';
 import BannerLayer from './BannerLayer';
+import { editorTheme } from './editorTheme';
 import CursorLayer from './CursorLayer';
 import { zoomTransformAt } from './zoom';
 
@@ -22,7 +23,7 @@ const pickingStyles = css({ cursor: 'crosshair' });
 const stageStyles = css({
   containerType: 'inline-size',
   position: 'relative',
-  backgroundColor: charcoal.rgb,
+  backgroundColor: editorTheme.stage,
   borderRadius: rem(8),
   overflow: 'hidden',
   display: 'flex',
@@ -37,7 +38,7 @@ const videoStyles = css({
 });
 
 const emptyStyles = css({
-  color: paper.rgb,
+  color: '#e9ecf3',
   textAlign: 'center',
   padding: rem(24),
 });
@@ -50,8 +51,8 @@ const titleCardStyles = css({
   alignItems: 'center',
   justifyContent: 'center',
   gap: rem(12),
-  backgroundColor: charcoal.rgb,
-  color: paper.rgb,
+  backgroundColor: '#0b0d12',
+  color: '#ffffff',
   padding: rem(48),
   textAlign: 'center',
 });
@@ -66,7 +67,7 @@ const headingStyles = css({
 const subheadingStyles = css({
   fontSize: rem(22),
   margin: 0,
-  color: steel.rgb,
+  color: '#d5d5de',
 });
 
 type Props = {

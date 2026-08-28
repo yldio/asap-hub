@@ -27,7 +27,7 @@ const iconOnlyStyles = css({ width: 32, padding: 0 });
 const primaryStyles = css({
   backgroundColor: editorTheme.playhead,
   borderColor: editorTheme.playhead,
-  color: '#04121f',
+  color: editorTheme.onAccent,
   fontWeight: 600,
 });
 

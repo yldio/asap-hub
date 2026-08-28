@@ -1,23 +1,29 @@
-// The editor chrome stays dark in both app themes, the way every video editor
-// does: a bright surround changes how the footage itself reads.
+const token = (name: string): string => `var(--demo-editor-${name})`;
+
+// The studio follows the app theme like every other page; the values live with
+// the rest of the tokens in GlobalStyles. Only the stage stays a dark matte in
+// both themes, the way every editor frames footage.
 export const editorTheme = {
-  surface: '#0f1116',
-  panel: '#161923',
-  raised: '#1d212c',
-  track: '#232838',
-  line: '#2d3342',
-  text: '#e9ecf3',
-  muted: '#98a1b3',
-  clip: '#e0a33c',
-  clipEdge: '#f3c26b',
-  clipText: '#241a06',
-  title: '#7b61ff',
-  zoom: '#5661f0',
-  audio: '#2fb6a6',
-  banner: '#e4679b',
-  record: '#e5484d',
-  playhead: '#5eb0ff',
-  selected: '#ffffff',
+  surface: token('surface'),
+  panel: token('panel'),
+  raised: token('raised'),
+  track: token('track'),
+  line: token('line'),
+  text: token('text'),
+  muted: token('muted'),
+  stage: token('stage'),
+  clip: token('clip'),
+  clipEdge: token('clip-edge'),
+  clipText: token('clip-text'),
+  title: token('title'),
+  zoom: token('zoom'),
+  audio: token('audio'),
+  banner: token('banner'),
+  record: token('record'),
+  playhead: token('playhead'),
+  selected: token('selected'),
+  // text sitting on an accent, which flips as the accent lightens or darkens
+  onAccent: token('on-accent'),
 } as const;
 
 export const trackHeights = {

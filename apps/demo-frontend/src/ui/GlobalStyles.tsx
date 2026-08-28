@@ -36,6 +36,29 @@ const lightTokens = {
   '--demo-shadow-soft': 'rgba(0, 0, 0, 0.12)',
   '--demo-shadow-medium': 'rgba(0, 0, 0, 0.18)',
   '--demo-shadow-strong': 'rgba(0, 0, 0, 0.3)',
+
+  // The studio chrome follows the app theme like every other page. The preview
+  // stage stays a dark matte in both, the way every editor frames footage: a
+  // bright surround changes how the picture itself reads.
+  '--demo-editor-surface': 'rgb(247, 249, 251)',
+  '--demo-editor-panel': 'rgb(255, 255, 255)',
+  '--demo-editor-raised': 'rgb(243, 246, 249)',
+  '--demo-editor-track': 'rgb(237, 241, 245)',
+  '--demo-editor-line': 'rgb(219, 226, 232)',
+  '--demo-editor-text': 'rgb(0, 34, 44)',
+  '--demo-editor-muted': 'rgb(96, 116, 128)',
+  '--demo-editor-stage': 'rgb(24, 27, 33)',
+  '--demo-editor-clip': 'rgb(232, 168, 62)',
+  '--demo-editor-clip-edge': 'rgb(180, 121, 24)',
+  '--demo-editor-clip-text': 'rgb(43, 30, 6)',
+  '--demo-editor-title': 'rgb(118, 96, 240)',
+  '--demo-editor-zoom': 'rgb(86, 97, 240)',
+  '--demo-editor-audio': 'rgb(38, 160, 146)',
+  '--demo-editor-banner': 'rgb(215, 88, 145)',
+  '--demo-editor-record': 'rgb(210, 48, 53)',
+  '--demo-editor-playhead': 'rgb(0, 122, 204)',
+  '--demo-editor-selected': 'rgb(0, 34, 44)',
+  '--demo-editor-on-accent': 'rgb(255, 255, 255)',
 };
 
 const darkTokens = {
@@ -71,6 +94,26 @@ const darkTokens = {
   '--demo-shadow-soft': 'rgba(0, 0, 0, 0.4)',
   '--demo-shadow-medium': 'rgba(0, 0, 0, 0.5)',
   '--demo-shadow-strong': 'rgba(0, 0, 0, 0.6)',
+
+  '--demo-editor-surface': 'rgb(15, 17, 22)',
+  '--demo-editor-panel': 'rgb(22, 25, 35)',
+  '--demo-editor-raised': 'rgb(29, 33, 44)',
+  '--demo-editor-track': 'rgb(35, 40, 56)',
+  '--demo-editor-line': 'rgb(45, 51, 66)',
+  '--demo-editor-text': 'rgb(233, 236, 243)',
+  '--demo-editor-muted': 'rgb(152, 161, 179)',
+  '--demo-editor-stage': 'rgb(15, 17, 22)',
+  '--demo-editor-clip': 'rgb(224, 163, 60)',
+  '--demo-editor-clip-edge': 'rgb(243, 194, 107)',
+  '--demo-editor-clip-text': 'rgb(36, 26, 6)',
+  '--demo-editor-title': 'rgb(123, 97, 255)',
+  '--demo-editor-zoom': 'rgb(86, 97, 240)',
+  '--demo-editor-audio': 'rgb(47, 182, 166)',
+  '--demo-editor-banner': 'rgb(228, 103, 155)',
+  '--demo-editor-record': 'rgb(229, 72, 77)',
+  '--demo-editor-playhead': 'rgb(94, 176, 255)',
+  '--demo-editor-selected': 'rgb(255, 255, 255)',
+  '--demo-editor-on-accent': 'rgb(4, 18, 31)',
 };
 
 const styles = {

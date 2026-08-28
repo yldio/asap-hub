@@ -164,6 +164,9 @@ it('saves the timeline after an edit', async () => {
   await userEvent.click(
     await screen.findByRole('button', { name: 'Add to timeline' }),
   );
+  // the debounce is only scheduled once the edit has been committed, and
+  // advancing the clock before then leaves a timer that nothing will fire
+  await waitFor(() => expect(timelineClips()).toHaveLength(1));
   await act(async () => {
     jest.advanceTimersByTime(2000);
   });

@@ -9,11 +9,15 @@ export type TakeResult = {
   narration?: ProjectAsset;
 };
 
-const takeLabel = (): string =>
-  `Screen recording ${new Date().toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  })}`;
+const at = (): string =>
+  new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+// Two names that only differ in a suffix are two names a 280px list cannot tell
+// apart, because the longer one is cut off before the suffix is reached.
+const takeLabels = (): { video: string; narration: string } => {
+  const time = at();
+  return { video: `Screen ${time}`, narration: `Voice over ${time}` };
+};
 
 // A finished take is two uploads at most: the picture, and the microphone as a
 // separate narration asset so it can be retimed or replaced on its own.
@@ -37,10 +41,10 @@ export const useRecordingTake = (
     async (take: RecordedTake) => {
       setSaving(true);
       try {
-        const label = takeLabel();
+        const labels = takeLabels();
         const video = await upload.uploadBlob({
           blob: take.blob,
-          label,
+          label: labels.video,
           extension: take.extension,
           mimeType: take.mimeType,
           kind: 'video',
@@ -52,7 +56,7 @@ export const useRecordingTake = (
         const narration = take.microphone
           ? await upload.uploadBlob({
               blob: take.microphone.blob,
-              label: `${label} voice over`,
+              label: labels.narration,
               extension: take.microphone.extension,
               mimeType: take.microphone.mimeType,
               kind: 'audio',

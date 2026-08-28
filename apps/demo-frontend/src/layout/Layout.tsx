@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { FC } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 
 import { pearl, rem } from '../ui/theme';
 import Breadcrumb from './Breadcrumb';
@@ -14,6 +14,14 @@ const shellStyles = css({
   gridTemplateRows: 'auto 1fr',
 });
 
+// the editor is a workspace, not a document: it takes the whole window and
+// scrolls its own panels rather than the page
+const fullBleedShellStyles = css({
+  height: '100vh',
+  minHeight: 0,
+  overflow: 'hidden',
+});
+
 const mainStyles = css({
   width: '100%',
   maxWidth: rem(1120),
@@ -22,14 +30,29 @@ const mainStyles = css({
   boxSizing: 'border-box',
 });
 
-const Layout: FC = () => (
-  <div css={shellStyles}>
-    <Header />
-    <main css={mainStyles}>
-      <Breadcrumb />
-      <Outlet />
-    </main>
-  </div>
-);
+const fullBleedMainStyles = css({
+  maxWidth: 'none',
+  padding: 0,
+  minHeight: 0,
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const isFullBleedPath = (pathname: string): boolean =>
+  pathname.startsWith('/studio/projects/');
+
+const Layout: FC = () => {
+  const fullBleed = isFullBleedPath(useLocation().pathname);
+
+  return (
+    <div css={[shellStyles, fullBleed && fullBleedShellStyles]}>
+      <Header />
+      <main css={[mainStyles, fullBleed && fullBleedMainStyles]}>
+        {fullBleed ? null : <Breadcrumb />}
+        <Outlet />
+      </main>
+    </div>
+  );
+};
 
 export default Layout;

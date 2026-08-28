@@ -25,6 +25,7 @@
   "dependencies": {
     "@asap-hub/demo-timeline": "workspace:*",
     "@aws-sdk/client-dynamodb": "^3.687.0",
+    "@aws-sdk/client-ecs": "^3.758.0",
     "@aws-sdk/client-s3": "^3.758.0",
     "@aws-sdk/client-ses": "^3.306.0",
     "@aws-sdk/client-ssm": "^3.758.0",

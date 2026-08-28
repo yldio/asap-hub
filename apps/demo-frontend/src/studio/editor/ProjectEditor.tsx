@@ -26,32 +26,38 @@ import { clampZoom, defaultPixelsPerSecond } from './geometry';
 import PreviewStage from './PreviewStage';
 import Timeline from './Timeline';
 import TransportBar from './TransportBar';
+import { useAssetDurations } from './useAssetDurations';
 import { usePlayback } from './usePlayback';
 
 const shellStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  minHeight: 560,
+  flex: 1,
+  minHeight: 0,
   backgroundColor: editorTheme.surface,
-  borderRadius: 10,
-  border: `1px solid ${editorTheme.line}`,
-  overflow: 'hidden',
   color: editorTheme.text,
 });
 
 const bodyStyles = css({
   display: 'flex',
+  flex: 1,
   minHeight: 0,
-  '@media (max-width: 1100px)': { flexDirection: 'column' },
+  '@media (max-width: 1100px)': { flexDirection: 'column', flex: 'none' },
 });
 
+// the stage takes whatever the panels and the timeline leave, and the preview
+// is centred in it rather than stretched
 const centreStyles = css({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   gap: 12,
   padding: 16,
   minWidth: 0,
+  minHeight: 0,
+  overflow: 'hidden',
 });
 
 const saveLabels: Record<string, string> = {
@@ -108,10 +114,14 @@ const ProjectEditor: FC<Props> = ({
     [assets],
   );
 
+  const probedDurations = useAssetDurations(assets, assetUrl);
+
+  // the server value wins once the ingest has probed the file; until then the
+  // browser's own reading keeps the trim bounds honest
   const assetDurationOf = useCallback(
     (assetId: string, fallbackMs: number): number =>
-      assetsById[assetId]?.durationMs ?? fallbackMs,
-    [assetsById],
+      assetsById[assetId]?.durationMs ?? probedDurations[assetId] ?? fallbackMs,
+    [assetsById, probedDurations],
   );
 
   const zoomToFit = useCallback(() => {
@@ -139,7 +149,7 @@ const ProjectEditor: FC<Props> = ({
         assetId: asset.assetId,
         // an asset still being prepared lands at a provisional length that the
         // ingest corrects once it has probed the file
-        durationMs: asset.durationMs ?? 10000,
+        durationMs: asset.durationMs ?? probedDurations[asset.assetId] ?? 10000,
         clipId: createId('clip'),
       });
       // the output follows the footage: 60fps sources render at 60, and a
@@ -156,7 +166,7 @@ const ProjectEditor: FC<Props> = ({
         ]),
       });
     },
-    [assetsById, dispatch, timeline.clips],
+    [assetsById, dispatch, probedDurations, timeline.clips],
   );
 
   const splitAtPlayhead = useCallback(() => {

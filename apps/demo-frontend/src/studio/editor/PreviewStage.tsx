@@ -8,6 +8,8 @@ import { charcoal, paper, rem, steel } from '../../ui/theme';
 const stageStyles = css({
   position: 'relative',
   width: '100%',
+  maxWidth: '100%',
+  maxHeight: '100%',
   aspectRatio: '16 / 9',
   backgroundColor: charcoal.rgb,
   borderRadius: rem(8),

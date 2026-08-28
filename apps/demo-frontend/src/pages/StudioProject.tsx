@@ -2,7 +2,7 @@
 import { css } from '@emotion/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useCallback } from 'react';
-import { Navigate, useParams } from 'react-router';
+import { Link, Navigate, useParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import { useEditableVideo } from '../api/hooks';
@@ -12,19 +12,51 @@ import ProjectEditor from '../studio/editor/ProjectEditor';
 import { useAssetUpload } from '../studio/editor/useAssetUpload';
 import { useProjectEditor } from '../studio/project/useProjectEditor';
 import useEditLease from '../studio/useEditLease';
-import { Headline, Spinner } from '../ui/components';
-import { ember, pearl, rem, steel } from '../ui/theme';
+import { Spinner } from '../ui/components';
+import { ember, paper, pearl, rem, silver, steel } from '../ui/theme';
 
-const layoutStyles = css({ display: 'grid', gap: rem(16) });
+const layoutStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+});
+
+const headerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(12),
+  padding: `${rem(10)} ${rem(16)}`,
+  borderBottom: `1px solid ${silver.rgb}`,
+  backgroundColor: paper.rgb,
+  flexWrap: 'wrap',
+});
+
+const titleStyles = css({
+  margin: 0,
+  fontSize: rem(16),
+  fontWeight: 600,
+});
+
+const backStyles = css({
+  color: steel.rgb,
+  textDecoration: 'none',
+  fontSize: rem(14),
+  ':hover': { textDecoration: 'underline' },
+});
 
 const noticeStyles = css({
   backgroundColor: pearl.rgb,
   borderRadius: rem(6),
-  padding: rem(12),
+  padding: `${rem(4)} ${rem(10)}`,
   color: steel.rgb,
+  fontSize: rem(13),
+  margin: 0,
 });
 
-const errorStyles = css({ color: ember.rgb });
+const errorStyles = css({ color: ember.rgb, margin: 0, fontSize: rem(13) });
+
+const centredStyles = css({ padding: rem(24) });
 
 // locally the assets are served straight from MinIO through the Vite proxy, and
 // in the deployed stack from the same CloudFront path behind a signed cookie
@@ -84,11 +116,17 @@ const StudioProject: FC = () => {
   }
 
   if (video.isLoading || timelineQuery.isLoading) {
-    return <Spinner label="Loading the demo" />;
+    return (
+      <div css={centredStyles}>
+        <Spinner label="Loading the demo" />
+      </div>
+    );
   }
 
   if (!video.data || !timelineQuery.data) {
-    return <p css={errorStyles}>This demo could not be loaded.</p>;
+    return (
+      <p css={[errorStyles, centredStyles]}>This demo could not be loaded.</p>
+    );
   }
 
   if (video.data.kind !== 'studio') {
@@ -165,15 +203,20 @@ const Editor: FC<EditorProps> = ({
 
   return (
     <div css={layoutStyles}>
-      <Headline level={1}>{video.title}</Headline>
-      {readOnly ? (
-        <p css={noticeStyles}>
-          {leaseHolder
-            ? `${leaseHolder} is editing this demo, so it is read only for now.`
-            : 'This demo is read only until the editing lock is available.'}
-        </p>
-      ) : null}
-      {uploadError ? <p css={errorStyles}>{uploadError}</p> : null}
+      <div css={headerStyles}>
+        <Link css={backStyles} to="/">
+          Demos
+        </Link>
+        <h1 css={titleStyles}>{video.title}</h1>
+        {readOnly ? (
+          <p css={noticeStyles}>
+            {leaseHolder
+              ? `${leaseHolder} is editing this demo, so it is read only for now.`
+              : 'This demo is read only until the editing lock is available.'}
+          </p>
+        ) : null}
+        {uploadError ? <p css={errorStyles}>{uploadError}</p> : null}
+      </div>
       <ProjectEditor
         editor={editor}
         assets={assets}

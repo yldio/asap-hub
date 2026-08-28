@@ -64,12 +64,13 @@ const accepts = (
 // the snippet posts no-cors and never sees the response, so a retry of a batch
 // that did land is normal traffic; reading the session and then appending would
 // count its events twice and duplicate its part id, so every test the read made
-// is repeated as the condition on the write itself
+// is repeated as the condition on the write itself. True means this batch, and
+// only this batch, claimed its slot.
 const appendPart = async (
   session: RecordingSessionItem,
   partId: string,
   events: number,
-): Promise<void> => {
+): Promise<boolean> => {
   const timestamp = new Date().toISOString();
   try {
     await getDocumentClient().send(
@@ -101,10 +102,12 @@ const appendPart = async (
         },
       }),
     );
+    return true;
   } catch (error) {
     if (!(error instanceof ConditionalCheckFailedException)) {
       throw error;
     }
+    return false;
   }
 };
 
@@ -134,17 +137,25 @@ export const captureRouter = (): Router => {
     }
 
     const partId = capturePartId(batch.clientId, batch.seq);
+
+    // accepts() read a session that any number of concurrent batches read too,
+    // so it bounds nothing on its own: the conditional counter write is the only
+    // thing that admits exactly one batch per slot, and the object is written
+    // only once that slot is claimed. A retry of a batch that already landed
+    // loses the condition and writes nothing, which is what makes the quota a
+    // bound on the bytes and not only on the counters.
+    if (!(await appendPart(session, partId, batch.events.length))) {
+      res.status(204).end();
+      return;
+    }
+
     const lines = batch.events.map((event) => JSON.stringify(event));
-    // rewriting the same key with the same bytes is what a retry does, so the
-    // object is put before the counters that must only ever move once
     await putObject(
       capturePartKey(session.videoId, session.sessionId, partId),
       `${lines.join('\n')}\n`,
       ndjsonContentType,
       captureLifecycleTag,
     );
-
-    await appendPart(session, partId, batch.events.length);
 
     res.status(204).end();
   });

@@ -347,6 +347,40 @@ describe('POST /api/capture', () => {
     expect(response.text).toBe('');
   });
 
+  // the session read is stale for every concurrent batch, so the conditional
+  // counter write is the only thing that bounds the object writes; putting the
+  // object first let N batches with distinct seq each write up to a MiB while
+  // only the quota's worth of counters landed
+  it('writes nothing to s3 when the counter write loses its condition', async () => {
+    mockSessionGet(sessionItem());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    await postCapture(batch());
+
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('claims the counter slot before it writes the object', async () => {
+    mockSessionGet(sessionItem());
+    const order: string[] = [];
+    mockSend.mockImplementation(async () => {
+      order.push('counter');
+      return {};
+    });
+    (storage.putObject as jest.Mock).mockImplementation(async () => {
+      order.push('object');
+    });
+
+    await postCapture(batch());
+
+    expect(order).toEqual(['counter', 'object']);
+  });
+
   it('never writes anything under raw/', async () => {
     mockSessionGet(sessionItem());
 

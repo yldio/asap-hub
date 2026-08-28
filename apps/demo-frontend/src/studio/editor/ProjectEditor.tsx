@@ -270,15 +270,19 @@ const ProjectEditor: FC<Props> = ({
       // adding a clip and moving the output format with it is one thing the
       // creator did, so one Ctrl+Z takes the whole of it back
       beginGesture();
+      const clipId = createId('clip');
       dispatch({
         type: 'addClip',
         assetId: asset.assetId,
         durationMs:
           asset.durationMs ?? probedDurations[asset.assetId] ?? unknownAssetMs,
-        clipId: createId('clip'),
+        clipId,
       });
       followFootage(asset);
       endGesture();
+      // the inspector is what you reach for next, and it stayed on its empty
+      // state until the new clip was hunted down on the lane and clicked
+      select('clip', clipId);
     },
     [
       addNarration,
@@ -287,6 +291,7 @@ const ProjectEditor: FC<Props> = ({
       endGesture,
       followFootage,
       probedDurations,
+      select,
     ],
   );
 
@@ -704,7 +709,10 @@ const ProjectEditor: FC<Props> = ({
         </div>
 
         <ActionBar
-          hasSelection={hasResolvedSelection(selected)}
+          canSplit={Boolean(current)}
+          canDuplicate={Boolean(selected.clip)}
+          canMute={Boolean(selectedSource)}
+          canRemove={hasResolvedSelection(selected)}
           canAddEffect={Boolean(current)}
           onAddTitleCard={addTitleCard}
           onAddBanner={addBanner}

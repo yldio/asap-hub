@@ -32,8 +32,14 @@ const hintStyles = css({
 
 const groupStyles = css({ display: 'flex', alignItems: 'center', gap: 6 });
 
+// Each of these is enabled by what it actually acts on: Split works on the clip
+// under the playhead whether or not anything is selected, Duplicate needs a
+// selected clip, and Mute only means anything on footage that carries sound.
 type Props = {
-  readonly hasSelection: boolean;
+  readonly canSplit: boolean;
+  readonly canDuplicate: boolean;
+  readonly canMute: boolean;
+  readonly canRemove: boolean;
   readonly canAddEffect: boolean;
   readonly onAddTitleCard: () => void;
   readonly onAddBanner: () => void;
@@ -51,7 +57,10 @@ type Props = {
 };
 
 const ActionBar: FC<Props> = ({
-  hasSelection,
+  canSplit,
+  canDuplicate,
+  canMute,
+  canRemove,
   canAddEffect,
   onAddTitleCard,
   onAddBanner,
@@ -98,28 +107,28 @@ const ActionBar: FC<Props> = ({
     </EditorButton>
     <EditorButton
       icon={<SplitIcon size={15} />}
-      disabled={readOnly || !hasSelection}
+      disabled={readOnly || !canSplit}
       onClick={onSplit}
     >
       Split
     </EditorButton>
     <EditorButton
       icon={<DuplicateIcon size={15} />}
-      disabled={readOnly || !hasSelection}
+      disabled={readOnly || !canDuplicate}
       onClick={onDuplicate}
     >
       Duplicate
     </EditorButton>
     <EditorButton
       icon={selectionMuted ? <MuteIcon size={15} /> : <SoundIcon size={15} />}
-      disabled={readOnly || !hasSelection}
+      disabled={readOnly || !canMute}
       onClick={onToggleMute}
     >
       {selectionMuted ? 'Unmute' : 'Mute'}
     </EditorButton>
     <EditorButton
       icon={<TrashIcon size={15} />}
-      disabled={readOnly || !hasSelection}
+      disabled={readOnly || !canRemove}
       onClick={onRemove}
     >
       Remove

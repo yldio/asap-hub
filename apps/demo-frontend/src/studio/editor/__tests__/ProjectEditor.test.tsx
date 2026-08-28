@@ -1,8 +1,9 @@
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { ProjectAsset } from '../../../api/types';
-import { TimelineAction } from '../../project/timelineReducer';
+import { TimelineAction, timelineReducer } from '../../project/timelineReducer';
 import { ProjectEditor as Editor } from '../../project/useProjectEditor';
 import ProjectEditor from '../ProjectEditor';
 
@@ -75,6 +76,56 @@ const renderEditor = ({
   return { ...view, calls };
 };
 
+// the same editor, but with the real reducer behind it, for the cases that turn
+// on what the document became rather than on what was asked of it
+const Live: FC<{
+  readonly assets: ProjectAsset[];
+  readonly initial: Timeline;
+}> = ({ assets, initial }) => {
+  const [timeline, setTimeline] = useState(initial);
+  const dispatch = useCallback(
+    (action: TimelineAction) =>
+      setTimeline((current) => timelineReducer(current, action)),
+    [],
+  );
+  const editor: Editor = useMemo(
+    () => ({
+      timeline,
+      saveState: 'idle',
+      dirty: false,
+      canUndo: false,
+      canRedo: false,
+      version: 1,
+      dispatch,
+      beginGesture: () => undefined,
+      endGesture: () => undefined,
+      undo: () => undefined,
+      redo: () => undefined,
+      rebase: () => undefined,
+      flush: () => undefined,
+      discard: () => undefined,
+    }),
+    [dispatch, timeline],
+  );
+
+  return (
+    <ProjectEditor
+      editor={editor}
+      assets={assets}
+      readOnly={false}
+      assetUrl={(item) => item.url}
+      onImport={jest.fn()}
+      onImportAudio={jest.fn()}
+      onRenameAsset={jest.fn()}
+      onDeleteAsset={jest.fn()}
+      uploading={false}
+    />
+  );
+};
+
+const renderLive = (initial: Timeline = createEmptyTimeline()) =>
+  render(<Live assets={[asset()]} initial={initial} />);
+
 const withClip = (): Timeline => ({
   ...createEmptyTimeline(),
   clips: [
@@ -143,6 +194,58 @@ describe('adding a source to the timeline', () => {
     );
 
     expect(calls.some((call) => call.action?.type === 'setCanvas')).toBe(false);
+  });
+});
+
+describe('the action bar', () => {
+  // Split acts on the clip under the playhead, so it was disabled while the S
+  // key it duplicates went on working
+  it('offers Split whenever a clip is under the playhead', () => {
+    renderEditor({ timeline: withClip() });
+
+    expect(screen.getByRole('button', { name: 'Split' })).toBeEnabled();
+  });
+
+  it('has nothing to split on an empty timeline', () => {
+    renderEditor();
+
+    expect(screen.getByRole('button', { name: 'Split' })).toBeDisabled();
+  });
+
+  // Duplicate and Mute returned early unless a clip was selected, so with a
+  // banner selected they looked live and did nothing at all
+  it('withholds Duplicate and Mute until a clip is selected', () => {
+    renderEditor({ timeline: withClip() });
+
+    expect(screen.getByRole('button', { name: 'Duplicate' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Mute' })).toBeDisabled();
+  });
+
+  it('offers Duplicate and Mute once a clip is selected', async () => {
+    renderLive();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    );
+
+    expect(screen.getByRole('button', { name: 'Duplicate' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Mute' })).toBeEnabled();
+  });
+});
+
+describe('adding a source', () => {
+  // the inspector used to keep saying "Select a clip on the timeline to edit it"
+  it('selects the clip it just made so the inspector shows it', async () => {
+    renderLive();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    );
+
+    expect(
+      screen.queryByText('Select a clip on the timeline to edit it.'),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Clip')).toHaveTextContent('Sprint demo');
   });
 });
 

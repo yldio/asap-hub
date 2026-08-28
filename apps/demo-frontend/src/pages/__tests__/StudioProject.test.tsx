@@ -179,6 +179,20 @@ it('saves the timeline after an edit', async () => {
   jest.useRealTimers();
 });
 
+it('says so straight away when an edit has not been saved yet', async () => {
+  renderStudio();
+
+  await waitFor(() =>
+    expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+  );
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Add to timeline' }),
+  );
+
+  expect(await screen.findByText('Unsaved changes')).toBeVisible();
+  expect(screen.queryByText('All changes saved')).not.toBeInTheDocument();
+});
+
 it('is read only when someone else holds the lease', async () => {
   renderStudio({
     acquireLease: jest

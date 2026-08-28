@@ -188,6 +188,27 @@ describe('dirty', () => {
   });
 });
 
+describe('the save state it reports', () => {
+  // the debounce leaves nothing in flight and nothing saved, and holding the
+  // last save's verdict there told the creator the new edit was safe
+  it('stops saying saved the moment the next edit is made', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 4 },
+      timelineVersion: 5,
+    });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+    await waitFor(() => expect(view.result.current.saveState).toBe('saved'));
+
+    act(() => view.result.current.dispatch(addClip('asset-2', 'clip-2')));
+
+    expect(view.result.current.saveState).toBe('idle');
+    expect(view.result.current.dirty).toBe(true);
+  });
+});
+
 describe('discard', () => {
   // the flush on the way out would otherwise save the very edits the creator
   // just chose to abandon

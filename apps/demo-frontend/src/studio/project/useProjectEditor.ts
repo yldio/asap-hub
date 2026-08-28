@@ -252,6 +252,12 @@ export const useProjectEditor = ({
 
   const dirty = state.history.present !== state.settled;
 
+  // an edit is unsaved the second it is made, so the last save's verdict must
+  // not stand for the length of the debounce: it told the creator the work was
+  // safe while the save button beside it was offering to save it
+  const reportedSaveState: SaveState =
+    dirty && state.saveState === 'saved' ? 'idle' : state.saveState;
+
   const flush = useCallback(() => {
     const { history, settled } = stateRef.current;
     if (history.present === settled) {
@@ -325,7 +331,7 @@ export const useProjectEditor = ({
   return useMemo(
     () => ({
       timeline: state.history.present,
-      saveState: state.saveState,
+      saveState: reportedSaveState,
       dirty,
       canUndo: canUndo(state.history),
       canRedo: canRedo(state.history),
@@ -348,8 +354,8 @@ export const useProjectEditor = ({
       flush,
       rebase,
       redoEdit,
+      reportedSaveState,
       state.history,
-      state.saveState,
       state.version,
       undoEdit,
     ],

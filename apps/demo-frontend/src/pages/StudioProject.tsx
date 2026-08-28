@@ -466,6 +466,7 @@ const Editor: FC<EditorProps> = ({
         video={video}
         readOnly={readOnly}
         leaseHolder={leaseHolder}
+        dirty={editor.dirty}
         notice={upload.error ?? renderError ?? publishError}
         onLeave={() => leaving.request(() => navigate('/'))}
         onRename={rename}

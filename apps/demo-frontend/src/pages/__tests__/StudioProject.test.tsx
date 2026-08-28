@@ -86,6 +86,19 @@ beforeAll(() => {
   Element.prototype.hasPointerCapture = jest.fn(() => false);
 });
 
+it('stands in for the editor while the demo is still loading', () => {
+  const pending = () => new Promise<never>(() => {});
+  renderStudio({
+    getVideo: pending,
+    getTimeline: pending,
+    listAssets: pending,
+    acquireLease: pending,
+  });
+
+  expect(screen.getByRole('status')).toHaveTextContent('Loading the demo');
+  expect(screen.queryByLabelText('Demo title')).not.toBeInTheDocument();
+});
+
 it('shows the editor once the project and its timeline load', async () => {
   renderStudio();
 

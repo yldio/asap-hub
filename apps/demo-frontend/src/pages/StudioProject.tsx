@@ -36,7 +36,8 @@ import { createId } from '../studio/project/ids';
 import { useLeaveGuard } from '../studio/project/useLeaveGuard';
 import { useProjectEditor } from '../studio/project/useProjectEditor';
 import useEditLease from '../studio/useEditLease';
-import { Button, Modal, Spinner } from '../ui/components';
+import { editorTheme } from '../studio/editor/editorTheme';
+import { Button, Modal } from '../ui/components';
 import { ember, lead, rem } from '../ui/theme';
 
 const layoutStyles = css({
@@ -51,6 +52,47 @@ const layoutStyles = css({
 const errorStyles = css({ color: ember.rgb, margin: 0, fontSize: rem(13) });
 
 const centredStyles = css({ padding: rem(24) });
+
+const skeletonStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  gap: rem(10),
+  padding: rem(10),
+  minHeight: 0,
+  backgroundColor: editorTheme.panel,
+});
+
+const skeletonBlockStyles = css({
+  borderRadius: rem(6),
+  backgroundColor: editorTheme.raised,
+  border: `1px solid ${editorTheme.line}`,
+});
+
+const skeletonBarStyles = css(skeletonBlockStyles, { height: rem(48) });
+
+const skeletonStageStyles = css(skeletonBlockStyles, { flex: 1 });
+
+const skeletonTimelineStyles = css(skeletonBlockStyles, { height: rem(140) });
+
+const skeletonLabelStyles = css({
+  margin: 0,
+  fontSize: rem(13),
+  color: editorTheme.muted,
+});
+
+// the studio is a whole page of chrome and the two queries behind it can take a
+// while, so its shape is on screen before the document is
+const StudioSkeleton: FC = () => (
+  <div css={skeletonStyles}>
+    <div css={skeletonBarStyles} />
+    <div css={skeletonStageStyles} />
+    <div css={skeletonTimelineStyles} />
+    <p css={skeletonLabelStyles} role="status">
+      Loading the demo
+    </p>
+  </div>
+);
 
 const assetPollMs = 3000;
 
@@ -191,11 +233,7 @@ const StudioProject: FC = () => {
   }
 
   if (video.isLoading || timelineQuery.isLoading) {
-    return (
-      <div css={centredStyles}>
-        <Spinner label="Loading the demo" />
-      </div>
-    );
+    return <StudioSkeleton />;
   }
 
   if (!video.data || !timelineQuery.data) {

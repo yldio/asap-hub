@@ -4,22 +4,19 @@ import { Clip, ClipPlacement, Transition } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
-import { editorTheme } from './editorTheme';
 import {
-  fieldStyles,
   mutedStyles,
   TimecodeField,
   panelHeadingStyles,
   panelStyles,
   readingStyles,
   SelectField,
+  VolumeField,
 } from './fields';
 import { formatTimecode } from './geometry';
 import { TrashIcon } from './icons';
 
 const nameStyles = css({ fontSize: 14, fontWeight: 600 });
-
-const rangeStyles = css({ accentColor: editorTheme.playhead });
 
 const rowButtonsStyles = css({ display: 'flex', gap: 6 });
 
@@ -99,19 +96,12 @@ const ClipInspector: FC<Props> = ({
             disabled={readOnly}
             onChange={(outMs) => onTrim({ outMs })}
           />
-          <label css={fieldStyles}>
-            {`Volume ${Math.round(source.volume * 100)}%`}
-            <input
-              css={rangeStyles}
-              type="range"
-              min={0}
-              max={2}
-              step={0.05}
-              disabled={readOnly}
-              value={source.volume}
-              onChange={(event) => onVolume(Number(event.target.value))}
-            />
-          </label>
+          <VolumeField
+            label="Volume"
+            value={source.volume}
+            disabled={readOnly}
+            onChange={onVolume}
+          />
         </>
       ) : null}
 

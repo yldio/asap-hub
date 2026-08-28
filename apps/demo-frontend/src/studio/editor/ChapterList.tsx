@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from 'react';
 import { formatDuration, parseTimecode } from '../../utils/time';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
+import { fieldGesture, useGesture } from './gesture';
 import { PlusIcon, TrashIcon } from './icons';
 
 const listStyles = css({
@@ -156,82 +157,89 @@ const ChapterList: FC<Props> = ({
   onRetime,
   onRemove,
   onSelectTitle,
-}) => (
-  <>
-    <EditorButton
-      icon={<PlusIcon size={15} />}
-      disabled={readOnly || !canAdd}
-      onClick={onAdd}
-    >
-      Chapter at the playhead
-    </EditorButton>
+}) => {
+  const gesture = useGesture();
 
-    {resolved.length === 0 ? (
-      <p css={emptyStyles}>
-        No chapters yet. Add one at the playhead, or drop in a title card and it
-        becomes a chapter of its own.
-      </p>
-    ) : (
-      <>
-        <ul css={listStyles}>
-          {resolved.map((chapter) => (
-            <li key={chapter.id} css={rowStyles}>
-              {chapter.kind === 'marker' ? (
-                <>
-                  <ChapterTime
-                    startMs={chapter.startMs}
-                    label={chapter.title || 'this chapter'}
-                    readOnly={readOnly}
-                    onRetime={(startMs) => onRetime(chapter.id, startMs)}
-                  />
-                  <input
-                    css={inputStyles}
-                    value={chapter.title}
-                    disabled={readOnly}
-                    placeholder="Chapter name"
-                    maxLength={limits.textLength}
-                    autoComplete="off"
-                    aria-label={`Name of the chapter at ${formatDuration(
-                      chapter.startMs,
-                    )}`}
-                    onChange={(event) =>
-                      onRename(chapter.id, event.target.value)
-                    }
-                  />
-                  <EditorButton
-                    aria-label={`Remove the chapter at ${formatDuration(
-                      chapter.startMs,
-                    )}`}
-                    icon={<TrashIcon size={14} />}
-                    disabled={readOnly}
-                    onClick={() => onRemove(chapter.id)}
-                  />
-                </>
-              ) : (
-                <>
-                  <span css={[timeButtonStyles, { lineHeight: '24px' }]}>
-                    {formatDuration(chapter.startMs)}
-                  </span>
-                  <button
-                    type="button"
-                    css={fixedStyles}
-                    title="Edit this title card"
-                    onClick={() => onSelectTitle(chapter.id)}
-                  >
-                    {`${chapter.title} (title card)`}
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-        <p css={hintStyles}>
-          A title card is its own chapter. Select one to rename it, move it or
-          take it out.
+  return (
+    <>
+      <EditorButton
+        icon={<PlusIcon size={15} />}
+        disabled={readOnly || !canAdd}
+        onClick={onAdd}
+      >
+        Chapter at the playhead
+      </EditorButton>
+
+      {resolved.length === 0 ? (
+        <p css={emptyStyles}>
+          No chapters yet. Add one at the playhead, or drop in a title card and
+          it becomes a chapter of its own.
         </p>
-      </>
-    )}
-  </>
-);
+      ) : (
+        <>
+          <ul css={listStyles}>
+            {resolved.map((chapter) => (
+              <li key={chapter.id} css={rowStyles}>
+                {chapter.kind === 'marker' ? (
+                  <>
+                    <ChapterTime
+                      startMs={chapter.startMs}
+                      label={chapter.title || 'this chapter'}
+                      readOnly={readOnly}
+                      onRetime={(startMs) => onRetime(chapter.id, startMs)}
+                    />
+                    <input
+                      css={inputStyles}
+                      value={chapter.title}
+                      disabled={readOnly}
+                      placeholder="Chapter name"
+                      maxLength={limits.textLength}
+                      autoComplete="off"
+                      aria-label={`Name of the chapter at ${formatDuration(
+                        chapter.startMs,
+                      )}`}
+                      // naming a chapter is one edit, not one per letter
+                      onFocus={() => gesture.begin(fieldGesture)}
+                      onBlur={() => gesture.end(fieldGesture)}
+                      onChange={(event) =>
+                        onRename(chapter.id, event.target.value)
+                      }
+                    />
+                    <EditorButton
+                      aria-label={`Remove the chapter at ${formatDuration(
+                        chapter.startMs,
+                      )}`}
+                      icon={<TrashIcon size={14} />}
+                      disabled={readOnly}
+                      onClick={() => onRemove(chapter.id)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <span css={[timeButtonStyles, { lineHeight: '24px' }]}>
+                      {formatDuration(chapter.startMs)}
+                    </span>
+                    <button
+                      type="button"
+                      css={fixedStyles}
+                      title="Edit this title card"
+                      onClick={() => onSelectTitle(chapter.id)}
+                    >
+                      {`${chapter.title} (title card)`}
+                    </button>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p css={hintStyles}>
+            A title card is its own chapter. Select one to rename it, move it or
+            take it out.
+          </p>
+        </>
+      )}
+    </>
+  );
+};
 
 export default ChapterList;

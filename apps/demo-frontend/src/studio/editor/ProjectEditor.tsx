@@ -35,6 +35,7 @@ import {
 import ChapterList from './ChapterList';
 import { DragKind, Span } from './dragging';
 import { editorTheme } from './editorTheme';
+import { dragGesture, GestureProvider, useGestures } from './gesture';
 import InspectorPanel from './InspectorPanel';
 import PreviewStage from './PreviewStage';
 import { hasResolvedSelection, resolveSelection, Selection } from './selection';
@@ -154,6 +155,9 @@ const ProjectEditor: FC<Props> = ({
   recorder,
 }) => {
   const { timeline, dispatch, beginGesture, endGesture } = editor;
+  const gesture = useGestures(beginGesture, endGesture);
+  const startDrag = useCallback(() => gesture.begin(dragGesture), [gesture]);
+  const endDrag = useCallback(() => gesture.end(dragGesture), [gesture]);
   const [selection, setSelection] = useState<Selection>();
   const [volume, setVolume] = useState(1);
   const select = useCallback(
@@ -562,154 +566,159 @@ const ProjectEditor: FC<Props> = ({
   });
 
   return (
-    <div css={shellStyles} ref={zoom.shellRef}>
-      <TransportBar
-        dirty={editor.dirty}
-        saving={editor.saveState === 'saving'}
-        readOnly={readOnly}
-        onSave={editor.flush}
-        canUndo={!readOnly && editor.canUndo}
-        canRedo={!readOnly && editor.canRedo}
-        saveLabel={saveLabels[editor.saveState]}
-        canvasHeight={timeline.canvas.height}
-        canvasFps={timeline.canvas.fps}
-        onFpsChange={(fps) => {
-          pickedCanvas.current = true;
-          dispatch({ type: 'setCanvas', canvas: { ...timeline.canvas, fps } });
-        }}
-        onUndo={editor.undo}
-        onRedo={editor.redo}
-      />
-
-      <div css={bodyStyles}>
-        <AssetPanel
-          recorder={recorderPanels}
-          chapters={
-            <ChapterList
-              resolved={chapters}
-              readOnly={readOnly}
-              canAdd={canAddChapter}
-              onAdd={addChapter}
-              onRename={(chapterId, title) =>
-                dispatch({ type: 'updateChapter', chapterId, title })
-              }
-              onRetime={retimeChapter}
-              onRemove={(chapterId) =>
-                dispatch({ type: 'removeChapter', chapterId })
-              }
-              onSelectTitle={selectTitleCard}
-            />
-          }
-          assets={assets}
-          busy={uploading}
-          progress={uploadProgress}
+    <GestureProvider value={gesture}>
+      <div css={shellStyles} ref={zoom.shellRef}>
+        <TransportBar
+          dirty={editor.dirty}
+          saving={editor.saveState === 'saving'}
           readOnly={readOnly}
-          onImport={onImport}
-          onImportAudio={onImportAudio}
-          error={assetError}
-          onRename={onRenameAsset}
-          onAdd={addAsset}
-          onDelete={onDeleteAsset}
+          onSave={editor.flush}
+          canUndo={!readOnly && editor.canUndo}
+          canRedo={!readOnly && editor.canRedo}
+          saveLabel={saveLabels[editor.saveState]}
+          canvasHeight={timeline.canvas.height}
+          canvasFps={timeline.canvas.fps}
+          onFpsChange={(fps) => {
+            pickedCanvas.current = true;
+            dispatch({
+              type: 'setCanvas',
+              canvas: { ...timeline.canvas, fps },
+            });
+          }}
+          onUndo={editor.undo}
+          onRedo={editor.redo}
         />
 
-        <div css={centreStyles} ref={theatreRef}>
-          <div css={stageAreaStyles} ref={stage.ref}>
-            <PreviewStage
-              onGestureStart={editor.beginGesture}
-              onGestureEnd={editor.endGesture}
-              box={stage.box}
-              placement={current}
-              banners={timeline.banners}
-              zooms={timeline.zooms}
-              cursorEffects={cursorEffects}
-              playheadMs={playheadMs}
+        <div css={bodyStyles}>
+          <AssetPanel
+            recorder={recorderPanels}
+            chapters={
+              <ChapterList
+                resolved={chapters}
+                readOnly={readOnly}
+                canAdd={canAddChapter}
+                onAdd={addChapter}
+                onRename={(chapterId, title) =>
+                  dispatch({ type: 'updateChapter', chapterId, title })
+                }
+                onRetime={retimeChapter}
+                onRemove={(chapterId) =>
+                  dispatch({ type: 'removeChapter', chapterId })
+                }
+                onSelectTitle={selectTitleCard}
+              />
+            }
+            assets={assets}
+            busy={uploading}
+            progress={uploadProgress}
+            readOnly={readOnly}
+            onImport={onImport}
+            onImportAudio={onImportAudio}
+            error={assetError}
+            onRename={onRenameAsset}
+            onAdd={addAsset}
+            onDelete={onDeleteAsset}
+          />
+
+          <div css={centreStyles} ref={theatreRef}>
+            <div css={stageAreaStyles} ref={stage.ref}>
+              <PreviewStage
+                onGestureStart={startDrag}
+                onGestureEnd={endDrag}
+                box={stage.box}
+                placement={current}
+                banners={timeline.banners}
+                zooms={timeline.zooms}
+                cursorEffects={cursorEffects}
+                playheadMs={playheadMs}
+                playing={playing}
+                volume={volume}
+                assets={assetsById}
+                assetUrl={assetUrl}
+                focus={
+                  selected.zoom && !readOnly
+                    ? {
+                        point: selected.zoom.focus,
+                        scale: selected.zoom.scale,
+                        onChange: moveFocus,
+                      }
+                    : undefined
+                }
+                pin={
+                  selected.effect && !readOnly
+                    ? { point: selected.effect.point, onChange: movePin }
+                    : undefined
+                }
+              />
+            </div>
+            <StageControls
               playing={playing}
+              canPlay={durationMs > 0}
+              playheadMs={playheadMs}
+              durationMs={durationMs}
               volume={volume}
-              assets={assetsById}
-              assetUrl={assetUrl}
-              focus={
-                selected.zoom && !readOnly
-                  ? {
-                      point: selected.zoom.focus,
-                      scale: selected.zoom.scale,
-                      onChange: moveFocus,
-                    }
-                  : undefined
-              }
-              pin={
-                selected.effect && !readOnly
-                  ? { point: selected.effect.point, onChange: movePin }
-                  : undefined
-              }
+              fullscreen={fullscreen.supported ? fullscreen : undefined}
+              onToggle={toggle}
+              onSeek={seek}
+              onSkipStart={() => seek(0)}
+              onSkipEnd={() => seek(durationMs)}
+              onVolume={setVolume}
             />
           </div>
-          <StageControls
-            playing={playing}
-            canPlay={durationMs > 0}
-            playheadMs={playheadMs}
-            durationMs={durationMs}
-            volume={volume}
-            fullscreen={fullscreen.supported ? fullscreen : undefined}
-            onToggle={toggle}
-            onSeek={seek}
-            onSkipStart={() => seek(0)}
-            onSkipEnd={() => seek(durationMs)}
-            onVolume={setVolume}
+
+          <InspectorPanel
+            selected={selected}
+            current={current}
+            assets={assetsById}
+            clipCount={placements.length}
+            readOnly={readOnly}
+            assetDurationOf={assetDurationOf}
+            dispatch={dispatch}
+            onRemove={removeSelected}
           />
         </div>
 
-        <InspectorPanel
-          selected={selected}
-          current={current}
-          assets={assetsById}
-          clipCount={placements.length}
+        <ActionBar
+          hasSelection={hasResolvedSelection(selected)}
+          canAddEffect={Boolean(current)}
+          onAddTitleCard={addTitleCard}
+          onAddBanner={addBanner}
+          onAddZoom={addZoom}
+          onAddCursorClick={addCursorClick}
+          selectionMuted={selectedSource?.volume === 0}
           readOnly={readOnly}
-          assetDurationOf={assetDurationOf}
-          dispatch={dispatch}
+          onSplit={splitAtPlayhead}
+          onDuplicate={duplicateSelected}
+          onToggleMute={toggleMuteSelected}
           onRemove={removeSelected}
+          onZoomIn={zoom.zoomIn}
+          onZoomOut={zoom.zoomOut}
+          onZoomFit={zoom.zoomToFit}
+        />
+
+        <Timeline
+          placements={placements}
+          durationMs={durationMs}
+          playheadMs={playheadMs}
+          pixelsPerSecond={zoom.pixelsPerSecond}
+          banners={timeline.banners}
+          narration={timeline.narration}
+          zooms={timeline.zooms}
+          cursorLayers={timeline.cursor}
+          selection={selection}
+          readOnly={readOnly}
+          assets={assetsById}
+          onSelect={select}
+          onSeek={seek}
+          onSpanChange={changeSpan}
+          onMove={moveClip}
+          onTrim={trimClip}
+          onToggleMute={toggleMuteClip}
+          onGestureStart={startDrag}
+          onGestureEnd={endDrag}
         />
       </div>
-
-      <ActionBar
-        hasSelection={hasResolvedSelection(selected)}
-        canAddEffect={Boolean(current)}
-        onAddTitleCard={addTitleCard}
-        onAddBanner={addBanner}
-        onAddZoom={addZoom}
-        onAddCursorClick={addCursorClick}
-        selectionMuted={selectedSource?.volume === 0}
-        readOnly={readOnly}
-        onSplit={splitAtPlayhead}
-        onDuplicate={duplicateSelected}
-        onToggleMute={toggleMuteSelected}
-        onRemove={removeSelected}
-        onZoomIn={zoom.zoomIn}
-        onZoomOut={zoom.zoomOut}
-        onZoomFit={zoom.zoomToFit}
-      />
-
-      <Timeline
-        placements={placements}
-        durationMs={durationMs}
-        playheadMs={playheadMs}
-        pixelsPerSecond={zoom.pixelsPerSecond}
-        banners={timeline.banners}
-        narration={timeline.narration}
-        zooms={timeline.zooms}
-        cursorLayers={timeline.cursor}
-        selection={selection}
-        readOnly={readOnly}
-        assets={assetsById}
-        onSelect={select}
-        onSeek={seek}
-        onSpanChange={changeSpan}
-        onMove={moveClip}
-        onTrim={trimClip}
-        onToggleMute={toggleMuteClip}
-        onGestureStart={editor.beginGesture}
-        onGestureEnd={editor.endGesture}
-      />
-    </div>
+    </GestureProvider>
   );
 };
 

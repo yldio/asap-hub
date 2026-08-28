@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { limits } from '@asap-hub/demo-timeline';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { editorTheme } from './editorTheme';
+import { fieldGesture, useGesture } from './gesture';
 import { formatMs, parseMs } from './timecode';
 
 // the label and its control, for the fields below and for the one-off controls
@@ -71,23 +72,30 @@ export const TextField: FC<{
   readonly disabled?: boolean;
   readonly placeholder?: string;
   readonly onChange: (value: string) => void;
-}> = ({ label, value, disabled, placeholder, onChange }) => (
-  <label css={fieldStyles}>
-    {label}
-    <input
-      css={controlStyles}
-      type="text"
-      value={value}
-      disabled={disabled}
-      placeholder={placeholder}
-      maxLength={limits.textLength}
-      autoComplete="off"
-      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-        onChange(event.target.value)
-      }
-    />
-  </label>
-);
+}> = ({ label, value, disabled, placeholder, onChange }) => {
+  const gesture = useGesture();
+  return (
+    <label css={fieldStyles}>
+      {label}
+      <input
+        css={controlStyles}
+        type="text"
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        maxLength={limits.textLength}
+        autoComplete="off"
+        // typing a name is one edit, not one per letter: without this two
+        // headings used half the hundred steps undo keeps
+        onFocus={() => gesture.begin(fieldGesture)}
+        onBlur={() => gesture.end(fieldGesture)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          onChange(event.target.value)
+        }
+      />
+    </label>
+  );
+};
 
 export const SelectField: FC<{
   readonly label: string;
@@ -121,28 +129,64 @@ const fadeStepMs = 50;
 const describeFade = (ms: number): string =>
   ms === 0 ? 'instant' : `${(ms / 1000).toFixed(2)}s`;
 
+// dragging a slider is one edit however many values it passes through on the way
 export const FadeField: FC<{
   readonly label: string;
   readonly value: number;
   readonly disabled?: boolean;
   readonly onChange: (ms: number) => void;
-}> = ({ label, value, disabled, onChange }) => (
-  <label css={fieldStyles}>
-    {`${label} ${describeFade(value)}`}
-    <input
-      css={sliderStyles}
-      type="range"
-      min={0}
-      max={fadeLimitMs}
-      step={fadeStepMs}
-      disabled={disabled}
-      value={Math.min(fadeLimitMs, value)}
-      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-        onChange(Number(event.target.value))
-      }
-    />
-  </label>
-);
+}> = ({ label, value, disabled, onChange }) => {
+  const gesture = useGesture();
+  return (
+    <label css={fieldStyles}>
+      {`${label} ${describeFade(value)}`}
+      <input
+        css={sliderStyles}
+        type="range"
+        min={0}
+        max={fadeLimitMs}
+        step={fadeStepMs}
+        disabled={disabled}
+        value={Math.min(fadeLimitMs, value)}
+        onFocus={() => gesture.begin(fieldGesture)}
+        onBlur={() => gesture.end(fieldGesture)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          onChange(Number(event.target.value))
+        }
+      />
+    </label>
+  );
+};
+
+export const maxVolume = 2;
+
+export const VolumeField: FC<{
+  readonly label: string;
+  readonly value: number;
+  readonly disabled?: boolean;
+  readonly onChange: (volume: number) => void;
+}> = ({ label, value, disabled, onChange }) => {
+  const gesture = useGesture();
+  return (
+    <label css={fieldStyles}>
+      {`${label} ${Math.round(value * 100)}%`}
+      <input
+        css={sliderStyles}
+        type="range"
+        min={0}
+        max={maxVolume}
+        step={0.05}
+        disabled={disabled}
+        value={value}
+        onFocus={() => gesture.begin(fieldGesture)}
+        onBlur={() => gesture.end(fieldGesture)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          onChange(Number(event.target.value))
+        }
+      />
+    </label>
+  );
+};
 
 // Every time in the studio is entered the way it is read: m:ss.cc. The draft is
 // held while it is being typed so a half finished value never reaches the

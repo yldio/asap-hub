@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { limits } from '@asap-hub/demo-timeline';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useId, useState } from 'react';
 import { editorTheme } from './editorTheme';
 import { fieldGesture, useGesture } from './gesture';
 import { formatMs, parseMs } from './timecode';
@@ -188,18 +188,24 @@ export const VolumeField: FC<{
   );
 };
 
+const noticeStyles = css({ fontSize: 12, color: editorTheme.record });
+
 // Every time in the studio is entered the way it is read: m:ss.cc. The draft is
 // held while it is being typed so a half finished value never reaches the
-// document, and an unparseable one is shown as wrong rather than swallowed.
+// document, and a value that cannot be used says so rather than quietly
+// springing back to what was there before.
 export const TimecodeField: FC<{
   readonly label: string;
   readonly value: number;
   readonly disabled?: boolean;
   readonly minMs?: number;
+  readonly maxMs?: number;
   readonly onChange: (ms: number) => void;
-}> = ({ label, value, disabled, minMs = 0, onChange }) => {
+}> = ({ label, value, disabled, minMs = 0, maxMs, onChange }) => {
   const [draft, setDraft] = useState(formatMs(value));
   const [editing, setEditing] = useState(false);
+  const [notice, setNotice] = useState<string>();
+  const noticeId = useId();
   useEffect(() => {
     if (!editing) {
       setDraft(formatMs(value));
@@ -207,42 +213,68 @@ export const TimecodeField: FC<{
   }, [editing, value]);
 
   const parsed = parseMs(draft);
+  const unreadable = editing && parsed === undefined;
+
+  const settle = () => {
+    setEditing(false);
+    if (parsed === undefined) {
+      setNotice(`Times read as m:ss.cc, like ${formatMs(65250)}.`);
+      setDraft(formatMs(value));
+      return;
+    }
+
+    const bounded = Math.min(maxMs ?? Infinity, Math.max(minMs, parsed));
+    if (bounded < parsed) {
+      setNotice(`The latest this can be is ${formatMs(bounded)}.`);
+    } else if (bounded > parsed) {
+      setNotice(`The earliest this can be is ${formatMs(bounded)}.`);
+    } else {
+      setNotice(undefined);
+    }
+
+    // the field only shows hundredths, so a value that reads back the same was
+    // not edited: firing anyway retimed the item by a few milliseconds and
+    // recorded an undo step for merely tabbing through
+    if (formatMs(bounded) !== formatMs(value)) {
+      onChange(bounded);
+    } else {
+      setDraft(formatMs(value));
+    }
+  };
 
   return (
     <label css={fieldStyles}>
       {label}
       <input
-        css={[controlStyles, editing && parsed === undefined && invalidStyles]}
+        css={[controlStyles, (unreadable || notice) && invalidStyles]}
         value={draft}
         disabled={disabled}
         inputMode="decimal"
         autoComplete="off"
-        aria-invalid={editing && parsed === undefined}
-        onFocus={() => setEditing(true)}
+        aria-invalid={Boolean(unreadable || notice)}
+        aria-describedby={notice ? noticeId : undefined}
+        onFocus={() => {
+          setEditing(true);
+          setNotice(undefined);
+        }}
         onChange={(event: ChangeEvent<HTMLInputElement>) =>
           setDraft(event.target.value)
         }
-        onBlur={() => {
-          setEditing(false);
-          const next =
-            parsed === undefined ? undefined : Math.max(minMs, parsed);
-          // the field only shows hundredths, so a value that reads back the
-          // same was not edited: firing anyway retimed the item by a few
-          // milliseconds and recorded an undo step for merely tabbing through
-          if (next !== undefined && formatMs(next) !== formatMs(value)) {
-            onChange(next);
-          } else {
-            setDraft(formatMs(value));
-          }
-        }}
+        onBlur={settle}
         onKeyDown={(event) => {
           if (event.key === 'Enter') event.currentTarget.blur();
           if (event.key === 'Escape') {
+            setNotice(undefined);
             setDraft(formatMs(value));
             event.currentTarget.blur();
           }
         }}
       />
+      {notice ? (
+        <span id={noticeId} css={noticeStyles} role="alert">
+          {notice}
+        </span>
+      ) : null}
     </label>
   );
 };

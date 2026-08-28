@@ -1,6 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Clip, ClipPlacement, Transition } from '@asap-hub/demo-timeline';
+import {
+  Clip,
+  ClipPlacement,
+  limits,
+  Transition,
+} from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
@@ -88,12 +93,15 @@ const ClipInspector: FC<Props> = ({
             label="Trim start"
             value={source.inMs}
             disabled={readOnly}
+            maxMs={source.outMs - limits.minClipMs}
             onChange={(inMs) => onTrim({ inMs })}
           />
           <TimecodeField
             label="Trim end"
             value={source.outMs}
             disabled={readOnly}
+            minMs={source.inMs + limits.minClipMs}
+            maxMs={asset?.durationMs}
             onChange={(outMs) => onTrim({ outMs })}
           />
           <VolumeField

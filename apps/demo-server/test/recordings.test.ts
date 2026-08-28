@@ -460,10 +460,8 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
     );
     expect(patch.set).toHaveBeenCalledWith(
       expect.objectContaining({
-        state: 'closed',
         eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
-        startedAtEpochMs: 1_700_000_000_000,
-        stoppedAtEpochMs: 1_700_000_060_000,
+        parts: [],
       }),
     );
     expect(response.body).toEqual({
@@ -525,6 +523,93 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
 
     expect(response.status).toBe(400);
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  // a batch accepted after the merge was written, but before the row said
+  // closed, used to be erased with the parts list and never reach the stream
+  it('closes the session with a conditional write before it merges anything', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1"}\n');
+    const order: string[] = [];
+    mockSend.mockImplementation(async () => {
+      order.push('close');
+      return {};
+    });
+    (storage.putObject as jest.Mock).mockImplementation(async () => {
+      order.push('merge');
+    });
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(order).toEqual(['close', 'merge']);
+
+    const { ConditionExpression, ExpressionAttributeValues, ReturnValues } =
+      mockSend.mock.calls[0]![0].input;
+    expect(ConditionExpression).toBe('#state = :open');
+    expect(ExpressionAttributeValues[':closed']).toBe('closed');
+    expect(ExpressionAttributeValues[':startedAt']).toBe(1_700_000_000_000);
+    expect(ReturnValues).toBe('ALL_NEW');
+  });
+
+  // both requests pass the read's state check, so only the condition separates them
+  it('refuses the second of two concurrent finalises', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem());
+    mockSessionPatch();
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'already_finalised' });
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
+
+  it('merges the parts the close returned, not the ones the read saw', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    // a batch landed between the read and the close, so the row carries two
+    mockSend.mockResolvedValue({
+      Attributes: { parts: ['tab-a:1', 'tab-a:2'] },
+    });
+    (storage.getObjectText as jest.Mock).mockImplementation(
+      async (key: string) =>
+        key.endsWith('tab-a-1.ndjson')
+          ? '{"id":"e1","t":1}'
+          : '{"id":"e2","t":2}',
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.body.eventCount).toBe(2);
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/events.ndjson',
+      '{"id":"e1","t":1}\n{"id":"e2","t":2}\n',
+      'application/x-ndjson',
+      'lifecycle=capture',
+    );
   });
 });
 

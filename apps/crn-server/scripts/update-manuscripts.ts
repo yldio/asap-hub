@@ -3,7 +3,6 @@ import {
   type Environment,
   patchAndPublish,
 } from '@asap-hub/contentful';
-import pThrottle from 'p-throttle';
 import {
   cell,
   col,
@@ -42,6 +41,24 @@ const SHORT_DESCRIPTION_MAX_LENGTH = 250;
 const URL_PATTERN =
   /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
 
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Checks both the zero-padded ISO shape and that the date is a real calendar date. */
+const isValidIsoDate = (value: string): boolean => {
+  if (!ISO_DATE_PATTERN.test(value)) {
+    return false;
+  }
+  const year = Number(value.slice(0, 4));
+  const month = Number(value.slice(5, 7));
+  const day = Number(value.slice(8, 10));
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+};
+
 /**
  * Updates existing manuscripts and manuscript versions in Contentful.
  * CSV columns: Title, Manuscript ID, Preprint Date, Publication Date,
@@ -57,9 +74,9 @@ const URL_PATTERN =
  * suffix doesn't match any existing version is skipped and logged.
  *
  * Before writing to a version, its URL, Lay Impact Statement and Short
- * Description are checked against the same constraints Contentful enforces.
- * If any fails, the row is skipped and logged - the
- * version isn't touched at all, rather than partially updated.
+ * Description are checked against the same constraints Contentful enforces and
+ * Preprint Date / Publication Date (when present) are checked for
+ * YYYY-MM-DD format. If any fails, the row is skipped and logged.
  *
  * A manuscript can have several rows (one per version). Per manuscript:
  *  - URL and Short Description are written to the matched version's URL and
@@ -169,6 +186,16 @@ const getInvalidFieldMessages = (row: CsvRow): string[] => {
   if (row.shortDescription.length > SHORT_DESCRIPTION_MAX_LENGTH) {
     messages.push(
       `Short Description is ${row.shortDescription.length} characters, over the ${SHORT_DESCRIPTION_MAX_LENGTH} limit`,
+    );
+  }
+  if (row.preprintDate && !isValidIsoDate(row.preprintDate)) {
+    messages.push(
+      `Preprint Date "${row.preprintDate}" is not a valid YYYY-MM-DD date`,
+    );
+  }
+  if (row.publicationDate && !isValidIsoDate(row.publicationDate)) {
+    messages.push(
+      `Publication Date "${row.publicationDate}" is not a valid YYYY-MM-DD date`,
     );
   }
   return messages;
@@ -351,9 +378,8 @@ const updateMatchedVersions = async (
   manuscriptGroup: CsvRow[],
   versions: VersionInfo[],
   counters: Counters,
-): Promise<Array<{ row: CsvRow; version: VersionInfo }>> => {
-  const matchedRows: Array<{ row: CsvRow; version: VersionInfo }> = [];
-
+  matchedRows: Array<{ row: CsvRow; version: VersionInfo }>,
+): Promise<void> => {
   for (const row of manuscriptGroup) {
     const suffix = parseVersionSuffix(row.manuscriptId);
     if (!suffix) {
@@ -394,8 +420,6 @@ const updateMatchedVersions = async (
 
     matchedRows.push({ row, version });
   }
-
-  return matchedRows;
 };
 
 /**
@@ -437,30 +461,34 @@ const getManuscriptFieldUpdates = (
     }
   };
 
+  const applyManuscriptFieldUpdate = (
+    field: 'url' | 'layImpactStatement' | 'preprintDate' | 'publicationDate',
+    newValue: string | undefined,
+    isDate = false,
+  ) => {
+    if (!newValue) {
+      return;
+    }
+    logIfOverwriting(field, newValue, isDate);
+    manuscriptFields[field] = newValue;
+  };
+
   const latestVersionWithUrl = [...versions]
     .filter((v) => v.url)
     .sort((a, b) => b.count - a.count)[0];
 
-  // the url on a manuscript is updated when a version is added with a url, so a manuscript's url should be the latest version url
-  if (latestVersionWithUrl) {
-    logIfOverwriting('url', latestVersionWithUrl.url);
-    manuscriptFields.url = latestVersionWithUrl.url;
-  }
+  // a manuscript's url should be the url in the latest version with a url
+  applyManuscriptFieldUpdate('url', latestVersionWithUrl?.url);
 
   // client says to use the lay impact statement of the latest version in the sheet
   const [recentSheetVersion] = [...matchedRows].sort(
     (a, b) => b.version.count - a.version.count,
   );
-  if (recentSheetVersion) {
-    logIfOverwriting(
-      'layImpactStatement',
-      recentSheetVersion.row.layImpactStatement,
-    );
-    manuscriptFields.layImpactStatement =
-      recentSheetVersion.row.layImpactStatement;
-  }
+  applyManuscriptFieldUpdate(
+    'layImpactStatement',
+    recentSheetVersion?.row.layImpactStatement,
+  );
 
-  // ISO "YYYY-MM-DD" strings sort chronologically as plain strings.
   const pickEarliestDate = (
     field: 'preprintDate' | 'publicationDate',
   ): string | undefined => {
@@ -479,16 +507,16 @@ const getManuscriptFieldUpdates = (
     return earliest?.row[field];
   };
 
-  const preprintDate = pickEarliestDate('preprintDate');
-  if (preprintDate) {
-    logIfOverwriting('preprintDate', preprintDate, true);
-    manuscriptFields.preprintDate = preprintDate;
-  }
-  const publicationDate = pickEarliestDate('publicationDate');
-  if (publicationDate) {
-    logIfOverwriting('publicationDate', publicationDate, true);
-    manuscriptFields.publicationDate = publicationDate;
-  }
+  applyManuscriptFieldUpdate(
+    'preprintDate',
+    pickEarliestDate('preprintDate'),
+    true,
+  );
+  applyManuscriptFieldUpdate(
+    'publicationDate',
+    pickEarliestDate('publicationDate'),
+    true,
+  );
 
   return { manuscriptFields, overwriteDiff };
 };
@@ -529,6 +557,8 @@ const app = async () => {
       return;
     }
 
+    const matchedRows: Array<{ row: CsvRow; version: VersionInfo }> = [];
+    let manuscriptFieldsResolved = false;
     try {
       const manuscriptEntry = await resolveManuscriptEntry(
         env,
@@ -541,11 +571,12 @@ const app = async () => {
       }
 
       const versions = await getManuscriptVersions(env, manuscriptEntry);
-      const matchedRows = await updateMatchedVersions(
+      await updateMatchedVersions(
         title,
         validRows,
         versions,
         counters,
+        matchedRows,
       );
       if (matchedRows.length === 0) {
         return;
@@ -568,16 +599,35 @@ const app = async () => {
         await patchAndPublish(manuscriptEntry, manuscriptFields);
         counters.manuscriptsUpdated += 1;
       }
+      manuscriptFieldsResolved = true;
     } catch (error: unknown) {
       counters.failed += 1;
       const message = `Failed: ${getErrorMessage(error)}`;
       console.error(`  ${message} ("${title}")`);
-      validRows.forEach((row) => addRowError(row, message));
+      // Rows already in matchedRows have had their version successfully patched
+      // and published before the failure. If that happened before the
+      // manuscript-level fields were resolved flag it.
+      // Rows that already have an error keep the existing error message instead of
+      // being overwritten.
+      validRows.forEach((row) => {
+        const alreadyMatched = matchedRows.some((m) => m.row === row);
+        if (alreadyMatched) {
+          if (!manuscriptFieldsResolved) {
+            addRowError(
+              row,
+              `Version updated, but manuscript-level fields may not have been updated: ${getErrorMessage(
+                error,
+              )}`,
+            );
+          }
+          return;
+        }
+        if (row.errors.length === 0) {
+          addRowError(row, message);
+        }
+      });
     }
   };
-
-  const throttle = pThrottle({ limit: 2, interval: 1000 });
-  const throttledProcessManuscript = throttle(processManuscript);
 
   console.log(
     `\nImporting ${totalRows} rows across ${versionRowsByManuscriptTitle.size} manuscripts...\n`,
@@ -588,7 +638,7 @@ const app = async () => {
     manuscriptGroup,
   ] of versionRowsByManuscriptTitle.entries()) {
     // eslint-disable-next-line no-await-in-loop
-    await throttledProcessManuscript(title, manuscriptGroup);
+    await processManuscript(title, manuscriptGroup);
   }
 
   console.log(`\n--- Summary ---`);

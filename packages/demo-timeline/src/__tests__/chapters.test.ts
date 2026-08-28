@@ -1,4 +1,4 @@
-import { resolveChapters } from '../chapters';
+import { resolveChapters, videoChapters } from '../chapters';
 import { createEmptyTimeline } from '../document';
 import { Timeline } from '../schema';
 
@@ -112,6 +112,31 @@ describe('resolveChapters', () => {
         }),
       ),
     ).toEqual([]);
+  });
+
+  // nothing between here and DynamoDB trims the name the container writes
+  it('trims the marker name the render carries', () => {
+    const padded = timeline({
+      clips: [source('a', 4000)],
+      chapters: [{ id: 'c1', clipId: 'a', offsetMs: 0, title: '  Intro  ' }],
+    });
+
+    expect(resolveChapters(padded)).toEqual([
+      { id: 'c1', kind: 'marker', startMs: 0, title: 'Intro' },
+    ]);
+    expect(videoChapters(padded)).toEqual([{ startMs: 0, title: 'Intro' }]);
+  });
+
+  it('leaves the stored marker name alone for the editor', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [source('a', 4000)],
+          chapters: [{ id: 'c1', clipId: 'a', offsetMs: 0, title: 'Intro ' }],
+        }),
+        { forEditing: true },
+      ),
+    ).toEqual([{ id: 'c1', kind: 'marker', startMs: 0, title: 'Intro ' }]);
   });
 
   it('never emits two chapters on the same frame', () => {

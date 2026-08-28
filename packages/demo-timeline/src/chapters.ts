@@ -57,7 +57,9 @@ export const resolveChapters = (
             id: marker.id,
             kind: 'marker' as const,
             startMs: start + marker.offsetMs,
-            title: marker.title,
+            // the editor keeps what is stored so a space being typed stays put,
+            // and everything else gets the name the watch page should show
+            title: forEditing ? marker.title : marker.title.trim(),
           },
         ];
   });

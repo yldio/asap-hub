@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { limits } from '@asap-hub/demo-timeline';
-import { ChangeEvent, FC, useEffect, useId, useState } from 'react';
+import { limits, Point } from '@asap-hub/demo-timeline';
+import { ChangeEvent, FC, ReactNode, useEffect, useId, useState } from 'react';
 import { editorTheme } from './editorTheme';
 import { fieldGesture, useGesture } from './gesture';
 import { formatMs, parseMs } from './timecode';
@@ -205,6 +205,55 @@ export const VolumeField: FC<{
 };
 
 const noticeStyles = css({ fontSize: 12, color: editorTheme.record });
+
+const pointRowStyles = css({ display: 'flex', gap: 8 });
+
+// Aiming a zoom or a click was a drag across the picture and nothing else, so
+// from a keyboard there was no way to place either of them at all.
+export const PointField: FC<{
+  readonly label: string;
+  readonly value: Point;
+  readonly disabled?: boolean;
+  readonly onChange: (point: Point) => void;
+}> = ({ label, value, disabled, onChange }) => {
+  const gesture = useGesture();
+  const axis = (
+    name: string,
+    at: number,
+    change: (unit: number) => Point,
+  ): ReactNode => (
+    <label css={fieldStyles}>
+      {name}
+      <input
+        css={controlStyles}
+        type="number"
+        min={0}
+        max={100}
+        step={1}
+        inputMode="numeric"
+        disabled={disabled}
+        value={Math.round(at * 100)}
+        onFocus={() => gesture.begin(fieldGesture)}
+        onBlur={() => gesture.end(fieldGesture)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          onChange(
+            change(Math.min(1, Math.max(0, Number(event.target.value) / 100))),
+          )
+        }
+      />
+    </label>
+  );
+
+  return (
+    <fieldset css={fieldStyles}>
+      <legend>{label}</legend>
+      <div css={pointRowStyles}>
+        {axis('% across', value.x, (x) => ({ ...value, x }))}
+        {axis('% down', value.y, (y) => ({ ...value, y }))}
+      </div>
+    </fieldset>
+  );
+};
 
 // Every time in the studio is entered the way it is read: m:ss.cc. The draft is
 // held while it is being typed so a half finished value never reaches the

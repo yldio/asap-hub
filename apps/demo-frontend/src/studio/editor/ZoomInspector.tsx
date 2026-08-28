@@ -4,6 +4,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   mutedStyles,
+  PointField,
   TimecodeField,
   panelHeadingStyles,
   panelStyles,
@@ -67,11 +68,13 @@ const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
       onChange={(rampOutMs) => onChange({ rampOutMs })}
     />
 
-    <p css={mutedStyles}>
-      {`Focus ${Math.round(zoom.focus.x * 100)}% across, ${Math.round(
-        zoom.focus.y * 100,
-      )}% down. Drag the picture to aim it.`}
-    </p>
+    <PointField
+      label="Focus"
+      value={zoom.focus}
+      disabled={readOnly}
+      onChange={(focus) => onChange({ focus })}
+    />
+    <p css={mutedStyles}>Or drag the picture to aim it.</p>
     <p css={mutedStyles}>
       The preview holds this zoom while it is selected, so what you see is what
       the export frames. Drag either edge of its block to change how long it

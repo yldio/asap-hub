@@ -1,12 +1,28 @@
-import { limits } from '@asap-hub/demo-timeline';
+import { limits, Point } from '@asap-hub/demo-timeline';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FC, useState } from 'react';
-import { TextField, TimecodeField } from '../fields';
+import { PointField, TextField, TimecodeField } from '../fields';
 
 const Editable: FC<{ readonly label: string }> = ({ label }) => {
   const [value, setValue] = useState('');
   return <TextField label={label} value={value} onChange={setValue} />;
+};
+
+const Aimable: FC<{ readonly onChange: (point: Point) => void }> = ({
+  onChange,
+}) => {
+  const [point, setPoint] = useState<Point>({ x: 0.5, y: 0.5 });
+  return (
+    <PointField
+      label="Focus"
+      value={point}
+      onChange={(next) => {
+        setPoint(next);
+        onChange(next);
+      }}
+    />
+  );
 };
 
 describe('TextField', () => {
@@ -29,6 +45,31 @@ describe('TextField', () => {
       'autocomplete',
       'off',
     );
+  });
+});
+
+describe('PointField', () => {
+  // aiming a zoom or a click was a drag across the picture and nothing else
+  it('gives the focus point a keyboard path', async () => {
+    const onChange = jest.fn();
+    render(<Aimable onChange={onChange} />);
+
+    const across = screen.getByLabelText('% across');
+    await userEvent.clear(across);
+    await userEvent.type(across, '25');
+
+    expect(onChange).toHaveBeenLastCalledWith({ x: 0.25, y: 0.5 });
+  });
+
+  it('keeps a point inside the frame', async () => {
+    const onChange = jest.fn();
+    render(<Aimable onChange={onChange} />);
+
+    const down = screen.getByLabelText('% down');
+    await userEvent.clear(down);
+    await userEvent.type(down, '400');
+
+    expect(onChange).toHaveBeenLastCalledWith({ x: 0.5, y: 1 });
   });
 });
 

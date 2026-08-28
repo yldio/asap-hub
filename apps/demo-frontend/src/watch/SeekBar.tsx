@@ -4,6 +4,7 @@ import { FC, KeyboardEvent, PointerEvent, useRef, useState } from 'react';
 
 import type { Chapter } from '../api/types';
 import { fern, rem } from '../ui/theme';
+import { formatDurationWords } from '../utils/time';
 import { toSegments } from './ChapterProgress';
 import { clamp, ratioAt } from './playback';
 
@@ -153,6 +154,10 @@ const SeekBar: FC<{
       aria-valuemin={0}
       aria-valuemax={Math.round(durationSeconds)}
       aria-valuenow={Math.round(currentSeconds)}
+      // without this the position is read out as a bare number of seconds
+      aria-valuetext={`${formatDurationWords(
+        currentSeconds * 1000,
+      )} of ${formatDurationWords(durationSeconds * 1000)}`}
       onKeyDown={onKeyDown}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);

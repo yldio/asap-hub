@@ -70,6 +70,16 @@ it('exposes the playhead through the slider values', () => {
   expect(bar).toHaveAttribute('aria-valuenow', '42');
 });
 
+// a bare "235" tells a screen reader listener nothing about where they are
+it('reads the playhead out as a time, not as a count of seconds', () => {
+  const { bar } = renderBar({ currentSeconds: 235, durationSeconds: 3725 });
+
+  expect(bar).toHaveAttribute(
+    'aria-valuetext',
+    '3 min 55 sec of 1 hr 2 min 5 sec',
+  );
+});
+
 it('seeks to the fraction of the bar that was pressed', () => {
   const { bar, onSeek, onScrubbingChange } = renderBar();
 

@@ -5,7 +5,7 @@ import { FC, PointerEvent as ReactPointerEvent } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { DragKind } from './dragging';
 import { editorTheme } from './editorTheme';
-import { formatDuration } from './geometry';
+import { formatTimecode } from './geometry';
 import { MuteIcon, SoundIcon } from './icons';
 
 const blockStyles = css({
@@ -124,11 +124,25 @@ const ClipBlock: FC<Props> = ({
   const label =
     clip.kind === 'title' ? clip.text || 'Title card' : asset?.label ?? 'Clip';
 
+  // The block sits under a ruler of programme time, so that is what it reads
+  // in. It used to print the source trim range rounded to whole seconds, which
+  // matched neither the ruler above it nor the block's own edges, and a clip
+  // shorter than a second collapsed into a range with no width at all.
+  const span = `${formatTimecode(placement.startMs)}–${formatTimecode(
+    placement.endMs,
+  )}`;
+  const trim = source
+    ? `Uses ${formatTimecode(source.inMs)} to ${formatTimecode(
+        source.outMs,
+      )} of ${asset?.label ?? 'the source'}`
+    : undefined;
+
   return (
     <div
       role="button"
       tabIndex={0}
-      aria-label={`${label}, ${formatDuration(placement.durationMs)}`}
+      aria-label={`${label}, ${span}`}
+      title={trim}
       aria-pressed={selected}
       css={[
         blockStyles,
@@ -151,11 +165,7 @@ const ClipBlock: FC<Props> = ({
       }}
     >
       <span css={labelStyles}>{label}</span>
-      <span css={rangeStyles}>
-        {source
-          ? `${formatDuration(source.inMs)}-${formatDuration(source.outMs)}`
-          : formatDuration(placement.durationMs)}
-      </span>
+      <span css={rangeStyles}>{span}</span>
 
       {source ? (
         <button

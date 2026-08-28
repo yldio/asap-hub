@@ -379,6 +379,47 @@ describe('a title card', () => {
   });
 });
 
+describe('a clip block', () => {
+  // it used to print the source trim range rounded to whole seconds, under a
+  // ruler showing programme time, so the two disagreed on every trimmed clip
+  it('reads in the same time the ruler does', () => {
+    renderTimeline({
+      placements: layoutClips([
+        { ...clips[0], inMs: 2500, outMs: 6000 } as (typeof clips)[number],
+      ]),
+    });
+
+    expect(screen.getByRole('button', { name: /^A, / })).toHaveTextContent(
+      '0:00.00–0:03.50',
+    );
+  });
+
+  it('gives a clip shorter than a second a span with a width', () => {
+    renderTimeline({
+      placements: layoutClips([
+        { ...clips[0], inMs: 6000, outMs: 6400 } as (typeof clips)[number],
+      ]),
+    });
+
+    expect(screen.getByRole('button', { name: /^A, / })).toHaveTextContent(
+      '0:00.00–0:00.40',
+    );
+  });
+
+  it('still says which part of the source it uses', () => {
+    renderTimeline({
+      placements: layoutClips([
+        { ...clips[0], inMs: 2500, outMs: 6000 } as (typeof clips)[number],
+      ]),
+    });
+
+    expect(screen.getByRole('button', { name: /^A, / })).toHaveAttribute(
+      'title',
+      'Uses 0:02.50 to 0:06.00 of A',
+    );
+  });
+});
+
 describe('the ruler', () => {
   it('seeks to the position that was clicked', () => {
     const { onSeek } = renderTimeline();

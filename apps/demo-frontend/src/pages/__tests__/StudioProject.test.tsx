@@ -259,6 +259,9 @@ describe('when the editing lock is held elsewhere', () => {
   // "retrying on the next edit" cannot be followed: a read only editor has no
   // next edit
   it('does not promise a retry it cannot make', async () => {
+    // the autosave debounce is driven rather than waited out: a real 1.5s wait
+    // plus the refused save left too little slack on a loaded machine
+    jest.useFakeTimers({ advanceTimers: true });
     renderStudio({ saveTimeline: lockedOut() });
 
     await waitFor(() =>
@@ -267,16 +270,15 @@ describe('when the editing lock is held elsewhere', () => {
     await userEvent.click(
       await screen.findByRole('button', { name: 'Add to timeline' }),
     );
+    await waitFor(() => expect(timelineClips()).toHaveLength(1));
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+    });
 
     expect(
-      await screen.findByText(
-        /cannot be saved until it comes back/,
-        undefined,
-        {
-          timeout: 4000,
-        },
-      ),
+      await screen.findByText(/cannot be saved until it comes back/),
     ).toBeVisible();
+    jest.useRealTimers();
     expect(
       screen.queryByText(/retrying on the next edit/),
     ).not.toBeInTheDocument();
@@ -326,6 +328,7 @@ describe('leaving with edits the server has not taken', () => {
   // nothing flushes a read only editor on the way out, so the edits made before
   // the lock went are lost without a word
   it('asks even when the lock has gone and they cannot be saved', async () => {
+    jest.useFakeTimers({ advanceTimers: true });
     renderStudio({
       saveTimeline: jest
         .fn()
@@ -338,12 +341,13 @@ describe('leaving with edits the server has not taken', () => {
     await userEvent.click(
       await screen.findByRole('button', { name: 'Add to timeline' }),
     );
+    await waitFor(() => expect(timelineClips()).toHaveLength(1));
     // the autosave has to run and be refused before the lock is known to be gone
-    expect(
-      await screen.findByText(/Bo is editing this demo/, undefined, {
-        timeout: 4000,
-      }),
-    ).toBeVisible();
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+    });
+    expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
+    jest.useRealTimers();
 
     await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
 

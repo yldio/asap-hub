@@ -326,12 +326,25 @@ describe('search', () => {
 });
 
 describe('sort, filter and view', () => {
+  it('keeps the view when the sort changes', async () => {
+    renderHome({ route: '/?view=all' });
+    await screen.findByText('Sprint retro');
+    await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Title A-Z' }),
+    );
+    await waitFor(() => expect(queryString()).toContain('sort=title'));
+    expect(queryString()).toContain('view=all');
+  });
+
   it('reorders the list by title', async () => {
     renderHome({ route: '/?view=all' });
 
     await screen.findByText('Sprint retro');
     await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
-    await userEvent.click(screen.getByRole('option', { name: 'Title A-Z' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Title A-Z' }),
+    );
 
     await waitFor(() =>
       expect(videoTitles()).toEqual([
@@ -349,7 +362,9 @@ describe('sort, filter and view', () => {
     expect(videoTitles()[0]).toBe('Engineering standup');
 
     await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
-    await userEvent.click(screen.getByRole('option', { name: 'Oldest first' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Oldest first' }),
+    );
 
     await waitFor(() => expect(videoTitles()[0]).toBe('Sprint retro'));
   });
@@ -363,13 +378,17 @@ describe('sort, filter and view', () => {
     });
 
     await userEvent.click(statusFilter);
-    await userEvent.click(screen.getByRole('option', { name: 'Published' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Published' }),
+    );
 
     expect(statusFilter).toHaveTextContent('Published');
     await waitFor(() => expect(screen.queryByText('Sprint retro')).toBeNull());
 
     await userEvent.click(statusFilter);
-    await userEvent.click(screen.getByRole('option', { name: 'Drafts' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Drafts' }),
+    );
 
     expect(await screen.findByText('Sprint retro')).toBeVisible();
     expect(screen.queryByText('Engineering standup')).toBeNull();
@@ -900,7 +919,9 @@ describe('a shareable list', () => {
 
     await screen.findByText('Sprint retro');
     await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
-    await userEvent.click(screen.getByRole('option', { name: 'Oldest first' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Oldest first' }),
+    );
 
     await waitFor(() => expect(queryString()).toContain('sort=oldest'));
     expect(queryString()).toContain('view=all');
@@ -908,7 +929,9 @@ describe('a shareable list', () => {
     await userEvent.click(
       screen.getByRole('button', { name: 'Filter by status' }),
     );
-    await userEvent.click(screen.getByRole('option', { name: 'Drafts' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Drafts' }),
+    );
 
     await waitFor(() => expect(queryString()).toContain('status=drafts'));
   });
@@ -918,7 +941,9 @@ describe('a shareable list', () => {
 
     await screen.findByText('Sprint retro');
     await userEvent.click(screen.getByRole('button', { name: 'Sort videos' }));
-    await userEvent.click(screen.getByRole('option', { name: 'Newest first' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Newest first' }),
+    );
 
     await waitFor(() => expect(queryString()).not.toContain('sort'));
   });

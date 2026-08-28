@@ -17,14 +17,16 @@ const byStart = (a: ResolvedChapter, b: ResolvedChapter): number =>
 // and the title cards have to be resolved into program time. A title card is a
 // section heading by definition, so it becomes a chapter without being asked.
 export type ResolveOptions = {
-  // the editor keeps an untitled marker on screen so a half typed name does not
-  // make the row disappear under the cursor; the render drops it
-  includeUntitled?: boolean;
+  // The editor shows every marker exactly as stored: a half typed name must not
+  // make its row vanish under the cursor, and two markers landing on the same
+  // frame have to stay visible or there is no way to delete the spare one. The
+  // render collapses both cases, because a player cannot use them.
+  forEditing?: boolean;
 };
 
 export const resolveChapters = (
   timeline: Timeline,
-  { includeUntitled = false }: ResolveOptions = {},
+  { forEditing = false }: ResolveOptions = {},
 ): ResolvedChapter[] => {
   const placements = layoutClips(timeline.clips);
   // the editor re-resolves on every keystroke, so the markers are looked up
@@ -48,7 +50,7 @@ export const resolveChapters = (
 
   const fromMarkers = timeline.chapters.flatMap((marker) => {
     const start = startByClipId.get(marker.clipId);
-    return start === undefined || (!marker.title.trim() && !includeUntitled)
+    return start === undefined || (!marker.title.trim() && !forEditing)
       ? []
       : [
           {
@@ -63,8 +65,17 @@ export const resolveChapters = (
   const resolved = [...fromTitles, ...fromMarkers].sort(byStart);
 
   // two chapters on the same frame would give the player an empty segment
-  return resolved.filter(
-    (chapter, index) =>
-      index === 0 || chapter.startMs !== resolved[index - 1]?.startMs,
-  );
+  return forEditing
+    ? resolved
+    : resolved.filter(
+        (chapter, index) =>
+          index === 0 || chapter.startMs !== resolved[index - 1]?.startMs,
+      );
 };
+
+export type VideoChapter = { startMs: number; title: string };
+
+// what the video row carries for the watch page: the editor's id and kind are
+// its own business, and the row's schema does not declare them
+export const videoChapters = (timeline: Timeline): VideoChapter[] =>
+  resolveChapters(timeline).map(({ startMs, title }) => ({ startMs, title }));

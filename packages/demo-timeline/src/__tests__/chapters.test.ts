@@ -95,7 +95,7 @@ describe('resolveChapters', () => {
         clips: [source('a', 4000)],
         chapters: [{ id: 'c1', clipId: 'a', offsetMs: 0, title: '' }],
       }),
-      { includeUntitled: true },
+      { forEditing: true },
     );
 
     expect(resolved).toEqual([
@@ -125,5 +125,31 @@ describe('resolveChapters', () => {
         }),
       ),
     ).toHaveLength(1);
+  });
+});
+
+describe('two markers on the same frame', () => {
+  const doubled = (): Timeline =>
+    timeline({
+      clips: [source('a', 8000)],
+      chapters: [
+        { id: 'm1', clipId: 'a', offsetMs: 2000, title: 'First' },
+        { id: 'm2', clipId: 'a', offsetMs: 2000, title: 'Second' },
+      ],
+    });
+
+  // the player would get an empty segment, so the render keeps only one
+  it('collapses to one for the render', () => {
+    expect(resolveChapters(doubled())).toHaveLength(1);
+  });
+
+  // ...but hiding the spare in the editor left no way to delete it, which read
+  // as "the chapter I added never saved"
+  it('shows both to the editor so the spare can be removed', () => {
+    expect(
+      resolveChapters(doubled(), { forEditing: true }).map(
+        (chapter) => chapter.title,
+      ),
+    ).toEqual(['First', 'Second']);
   });
 });

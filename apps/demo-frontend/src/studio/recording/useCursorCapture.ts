@@ -49,7 +49,8 @@ export const useCursorCapture = (projectId: string) => {
 
   const apply = useCallback(
     async (input: {
-      startedAtEpochMs: number;
+      // optional: the capture's own events carry the origin
+      startedAtEpochMs?: number;
       stoppedAtEpochMs: number;
       frame: { width: number; height: number };
       existing: Parameters<typeof mergeDerivedEffects>[0];

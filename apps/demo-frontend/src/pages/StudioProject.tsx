@@ -398,36 +398,6 @@ const Editor: FC<EditorProps> = ({
 
   const capture = useCursorCapture(id);
 
-  // the capture belongs to whichever clip is under the playhead, because that is
-  // the recording the creator just made
-  const applyCapture = useCallback(() => {
-    const clip = editor.timeline.clips[0];
-    if (!clip) return;
-    const layer = editor.timeline.cursor.find(
-      (candidate) => candidate.clipId === clip.id,
-    );
-    void capture
-      .apply({
-        startedAtEpochMs:
-          Date.now() - timelineDurationMs(editor.timeline.clips),
-        stoppedAtEpochMs: Date.now(),
-        frame: {
-          width: editor.timeline.canvas.width,
-          height: editor.timeline.canvas.height,
-        },
-        existing: layer?.effects ?? [],
-      })
-      .then((applied) => {
-        if (!applied) return;
-        editor.dispatch({
-          type: 'applyCapture',
-          clipId: clip.id,
-          path: applied.path,
-          effects: applied.effects,
-        });
-      });
-  }, [capture, editor]);
-
   // the autosave debounce means a departure can outrun the last edit, so the
   // studio asks rather than losing it quietly. A read only editor is asked too:
   // nothing flushes those edits on the way out, so leaving is the end of them
@@ -575,7 +545,7 @@ const Editor: FC<EditorProps> = ({
       </ProjectHeader>
       <ProjectEditor
         editor={editor}
-        recorder={(addAsset) => (
+        recorder={(addAsset, applyCursorCapture) => (
           <>
             <RecorderPanel
               status={take.status}
@@ -616,7 +586,7 @@ const Editor: FC<EditorProps> = ({
               readOnly={readOnly}
               applying={capture.applying}
               onStart={capture.start}
-              onApply={applyCapture}
+              onApply={() => applyCursorCapture(capture.apply)}
             />
           </>
         )}

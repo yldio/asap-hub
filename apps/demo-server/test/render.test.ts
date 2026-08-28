@@ -536,8 +536,29 @@ describe('the writes the container makes', () => {
   it('stays conditional on the item naming this run', () => {
     const args = videoUpdateArgs(env, 'SET durationMs = :d', {}, {});
     expect(args[args.indexOf('--condition-expression') + 1]).toBe(
-      '#render.#renderId = :renderId',
+      '#render.#renderId = :renderId AND #render.#state IN (:queued, :rendering)',
     );
+  });
+
+  // a task the cancel could not stop keeps rendering, and the completion write
+  // would otherwise publish the export the creator called off
+  it('refuses to write once the render is no longer waiting on it', () => {
+    const args = videoUpdateArgs(
+      env,
+      'SET mediaPath = :mediaPath',
+      {},
+      { ':mediaPath': { S: 'r2' } },
+    );
+
+    expect(
+      JSON.parse(args[args.indexOf('--expression-attribute-names') + 1]!),
+    ).toMatchObject({ '#state': 'state' });
+    expect(
+      JSON.parse(args[args.indexOf('--expression-attribute-values') + 1]!),
+    ).toMatchObject({
+      ':queued': { S: 'queued' },
+      ':rendering': { S: 'rendering' },
+    });
   });
 });
 

@@ -342,10 +342,13 @@ const upload = (
 const videoKeyJson = (env: RenderEnv): string =>
   JSON.stringify({ PK: { S: `VIDEO#${env.videoId}` }, SK: { S: 'META' } });
 
-// a superseded render must never clobber a newer one, so every write this
-// container makes is conditional on the item still naming this run. The version
-// is bumped alongside, because it is what the editor reads to decide whether its
-// copy of the row is still current, and these writes change the row materially
+// a superseded render must never clobber a newer one, and a cancelled one must
+// never land at all, so every write this container makes is conditional on the
+// item still naming this run and still waiting on it. A task the cancel could
+// not stop keeps going, and this is what keeps its output off the demo. The
+// version is bumped alongside, because it is what the editor reads to decide
+// whether its copy of the row is still current, and these writes change the row
+// materially
 export const videoUpdateArgs = (
   env: RenderEnv,
   expression: string,
@@ -360,17 +363,20 @@ export const videoUpdateArgs = (
   '--update-expression',
   `${expression} ADD #version :one`,
   '--condition-expression',
-  '#render.#renderId = :renderId',
+  '#render.#renderId = :renderId AND #render.#state IN (:queued, :rendering)',
   '--expression-attribute-names',
   JSON.stringify({
     '#render': 'render',
     '#renderId': 'renderId',
+    '#state': 'state',
     '#version': 'version',
     ...names,
   }),
   '--expression-attribute-values',
   JSON.stringify({
     ':renderId': { S: env.renderId },
+    ':queued': { S: 'queued' },
+    ':rendering': { S: 'rendering' },
     ':one': { N: '1' },
     ...values,
   }),

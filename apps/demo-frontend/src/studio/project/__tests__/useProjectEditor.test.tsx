@@ -352,6 +352,30 @@ describe('leaving the page', () => {
   });
 });
 
+describe('flushing twice over the same revision', () => {
+  // "save and leave" flushes and then navigates, and the unmount that follows
+  // flushed the identical document a second time
+  it('puts the document up once', async () => {
+    let land = (value: unknown) => value;
+    const saveTimeline = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          land = resolve;
+        }),
+    );
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    act(() => view.result.current.flush());
+    act(() => view.unmount());
+    await act(async () => {
+      land({ video: { ...project, version: 4 }, timelineVersion: 5 });
+    });
+
+    expect(saveTimeline).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('a drag', () => {
   // a pointer drag fires on every animation frame, so without a gesture each
   // sample became its own undo step and the 100 entry history was evicted by a

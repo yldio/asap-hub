@@ -163,6 +163,7 @@ export const useProjectEditor = ({
 
   const savingRef = useRef(false);
   const pendingRef = useRef<Timeline>();
+  const inFlightRef = useRef<Timeline>();
   const stateRef = useRef(state);
   stateRef.current = state;
   const dirtyRef = useRef(false);
@@ -186,10 +187,16 @@ export const useProjectEditor = ({
   const save = useCallback(
     async (next: Timeline): Promise<void> => {
       if (savingRef.current) {
-        pendingRef.current = next;
+        // "save and leave" flushes, then the unmount that follows flushes the
+        // same revision again; queueing it would put the identical document up
+        // to the server twice
+        if (next !== inFlightRef.current) {
+          pendingRef.current = next;
+        }
         return;
       }
       savingRef.current = true;
+      inFlightRef.current = next;
       send({ type: 'saving' });
 
       try {

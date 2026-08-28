@@ -215,3 +215,77 @@ describe('discard', () => {
     expect(view.result.current.timeline.clips).toHaveLength(1);
   });
 });
+
+describe('a save that does not land', () => {
+  // settling before the server has taken the edit hides it from every retry
+  // path, and from the export button, which refuses to run while dirty
+  it('stays dirty when the request fails', async () => {
+    const saveTimeline = jest.fn().mockRejectedValue(new Error('offline'));
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    expect(saveTimeline).toHaveBeenCalled();
+    expect(view.result.current.dirty).toBe(true);
+  });
+
+  it('stays dirty when the server rejects the timeline', async () => {
+    const saveTimeline = jest
+      .fn()
+      .mockRejectedValue(new ApiError(413, 'timeline_too_large'));
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    expect(view.result.current.dirty).toBe(true);
+  });
+
+  // the render container bumps the row version every few seconds while it
+  // reports progress, so a conflict that leaves the timeline version alone is
+  // the common case, not an oddity
+  it('carries the edit up again when only the row version moved', async () => {
+    const saveTimeline = jest
+      .fn()
+      .mockRejectedValueOnce(new ApiError(409, 'conflict'))
+      .mockResolvedValue({
+        video: { ...project, version: 9 },
+        timelineVersion: 5,
+      });
+    const getVideo = jest.fn().mockResolvedValue({
+      ...project,
+      version: 8,
+      timeline: { timelineVersion: 4 },
+    });
+    const { view } = renderEditor({ saveTimeline, getVideo });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    await waitFor(() => expect(saveTimeline).toHaveBeenCalledTimes(2));
+    expect(saveTimeline.mock.calls[1]?.[1]).toMatchObject({ version: 8 });
+    await waitFor(() => expect(view.result.current.dirty).toBe(false));
+  });
+});
+
+describe('discarding on the way out', () => {
+  // discard dispatches, but the unmount that follows in the same click never
+  // re-renders, so anything read from a render-assigned ref is still pre-discard
+  it('does not save the abandoned edit when the editor unmounts', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 4 },
+      timelineVersion: 5,
+    });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    act(() => {
+      view.result.current.discard();
+      view.unmount();
+    });
+
+    await settle();
+    expect(saveTimeline).not.toHaveBeenCalled();
+  });
+});

@@ -15,6 +15,7 @@ import {
 } from './undo';
 
 export const autosaveMs = 1500;
+const maxConflictRetries = 5;
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -162,6 +163,15 @@ export const useProjectEditor = ({
   const pendingRef = useRef<Timeline>();
   const stateRef = useRef(state);
   stateRef.current = state;
+  const dirtyRef = useRef(false);
+
+  // settling is what makes an edit stop counting as unsaved, so it happens only
+  // once the server has taken it, and against the revision that was actually
+  // sent rather than whatever is on screen by the time the reply lands
+  const markSettled = useCallback((settled: Timeline) => {
+    stateRef.current = { ...stateRef.current, settled };
+    send({ type: 'settle', timeline: settled });
+  }, []);
 
   // The versions a request must carry live in a ref, not in the reducer state.
   // A save queued behind another one runs inside the first one's `finally`,
@@ -169,6 +179,7 @@ export const useProjectEditor = ({
   // sent the version the server had already moved past and every save from then
   // on came back 409.
   const versionsRef = useRef({ timelineVersion, version });
+  const conflictsRef = useRef(0);
 
   const save = useCallback(
     async (next: Timeline): Promise<void> => {
@@ -188,6 +199,8 @@ export const useProjectEditor = ({
           timelineVersion: saved.timelineVersion,
           version: saved.video.version,
         };
+        conflictsRef.current = 0;
+        markSettled(next);
         send({ type: 'saved', ...versionsRef.current });
       } catch (error) {
         if (error instanceof ApiError && error.status === 409) {
@@ -198,22 +211,27 @@ export const useProjectEditor = ({
             // back: rebasing only the row version left the timeline version
             // stale, so the retry conflicted exactly as the first attempt did.
             const fresh = await api.getVideo(id).catch(() => undefined);
-            const ahead =
-              fresh &&
-              fresh.timeline &&
-              fresh.timeline.timelineVersion !==
-                versionsRef.current.timelineVersion;
             if (fresh) {
-              versionsRef.current = {
+              const rebased = {
                 timelineVersion:
                   fresh.timeline?.timelineVersion ??
                   versionsRef.current.timelineVersion,
                 version: fresh.version,
               };
-              send({ type: 'rebase', ...versionsRef.current });
-              // only worth carrying the edit up again if the rebase actually
-              // moved; retrying on the same versions would spin
-              if (ahead) {
+              // Either version moving is a real conflict worth retrying. The
+              // row version alone moves constantly, because a render reports
+              // its progress onto the same row every few seconds; treating that
+              // as "nothing changed" threw the edit away.
+              const moved =
+                rebased.timelineVersion !==
+                  versionsRef.current.timelineVersion ||
+                rebased.version !== versionsRef.current.version;
+              versionsRef.current = rebased;
+              send({ type: 'rebase', ...rebased });
+              conflictsRef.current += 1;
+              // bounded, so a row something else is writing to in a loop cannot
+              // turn one edit into an endless stream of saves
+              if (moved && conflictsRef.current <= maxConflictRetries) {
                 pendingRef.current = next;
               }
             }
@@ -239,14 +257,17 @@ export const useProjectEditor = ({
     if (history.present === settled) {
       return;
     }
-    send({ type: 'settle', timeline: history.present });
     void save(history.present);
   }, [save]);
 
+  // the refs are written during render, and the click that discards usually
+  // unmounts the editor in the same commit, so an unmount cleanup reading them
+  // would still see the abandoned edit and dutifully save it
   const discard = useCallback(() => {
-    send({ type: 'settle', timeline: stateRef.current.history.present });
+    markSettled(stateRef.current.history.present);
+    dirtyRef.current = false;
     pendingRef.current = undefined;
-  }, []);
+  }, [markSettled]);
 
   useEffect(() => {
     if (readOnly || !dirty) {
@@ -261,7 +282,6 @@ export const useProjectEditor = ({
   // quietly missing it. beforeunload runs before the lease is released.
   const flushRef = useRef(flush);
   flushRef.current = flush;
-  const dirtyRef = useRef(dirty);
   dirtyRef.current = dirty && !readOnly;
 
   useEffect(() => {

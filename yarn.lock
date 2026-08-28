@@ -1217,6 +1217,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/demo-frontend@workspace:apps/demo-frontend"
   dependencies:
+    "@asap-hub/demo-timeline": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@auth0/auth0-spa-js": "npm:1.22.6"
@@ -1248,6 +1249,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/demo-server@workspace:apps/demo-server"
   dependencies:
+    "@asap-hub/demo-timeline": "workspace:*"
     "@aws-sdk/client-dynamodb": "npm:^3.687.0"
     "@aws-sdk/client-s3": "npm:^3.758.0"
     "@aws-sdk/client-ses": "npm:^3.306.0"
@@ -1284,6 +1286,18 @@ __metadata:
       built: false
     serverless-s3-sync:
       unplugged: true
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/demo-timeline@workspace:*, @asap-hub/demo-timeline@workspace:packages/demo-timeline":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/demo-timeline@workspace:packages/demo-timeline"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/cli": "npm:7.28.6"
+    "@babel/runtime-corejs3": "npm:7.28.6"
+    "@types/jest": "npm:29.5.14"
+    zod: "npm:^3.24.1"
   languageName: unknown
   linkType: soft
 

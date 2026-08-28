@@ -20,6 +20,13 @@ export default defineConfig({
           '../../packages/react-components/src',
         ),
       },
+      {
+        find: '@asap-hub/demo-timeline',
+        replacement: path.resolve(
+          __dirname,
+          '../../packages/demo-timeline/src',
+        ),
+      },
     ],
     dedupe: ['react', 'react-dom', 'react-router'],
   },

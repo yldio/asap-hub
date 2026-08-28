@@ -13,6 +13,7 @@
     "test:coverage": "WORKSPACE_PATH=apps/demo-frontend; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
+    "@asap-hub/demo-timeline": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@auth0/auth0-spa-js": "1.22.6",
     "@babel/preset-react": "7.28.5",

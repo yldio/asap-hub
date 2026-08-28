@@ -292,3 +292,46 @@ describe('deriveCursorEffects', () => {
     );
   });
 });
+
+describe('a capture with no start time given', () => {
+  // the caller cannot know when the capture ran, and guessing an origin put
+  // every event before zero, where they were dropped and nothing was added
+  const events = [
+    {
+      id: 'a',
+      type: 'click' as const,
+      t: 1_700_000_000_000,
+      x: 10,
+      y: 10,
+      viewportW: 100,
+      viewportH: 100,
+    },
+    {
+      id: 'b',
+      type: 'click' as const,
+      t: 1_700_000_004_000,
+      x: 20,
+      y: 20,
+      viewportW: 100,
+      viewportH: 100,
+    },
+  ];
+  const frame = { width: 1920, height: 1080 };
+
+  it('takes its origin from the first event', () => {
+    const derived = deriveCursorEffects(events, { frame });
+
+    expect(derived.effects.length).toBeGreaterThan(0);
+    expect(derived.effects[0]?.tMs).toBe(0);
+  });
+
+  it('keeps every event rather than dropping the lot', () => {
+    const wrongOrigin = deriveCursorEffects(events, {
+      frame,
+      startedAtEpochMs: Date.now(),
+    });
+
+    expect(wrongOrigin.effects).toHaveLength(0);
+    expect(deriveCursorEffects(events, { frame }).effects).not.toHaveLength(0);
+  });
+});

@@ -68,10 +68,16 @@ export const useCursorCapture = (projectId: string) => {
           .catch(() => undefined);
 
         const ndjson = await api.captureEvents(projectId, session.sessionId);
-        const derived = deriveCursorEffects(parseCaptureEvents(ndjson), {
-          startedAtEpochMs: input.startedAtEpochMs,
-          frame: input.frame,
-        });
+        const events = parseCaptureEvents(ndjson);
+        if (events.length === 0) {
+          setError('That capture recorded nothing to add.');
+          return undefined;
+        }
+
+        // no startedAtEpochMs: the capture's own first event is the origin. The
+        // caller cannot know it, and guessing one put every event before zero,
+        // where they were all dropped and the button silently did nothing
+        const derived = deriveCursorEffects(events, { frame: input.frame });
         const merged = mergeDerivedEffects(input.existing, derived.effects);
 
         return { path: derived.path, ...merged };

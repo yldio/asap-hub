@@ -29,11 +29,17 @@ const place = (
   options: DeriveOptions,
 ): PlacedEvent[] => {
   const offsetMs = options.offsetMs ?? 0;
+  const origin =
+    options.startedAtEpochMs ??
+    events.reduce(
+      (earliest, event) => Math.min(earliest, event.t),
+      Number.POSITIVE_INFINITY,
+    );
   return events
     .flatMap((event) => {
       // wall clock to clip-local: anything before the take started, or past the
       // longest timeline the document allows, cannot be represented
-      const tMs = Math.round(event.t - options.startedAtEpochMs + offsetMs);
+      const tMs = Math.round(event.t - origin + offsetMs);
       if (tMs < 0 || tMs > limits.maxTimelineMs) {
         return [];
       }

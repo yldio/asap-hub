@@ -88,6 +88,31 @@ export const completeUploadSchema = z.object({
     .max(10000),
 });
 
+export const createProjectSchema = z.object({
+  title: z.string().min(1).max(300),
+  folderId: folderIdField.optional(),
+  recordedAt: z.string().min(1).optional(),
+});
+
+// the document itself is validated by timelineSchema from @asap-hub/demo-timeline;
+// this is the envelope the editor sends around it
+export const saveTimelineSchema = z.object({
+  timeline: z.unknown(),
+  timelineVersion: z.number().int().nonnegative(),
+  version: z.number().int().nonnegative(),
+});
+
+export const createAssetSchema = z.object({
+  kind: z.enum(['video', 'audio']),
+  mimeType: z.string().min(1).max(120),
+  label: z.string().min(1).max(300),
+  extension: z
+    .string()
+    .min(1)
+    .max(8)
+    .regex(/^[a-z0-9]+$/, 'invalid extension'),
+});
+
 export const createInviteSchema = z.object({
   email: z.string().email(),
   role: roleSchema,

@@ -19,6 +19,7 @@ import {
   rawPrefix,
   signUploadParts,
 } from '../storage';
+import { createVideoRow } from './video-create';
 import { serialiseVideo } from './videos';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
@@ -38,25 +39,16 @@ export const uploadsRouter = (): Router => {
       recordedAt?: string;
     };
     const videoId = uuid();
-    const now = new Date().toISOString();
 
-    await videoEntity
-      .create({
-        id: videoId,
-        title,
-        status: 'draft',
-        folderId: folderId ?? 'ROOT',
-        recordedAt: recordedAt ?? now,
-        durationMs: 0,
-        chapters: [],
-        s3Prefix: videoId,
-        createdBy: { sub: currentUser(req).sub, name: currentUser(req).name },
-        version: 1,
-        processingState: 'uploading',
-        createdAt: now,
-        updatedAt: now,
-      })
-      .go();
+    await createVideoRow({
+      id: videoId,
+      title,
+      folderId,
+      recordedAt,
+      kind: 'upload',
+      processingState: 'uploading',
+      createdBy: { sub: currentUser(req).sub, name: currentUser(req).name },
+    });
 
     const { uploadId, key } = await createMultipartUpload(
       rawKey(videoId),

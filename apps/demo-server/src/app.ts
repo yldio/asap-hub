@@ -5,6 +5,7 @@ import { foldersRouter } from './routes/folders';
 import { currentUser } from './routes/request';
 import { invitesRouter } from './routes/invites';
 import { mediaRouter } from './routes/media';
+import { projectsRouter } from './routes/projects';
 import { uploadsRouter } from './routes/uploads';
 import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
@@ -50,6 +51,7 @@ export const appFactory = (): Express => {
   });
 
   api.use('/folders', foldersRouter());
+  api.use('/projects', projectsRouter());
   api.use('/videos', videosRouter());
   api.use('/uploads', uploadsRouter());
   api.use('/invites', invitesRouter());

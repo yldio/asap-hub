@@ -8,9 +8,14 @@ RUN apk add --no-cache \
   aws-cli \
   coreutils \
   nodejs \
-  librsvg \
+  rsvg-convert \
   fontconfig \
   font-dejavu
+
+# a missing binary should fail the build, not the first render that needs it
+RUN for tool in bash ffmpeg ffprobe aws node rsvg-convert; do \
+  command -v "$tool" >/dev/null || { echo "missing $tool"; exit 1; }; \
+  done
 
 COPY entrypoint.sh encode.sh finish.sh ingest.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/encode.sh \

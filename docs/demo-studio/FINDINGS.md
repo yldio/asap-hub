@@ -13,6 +13,20 @@ dropped.
 
 ---
 
+## F-009 (P1, fixed) The encoder image had no `rsvg-convert`
+
+**Observed.** The image installed Alpine's `librsvg`, which ships the library but not the command
+line tool. `which rsvg-convert` in the built image found nothing.
+
+**Why it matters.** Title cards and banners are rasterised from SVG by `rsvg-convert`, so every
+render carrying text would have failed inside the container, while passing every test and every
+local run on a machine that happens to have the tool.
+
+**Fixed.** The image installs `rsvg-convert` (which pulls librsvg with it), and the build now asserts
+that every binary a job needs is present, so a missing one fails the image build rather than the
+first render. Verified by rendering a timeline with a title card, a banner and a slide transition
+inside the container: 1920x1080 at 30fps with the text exactly as the preview draws it.
+
 ## F-008 (P1, fixed) The join failed on every real render: audio format and timebase
 
 **Observed.** Running the renderer against real files, the three per-clip encodes succeeded and the

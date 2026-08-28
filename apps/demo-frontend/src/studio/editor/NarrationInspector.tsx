@@ -7,7 +7,7 @@ import EditorButton from './EditorButton';
 import {
   fieldStyles,
   mutedStyles,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   readingStyles,
@@ -44,24 +44,21 @@ const NarrationInspector: FC<Props> = ({
       <span>{formatTimecode(narration.outMs - narration.inMs)}</span>
     </div>
 
-    <NumberField
-      label="Starts at, in milliseconds"
+    <TimecodeField
+      label="Starts at"
       value={narration.startMs}
-      step={100}
       disabled={readOnly}
       onChange={(startMs) => onChange({ startMs })}
     />
-    <NumberField
+    <TimecodeField
       label="Skip from the beginning of the audio"
       value={narration.inMs}
-      step={100}
       disabled={readOnly}
       onChange={(inMs) => onChange({ inMs })}
     />
-    <NumberField
+    <TimecodeField
       label="Play up to, in the audio"
       value={narration.outMs}
-      step={100}
       disabled={readOnly}
       onChange={(outMs) => onChange({ outMs })}
     />

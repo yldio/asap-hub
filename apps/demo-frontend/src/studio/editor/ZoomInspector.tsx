@@ -4,7 +4,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   mutedStyles,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   readingStyles,
@@ -42,31 +42,27 @@ const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
       ]}
       onChange={(scale) => onChange({ scale: Number(scale) })}
     />
-    <NumberField
-      label="Starts in the clip, in milliseconds"
+    <TimecodeField
+      label="Starts in the clip"
       value={zoom.startMs}
-      step={250}
       disabled={readOnly}
       onChange={(startMs) => onChange({ startMs })}
     />
-    <NumberField
+    <TimecodeField
       label="Ramp in"
       value={zoom.rampInMs}
-      step={100}
       disabled={readOnly}
       onChange={(rampInMs) => onChange({ rampInMs })}
     />
-    <NumberField
+    <TimecodeField
       label="Hold"
       value={zoom.holdMs}
-      step={250}
       disabled={readOnly}
       onChange={(holdMs) => onChange({ holdMs })}
     />
-    <NumberField
+    <TimecodeField
       label="Ramp out"
       value={zoom.rampOutMs}
-      step={100}
       disabled={readOnly}
       onChange={(rampOutMs) => onChange({ rampOutMs })}
     />

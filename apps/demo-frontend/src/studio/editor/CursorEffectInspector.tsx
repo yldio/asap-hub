@@ -4,7 +4,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   mutedStyles,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   SelectField,
@@ -43,10 +43,9 @@ const CursorEffectInspector: FC<Props> = ({
       ]}
       onChange={(type) => onChange({ type: type as CursorEffect['type'] })}
     />
-    <NumberField
-      label="At, in the clip, in milliseconds"
+    <TimecodeField
+      label="At, in the clip"
       value={effect.tMs}
-      step={100}
       disabled={readOnly}
       onChange={(tMs) => onChange({ tMs })}
     />

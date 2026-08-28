@@ -8,7 +8,7 @@ import { editorTheme } from './editorTheme';
 import {
   fieldStyles,
   mutedStyles,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   readingStyles,
@@ -87,13 +87,13 @@ const ClipInspector: FC<Props> = ({
 
       {source ? (
         <>
-          <NumberField
+          <TimecodeField
             label="Trim start"
             value={source.inMs}
             disabled={readOnly}
             onChange={(inMs) => onTrim({ inMs })}
           />
-          <NumberField
+          <TimecodeField
             label="Trim end"
             value={source.outMs}
             disabled={readOnly}

@@ -8,7 +8,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   FadeField,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   readingStyles,
@@ -61,11 +61,9 @@ const TitleCardInspector: FC<Props> = ({
       placeholder="Under feature flag"
       onChange={(subtitle) => onChange({ subtitle })}
     />
-    <NumberField
-      label="Length in milliseconds"
+    <TimecodeField
+      label="Length"
       value={clip.durationMs}
-      min={500}
-      step={250}
       disabled={readOnly}
       onChange={(durationMs) => onChange({ durationMs })}
     />

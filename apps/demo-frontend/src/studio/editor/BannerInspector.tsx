@@ -4,7 +4,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   FadeField,
-  NumberField,
+  TimecodeField,
   panelHeadingStyles,
   panelStyles,
   SelectField,
@@ -42,18 +42,15 @@ const BannerInspector: FC<Props> = ({
       placeholder="Under feature flag ASAP_NEW_EVENT_PAGE"
       onChange={(subtitle) => onChange({ subtitle })}
     />
-    <NumberField
-      label="Starts at, in milliseconds"
+    <TimecodeField
+      label="Starts at"
       value={banner.startMs}
-      step={250}
       disabled={readOnly}
       onChange={(startMs) => onChange({ startMs })}
     />
-    <NumberField
-      label="Length in milliseconds"
+    <TimecodeField
+      label="Length"
       value={banner.durationMs}
-      min={200}
-      step={250}
       disabled={readOnly}
       onChange={(durationMs) => onChange({ durationMs })}
     />

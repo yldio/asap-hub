@@ -27,7 +27,17 @@ const frameStyles = css({
   backgroundColor: 'rgba(0, 0, 0, 0.6)',
 });
 
+// the caption is drawn over whatever frame happens to be behind it, so it needs
+// a surface of its own rather than a shadow that a bright frame swallows
+const captionBackdrop = {
+  maxWidth: '100%',
+  padding: `${rem(2)} ${rem(8)}`,
+  borderRadius: rem(4),
+  backgroundColor: 'rgba(0, 0, 0, 0.82)',
+} as const;
+
 const titleStyles = css({
+  ...captionBackdrop,
   maxWidth: rem(240),
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -35,14 +45,13 @@ const titleStyles = css({
   fontSize: rem(14),
   fontWeight: 'bold',
   color: onDark.rgb,
-  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
 });
 
 const timeStyles = css({
+  ...captionBackdrop,
   fontSize: rem(13),
   fontVariantNumeric: 'tabular-nums',
-  color: 'rgba(255, 255, 255, 0.9)',
-  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
+  color: onDark.rgb,
 });
 
 const TOOLTIP_WIDTH = 168;

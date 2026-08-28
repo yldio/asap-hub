@@ -146,6 +146,10 @@ type Props = {
   readonly focus?: StageFocus;
   // set while a click effect is selected: its marker can be dropped anywhere
   readonly pin?: StagePin;
+  // a drag across the stage is one thing the creator did, not one edit per
+  // pointer sample, so it collapses into a single undo step
+  readonly onGestureStart?: () => void;
+  readonly onGestureEnd?: () => void;
 };
 
 // one video element, re-pointed as the playhead crosses a clip boundary. The
@@ -163,6 +167,8 @@ const PreviewStage: FC<Props> = ({
   assetUrl,
   focus,
   pin,
+  onGestureStart,
+  onGestureEnd,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const panRef = useRef<{ x: number; y: number; from: Point }>();
@@ -274,7 +280,10 @@ const PreviewStage: FC<Props> = ({
     );
   };
 
-  const endPan = () => {
+  const endDrag = () => {
+    if (panRef.current || pin) {
+      onGestureEnd?.();
+    }
     panRef.current = undefined;
     setPanning(false);
   };
@@ -291,8 +300,10 @@ const PreviewStage: FC<Props> = ({
       style={size}
       onPointerDown={(event) => {
         if (focus) {
+          onGestureStart?.();
           startPan(event);
         } else if (pin) {
+          onGestureStart?.();
           event.currentTarget.setPointerCapture(event.pointerId);
           dropPin(event);
         }
@@ -307,8 +318,8 @@ const PreviewStage: FC<Props> = ({
           dropPin(event);
         }
       }}
-      onPointerUp={endPan}
-      onPointerCancel={endPan}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
     >
       {url ? (
         <video

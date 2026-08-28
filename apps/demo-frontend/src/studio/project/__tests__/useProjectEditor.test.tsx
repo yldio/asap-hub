@@ -289,3 +289,32 @@ describe('discarding on the way out', () => {
     expect(saveTimeline).not.toHaveBeenCalled();
   });
 });
+
+describe('a drag', () => {
+  // a pointer drag fires on every animation frame, so without a gesture each
+  // sample became its own undo step and the 100 entry history was evicted by a
+  // single move across the stage
+  it('collapses into one undo step however many samples it takes', async () => {
+    const { view } = renderEditor({ saveTimeline: jest.fn() });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    const before = view.result.current.timeline;
+
+    act(() => {
+      view.result.current.beginGesture();
+      for (let i = 1; i <= 40; i += 1) {
+        view.result.current.dispatch({
+          type: 'setClipVolume',
+          clipId: 'clip-1',
+          volume: i / 40,
+        });
+      }
+      view.result.current.endGesture();
+    });
+
+    expect(view.result.current.timeline.clips[0]).toMatchObject({ volume: 1 });
+
+    act(() => view.result.current.undo());
+    expect(view.result.current.timeline).toBe(before);
+  });
+});

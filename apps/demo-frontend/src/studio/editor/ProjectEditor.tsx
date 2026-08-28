@@ -577,6 +577,8 @@ const ProjectEditor: FC<Props> = ({
         <div css={centreStyles} ref={theatreRef}>
           <div css={stageAreaStyles} ref={stage.ref}>
             <PreviewStage
+              onGestureStart={editor.beginGesture}
+              onGestureEnd={editor.endGesture}
               box={stage.box}
               placement={current}
               banners={timeline.banners}

@@ -146,16 +146,28 @@ describe('folder tree and listing', () => {
     ).toBeVisible();
   });
 
-  it('lists the videos of the folder in the url with a path breadcrumb', async () => {
+  it('lists the videos of the folder in the url under its name', async () => {
     renderHome({ route: '/?folder=f-sprint' });
 
     expect(await screen.findByText('Sprint retro')).toBeVisible();
     const heading = within(contentSection()).getByRole('heading', { level: 2 });
-    expect(within(heading).getByRole('link', { name: 'Home' })).toBeVisible();
-    expect(
-      within(heading).getByRole('link', { name: 'Engineering' }),
-    ).toBeVisible();
     expect(heading).toHaveTextContent('Sprints');
+    // the ancestors belong to the shared breadcrumb, not to a second trail here
+    expect(within(heading).queryByRole('link')).toBeNull();
+  });
+
+  it('reaches every sidebar row as a link, with its own buttons beside it', async () => {
+    renderHome();
+
+    const row = await within(sidebar()).findByRole('link', {
+      name: 'Engineering',
+    });
+    expect(row).toHaveAttribute('href', '/?folder=f-eng');
+    // the caret and the kebab are siblings of the link, never nested in it
+    expect(within(row).queryByRole('button')).toBeNull();
+    expect(
+      within(sidebar()).getByRole('button', { name: 'Expand Engineering' }),
+    ).toBeVisible();
   });
 
   it('renders an empty state for a folder with no videos', async () => {
@@ -194,7 +206,9 @@ describe('creator vs member affordances', () => {
     renderHome();
 
     expect(await screen.findByRole('link', { name: /upload/i })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'All statuses' })).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    ).toBeVisible();
     expect(
       within(contentSection()).getByRole('button', { name: /New folder/ }),
     ).toBeVisible();
@@ -208,7 +222,9 @@ describe('creator vs member affordances', () => {
 
     await screen.findByText('Unfiled walkthrough');
     expect(screen.queryByRole('link', { name: /upload/i })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'All statuses' })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Filter by status' }),
+    ).toBeNull();
     expect(screen.queryByRole('button', { name: /New folder/ })).toBeNull();
     expect(
       screen.queryByRole('link', { name: 'Edit Unfiled walkthrough' }),
@@ -238,6 +254,39 @@ describe('search', () => {
     ).toBeVisible();
     expect(screen.getByText('Engineering / Sprints')).toBeVisible();
     expect(screen.queryByText('Unfiled walkthrough')).toBeNull();
+  });
+
+  it('answers a search with one request, not one per folder', async () => {
+    const api = baseApi();
+    renderHome({ api });
+
+    await screen.findByText('Unfiled walkthrough');
+    const foldersListed = api.listVideos.mock.calls.length;
+    await userEvent.type(screen.getByLabelText('Search videos'), 'sprint');
+
+    expect(
+      await screen.findByText('Sprint retro', {}, { timeout: 4000 }),
+    ).toBeVisible();
+    expect(api.listAllVideos).toHaveBeenCalledTimes(1);
+    expect(api.listVideos).toHaveBeenCalledTimes(foldersListed);
+  });
+
+  it('surfaces a failed search rather than reporting no results', async () => {
+    renderHome({
+      api: { listAllVideos: () => Promise.reject(new Error('boom')) },
+    });
+
+    await screen.findByText('Unfiled walkthrough');
+    await userEvent.type(screen.getByLabelText('Search videos'), 'sprint');
+
+    expect(
+      await screen.findByText(
+        'We could not load the videos.',
+        {},
+        { timeout: 4000 },
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText('No results for sprint')).toBeNull();
   });
 
   it('reports when a search matches nothing', async () => {
@@ -281,25 +330,25 @@ describe('sort, filter and view', () => {
     await waitFor(() => expect(videoTitles()[0]).toBe('Sprint retro'));
   });
 
-  it('cycles the status filter and narrows the list', async () => {
+  it('narrows the list from the status menu', async () => {
     renderHome({ route: '/?view=all' });
 
     await screen.findByText('Sprint retro');
-    await userEvent.click(screen.getByRole('button', { name: 'All statuses' }));
+    const statusFilter = screen.getByRole('button', {
+      name: 'Filter by status',
+    });
 
-    expect(
-      await screen.findByRole('button', { name: 'Published' }),
-    ).toBeVisible();
+    await userEvent.click(statusFilter);
+    await userEvent.click(screen.getByRole('option', { name: 'Published' }));
+
+    expect(statusFilter).toHaveTextContent('Published');
     await waitFor(() => expect(screen.queryByText('Sprint retro')).toBeNull());
 
-    await userEvent.click(screen.getByRole('button', { name: 'Published' }));
+    await userEvent.click(statusFilter);
+    await userEvent.click(screen.getByRole('option', { name: 'Drafts' }));
+
     expect(await screen.findByText('Sprint retro')).toBeVisible();
     expect(screen.queryByText('Engineering standup')).toBeNull();
-
-    await userEvent.click(screen.getByRole('button', { name: 'Drafts' }));
-    expect(
-      await screen.findByRole('button', { name: 'All statuses' }),
-    ).toBeVisible();
   });
 
   it('persists the view mode across mounts', async () => {
@@ -477,6 +526,9 @@ describe('video context menu', () => {
 
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('Delete 1 video?')).toBeVisible();
+    expect(
+      within(dialog).getByText(/1 video and its file will be/),
+    ).toBeVisible();
     await userEvent.click(
       within(dialog).getByRole('button', { name: 'Delete' }),
     );
@@ -527,6 +579,9 @@ describe('video context menu', () => {
 
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('Delete 2 videos?')).toBeVisible();
+    expect(
+      within(dialog).getByText(/2 videos and their files will be/),
+    ).toBeVisible();
   });
 
   it('deletes straight from the card trash button', async () => {
@@ -557,7 +612,7 @@ describe('folder create, rename and delete', () => {
 
     await within(sidebar()).findByText('Engineering');
     await userEvent.click(
-      within(sidebar()).getByRole('button', { name: 'New folder' }),
+      within(sidebar()).getByRole('button', { name: 'New top-level folder' }),
     );
     await userEvent.type(
       screen.getByLabelText('New folder name'),
@@ -565,6 +620,26 @@ describe('folder create, rename and delete', () => {
     );
 
     expect(createFolder).toHaveBeenCalledWith('Ops', undefined);
+  });
+
+  it('closes the sidebar input when the plus button is pressed again', async () => {
+    renderHome();
+
+    await within(sidebar()).findByText('Engineering');
+    const plus = within(sidebar()).getByRole('button', {
+      name: 'New top-level folder',
+    });
+
+    await userEvent.click(plus);
+    expect(screen.getByLabelText('New folder name')).toHaveAttribute(
+      'placeholder',
+      'Folder name',
+    );
+
+    await userEvent.click(plus);
+
+    expect(screen.queryByLabelText('New folder name')).toBeNull();
+    expect(plus).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('creates a folder inside the current folder from the toolbar', async () => {
@@ -680,7 +755,56 @@ describe('folder create, rename and delete', () => {
     expect(deleteFolder).toHaveBeenCalledWith('f-design');
   });
 
-  it('counts the subtree and gates the delete behind the typed name', async () => {
+  it('counts the subtree from the cached counts, without new requests', async () => {
+    const api = baseApi();
+    renderHome({
+      api: { ...api, deleteFolder: jest.fn(() => Promise.resolve()) },
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Engineering' }),
+    );
+    const listedBefore = api.listVideos.mock.calls.length;
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Delete' }),
+    );
+
+    const dialog = await screen.findByRole('dialog');
+    expect(
+      await within(dialog).findByText(
+        /This folder contains 2 videos and 2 folders\./,
+      ),
+    ).toBeVisible();
+    expect(api.listVideos).toHaveBeenCalledTimes(listedBefore);
+  });
+
+  it('still offers the delete when the counts cannot be loaded', async () => {
+    renderHome({
+      api: { folderCounts: () => Promise.reject(new Error('boom')) },
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Delete' }),
+    );
+
+    const dialog = await screen.findByRole('dialog', {}, { timeout: 4000 });
+    // it must never sit on "Checking folder contents" for ever
+    expect(
+      await within(dialog).findByText(
+        /We could not count what is inside this folder/,
+        {},
+        { timeout: 4000 },
+      ),
+    ).toBeVisible();
+    expect(
+      within(dialog).getByLabelText('Type the folder name to confirm'),
+    ).toBeVisible();
+  });
+
+  it('gates the delete behind the typed name', async () => {
     const deleteFolder = jest.fn(() => Promise.resolve());
     renderHome({ api: { deleteFolder } });
 
@@ -692,11 +816,6 @@ describe('folder create, rename and delete', () => {
     );
 
     const dialog = await screen.findByRole('dialog');
-    expect(
-      await within(dialog).findByText(
-        /This folder contains 2 videos and 2 folders\./,
-      ),
-    ).toBeVisible();
     expect(within(dialog).getByText(/2 subfolders/)).toBeVisible();
 
     const confirm = within(dialog).getByRole('button', { name: 'Delete' });

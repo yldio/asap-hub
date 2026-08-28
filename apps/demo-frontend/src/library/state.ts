@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import type { Video } from '../api/types';
 
@@ -33,15 +33,6 @@ export const useViewMode = (): [ViewMode, (mode: ViewMode) => void] => {
   ];
 };
 
-export const useDebounced = <T>(value: T, delayMs: number): T => {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDebounced(value), delayMs);
-    return () => window.clearTimeout(timer);
-  }, [value, delayMs]);
-  return debounced;
-};
-
 export const sortLabels: Record<SortMode, string> = {
   newest: 'Newest first',
   oldest: 'Oldest first',
@@ -54,25 +45,30 @@ export const statusFilterLabels: Record<StatusFilter, string> = {
   drafts: 'Drafts',
 };
 
-export const nextStatusFilter = (current: StatusFilter): StatusFilter => {
-  if (current === 'all') return 'published';
-  return current === 'published' ? 'drafts' : 'all';
-};
+export const statusFilters: readonly StatusFilter[] = [
+  'all',
+  'published',
+  'drafts',
+];
+
+// the id breaks every tie, so "oldest" is the exact reverse of "newest"
+// instead of two orders that only agree where the dates differ
+const byRecordedAt = (a: Video, b: Video): number =>
+  a.recordedAt.localeCompare(b.recordedAt) || a.id.localeCompare(b.id);
+
+const byTitle = (a: Video, b: Video): number =>
+  a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }) ||
+  a.id.localeCompare(b.id);
 
 export const sortVideos = (
   videos: readonly Video[],
   mode: SortMode,
 ): Video[] => {
   const sorted = [...videos];
-  if (mode === 'title') {
-    return sorted.sort((a, b) =>
-      a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }),
-    );
-  }
-  return sorted.sort((a, b) => {
-    const comparison = a.recordedAt.localeCompare(b.recordedAt);
-    return mode === 'newest' ? -comparison : comparison;
-  });
+  if (mode === 'title') return sorted.sort(byTitle);
+  return sorted.sort((a, b) =>
+    mode === 'newest' ? -byRecordedAt(a, b) : byRecordedAt(a, b),
+  );
 };
 
 export const matchesStatusFilter = (

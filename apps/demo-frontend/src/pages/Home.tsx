@@ -18,9 +18,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Link, Navigate, useNavigate, useSearchParams } from 'react-router';
+import { Navigate, useNavigate, useSearchParams } from 'react-router';
 
-import { useApi } from '../api/ApiProvider';
 import {
   useAllVideos,
   useBulkDeleteVideos,
@@ -43,7 +42,6 @@ import { useIsCreator } from '../auth/MeContext';
 import { FolderCard } from '../library/FolderCard';
 import { Sidebar } from '../library/Sidebar';
 import { Toolbar } from '../library/Toolbar';
-import { useSearchResults } from '../library/useSearchResults';
 import { isWatchable, VideoCard } from '../library/VideoCard';
 import {
   aggregateCount,
@@ -57,10 +55,9 @@ import {
   subtreeIds,
 } from '../library/tree';
 import {
+  matchesQuery,
   matchesStatusFilter,
-  nextStatusFilter,
   sortVideos,
-  useDebounced,
   useViewMode,
   type SortMode,
   type StatusFilter,
@@ -85,6 +82,7 @@ import {
   steel,
 } from '../ui/theme';
 import { folderCount, videoCount } from '../utils/format';
+import { useDebounced } from '../utils/useDebounced';
 import {
   applySelection,
   emptySelection,
@@ -119,14 +117,6 @@ const breadcrumbNameStyles = css({
 });
 
 const summaryStyles = css({ fontSize: rem(14), color: lead.rgb });
-
-const crumbLinkStyles = css({
-  color: lead.rgb,
-  textDecoration: 'none',
-  ':hover': { textDecoration: 'underline' },
-});
-
-const crumbSeparatorStyles = css({ color: steel.rgb, fontWeight: 'normal' });
 
 const sectionLabelStyles = css({
   fontSize: rem(12),
@@ -230,11 +220,14 @@ const Home: FC = () => {
   const selectedFolder = folderParam === rootFolderId ? undefined : folderParam;
   const isCreator = useIsCreator();
   const navigate = useNavigate();
-  const api = useApi();
+
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounced(query, 250).trim();
+  const isSearching = debouncedQuery.length > 0;
 
   const folders = useFolders();
   const videos = useVideos(selectedFolder);
-  const allVideos = useAllVideos(isAllVideos);
+  const allVideos = useAllVideos(isAllVideos || isSearching);
   const counts = useFolderCounts();
 
   const createFolder = useCreateFolder();
@@ -255,30 +248,18 @@ const Home: FC = () => {
   const [draggingIds, setDraggingIds] = useState<string[]>([]);
   const [creatingChildOf, setCreatingChildOf] = useState<string>();
   const [draggingFolderId, setDraggingFolderId] = useState<string>();
-  const [subtreeCounts, setSubtreeCounts] = useState<{
-    videos: number;
-    folders: number;
-  }>();
 
-  const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortMode>('newest');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [view, setView] = useViewMode();
 
-  const debouncedQuery = useDebounced(query, 250).trim();
-  const isSearching = debouncedQuery.length > 0;
-
-  // ROOT is only kept for search, which has to sweep the unfiled videos too
-  const searchFolders = useMemo(() => folders.data ?? [], [folders.data]);
-  const folderList = useMemo(() => realFolders(searchFolders), [searchFolders]);
+  const folderList = useMemo(
+    () => realFolders(folders.data ?? []),
+    [folders.data],
+  );
   const folderNames = useMemo(
     () => new Map(folderList.map(({ id, name }) => [id, name])),
     [folderList],
-  );
-
-  const search = useSearchResults(
-    searchFolders,
-    isSearching ? debouncedQuery : '',
   );
 
   const filterAndSort = useCallback(
@@ -294,9 +275,15 @@ const Home: FC = () => {
     [isCreator, statusFilter, sort],
   );
 
+  // search reads the one all-videos list rather than a request per folder
   const searchVideos = useMemo(
-    () => filterAndSort(search.results.map(({ video }) => video)),
-    [search.results, filterAndSort],
+    () =>
+      filterAndSort(
+        (allVideos.data ?? []).filter((video) =>
+          matchesQuery(video, debouncedQuery),
+        ),
+      ),
+    [allVideos.data, debouncedQuery, filterAndSort],
   );
 
   const folderVideos = useMemo(
@@ -443,30 +430,13 @@ const Home: FC = () => {
     bulkMove.mutate({ ids, folderId: target }, { onSuccess: clearSelection });
   };
 
-  const openFolderDeleteModal = useCallback(
-    async (folder: Folder) => {
-      setFolderToDelete(folder);
-      setConfirmName('');
-      setSubtreeCounts(undefined);
-      const ids = subtreeIds(folder.id, folderList);
-      try {
-        const lists = await Promise.all(
-          ids.map((folderId) => api.listVideos(folderId)),
-        );
-        setSubtreeCounts({
-          videos: lists.reduce((sum, list) => sum + list.length, 0),
-          folders: ids.length - 1,
-        });
-      } catch {
-        setSubtreeCounts(undefined);
-      }
-    },
-    [api, folderList],
-  );
+  const openFolderDeleteModal = useCallback((folder: Folder) => {
+    setFolderToDelete(folder);
+    setConfirmName('');
+  }, []);
 
   const closeFolderDeleteModal = () => {
     setFolderToDelete(undefined);
-    setSubtreeCounts(undefined);
     setConfirmName('');
   };
 
@@ -509,6 +479,20 @@ const Home: FC = () => {
         videoCount(1)
       : videoCount(draggingIds.length);
 
+  const subtreeCounts = useMemo(() => {
+    if (!folderToDelete) return undefined;
+    const videoTotal = aggregateCount(
+      folderToDelete.id,
+      folderList,
+      counts.data,
+    );
+    if (videoTotal === undefined) return undefined;
+    return {
+      videos: videoTotal,
+      folders: subtreeIds(folderToDelete.id, folderList).length - 1,
+    };
+  }, [folderToDelete, folderList, counts.data]);
+
   const isEmptyFolderDelete =
     subtreeCounts !== undefined &&
     subtreeCounts.videos === 0 &&
@@ -527,11 +511,6 @@ const Home: FC = () => {
   const currentFolderName = selectedFolder
     ? folderNames.get(selectedFolder) ?? 'Folder'
     : 'Home';
-
-  const breadcrumbPath = useMemo(
-    () => (selectedFolder ? pathOf(selectedFolder, folderList) : []),
-    [selectedFolder, folderList],
-  );
 
   // top level on Home, the direct subfolders of the folder being viewed otherwise
   const childFolders = useMemo(
@@ -584,12 +563,10 @@ const Home: FC = () => {
   const createFolderHere = (name: string) =>
     createFolder.mutate({ name, parentId: selectedFolder });
 
-  const isLoadingList = isSearching
-    ? search.isLoading
-    : isAllVideos
-      ? allVideos.isLoading
-      : videos.isLoading;
-  const isEmpty = !isLoadingList && visibleVideos.length === 0;
+  const usesAllVideos = isSearching || isAllVideos;
+  const isLoadingList = usesAllVideos ? allVideos.isLoading : videos.isLoading;
+  const hasListError = usesAllVideos ? allVideos.isError : videos.isError;
+  const isEmpty = !isLoadingList && !hasListError && visibleVideos.length === 0;
   const showsFolderCards =
     !isSearching && !isAllVideos && childFolders.length > 0;
 
@@ -655,9 +632,7 @@ const Home: FC = () => {
             view={view}
             onViewChange={setView}
             statusFilter={statusFilter}
-            onStatusFilterClick={() =>
-              setStatusFilter(nextStatusFilter(statusFilter))
-            }
+            onStatusFilterChange={setStatusFilter}
             isCreator={isCreator}
             currentLocationName={currentFolderName}
             canCreateHere={canCreateHere}
@@ -666,34 +641,11 @@ const Home: FC = () => {
 
           <div css={breadcrumbStyles}>
             <h2 css={breadcrumbNameStyles}>
-              {isSearching ? (
-                `Results for "${debouncedQuery}"`
-              ) : isAllVideos ? (
-                'All videos'
-              ) : breadcrumbPath.length > 1 ? (
-                <span>
-                  <Link to="/" css={crumbLinkStyles}>
-                    Home
-                  </Link>
-                  {breadcrumbPath.map((folder, index) => (
-                    <span key={folder.id}>
-                      <span css={crumbSeparatorStyles}> / </span>
-                      {index === breadcrumbPath.length - 1 ? (
-                        folder.name
-                      ) : (
-                        <Link
-                          to={`/?folder=${folder.id}`}
-                          css={crumbLinkStyles}
-                        >
-                          {folder.name}
-                        </Link>
-                      )}
-                    </span>
-                  ))}
-                </span>
-              ) : (
-                currentFolderName
-              )}
+              {isSearching
+                ? `Results for "${debouncedQuery}"`
+                : isAllVideos
+                  ? 'All videos'
+                  : currentFolderName}
             </h2>
             <span css={summaryStyles}>
               {videoCount(visibleVideos.length)}
@@ -727,14 +679,13 @@ const Home: FC = () => {
           )}
 
           {isLoadingList && <Spinner label="Loading videos" />}
-          {!isSearching &&
-            (isAllVideos ? allVideos.isError : videos.isError) && (
-              <div css={emptyStyles}>
-                {isAllVideos
-                  ? 'We could not load the videos.'
-                  : 'We could not load the videos in this folder.'}
-              </div>
-            )}
+          {hasListError && (
+            <div css={emptyStyles}>
+              {usesAllVideos
+                ? 'We could not load the videos.'
+                : 'We could not load the videos in this folder.'}
+            </div>
+          )}
           {isEmpty && (
             <div css={emptyStyles}>
               {isSearching
@@ -805,7 +756,7 @@ const Home: FC = () => {
             onSelect={() => {
               const { folder } = folderMenu;
               setFolderMenu(undefined);
-              void openFolderDeleteModal(folder);
+              openFolderDeleteModal(folder);
             }}
           >
             Delete
@@ -878,7 +829,7 @@ const Home: FC = () => {
           label={`Delete folder ${folderToDelete.name}`}
           onClose={closeFolderDeleteModal}
         >
-          {subtreeCounts === undefined ? (
+          {subtreeCounts === undefined && !counts.isError ? (
             <Spinner label="Checking folder contents" />
           ) : (
             <>
@@ -892,16 +843,25 @@ const Home: FC = () => {
               ) : (
                 <>
                   <p css={dangerBodyStyles}>
-                    This folder contains {videoCount(subtreeCounts.videos)} and{' '}
-                    {folderCount(subtreeCounts.folders)}.
+                    {subtreeCounts
+                      ? `This folder contains ${videoCount(
+                          subtreeCounts.videos,
+                        )} and ${folderCount(subtreeCounts.folders)}.`
+                      : 'We could not count what is inside this folder.'}
                   </p>
                   <div css={dangerNoticeStyles}>
-                    {videoCount(subtreeCounts.videos)} and{' '}
-                    {subtreeCounts.folders === 1
-                      ? '1 subfolder'
-                      : `${subtreeCounts.folders} subfolders`}
-                    , including their video files, will be permanently deleted
-                    and cannot be recovered.
+                    {subtreeCounts ? (
+                      <>
+                        {videoCount(subtreeCounts.videos)} and{' '}
+                        {subtreeCounts.folders === 1
+                          ? '1 subfolder'
+                          : `${subtreeCounts.folders} subfolders`}
+                        , including their video files, will be permanently
+                        deleted and cannot be recovered.
+                      </>
+                    ) : (
+                      'This folder, everything in it and every subfolder will be permanently deleted and cannot be recovered.'
+                    )}
                   </div>
                   <label css={{ display: 'block', marginTop: rem(16) }}>
                     <span css={{ fontSize: rem(14), color: lead.rgb }}>
@@ -941,7 +901,8 @@ const Home: FC = () => {
             Delete {videoCount(selection.ids.length)}?
           </h2>
           <div css={dangerNoticeStyles}>
-            {videoCount(selection.ids.length)} and their video files will be
+            {videoCount(selection.ids.length)} and{' '}
+            {selection.ids.length === 1 ? 'its file' : 'their files'} will be
             permanently removed and cannot be recovered.
           </div>
           <div css={modalActionsStyles}>

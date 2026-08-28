@@ -214,6 +214,23 @@ describe('POST /api/projects/:id/assets', () => {
     extension: 'webm',
   };
 
+  it('refuses to start an upload while someone else is editing', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({ lockedBy: 'auth0|someone-else', lockedByName: 'Bo' }),
+    );
+    const create = mockAssetCreate();
+
+    const response = await api
+      .post('/api/projects/project-1/assets')
+      .set('Authorization', creatorToken)
+      .send(body);
+
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({ error: 'locked' });
+    expect(create).not.toHaveBeenCalled();
+  });
+
   it('creates the row and opens a multipart upload on the asset key', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
@@ -549,6 +566,24 @@ describe('DELETE /api/projects/:id/assets/:assetId', () => {
     api
       .delete('/api/projects/project-1/assets/asset-1')
       .set('Authorization', creatorToken);
+
+  // the reference check can only speak for the lease holder: another editor's
+  // placement of this source may still be inside their autosave debounce, and
+  // deleting the objects is not something their save can undo
+  it('refuses to remove a source while someone else is editing', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({ lockedBy: 'auth0|someone-else', lockedByName: 'Bo' }),
+    );
+    mockTimeline(timelineUsing('asset-9', 'clip'));
+    const deleteRow = mockAssetDelete();
+
+    const response = await remove();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({ error: 'locked' });
+    expect(deleteRow).not.toHaveBeenCalled();
+  });
 
   it('clears the asset prefix and the row', async () => {
     mockUser('creator', 'auth0|creator');

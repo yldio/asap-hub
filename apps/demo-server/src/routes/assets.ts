@@ -1,6 +1,6 @@
 import { parseTimeline } from '@asap-hub/demo-timeline';
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { assetEntity } from '../data/entities';
 import { getJobRunner } from '../jobs/runner';
@@ -73,6 +73,18 @@ export const registerAssetRoutes = (router: Router): void => {
   // an asset id is concatenated into an S3 key just like a video id is
   const assetId = requireVideoIdParam('assetId');
 
+  // Starting an upload, renaming a source and deleting one are edits, so they
+  // belong to the lease holder. Signing parts and completing an upload
+  // deliberately do not take it: those run for as long as the file takes, and
+  // are already scoped to an asset row this session created.
+  const withoutLease = (req: Request, res: Response, project: VideoItem) => {
+    if (holdsLease(project, currentUser(req).sub, Date.now())) {
+      return false;
+    }
+    res.status(409).json(lockedBody(project));
+    return true;
+  };
+
   // handing out a signed part URL, or completing the upload behind it, is write
   // access to the asset key, so it is only granted while the row is mid-upload;
   // otherwise any creator could overwrite a source an edit already depends on
@@ -106,6 +118,9 @@ export const registerAssetRoutes = (router: Router): void => {
     async (req, res) => {
       const project = await loadProject(req, res);
       if (!project) {
+        return;
+      }
+      if (withoutLease(req, res, project)) {
         return;
       }
 
@@ -248,10 +263,7 @@ export const registerAssetRoutes = (router: Router): void => {
         return;
       }
 
-      // renaming a source is an edit like any other, so it belongs to whoever
-      // holds the lease rather than to whichever creator asks first
-      if (!holdsLease(project, currentUser(req).sub, Date.now())) {
-        res.status(409).json(lockedBody(project));
+      if (withoutLease(req, res, project)) {
         return;
       }
 
@@ -284,6 +296,14 @@ export const registerAssetRoutes = (router: Router): void => {
   router.delete('/:id/assets/:assetId', videoId, assetId, async (req, res) => {
     const project = await loadProject(req, res);
     if (!project) {
+      return;
+    }
+
+    // the reference check reads the timeline the row points at now, so it can
+    // only speak for the holder of the lease: another editor's placement of
+    // this source may be sitting in their autosave debounce, and deleting the
+    // objects is not something a later save can undo
+    if (withoutLease(req, res, project)) {
       return;
     }
 

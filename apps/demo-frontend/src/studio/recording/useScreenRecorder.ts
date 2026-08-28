@@ -23,6 +23,9 @@ type RecorderFactory = (
 
 export type ScreenRecorderOptions = {
   withMicrophone: boolean;
+  // the browser's own Stop sharing button ends a take without anyone calling
+  // stop(), and the recording still has to be saved
+  onEnded?: (take: RecordedTake) => void;
   getDisplayMedia?: (
     constraints: DisplayMediaStreamOptions,
   ) => Promise<MediaStream>;
@@ -76,8 +79,14 @@ const session = (
     chunks,
     stream,
     mimeType,
+    // ending the share from the browser's own bar stops the recorder for us, and
+    // calling stop() on an inactive one throws
     finish: () =>
       new Promise<void>((resolve) => {
+        if (recorder.state === 'inactive') {
+          resolve();
+          return;
+        }
         recorder.addEventListener('stop', () => resolve(), { once: true });
         recorder.stop();
       }),
@@ -96,6 +105,7 @@ const systemNow = () => Date.now();
 // throttled.
 export const useScreenRecorder = ({
   withMicrophone,
+  onEnded,
   getDisplayMedia,
   getUserMedia,
   createRecorder,
@@ -108,6 +118,9 @@ export const useScreenRecorder = ({
 
   const screenRef = useRef<Session>();
   const micRef = useRef<Session>();
+  const stopRef = useRef<() => Promise<RecordedTake | undefined>>();
+  const onEndedRef = useRef(onEnded);
+  onEndedRef.current = onEnded;
   const startedAtRef = useRef(0);
   const tickRef = useRef<ReturnType<typeof setInterval>>();
 
@@ -160,29 +173,59 @@ export const useScreenRecorder = ({
       return;
     }
 
+    if (screenRef.current) {
+      return;
+    }
+
+    let stream: MediaStream;
     try {
-      const stream = await display(displayConstraints);
+      stream = await display(displayConstraints);
+    } catch (cause) {
+      setError(
+        cause instanceof Error && cause.name === 'NotAllowedError'
+          ? 'Screen sharing was declined.'
+          : 'Could not start the recording.',
+      );
+      setStatus('idle');
+      return;
+    }
+
+    try {
       const recorder = factory(stream, { mimeType: videoMimeType });
       screenRef.current = session(recorder, stream, videoMimeType);
 
-      // the picker's own Stop sharing button ends the take as well
+      // the picker's own Stop sharing button ends the take as well, and it has
+      // to finish the recording rather than only relabel it
       stream.getVideoTracks().forEach((track) => {
-        track.addEventListener('ended', () => setStatus('finishing'));
+        track.addEventListener('ended', () => {
+          setStatus('finishing');
+          void stopRef.current?.().then((take) => {
+            if (take && take.blob.size > 0) {
+              onEndedRef.current?.(take);
+            }
+          });
+        });
       });
 
+      // a microphone the creator refuses is not a reason to abandon the take,
+      // but it used to leave the screen shared with no way left to stop it
       if (withMicrophone && user) {
         const micMimeType = pickAudioMimeType(supported);
         if (micMimeType) {
-          const micStream = await user({
-            audio: {
-              echoCancellation: true,
-              noiseSuppression: true,
-              autoGainControl: true,
-            },
-          });
-          const micRecorder = factory(micStream, { mimeType: micMimeType });
-          micRef.current = session(micRecorder, micStream, micMimeType);
-          micRecorder.start(5000);
+          try {
+            const micStream = await user({
+              audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true,
+              },
+            });
+            const micRecorder = factory(micStream, { mimeType: micMimeType });
+            micRef.current = session(micRecorder, micStream, micMimeType);
+            micRecorder.start(5000);
+          } catch {
+            setError('The microphone was not available, recording without it.');
+          }
         }
       }
 
@@ -191,12 +234,12 @@ export const useScreenRecorder = ({
       recorder.start(5000);
       setStatus('recording');
       startTicking();
-    } catch (cause) {
-      setError(
-        cause instanceof Error && cause.name === 'NotAllowedError'
-          ? 'Screen sharing was declined.'
-          : 'Could not start the recording.',
-      );
+    } catch {
+      stopTracks(stream);
+      stopTracks(micRef.current?.stream);
+      screenRef.current = undefined;
+      micRef.current = undefined;
+      setError('Could not start the recording.');
       setStatus('idle');
     }
   }, [
@@ -261,6 +304,8 @@ export const useScreenRecorder = ({
         : {}),
     };
   }, [now, stopTicking]);
+
+  stopRef.current = stop;
 
   return { status, error, elapsedMs, start, pause, resume, stop };
 };

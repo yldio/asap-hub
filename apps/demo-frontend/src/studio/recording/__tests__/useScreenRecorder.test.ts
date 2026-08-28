@@ -38,7 +38,14 @@ const fakeRecorder = (): FakeRecorder => {
 };
 
 const fakeStream = () => {
-  const track = { stop: jest.fn(), addEventListener: jest.fn() };
+  const ended: (() => void)[] = [];
+  const track = {
+    stop: jest.fn(),
+    addEventListener: jest.fn((type: string, listener: () => void) => {
+      if (type === 'ended') ended.push(listener);
+    }),
+    end: () => ended.forEach((listener) => listener()),
+  };
   return {
     getTracks: () => [track],
     getVideoTracks: () => [track],
@@ -191,4 +198,61 @@ it('refuses to start when no format is supported', async () => {
 
   expect(options.getDisplayMedia).not.toHaveBeenCalled();
   expect(view.result.current.error).toMatch(/cannot record/);
+});
+
+describe('when the browser ends the share', () => {
+  // Chrome's own Stop sharing bar is how most takes end. It used to only set a
+  // label, so nothing was saved and the microphone stayed live.
+  it('finishes the take and hands it over', async () => {
+    const onEnded = jest.fn();
+    const { view, recorders, stream } = setup({ onEnded });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => recorders[0]?.emit(16));
+    await act(async () => {
+      stream.track.end();
+    });
+
+    await waitFor(() => expect(onEnded).toHaveBeenCalled());
+    expect(onEnded.mock.calls[0]?.[0]?.blob.size).toBe(16);
+    expect(stream.track.stop).toHaveBeenCalled();
+    await waitFor(() => expect(view.result.current.status).toBe('idle'));
+  });
+});
+
+describe('when the microphone is refused', () => {
+  it('records without it rather than leaving the screen shared', async () => {
+    const { view, stream } = setup({
+      withMicrophone: true,
+      getUserMedia: jest.fn().mockRejectedValue(new Error('NotAllowedError')),
+    });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(view.result.current.status).toBe('recording');
+    expect(stream.track.stop).not.toHaveBeenCalled();
+
+    const take = await act(async () => view.result.current.stop());
+    expect(take?.microphone).toBeUndefined();
+    expect(stream.track.stop).toHaveBeenCalled();
+  });
+});
+
+describe('starting twice', () => {
+  it('does not orphan the first stream', async () => {
+    const { view, options } = setup();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(options.getDisplayMedia).toHaveBeenCalledTimes(1);
+  });
 });

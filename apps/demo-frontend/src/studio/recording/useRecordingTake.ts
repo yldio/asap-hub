@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { AssetUpload } from '../editor/useAssetUpload';
 import { RecordedTake, useScreenRecorder } from './useScreenRecorder';
@@ -23,7 +23,15 @@ export const useRecordingTake = (
 ) => {
   const [withMicrophone, setWithMicrophone] = useState(true);
   const [saving, setSaving] = useState(false);
-  const recorder = useScreenRecorder({ withMicrophone });
+  const saveRef = useRef<(take: RecordedTake) => Promise<void>>();
+  const recorder = useScreenRecorder({
+    withMicrophone,
+    // the browser's own Stop sharing button finishes the take, and it still has
+    // to be uploaded and put on the timeline
+    onEnded: (take) => {
+      void saveRef.current?.(take);
+    },
+  });
 
   const save = useCallback(
     async (take: RecordedTake) => {
@@ -58,6 +66,8 @@ export const useRecordingTake = (
     },
     [onTake, upload],
   );
+
+  saveRef.current = save;
 
   const stop = useCallback(async () => {
     const take = await recorder.stop();

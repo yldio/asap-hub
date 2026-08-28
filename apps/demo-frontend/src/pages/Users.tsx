@@ -1,25 +1,20 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { FC, useMemo, useState } from 'react';
-import { Navigate } from 'react-router';
+import { Link } from 'react-router';
 
 import { useDeleteUser, useUpdateUser, useUsers } from '../api/hooks';
 import type { ManagedUser, Role } from '../api/types';
 import { useIsAdmin, useMeContext } from '../auth/MeContext';
-import {
-  Badge,
-  Button,
-  Card,
-  Headline,
-  Modal,
-  Spinner,
-} from '../ui/components';
+import { PageHeading } from '../layout/PageHeading';
+import { Badge, Button, Card, Modal, Spinner } from '../ui/components';
 import { TableFilters } from '../ui/TableFilters';
 import {
   charcoal,
   ember,
   lead,
   paper,
+  pine,
   rem,
   rose,
   silver,
@@ -63,6 +58,28 @@ const selectStyles = css({
 });
 
 const actionsStyles = css({ display: 'flex', gap: rem(8) });
+
+const deniedStyles = css({
+  padding: rem(40),
+  display: 'grid',
+  gap: rem(8),
+  justifyItems: 'start',
+});
+
+const pageHeaderStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: rem(12),
+});
+
+// the two pages answer one question between them, so each names the other
+const crossLinkStyles = css({
+  color: pine.rgb,
+  fontSize: rem(14),
+  fontWeight: 'bold',
+});
 
 const youStyles = css({ color: lead.rgb, fontSize: rem(14) });
 
@@ -154,7 +171,21 @@ const Users: FC = () => {
     });
   }, [items, debouncedQuery, roleFilter, statusFilter]);
 
-  if (!isAdmin) return <Navigate to="/" replace />;
+  // a silent redirect leaves you wondering whether the link was broken, so this
+  // says the same thing the invites page says
+  if (!isAdmin) {
+    return (
+      <Card overrideStyles={deniedStyles}>
+        <PageHeading size={3}>Only admins can manage users</PageHeading>
+        <p css={{ color: lead.rgb, margin: 0 }}>
+          Ask an admin to change someone&rsquo;s role or remove their account.
+        </p>
+        <Link to="/" css={{ color: pine.rgb }}>
+          Back to demos
+        </Link>
+      </Card>
+    );
+  }
 
   const confirmStatus = () => {
     if (!statusTarget) return;
@@ -176,7 +207,12 @@ const Users: FC = () => {
 
   return (
     <>
-      <Headline level={2}>Users</Headline>
+      <div css={pageHeaderStyles}>
+        <PageHeading>Users</PageHeading>
+        <Link to="/invites" css={crossLinkStyles}>
+          Invites
+        </Link>
+      </div>
       <div css={{ height: rem(16) }} />
 
       <Card>

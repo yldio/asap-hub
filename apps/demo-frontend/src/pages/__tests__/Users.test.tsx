@@ -27,12 +27,39 @@ const items: ManagedUser[] = [
 const rowFor = async (email: string) =>
   (await screen.findByText(email)).closest('tr') as HTMLElement;
 
-it('redirects a non-admin away from the page', async () => {
+// a silent redirect reads as a broken link; the invites page already explains
+it('explains the refusal to a non-admin instead of redirecting', async () => {
   const listUsers = jest.fn(() => Promise.resolve(items));
   renderApp(<Users />, { me: memberMe, api: { listUsers } });
 
-  await waitFor(() => expect(screen.queryByText('Users')).toBeNull());
+  expect(
+    await screen.findByRole('heading', {
+      name: 'Only admins can manage users',
+      level: 1,
+    }),
+  ).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Back to demos' })).toHaveAttribute(
+    'href',
+    '/',
+  );
+  expect(screen.queryByRole('table')).toBeNull();
   expect(listUsers).not.toHaveBeenCalled();
+});
+
+it('opens on one h1 and points at the invites', async () => {
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.resolve(items) },
+  });
+
+  expect(
+    await screen.findByRole('heading', { name: 'Users', level: 1 }),
+  ).toBeVisible();
+  expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+  expect(screen.getByRole('link', { name: 'Invites' })).toHaveAttribute(
+    'href',
+    '/invites',
+  );
 });
 
 it('locks the role select and hides the actions on your own row', async () => {

@@ -524,6 +524,30 @@ describe('DELETE /api/videos/:id', () => {
 
     expect(response.status).toBe(409);
   });
+
+  // the only lifecycle rule on media/ transitions to GLACIER_IR, so anything a
+  // running container writes after the prefix is emptied is billed for ever
+  it('refuses while a render is still writing into the media prefix', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      heldLease({
+        render: {
+          renderId: 'render-1',
+          state: 'rendering',
+          timelineVersion: 4,
+          requestedAt: new Date().toISOString(),
+        },
+      }),
+    );
+
+    const response = await api
+      .delete('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'render_active' });
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
 });
 
 describe('POST /api/videos/:id/unpublish', () => {

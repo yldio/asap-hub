@@ -12,7 +12,7 @@ import {
   updateVideoSchema,
 } from '../schemas';
 import { buildSignedCookies } from '../signed-cookies';
-import { deleteVideoCascade } from './cascade';
+import { deleteVideoCascade, RenderInProgress } from './cascade';
 import { folderExists, rootFolderId } from './folders';
 import {
   currentUser,
@@ -28,8 +28,10 @@ import {
   holdsLease,
   holderNameOf,
   failedItem,
+  isRenderActive,
   leaseDurationMs,
   lockedBody,
+  renderOf,
   serialiseVideo,
   videoKey,
   VideoItem,
@@ -144,6 +146,7 @@ export const videosRouter = (): Router => {
       const deleted: string[] = [];
       const missing: string[] = [];
       const locked: string[] = [];
+      const rendering: string[] = [];
 
       const deleteOne = async (id: string): Promise<void> => {
         const existing = await videoEntity.get({ id }).go();
@@ -161,6 +164,10 @@ export const videosRouter = (): Router => {
           await deleteVideoCascade(id);
           deleted.push(id);
         } catch (error) {
+          if (error instanceof RenderInProgress) {
+            rendering.push(id);
+            return;
+          }
           // eslint-disable-next-line no-console
           console.error(`failed to delete video ${id}`, error);
         }
@@ -170,7 +177,7 @@ export const videosRouter = (): Router => {
         Promise.resolve(),
       );
 
-      res.json({ deleted, missing, locked });
+      res.json({ deleted, missing, locked, rendering });
     },
   );
 
@@ -401,6 +408,13 @@ export const videosRouter = (): Router => {
     // other writes take; otherwise a second creator can wipe a demo mid-edit
     if (!holdsLease(data, currentUser(req).sub, Date.now())) {
       res.status(409).json(lockedBody(data));
+      return;
+    }
+
+    // a container still writing into media/{id}/ would strand its output the
+    // moment the prefix is emptied, and only a GLACIER_IR transition watches it
+    if (isRenderActive(renderOf(data as VideoItem))) {
+      res.status(409).json({ error: 'render_active' });
       return;
     }
 

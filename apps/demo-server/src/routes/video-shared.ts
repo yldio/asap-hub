@@ -20,6 +20,39 @@ export type VideoRow = EntityItem<typeof videoEntity>;
 
 export const videoKey = (id: string) => ({ PK: `VIDEO#${id}`, SK: 'META' });
 
+export type RenderState = {
+  renderId: string;
+  state: 'queued' | 'rendering' | 'done' | 'failed' | 'cancelled';
+  timelineVersion: number;
+  stage?: string;
+  progress?: number;
+  taskArn?: string;
+  requestedAt?: string;
+  finishedAt?: string;
+  error?: string;
+};
+
+const activeRenderStates = ['queued', 'rendering'];
+
+// a task killed without reporting leaves 'rendering' on the row for ever, and
+// nothing else ever clears it, so an active render past the longest one the
+// container could plausibly still be running counts as over
+export const maxRenderAgeMs = 4 * 60 * 60 * 1000;
+
+export const isRenderActive = (
+  render?: RenderState,
+  now: number = Date.now(),
+): boolean => {
+  if (!render || !activeRenderStates.includes(render.state)) {
+    return false;
+  }
+  const requestedAt = Date.parse(render.requestedAt ?? '');
+  return Number.isNaN(requestedAt) || now - requestedAt < maxRenderAgeMs;
+};
+
+export const renderOf = (item: VideoItem): RenderState | undefined =>
+  item.render as RenderState | undefined;
+
 export const serialiseVideo = (item: VideoItem) => ({
   id: item.id,
   title: item.title,

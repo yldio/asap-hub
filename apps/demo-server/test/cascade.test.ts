@@ -4,7 +4,8 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { assetEntity, videoEntity } from '../src/data/entities';
-import { deleteVideoCascade } from '../src/routes/cascade';
+import { deleteVideoCascade, RenderInProgress } from '../src/routes/cascade';
+import { maxRenderAgeMs } from '../src/routes/video-shared';
 import { abortMultipartUploadsUnder, deletePrefix } from '../src/storage';
 /* eslint-enable import/first */
 
@@ -28,9 +29,33 @@ const mockItemDelete = () =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .mockReturnValue({ go: async () => ({ data: {} }) } as any);
 
+const mockVideoGet = (
+  data: Record<string, unknown> | null = { id: 'video-1' },
+) =>
+  jest
+    .spyOn(videoEntity, 'get')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .mockReturnValue({ go: async () => ({ data }) } as any);
+
+const activeRender = (overrides: Record<string, unknown> = {}) => ({
+  id: 'video-1',
+  render: {
+    renderId: 'render-1',
+    state: 'rendering',
+    timelineVersion: 4,
+    requestedAt: new Date().toISOString(),
+    ...overrides,
+  },
+});
+
+const assetQueryGo = jest.fn();
+
 const mockAssets = (assetIds: string[] = []) => {
+  assetQueryGo
+    .mockReset()
+    .mockResolvedValue({ data: assetIds.map((assetId) => ({ assetId })) });
   jest.spyOn(assetEntity.query, 'byVideo').mockReturnValue({
-    go: async () => ({ data: assetIds.map((assetId) => ({ assetId })) }),
+    go: assetQueryGo,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any);
   return (
@@ -46,6 +71,7 @@ beforeEach(() => {
   mockDeletePrefix.mockReset().mockResolvedValue(undefined);
   mockAbortUploads.mockReset().mockResolvedValue(undefined);
   mockAssets();
+  mockVideoGet();
 });
 
 describe('deleteVideoCascade', () => {
@@ -59,6 +85,16 @@ describe('deleteVideoCascade', () => {
     expect(mockDeletePrefix).toHaveBeenCalledWith('media/video-1/');
     expect(mockDeletePrefix).toHaveBeenCalledWith('projects/video-1/');
     expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
+  });
+
+  // every other query pages; a single page leaves the rows of a big project behind
+  it('pages through every asset row of the project', async () => {
+    mockItemDelete();
+    mockAssets(['asset-1']);
+
+    await deleteVideoCascade('video-1');
+
+    expect(assetQueryGo).toHaveBeenCalledWith({ pages: 'all' });
   });
 
   it('deletes every asset row of the project', async () => {
@@ -141,6 +177,63 @@ describe('deleteVideoCascade', () => {
     await expect(deleteVideoCascade('video-1')).rejects.toThrow(
       'ThrottlingException',
     );
+  });
+});
+
+describe('deleteVideoCascade during a render', () => {
+  it('refuses while a container may still be writing into media/', async () => {
+    const remove = mockItemDelete();
+    mockVideoGet(activeRender());
+
+    await expect(deleteVideoCascade('video-1')).rejects.toBeInstanceOf(
+      RenderInProgress,
+    );
+
+    expect(mockDeletePrefix).not.toHaveBeenCalled();
+    expect(mockAbortUploads).not.toHaveBeenCalled();
+    expect(remove).not.toHaveBeenCalled();
+  });
+
+  it('refuses a queued render too, before the task has started writing', async () => {
+    mockItemDelete();
+    mockVideoGet(activeRender({ state: 'queued' }));
+
+    await expect(deleteVideoCascade('video-1')).rejects.toBeInstanceOf(
+      RenderInProgress,
+    );
+  });
+
+  it('deletes once the render has finished', async () => {
+    const remove = mockItemDelete();
+    mockVideoGet(activeRender({ state: 'done' }));
+
+    await deleteVideoCascade('video-1');
+
+    expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
+  });
+
+  // nothing ever clears a state a killed task left behind, so an ancient render
+  // must not make the video undeletable
+  it('deletes when an active render has aged out', async () => {
+    const remove = mockItemDelete();
+    mockVideoGet(
+      activeRender({
+        requestedAt: new Date(Date.now() - maxRenderAgeMs - 1000).toISOString(),
+      }),
+    );
+
+    await deleteVideoCascade('video-1');
+
+    expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
+  });
+
+  it('deletes a row that is already gone', async () => {
+    const remove = mockItemDelete();
+    mockVideoGet(null);
+
+    await deleteVideoCascade('video-1');
+
+    expect(remove).toHaveBeenCalledWith({ id: 'video-1' });
   });
 });
 

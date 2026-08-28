@@ -19,42 +19,18 @@ import { validate } from './validate';
 import {
   applyGuardedUpdate,
   guardedUpdate,
+  isRenderActive,
   loadProject,
+  renderOf,
   serialiseVideo,
   videoKey,
+  RenderState,
   VideoItem,
   VideoWriteConflict,
 } from './video-shared';
 
-export type RenderState = {
-  renderId: string;
-  state: 'queued' | 'rendering' | 'done' | 'failed' | 'cancelled';
-  timelineVersion: number;
-  stage?: string;
-  progress?: number;
-  taskArn?: string;
-  requestedAt?: string;
-  finishedAt?: string;
-  error?: string;
-};
-
-const activeStates = ['queued', 'rendering'];
-
-// a task killed without reporting leaves 'rendering' on the row for ever, and
-// nothing else ever clears it, so an active render past the longest one the
-// container could plausibly still be running counts as over
-export const maxRenderAgeMs = 4 * 60 * 60 * 1000;
-
-export const isRenderActive = (
-  render?: RenderState,
-  now: number = Date.now(),
-): boolean => {
-  if (!render || !activeStates.includes(render.state)) {
-    return false;
-  }
-  const requestedAt = Date.parse(render.requestedAt ?? '');
-  return Number.isNaN(requestedAt) || now - requestedAt < maxRenderAgeMs;
-};
+export type { RenderState } from './video-shared';
+export { isRenderActive, maxRenderAgeMs } from './video-shared';
 
 // A render writes to media/{id}/{mediaPath}/, so each one gets its own
 // directory and a re-render is not hidden behind the day-long CloudFront TTL on
@@ -65,9 +41,6 @@ export const isRenderActive = (
 
 export const renderTimelineKey = (videoId: string, renderId: string): string =>
   `${projectPrefix(videoId)}renders/${renderId}/timeline.json`;
-
-const renderOf = (project: VideoItem): RenderState | undefined =>
-  project.render as RenderState | undefined;
 
 // the render map this request built is stale the moment the container starts
 // writing progress into it, so only the one field this write knows about moves,

@@ -387,6 +387,7 @@ describe('POST /api/videos/bulk-delete', () => {
       deleted: [uuidA],
       missing: [uuidB],
       locked: [],
+      rendering: [],
     });
     expect(cascadeSpy).toHaveBeenCalledTimes(1);
     expect(cascadeSpy).toHaveBeenCalledWith(uuidA);
@@ -412,6 +413,7 @@ describe('POST /api/videos/bulk-delete', () => {
       deleted: [uuidC],
       missing: [],
       locked: [],
+      rendering: [],
     });
   });
 
@@ -434,6 +436,7 @@ describe('POST /api/videos/bulk-delete', () => {
       deleted: [uuidC],
       missing: [],
       locked: [uuidA],
+      rendering: [],
     });
     expect(cascadeSpy).not.toHaveBeenCalledWith(uuidA);
   });
@@ -455,6 +458,31 @@ describe('POST /api/videos/bulk-delete', () => {
       deleted: [uuidA, uuidC],
       missing: [],
       locked: [],
+      rendering: [],
+    });
+  });
+
+  // a video the cascade refuses because a container is still writing is not a
+  // failure the client should retry blindly, so it gets its own bucket
+  it('reports a video the cascade refused for an active render', async () => {
+    stubVideoGet((id) => ({ id }));
+    jest
+      .spyOn(cascade, 'deleteVideoCascade')
+      .mockImplementation(async (id: string) => {
+        if (id === uuidA) throw new cascade.RenderInProgress(id);
+      });
+
+    const response = await api
+      .post('/api/videos/bulk-delete')
+      .set('Authorization', creatorToken)
+      .send({ ids: [uuidA, uuidC] });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      deleted: [uuidC],
+      missing: [],
+      locked: [],
+      rendering: [uuidA],
     });
   });
 

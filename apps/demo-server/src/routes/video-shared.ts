@@ -59,6 +59,15 @@ export const holdsLease = (item: Lease, sub: string, now: number): boolean =>
   typeof item.lockExpiresAt === 'number' &&
   item.lockExpiresAt > now;
 
+// the bulk routes take no lease of their own, so what disqualifies a video is
+// an unexpired lease belonging to someone else; an unheld one needs no lease
+export const heldByAnother = (item: Lease, sub: string, now: number): boolean =>
+  typeof item.lockedBy === 'string' &&
+  item.lockedBy !== '' &&
+  item.lockedBy !== sub &&
+  typeof item.lockExpiresAt === 'number' &&
+  item.lockExpiresAt > now;
+
 // the pre-flight answer for a caller that does not hold the lease: the write
 // condition would reject it anyway, and this names the holder first
 export const lockedBody = (item: VideoItem): Record<string, unknown> => ({

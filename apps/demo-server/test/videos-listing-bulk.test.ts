@@ -251,11 +251,73 @@ describe('POST /api/videos/bulk-move', () => {
       .send({ ids: [uuidA, uuidB], folderId: 'f1' });
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ moved: [uuidA], missing: [uuidB] });
+    expect(response.body).toEqual({
+      moved: [uuidA],
+      missing: [uuidB],
+      locked: [],
+    });
     expect(set).toHaveBeenCalledWith(
       expect.objectContaining({ folderId: 'f1' }),
     );
     expect(add).toHaveBeenCalledWith({ version: 1 });
+  });
+
+  // a move is as disruptive to an open edit as a delete: the editor would find
+  // the demo it is holding somewhere else the moment it saved
+  it('skips a video another creator holds open, as bulk-delete does', async () => {
+    jest
+      .spyOn(folderEntity, 'get')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: { id: 'f1' } }) } as any);
+    stubVideoGet((id) =>
+      id === uuidA
+        ? { id, lockedBy: 'auth0|other', lockExpiresAt: Date.now() + 60000 }
+        : { id },
+    );
+    const patch = jest.spyOn(videoEntity, 'patch').mockReturnValue({
+      set: () => ({ add: () => ({ go: async () => ({ data: {} }) }) }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await api
+      .post('/api/videos/bulk-move')
+      .set('Authorization', creatorToken)
+      .send({ ids: [uuidA, uuidB], folderId: 'f1' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      moved: [uuidB],
+      missing: [],
+      locked: [uuidA],
+    });
+    expect(patch).toHaveBeenCalledTimes(1);
+  });
+
+  it('moves a video whose lease has expired or is its own', async () => {
+    jest
+      .spyOn(folderEntity, 'get')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: async () => ({ data: { id: 'f1' } }) } as any);
+    stubVideoGet((id) =>
+      id === uuidA
+        ? { id, lockedBy: 'auth0|other', lockExpiresAt: Date.now() - 1000 }
+        : { id, lockedBy: 'auth0|creator', lockExpiresAt: Date.now() + 60000 },
+    );
+    jest.spyOn(videoEntity, 'patch').mockReturnValue({
+      set: () => ({ add: () => ({ go: async () => ({ data: {} }) }) }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await api
+      .post('/api/videos/bulk-move')
+      .set('Authorization', creatorToken)
+      .send({ ids: [uuidA, uuidB], folderId: 'f1' });
+
+    expect(response.body).toEqual({
+      moved: [uuidA, uuidB],
+      missing: [],
+      locked: [],
+    });
   });
 
   it('404s an unknown destination folder before moving anything', async () => {

@@ -24,6 +24,7 @@ import { validate } from './validate';
 import { asyncRouter } from './async-router';
 import {
   applyGuardedUpdate,
+  heldByAnother,
   holdsLease,
   holderNameOf,
   failedItem,
@@ -102,11 +103,19 @@ export const videosRouter = (): Router => {
 
       const moved: string[] = [];
       const missing: string[] = [];
+      const locked: string[] = [];
 
       const moveOne = async (id: string): Promise<void> => {
         const existing = await videoEntity.get({ id }).go();
         if (!existing.data) {
           missing.push(id);
+          return;
+        }
+        // a move is as visible to an open edit as a delete is: the editor would
+        // find the demo it is holding somewhere else the moment it saved, so a
+        // video someone else holds open is skipped, exactly as bulk-delete does
+        if (heldByAnother(existing.data, currentUser(req).sub, Date.now())) {
+          locked.push(id);
           return;
         }
         // patch recomputes GSI1PK from folderId and leaves the rest of the item alone
@@ -122,7 +131,7 @@ export const videosRouter = (): Router => {
         Promise.resolve(),
       );
 
-      res.json({ moved, missing });
+      res.json({ moved, missing, locked });
     },
   );
 
@@ -144,13 +153,7 @@ export const videosRouter = (): Router => {
         }
         // a video someone else holds open is skipped rather than destroyed,
         // matching the single delete; an unheld video needs no lease
-        const holder = existing.data.lockedBy;
-        if (
-          holder &&
-          holder !== currentUser(req).sub &&
-          typeof existing.data.lockExpiresAt === 'number' &&
-          existing.data.lockExpiresAt > Date.now()
-        ) {
+        if (heldByAnother(existing.data, currentUser(req).sub, Date.now())) {
           locked.push(id);
           return;
         }

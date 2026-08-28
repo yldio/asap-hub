@@ -31,12 +31,26 @@ export const topLevelParentId = 'TOP';
 
 export type FolderCounts = Record<string, number>;
 
-export type BulkMoveResult = { moved: string[]; missing: string[] };
+export type BulkMoveResult = {
+  moved: string[];
+  missing: string[];
+  // held open by another creator, so the move was refused rather than applied
+  locked: string[];
+};
 
 export type BulkDeleteResult = {
   deleted: string[];
   missing: string[];
   locked: string[];
+  // an export was running, and deleting mid render strands the media
+  rendering: string[];
+};
+
+// a folder holding a video that could not go is kept, and so are its ancestors
+export type FolderDeleteResult = {
+  locked: string[];
+  rendering: string[];
+  kept: string[];
 };
 
 export type Chapter = {

@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 import { TestApiProvider } from '../../../api/ApiProvider';
 import { ApiError } from '../../../api/client';
+import type { SavedTimeline } from '../../../api/types';
 import type { Api } from '../../../api/client';
 import { AuthContext, AuthState } from '../../../auth/AuthProvider';
 import { authenticatedState, makeVideo } from '../../../test-utils';
@@ -394,10 +395,10 @@ describe('flushing twice over the same revision', () => {
   // "save and leave" flushes and then navigates, and the unmount that follows
   // flushed the identical document a second time
   it('puts the document up once', async () => {
-    let land = (value: unknown) => value;
+    let land = (value: SavedTimeline) => value as unknown;
     const saveTimeline = jest.fn(
       () =>
-        new Promise((resolve) => {
+        new Promise<SavedTimeline>((resolve) => {
           land = resolve;
         }),
     );

@@ -109,7 +109,7 @@ const loadSession = async (
 // merged rather than erased.
 const closeSession = async (
   sessionId: string,
-  startedAtEpochMs: number,
+  startedAtEpochMs: number | undefined,
   stoppedAtEpochMs: number,
 ): Promise<Partial<RecordingSessionItem> | undefined> => {
   try {
@@ -119,14 +119,19 @@ const closeSession = async (
         Key: recordingSessionKey(sessionId),
         UpdateExpression: [
           'SET #state = :closed, updatedAt = :timestamp,',
-          'startedAtEpochMs = :startedAt, stoppedAtEpochMs = :stoppedAt',
+          'stoppedAtEpochMs = :stoppedAt',
+          ...(startedAtEpochMs === undefined
+            ? []
+            : [', startedAtEpochMs = :startedAt']),
         ].join(' '),
         ConditionExpression: '#state = :open',
         ExpressionAttributeNames: { '#state': 'state' },
         ExpressionAttributeValues: {
           ':closed': 'closed',
           ':open': 'open',
-          ':startedAt': startedAtEpochMs,
+          ...(startedAtEpochMs === undefined
+            ? {}
+            : { ':startedAt': startedAtEpochMs }),
           ':stoppedAt': stoppedAtEpochMs,
           ':timestamp': new Date().toISOString(),
         },

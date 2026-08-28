@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../config';
 import type {
   BulkDeleteResult,
   BulkMoveResult,
+  FolderDeleteResult,
   CreatedAsset,
   CreatedUpload,
   Folder,
@@ -167,15 +168,14 @@ export const createApi = (getToken: GetToken) => ({
       body: { parentId },
     }),
 
-  deleteFolder: async (id: string): Promise<void> => {
-    await request<void>(
+  deleteFolder: async (id: string): Promise<FolderDeleteResult> =>
+    request<FolderDeleteResult>(
       `/folders/${encodeURIComponent(id)}`,
       await getToken(),
       {
         method: 'DELETE',
       },
-    );
-  },
+    ),
 
   bulkMoveVideos: async (
     ids: string[],
@@ -357,7 +357,7 @@ export const createApi = (getToken: GetToken) => ({
   finaliseCapture: async (
     id: string,
     sessionId: string,
-    window: { startedAtEpochMs: number; stoppedAtEpochMs: number },
+    window: { startedAtEpochMs?: number; stoppedAtEpochMs: number },
   ): Promise<{ eventsKey: string }> =>
     request<{ eventsKey: string }>(
       `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(

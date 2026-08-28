@@ -162,14 +162,17 @@ export const captureBatchSchema = z.object({
   events: z.array(z.record(z.unknown())).min(1).max(maxCaptureBatchEvents),
 });
 
+// the take's start is optional: a capture applied from the editor knows when it
+// stopped but not when the recording it belongs to began, and the events carry
+// their own origin
 export const finaliseRecordingSchema = z
   .object({
-    startedAtEpochMs: z.number().int().positive(),
+    startedAtEpochMs: z.number().int().positive().optional(),
     stoppedAtEpochMs: z.number().int().positive(),
   })
   .refine(
     ({ startedAtEpochMs, stoppedAtEpochMs }) =>
-      stoppedAtEpochMs >= startedAtEpochMs,
+      startedAtEpochMs === undefined || stoppedAtEpochMs >= startedAtEpochMs,
     {
       message: 'stoppedAtEpochMs must not precede startedAtEpochMs',
     },

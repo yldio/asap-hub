@@ -1013,3 +1013,49 @@ describe('headings', () => {
     expect(sidebar()).toHaveAccessibleName('Folders');
   });
 });
+
+describe('on a narrow screen', () => {
+  const realMatchMedia = window.matchMedia;
+
+  const stubNarrow = (matches: boolean) => {
+    window.matchMedia = jest.fn().mockReturnValue({
+      matches,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }) as unknown as typeof window.matchMedia;
+  };
+
+  afterEach(() => {
+    window.matchMedia = realMatchMedia;
+  });
+
+  // the tree used to cost most of a phone screen before the first demo
+  it('folds the folder tree behind a disclosure', async () => {
+    stubNarrow(true);
+    renderHome();
+
+    await screen.findByText('Unfiled walkthrough');
+    const toggle = within(sidebar()).getByRole('button', { name: 'Folders' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(within(sidebar()).queryByRole('link', { name: 'Home' })).toBeNull();
+
+    await userEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(
+      await within(sidebar()).findByRole('link', { name: 'Engineering' }),
+    ).toBeVisible();
+  });
+
+  it('leaves the tree open on a wide screen', async () => {
+    stubNarrow(false);
+    renderHome();
+
+    expect(
+      await within(sidebar()).findByRole('link', { name: 'Engineering' }),
+    ).toBeVisible();
+    expect(
+      within(sidebar()).queryByRole('button', { name: 'Folders' }),
+    ).toBeNull();
+  });
+});

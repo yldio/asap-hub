@@ -20,6 +20,7 @@ import {
 } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
+import { CaptureApply, captureTarget } from '../recording/cursorPlacement';
 import {
   ProjectEditor as Editor,
   SaveState,
@@ -135,9 +136,12 @@ type Props = {
   readonly uploading: boolean;
   readonly uploadProgress?: number;
   // a recorder needs to put what it captured on the timeline where the playhead
-  // is, and the playhead lives here, so it is handed the same drop-in the
+  // is, and the playhead lives here, so it is handed the same drop-ins the
   // media list uses rather than reaching for the reducer itself
-  readonly recorder?: (addAsset: (asset: ProjectAsset) => void) => ReactNode;
+  readonly recorder?: (
+    addAsset: (asset: ProjectAsset) => void,
+    applyCursorCapture: (apply: CaptureApply) => void,
+  ) => ReactNode;
 };
 
 const ProjectEditor: FC<Props> = ({
@@ -380,6 +384,25 @@ const ProjectEditor: FC<Props> = ({
     select('effect', effectId);
   }, [current, dispatch, playheadMs, select]);
 
+  // the cursor capture lands on the clip under the playhead, the same place a
+  // hand placed click does; only the reading of the raw stream lives elsewhere
+  const applyCursorCapture = useCallback(
+    (apply: CaptureApply) => {
+      const target = captureTarget(timeline, current, Date.now());
+      if (!target) return;
+      void apply(target.request).then((applied) => {
+        if (!applied) return;
+        dispatch({
+          type: 'applyCapture',
+          clipId: target.clipId,
+          path: applied.path,
+          effects: applied.effects,
+        });
+      });
+    },
+    [current, dispatch, timeline],
+  );
+
   const addChapter = useCallback(() => {
     if (!current) return;
     dispatch({
@@ -550,8 +573,8 @@ const ProjectEditor: FC<Props> = ({
     !chapters.some((chapter) => chapter.startMs === Math.round(playheadMs));
 
   const recorderPanels = useMemo(
-    () => recorder?.(addAsset),
-    [addAsset, recorder],
+    () => recorder?.(addAsset, applyCursorCapture),
+    [addAsset, applyCursorCapture, recorder],
   );
 
   useEditorShortcuts({

@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useFolders, useVideo } from '../api/hooks';
-import { realFolders } from '../library/tree';
+import { pathOf, realFolders } from '../library/tree';
 import { lead, rem, tin } from '../ui/theme';
 
 const navStyles = css({
@@ -41,18 +41,19 @@ const useCrumbs = (): Crumb[] => {
     : isAllVideos
       ? undefined
       : searchParams.get('folder') ?? undefined;
-  // ROOT has no crumb of its own, "Demos" already is the top level
-  const folder = realFolders(folders.data ?? []).find(
-    ({ id: candidate }) => candidate === folderId,
-  );
+  // ROOT has no crumb of its own, "Demos" already is the top level; every
+  // ancestor of the folder gets one so the trail is the whole path
+  const folderPath = folderId
+    ? pathOf(folderId, realFolders(folders.data ?? []))
+    : [];
 
   const crumbs: Crumb[] = [{ label: 'Demos', to: '/' }];
   if (isAllVideos) {
     crumbs.push({ label: 'All videos', to: '/?view=all' });
   }
-  if (folder) {
+  folderPath.forEach((folder) => {
     crumbs.push({ label: folder.name, to: `/?folder=${folder.id}` });
-  }
+  });
   if (isWatch && video.data) {
     crumbs.push({ label: video.data.title });
   }
@@ -75,7 +76,7 @@ const Breadcrumb: FC = () => {
   return (
     <nav css={navStyles} aria-label="Breadcrumb">
       {crumbs.map((crumb, index) => (
-        <span key={crumb.label} css={{ display: 'contents' }}>
+        <span key={crumb.to ?? crumb.label} css={{ display: 'contents' }}>
           {index > 0 && <span css={separatorStyles}>/</span>}
           {crumb.to && index < crumbs.length - 1 ? (
             <Link to={crumb.to} css={linkStyles}>

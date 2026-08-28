@@ -7,6 +7,8 @@ import Breadcrumb from '../Breadcrumb';
 const folders: Folder[] = [
   { id: 'ROOT', name: 'Root' },
   { id: 'f-eng', name: 'Engineering' },
+  { id: 'f-sprint', name: 'Sprints', parentId: 'f-eng' },
+  { id: 'f-deep', name: 'Deep', parentId: 'f-sprint' },
 ];
 
 const video = makeVideo({ title: 'Sprint 42 demo', folderId: 'f-eng' });
@@ -45,6 +47,25 @@ it('names the folder in the url after Demos', async () => {
     'aria-current',
     'page',
   );
+});
+
+it('names every ancestor of a nested folder', async () => {
+  renderCrumbs('/?folder=f-deep');
+
+  await screen.findByRole('navigation', { name: 'Breadcrumb' });
+  expect(crumbLabels()).toEqual(['Demos', '/Engineering', '/Sprints', '/Deep']);
+  expect(screen.getByRole('link', { name: 'Sprints' })).toHaveAttribute(
+    'href',
+    '/?folder=f-sprint',
+  );
+  expect(screen.getByText('Deep')).toHaveAttribute('aria-current', 'page');
+});
+
+it('walks the folder path on a watch page too', async () => {
+  renderCrumbs('/videos/video-1', '/videos/:id');
+
+  await screen.findByText('Sprint 42 demo');
+  expect(crumbLabels()).toEqual(['Demos', '/Engineering', '/Sprint 42 demo']);
 });
 
 it('skips the synthetic ROOT folder', async () => {

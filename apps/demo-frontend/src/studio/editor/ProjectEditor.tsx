@@ -3,12 +3,13 @@ import { css } from '@emotion/react';
 import {
   chooseCanvas,
   clipLocalMs,
+  Point,
   resolveChapters,
   layoutClips,
   placementAt,
   timelineDurationMs,
 } from '@asap-hub/demo-timeline';
-import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
+import { FC, ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
 import {
@@ -18,15 +19,18 @@ import {
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
 import ChapterList from './ChapterList';
+import { Span } from './dragging';
 import { editorTheme } from './editorTheme';
 import InspectorPanel from './InspectorPanel';
 import PreviewStage from './PreviewStage';
 import { hasResolvedSelection, resolveSelection, Selection } from './selection';
-import Timeline from './Timeline';
+import StageControls from './StageControls';
+import Timeline, { SpanKind } from './Timeline';
 import TransportBar from './TransportBar';
 import { useAssetDurations } from './useAssetDurations';
 import { useEditorShortcuts } from './useEditorShortcuts';
 import { useFittedBox } from './useFittedBox';
+import { useFullscreen } from './useFullscreen';
 import { usePlayback } from './usePlayback';
 import { useTimelineZoom } from './useTimelineZoom';
 
@@ -69,13 +73,21 @@ const centreStyles = css({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 12,
+  gap: 4,
   padding: 16,
   minWidth: 0,
   minHeight: 0,
   overflow: 'hidden',
+  backgroundColor: editorTheme.surface,
+});
+
+const stageAreaStyles = css({
+  flex: 1,
+  minHeight: 0,
+  minWidth: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 });
 
 const saveLabels: Record<SaveState, string> = {
@@ -96,10 +108,14 @@ type Props = {
   readonly readOnly: boolean;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
   readonly onImport: (file: File) => void;
+  readonly onImportAudio: (file: File) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly uploading: boolean;
   readonly uploadProgress?: number;
-  readonly recorder?: ReactNode;
+  // a recorder needs to put what it captured on the timeline where the playhead
+  // is, and the playhead lives here, so it is handed the same drop-in the
+  // media list uses rather than reaching for the reducer itself
+  readonly recorder?: (addAsset: (asset: ProjectAsset) => void) => ReactNode;
 };
 
 const ProjectEditor: FC<Props> = ({
@@ -108,6 +124,7 @@ const ProjectEditor: FC<Props> = ({
   readOnly,
   assetUrl,
   onImport,
+  onImportAudio,
   onDeleteAsset,
   uploading,
   uploadProgress,
@@ -115,6 +132,7 @@ const ProjectEditor: FC<Props> = ({
 }) => {
   const { timeline, dispatch } = editor;
   const [selection, setSelection] = useState<Selection>();
+  const [volume, setVolume] = useState(1);
   const select = useCallback(
     (kind: Selection['kind'], id: string) => setSelection({ kind, id }),
     [],
@@ -138,6 +156,8 @@ const ProjectEditor: FC<Props> = ({
   });
   const zoom = useTimelineZoom(durationMs);
   const stage = useFittedBox(timeline.canvas.width / timeline.canvas.height);
+  const theatreRef = useRef<HTMLDivElement>(null);
+  const fullscreen = useFullscreen(theatreRef);
 
   const current = placementAt(placements, playheadMs);
   const selected = resolveSelection(selection, timeline, placements, current);
@@ -150,15 +170,43 @@ const ProjectEditor: FC<Props> = ({
   const probedDurations = useAssetDurations(assets, assetUrl);
 
   // the server value wins once the ingest has probed the file; until then the
-  // browser's own reading keeps the trim bounds honest
+  // browser's own reading stands in, and a recording that carries no duration
+  // at all leaves this undefined rather than pretending the clip is the asset
   const assetDurationOf = useCallback(
-    (assetId: string, fallbackMs: number): number =>
-      assetsById[assetId]?.durationMs ?? probedDurations[assetId] ?? fallbackMs,
+    (assetId: string): number | undefined =>
+      assetsById[assetId]?.durationMs ?? probedDurations[assetId],
     [assetsById, probedDurations],
+  );
+
+  const addNarration = useCallback(
+    (asset: ProjectAsset) => {
+      const id = createId('narration');
+      dispatch({
+        type: 'addNarration',
+        narration: {
+          id,
+          assetId: asset.assetId,
+          startMs: Math.round(playheadMs),
+          inMs: 0,
+          outMs: Math.round(
+            asset.durationMs ??
+              probedDurations[asset.assetId] ??
+              unknownAssetMs,
+          ),
+          volume: 1,
+        },
+      });
+      select('narration', id);
+    },
+    [dispatch, playheadMs, probedDurations, select],
   );
 
   const addAsset = useCallback(
     (asset: ProjectAsset) => {
+      if (asset.kind === 'audio') {
+        addNarration(asset);
+        return;
+      }
       dispatch({
         type: 'addClip',
         assetId: asset.assetId,
@@ -180,7 +228,7 @@ const ProjectEditor: FC<Props> = ({
         ]),
       });
     },
-    [assetsById, dispatch, probedDurations, timeline.clips],
+    [addNarration, assetsById, dispatch, probedDurations, timeline.clips],
   );
 
   const splitAtPlayhead = useCallback(() => {
@@ -213,6 +261,11 @@ const ProjectEditor: FC<Props> = ({
       dispatch({ type: 'removeZoom', zoomId: selected.zoom.id });
     } else if (selected.banner) {
       dispatch({ type: 'removeBanner', bannerId: selected.banner.id });
+    } else if (selected.narration) {
+      dispatch({
+        type: 'removeNarration',
+        narrationId: selected.narration.id,
+      });
     } else if (selected.clip) {
       dispatch({ type: 'removeClip', clipId: selected.clip.clip.id });
     } else {
@@ -314,10 +367,73 @@ const ProjectEditor: FC<Props> = ({
         type: 'trimClip',
         clipId,
         ...change,
-        assetDurationMs: assetDurationOf(clip.assetId, clip.outMs),
+        assetDurationMs: assetDurationOf(clip.assetId),
       });
     },
     [assetDurationOf, dispatch, timeline.clips],
+  );
+
+  // The timeline speaks programme time for everything it drags. Only the zoom
+  // lane is anchored to a clip, so this is the one place that converts.
+  const changeSpan = useCallback(
+    (kind: SpanKind, id: string, span: Span) => {
+      const startMs = Math.round(span.startMs);
+      const spanDurationMs = Math.round(span.durationMs);
+
+      if (kind === 'banner') {
+        dispatch({
+          type: 'updateBanner',
+          bannerId: id,
+          change: { startMs, durationMs: spanDurationMs },
+        });
+        return;
+      }
+
+      if (kind === 'title') {
+        dispatch({
+          type: 'updateTitleCard',
+          clipId: id,
+          durationMs: spanDurationMs,
+        });
+        return;
+      }
+
+      if (kind === 'narration') {
+        const take = timeline.narration.find((item) => item.id === id);
+        if (!take) return;
+        // moving the block keeps the audio it plays; dragging its start also
+        // moves the point the recording is played from
+        const inMs = Math.max(
+          0,
+          Math.round(take.inMs + startMs - take.startMs),
+        );
+        dispatch({
+          type: 'updateNarration',
+          narrationId: id,
+          change: { startMs, inMs, outMs: inMs + spanDurationMs },
+        });
+        return;
+      }
+
+      const target = timeline.zooms.find((item) => item.id === id);
+      const placement = placements.find(
+        ({ clip }) => clip.id === target?.clipId,
+      );
+      if (!target || !placement) return;
+      dispatch({
+        type: 'updateZoom',
+        zoomId: id,
+        change: {
+          startMs: Math.max(0, startMs - placement.startMs),
+          // the ramps keep their shape; the hold is what a drag lengthens
+          holdMs: Math.max(
+            0,
+            spanDurationMs - target.rampInMs - target.rampOutMs,
+          ),
+        },
+      });
+    },
+    [dispatch, placements, timeline.narration, timeline.zooms],
   );
 
   const toggleMuteClip = useCallback(
@@ -325,30 +441,29 @@ const ProjectEditor: FC<Props> = ({
     [dispatch],
   );
 
-  const moveBanner = useCallback(
-    (bannerId: string, change: { startMs?: number; durationMs?: number }) =>
-      dispatch({ type: 'updateBanner', bannerId, change }),
-    [dispatch],
+  const moveFocus = useCallback(
+    (focus: Point) => {
+      if (!selected.zoom) return;
+      dispatch({
+        type: 'updateZoom',
+        zoomId: selected.zoom.id,
+        change: { focus },
+      });
+    },
+    [dispatch, selected.zoom],
   );
 
-  const pickPoint = useCallback(
-    (point: { x: number; y: number }) => {
-      if (selected.zoom) {
-        dispatch({
-          type: 'updateZoom',
-          zoomId: selected.zoom.id,
-          change: { focus: point },
-        });
-      } else if (selected.effect && current) {
-        dispatch({
-          type: 'updateCursorEffect',
-          clipId: current.clip.id,
-          effectId: selected.effect.id,
-          change: { point },
-        });
-      }
+  const movePin = useCallback(
+    (point: Point) => {
+      if (!selected.effect || !current) return;
+      dispatch({
+        type: 'updateCursorEffect',
+        clipId: current.clip.id,
+        effectId: selected.effect.id,
+        change: { point },
+      });
     },
-    [current, dispatch, selected.effect, selected.zoom],
+    [current, dispatch, selected.effect],
   );
 
   useEditorShortcuts({
@@ -364,8 +479,6 @@ const ProjectEditor: FC<Props> = ({
   return (
     <div css={shellStyles} ref={zoom.shellRef}>
       <TransportBar
-        playing={playing}
-        canPlay={durationMs > 0}
         canUndo={!readOnly && editor.canUndo}
         canRedo={!readOnly && editor.canRedo}
         saveLabel={saveLabels[editor.saveState]}
@@ -374,16 +487,13 @@ const ProjectEditor: FC<Props> = ({
         onFpsChange={(fps) =>
           dispatch({ type: 'setCanvas', canvas: { ...timeline.canvas, fps } })
         }
-        onToggle={toggle}
-        onSkipStart={() => seek(0)}
-        onSkipEnd={() => seek(durationMs)}
         onUndo={editor.undo}
         onRedo={editor.redo}
       />
 
       <div css={bodyStyles}>
         <AssetPanel
-          recorder={recorder}
+          recorder={recorder?.(addAsset)}
           chapters={
             <ChapterList
               resolved={resolveChapters(timeline, { includeUntitled: true })}
@@ -403,22 +513,52 @@ const ProjectEditor: FC<Props> = ({
           progress={uploadProgress}
           readOnly={readOnly}
           onImport={onImport}
+          onImportAudio={onImportAudio}
           onAdd={addAsset}
           onDelete={onDeleteAsset}
         />
 
-        <div css={centreStyles} ref={stage.ref}>
-          <PreviewStage
-            box={stage.box}
-            placement={current}
-            banners={timeline.banners}
-            zooms={timeline.zooms}
-            cursorEffects={cursorEffects}
-            playheadMs={playheadMs}
+        <div css={centreStyles} ref={theatreRef}>
+          <div css={stageAreaStyles} ref={stage.ref}>
+            <PreviewStage
+              box={stage.box}
+              placement={current}
+              banners={timeline.banners}
+              zooms={timeline.zooms}
+              cursorEffects={cursorEffects}
+              playheadMs={playheadMs}
+              playing={playing}
+              volume={volume}
+              assets={assetsById}
+              assetUrl={assetUrl}
+              focus={
+                selected.zoom && !readOnly
+                  ? {
+                      point: selected.zoom.focus,
+                      scale: selected.zoom.scale,
+                      onChange: moveFocus,
+                    }
+                  : undefined
+              }
+              pin={
+                selected.effect && !readOnly
+                  ? { point: selected.effect.point, onChange: movePin }
+                  : undefined
+              }
+            />
+          </div>
+          <StageControls
             playing={playing}
-            assets={assetsById}
-            assetUrl={assetUrl}
-            onPickPoint={readOnly ? undefined : pickPoint}
+            canPlay={durationMs > 0}
+            playheadMs={playheadMs}
+            durationMs={durationMs}
+            volume={volume}
+            fullscreen={fullscreen.supported ? fullscreen : undefined}
+            onToggle={toggle}
+            onSeek={seek}
+            onSkipStart={() => seek(0)}
+            onSkipEnd={() => seek(durationMs)}
+            onVolume={setVolume}
           />
         </div>
 
@@ -443,8 +583,6 @@ const ProjectEditor: FC<Props> = ({
         onAddCursorClick={addCursorClick}
         selectionMuted={selectedSource?.volume === 0}
         readOnly={readOnly}
-        playheadMs={playheadMs}
-        durationMs={durationMs}
         onSplit={splitAtPlayhead}
         onDuplicate={duplicateSelected}
         onToggleMute={toggleMuteSelected}
@@ -468,7 +606,7 @@ const ProjectEditor: FC<Props> = ({
         assets={assetsById}
         onSelect={select}
         onSeek={seek}
-        onMoveBanner={moveBanner}
+        onSpanChange={changeSpan}
         onMove={moveClip}
         onTrim={trimClip}
         onToggleMute={toggleMuteClip}

@@ -3,14 +3,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
-import {
-  PauseIcon,
-  PlayIcon,
-  RedoIcon,
-  SkipEndIcon,
-  SkipStartIcon,
-  UndoIcon,
-} from './icons';
+import { RedoIcon, UndoIcon } from './icons';
 
 const barStyles = css({
   display: 'flex',
@@ -21,13 +14,6 @@ const barStyles = css({
   borderBottom: `1px solid ${editorTheme.line}`,
   color: editorTheme.text,
   flexWrap: 'wrap',
-});
-
-const centreStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 6,
-  margin: '0 auto',
 });
 
 const chipStyles = css({
@@ -53,36 +39,32 @@ const selectStyles = css({
   fontSize: 13,
 });
 
-const saveStyles = css({ fontSize: 12, color: editorTheme.muted });
+const saveStyles = css({
+  fontSize: 12,
+  color: editorTheme.muted,
+  marginLeft: 'auto',
+});
 
 type Props = {
-  readonly playing: boolean;
-  readonly canPlay: boolean;
   readonly canUndo: boolean;
   readonly canRedo: boolean;
   readonly saveLabel: string;
   readonly canvasHeight: number;
   readonly canvasFps: 24 | 30 | 60;
   readonly onFpsChange: (fps: 24 | 30 | 60) => void;
-  readonly onToggle: () => void;
-  readonly onSkipStart: () => void;
-  readonly onSkipEnd: () => void;
   readonly onUndo: () => void;
   readonly onRedo: () => void;
 };
 
+// the document bar: what the demo will be rendered as, and the history of the
+// edits. Playing it back belongs under the picture, not up here.
 const TransportBar: FC<Props> = ({
-  playing,
-  canPlay,
   canUndo,
   canRedo,
   saveLabel,
   canvasHeight,
   canvasFps,
   onFpsChange,
-  onToggle,
-  onSkipStart,
-  onSkipEnd,
   onUndo,
   onRedo,
 }) => (
@@ -116,26 +98,6 @@ const TransportBar: FC<Props> = ({
       disabled={!canRedo}
       onClick={onRedo}
     />
-
-    <div css={centreStyles}>
-      <EditorButton
-        aria-label="Jump to the start"
-        icon={<SkipStartIcon size={16} />}
-        onClick={onSkipStart}
-      />
-      <EditorButton
-        aria-label={playing ? 'Pause' : 'Play'}
-        icon={playing ? <PauseIcon size={16} /> : <PlayIcon size={16} />}
-        primary
-        disabled={!canPlay}
-        onClick={onToggle}
-      />
-      <EditorButton
-        aria-label="Jump to the end"
-        icon={<SkipEndIcon size={16} />}
-        onClick={onSkipEnd}
-      />
-    </div>
 
     <span css={saveStyles}>{saveLabel}</span>
   </div>

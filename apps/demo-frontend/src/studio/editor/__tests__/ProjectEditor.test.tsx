@@ -197,6 +197,32 @@ describe('adding a source to the timeline', () => {
   });
 });
 
+describe('the side panels', () => {
+  // at 1366x768 most of both panels is below the fold, and an overlay scrollbar
+  // gave no sign of it, so they are reachable from the keyboard as well
+  it.each(['Media', 'Clip'])('lets the keyboard scroll %s', (name) => {
+    renderEditor();
+
+    expect(screen.getByRole('complementary', { name })).toHaveAttribute(
+      'tabindex',
+      '0',
+    );
+  });
+
+  it('keeps the controls at the far end of the inspector reachable', async () => {
+    renderLive();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    );
+
+    const inspector = screen.getByRole('complementary', { name: 'Clip' });
+    expect(inspector).toHaveTextContent('Volume');
+    expect(inspector).toHaveTextContent('Move earlier');
+    expect(inspector).toHaveTextContent('Remove clip');
+  });
+});
+
 describe('the action bar', () => {
   // Split acts on the clip under the playhead, so it was disabled while the S
   // key it duplicates went on working

@@ -25,7 +25,7 @@ const BannerInspector: FC<Props> = ({
   onChange,
   onRemove,
 }) => (
-  <aside css={panelStyles} aria-label="Banner">
+  <aside css={panelStyles} aria-label="Banner" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Banner</h2>
 
     <TextField

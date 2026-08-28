@@ -39,7 +39,7 @@ const TitleCardInspector: FC<Props> = ({
   onChange,
   onRemove,
 }) => (
-  <aside css={panelStyles} aria-label="Title card">
+  <aside css={panelStyles} aria-label="Title card" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Title card</h2>
 
     <div css={readingStyles}>

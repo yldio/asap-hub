@@ -29,7 +29,7 @@ const NarrationInspector: FC<Props> = ({
   onChange,
   onRemove,
 }) => (
-  <aside css={panelStyles} aria-label="Voice over">
+  <aside css={panelStyles} aria-label="Voice over" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Voice over</h2>
 
     <div css={readingStyles}>

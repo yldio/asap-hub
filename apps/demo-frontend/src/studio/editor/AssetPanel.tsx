@@ -5,10 +5,11 @@ import { FC, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
+import { scrollingStyles } from './fields';
 import { formatDuration } from './geometry';
 import { AudioIcon, PlusIcon, TrashIcon } from './icons';
 
-const panelStyles = css({
+const panelStyles = css(scrollingStyles, {
   gridColumn: 1,
   gridRow: 1,
   display: 'flex',
@@ -19,7 +20,6 @@ const panelStyles = css({
   backgroundColor: editorTheme.panel,
   width: 280,
   flexShrink: 0,
-  overflowY: 'auto',
   '@media (max-width: 1100px)': {
     width: 'auto',
     borderRight: 0,
@@ -184,7 +184,7 @@ const AssetPanel: FC<Props> = ({
     };
 
   return (
-    <aside css={panelStyles} aria-label="Media">
+    <aside css={panelStyles} aria-label="Media" tabIndex={0}>
       <h2 css={headingStyles}>Media</h2>
       {error ? (
         <p css={errorStyles} role="alert">

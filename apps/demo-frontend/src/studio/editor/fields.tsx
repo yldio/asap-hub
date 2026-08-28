@@ -31,7 +31,24 @@ const controlStyles = css({
 
 const invalidStyles = css({ borderColor: editorTheme.record });
 
-export const panelStyles = css({
+// Both side panels are taller than a laptop screen. An overlay scrollbar draws
+// nothing until the pointer is already moving, so the controls below the fold
+// looked as though they did not exist: the track and thumb stay drawn instead.
+export const scrollingStyles = css({
+  overflowY: 'auto',
+  overscrollBehavior: 'contain',
+  scrollbarWidth: 'thin',
+  scrollbarColor: `${editorTheme.muted} ${editorTheme.surface}`,
+  '::-webkit-scrollbar': { width: 10 },
+  '::-webkit-scrollbar-track': { backgroundColor: editorTheme.surface },
+  '::-webkit-scrollbar-thumb': {
+    backgroundColor: editorTheme.muted,
+    borderRadius: 5,
+    border: `2px solid ${editorTheme.surface}`,
+  },
+});
+
+export const panelStyles = css(scrollingStyles, {
   gridColumn: 3,
   gridRow: 1,
   display: 'flex',
@@ -42,7 +59,6 @@ export const panelStyles = css({
   backgroundColor: editorTheme.panel,
   width: 260,
   flexShrink: 0,
-  overflowY: 'auto',
   '@media (max-width: 1100px)': { width: 'auto', borderLeft: 0, gridColumn: 1 },
 });
 

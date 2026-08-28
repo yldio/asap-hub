@@ -22,7 +22,7 @@ type Props = {
 };
 
 const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
-  <aside css={panelStyles} aria-label="Zoom">
+  <aside css={panelStyles} aria-label="Zoom" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Zoom</h2>
 
     <div css={readingStyles}>

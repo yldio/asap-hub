@@ -30,7 +30,7 @@ const CursorEffectInspector: FC<Props> = ({
   onChange,
   onRemove,
 }) => (
-  <aside css={panelStyles} aria-label="Cursor effect">
+  <aside css={panelStyles} aria-label="Cursor effect" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Cursor effect</h2>
 
     <SelectField

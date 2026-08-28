@@ -63,7 +63,7 @@ const ClipInspector: FC<Props> = ({
 }) => {
   if (!placement) {
     return (
-      <aside css={panelStyles} aria-label="Clip">
+      <aside css={panelStyles} aria-label="Clip" tabIndex={0}>
         <h2 css={panelHeadingStyles}>Clip</h2>
         <p css={mutedStyles}>Select a clip on the timeline to edit it.</p>
       </aside>
@@ -74,7 +74,7 @@ const ClipInspector: FC<Props> = ({
   const source = clip.kind === 'source' ? clip : undefined;
 
   return (
-    <aside css={panelStyles} aria-label="Clip">
+    <aside css={panelStyles} aria-label="Clip" tabIndex={0}>
       <h2 css={panelHeadingStyles}>Clip</h2>
       <span css={nameStyles}>{clipName(clip, asset)}</span>
 

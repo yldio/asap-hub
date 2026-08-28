@@ -4,6 +4,7 @@ import {
   Banner,
   ClipPlacement,
   CursorLayer,
+  limits,
   NarrationClip,
   Zoom,
 } from '@asap-hub/demo-timeline';
@@ -194,6 +195,9 @@ type StartSpanDrag = (
   span: Span,
   dragKind: DragKind,
   event: ReactPointerEvent<HTMLElement>,
+  // a zoom cannot be shorter than its own ramps; everything else stops at the
+  // shortest block the timeline allows
+  minMs?: number,
 ) => void;
 
 type SelectHandler = (kind: Selection['kind'], id: string) => void;
@@ -387,7 +391,14 @@ const EffectTrack = memo<{
               readOnly={readOnly}
               onSelect={() => onSelect('zoom', zoom.id)}
               onDragStart={(kind, event) =>
-                onDragStart('zoom', zoom.id, span, kind, event)
+                onDragStart(
+                  'zoom',
+                  zoom.id,
+                  span,
+                  kind,
+                  event,
+                  Math.max(limits.minClipMs, zoom.rampInMs + zoom.rampOutMs),
+                )
               }
             />
           );
@@ -475,7 +486,12 @@ const NarrationTrack = memo<{
 type Drag =
   | { target: 'reorder'; clipId: string; index: number }
   | ({ target: 'clip'; clipId: string } & TrimDrag)
-  | ({ target: 'span'; spanKind: SpanKind; id: string } & SpanDrag);
+  | ({
+      target: 'span';
+      spanKind: SpanKind;
+      id: string;
+      minMs?: number;
+    } & SpanDrag);
 
 type Props = {
   readonly placements: ClipPlacement[];
@@ -574,7 +590,7 @@ const Timeline: FC<Props> = ({
         onSpanChange(
           drag.spanKind,
           drag.id,
-          spanAfterDrag(drag, tMs),
+          spanAfterDrag(drag, tMs, drag.minMs),
           drag.kind,
         );
     }
@@ -651,7 +667,7 @@ const Timeline: FC<Props> = ({
   );
 
   const startSpanDrag = useCallback<StartSpanDrag>(
-    (spanKind, id, span, kind, event) => {
+    (spanKind, id, span, kind, event, minMs) => {
       if (!capture(event)) return;
       onGestureStart();
       dragRef.current = {
@@ -659,6 +675,7 @@ const Timeline: FC<Props> = ({
         spanKind,
         id,
         kind,
+        minMs,
         originMs: msAt(event.clientX),
         ...span,
       };

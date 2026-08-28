@@ -300,6 +300,23 @@ describe('the overlay lanes', () => {
     );
   });
 
+  // dragging the left edge right used to push the zoom's end later, because the
+  // lane stopped at the shortest block rather than at the zoom's own ramps
+  it('never lets a zoom end later than it did when its start is trimmed', () => {
+    const { onSpanChange } = renderTimeline({ zooms: [zoom] });
+
+    const handle = screen.getByRole('button', {
+      name: 'Drag to change where Zoom 2x starts',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 500 });
+    pointerMove(handle, { pointerId: 1, clientX: 700 });
+
+    // the zoom runs 5000..7000; its ramps are 800 together, so its start can
+    // only reach 6200 and its end has to stay where it was
+    const [, , span] = onSpanChange.mock.calls.at(-1) ?? [];
+    expect(span).toEqual({ startMs: 6200, durationMs: 800 });
+  });
+
   it('moves a voice over take', () => {
     const { onSpanChange } = renderTimeline({ narration: [narration] });
 

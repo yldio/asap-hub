@@ -203,6 +203,80 @@ it('is read only when someone else holds the lease', async () => {
   expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
 });
 
+describe('leaving with edits the server has not taken', () => {
+  it('asks before the demos breadcrumb navigates', async () => {
+    renderStudio();
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+
+    expect(
+      await screen.findByRole('dialog', { name: 'Unsaved changes' }),
+    ).toBeVisible();
+  });
+
+  // the link out to the demo navigated straight past the guard
+  it('asks before the preview link navigates', async () => {
+    renderStudio({
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    await userEvent.click(
+      screen.getByRole('link', { name: 'Preview the demo' }),
+    );
+
+    expect(
+      await screen.findByRole('dialog', { name: 'Unsaved changes' }),
+    ).toBeVisible();
+  });
+
+  // nothing flushes a read only editor on the way out, so the edits made before
+  // the lock went are lost without a word
+  it('asks even when the lock has gone and they cannot be saved', async () => {
+    renderStudio({
+      saveTimeline: jest
+        .fn()
+        .mockRejectedValue(new ApiError(409, 'locked', 'locked', 'Bo')),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    // the autosave has to run and be refused before the lock is known to be gone
+    expect(
+      await screen.findByText(/Bo is editing this demo/, undefined, {
+        timeout: 4000,
+      }),
+    ).toBeVisible();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Unsaved changes',
+    });
+    expect(within(dialog).getByText(/cannot be saved/)).toBeVisible();
+    expect(
+      within(dialog).queryByRole('button', { name: 'Save and leave' }),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe('rendering', () => {
   it('offers a render once the timeline has a clip', async () => {
     renderStudio({

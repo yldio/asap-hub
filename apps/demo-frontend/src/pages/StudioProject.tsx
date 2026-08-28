@@ -370,9 +370,10 @@ const Editor: FC<EditorProps> = ({
   }, [capture, editor]);
 
   // the autosave debounce means a departure can outrun the last edit, so the
-  // studio asks rather than losing it quietly
+  // studio asks rather than losing it quietly. A read only editor is asked too:
+  // nothing flushes those edits on the way out, so leaving is the end of them
   const navigate = useNavigate();
-  const leaving = useLeaveGuard(editor.dirty && !readOnly);
+  const leaving = useLeaveGuard(editor.dirty);
 
   const [renderError, setRenderError] = useState<string>();
 
@@ -486,6 +487,7 @@ const Editor: FC<EditorProps> = ({
             editor.saveState !== 'saving'
           }
           readOnly={readOnly}
+          onLeave={() => leaving.request(() => navigate(`/videos/${id}`))}
           onRender={startRender}
           onCancel={cancelRender}
         />
@@ -553,8 +555,9 @@ const Editor: FC<EditorProps> = ({
         <Modal onClose={leaving.stay} label="Unsaved changes">
           <h2 css={dialogTitleStyles}>You have unsaved changes</h2>
           <p css={dialogBodyStyles}>
-            The last few edits have not reached the server yet. Save them, or
-            leave them behind and go back to the demos.
+            {readOnly
+              ? 'These edits were made after the editing lock was lost, so they cannot be saved. Leaving loses them.'
+              : 'The last few edits have not reached the server yet. Save them, or leave them behind and go back to the demos.'}
           </p>
           <div css={dialogActionsStyles}>
             <Button small onClick={leaving.stay}>
@@ -569,16 +572,18 @@ const Editor: FC<EditorProps> = ({
             >
               Discard and leave
             </Button>
-            <Button
-              small
-              primary
-              onClick={() => {
-                editor.flush();
-                leaving.discard();
-              }}
-            >
-              Save and leave
-            </Button>
+            {readOnly ? null : (
+              <Button
+                small
+                primary
+                onClick={() => {
+                  editor.flush();
+                  leaving.discard();
+                }}
+              >
+                Save and leave
+              </Button>
+            )}
           </div>
         </Modal>
       )}

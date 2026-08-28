@@ -66,6 +66,8 @@ type Props = {
   readonly hasOutput: boolean;
   readonly canRender: boolean;
   readonly readOnly: boolean;
+  // false means the guard has taken over and the link must not navigate
+  readonly onLeave: () => boolean;
   readonly onRender: () => void;
   readonly onCancel: () => void;
 };
@@ -77,6 +79,7 @@ const RenderBar: FC<Props> = ({
   hasOutput,
   canRender,
   readOnly,
+  onLeave,
   onRender,
   onCancel,
 }) => {
@@ -105,7 +108,15 @@ const RenderBar: FC<Props> = ({
         </span>
       ) : null}
       {hasOutput ? (
-        <Link css={linkStyles} to={`/videos/${videoId}`}>
+        <Link
+          css={linkStyles}
+          to={`/videos/${videoId}`}
+          onClick={(event) => {
+            if (!onLeave()) {
+              event.preventDefault();
+            }
+          }}
+        >
           {status === 'published' ? 'View the demo' : 'Preview the demo'}
         </Link>
       ) : (

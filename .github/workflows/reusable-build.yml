@@ -89,11 +89,21 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # master pushes always redeploy; PRs are gated on their changed files
-          # via the API, avoiding a slow full-history checkout entirely
-          if [ "${{ github.event_name }}" != 'pull_request' ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+          # via the API, avoiding a slow full-history checkout entirely. A merge
+          # queue entry deploys nothing: the master push behind it does, and
+          # deploying here would put an unrelated CRN or GP2 PR behind a demo
+          # deploy it never asked for
+          case "${{ github.event_name }}" in
+            pull_request) ;;
+            merge_group)
+              echo "changed=false" >> $GITHUB_OUTPUT
+              exit 0
+              ;;
+            *)
+              echo "changed=true" >> $GITHUB_OUTPUT
+              exit 0
+              ;;
+          esac
           # buffer first: grep -q exiting early would SIGPIPE gh under pipefail
           if ! FILES=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" \
               --paginate --jq '.[].filename'); then
@@ -101,7 +111,7 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
             exit 0
           fi
-          if grep -qE '^apps/demo-' <<< "$FILES"; then
+          if grep -qE '^(apps/demo-|packages/demo-timeline/)' <<< "$FILES"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT

@@ -59,6 +59,8 @@ export { default as ExportAnalyticsModal } from './ExportAnalyticsModal';
 export { default as Filter } from './Filter';
 export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as HelpSection } from './HelpSection';
+export { default as HubResearchOutputsCard } from './HubResearchOutputsCard';
+export type { HubResearchOutputRow } from './HubResearchOutputsCard';
 export { default as InterestGroupCard } from './InterestGroupCard';
 export { default as InterestGroupInformation } from './InterestGroupInformation';
 export { default as InterestGroupLeadersTabbedCard } from './InterestGroupLeadersTabbedCard';

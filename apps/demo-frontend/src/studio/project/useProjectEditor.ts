@@ -88,9 +88,13 @@ export type ProjectEditor = {
   saveState: SaveState;
   canUndo: boolean;
   canRedo: boolean;
+  // every autosave moves the row on, so anything else that writes to the video
+  // has to condition on this rather than on the version the page loaded with
+  version: number;
   dispatch: (action: TimelineAction) => void;
   undo: () => void;
   redo: () => void;
+  rebase: (version: number) => void;
 };
 
 // the save model is the one already proven by the chapter editor: debounce, one
@@ -181,9 +185,12 @@ export const useProjectEditor = ({
       saveState: state.saveState,
       canUndo: canUndo(state.history),
       canRedo: canRedo(state.history),
+      version: state.version,
       dispatch: (action: TimelineAction) => send({ type: 'edit', action }),
       undo: () => send({ type: 'undo' }),
       redo: () => send({ type: 'redo' }),
+      rebase: (nextVersion: number) =>
+        send({ type: 'rebase', version: nextVersion }),
     }),
     [state],
   );

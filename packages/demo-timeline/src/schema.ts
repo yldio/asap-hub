@@ -13,6 +13,7 @@ export const limits = {
   chapters: 500,
   textLength: 200,
   transitionMs: 3000,
+  fadeMs: 5000,
   offsetMs: 60000,
   minClipMs: 100,
   maxTimelineMs: 4 * 60 * 60 * 1000,
@@ -44,6 +45,9 @@ export const sourceClipSchema = z.object({
   transitionIn: transitionSchema.optional(),
 });
 
+// how long the text takes to appear and to leave; absent means the default
+const fadeSchema = z.number().int().min(0).max(limits.fadeMs).optional();
+
 export const titleClipSchema = z.object({
   kind: z.literal('title'),
   id: idSchema,
@@ -51,6 +55,8 @@ export const titleClipSchema = z.object({
   preset: z.enum(titlePresets),
   text: textSchema,
   subtitle: textSchema.optional(),
+  fadeInMs: fadeSchema,
+  fadeOutMs: fadeSchema,
   transitionIn: transitionSchema.optional(),
 });
 
@@ -68,6 +74,8 @@ export const bannerSchema = z.object({
   subtitle: textSchema.optional(),
   position: z.enum(['top', 'bottom']),
   animation: z.enum(['fade', 'slide']),
+  fadeInMs: fadeSchema,
+  fadeOutMs: fadeSchema,
 });
 
 export const narrationClipSchema = z.object({

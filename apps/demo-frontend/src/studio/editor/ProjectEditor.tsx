@@ -491,6 +491,10 @@ const ProjectEditor: FC<Props> = ({
   return (
     <div css={shellStyles} ref={zoom.shellRef}>
       <TransportBar
+        dirty={editor.dirty}
+        saving={editor.saveState === 'saving'}
+        readOnly={readOnly}
+        onSave={editor.flush}
         canUndo={!readOnly && editor.canUndo}
         canRedo={!readOnly && editor.canRedo}
         saveLabel={saveLabels[editor.saveState]}

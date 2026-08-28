@@ -64,6 +64,8 @@ type Props = {
   readonly readOnly: boolean;
   readonly leaseHolder?: string;
   readonly notice?: string;
+  // false means the guard has taken over and the link must not navigate
+  readonly onLeave: () => boolean;
   readonly onRename: (title: string) => void;
   readonly onPublish: () => void;
   readonly onUnpublish: () => void;
@@ -78,6 +80,7 @@ const ProjectHeader: FC<Props> = ({
   readOnly,
   leaseHolder,
   notice,
+  onLeave,
   onRename,
   onPublish,
   onUnpublish,
@@ -91,7 +94,15 @@ const ProjectHeader: FC<Props> = ({
 
   return (
     <div css={barStyles}>
-      <Link css={backStyles} to="/">
+      <Link
+        css={backStyles}
+        to="/"
+        onClick={(event) => {
+          if (!onLeave()) {
+            event.preventDefault();
+          }
+        }}
+      >
         Demos
       </Link>
       <input

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
-import { RedoIcon, UndoIcon } from './icons';
+import { RedoIcon, SaveIcon, UndoIcon } from './icons';
 
 const barStyles = css({
   display: 'flex',
@@ -46,6 +46,10 @@ const saveStyles = css({
 });
 
 type Props = {
+  readonly dirty: boolean;
+  readonly saving: boolean;
+  readonly readOnly: boolean;
+  readonly onSave: () => void;
   readonly canUndo: boolean;
   readonly canRedo: boolean;
   readonly saveLabel: string;
@@ -59,6 +63,10 @@ type Props = {
 // the document bar: what the demo will be rendered as, and the history of the
 // edits. Playing it back belongs under the picture, not up here.
 const TransportBar: FC<Props> = ({
+  dirty,
+  saving,
+  readOnly,
+  onSave,
   canUndo,
   canRedo,
   saveLabel,
@@ -100,6 +108,13 @@ const TransportBar: FC<Props> = ({
     />
 
     <span css={saveStyles}>{saveLabel}</span>
+    <EditorButton
+      icon={<SaveIcon size={15} />}
+      disabled={readOnly || saving || !dirty}
+      onClick={onSave}
+    >
+      {saving ? 'Saving…' : 'Save'}
+    </EditorButton>
   </div>
 );
 

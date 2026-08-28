@@ -146,3 +146,11 @@ export const AudioIcon = svg(
     <path d="M20 11v2" />
   </>,
 );
+
+export const SaveIcon = svg(
+  <>
+    <path d="M5 4h11l4 4v12H5z" />
+    <path d="M8 4v5h7V4" />
+    <path d="M8 20v-6h8v6" />
+  </>,
+);

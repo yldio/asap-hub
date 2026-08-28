@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { timelineDurationMs } from '@asap-hub/demo-timeline';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useCallback, useState } from 'react';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
 import { ApiError } from '../api/client';
@@ -33,10 +33,11 @@ import {
 } from '../studio/recording/useRecordingTake';
 import { useVoiceRecorder } from '../studio/recording/useVoiceRecorder';
 import { createId } from '../studio/project/ids';
+import { useLeaveGuard } from '../studio/project/useLeaveGuard';
 import { useProjectEditor } from '../studio/project/useProjectEditor';
 import useEditLease from '../studio/useEditLease';
-import { Spinner } from '../ui/components';
-import { ember, rem } from '../ui/theme';
+import { Button, Modal, Spinner } from '../ui/components';
+import { ember, lead, rem } from '../ui/theme';
 
 const layoutStyles = css({
   display: 'flex',
@@ -52,6 +53,17 @@ const errorStyles = css({ color: ember.rgb, margin: 0, fontSize: rem(13) });
 const centredStyles = css({ padding: rem(24) });
 
 const assetPollMs = 3000;
+
+const dialogTitleStyles = css({ margin: 0, fontSize: rem(18) });
+
+const dialogBodyStyles = css({ margin: 0, color: lead.rgb, fontSize: rem(14) });
+
+const dialogActionsStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  justifyContent: 'flex-end',
+  flexWrap: 'wrap',
+});
 
 // locally the assets are served straight from MinIO through the Vite proxy, and
 // in the deployed stack from the same CloudFront path behind a signed cookie
@@ -321,6 +333,11 @@ const Editor: FC<EditorProps> = ({
       });
   }, [capture, editor]);
 
+  // the autosave debounce means a departure can outrun the last edit, so the
+  // studio asks rather than losing it quietly
+  const navigate = useNavigate();
+  const leaving = useLeaveGuard(editor.dirty && !readOnly);
+
   const [renderError, setRenderError] = useState<string>();
 
   // the export writes to the same row the autosave does, so it takes the
@@ -415,6 +432,7 @@ const Editor: FC<EditorProps> = ({
         readOnly={readOnly}
         leaseHolder={leaseHolder}
         notice={upload.error ?? renderError ?? publishError}
+        onLeave={() => leaving.request(() => navigate('/'))}
         onRename={rename}
         onPublish={publish}
         onUnpublish={unpublish}
@@ -492,6 +510,40 @@ const Editor: FC<EditorProps> = ({
         uploading={upload.busy}
         uploadProgress={upload.progress}
       />
+
+      {leaving.asking && (
+        <Modal onClose={leaving.stay} label="Unsaved changes">
+          <h2 css={dialogTitleStyles}>You have unsaved changes</h2>
+          <p css={dialogBodyStyles}>
+            The last few edits have not reached the server yet. Save them, or
+            leave them behind and go back to the demos.
+          </p>
+          <div css={dialogActionsStyles}>
+            <Button small onClick={leaving.stay}>
+              Stay here
+            </Button>
+            <Button
+              small
+              onClick={() => {
+                editor.discard();
+                leaving.discard();
+              }}
+            >
+              Discard and leave
+            </Button>
+            <Button
+              small
+              primary
+              onClick={() => {
+                editor.flush();
+                leaving.discard();
+              }}
+            >
+              Save and leave
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

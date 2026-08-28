@@ -392,3 +392,63 @@ describe('title card fades', () => {
     });
   });
 });
+
+describe('chapters', () => {
+  const withMarker = () =>
+    timelineReducer(withClips(), {
+      type: 'addChapter',
+      id: 'chapter-1',
+      clipId: 'clip-1',
+      offsetMs: 1000,
+      title: 'Attendance',
+    });
+
+  it('renames without moving', () => {
+    const timeline = timelineReducer(withMarker(), {
+      type: 'updateChapter',
+      chapterId: 'chapter-1',
+      title: 'Speakers',
+    });
+
+    expect(timeline.chapters[0]).toEqual({
+      id: 'chapter-1',
+      clipId: 'clip-1',
+      offsetMs: 1000,
+      title: 'Speakers',
+    });
+  });
+
+  // a retimed marker re-anchors to whichever clip is under the new moment, so
+  // it still travels with that clip when it is trimmed or reordered
+  it('re-anchors to another clip when it is retimed across a boundary', () => {
+    const timeline = timelineReducer(withMarker(), {
+      type: 'updateChapter',
+      chapterId: 'chapter-1',
+      clipId: 'clip-2',
+      offsetMs: 500,
+    });
+
+    expect(timeline.chapters[0]).toMatchObject({
+      clipId: 'clip-2',
+      offsetMs: 500,
+      title: 'Attendance',
+    });
+  });
+
+  it('accepts the very start of a clip', () => {
+    const timeline = timelineReducer(withMarker(), {
+      type: 'updateChapter',
+      chapterId: 'chapter-1',
+      offsetMs: 0,
+    });
+
+    expect(timeline.chapters[0]).toMatchObject({ offsetMs: 0 });
+  });
+
+  it('goes when its clip goes', () => {
+    expect(
+      timelineReducer(withMarker(), { type: 'removeClip', clipId: 'clip-1' })
+        .chapters,
+    ).toEqual([]);
+  });
+});

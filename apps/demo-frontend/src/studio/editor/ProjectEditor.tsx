@@ -345,6 +345,32 @@ const ProjectEditor: FC<Props> = ({
     });
   }, [current, dispatch, playheadMs]);
 
+  // a marker belongs to the clip under the moment it is moved to, so a retimed
+  // chapter still travels with that clip when it is trimmed or reordered
+  const retimeChapter = useCallback(
+    (chapterId: string, startMs: number) => {
+      const placement = placementAt(placements, startMs);
+      if (!placement) return;
+      dispatch({
+        type: 'updateChapter',
+        chapterId,
+        clipId: placement.clip.id,
+        offsetMs: Math.round(clipLocalMs(placement, startMs)),
+      });
+    },
+    [dispatch, placements],
+  );
+
+  const selectTitleCard = useCallback(
+    (clipId: string) => {
+      const placement = placements.find(({ clip }) => clip.id === clipId);
+      if (!placement) return;
+      seek(placement.startMs);
+      select('clip', clipId);
+    },
+    [placements, seek, select],
+  );
+
   const addBanner = useCallback(() => {
     const id = createId('banner');
     dispatch({
@@ -468,9 +494,15 @@ const ProjectEditor: FC<Props> = ({
   );
 
   const chapters = useMemo(
-    () => resolveChapters(timeline, { includeUntitled: true }),
+    () => resolveChapters(timeline, { forEditing: true }),
     [timeline],
   );
+  // a second chapter on the same frame is one the render has to throw away, and
+  // adding one looked like nothing had happened
+  const canAddChapter =
+    Boolean(current) &&
+    !chapters.some((chapter) => chapter.startMs === Math.round(playheadMs));
+
   const recorderPanels = useMemo(
     () => recorder?.(addAsset),
     [addAsset, recorder],
@@ -514,14 +546,16 @@ const ProjectEditor: FC<Props> = ({
             <ChapterList
               resolved={chapters}
               readOnly={readOnly}
-              canAdd={Boolean(current)}
+              canAdd={canAddChapter}
               onAdd={addChapter}
               onRename={(chapterId, title) =>
                 dispatch({ type: 'updateChapter', chapterId, title })
               }
+              onRetime={retimeChapter}
               onRemove={(chapterId) =>
                 dispatch({ type: 'removeChapter', chapterId })
               }
+              onSelectTitle={selectTitleCard}
             />
           }
           assets={assets}

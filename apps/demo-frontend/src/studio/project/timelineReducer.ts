@@ -89,7 +89,15 @@ export type TimelineAction =
       offsetMs: number;
       title: string;
     }
-  | { type: 'updateChapter'; chapterId: string; title: string }
+  | {
+      type: 'updateChapter';
+      chapterId: string;
+      title?: string;
+      // retiming re-anchors the marker: it belongs to whichever clip is under
+      // the new moment, so it survives that clip being moved or trimmed
+      clipId?: string;
+      offsetMs?: number;
+    }
   | { type: 'removeChapter'; chapterId: string }
   | { type: 'setCanvas'; canvas: Canvas };
 
@@ -397,7 +405,12 @@ export const timelineReducer = (
         ...timeline,
         chapters: timeline.chapters.map((chapter) =>
           chapter.id === action.chapterId
-            ? { ...chapter, title: action.title }
+            ? {
+                ...chapter,
+                title: action.title ?? chapter.title,
+                clipId: action.clipId ?? chapter.clipId,
+                offsetMs: action.offsetMs ?? chapter.offsetMs,
+              }
             : chapter,
         ),
       };

@@ -39,10 +39,22 @@ const linkStyles = css({
   ':hover': { textDecoration: 'underline' },
 });
 
-const stageLabels: Record<string, string> = {
-  clips: 'Rendering the clips',
-  join: 'Joining the timeline',
-  finishing: 'Building the preview images',
+// the container reports its own stage names, and for the per step work it
+// reports the step's label, such as "clip 0 (source asset-1)"
+export const stageLabel = (stage: string): string => {
+  if (stage.startsWith('clip ')) {
+    return 'Rendering the clips';
+  }
+  if (stage.startsWith('join ')) {
+    return 'Joining the timeline';
+  }
+  return (
+    {
+      sources: 'Fetching the sources',
+      sprite: 'Building the preview images',
+      upload: 'Uploading the demo',
+    }[stage] ?? 'Rendering'
+  );
 };
 
 const draftStyles = css({ fontSize: 13, color: editorTheme.muted });
@@ -75,7 +87,7 @@ const RenderBar: FC<Props> = ({
     return (
       <div css={barStyles}>
         <span css={statusStyles}>
-          {render?.stage ? stageLabels[render.stage] ?? 'Rendering' : 'Queued'}
+          {render?.stage ? stageLabel(render.stage) : 'Queued'}
         </span>
         <span css={trackStyles} role="progressbar" aria-valuenow={progress}>
           <span css={fillStyles} style={{ width: `${progress}%` }} />

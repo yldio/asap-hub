@@ -99,6 +99,15 @@ Acceptance criteria:
 - [x] Every title card becomes a chapter of its own
 - [x] Resolved into program time when a render starts, so the watch page needs no change
 
+## Later additions
+
+- [x] Cursor capture from several tabs at once, for demos recorded as a whole screen: each tab
+      numbers its own batches and the streams are merged on the clock they share, with the studio
+      reporting how many tabs are connected
+- [x] The studio follows the app's light and dark themes, through `--demo-editor-*` tokens. Only the
+      preview stage stays a dark matte in both, the way every editor frames footage, and the artwork
+      inside it (title cards, banners, cursor effects) keeps the palette the renderer burns in
+
 ## Session log
 
 Newest first. One entry per working session: what landed, what was verified, what moved.

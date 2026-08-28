@@ -328,28 +328,46 @@ const videoKeyJson = (env: RenderEnv): string =>
   JSON.stringify({ PK: { S: `VIDEO#${env.videoId}` }, SK: { S: 'META' } });
 
 // a superseded render must never clobber a newer one, so every write this
-// container makes is conditional on the item still naming this run
+// container makes is conditional on the item still naming this run. The version
+// is bumped alongside, because it is what the editor reads to decide whether its
+// copy of the row is still current, and these writes change the row materially
+export const videoUpdateArgs = (
+  env: RenderEnv,
+  expression: string,
+  names: Record<string, string>,
+  values: Record<string, AttributeValue>,
+): string[] => [
+  'update-item',
+  '--table-name',
+  env.table,
+  '--key',
+  videoKeyJson(env),
+  '--update-expression',
+  `${expression} ADD #version :one`,
+  '--condition-expression',
+  '#render.#renderId = :renderId',
+  '--expression-attribute-names',
+  JSON.stringify({
+    '#render': 'render',
+    '#renderId': 'renderId',
+    '#version': 'version',
+    ...names,
+  }),
+  '--expression-attribute-values',
+  JSON.stringify({
+    ':renderId': { S: env.renderId },
+    ':one': { N: '1' },
+    ...values,
+  }),
+];
+
 const updateVideo = (
   env: RenderEnv,
   expression: string,
   names: Record<string, string>,
   values: Record<string, AttributeValue>,
 ): Promise<string> =>
-  dynamodb(env, [
-    'update-item',
-    '--table-name',
-    env.table,
-    '--key',
-    videoKeyJson(env),
-    '--update-expression',
-    expression,
-    '--condition-expression',
-    '#render.#renderId = :renderId',
-    '--expression-attribute-names',
-    JSON.stringify({ '#render': 'render', '#renderId': 'renderId', ...names }),
-    '--expression-attribute-values',
-    JSON.stringify({ ':renderId': { S: env.renderId }, ...values }),
-  ]);
+  dynamodb(env, videoUpdateArgs(env, expression, names, values));
 
 const queryAssetRows = async (env: RenderEnv): Promise<AssetRow[]> => {
   const response = await dynamodb(env, [

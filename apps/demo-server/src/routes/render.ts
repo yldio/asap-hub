@@ -2,13 +2,23 @@ import {
   parseTimeline,
   resolveChapters,
   serialiseTimeline,
+  Timeline,
 } from '@asap-hub/demo-timeline';
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
+import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
+import { getTableName } from '../config';
+import { getDocumentClient } from '../data/client';
 import { videoEntity } from '../data/entities';
 import { getJobRunner } from '../jobs/runner';
 import { cancelRenderSchema, startRenderSchema } from '../schemas';
-import { getObjectText, projectPrefix, putObject } from '../storage';
+import {
+  getObjectText,
+  projectPrefix,
+  putObject,
+  renderLifecycleTag,
+} from '../storage';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
 import {
@@ -16,6 +26,7 @@ import {
   guardedUpdate,
   loadProject,
   serialiseVideo,
+  videoKey,
   VideoItem,
 } from './video-shared';
 
@@ -33,8 +44,21 @@ export type RenderState = {
 
 const activeStates = ['queued', 'rendering'];
 
-export const isRenderActive = (render?: RenderState): boolean =>
-  Boolean(render && activeStates.includes(render.state));
+// a task killed without reporting leaves 'rendering' on the row for ever, and
+// nothing else ever clears it, so an active render past the longest one the
+// container could plausibly still be running counts as over
+export const maxRenderAgeMs = 4 * 60 * 60 * 1000;
+
+export const isRenderActive = (
+  render?: RenderState,
+  now: number = Date.now(),
+): boolean => {
+  if (!render || !activeStates.includes(render.state)) {
+    return false;
+  }
+  const requestedAt = Date.parse(render.requestedAt ?? '');
+  return Number.isNaN(requestedAt) || now - requestedAt < maxRenderAgeMs;
+};
 
 // a render writes to media/{id}/{mediaPath}/, so each one gets its own directory
 // and a re-render is not hidden behind the day-long CloudFront TTL on the last
@@ -48,6 +72,51 @@ export const renderTimelineKey = (videoId: string, renderId: string): string =>
 
 const renderOf = (project: VideoItem): RenderState | undefined =>
   project.render as RenderState | undefined;
+
+// the render map this request built is stale the moment the container starts
+// writing progress into it, so only the one field this write knows about moves,
+// and only while the row still names this run
+const recordTaskArn = async (
+  id: string,
+  renderId: string,
+  taskArn: string,
+): Promise<void> => {
+  try {
+    await getDocumentClient().send(
+      new UpdateCommand({
+        TableName: getTableName(),
+        Key: videoKey(id),
+        UpdateExpression: 'SET #render.#taskArn = :taskArn ADD #version :one',
+        ConditionExpression: '#render.#renderId = :renderId',
+        ExpressionAttributeNames: {
+          '#render': 'render',
+          '#taskArn': 'taskArn',
+          '#renderId': 'renderId',
+          '#version': 'version',
+        },
+        ExpressionAttributeValues: {
+          ':taskArn': taskArn,
+          ':renderId': renderId,
+          ':one': 1,
+        },
+      }),
+    );
+  } catch (error) {
+    if (!(error instanceof ConditionalCheckFailedException)) {
+      throw error;
+    }
+    // eslint-disable-next-line no-console
+    console.error(`the row for ${id} no longer names the render ${renderId}`);
+  }
+};
+
+// resolveChapters carries the editor's id and kind too, and the guarded write
+// bypasses ElectroDB, so the resolved list is projected onto the shape the item
+// declares rather than going out of serialiseVideo as something else
+export const itemChapters = (
+  timeline: Timeline,
+): { startMs: number; title: string }[] =>
+  resolveChapters(timeline).map(({ startMs, title }) => ({ startMs, title }));
 
 const timelinePointerOf = (
   project: VideoItem,
@@ -98,6 +167,7 @@ export const registerRenderRoutes = (router: Router): void => {
         timelineKey,
         serialiseTimeline(timeline),
         'application/json',
+        renderLifecycleTag,
       );
 
       const requestedAt = new Date().toISOString();
@@ -118,7 +188,7 @@ export const registerRenderRoutes = (router: Router): void => {
         // the snapshot being rendered rather than after the fact
         set: {
           render,
-          chapters: resolveChapters(timeline),
+          chapters: itemChapters(timeline),
           updatedAt: requestedAt,
         },
       });
@@ -157,16 +227,7 @@ export const registerRenderRoutes = (router: Router): void => {
         return;
       }
 
-      const tracked = await applyGuardedUpdate(res, {
-        id,
-        sub,
-        now: Date.now(),
-        expectedVersion: version + 1,
-        set: { render: { ...render, taskArn: jobId } },
-      });
-      if (!tracked) {
-        return;
-      }
+      await recordTaskArn(id, renderId, jobId);
 
       await respondWithVideo(res, id);
     },

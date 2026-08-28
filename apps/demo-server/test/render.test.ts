@@ -4,6 +4,7 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import {
   AssetRow,
@@ -19,11 +20,16 @@ import {
   toAssetRow,
   toRenderAssets,
   unmarshalItem,
+  videoUpdateArgs,
 } from '../encoder/render';
 import { appFactory } from '../src/app';
 import { userEntity, videoEntity } from '../src/data/entities';
 import { setJobRunner } from '../src/jobs/runner';
-import { nextMediaPath } from '../src/routes/render';
+import {
+  isRenderActive,
+  maxRenderAgeMs,
+  nextMediaPath,
+} from '../src/routes/render';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -169,6 +175,7 @@ describe('POST /api/projects/:id/render', () => {
       'projects/project-1/renders/generated-render-id/timeline.json',
       JSON.stringify(timelineWithClip()),
       'application/json',
+      'lifecycle=render',
     );
     expect(setValue(0, 'render')).toMatchObject({
       renderId: 'generated-render-id',
@@ -193,8 +200,63 @@ describe('POST /api/projects/:id/render', () => {
         'projects/project-1/renders/generated-render-id/timeline.json',
       MEDIA_PATH: 'r3',
     });
-    expect(setValue(1, 'render')).toMatchObject({ taskArn: 'task-arn-1' });
-    expect(setValue(1, 'expectedVersion')).toBe(4);
+    // the render map this request built is already stale by now: the container
+    // may have written progress into it, so only taskArn moves, and only while
+    // the row still names this run
+    const tracked = mockSend.mock.calls[1]![0].input;
+    expect(tracked.UpdateExpression).toBe(
+      'SET #render.#taskArn = :taskArn ADD #version :one',
+    );
+    expect(tracked.ConditionExpression).toBe('#render.#renderId = :renderId');
+    expect(tracked.ExpressionAttributeValues).toEqual({
+      ':taskArn': 'task-arn-1',
+      ':renderId': 'generated-render-id',
+      ':one': 1,
+    });
+  });
+
+  it('still answers when the row no longer names the render', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    mockSend.mockResolvedValueOnce({}).mockRejectedValueOnce(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await start();
+
+    expect(response.status).toBe(200);
+  });
+
+  // resolveChapters carries an id and a kind the item's own schema does not
+  it('writes chapters in the shape the item declares', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const timeline = timelineWithClip();
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      JSON.stringify({
+        ...timeline,
+        clips: [
+          ...timeline.clips,
+          {
+            kind: 'title',
+            id: 'title-1',
+            preset: 'centered',
+            text: 'Part two',
+            durationMs: 2000,
+          },
+        ],
+      }),
+    );
+
+    await start();
+
+    expect(setValue(0, 'chapters')).toEqual([
+      { startMs: 5000, title: 'Part two' },
+    ]);
   });
 
   it('refuses a second render while one is active', async () => {
@@ -215,6 +277,29 @@ describe('POST /api/projects/:id/render', () => {
     expect(response.body).toEqual({ error: 'render_active' });
     expect(run).not.toHaveBeenCalled();
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  // recordFailure only runs if the process survives, so a killed task leaves
+  // 'rendering' behind for ever and every later export would 409 on it
+  it('starts again once an active render is too old to still be running', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({
+        render: {
+          renderId: 'render-0',
+          state: 'rendering',
+          timelineVersion: 4,
+          requestedAt: new Date(
+            Date.now() - maxRenderAgeMs - 1000,
+          ).toISOString(),
+        },
+      }),
+    );
+
+    const response = await start();
+
+    expect(response.status).toBe(200);
+    expect(run).toHaveBeenCalled();
   });
 
   it('starts again once the last render finished', async () => {
@@ -353,6 +438,106 @@ describe('DELETE /api/projects/:id/render', () => {
 
     expect(response.status).toBe(403);
     expect(stop).not.toHaveBeenCalled();
+  });
+});
+
+describe('isRenderActive', () => {
+  const now = Date.parse('2026-08-01T12:00:00.000Z');
+  const at = (offsetMs: number) => new Date(now - offsetMs).toISOString();
+
+  it('counts a render the container is still plausibly running', () => {
+    expect(
+      isRenderActive(
+        {
+          renderId: 'render-0',
+          state: 'rendering',
+          timelineVersion: 4,
+          requestedAt: at(60_000),
+        },
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  // a task killed before it could report leaves 'rendering' on the row for
+  // ever, and every later export would answer render_active off it
+  it('counts one older than the longest render could be as over', () => {
+    expect(
+      isRenderActive(
+        {
+          renderId: 'render-0',
+          state: 'rendering',
+          timelineVersion: 4,
+          requestedAt: at(maxRenderAgeMs + 1000),
+        },
+        now,
+      ),
+    ).toBe(false);
+  });
+
+  it('leaves a render with no requestedAt alone', () => {
+    expect(
+      isRenderActive(
+        { renderId: 'render-0', state: 'queued', timelineVersion: 4 },
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  it('is false for a render that finished and for no render at all', () => {
+    expect(
+      isRenderActive(
+        {
+          renderId: 'render-0',
+          state: 'done',
+          timelineVersion: 4,
+          requestedAt: at(0),
+        },
+        now,
+      ),
+    ).toBe(false);
+    expect(isRenderActive(undefined, now)).toBe(false);
+  });
+});
+
+describe('the writes the container makes', () => {
+  const env = {
+    videoId: 'project-1',
+    renderId: 'render-1',
+    timelineKey: 'projects/project-1/renders/render-1/timeline.json',
+    mediaPath: 'r1',
+    bucket: 'bucket',
+    table: 'table',
+    s3Endpoint: undefined,
+    dynamodbEndpoint: undefined,
+    workDir: '/scratch',
+  };
+
+  // the row changes materially on every one of these, and version is what the
+  // editor reads to decide whether its copy is still current
+  it('bumps the version alongside whatever it is writing', () => {
+    const args = videoUpdateArgs(
+      env,
+      'SET #render.#state = :state',
+      { '#state': 'state' },
+      { ':state': { S: 'rendering' } },
+    );
+
+    const expression = args[args.indexOf('--update-expression') + 1];
+    expect(expression).toBe('SET #render.#state = :state ADD #version :one');
+    expect(
+      JSON.parse(args[args.indexOf('--expression-attribute-names') + 1]!),
+    ).toMatchObject({ '#version': 'version' });
+    expect(
+      JSON.parse(args[args.indexOf('--expression-attribute-values') + 1]!),
+    ).toMatchObject({ ':one': { N: '1' } });
+  });
+
+  it('stays conditional on the item naming this run', () => {
+    const args = videoUpdateArgs(env, 'SET durationMs = :d', {}, {});
+    expect(args[args.indexOf('--condition-expression') + 1]).toBe(
+      '#render.#renderId = :renderId',
+    );
   });
 });
 

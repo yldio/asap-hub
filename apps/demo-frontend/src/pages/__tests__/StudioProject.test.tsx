@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import { ApiError } from '../../api/client';
 import type { ProjectAsset, Video } from '../../api/types';
+import { autosaveMs } from '../../studio/project/useProjectEditor';
 import { creatorMe, makeVideo, renderApp } from '../../test-utils';
 import StudioProject from '../StudioProject';
 
@@ -75,6 +76,23 @@ const timelineClip = () =>
   screen.getByRole('button', { name: /^Intro take, / });
 const timelineClips = () =>
   screen.queryAllByRole('button', { name: /^Intro take, / });
+
+// The autosave effect schedules its debounce after the commit, so a single jump
+// of the clock can land before the timer exists and fire nothing. Pumping with a
+// flush between each step means the timer is always scheduled before it is due.
+const pumpAutosave = async (steps = 6) => {
+  for (let step = 0; step < steps; step += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await act(async () => {
+      jest.advanceTimersByTime(autosaveMs);
+    });
+  }
+};
+
+// the editor mounts a lease, a timeline, an asset list and a preview, and the
+// autosave tests pump a debounce on top of that; 10s is not enough headroom on a
+// loaded runner, where this file has been killed mid-test
+jest.setTimeout(30_000);
 
 // jsdom implements neither media playback nor pointer capture, both of which
 // the editor uses as soon as a clip is on the timeline
@@ -180,11 +198,9 @@ it('saves the timeline after an edit', async () => {
   // the debounce is only scheduled once the edit has been committed, and
   // advancing the clock before then leaves a timer that nothing will fire
   await waitFor(() => expect(timelineClips()).toHaveLength(1));
-  await act(async () => {
-    jest.advanceTimersByTime(2000);
-  });
+  await pumpAutosave();
 
-  await waitFor(() => expect(saveTimeline).toHaveBeenCalled());
+  expect(saveTimeline).toHaveBeenCalled();
   expect(saveTimeline).toHaveBeenCalledWith(
     'project-1',
     expect.objectContaining({ timelineVersion: 4, version: 3 }),
@@ -271,9 +287,7 @@ describe('when the editing lock is held elsewhere', () => {
       await screen.findByRole('button', { name: 'Add to timeline' }),
     );
     await waitFor(() => expect(timelineClips()).toHaveLength(1));
-    await act(async () => {
-      jest.advanceTimersByTime(2000);
-    });
+    await pumpAutosave();
 
     expect(
       await screen.findByText(/cannot be saved until it comes back/),
@@ -343,9 +357,7 @@ describe('leaving with edits the server has not taken', () => {
     );
     await waitFor(() => expect(timelineClips()).toHaveLength(1));
     // the autosave has to run and be refused before the lock is known to be gone
-    await act(async () => {
-      jest.advanceTimersByTime(2000);
-    });
+    await pumpAutosave();
     expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
     jest.useRealTimers();
 

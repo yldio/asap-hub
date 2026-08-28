@@ -332,7 +332,9 @@ describe('buildRenderPlan', () => {
       expect(
         planFor({ clips: [source({ volume: 0 })] }).steps[0]?.args,
       ).toEqual(
-        expect.arrayContaining(['volume=0,aresample=async=1:first_pts=0']),
+        expect.arrayContaining([
+          'volume=0,aresample=async=1:first_pts=0,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo',
+        ]),
       );
     });
 
@@ -370,8 +372,8 @@ describe('buildRenderPlan', () => {
 
     const args = plan.steps.at(-1)?.args.join(' ') ?? '';
 
-    expect(args).toContain('[0:v][1:v]concat=n=2:v=1:a=0[v1]');
-    expect(args).toContain('[v1][2:v]xfade=transition=fade');
+    expect(args).toContain('[vt0][vt1]concat=n=2:v=1:a=0[v1]');
+    expect(args).toContain('[v1][vt2]xfade=transition=fade');
   });
 });
 

@@ -39,10 +39,21 @@ export const videoFilters = (context: VideoFilterContext): string[] =>
 // desyncs the audio, so every stage one clip is resampled to a constant rate
 export const resampleFilter = 'aresample=async=1:first_pts=0';
 
+export const audioSampleRate = 48000;
+
+// concat rewrites the timebase of what it produces, and xfade refuses two
+// inputs whose timebases differ, so both sides of a blend are pinned to one
+export const timebaseFilter = 'settb=AVTB';
+
+// concat and acrossfade refuse to join streams whose rate, layout or sample
+// format differ, and a recording's own audio is often 44.1kHz mono while the
+// silence generated for a title card is 48kHz stereo
+export const audioFormatFilter = `aformat=sample_fmts=fltp:sample_rates=${audioSampleRate}:channel_layouts=stereo`;
+
 export const clipAudioFilters = (clip: Clip): string[] =>
   clip.kind === 'source' && clip.volume !== 1
-    ? [`volume=${clip.volume}`, resampleFilter]
-    : [resampleFilter];
+    ? [`volume=${clip.volume}`, resampleFilter, audioFormatFilter]
+    : [resampleFilter, audioFormatFilter];
 
 export const overlayFadeMs = 300;
 

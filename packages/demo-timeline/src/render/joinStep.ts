@@ -12,6 +12,7 @@ import {
   graph,
   label,
   secondsFromMs,
+  timebaseFilter,
   xfadeTransition,
 } from './filters';
 import { clipOutputPath, concatListPath } from './paths';
@@ -187,10 +188,23 @@ const xfadeJoin = ({
 }: JoinStepInput): JoinStepResult => {
   const boundaries = joinBoundaries(placements);
 
+  // xfade refuses two inputs whose timebases differ, and concat rewrites the
+  // timebase of what it produces, so every branch is pinned to the same one
+  const normalised = [
+    filterSegment(['0:v'], [timebaseFilter], 'vt0'),
+    ...boundaries.map((boundary) =>
+      filterSegment(
+        [`${boundary.index}:v`],
+        [timebaseFilter],
+        `vt${boundary.index}`,
+      ),
+    ),
+  ];
+
   const video = foldChain(
-    '0:v',
+    'vt0',
     boundaries.map((boundary) => ({
-      input: `${boundary.index}:v`,
+      input: `vt${boundary.index}`,
       name: `v${boundary.index}`,
       filter:
         boundary.durationMs > 0
@@ -200,6 +214,11 @@ const xfadeJoin = ({
           : 'concat=n=2:v=1:a=0',
     })),
   );
+
+  const videoWithTimebase: Chain = {
+    segments: [...normalised, ...video.segments],
+    label: video.label,
+  };
 
   const programAudio = foldChain(
     '0:a',
@@ -239,9 +258,9 @@ const xfadeJoin = ({
         ]),
         ...narrationInputArgs(narration, assets),
         '-filter_complex',
-        graph([...video.segments, ...programAudio.segments, ...mix]),
+        graph([...videoWithTimebase.segments, ...programAudio.segments, ...mix]),
         '-map',
-        label(video.label),
+        label(videoWithTimebase.label),
         '-map',
         label(mixed ? 'a' : programAudio.label),
         ...videoEncodeArgs(canvas),

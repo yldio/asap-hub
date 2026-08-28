@@ -13,6 +13,40 @@ dropped.
 
 ---
 
+## F-008 (P1, fixed) The join failed on every real render: audio format and timebase
+
+**Observed.** Running the renderer against real files, the three per-clip encodes succeeded and the
+join died with `ffmpeg exited 234`, `Error reinitializing filters`. Two separate causes, neither of
+which any unit test could have caught because both live in ffmpeg's runtime behaviour:
+
+1. A source recording's audio is typically 44.1kHz mono, while the silence generated for a title
+   card is 48kHz stereo. `concat` and `acrossfade` refuse to join streams whose rate, layout or
+   sample format differ.
+2. `concat` rewrites the timebase of what it produces (to 1/1000000), and `xfade` refuses two inputs
+   whose timebases differ, so blending a concatenated run with a raw clip failed with
+   `First input link main timebase (1/1000000) do not match ... (1/15360)`.
+
+**Why it matters.** Every render with a title card or a transition would have failed, which is most
+of them. The plan looked correct in the snapshots, and was.
+
+**Fixed.** Each clip's audio chain ends with
+`aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo`, and every branch entering an
+xfade is pinned with `settb=AVTB`. Verified by rendering two clips, a title card, a banner and a
+crossfade end to end: 1920x1080 h264 at 30fps, AAC 48kHz stereo, duration exactly the sum of the
+clips minus the crossfade, with the sprite, VTT and poster beside it and the item flipped to ready.
+
+## F-007 (P2) The container consumes the shared package through its build output
+
+**Observed.** The first end to end render failed with `buildRenderPlan is not a function`: esbuild
+bundled `@asap-hub/demo-timeline` from its `build-cjs` output, which predated the render module.
+
+**Why it matters.** It is the same trap as F-005 wearing a different hat, and the error names a
+function that plainly exists in the source.
+
+**Decided.** `yarn demo:local:encoder` builds the renderer bundle before the image, and the package
+has to be built first. Anyone editing the shared package needs `yarn watch` running, or a manual
+`yarn workspace @asap-hub/demo-timeline run build:babel`.
+
 ## F-006 (P1) `.env` forces `NODE_ENV=development`, which breaks `test/storage.test.ts`
 
 **Observed.** `apps/demo-server/test/storage.test.ts` fails before a single test runs, with

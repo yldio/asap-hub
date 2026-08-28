@@ -91,9 +91,10 @@ describe('videoFilters', () => {
 });
 
 describe('clipAudioFilters', () => {
-  it('only resamples at full volume', () => {
+  it('resamples and normalises the format at full volume', () => {
     expect(clipAudioFilters(source())).toEqual([
       'aresample=async=1:first_pts=0',
+      'aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo',
     ]);
   });
 
@@ -101,6 +102,7 @@ describe('clipAudioFilters', () => {
     expect(clipAudioFilters(source({ volume: 0.4 }))).toEqual([
       'volume=0.4',
       'aresample=async=1:first_pts=0',
+      'aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo',
     ]);
   });
 });

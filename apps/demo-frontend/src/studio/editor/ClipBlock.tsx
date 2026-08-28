@@ -161,6 +161,12 @@ const ClipBlock: FC<Props> = ({
   const span = `${formatTimecode(placement.startMs)}–${formatTimecode(
     placement.endMs,
   )}`;
+  // an overlap is the only thing on the lane a screen reader cannot see, and it
+  // is what says two clips are blending rather than cutting
+  const blend =
+    placement.overlapMs > 0 && clip.transitionIn
+      ? `, ${clip.transitionIn.type} from the clip before`
+      : '';
   const trim = source
     ? `Uses ${formatTimecode(source.inMs)} to ${formatTimecode(
         source.outMs,
@@ -171,7 +177,7 @@ const ClipBlock: FC<Props> = ({
     <div
       role="button"
       tabIndex={0}
-      aria-label={`${label}, ${span}${muted ? ', muted' : ''}`}
+      aria-label={`${label}, ${span}${muted ? ', muted' : ''}${blend}`}
       title={trim}
       aria-pressed={selected}
       css={[

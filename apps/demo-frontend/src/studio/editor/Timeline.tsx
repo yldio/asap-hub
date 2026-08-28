@@ -18,7 +18,9 @@ import {
   useState,
 } from 'react';
 import { ProjectAsset } from '../../api/types';
+import { useEdgeAutoScroll } from './autoScroll';
 import ClipBlock from './ClipBlock';
+import { useDragGhost } from './dragGhost';
 import {
   DragKind,
   Span,
@@ -37,6 +39,7 @@ import {
   tickIntervalMs,
 } from './geometry';
 import LaneBlock, { arrowDeltaMs } from './LaneBlock';
+import { overlapAfterDrag, overlapHint } from './overlap';
 import { isSelected, Selection } from './selection';
 import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
 import { zoomDurationMs } from './zoom';
@@ -169,6 +172,40 @@ const playheadKnobStyles = css({
   height: 12,
   borderRadius: '0 0 6px 6px',
   backgroundColor: editorTheme.playhead,
+});
+
+// the crossed lines every editor draws over a blend, so the length two clips
+// share is readable on the lane rather than only in the inspector
+const crossfadeStyles = css({
+  position: 'absolute',
+  top: 6,
+  bottom: 6,
+  borderRadius: 6,
+  pointerEvents: 'none',
+  zIndex: 1,
+  backgroundImage: [
+    `linear-gradient(to top right, transparent calc(50% - 1px), ${editorTheme.selected} calc(50% - 1px), ${editorTheme.selected} calc(50% + 1px), transparent calc(50% + 1px))`,
+    `linear-gradient(to bottom right, transparent calc(50% - 1px), ${editorTheme.selected} calc(50% - 1px), ${editorTheme.selected} calc(50% + 1px), transparent calc(50% + 1px))`,
+  ].join(', '),
+});
+
+const ghostStyles = css({
+  position: 'absolute',
+  zIndex: 4,
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: 6,
+  border: `1px dashed ${editorTheme.selected}`,
+  backgroundColor: editorTheme.raised,
+  color: editorTheme.text,
+  opacity: 0.7,
+  padding: '0 8px',
+  fontSize: 11,
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  '&[hidden]': { display: 'none' },
 });
 
 const dropMarkerStyles = css({
@@ -349,6 +386,20 @@ const ClipTrack = memo<{
           />
         ))
       )}
+
+      {placements
+        .filter((placement) => placement.overlapMs > 0)
+        .map((placement) => (
+          <span
+            key={`blend-${placement.clip.id}`}
+            aria-hidden="true"
+            css={crossfadeStyles}
+            style={{
+              left: msToPx(placement.startMs, pixelsPerSecond),
+              width: msToPx(placement.overlapMs, pixelsPerSecond),
+            }}
+          />
+        ))}
 
       {dropIndex === undefined ? null : (
         <div
@@ -612,7 +663,7 @@ const NarrationTrack = memo<{
 );
 
 type Drag =
-  | { target: 'reorder'; clipId: string; index: number }
+  | { target: 'reorder'; clipId: string; index: number; originMs: number }
   | ({ target: 'clip'; clipId: string } & TrimDrag)
   | ({
       target: 'span';
@@ -644,6 +695,10 @@ type Props = {
     drag: DragKind,
   ) => void;
   readonly onMove: (clipId: string, toIndex: number) => void;
+  // a clip dropped over its neighbour blends into it: the overlap is the length
+  // of the transition, because that is the only way the track lets two clips
+  // share time
+  readonly onOverlap: (clipId: string, durationMs: number) => void;
   readonly onTrim: (
     clipId: string,
     change: { inMs?: number; outMs?: number },
@@ -668,6 +723,7 @@ const Timeline: FC<Props> = ({
   onSelect,
   onSeek,
   onMove,
+  onOverlap,
   onTrim,
   onSpanChange,
   onToggleMute,
@@ -675,8 +731,14 @@ const Timeline: FC<Props> = ({
   onGestureEnd,
 }) => {
   const laneRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<Drag>();
+  const pointerXRef = useRef(0);
+  // the drop marker is drawn by React, but the drag has to read its own answer
+  // back on the same frame it was worked out
+  const dropIndexRef = useRef<number>();
   const [dropIndex, setDropIndex] = useState<number>();
+  const ghost = useDragGhost();
 
   const msAt = useCallback(
     (clientX: number): number => {
@@ -691,51 +753,121 @@ const Timeline: FC<Props> = ({
   );
 
   // the drop lands before the first clip whose midpoint the pointer has not passed
-  const indexAt = (tMs: number): number =>
-    placements.filter(
-      (placement) => tMs > placement.startMs + placement.durationMs / 2,
-    ).length;
+  const indexAt = useCallback(
+    (tMs: number): number =>
+      placements.filter(
+        (placement) => tMs > placement.startMs + placement.durationMs / 2,
+      ).length,
+    [placements],
+  );
+
+  const applyDrag = useCallback(
+    (clientX: number) => {
+      const drag = dragRef.current;
+      if (!drag || readOnly) return;
+      const tMs = msAt(clientX);
+      const offsetPx = msToPx(tMs - drag.originMs, pixelsPerSecond);
+
+      switch (drag.target) {
+        case 'reorder': {
+          const landing = indexAt(tMs);
+          const toIndex = landing > drag.index ? landing - 1 : landing;
+          const reorders = toIndex !== drag.index;
+          dropIndexRef.current = reorders ? landing : undefined;
+          setDropIndex(dropIndexRef.current);
+
+          if (reorders) {
+            ghost.move(offsetPx, 'Move here');
+            return;
+          }
+          const blend = overlapAfterDrag(
+            placements,
+            drag.index,
+            tMs - drag.originMs,
+          );
+          ghost.move(
+            offsetPx,
+            blend === undefined ? undefined : overlapHint(blend.durationMs),
+          );
+          return;
+        }
+
+        case 'clip':
+          onTrim(drag.clipId, trimAfterDrag(drag, tMs));
+          return;
+
+        default: {
+          const span = spanAfterDrag(drag, tMs, drag.minMs);
+          onSpanChange(drag.spanKind, drag.id, span, drag.kind);
+          if (drag.kind === 'move') {
+            ghost.move(offsetPx, formatTimecode(span.startMs));
+          }
+        }
+      }
+    },
+    [
+      ghost,
+      indexAt,
+      msAt,
+      onSpanChange,
+      onTrim,
+      pixelsPerSecond,
+      placements,
+      readOnly,
+    ],
+  );
+
+  // the lane keeps sliding while the pointer is held at either end of it, and
+  // every step of that slide moves the drag along with it
+  const followPointer = useCallback(
+    () => applyDrag(pointerXRef.current),
+    [applyDrag],
+  );
+  const autoScroll = useEdgeAutoScroll(scrollRef, followPointer);
 
   const onLanePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     // a capture can be lost without a pointerup ever reaching the lane, and a
     // stale drag would then keep editing on plain hover
     if (!drag || readOnly || event.buttons === 0) return;
-    const tMs = msAt(event.clientX);
-
-    switch (drag.target) {
-      case 'reorder':
-        setDropIndex(indexAt(tMs));
-        return;
-
-      case 'clip':
-        onTrim(drag.clipId, trimAfterDrag(drag, tMs));
-        return;
-
-      default:
-        onSpanChange(
-          drag.spanKind,
-          drag.id,
-          spanAfterDrag(drag, tMs, drag.minMs),
-          drag.kind,
-        );
-    }
+    pointerXRef.current = event.clientX;
+    autoScroll.track(event.clientX);
+    applyDrag(event.clientX);
   };
 
   const endDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     dragRef.current = undefined;
+    autoScroll.stop();
+    ghost.hide();
+
+    if (drag?.target === 'reorder') {
+      const landing = dropIndexRef.current;
+      if (landing === undefined) {
+        // it was not dropped past a neighbour, so it was dropped over one
+        const blend = overlapAfterDrag(
+          placements,
+          drag.index,
+          msAt(pointerXRef.current) - drag.originMs,
+        );
+        if (blend) {
+          onOverlap(blend.clipId, blend.durationMs);
+        }
+      } else {
+        const toIndex = landing > drag.index ? landing - 1 : landing;
+        if (toIndex !== drag.index) {
+          onMove(drag.clipId, toIndex);
+        }
+      }
+    }
+
+    // the drop is part of the drag, so it belongs inside the one undo step the
+    // whole gesture makes rather than becoming an entry of its own
     if (drag) {
       onGestureEnd();
     }
 
-    if (drag?.target === 'reorder' && dropIndex !== undefined) {
-      const toIndex = dropIndex > drag.index ? dropIndex - 1 : dropIndex;
-      if (toIndex !== drag.index) {
-        onMove(drag.clipId, toIndex);
-      }
-    }
-
+    dropIndexRef.current = undefined;
     setDropIndex(undefined);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
@@ -749,15 +881,30 @@ const Timeline: FC<Props> = ({
       const lane = laneRef.current;
       if (!lane) return false;
       lane.setPointerCapture(event.pointerId);
+      pointerXRef.current = event.clientX;
+      autoScroll.track(event.clientX);
+      autoScroll.start();
       return true;
     },
-    [],
+    [autoScroll],
+  );
+
+  // only a move carries the block somewhere else; a trim already redraws the
+  // block itself as it goes, and a second copy of it would say nothing
+  const raiseGhost = useCallback(
+    (kind: DragKind, event: ReactPointerEvent<HTMLElement>) => {
+      const lane = laneRef.current;
+      if (kind !== 'move' || !lane) return;
+      ghost.show(event.currentTarget, lane);
+    },
+    [ghost],
   );
 
   const startClipDrag = useCallback<StartClipDrag>(
     (placement, kind, event) => {
       if (!capture(event)) return;
       onGestureStart();
+      raiseGhost(kind, event);
       const { clip } = placement;
 
       if (kind === 'move') {
@@ -765,6 +912,7 @@ const Timeline: FC<Props> = ({
           target: 'reorder',
           clipId: clip.id,
           index: placement.index,
+          originMs: msAt(event.clientX),
         };
         return;
       }
@@ -789,13 +937,14 @@ const Timeline: FC<Props> = ({
               durationMs: placement.durationMs,
             };
     },
-    [capture, msAt, onGestureStart],
+    [capture, msAt, onGestureStart, raiseGhost],
   );
 
   const startSpanDrag = useCallback<StartSpanDrag>(
     (spanKind, id, span, kind, event, minMs) => {
       if (!capture(event)) return;
       onGestureStart();
+      raiseGhost(kind, event);
       dragRef.current = {
         target: 'span',
         spanKind,
@@ -806,7 +955,7 @@ const Timeline: FC<Props> = ({
         ...span,
       };
     },
-    [capture, msAt, onGestureStart],
+    [capture, msAt, onGestureStart, raiseGhost],
   );
 
   // A keyboard makes the same edits the pointer does, by handing the drag
@@ -883,7 +1032,12 @@ const Timeline: FC<Props> = ({
         </div>
       </div>
 
-      <div css={scrollStyles}>
+      <div
+        css={scrollStyles}
+        ref={scrollRef}
+        role="region"
+        aria-label="Timeline lanes"
+      >
         <div
           css={laneStyles}
           style={{ width: laneWidth }}
@@ -948,6 +1102,14 @@ const Timeline: FC<Props> = ({
           />
 
           <PlayheadMarker pixelsPerSecond={pixelsPerSecond} />
+
+          <div
+            ref={ghost.ref}
+            css={ghostStyles}
+            data-testid="drag-ghost"
+            aria-hidden="true"
+            hidden
+          />
         </div>
       </div>
     </div>

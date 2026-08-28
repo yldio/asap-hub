@@ -1,5 +1,5 @@
 import { layoutClips, Timeline as TimelineDoc } from '@asap-hub/demo-timeline';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { ProjectAsset } from '../../../api/types';
 import Timeline from '../Timeline';
 
@@ -83,6 +83,7 @@ const pixelsPerSecond = 100;
 
 const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onMove = jest.fn();
+  const onOverlap = jest.fn();
   const onTrim = jest.fn();
   const onSeek = jest.fn();
   const onSelect = jest.fn();
@@ -109,6 +110,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       onSelect={onSelect}
       onSeek={onSeek}
       onMove={onMove}
+      onOverlap={onOverlap}
       onTrim={onTrim}
       onSpanChange={onSpanChange}
       onToggleMute={onToggleMute}
@@ -121,6 +123,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   return {
     container: view.container,
     onMove,
+    onOverlap,
     onTrim,
     onSeek,
     onSelect,
@@ -171,8 +174,59 @@ beforeAll(() => {
   Element.prototype.hasPointerCapture = jest.fn(() => true);
 });
 
+// the auto scroll runs on animation frames, so the test holds the clock and
+// steps it one frame at a time
+const scheduled = new Map<number, FrameRequestCallback>();
+
+const stubFrames = () => {
+  let nextId = 0;
+  scheduled.clear();
+  jest.spyOn(window, 'requestAnimationFrame').mockImplementation((run) => {
+    nextId += 1;
+    scheduled.set(nextId, run);
+    return nextId;
+  });
+  jest.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
+    scheduled.delete(id);
+  });
+};
+
+const runFrame = (now: number): boolean => {
+  const pending = Array.from(scheduled.entries()).pop();
+  if (!pending) return false;
+  scheduled.delete(pending[0]);
+  act(() => pending[1](now));
+  return true;
+};
+
+// jsdom has no layout, so a scroll box has to be described to it
+const stubScroller = (
+  element: HTMLElement,
+  sizes: { clientWidth: number; scrollWidth: number },
+) => {
+  let scrollLeft = 0;
+  Object.defineProperty(element, 'clientWidth', {
+    configurable: true,
+    get: () => sizes.clientWidth,
+  });
+  Object.defineProperty(element, 'scrollWidth', {
+    configurable: true,
+    get: () => sizes.scrollWidth,
+  });
+  Object.defineProperty(element, 'scrollLeft', {
+    configurable: true,
+    get: () => scrollLeft,
+    set: (value: number) => {
+      scrollLeft = value;
+    },
+  });
+};
+
+const lanes = () => screen.getByRole('region', { name: 'Timeline lanes' });
+
 beforeEach(() => {
   stubLaneGeometry();
+  stubFrames();
 });
 
 afterEach(() => {
@@ -196,13 +250,14 @@ describe('dragging a clip', () => {
   });
 
   it('leaves the order alone when it is dropped where it started', () => {
-    const { onMove } = renderTimeline();
+    const { onMove, onOverlap } = renderTimeline();
 
     fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
-    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 150 });
-    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 150 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 110 });
+    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 110 });
 
     expect(onMove).not.toHaveBeenCalled();
+    expect(onOverlap).not.toHaveBeenCalled();
   });
 
   it('does not reorder while the project is read only', () => {
@@ -736,5 +791,261 @@ describe('the track headers', () => {
       'Zoom, cursor',
       'Voice over',
     ]);
+  });
+});
+
+// The track is gapless and ordered, so the only way two clips can share time is
+// for the later one to blend into the one before it. Dropping a clip over its
+// neighbour sets that blend rather than parking it at a free position.
+describe('dropping a clip over its neighbour', () => {
+  const blended: TimelineDoc['clips'] = [
+    clips[0] as (typeof clips)[number],
+    {
+      ...(clips[1] as (typeof clips)[number]),
+      transitionIn: { type: 'crossfade', durationMs: 1000 },
+    },
+  ];
+
+  it('crossfades into the clip after it when it is pushed right', () => {
+    const { onOverlap } = renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 200 });
+    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 200 });
+
+    expect(onOverlap).toHaveBeenCalledWith('clip-b', 1000);
+  });
+
+  it('lengthens the blend when the later clip is pulled left', () => {
+    const { onOverlap } = renderTimeline({ placements: layoutClips(blended) });
+
+    const block = clipBlock('B');
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 400 });
+    pointerMove(block, { pointerId: 1, clientX: 300 });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: 300 });
+
+    expect(onOverlap).toHaveBeenCalledWith('clip-b', 2000);
+  });
+
+  it('gives the blend back when the later clip is pushed right again', () => {
+    const { onOverlap } = renderTimeline({ placements: layoutClips(blended) });
+
+    const block = clipBlock('B');
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 400 });
+    pointerMove(block, { pointerId: 1, clientX: 500 });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: 500 });
+
+    expect(onOverlap).toHaveBeenCalledWith('clip-b', 0);
+  });
+
+  // a transition plays over both clips, so it can never eat more than half of
+  // the shorter one however far the drag is taken
+  it('never blends more than half of the shorter clip', () => {
+    const { onOverlap } = renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 500 });
+    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 500 });
+
+    expect(onOverlap).toHaveBeenCalledWith('clip-b', 2000);
+  });
+
+  it('reorders rather than blending when it is taken past the neighbour', () => {
+    const { onMove, onOverlap } = renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
+    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 800 });
+
+    expect(onMove).toHaveBeenCalledWith('clip-a', 1);
+    expect(onOverlap).not.toHaveBeenCalled();
+  });
+
+  it('does not blend while the project is read only', () => {
+    const { onOverlap } = renderTimeline({ readOnly: true });
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 200 });
+    fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 200 });
+
+    expect(onOverlap).not.toHaveBeenCalled();
+  });
+
+  // the crossed lines over the shared length are the only sign on the lane, and
+  // they say nothing to a screen reader
+  it('says on the block that it blends into the clip before', () => {
+    renderTimeline({ placements: layoutClips(blended) });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'B, 0:03.00–0:09.00, crossfade from the clip before',
+      }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('the drag shadow', () => {
+  const ghost = () => screen.getByTestId('drag-ghost');
+
+  it('is not shown until something is dragged', () => {
+    renderTimeline({ banners: [banner] });
+
+    expect(ghost()).not.toBeVisible();
+  });
+
+  it('follows a banner along its lane and says where it will land', () => {
+    renderTimeline({ banners: [banner] });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 450 });
+
+    expect(ghost()).toBeVisible();
+    expect(ghost()).toHaveTextContent('Banner Hello · 0:04.00');
+  });
+
+  it('says what dropping a clip where it is would do', () => {
+    renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 200 });
+
+    expect(ghost()).toHaveTextContent('Crossfade 1.0s');
+  });
+
+  it('says when a clip would be reordered instead', () => {
+    renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
+
+    expect(ghost()).toHaveTextContent('Move here');
+  });
+
+  it('follows a voice over take and a cursor effect too', () => {
+    renderTimeline({ narration: [narration], cursorLayers: [cursorLayer] });
+
+    const take = screen.getByRole('button', { name: 'Voice over A' });
+    fireEvent.pointerDown(take, { pointerId: 1, clientX: 150 });
+    pointerMove(take, { pointerId: 1, clientX: 550 });
+    expect(ghost()).toHaveTextContent('Voice over A · 0:05.00');
+    fireEvent.pointerUp(take, { pointerId: 1, clientX: 550 });
+
+    const marker = screen.getByRole('button', {
+      name: 'ripple effect at 0:05.00',
+    });
+    fireEvent.pointerDown(marker, { pointerId: 1, clientX: 500 });
+    pointerMove(marker, { pointerId: 1, clientX: 700 });
+    expect(ghost()).toHaveTextContent('ripple effect at 0:05.00 · 0:07.00');
+  });
+
+  it('is taken away when the pointer is let go', () => {
+    renderTimeline({ banners: [banner] });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 450 });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: 450 });
+
+    expect(ghost()).not.toBeVisible();
+  });
+
+  it('stays away for a trim, which redraws the block itself', () => {
+    renderTimeline();
+
+    const handle = screen.getByRole('button', { name: 'Trim the end of A' });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
+    pointerMove(handle, { pointerId: 1, clientX: 600 });
+
+    expect(ghost()).not.toBeVisible();
+  });
+});
+
+// the lane is wider than the window on any real demo, and a drag used to stop
+// dead at the edge of what was on screen
+describe('scrolling the lane from the edge of a drag', () => {
+  it('scrolls on when a drag is held against the right edge', () => {
+    renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 990 });
+
+    runFrame(0);
+    runFrame(100);
+
+    expect(lanes().scrollLeft).toBeGreaterThan(0);
+  });
+
+  it('scrolls back when the drag is held against the left edge', () => {
+    renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
+    lanes().scrollLeft = 800;
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 10 });
+
+    runFrame(0);
+    runFrame(100);
+
+    expect(lanes().scrollLeft).toBeLessThan(800);
+  });
+
+  it('leaves the lane alone while the drag is away from either edge', () => {
+    renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 500 });
+
+    runFrame(0);
+    runFrame(100);
+
+    expect(lanes().scrollLeft).toBe(0);
+  });
+
+  it('never scrolls past the end of the lane', () => {
+    renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 1000 });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 990 });
+
+    runFrame(0);
+    runFrame(100);
+
+    expect(lanes().scrollLeft).toBe(0);
+  });
+
+  it('carries the block being dragged along with the lane', () => {
+    const { onSpanChange } = renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 990 });
+    const beforeScrolling = onSpanChange.mock.calls.length;
+
+    runFrame(0);
+    runFrame(100);
+
+    expect(onSpanChange.mock.calls.length).toBeGreaterThan(beforeScrolling);
+  });
+
+  it('stops as soon as the pointer is let go', () => {
+    renderTimeline({ banners: [banner] });
+    stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    pointerMove(block, { pointerId: 1, clientX: 990 });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: 990 });
+
+    expect(runFrame(100)).toBe(false);
+    expect(lanes().scrollLeft).toBe(0);
   });
 });

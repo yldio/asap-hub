@@ -8,9 +8,24 @@ import { TimelineAction, timelineReducer } from '../../project/timelineReducer';
 import { ProjectEditor as Editor } from '../../project/useProjectEditor';
 import ProjectEditor from '../ProjectEditor';
 
+// jsdom implements neither PointerEvent nor pointer capture, so without these
+// the lane never sees a coordinate
+class TestPointerEvent extends MouseEvent {
+  readonly pointerId: number;
+
+  constructor(type: string, props: PointerEventInit = {}) {
+    super(type, props);
+    this.pointerId = props.pointerId ?? 1;
+  }
+}
+
 beforeAll(() => {
   HTMLMediaElement.prototype.pause = jest.fn();
   HTMLMediaElement.prototype.play = jest.fn(() => Promise.resolve());
+  window.PointerEvent = TestPointerEvent as unknown as typeof PointerEvent;
+  Element.prototype.setPointerCapture = jest.fn();
+  Element.prototype.releasePointerCapture = jest.fn();
+  Element.prototype.hasPointerCapture = jest.fn(() => true);
 });
 
 const asset = (overrides: Partial<ProjectAsset> = {}): ProjectAsset => ({
@@ -380,24 +395,6 @@ describe('retiming a cursor effect on the lane', () => {
       call.action?.type === 'updateCursorEffect' ? [call.action.change] : [],
     );
 
-  // jsdom implements neither PointerEvent nor pointer capture, so without
-  // these the lane never sees a coordinate
-  class TestPointerEvent extends MouseEvent {
-    readonly pointerId: number;
-
-    constructor(type: string, props: PointerEventInit = {}) {
-      super(type, props);
-      this.pointerId = props.pointerId ?? 1;
-    }
-  }
-
-  beforeAll(() => {
-    window.PointerEvent = TestPointerEvent as unknown as typeof PointerEvent;
-    Element.prototype.setPointerCapture = jest.fn();
-    Element.prototype.releasePointerCapture = jest.fn();
-    Element.prototype.hasPointerCapture = jest.fn(() => true);
-  });
-
   it('stores the new moment against the clip the effect belongs to', () => {
     const { calls } = renderEditor({ timeline: withEffect(1000) });
 
@@ -571,5 +568,90 @@ describe('the colour of a click', () => {
         call.action?.type === 'updateCursorEffect' ? [call.action.change] : [],
       ),
     ).toContainEqual(expect.objectContaining({ color: '#ff3b30' }));
+  });
+});
+
+// The video track is gapless and ordered: two clips can only share time by the
+// later one blending into the one before it, so an overlap dragged on the lane
+// is stored as that clip's incoming transition.
+describe('dropping a clip over its neighbour', () => {
+  const withTwoClips = (): Timeline => ({
+    ...withClip(),
+    clips: [
+      ...withClip().clips,
+      {
+        kind: 'source',
+        id: 'clip-b',
+        assetId: 'asset-a',
+        inMs: 0,
+        outMs: 8000,
+        volume: 1,
+      },
+    ],
+  });
+
+  beforeEach(() => {
+    jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      top: 0,
+      right: 1000,
+      bottom: 100,
+      width: 1000,
+      height: 100,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  // the lane draws at 24 pixels a second until the shell has been measured, so
+  // 24 pixels of travel is a second of programme time
+  const dragFirstClip = (fromX: number, toX: number) => {
+    const block = screen.getAllByRole('button', {
+      name: /^Sprint demo, 0:00\.00/,
+    })[0] as HTMLElement;
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: fromX });
+    fireEvent.pointerMove(block, { pointerId: 1, clientX: toX, buttons: 1 });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: toX });
+  };
+
+  it('stores the overlap as a crossfade on the later clip', () => {
+    const { calls } = renderEditor({ timeline: withTwoClips() });
+
+    dragFirstClip(50, 74);
+
+    expect(calls.map((call) => call.action).filter(Boolean)).toContainEqual({
+      type: 'setTransition',
+      clipId: 'clip-b',
+      transition: { type: 'crossfade', durationMs: 1000 },
+    });
+  });
+
+  it('is one undoable gesture however many frames the drag took', () => {
+    const { calls } = renderEditor({ timeline: withTwoClips() });
+
+    dragFirstClip(50, 74);
+
+    expect(calls.map((call) => call.name)).toEqual([
+      'beginGesture',
+      'dispatch',
+      'endGesture',
+    ]);
+  });
+
+  it('says on the lane that the two clips now blend', () => {
+    renderLive(withTwoClips());
+
+    dragFirstClip(50, 74);
+
+    expect(
+      screen.getByRole('button', {
+        name: /crossfade from the clip before$/,
+      }),
+    ).toBeInTheDocument();
   });
 });

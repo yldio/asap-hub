@@ -519,6 +519,29 @@ const ProjectEditor: FC<Props> = ({
     [dispatch],
   );
 
+  // Two clips can only share time by blending, so an overlap dragged on the
+  // lane is stored as the incoming transition of the later of the two. A join
+  // that was already sliding keeps sliding; anything else becomes a crossfade.
+  const overlapClips = useCallback(
+    (clipId: string, blendMs: number) => {
+      const clip = timeline.clips.find((candidate) => candidate.id === clipId);
+      if (!clip) return;
+      const kept = clip.transitionIn;
+      dispatch({
+        type: 'setTransition',
+        clipId,
+        transition:
+          blendMs > 0
+            ? {
+                type: kept && kept.type !== 'cut' ? kept.type : 'crossfade',
+                durationMs: Math.round(blendMs),
+              }
+            : undefined,
+      });
+    },
+    [dispatch, timeline.clips],
+  );
+
   const trimClip = useCallback(
     (clipId: string, change: { inMs?: number; outMs?: number }) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
@@ -862,6 +885,7 @@ const ProjectEditor: FC<Props> = ({
             onSeek={seek}
             onSpanChange={changeSpan}
             onMove={moveClip}
+            onOverlap={overlapClips}
             onTrim={trimClip}
             onToggleMute={toggleMuteClip}
             onGestureStart={startDrag}

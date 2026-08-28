@@ -33,14 +33,18 @@ const barStyles = css({
   alignItems: 'center',
   gap: rem(12),
   paddingBottom: rem(16),
+  '@media (max-width: 700px)': { gap: rem(8), paddingBottom: rem(12) },
 });
 
+// once the row is tight the search takes a line of its own, which leaves the
+// whole next line to the controls instead of stranding Upload below them
 const searchWrapStyles = css({
   position: 'relative',
   flex: `1 1 ${rem(220)}`,
   minWidth: rem(180),
   display: 'flex',
   alignItems: 'center',
+  '@media (max-width: 900px)': { flex: '1 1 100%' },
 });
 
 const searchIconStyles = css({
@@ -61,7 +65,11 @@ const searchInputStyles = css({
   font: 'inherit',
   fontSize: rem(15),
   color: charcoal.rgb,
-  ':focus': { outline: 'none', borderColor: pine.rgb },
+  ':focus': { borderColor: pine.rgb },
+  ':focus-visible': {
+    outline: `${rem(2)} solid ${pine.rgb}`,
+    outlineOffset: rem(1),
+  },
 });
 
 const toggleGroupStyles = css({
@@ -106,6 +114,7 @@ const uploadStyles = css({
   textDecoration: 'none',
   whiteSpace: 'nowrap',
   ':hover': { opacity: 0.9 },
+  '@media (max-width: 700px)': { flex: 1 },
 });
 
 const newFolderStyles = css({
@@ -125,6 +134,7 @@ const newFolderStyles = css({
   whiteSpace: 'nowrap',
   ':hover:enabled': { backgroundColor: silver.rgb },
   ':disabled': { color: tin.rgb, cursor: 'default' },
+  '@media (max-width: 700px)': { flex: 1 },
 });
 
 const popoverStyles = css({

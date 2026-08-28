@@ -33,6 +33,37 @@ const clips: TimelineDoc['clips'] = [
   },
 ];
 
+const banner: TimelineDoc['banners'][number] = {
+  id: 'banner-a',
+  startMs: 2000,
+  durationMs: 2000,
+  preset: 'lowerThird',
+  text: 'Hello',
+  position: 'bottom',
+  animation: 'fade',
+};
+
+const zoom: TimelineDoc['zooms'][number] = {
+  id: 'zoom-a',
+  clipId: 'clip-b',
+  startMs: 1000,
+  rampInMs: 400,
+  holdMs: 1200,
+  rampOutMs: 400,
+  focus: { x: 0.5, y: 0.5 },
+  scale: 2,
+  easing: 'easeInOut',
+};
+
+const narration: TimelineDoc['narration'][number] = {
+  id: 'take-a',
+  assetId: 'asset-a',
+  startMs: 1000,
+  inMs: 0,
+  outMs: 3000,
+  volume: 1,
+};
+
 const pixelsPerSecond = 100;
 
 const renderTimeline = (overrides: Record<string, unknown> = {}) => {
@@ -40,7 +71,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onTrim = jest.fn();
   const onSeek = jest.fn();
   const onSelect = jest.fn();
-  const onMoveBanner = jest.fn();
+  const onSpanChange = jest.fn();
   const onToggleMute = jest.fn();
   const placements = layoutClips(clips);
 
@@ -55,7 +86,6 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       narration={[]}
       zooms={[]}
       cursorLayers={[]}
-      onMoveBanner={onMoveBanner}
       assets={{
         'asset-a': asset('asset-a', 'A'),
         'asset-b': asset('asset-b', 'B'),
@@ -64,6 +94,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       onSeek={onSeek}
       onMove={onMove}
       onTrim={onTrim}
+      onSpanChange={onSpanChange}
       onToggleMute={onToggleMute}
       {...overrides}
     />,
@@ -75,7 +106,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     onTrim,
     onSeek,
     onSelect,
-    onMoveBanner,
+    onSpanChange,
     onToggleMute,
   };
 };
@@ -187,6 +218,124 @@ describe('dragging a trim handle', () => {
     fireEvent.pointerMove(handle, { pointerId: 1, clientX: 100 });
 
     expect(onTrim).toHaveBeenCalledWith('clip-a', { inMs: 1000 });
+  });
+
+  // the handle used to be measured against the block's own edge, which moves as
+  // the trim lands, so every frame added the offset again and the clip could
+  // only ever shrink
+  it('follows the pointer back and forth within one drag', () => {
+    const { onTrim } = renderTimeline();
+
+    const handle = screen.getByRole('button', { name: 'Trim the end of A' });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 300 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 700 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 400 });
+
+    expect(onTrim).toHaveBeenLastCalledWith('clip-a', { outMs: 4000 });
+  });
+});
+
+describe('the overlay lanes', () => {
+  it('moves a banner along its lane', () => {
+    const { onSpanChange } = renderTimeline({ banners: [banner] });
+
+    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
+    fireEvent.pointerMove(block, { pointerId: 1, clientX: 450 });
+
+    expect(onSpanChange).toHaveBeenCalledWith('banner', 'banner-a', {
+      startMs: 4000,
+      durationMs: 2000,
+    });
+  });
+
+  it('lengthens a banner from its end', () => {
+    const { onSpanChange } = renderTimeline({ banners: [banner] });
+
+    const handle = screen.getByRole('button', {
+      name: 'Drag to change where Banner Hello ends',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 700 });
+
+    expect(onSpanChange).toHaveBeenCalledWith('banner', 'banner-a', {
+      startMs: 2000,
+      durationMs: 5000,
+    });
+  });
+
+  it('resizes a zoom in programme time, past the clip it belongs to', () => {
+    const { onSpanChange } = renderTimeline({ zooms: [zoom] });
+
+    // clip B starts at 4000ms, so the zoom sits at 5000ms and runs for 2000ms
+    const handle = screen.getByRole('button', {
+      name: 'Drag to change where Zoom 2x ends',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 700 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 900 });
+
+    expect(onSpanChange).toHaveBeenCalledWith('zoom', 'zoom-a', {
+      startMs: 5000,
+      durationMs: 4000,
+    });
+  });
+
+  it('moves a voice over take', () => {
+    const { onSpanChange } = renderTimeline({ narration: [narration] });
+
+    const block = screen.getByRole('button', { name: 'Voice over A' });
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 150 });
+    fireEvent.pointerMove(block, { pointerId: 1, clientX: 550 });
+
+    expect(onSpanChange).toHaveBeenCalledWith('narration', 'take-a', {
+      startMs: 5000,
+      durationMs: 3000,
+    });
+  });
+
+  it('selects a voice over take so it can be removed', () => {
+    const { onSelect } = renderTimeline({ narration: [narration] });
+
+    fireEvent.pointerDown(
+      screen.getByRole('button', { name: 'Voice over A' }),
+      {
+        pointerId: 1,
+        clientX: 150,
+      },
+    );
+
+    expect(onSelect).toHaveBeenCalledWith('narration', 'take-a');
+  });
+});
+
+describe('a title card', () => {
+  const titled: TimelineDoc['clips'] = [
+    {
+      kind: 'title',
+      id: 'title-a',
+      durationMs: 3000,
+      preset: 'centered',
+      text: 'Intro',
+    },
+    ...clips,
+  ];
+
+  it('changes how long it stays on screen when its edge is dragged', () => {
+    const { onSpanChange } = renderTimeline({
+      placements: layoutClips(titled),
+    });
+
+    const handle = screen.getByRole('button', {
+      name: 'Trim the end of Intro',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 300 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 500 });
+
+    expect(onSpanChange).toHaveBeenCalledWith('title', 'title-a', {
+      startMs: 0,
+      durationMs: 5000,
+    });
   });
 });
 

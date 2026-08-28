@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner } from '@asap-hub/demo-timeline';
 import { FC, PointerEvent as ReactPointerEvent } from 'react';
+import { DragKind } from './dragging';
 import { editorTheme } from './editorTheme';
-import { formatDuration } from './geometry';
+
+// the shortest block still wide enough to aim a pointer at
+export const minBlockPx = 24;
 
 const blockStyles = css({
   position: 'absolute',
@@ -11,9 +13,7 @@ const blockStyles = css({
   bottom: 4,
   borderRadius: 6,
   border: '1px solid transparent',
-  backgroundColor: editorTheme.banner,
-  color: editorTheme.onBanner,
-  padding: '4px 8px',
+  padding: '4px 10px',
   overflow: 'hidden',
   cursor: 'grab',
   display: 'flex',
@@ -26,6 +26,7 @@ const blockStyles = css({
   touchAction: 'none',
   userSelect: 'none',
   whiteSpace: 'nowrap',
+  ':active': { cursor: 'grabbing' },
 });
 
 const selectedStyles = css({
@@ -43,25 +44,47 @@ const handleStyles = css({
   border: 0,
   padding: 0,
   touchAction: 'none',
+  ':hover::after, :focus-visible::after': {
+    content: '""',
+    position: 'absolute',
+    top: 5,
+    bottom: 5,
+    left: 3,
+    width: 4,
+    borderRadius: 2,
+    backgroundColor: 'currentColor',
+  },
 });
 
-export type BannerDragKind = 'move' | 'trimStart' | 'trimEnd';
+const tones = {
+  banner: { backgroundColor: editorTheme.banner, color: editorTheme.onBanner },
+  zoom: { backgroundColor: editorTheme.zoom, color: editorTheme.onZoom },
+  audio: { backgroundColor: editorTheme.audio, color: editorTheme.onAudio },
+} as const;
+
+export type LaneTone = keyof typeof tones;
 
 type Props = {
-  readonly banner: Banner;
+  readonly label: string;
+  readonly name: string;
+  readonly tone: LaneTone;
   readonly left: number;
   readonly width: number;
   readonly selected: boolean;
   readonly readOnly: boolean;
   readonly onSelect: () => void;
   readonly onDragStart: (
-    kind: BannerDragKind,
+    kind: DragKind,
     event: ReactPointerEvent<HTMLElement>,
   ) => void;
 };
 
-const BannerBlock: FC<Props> = ({
-  banner,
+// Banners, zooms and voice over are the same thing on the timeline: a labelled
+// span that can be dragged along its lane and resized from either edge.
+const LaneBlock: FC<Props> = ({
+  label,
+  name,
+  tone,
   left,
   width,
   selected,
@@ -72,12 +95,10 @@ const BannerBlock: FC<Props> = ({
   <div
     role="button"
     tabIndex={0}
-    aria-label={`Banner ${banner.text || 'Untitled'}, ${formatDuration(
-      banner.durationMs,
-    )}`}
+    aria-label={name}
     aria-pressed={selected}
-    css={[blockStyles, selected && selectedStyles]}
-    style={{ left, width: Math.max(width, 18) }}
+    css={[blockStyles, tones[tone], selected && selectedStyles]}
+    style={{ left, width: Math.max(width, minBlockPx) }}
     onPointerDown={(event) => {
       onSelect();
       if (!readOnly) {
@@ -91,10 +112,10 @@ const BannerBlock: FC<Props> = ({
       }
     }}
   >
-    {banner.text || 'Banner'}
+    {label}
     <button
       type="button"
-      aria-label={`Trim the start of banner ${banner.text || 'Untitled'}`}
+      aria-label={`Drag to change where ${name} starts`}
       css={handleStyles}
       style={{ left: 0 }}
       disabled={readOnly}
@@ -106,7 +127,7 @@ const BannerBlock: FC<Props> = ({
     />
     <button
       type="button"
-      aria-label={`Trim the end of banner ${banner.text || 'Untitled'}`}
+      aria-label={`Drag to change where ${name} ends`}
       css={handleStyles}
       style={{ right: 0 }}
       disabled={readOnly}
@@ -119,4 +140,4 @@ const BannerBlock: FC<Props> = ({
   </div>
 );
 
-export default BannerBlock;
+export default LaneBlock;

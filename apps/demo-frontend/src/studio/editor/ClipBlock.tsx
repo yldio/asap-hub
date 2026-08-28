@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { ClipPlacement } from '@asap-hub/demo-timeline';
 import { FC, PointerEvent as ReactPointerEvent } from 'react';
 import { ProjectAsset } from '../../api/types';
+import { DragKind } from './dragging';
 import { editorTheme } from './editorTheme';
 import { formatDuration } from './geometry';
 import { MuteIcon, SoundIcon } from './icons';
@@ -91,8 +92,6 @@ const muteButtonStyles = css({
   cursor: 'pointer',
 });
 
-export type ClipDragKind = 'move' | 'trimStart' | 'trimEnd';
-
 type Props = {
   readonly placement: ClipPlacement;
   readonly asset?: ProjectAsset;
@@ -102,7 +101,7 @@ type Props = {
   readonly readOnly: boolean;
   readonly onSelect: () => void;
   readonly onDragStart: (
-    kind: ClipDragKind,
+    kind: DragKind,
     event: ReactPointerEvent<HTMLElement>,
   ) => void;
   readonly onToggleMute: () => void;
@@ -159,45 +158,44 @@ const ClipBlock: FC<Props> = ({
       </span>
 
       {source ? (
-        <>
-          <button
-            type="button"
-            aria-label={`${muted ? 'Unmute' : 'Mute'} ${label}`}
-            css={muteButtonStyles}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleMute();
-            }}
-          >
-            {muted ? <MuteIcon size={14} /> : <SoundIcon size={14} />}
-          </button>
-          <button
-            type="button"
-            aria-label={`Trim the start of ${label}`}
-            css={handleStyles}
-            style={{ left: 0 }}
-            disabled={readOnly}
-            onPointerDown={(event) => {
-              event.stopPropagation();
-              onSelect();
-              onDragStart('trimStart', event);
-            }}
-          />
-          <button
-            type="button"
-            aria-label={`Trim the end of ${label}`}
-            css={handleStyles}
-            style={{ right: 0 }}
-            disabled={readOnly}
-            onPointerDown={(event) => {
-              event.stopPropagation();
-              onSelect();
-              onDragStart('trimEnd', event);
-            }}
-          />
-        </>
+        <button
+          type="button"
+          aria-label={`${muted ? 'Unmute' : 'Mute'} ${label}`}
+          css={muteButtonStyles}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggleMute();
+          }}
+        >
+          {muted ? <MuteIcon size={14} /> : <SoundIcon size={14} />}
+        </button>
       ) : null}
+
+      <button
+        type="button"
+        aria-label={`Trim the start of ${label}`}
+        css={handleStyles}
+        style={{ left: 0 }}
+        disabled={readOnly}
+        onPointerDown={(event) => {
+          event.stopPropagation();
+          onSelect();
+          onDragStart('trimStart', event);
+        }}
+      />
+      <button
+        type="button"
+        aria-label={`Trim the end of ${label}`}
+        css={handleStyles}
+        style={{ right: 0 }}
+        disabled={readOnly}
+        onPointerDown={(event) => {
+          event.stopPropagation();
+          onSelect();
+          onDragStart('trimEnd', event);
+        }}
+      />
     </div>
   );
 };

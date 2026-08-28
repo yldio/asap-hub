@@ -16,9 +16,16 @@ import {
   useState,
 } from 'react';
 import { ProjectAsset } from '../../api/types';
-import BannerBlock, { BannerDragKind } from './BannerBlock';
-import ClipBlock, { ClipDragKind } from './ClipBlock';
-import { editorTheme, trackHeights } from './editorTheme';
+import ClipBlock from './ClipBlock';
+import {
+  DragKind,
+  Span,
+  SpanDrag,
+  spanAfterDrag,
+  TrimDrag,
+  trimAfterDrag,
+} from './dragging';
+import { editorTheme, trackHeaders, trackHeights } from './editorTheme';
 import {
   formatDuration,
   lanePaddingPx,
@@ -26,7 +33,9 @@ import {
   pxToMs,
   tickIntervalMs,
 } from './geometry';
+import LaneBlock from './LaneBlock';
 import { isSelected, Selection } from './selection';
+import { zoomDurationMs } from './zoom';
 
 const panelStyles = css({
   backgroundColor: editorTheme.panel,
@@ -43,7 +52,7 @@ const panelStyles = css({
 // the track names stay put while the lanes scroll under them
 const headerColumnStyles = css({
   flexShrink: 0,
-  width: 116,
+  width: trackHeaders,
   borderRight: `1px solid ${editorTheme.line}`,
   backgroundColor: editorTheme.panel,
   zIndex: 1,
@@ -107,31 +116,6 @@ const overlayTrackStyles = css({
   borderBottom: `1px solid ${editorTheme.line}`,
 });
 
-const zoomBlockStyles = css({
-  position: 'absolute',
-  top: 4,
-  bottom: 4,
-  borderRadius: 6,
-  backgroundColor: editorTheme.zoom,
-  color: editorTheme.onZoom,
-  padding: '4px 8px',
-  fontSize: 12,
-  fontWeight: 600,
-  display: 'flex',
-  alignItems: 'center',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  border: '1px solid transparent',
-  font: 'inherit',
-  textAlign: 'left',
-  cursor: 'pointer',
-});
-
-const selectedBlockStyles = css({
-  borderColor: editorTheme.selected,
-  boxShadow: `0 0 0 1px ${editorTheme.selected}`,
-});
-
 const effectMarkerStyles = css({
   position: 'absolute',
   top: 8,
@@ -147,26 +131,6 @@ const effectMarkerStyles = css({
 
 const selectedMarkerStyles = css({
   outline: `2px solid ${editorTheme.selected}`,
-});
-
-const audioBlockStyles = css({
-  position: 'absolute',
-  top: 4,
-  bottom: 4,
-  borderRadius: 6,
-  backgroundColor: editorTheme.audio,
-  color: editorTheme.onAudio,
-  padding: '4px 8px',
-  fontSize: 12,
-  fontWeight: 600,
-  display: 'flex',
-  alignItems: 'center',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  border: 0,
-  font: 'inherit',
-  textAlign: 'left',
-  cursor: 'pointer',
 });
 
 const emptyTrackStyles = css({
@@ -212,20 +176,23 @@ const dropMarkerStyles = css({
   zIndex: 3,
 });
 
-// the shortest block still wide enough to aim a pointer at
-const minBlockPx = 18;
-
 type MsAt = (clientX: number) => number;
+
+// a title card has no footage to trim, so both its edges just change how long
+// it stays on screen; every other span sits on a lane of its own
+export type SpanKind = 'banner' | 'zoom' | 'narration' | 'title';
 
 type StartClipDrag = (
   placement: ClipPlacement,
-  kind: ClipDragKind,
+  kind: DragKind,
   event: ReactPointerEvent<HTMLElement>,
 ) => void;
 
-type StartBannerDrag = (
-  banner: Banner,
-  kind: BannerDragKind,
+type StartSpanDrag = (
+  kind: SpanKind,
+  id: string,
+  span: Span,
+  dragKind: DragKind,
   event: ReactPointerEvent<HTMLElement>,
 ) => void;
 
@@ -341,7 +308,7 @@ const BannerTrack = memo<{
   readonly selection?: Selection;
   readonly readOnly: boolean;
   readonly onSelect: SelectHandler;
-  readonly onDragStart: StartBannerDrag;
+  readonly onDragStart: StartSpanDrag;
 }>(
   ({
     banners,
@@ -353,15 +320,19 @@ const BannerTrack = memo<{
   }) => (
     <div css={overlayTrackStyles}>
       {banners.map((banner) => (
-        <BannerBlock
+        <LaneBlock
           key={banner.id}
-          banner={banner}
+          tone="banner"
+          label={banner.text || 'Banner'}
+          name={`Banner ${banner.text || 'Untitled'}`}
           left={msToPx(banner.startMs, pixelsPerSecond)}
           width={msToPx(banner.durationMs, pixelsPerSecond)}
           selected={isSelected(selection, 'banner', banner.id)}
           readOnly={readOnly}
           onSelect={() => onSelect('banner', banner.id)}
-          onDragStart={(kind, event) => onDragStart(banner, kind, event)}
+          onDragStart={(kind, event) =>
+            onDragStart('banner', banner.id, banner, kind, event)
+          }
         />
       ))}
     </div>
@@ -376,7 +347,9 @@ const EffectTrack = memo<{
   readonly placements: ClipPlacement[];
   readonly pixelsPerSecond: number;
   readonly selection?: Selection;
+  readonly readOnly: boolean;
   readonly onSelect: SelectHandler;
+  readonly onDragStart: StartSpanDrag;
 }>(
   ({
     zooms,
@@ -384,7 +357,9 @@ const EffectTrack = memo<{
     placements,
     pixelsPerSecond,
     selection,
+    readOnly,
     onSelect,
+    onDragStart,
   }) => {
     const startOf = (clipId: string): number | undefined =>
       placements.find(({ clip }) => clip.id === clipId)?.startMs;
@@ -396,23 +371,25 @@ const EffectTrack = memo<{
           if (clipStartMs === undefined) {
             return null;
           }
-          const lengthMs = zoom.rampInMs + zoom.holdMs + zoom.rampOutMs;
+          const span = {
+            startMs: clipStartMs + zoom.startMs,
+            durationMs: zoomDurationMs(zoom),
+          };
           return (
-            <button
-              type="button"
+            <LaneBlock
               key={zoom.id}
-              css={[
-                zoomBlockStyles,
-                isSelected(selection, 'zoom', zoom.id) && selectedBlockStyles,
-              ]}
-              style={{
-                left: msToPx(clipStartMs + zoom.startMs, pixelsPerSecond),
-                width: Math.max(msToPx(lengthMs, pixelsPerSecond), minBlockPx),
-              }}
-              onClick={() => onSelect('zoom', zoom.id)}
-            >
-              {`Zoom ${zoom.scale}x`}
-            </button>
+              tone="zoom"
+              label={`Zoom ${zoom.scale}x`}
+              name={`Zoom ${zoom.scale}x`}
+              left={msToPx(span.startMs, pixelsPerSecond)}
+              width={msToPx(span.durationMs, pixelsPerSecond)}
+              selected={isSelected(selection, 'zoom', zoom.id)}
+              readOnly={readOnly}
+              onSelect={() => onSelect('zoom', zoom.id)}
+              onDragStart={(kind, event) =>
+                onDragStart('zoom', zoom.id, span, kind, event)
+              }
+            />
           );
         })}
 
@@ -445,31 +422,60 @@ const EffectTrack = memo<{
 
 const NarrationTrack = memo<{
   readonly narration: NarrationClip[];
+  readonly assets: Record<string, ProjectAsset>;
   readonly pixelsPerSecond: number;
-}>(({ narration, pixelsPerSecond }) => (
-  <div css={overlayTrackStyles}>
-    {narration.map((clip) => (
-      <span
-        key={clip.id}
-        css={audioBlockStyles}
-        style={{
-          left: msToPx(clip.startMs, pixelsPerSecond),
-          width: Math.max(
-            msToPx(clip.outMs - clip.inMs, pixelsPerSecond),
-            minBlockPx,
-          ),
-        }}
-      >
-        Voice over
-      </span>
-    ))}
-  </div>
-));
+  readonly selection?: Selection;
+  readonly readOnly: boolean;
+  readonly onSelect: SelectHandler;
+  readonly onDragStart: StartSpanDrag;
+}>(
+  ({
+    narration,
+    assets,
+    pixelsPerSecond,
+    selection,
+    readOnly,
+    onSelect,
+    onDragStart,
+  }) => (
+    <div css={overlayTrackStyles}>
+      {narration.length === 0 ? (
+        <p css={emptyTrackStyles}>
+          Record a voice over or import an audio file to add one here.
+        </p>
+      ) : (
+        narration.map((take) => {
+          const label = assets[take.assetId]?.label ?? 'Voice over';
+          const span = {
+            startMs: take.startMs,
+            durationMs: take.outMs - take.inMs,
+          };
+          return (
+            <LaneBlock
+              key={take.id}
+              tone="audio"
+              label={label}
+              name={`Voice over ${label}`}
+              left={msToPx(span.startMs, pixelsPerSecond)}
+              width={msToPx(span.durationMs, pixelsPerSecond)}
+              selected={isSelected(selection, 'narration', take.id)}
+              readOnly={readOnly}
+              onSelect={() => onSelect('narration', take.id)}
+              onDragStart={(kind, event) =>
+                onDragStart('narration', take.id, span, kind, event)
+              }
+            />
+          );
+        })
+      )}
+    </div>
+  ),
+);
 
 type Drag =
-  | { kind: 'move'; clipId: string; index: number }
-  | { kind: 'trimStart' | 'trimEnd'; clipId: string }
-  | { kind: BannerDragKind; bannerId: string; grabOffsetMs: number };
+  | { target: 'reorder'; clipId: string; index: number }
+  | ({ target: 'clip'; clipId: string } & TrimDrag)
+  | ({ target: 'span'; spanKind: SpanKind; id: string } & SpanDrag);
 
 type Props = {
   readonly placements: ClipPlacement[];
@@ -485,10 +491,8 @@ type Props = {
   readonly assets: Record<string, ProjectAsset>;
   readonly onSelect: SelectHandler;
   readonly onSeek: (ms: number) => void;
-  readonly onMoveBanner: (
-    bannerId: string,
-    change: { startMs?: number; durationMs?: number },
-  ) => void;
+  // always in programme time; the editor converts for the clip-anchored tracks
+  readonly onSpanChange: (kind: SpanKind, id: string, span: Span) => void;
   readonly onMove: (clipId: string, toIndex: number) => void;
   readonly onTrim: (
     clipId: string,
@@ -513,7 +517,7 @@ const Timeline: FC<Props> = ({
   onSeek,
   onMove,
   onTrim,
-  onMoveBanner,
+  onSpanChange,
   onToggleMute,
 }) => {
   const laneRef = useRef<HTMLDivElement>(null);
@@ -543,48 +547,17 @@ const Timeline: FC<Props> = ({
     if (!drag) return;
     const tMs = msAt(event.clientX);
 
-    if ('bannerId' in drag) {
-      const banner = banners.find(({ id }) => id === drag.bannerId);
-      if (!banner) return;
-      if (drag.kind === 'move') {
-        onMoveBanner(drag.bannerId, {
-          startMs: Math.max(0, tMs - drag.grabOffsetMs),
-        });
-      } else if (drag.kind === 'trimStart') {
-        const startMs = Math.max(
-          0,
-          Math.min(tMs, banner.startMs + banner.durationMs - 200),
-        );
-        onMoveBanner(drag.bannerId, {
-          startMs,
-          durationMs: banner.startMs + banner.durationMs - startMs,
-        });
-      } else {
-        onMoveBanner(drag.bannerId, {
-          durationMs: Math.max(200, tMs - banner.startMs),
-        });
-      }
-      return;
-    }
+    switch (drag.target) {
+      case 'reorder':
+        setDropIndex(indexAt(tMs));
+        return;
 
-    if (drag.kind === 'move') {
-      setDropIndex(indexAt(tMs));
-      return;
-    }
+      case 'clip':
+        onTrim(drag.clipId, trimAfterDrag(drag, tMs));
+        return;
 
-    const placement = placements.find(({ clip }) => clip.id === drag.clipId);
-    if (!placement || placement.clip.kind !== 'source') return;
-
-    if (drag.kind === 'trimStart') {
-      onTrim(drag.clipId, {
-        inMs: placement.clip.inMs + (tMs - placement.startMs),
-      });
-    } else {
-      onTrim(drag.clipId, {
-        outMs:
-          placement.clip.outMs +
-          (tMs - (placement.startMs + placement.durationMs)),
-      });
+      default:
+        onSpanChange(drag.spanKind, drag.id, spanAfterDrag(drag, tMs));
     }
   };
 
@@ -592,12 +565,7 @@ const Timeline: FC<Props> = ({
     const drag = dragRef.current;
     dragRef.current = undefined;
 
-    if (
-      drag &&
-      !('bannerId' in drag) &&
-      drag.kind === 'move' &&
-      dropIndex !== undefined
-    ) {
+    if (drag?.target === 'reorder' && dropIndex !== undefined) {
       const toIndex = dropIndex > drag.index ? dropIndex - 1 : dropIndex;
       if (toIndex !== drag.index) {
         onMove(drag.clipId, toIndex);
@@ -610,30 +578,68 @@ const Timeline: FC<Props> = ({
     }
   };
 
-  const startClipDrag = useCallback<StartClipDrag>((placement, kind, event) => {
-    const lane = laneRef.current;
-    if (!lane) return;
-    lane.setPointerCapture(event.pointerId);
-    dragRef.current =
-      kind === 'move'
-        ? { kind, clipId: placement.clip.id, index: placement.index }
-        : { kind, clipId: placement.clip.id };
-  }, []);
-
-  const startBannerDrag = useCallback<StartBannerDrag>(
-    (banner, kind, event) => {
+  // the lane owns the pointer for the whole drag, so it keeps receiving moves
+  // even once the pointer has left the block it started on
+  const capture = useCallback(
+    (event: ReactPointerEvent<HTMLElement>): boolean => {
       const lane = laneRef.current;
-      if (!lane) return;
+      if (!lane) return false;
       lane.setPointerCapture(event.pointerId);
+      return true;
+    },
+    [],
+  );
+
+  const startClipDrag = useCallback<StartClipDrag>(
+    (placement, kind, event) => {
+      if (!capture(event)) return;
+      const { clip } = placement;
+
+      if (kind === 'move') {
+        dragRef.current = {
+          target: 'reorder',
+          clipId: clip.id,
+          index: placement.index,
+        };
+        return;
+      }
+
+      dragRef.current =
+        clip.kind === 'source'
+          ? {
+              target: 'clip',
+              clipId: clip.id,
+              kind,
+              originMs: msAt(event.clientX),
+              inMs: clip.inMs,
+              outMs: clip.outMs,
+            }
+          : {
+              target: 'span',
+              spanKind: 'title',
+              id: clip.id,
+              kind,
+              originMs: msAt(event.clientX),
+              startMs: placement.startMs,
+              durationMs: placement.durationMs,
+            };
+    },
+    [capture, msAt],
+  );
+
+  const startSpanDrag = useCallback<StartSpanDrag>(
+    (spanKind, id, span, kind, event) => {
+      if (!capture(event)) return;
       dragRef.current = {
+        target: 'span',
+        spanKind,
+        id,
         kind,
-        bannerId: banner.id,
-        // keep the grab point under the pointer instead of snapping the
-        // banner's start to it
-        grabOffsetMs: msAt(event.clientX) - banner.startMs,
+        originMs: msAt(event.clientX),
+        ...span,
       };
     },
-    [msAt],
+    [capture, msAt],
   );
 
   const laneWidth = Math.max(
@@ -694,7 +700,7 @@ const Timeline: FC<Props> = ({
             selection={selection}
             readOnly={readOnly}
             onSelect={onSelect}
-            onDragStart={startBannerDrag}
+            onDragStart={startSpanDrag}
           />
 
           <EffectTrack
@@ -703,12 +709,19 @@ const Timeline: FC<Props> = ({
             placements={placements}
             pixelsPerSecond={pixelsPerSecond}
             selection={selection}
+            readOnly={readOnly}
             onSelect={onSelect}
+            onDragStart={startSpanDrag}
           />
 
           <NarrationTrack
             narration={narration}
+            assets={assets}
             pixelsPerSecond={pixelsPerSecond}
+            selection={selection}
+            readOnly={readOnly}
+            onSelect={onSelect}
+            onDragStart={startSpanDrag}
           />
 
           <div

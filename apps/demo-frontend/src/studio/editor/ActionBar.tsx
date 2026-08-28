@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
-import { formatTimecode } from './geometry';
 import {
   DuplicateIcon,
   MinusIcon,
@@ -31,12 +30,6 @@ const hintStyles = css({
   marginLeft: 'auto',
 });
 
-const timeStyles = css({
-  fontVariantNumeric: 'tabular-nums',
-  fontSize: 13,
-  color: editorTheme.muted,
-});
-
 const groupStyles = css({ display: 'flex', alignItems: 'center', gap: 6 });
 
 type Props = {
@@ -48,8 +41,6 @@ type Props = {
   readonly onAddCursorClick: () => void;
   readonly selectionMuted: boolean;
   readonly readOnly: boolean;
-  readonly playheadMs: number;
-  readonly durationMs: number;
   readonly onSplit: () => void;
   readonly onDuplicate: () => void;
   readonly onToggleMute: () => void;
@@ -68,8 +59,6 @@ const ActionBar: FC<Props> = ({
   onAddCursorClick,
   selectionMuted,
   readOnly,
-  playheadMs,
-  durationMs,
   onSplit,
   onDuplicate,
   onToggleMute,
@@ -105,7 +94,7 @@ const ActionBar: FC<Props> = ({
       disabled={readOnly || !canAddEffect}
       onClick={onAddCursorClick}
     >
-      Click
+      Mouse click
     </EditorButton>
     <EditorButton
       icon={<SplitIcon size={15} />}
@@ -136,13 +125,9 @@ const ActionBar: FC<Props> = ({
       Remove
     </EditorButton>
 
-    <span css={timeStyles}>
-      {formatTimecode(playheadMs)} / {formatTimecode(durationMs)}
-    </span>
-
     <span css={hintStyles}>
-      Drag clips to reorder, drag their edges to trim. S splits, D duplicates, M
-      mutes.
+      Drag anything along its lane to move it, or drag either edge to change how
+      long it lasts. S splits, D duplicates, M mutes.
     </span>
 
     <div css={groupStyles}>

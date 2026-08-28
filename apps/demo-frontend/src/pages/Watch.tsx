@@ -11,8 +11,9 @@ import ChapterList from '../watch/ChapterList';
 import Player from '../watch/Player';
 import SpritePreview from '../watch/SpritePreview';
 import useThumbnails from '../watch/useThumbnails';
-import { Button, ButtonLink, Card, Headline, Spinner } from '../ui/components';
-import { lead, rem } from '../ui/theme';
+import { PageHeading, SectionHeading } from '../layout/PageHeading';
+import { Button, ButtonLink, Card, Spinner } from '../ui/components';
+import { charcoal, lead, paper, rem, silver, steel } from '../ui/theme';
 import { formatDuration, formatRecordedAt } from '../utils/time';
 
 const layoutStyles = css({
@@ -33,6 +34,35 @@ const metaStyles = css({
   fontSize: rem(14),
   color: lead.rgb,
   paddingTop: rem(12),
+});
+
+// the buttons keep to their own group so they wrap together instead of the last
+// one being pushed past the right edge of the video column
+const actionsStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: rem(8),
+  marginLeft: 'auto',
+});
+
+// a routed link cannot be a ButtonLink, so it carries the same secondary button
+// look rather than falling back to the browser's default blue underline
+const editLinkStyles = css({
+  boxSizing: 'border-box',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: `${rem(5)} ${rem(15)}`,
+  borderRadius: rem(4),
+  border: `${rem(1)} solid ${steel.rgb}`,
+  backgroundColor: paper.rgb,
+  color: charcoal.rgb,
+  fontSize: rem(14),
+  fontWeight: 'bold',
+  textDecoration: 'none',
+  transition: '200ms',
+  ':hover, :focus-visible': { backgroundColor: silver.rgb },
 });
 
 const downloadFileName = (title: string) =>
@@ -89,19 +119,20 @@ const WatchPlayer: FC<{
           <span>{formatRecordedAt(video.recordedAt)}</span>
           <span>{formatDuration(video.durationMs)}</span>
           <span>Recorded by {video.createdBy.name}</span>
-          <ButtonLink
-            small
-            href={access.streamUrl}
-            download={downloadFileName(video.title)}
-            css={{ marginLeft: 'auto' }}
-          >
-            Download
-          </ButtonLink>
-          {isCreator && (
-            <Link to={editPathOf(video)} css={{ fontWeight: 'bold' }}>
-              Edit demo
-            </Link>
-          )}
+          <span css={actionsStyles}>
+            <ButtonLink
+              small
+              href={access.streamUrl}
+              download={downloadFileName(video.title)}
+            >
+              Download
+            </ButtonLink>
+            {isCreator && (
+              <Link to={editPathOf(video)} css={editLinkStyles}>
+                Edit demo
+              </Link>
+            )}
+          </span>
         </div>
       </div>
 
@@ -136,7 +167,7 @@ const Watch: FC = () => {
   if (video.isError || !video.data) {
     return (
       <Card overrideStyles={statePanelStyles}>
-        <Headline level={3}>We could not load this demo</Headline>
+        <PageHeading size={3}>We could not load this demo</PageHeading>
         <p css={{ color: lead.rgb, margin: 0 }}>
           It may have been removed, or you may not have access to it.
         </p>
@@ -159,14 +190,14 @@ const Watch: FC = () => {
     const settled = failed || unexported;
     return (
       <>
-        <Headline level={2}>{video.data.title}</Headline>
+        <PageHeading>{video.data.title}</PageHeading>
         <div css={{ height: rem(16) }} />
         <Card overrideStyles={statePanelStyles}>
-          <Headline level={3}>
+          <SectionHeading>
             {failed ? 'This demo failed to process' : null}
             {unexported ? 'This demo has not been exported yet' : null}
             {settled ? null : 'This demo is still processing'}
-          </Headline>
+          </SectionHeading>
           <p css={{ color: lead.rgb, margin: 0 }}>
             {failed
               ? 'The recording could not be encoded. Ask a creator to upload it again.'
@@ -197,10 +228,10 @@ const Watch: FC = () => {
   if (access.isError || !access.data) {
     return (
       <>
-        <Headline level={2}>{video.data.title}</Headline>
+        <PageHeading>{video.data.title}</PageHeading>
         <div css={{ height: rem(16) }} />
         <Card overrideStyles={statePanelStyles}>
-          <Headline level={3}>Playback is not available</Headline>
+          <SectionHeading>Playback is not available</SectionHeading>
           <p css={{ color: lead.rgb, margin: 0 }}>
             We could not get permission to stream this demo. Your access may
             have expired, or you may not be allowed to watch it.
@@ -219,7 +250,7 @@ const Watch: FC = () => {
 
   return (
     <>
-      <Headline level={2}>{video.data.title}</Headline>
+      <PageHeading>{video.data.title}</PageHeading>
       <div css={{ height: rem(16) }} />
       <WatchPlayer
         video={video.data}

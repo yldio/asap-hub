@@ -1,8 +1,8 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import type { Video, VideoAccess } from '../../api/types';
-import { memberMe, renderApp } from '../../test-utils';
+import { creatorMe, memberMe, renderApp } from '../../test-utils';
 import Watch from '../Watch';
 
 const video: Video = {
@@ -107,4 +107,63 @@ it('offers a download of the stream with a safe file name', async () => {
   const link = await screen.findByRole('link', { name: 'Download' });
   expect(link).toHaveAttribute('href', '/media/video-1/stream.mp4');
   expect(link).toHaveAttribute('download', 'Q3- a-b results.mp4');
+});
+
+it('opens the page on a single h1 naming the demo', async () => {
+  renderApp(<Watch />, {
+    api,
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  expect(
+    await screen.findByRole('heading', { name: 'Sprint 42 demo', level: 1 }),
+  ).toBeVisible();
+  expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+});
+
+it('names the demo in an h1 even when it cannot be played', async () => {
+  renderApp(<Watch />, {
+    api: { ...api, getVideo: () => Promise.reject(new Error('gone')) },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  expect(
+    await screen.findByRole(
+      'heading',
+      { name: 'We could not load this demo', level: 1 },
+      { timeout: 4000 },
+    ),
+  ).toBeVisible();
+});
+
+// it used to be the browser's default blue underline beside a styled button
+it('dresses the edit link as a button beside Download', async () => {
+  renderApp(<Watch />, {
+    api,
+    me: creatorMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  const edit = await screen.findByRole('link', { name: 'Edit demo' });
+  expect(edit).toHaveAttribute('href', '/studio/videos/video-1');
+  // both actions sit in the same group, so neither is pushed off the column
+  const group = edit.parentElement as HTMLElement;
+  expect(within(group).getByRole('link', { name: 'Download' })).toBeVisible();
+});
+
+it('offers no edit link to a member', async () => {
+  renderApp(<Watch />, {
+    api,
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  await screen.findByRole('link', { name: 'Download' });
+  expect(screen.queryByRole('link', { name: 'Edit demo' })).toBeNull();
 });

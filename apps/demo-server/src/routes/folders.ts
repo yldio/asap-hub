@@ -3,11 +3,11 @@ import { v4 as uuid } from 'uuid';
 import { canViewDrafts, requireCreator } from '../auth';
 import { folderEntity, videoEntity } from '../data/entities';
 import { createFolderSchema, updateFolderSchema } from '../schemas';
-import { deleteVideoCascade } from './cascade';
-import { pathParam, requireFolderIdParam } from './request';
+import { deleteVideoCascade, RenderInProgress } from './cascade';
+import { currentUser, pathParam, requireFolderIdParam } from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
-import { videosInFolder } from './video-shared';
+import { heldByAnother, videosInFolder } from './video-shared';
 
 export const rootFolderId = 'ROOT';
 
@@ -211,9 +211,20 @@ export const foldersRouter = (): Router => {
     const { data: allFolders } = await folderEntity.query
       .all({})
       .go({ pages: 'all' });
+    const byId = new Map<string, FolderRow>(
+      allFolders.map((folder) => [folder.id, folder]),
+    );
 
     // deepest first so a parent is only removed once its children are gone
     const ids = subtreeIds(id, allFolders).reverse();
+
+    const { sub } = currentUser(req);
+    const now = Date.now();
+    const locked: string[] = [];
+    const rendering: string[] = [];
+    // a folder that still holds a video the cascade would not touch has to stay
+    // behind with it, or the video would point at a row that no longer exists
+    const kept = new Set<string>();
 
     await ids.reduce(
       (chain, folderId) =>
@@ -222,23 +233,46 @@ export const foldersRouter = (): Router => {
             .byFolder({ folderId })
             .go({ pages: 'all' });
 
+          let skipped = kept.has(folderId);
+
           await Promise.all(
             videos.map(async (video) => {
+              // a video someone else holds open is skipped rather than
+              // destroyed, exactly as the single and bulk deletes do
+              if (heldByAnother(video, sub, now)) {
+                locked.push(video.id);
+                skipped = true;
+                return;
+              }
               try {
                 await deleteVideoCascade(video.id);
               } catch (error) {
+                if (error instanceof RenderInProgress) {
+                  rendering.push(video.id);
+                  skipped = true;
+                  return;
+                }
                 // eslint-disable-next-line no-console
                 console.error(`failed to delete video ${video.id}`, error);
               }
             }),
           );
 
+          if (skipped) {
+            kept.add(folderId);
+            const parentId = byId.get(folderId)?.parentId;
+            if (parentId) {
+              kept.add(parentId);
+            }
+            return;
+          }
+
           await folderEntity.delete({ id: folderId }).go();
         }),
       Promise.resolve(),
     );
 
-    res.status(204).end();
+    res.json({ locked, rendering, kept: [...kept] });
   });
 
   return router;

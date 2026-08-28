@@ -85,7 +85,9 @@ const mockFolderCreate = () =>
     .mockReturnValue({ go: async () => ({ data: {} }) } as any);
 
 // videos keyed by folder, so a subtree delete can be asserted per folder
-const mockVideosByFolder = (byFolder: Record<string, { id: string }[]>) =>
+const mockVideosByFolder = (
+  byFolder: Record<string, Record<string, unknown>[]>,
+) =>
   jest.spyOn(videoEntity.query, 'byFolder').mockImplementation(
     (key: any) =>
       ({
@@ -346,7 +348,8 @@ describe('DELETE /api/folders/:id cascade', () => {
       .delete('/api/folders/a')
       .set('Authorization', creatorToken);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ locked: [], rendering: [], kept: [] });
 
     // every video in the subtree is cascaded, not just the ones in the target
     expect(cascadeSpy.mock.calls.map(([id]) => id).sort()).toEqual([
@@ -380,12 +383,132 @@ describe('DELETE /api/folders/:id cascade', () => {
       .delete('/api/folders/a')
       .set('Authorization', creatorToken);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(200);
     expect(remove).toHaveBeenCalledWith({ id: 'a' });
     expect(logged).toHaveBeenCalledWith(
       'failed to delete video v-a',
       expect.any(Error),
     );
+  });
+
+  // a folder delete used to destroy every video under it with no lease check at
+  // all, wiping out a colleague's open edit
+  it('skips a video another creator holds open and reports it', async () => {
+    mockFolderGet({ id: 'a', name: 'A' });
+    mockFolders([{ id: 'a', name: 'A' }]);
+    mockVideosByFolder({
+      a: [
+        {
+          id: 'v-held',
+          lockedBy: 'auth0|other',
+          lockExpiresAt: Date.now() + 60000,
+        },
+        { id: 'v-free' },
+      ],
+    });
+    const remove = mockFolderDelete();
+    const cascadeSpy = jest
+      .spyOn(cascade, 'deleteVideoCascade')
+      .mockResolvedValue(undefined);
+
+    const response = await api
+      .delete('/api/folders/a')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      locked: ['v-held'],
+      rendering: [],
+      kept: ['a'],
+    });
+    expect(cascadeSpy).toHaveBeenCalledTimes(1);
+    expect(cascadeSpy).toHaveBeenCalledWith('v-free');
+    // the folder stays with the video it could not remove, or the video would
+    // point at a row that no longer exists
+    expect(remove).not.toHaveBeenCalled();
+  });
+
+  it('deletes a video whose lease has expired or is its own', async () => {
+    mockFolderGet({ id: 'a', name: 'A' });
+    mockFolders([{ id: 'a', name: 'A' }]);
+    mockVideosByFolder({
+      a: [
+        {
+          id: 'v-stale',
+          lockedBy: 'auth0|other',
+          lockExpiresAt: Date.now() - 1000,
+        },
+        {
+          id: 'v-mine',
+          lockedBy: 'auth0|creator',
+          lockExpiresAt: Date.now() + 60000,
+        },
+      ],
+    });
+    const remove = mockFolderDelete();
+    const cascadeSpy = jest
+      .spyOn(cascade, 'deleteVideoCascade')
+      .mockResolvedValue(undefined);
+
+    const response = await api
+      .delete('/api/folders/a')
+      .set('Authorization', creatorToken);
+
+    expect(response.body).toEqual({ locked: [], rendering: [], kept: [] });
+    expect(cascadeSpy.mock.calls.map(([id]) => id).sort()).toEqual([
+      'v-mine',
+      'v-stale',
+    ]);
+    expect(remove).toHaveBeenCalledWith({ id: 'a' });
+  });
+
+  it('reports a video the cascade refused for an active render', async () => {
+    mockFolderGet({ id: 'a', name: 'A' });
+    mockFolders([{ id: 'a', name: 'A' }]);
+    mockVideosByFolder({ a: [{ id: 'v-rendering' }] });
+    const remove = mockFolderDelete();
+    jest
+      .spyOn(cascade, 'deleteVideoCascade')
+      .mockRejectedValue(new cascade.RenderInProgress('v-rendering'));
+
+    const response = await api
+      .delete('/api/folders/a')
+      .set('Authorization', creatorToken);
+
+    expect(response.body).toEqual({
+      locked: [],
+      rendering: ['v-rendering'],
+      kept: ['a'],
+    });
+    expect(remove).not.toHaveBeenCalled();
+  });
+
+  // the video is kept, so every folder above it has to be kept too
+  it('keeps the ancestors of a folder it could not empty', async () => {
+    mockFolderGet({ id: 'a', name: 'A' });
+    mockFolders([
+      { id: 'a', name: 'A' },
+      { id: 'b', name: 'B', parentId: 'a' },
+      { id: 'c', name: 'C', parentId: 'b' },
+    ]);
+    mockVideosByFolder({
+      c: [
+        {
+          id: 'v-held',
+          lockedBy: 'auth0|other',
+          lockExpiresAt: Date.now() + 60000,
+        },
+      ],
+    });
+    const remove = mockFolderDelete();
+    jest.spyOn(cascade, 'deleteVideoCascade').mockResolvedValue(undefined);
+
+    const response = await api
+      .delete('/api/folders/a')
+      .set('Authorization', creatorToken);
+
+    expect(response.body.kept.sort()).toEqual(['a', 'b', 'c']);
+    expect(remove).not.toHaveBeenCalled();
   });
 
   it('404s an unknown folder without deleting anything', async () => {

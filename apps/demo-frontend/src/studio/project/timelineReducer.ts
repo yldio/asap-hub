@@ -52,6 +52,8 @@ export type TimelineAction =
       text?: string;
       subtitle?: string;
       durationMs?: number;
+      fadeInMs?: number;
+      fadeOutMs?: number;
     }
   | { type: 'addBanner'; banner: Banner }
   | { type: 'updateBanner'; bannerId: string; change: Partial<Banner> }
@@ -253,6 +255,8 @@ export const timelineReducer = (
                 text: action.text ?? clip.text,
                 subtitle: action.subtitle ?? clip.subtitle,
                 durationMs: action.durationMs ?? clip.durationMs,
+                fadeInMs: action.fadeInMs ?? clip.fadeInMs,
+                fadeOutMs: action.fadeOutMs ?? clip.fadeOutMs,
               }
             : clip,
         ),

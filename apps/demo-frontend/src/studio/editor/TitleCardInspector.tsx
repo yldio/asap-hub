@@ -1,8 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import { ClipPlacement, TitleClip } from '@asap-hub/demo-timeline';
+import {
+  ClipPlacement,
+  defaultFadeMs,
+  TitleClip,
+} from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
+  FadeField,
   NumberField,
   panelHeadingStyles,
   panelStyles,
@@ -21,6 +26,8 @@ type Props = {
     text?: string;
     subtitle?: string;
     durationMs?: number;
+    fadeInMs?: number;
+    fadeOutMs?: number;
   }) => void;
   readonly onRemove: () => void;
 };
@@ -62,6 +69,22 @@ const TitleCardInspector: FC<Props> = ({
       disabled={readOnly}
       onChange={(durationMs) => onChange({ durationMs })}
     />
+
+    <FadeField
+      label="Text fades in over"
+      value={clip.fadeInMs ?? defaultFadeMs}
+      disabled={readOnly}
+      onChange={(fadeInMs) => onChange({ fadeInMs })}
+    />
+    <FadeField
+      label="Text fades out over"
+      value={clip.fadeOutMs ?? defaultFadeMs}
+      disabled={readOnly}
+      onChange={(fadeOutMs) => onChange({ fadeOutMs })}
+    />
+    <p css={mutedStyles}>
+      Both ramps are scaled down together if the card is too short to hold them.
+    </p>
 
     <EditorButton
       danger

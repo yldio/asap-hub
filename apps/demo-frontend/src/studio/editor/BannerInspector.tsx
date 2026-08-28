@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { Banner } from '@asap-hub/demo-timeline';
+import { Banner, defaultFadeMs } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
+  FadeField,
   NumberField,
   panelHeadingStyles,
   panelStyles,
@@ -79,6 +80,19 @@ const BannerInspector: FC<Props> = ({
       onChange={(animation) =>
         onChange({ animation: animation as Banner['animation'] })
       }
+    />
+
+    <FadeField
+      label="Text fades in over"
+      value={banner.fadeInMs ?? defaultFadeMs}
+      disabled={readOnly}
+      onChange={(fadeInMs) => onChange({ fadeInMs })}
+    />
+    <FadeField
+      label="Text fades out over"
+      value={banner.fadeOutMs ?? defaultFadeMs}
+      disabled={readOnly}
+      onChange={(fadeOutMs) => onChange({ fadeOutMs })}
     />
 
     <EditorButton

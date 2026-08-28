@@ -126,3 +126,34 @@ export const SelectField: FC<{
     </select>
   </label>
 );
+
+const sliderStyles = css({ width: '100%', accentColor: editorTheme.playhead });
+
+const fadeLimitMs = 2000;
+const fadeStepMs = 50;
+
+const describeFade = (ms: number): string =>
+  ms === 0 ? 'instant' : `${(ms / 1000).toFixed(2)}s`;
+
+export const FadeField: FC<{
+  readonly label: string;
+  readonly value: number;
+  readonly disabled?: boolean;
+  readonly onChange: (ms: number) => void;
+}> = ({ label, value, disabled, onChange }) => (
+  <label css={fieldStyles}>
+    {`${label} ${describeFade(value)}`}
+    <input
+      css={sliderStyles}
+      type="range"
+      min={0}
+      max={fadeLimitMs}
+      step={fadeStepMs}
+      disabled={disabled}
+      value={Math.min(fadeLimitMs, value)}
+      onChange={(event: ChangeEvent<HTMLInputElement>) =>
+        onChange(Number(event.target.value))
+      }
+    />
+  </label>
+);

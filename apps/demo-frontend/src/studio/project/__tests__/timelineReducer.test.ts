@@ -339,3 +339,56 @@ describe('voice over', () => {
     ).toEqual([take]);
   });
 });
+
+describe('title card fades', () => {
+  const withTitle = () =>
+    timelineReducer(createEmptyTimeline(), {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 0,
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+
+  it('starts with no fade of its own, so the default applies', () => {
+    const clip = withTitle().clips[0];
+
+    expect(clip).toHaveProperty('kind', 'title');
+    expect(clip && 'fadeInMs' in clip && clip.fadeInMs).toBeFalsy();
+  });
+
+  it('takes the ramps the creator sets', () => {
+    const timeline = timelineReducer(withTitle(), {
+      type: 'updateTitleCard',
+      clipId: 'title-1',
+      fadeInMs: 800,
+      fadeOutMs: 150,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({ fadeInMs: 800, fadeOutMs: 150 });
+  });
+
+  // zero is a real choice, not an absent one: the text arrives instantly
+  it('keeps an instant fade rather than falling back to the default', () => {
+    const timeline = timelineReducer(withTitle(), {
+      type: 'updateTitleCard',
+      clipId: 'title-1',
+      fadeInMs: 0,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({ fadeInMs: 0 });
+  });
+
+  it('leaves the heading alone when only a fade changes', () => {
+    const timeline = timelineReducer(withTitle(), {
+      type: 'updateTitleCard',
+      clipId: 'title-1',
+      fadeOutMs: 900,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+  });
+});

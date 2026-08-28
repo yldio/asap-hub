@@ -18,6 +18,12 @@ export const canUndo = <T>(history: History<T>): boolean =>
 export const canRedo = <T>(history: History<T>): boolean =>
   history.future.length > 0;
 
+// the later frames of one gesture stand in for the first: a drag is a single
+// thing the creator did, and undoing it should not walk back through every
+// pointer move that made it up
+export const replace = <T>(history: History<T>, present: T): History<T> =>
+  present === history.present ? history : { ...history, present, future: [] };
+
 // a new edit always clears the redo stack: the branch it belonged to is gone
 export const record = <T>(history: History<T>, present: T): History<T> =>
   present === history.present

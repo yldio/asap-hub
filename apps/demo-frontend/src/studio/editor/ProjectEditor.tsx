@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   chooseCanvas,
   clipLocalMs,
+  CursorEffect,
   Point,
   resolveChapters,
   layoutClips,
@@ -19,11 +20,12 @@ import {
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
 import ChapterList from './ChapterList';
-import { Span } from './dragging';
+import { DragKind, Span } from './dragging';
 import { editorTheme } from './editorTheme';
 import InspectorPanel from './InspectorPanel';
 import PreviewStage from './PreviewStage';
 import { hasResolvedSelection, resolveSelection, Selection } from './selection';
+import { narrationChange, zoomChange } from './spanChange';
 import StageControls from './StageControls';
 import Timeline, { SpanKind } from './Timeline';
 import TransportBar from './TransportBar';
@@ -97,6 +99,10 @@ const saveLabels: Record<SaveState, string> = {
   error: 'Could not save, retrying on the next edit',
 };
 
+// the playhead moves on every animation frame, so anything handed down as a
+// prop has to keep its identity when the document has not changed
+const noCursorEffects: CursorEffect[] = [];
+
 const newBannerMs = 4000;
 const newTitleCardMs = 3000;
 // a provisional length for an asset the ingest has not probed yet
@@ -160,12 +166,15 @@ const ProjectEditor: FC<Props> = ({
   const fullscreen = useFullscreen(theatreRef);
 
   const current = placementAt(placements, playheadMs);
-  const selected = resolveSelection(selection, timeline, placements, current);
+  const selected = useMemo(
+    () => resolveSelection(selection, timeline, placements, current),
+    [current, placements, selection, timeline],
+  );
   const selectedSource =
     selected.clip?.clip.kind === 'source' ? selected.clip.clip : undefined;
   const cursorEffects =
     timeline.cursor.find((layer) => layer.clipId === current?.clip.id)
-      ?.effects ?? [];
+      ?.effects ?? noCursorEffects;
 
   const probedDurations = useAssetDurations(assets, assetUrl);
 
@@ -376,7 +385,7 @@ const ProjectEditor: FC<Props> = ({
   // The timeline speaks programme time for everything it drags. Only the zoom
   // lane is anchored to a clip, so this is the one place that converts.
   const changeSpan = useCallback(
-    (kind: SpanKind, id: string, span: Span) => {
+    (kind: SpanKind, id: string, span: Span, drag: DragKind) => {
       const startMs = Math.round(span.startMs);
       const spanDurationMs = Math.round(span.durationMs);
 
@@ -401,16 +410,15 @@ const ProjectEditor: FC<Props> = ({
       if (kind === 'narration') {
         const take = timeline.narration.find((item) => item.id === id);
         if (!take) return;
-        // moving the block keeps the audio it plays; dragging its start also
-        // moves the point the recording is played from
-        const inMs = Math.max(
-          0,
-          Math.round(take.inMs + startMs - take.startMs),
-        );
         dispatch({
           type: 'updateNarration',
           narrationId: id,
-          change: { startMs, inMs, outMs: inMs + spanDurationMs },
+          change: narrationChange(
+            take,
+            span,
+            drag,
+            assetDurationOf(take.assetId),
+          ),
         });
         return;
       }
@@ -423,17 +431,10 @@ const ProjectEditor: FC<Props> = ({
       dispatch({
         type: 'updateZoom',
         zoomId: id,
-        change: {
-          startMs: Math.max(0, startMs - placement.startMs),
-          // the ramps keep their shape; the hold is what a drag lengthens
-          holdMs: Math.max(
-            0,
-            spanDurationMs - target.rampInMs - target.rampOutMs,
-          ),
-        },
+        change: zoomChange(target, span, placement.startMs),
       });
     },
-    [dispatch, placements, timeline.narration, timeline.zooms],
+    [assetDurationOf, dispatch, placements, timeline.narration, timeline.zooms],
   );
 
   const toggleMuteClip = useCallback(
@@ -466,6 +467,15 @@ const ProjectEditor: FC<Props> = ({
     [current, dispatch, selected.effect],
   );
 
+  const chapters = useMemo(
+    () => resolveChapters(timeline, { includeUntitled: true }),
+    [timeline],
+  );
+  const recorderPanels = useMemo(
+    () => recorder?.(addAsset),
+    [addAsset, recorder],
+  );
+
   useEditorShortcuts({
     readOnly,
     onToggle: toggle,
@@ -474,6 +484,8 @@ const ProjectEditor: FC<Props> = ({
     onDuplicate: duplicateSelected,
     onToggleMute: toggleMuteSelected,
     onRemove: removeSelected,
+    onUndo: editor.undo,
+    onRedo: editor.redo,
   });
 
   return (
@@ -493,10 +505,10 @@ const ProjectEditor: FC<Props> = ({
 
       <div css={bodyStyles}>
         <AssetPanel
-          recorder={recorder?.(addAsset)}
+          recorder={recorderPanels}
           chapters={
             <ChapterList
-              resolved={resolveChapters(timeline, { includeUntitled: true })}
+              resolved={chapters}
               readOnly={readOnly}
               canAdd={Boolean(current)}
               onAdd={addChapter}
@@ -610,6 +622,8 @@ const ProjectEditor: FC<Props> = ({
         onMove={moveClip}
         onTrim={trimClip}
         onToggleMute={toggleMuteClip}
+        onGestureStart={editor.beginGesture}
+        onGestureEnd={editor.endGesture}
       />
     </div>
   );

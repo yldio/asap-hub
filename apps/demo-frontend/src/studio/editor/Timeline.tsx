@@ -491,14 +491,24 @@ type Props = {
   readonly assets: Record<string, ProjectAsset>;
   readonly onSelect: SelectHandler;
   readonly onSeek: (ms: number) => void;
-  // always in programme time; the editor converts for the clip-anchored tracks
-  readonly onSpanChange: (kind: SpanKind, id: string, span: Span) => void;
+  // always in programme time; the editor converts for the clip-anchored tracks.
+  // The drag kind travels with it because moving a block and resizing it mean
+  // different things to the audio underneath it.
+  readonly onSpanChange: (
+    kind: SpanKind,
+    id: string,
+    span: Span,
+    drag: DragKind,
+  ) => void;
   readonly onMove: (clipId: string, toIndex: number) => void;
   readonly onTrim: (
     clipId: string,
     change: { inMs?: number; outMs?: number },
   ) => void;
   readonly onToggleMute: (clipId: string) => void;
+  // one drag is one undoable step, however many pointer moves it takes
+  readonly onGestureStart: () => void;
+  readonly onGestureEnd: () => void;
 };
 
 const Timeline: FC<Props> = ({
@@ -519,6 +529,8 @@ const Timeline: FC<Props> = ({
   onTrim,
   onSpanChange,
   onToggleMute,
+  onGestureStart,
+  onGestureEnd,
 }) => {
   const laneRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<Drag>();
@@ -544,7 +556,9 @@ const Timeline: FC<Props> = ({
 
   const onLanePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
-    if (!drag) return;
+    // a capture can be lost without a pointerup ever reaching the lane, and a
+    // stale drag would then keep editing on plain hover
+    if (!drag || readOnly || event.buttons === 0) return;
     const tMs = msAt(event.clientX);
 
     switch (drag.target) {
@@ -557,13 +571,21 @@ const Timeline: FC<Props> = ({
         return;
 
       default:
-        onSpanChange(drag.spanKind, drag.id, spanAfterDrag(drag, tMs));
+        onSpanChange(
+          drag.spanKind,
+          drag.id,
+          spanAfterDrag(drag, tMs),
+          drag.kind,
+        );
     }
   };
 
   const endDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     dragRef.current = undefined;
+    if (drag) {
+      onGestureEnd();
+    }
 
     if (drag?.target === 'reorder' && dropIndex !== undefined) {
       const toIndex = dropIndex > drag.index ? dropIndex - 1 : dropIndex;
@@ -593,6 +615,7 @@ const Timeline: FC<Props> = ({
   const startClipDrag = useCallback<StartClipDrag>(
     (placement, kind, event) => {
       if (!capture(event)) return;
+      onGestureStart();
       const { clip } = placement;
 
       if (kind === 'move') {
@@ -624,12 +647,13 @@ const Timeline: FC<Props> = ({
               durationMs: placement.durationMs,
             };
     },
-    [capture, msAt],
+    [capture, msAt, onGestureStart],
   );
 
   const startSpanDrag = useCallback<StartSpanDrag>(
     (spanKind, id, span, kind, event) => {
       if (!capture(event)) return;
+      onGestureStart();
       dragRef.current = {
         target: 'span',
         spanKind,
@@ -639,7 +663,7 @@ const Timeline: FC<Props> = ({
         ...span,
       };
     },
-    [capture, msAt],
+    [capture, msAt, onGestureStart],
   );
 
   const laneWidth = Math.max(
@@ -673,6 +697,7 @@ const Timeline: FC<Props> = ({
           onPointerMove={onLanePointerMove}
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
+          onLostPointerCapture={endDrag}
         >
           <Ruler
             durationMs={durationMs}

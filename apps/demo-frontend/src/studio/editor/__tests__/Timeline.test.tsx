@@ -73,6 +73,8 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onSelect = jest.fn();
   const onSpanChange = jest.fn();
   const onToggleMute = jest.fn();
+  const onGestureStart = jest.fn();
+  const onGestureEnd = jest.fn();
   const placements = layoutClips(clips);
 
   const view = render(
@@ -96,6 +98,8 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       onTrim={onTrim}
       onSpanChange={onSpanChange}
       onToggleMute={onToggleMute}
+      onGestureStart={onGestureStart}
+      onGestureEnd={onGestureEnd}
       {...overrides}
     />,
   );
@@ -108,8 +112,17 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     onSelect,
     onSpanChange,
     onToggleMute,
+    onGestureStart,
+    onGestureEnd,
   };
 };
+
+// the move handler ignores a pointer with nothing held, so every drag frame in
+// these tests has to say a button is down
+const pointerMove = (
+  element: Element,
+  init: { pointerId: number; clientX: number },
+) => fireEvent.pointerMove(element, { ...init, buttons: 1 });
 
 // the lane is positioned by the browser; jsdom reports zeroes unless told
 const stubLaneGeometry = () => {
@@ -162,7 +175,7 @@ describe('dragging a clip', () => {
     // clip A occupies 0..400px, clip B 400..1000px; dropping at 800px is past
     // the midpoint of B, so A should land after it
     fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
-    fireEvent.pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
     fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 800 });
 
     expect(onMove).toHaveBeenCalledWith('clip-a', 1);
@@ -172,7 +185,7 @@ describe('dragging a clip', () => {
     const { onMove } = renderTimeline();
 
     fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
-    fireEvent.pointerMove(clipBlock('A'), { pointerId: 1, clientX: 150 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 150 });
     fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 150 });
 
     expect(onMove).not.toHaveBeenCalled();
@@ -182,7 +195,7 @@ describe('dragging a clip', () => {
     const { onMove } = renderTimeline({ readOnly: true });
 
     fireEvent.pointerDown(clipBlock('A'), { pointerId: 1, clientX: 100 });
-    fireEvent.pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
+    pointerMove(clipBlock('A'), { pointerId: 1, clientX: 800 });
     fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 800 });
 
     expect(onMove).not.toHaveBeenCalled();
@@ -195,7 +208,7 @@ describe('dragging a trim handle', () => {
 
     const handle = screen.getByRole('button', { name: 'Trim the end of A' });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 300 });
+    pointerMove(handle, { pointerId: 1, clientX: 300 });
 
     expect(onTrim).toHaveBeenCalledWith('clip-a', { outMs: 3000 });
   });
@@ -205,7 +218,7 @@ describe('dragging a trim handle', () => {
 
     const handle = screen.getByRole('button', { name: 'Trim the end of A' });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 600 });
+    pointerMove(handle, { pointerId: 1, clientX: 600 });
 
     expect(onTrim).toHaveBeenCalledWith('clip-a', { outMs: 6000 });
   });
@@ -215,7 +228,7 @@ describe('dragging a trim handle', () => {
 
     const handle = screen.getByRole('button', { name: 'Trim the start of A' });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 0 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 100 });
+    pointerMove(handle, { pointerId: 1, clientX: 100 });
 
     expect(onTrim).toHaveBeenCalledWith('clip-a', { inMs: 1000 });
   });
@@ -228,9 +241,9 @@ describe('dragging a trim handle', () => {
 
     const handle = screen.getByRole('button', { name: 'Trim the end of A' });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 300 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 700 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 400 });
+    pointerMove(handle, { pointerId: 1, clientX: 300 });
+    pointerMove(handle, { pointerId: 1, clientX: 700 });
+    pointerMove(handle, { pointerId: 1, clientX: 400 });
 
     expect(onTrim).toHaveBeenLastCalledWith('clip-a', { outMs: 4000 });
   });
@@ -242,12 +255,14 @@ describe('the overlay lanes', () => {
 
     const block = screen.getByRole('button', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
-    fireEvent.pointerMove(block, { pointerId: 1, clientX: 450 });
+    pointerMove(block, { pointerId: 1, clientX: 450 });
 
-    expect(onSpanChange).toHaveBeenCalledWith('banner', 'banner-a', {
-      startMs: 4000,
-      durationMs: 2000,
-    });
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'banner',
+      'banner-a',
+      { startMs: 4000, durationMs: 2000 },
+      'move',
+    );
   });
 
   it('lengthens a banner from its end', () => {
@@ -257,12 +272,14 @@ describe('the overlay lanes', () => {
       name: 'Drag to change where Banner Hello ends',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 400 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 700 });
+    pointerMove(handle, { pointerId: 1, clientX: 700 });
 
-    expect(onSpanChange).toHaveBeenCalledWith('banner', 'banner-a', {
-      startMs: 2000,
-      durationMs: 5000,
-    });
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'banner',
+      'banner-a',
+      { startMs: 2000, durationMs: 5000 },
+      'trimEnd',
+    );
   });
 
   it('resizes a zoom in programme time, past the clip it belongs to', () => {
@@ -273,12 +290,14 @@ describe('the overlay lanes', () => {
       name: 'Drag to change where Zoom 2x ends',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 700 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 900 });
+    pointerMove(handle, { pointerId: 1, clientX: 900 });
 
-    expect(onSpanChange).toHaveBeenCalledWith('zoom', 'zoom-a', {
-      startMs: 5000,
-      durationMs: 4000,
-    });
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'zoom',
+      'zoom-a',
+      { startMs: 5000, durationMs: 4000 },
+      'trimEnd',
+    );
   });
 
   it('moves a voice over take', () => {
@@ -286,12 +305,14 @@ describe('the overlay lanes', () => {
 
     const block = screen.getByRole('button', { name: 'Voice over A' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 150 });
-    fireEvent.pointerMove(block, { pointerId: 1, clientX: 550 });
+    pointerMove(block, { pointerId: 1, clientX: 550 });
 
-    expect(onSpanChange).toHaveBeenCalledWith('narration', 'take-a', {
-      startMs: 5000,
-      durationMs: 3000,
-    });
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'narration',
+      'take-a',
+      { startMs: 5000, durationMs: 3000 },
+      'move',
+    );
   });
 
   it('selects a voice over take so it can be removed', () => {
@@ -330,12 +351,14 @@ describe('a title card', () => {
       name: 'Trim the end of Intro',
     });
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 300 });
-    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 500 });
+    pointerMove(handle, { pointerId: 1, clientX: 500 });
 
-    expect(onSpanChange).toHaveBeenCalledWith('title', 'title-a', {
-      startMs: 0,
-      durationMs: 5000,
-    });
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'title',
+      'title-a',
+      { startMs: 0, durationMs: 5000 },
+      'trimEnd',
+    );
   });
 });
 

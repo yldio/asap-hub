@@ -5,6 +5,7 @@ import {
   initialHistory,
   record,
   redo,
+  replace,
   undo,
 } from '../undo';
 
@@ -65,5 +66,26 @@ describe('canUndo and canRedo', () => {
     expect(canRedo(edited)).toBe(false);
     expect(canRedo(undo(edited))).toBe(true);
     expect(canUndo(initialHistory('a'))).toBe(false);
+  });
+});
+
+describe('replace', () => {
+  it('swaps the present without deepening the past', () => {
+    const history = record(initialHistory('a'), 'b');
+    const swapped = replace(history, 'c');
+
+    expect(swapped).toEqual({ past: ['a'], present: 'c', future: [] });
+  });
+
+  it('drops the redo branch, like any other edit', () => {
+    const history = undo(record(initialHistory('a'), 'b'));
+
+    expect(replace(history, 'c').future).toEqual([]);
+  });
+
+  it('leaves the history alone when nothing changed', () => {
+    const history = record(initialHistory('a'), 'b');
+
+    expect(replace(history, 'b')).toBe(history);
   });
 });

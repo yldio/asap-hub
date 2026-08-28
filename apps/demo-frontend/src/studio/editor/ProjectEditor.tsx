@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import {
-  chooseCanvas,
   clipLocalMs,
   CursorEffect,
   Point,
@@ -10,7 +9,15 @@ import {
   placementAt,
   timelineDurationMs,
 } from '@asap-hub/demo-timeline';
-import { FC, ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
 import {
@@ -19,6 +26,12 @@ import {
 } from '../project/useProjectEditor';
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
+import {
+  assetsOnTimeline,
+  canvasForAssets,
+  raiseCanvas,
+  sameCanvas,
+} from './canvasChoice';
 import ChapterList from './ChapterList';
 import { DragKind, Span } from './dragging';
 import { editorTheme } from './editorTheme';
@@ -140,7 +153,7 @@ const ProjectEditor: FC<Props> = ({
   uploadProgress,
   recorder,
 }) => {
-  const { timeline, dispatch } = editor;
+  const { timeline, dispatch, beginGesture, endGesture } = editor;
   const [selection, setSelection] = useState<Selection>();
   const [volume, setVolume] = useState(1);
   const select = useCallback(
@@ -214,12 +227,40 @@ const ProjectEditor: FC<Props> = ({
     [dispatch, playheadMs, probedDurations, select],
   );
 
+  // the output follows the footage: 60fps sources render at 60, and a source
+  // taller than 1080p keeps its height. The creator's own choice of frame rate
+  // stops this for the rest of the session rather than being overwritten.
+  const pickedCanvas = useRef(false);
+  const followFootage = useCallback(
+    (extra?: ProjectAsset) => {
+      if (pickedCanvas.current) return;
+      const wanted = canvasForAssets([
+        ...assetsOnTimeline(timeline.clips, assetsById),
+        ...(extra ? [extra] : []),
+      ]);
+      if (!wanted) return;
+      const canvas = raiseCanvas(timeline.canvas, wanted);
+      if (sameCanvas(canvas, timeline.canvas)) return;
+      dispatch({ type: 'setCanvas', canvas });
+    },
+    [assetsById, dispatch, timeline.canvas, timeline.clips],
+  );
+
+  // the ingest probes the file in a container, so the real format arrives long
+  // after the clip was put on the timeline and the choice has to be made again
+  useEffect(() => {
+    followFootage();
+  }, [followFootage]);
+
   const addAsset = useCallback(
     (asset: ProjectAsset) => {
       if (asset.kind === 'audio') {
         addNarration(asset);
         return;
       }
+      // adding a clip and moving the output format with it is one thing the
+      // creator did, so one Ctrl+Z takes the whole of it back
+      beginGesture();
       dispatch({
         type: 'addClip',
         assetId: asset.assetId,
@@ -227,21 +268,17 @@ const ProjectEditor: FC<Props> = ({
           asset.durationMs ?? probedDurations[asset.assetId] ?? unknownAssetMs,
         clipId: createId('clip'),
       });
-      // the output follows the footage: 60fps sources render at 60, and a
-      // source taller than 1080p keeps its height
-      dispatch({
-        type: 'setCanvas',
-        canvas: chooseCanvas([
-          ...timeline.clips.flatMap((clip) => {
-            const used =
-              clip.kind === 'source' ? assetsById[clip.assetId] : undefined;
-            return used ? [used] : [];
-          }),
-          asset,
-        ]),
-      });
+      followFootage(asset);
+      endGesture();
     },
-    [addNarration, assetsById, dispatch, probedDurations, timeline.clips],
+    [
+      addNarration,
+      beginGesture,
+      dispatch,
+      endGesture,
+      followFootage,
+      probedDurations,
+    ],
   );
 
   const splitAtPlayhead = useCallback(() => {
@@ -536,9 +573,10 @@ const ProjectEditor: FC<Props> = ({
         saveLabel={saveLabels[editor.saveState]}
         canvasHeight={timeline.canvas.height}
         canvasFps={timeline.canvas.fps}
-        onFpsChange={(fps) =>
-          dispatch({ type: 'setCanvas', canvas: { ...timeline.canvas, fps } })
-        }
+        onFpsChange={(fps) => {
+          pickedCanvas.current = true;
+          dispatch({ type: 'setCanvas', canvas: { ...timeline.canvas, fps } });
+        }}
         onUndo={editor.undo}
         onRedo={editor.redo}
       />

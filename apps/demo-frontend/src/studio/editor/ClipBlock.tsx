@@ -29,9 +29,22 @@ const blockStyles = css({
   userSelect: 'none',
 });
 
+// The title purple is a mid tone: at 12px nothing reaches 4.5:1 on it, not even
+// white, which stops at 4.2. So it becomes an accent down the edge and the words
+// sit on the same ground the panels use, where they read at better than 13:1.
 const titleBlockStyles = css({
-  backgroundColor: editorTheme.title,
+  backgroundColor: editorTheme.raised,
   color: editorTheme.text,
+  paddingLeft: 14,
+  '::before': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+    backgroundColor: editorTheme.title,
+  },
 });
 
 const selectedStyles = css({

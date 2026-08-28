@@ -1,5 +1,5 @@
-import { CursorEffect } from '@asap-hub/demo-timeline';
 import { render } from '@testing-library/react';
+import { CursorEffect, defaultCursorColor } from '@asap-hub/demo-timeline';
 import CursorLayer, { rippleMs } from '../CursorLayer';
 
 const ripple: CursorEffect = {
@@ -54,5 +54,33 @@ describe('a click the creator is parked on', () => {
   it('holds the ring on screen whether the demo is playing or not', () => {
     expect(hasRipple(false)).toBe(true);
     expect(hasRipple(true)).toBe(true);
+  });
+});
+
+describe('the colour of a click', () => {
+  const ringOf = (color?: string) => {
+    const { container, unmount } = render(
+      <CursorLayer effects={[{ ...ripple, color }]} tMs={1000} />,
+    );
+    const found = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-ripple"]',
+    );
+    const border = found?.style.borderColor ?? '';
+    const shadow = found?.style.boxShadow ?? '';
+    unmount();
+    return { border, shadow };
+  };
+
+  it('draws the ring in the colour the creator picked', () => {
+    expect(ringOf('#ff3b30').border).toBe('#ff3b30');
+  });
+
+  it('falls back to the default for a click saved before the picker', () => {
+    expect(ringOf().border).toBe(defaultCursorColor);
+  });
+
+  // a white ring on a white page is invisible without it
+  it('always carries a dark edge, whatever the colour', () => {
+    expect(ringOf('#ffffff').shadow).toContain('rgba(0, 0, 0');
   });
 });

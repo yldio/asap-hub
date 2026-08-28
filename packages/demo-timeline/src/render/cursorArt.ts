@@ -1,3 +1,4 @@
+import { defaultCursorColor, edgeFor, isCursorColor } from '../cursorColors';
 import { PresetCanvas, svgDocument } from '../presets';
 import { CursorEffect, Point } from '../schema';
 
@@ -9,16 +10,18 @@ export const spotlightDurationMs = 1200;
 // burnt into the picture, so the render ramps it
 export const spotlightFadeMs = 200;
 
-export type CursorArtInput = { point: Point; canvas: PresetCanvas };
+export type CursorArtInput = {
+  point: Point;
+  canvas: PresetCanvas;
+  color?: string;
+};
 
 // every size is a fraction of the canvas, so a click looks the same at 1080p
 // and at 4K
 const rippleStyle = {
   diameter: 0.09,
   strokeWidth: 0.004,
-  stroke: '#ffffff',
   strokeOpacity: 0.9,
-  fill: '#ffffff',
   fillOpacity: 0.18,
 } as const;
 
@@ -29,21 +32,27 @@ const spotlightStyle = {
   scrimStop: 0.26,
 } as const;
 
-export const rippleSvg = ({ point, canvas }: CursorArtInput): string => {
+export const rippleSvg = ({ point, canvas, color }: CursorArtInput): string => {
   const radius = Math.round((canvas.width * rippleStyle.diameter) / 2);
   const strokeWidth = Math.max(
     1,
     Math.round(canvas.height * rippleStyle.strokeWidth),
   );
+  const ink = color && isCursorColor(color) ? color : defaultCursorColor;
+  const cx = Math.round(point.x * canvas.width);
+  const cy = Math.round(point.y * canvas.height);
+
+  // the dark edge sits just outside the ring, so a white click stays readable on
+  // a white page and a coloured one stays readable on its own colour
+  const edge = edgeFor(ink);
 
   return svgDocument(canvas, [
-    `<circle cx="${Math.round(point.x * canvas.width)}" cy="${Math.round(
-      point.y * canvas.height,
-    )}" r="${radius}" fill="${rippleStyle.fill}" fill-opacity="${
-      rippleStyle.fillOpacity
-    }" stroke="${rippleStyle.stroke}" stroke-opacity="${
-      rippleStyle.strokeOpacity
+    `<circle cx="${cx}" cy="${cy}" r="${
+      radius + strokeWidth
+    }" fill="none" stroke="${edge.color}" stroke-opacity="${
+      edge.opacity
     }" stroke-width="${strokeWidth}"/>`,
+    `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${ink}" fill-opacity="${rippleStyle.fillOpacity}" stroke="${ink}" stroke-opacity="${rippleStyle.strokeOpacity}" stroke-width="${strokeWidth}"/>`,
   ]);
 };
 
@@ -83,7 +92,7 @@ export const cursorArt = (
   effect: CursorEffect,
   canvas: PresetCanvas,
 ): CursorArt | undefined => {
-  const input = { point: effect.point, canvas };
+  const input = { point: effect.point, canvas, color: effect.color };
   if (effect.type === 'ripple') {
     // the preview's ring expands as it fades; the render holds the ring still
     // and decays it over the same window

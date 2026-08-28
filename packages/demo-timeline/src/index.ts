@@ -5,5 +5,6 @@ export * from './fade';
 export * from './chapters';
 export * from './canvas';
 export * from './cursor';
+export * from './cursorColors';
 export * from './presets';
 export * from './render';

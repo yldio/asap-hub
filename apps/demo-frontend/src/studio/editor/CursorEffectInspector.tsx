@@ -1,5 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { CursorEffect } from '@asap-hub/demo-timeline';
+import { css } from '@emotion/react';
+import {
+  CursorEffect,
+  cursorColors,
+  defaultCursorColor,
+} from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
@@ -11,6 +16,23 @@ import {
   SelectField,
 } from './fields';
 import { TrashIcon } from './icons';
+import { editorTheme } from './editorTheme';
+
+const swatchRowStyles = css({ display: 'flex', gap: 6, flexWrap: 'wrap' });
+
+const swatchStyles = css({
+  width: 24,
+  height: 24,
+  borderRadius: '50%',
+  padding: 0,
+  cursor: 'pointer',
+  border: `2px solid ${editorTheme.line}`,
+  // the same dark edge the ring carries, so the swatch reads on this panel too
+  boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.45)',
+  ':disabled': { cursor: 'not-allowed', opacity: 0.5 },
+});
+
+const chosenSwatchStyles = css({ borderColor: editorTheme.text });
 
 const originLabels: Record<CursorEffect['origin'], string> = {
   derived: 'From the captured recording',
@@ -44,6 +66,24 @@ const CursorEffectInspector: FC<Props> = ({
       ]}
       onChange={(type) => onChange({ type: type as CursorEffect['type'] })}
     />
+    <fieldset css={swatchRowStyles} aria-label="Click colour">
+      {cursorColors.map((swatch) => {
+        const chosen = (effect.color ?? defaultCursorColor) === swatch.hex;
+        return (
+          <button
+            key={swatch.id}
+            type="button"
+            css={[swatchStyles, chosen && chosenSwatchStyles]}
+            style={{ backgroundColor: swatch.hex }}
+            aria-label={swatch.label}
+            aria-pressed={chosen}
+            disabled={readOnly}
+            onClick={() => onChange({ color: swatch.hex })}
+          />
+        );
+      })}
+    </fieldset>
+
     <TimecodeField
       label="At, in the clip"
       value={effect.tMs}

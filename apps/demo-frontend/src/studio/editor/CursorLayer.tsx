@@ -1,6 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from '@emotion/react';
-import { CursorEffect } from '@asap-hub/demo-timeline';
+import {
+  CursorEffect,
+  defaultCursorColor,
+  edgeFor,
+  isCursorColor,
+} from '@asap-hub/demo-timeline';
 import {
   forwardRef,
   useEffect,
@@ -26,10 +31,23 @@ const rippleStyles = css({
   width: '9%',
   aspectRatio: '1',
   borderRadius: '50%',
-  border: '2px solid rgba(255, 255, 255, 0.9)',
-  backgroundColor: 'rgba(255, 255, 255, 0.18)',
+  borderStyle: 'solid',
+  borderWidth: 2,
   transform: 'translate(-50%, -50%)',
 });
+
+const inkOf = (effect: CursorEffect): string =>
+  effect.color && isCursorColor(effect.color)
+    ? effect.color
+    : defaultCursorColor;
+
+// the same edge the render draws just outside the ring, so a white click stays
+// readable on the white page it usually sits on, and a black one on a dark app
+const edgeShadow = (ink: string): string => {
+  const edge = edgeFor(ink);
+  const rgb = edge.color === '#ffffff' ? '255, 255, 255' : '0, 0, 0';
+  return `0 0 0 2px rgba(${rgb}, ${edge.opacity})`;
+};
 
 // The animation is wall clock, and it ends on opacity 0. Parked on an effect to
 // place it, the creator saw it flash once and then nothing at all, which is the
@@ -147,6 +165,9 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
               style={{
                 left: `${effect.point.x * 100}%`,
                 top: `${effect.point.y * 100}%`,
+                borderColor: inkOf(effect),
+                backgroundColor: `${inkOf(effect)}2e`,
+                boxShadow: edgeShadow(inkOf(effect)),
               }}
             />
           ))}

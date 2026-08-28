@@ -130,6 +130,12 @@ export const cursorEffectSchema = z.object({
   type: z.enum(['ripple', 'spotlight', 'zoom']),
   point: pointSchema,
   origin: z.enum(['derived', 'derived-edited', 'manual']),
+  // left out on everything derived before the picker existed, so the renderer
+  // and the preview both fall back to the default rather than refusing to load
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/)
+    .optional(),
   sourceEventId: idSchema.optional(),
 });
 

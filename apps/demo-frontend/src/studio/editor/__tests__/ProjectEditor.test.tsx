@@ -536,3 +536,40 @@ describe('the format the export uses', () => {
     expect(calls.some((call) => call.action?.type === 'setCanvas')).toBe(false);
   });
 });
+
+describe('the colour of a click', () => {
+  const withEffect = (): Timeline => ({
+    ...withClip(),
+    cursor: [
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        path: [],
+        effects: [
+          {
+            id: 'effect-a',
+            tMs: 1000,
+            type: 'ripple',
+            point: { x: 0.5, y: 0.5 },
+            origin: 'manual',
+          },
+        ],
+      },
+    ],
+  });
+
+  it('writes the picked colour onto the effect', async () => {
+    const { calls } = renderEditor({ timeline: withEffect() });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+    );
+    await userEvent.click(await screen.findByRole('button', { name: 'Red' }));
+
+    expect(
+      calls.flatMap((call) =>
+        call.action?.type === 'updateCursorEffect' ? [call.action.change] : [],
+      ),
+    ).toContainEqual(expect.objectContaining({ color: '#ff3b30' }));
+  });
+});

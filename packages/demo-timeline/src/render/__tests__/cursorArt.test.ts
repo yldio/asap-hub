@@ -1,3 +1,4 @@
+import { cursorEdge, defaultCursorColor } from '../../cursorColors';
 import { CursorEffect } from '../../schema';
 import {
   cursorArt,
@@ -73,5 +74,35 @@ describe('cursorArt', () => {
 
   it('draws nothing for the zoom marker the editor materialises', () => {
     expect(cursorArt(effect({ type: 'zoom' }), canvas)).toBeUndefined();
+  });
+});
+
+describe('the colour of a click', () => {
+  const frame = { width: 1920, height: 1080, fps: 30 } as const;
+  const point = { x: 0.5, y: 0.5 };
+
+  it('draws the ring in the colour the creator picked', () => {
+    expect(rippleSvg({ point, canvas: frame, color: '#ff3b30' })).toContain(
+      'stroke="#ff3b30"',
+    );
+  });
+
+  it('falls back to the default for an effect saved before the picker', () => {
+    expect(rippleSvg({ point, canvas: frame })).toContain(
+      `stroke="${defaultCursorColor}"`,
+    );
+  });
+
+  it('ignores something that is not a colour', () => {
+    expect(rippleSvg({ point, canvas: frame, color: 'url(#evil)' })).toContain(
+      `stroke="${defaultCursorColor}"`,
+    );
+  });
+
+  // a white ring on a white page is invisible without it
+  it('always carries a dark edge, whatever the colour', () => {
+    expect(rippleSvg({ point, canvas: frame, color: '#ffffff' })).toContain(
+      `stroke="${cursorEdge}"`,
+    );
   });
 });

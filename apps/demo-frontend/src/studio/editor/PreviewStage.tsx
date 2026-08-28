@@ -5,6 +5,7 @@ import {
   clipLocalMs,
   ClipPlacement,
   CursorEffect,
+  fadeOpacityAt,
   Point,
   sourceTimeAt,
   Zoom,
@@ -67,6 +68,13 @@ const titleCardStyles = css({
   color: '#ffffff',
   padding: rem(48),
   textAlign: 'center',
+});
+
+const titleTextStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: rem(12),
 });
 
 const headingStyles = css({
@@ -223,11 +231,22 @@ const PreviewStage: FC<Props> = ({
   }
 
   if (clip.kind === 'title') {
+    // only the words fade; the card itself is the clip's picture, and the
+    // render draws exactly this curve
+    const textOpacity = fadeOpacityAt(
+      clip,
+      { startMs: 0, durationMs: clip.durationMs },
+      localMs,
+    );
     return (
       <div css={stageStyles} style={size}>
         <div css={titleCardStyles}>
-          <h2 css={headingStyles}>{clip.text}</h2>
-          {clip.subtitle ? <p css={subheadingStyles}>{clip.subtitle}</p> : null}
+          <div css={titleTextStyles} style={{ opacity: textOpacity }}>
+            <h2 css={headingStyles}>{clip.text}</h2>
+            {clip.subtitle ? (
+              <p css={subheadingStyles}>{clip.subtitle}</p>
+            ) : null}
+          </div>
         </div>
         <BannerLayer banners={banners} tMs={playheadMs} />
       </div>

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner } from '@asap-hub/demo-timeline';
+import { Banner, fadeOpacityAt } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 
 const layerStyles = css({
@@ -44,19 +44,6 @@ const subtitleStyles = css({
   opacity: 0.92,
 });
 
-// the render fades a banner in and out over 300ms; the preview does the same so
-// scrubbing across an edge looks like the finished video
-const fadeMs = 300;
-
-const opacityAt = (banner: Banner, tMs: number): number => {
-  const since = tMs - banner.startMs;
-  const until = banner.startMs + banner.durationMs - tMs;
-  if (since < 0 || until < 0) {
-    return 0;
-  }
-  return Math.min(1, since / fadeMs, until / fadeMs);
-};
-
 const offsetAt = (banner: Banner, opacity: number): string =>
   banner.animation === 'slide'
     ? `translateY(${(1 - opacity) * (banner.position === 'top' ? -30 : 30)}%)`
@@ -70,7 +57,7 @@ type Props = {
 const BannerLayer: FC<Props> = ({ banners, tMs }) => (
   <div css={layerStyles}>
     {banners.map((banner) => {
-      const opacity = opacityAt(banner, tMs);
+      const opacity = fadeOpacityAt(banner, banner, tMs);
       if (opacity <= 0) {
         return null;
       }

@@ -10,7 +10,7 @@ import {
 } from 'react';
 
 import type { Chapter, VideoAccess } from '../api/types';
-import { charcoal, fern, paper, rem } from '../ui/theme';
+import { charcoal, fern, onDark, rem } from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import ChaptersPanel from './ChaptersPanel';
 import {
@@ -56,7 +56,7 @@ const controlsStyles = css({
   padding: `${rem(28)} ${rem(12)} ${rem(8)}`,
   background:
     'linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0))',
-  color: paper.rgb,
+  color: onDark.rgb,
   transition: 'opacity 200ms',
   display: 'grid',
   gap: rem(2),
@@ -82,7 +82,7 @@ const iconButtonStyles = css({
   border: 'none',
   borderRadius: rem(4),
   backgroundColor: 'transparent',
-  color: paper.rgb,
+  color: onDark.rgb,
   cursor: 'pointer',
   ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.15)' },
 });
@@ -143,7 +143,7 @@ const centerPlayStyles = css({
   border: 'none',
   borderRadius: '50%',
   backgroundColor: 'rgba(0, 0, 0, 0.55)',
-  color: paper.rgb,
+  color: onDark.rgb,
   cursor: 'pointer',
   ':hover, :focus-visible': { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
 });

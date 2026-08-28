@@ -11,6 +11,9 @@ export type ThemeColor = { readonly rgb: string };
 const token = (name: string): ThemeColor => ({ rgb: `var(--demo-${name})` });
 
 export const paper = token('paper');
+// white that stays white: for text drawn on a surface that is dark in both
+// themes, such as the player controls over the video
+export const onDark = token('on-dark');
 export const pearl = token('pearl');
 export const silver = token('silver');
 export const steel = token('steel');

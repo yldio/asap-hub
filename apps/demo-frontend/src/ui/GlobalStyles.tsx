@@ -3,8 +3,9 @@ import { FC } from 'react';
 
 import { charcoal, fontStyles, pearl, rem } from './theme';
 
-const lightTokens = {
+export const lightTokens = {
   '--demo-paper': 'rgb(255, 255, 255)',
+  '--demo-on-dark': 'rgb(255, 255, 255)',
   '--demo-pearl': 'rgb(252, 253, 254)',
   '--demo-silver': 'rgb(237, 241, 243)',
   '--demo-steel': 'rgb(223, 229, 234)',
@@ -62,8 +63,9 @@ const lightTokens = {
   '--demo-editor-on-record': 'rgb(255, 255, 255)',
 };
 
-const darkTokens = {
+export const darkTokens = {
   '--demo-paper': 'rgb(22, 25, 28)',
+  '--demo-on-dark': 'rgb(255, 255, 255)',
   '--demo-pearl': 'rgb(16, 18, 20)',
   '--demo-silver': 'rgb(33, 37, 41)',
   '--demo-steel': 'rgb(48, 54, 60)',

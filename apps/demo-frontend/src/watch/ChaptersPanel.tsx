@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, useEffect, useRef } from 'react';
 
 import type { Chapter } from '../api/types';
-import { fern, paper, rem } from '../ui/theme';
+import { fern, onDark, rem } from '../ui/theme';
 import { formatDuration, formatDurationWords } from '../utils/time';
 import { chapterEndMs } from './playback';
 
@@ -51,7 +51,7 @@ const rowStyles = css({
   fontSize: rem(15),
   fontWeight: 500,
   lineHeight: 1.4,
-  color: paper.rgb,
+  color: onDark.rgb,
   ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
 });
 

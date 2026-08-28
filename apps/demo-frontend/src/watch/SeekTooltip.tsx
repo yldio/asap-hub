@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import type { Chapter } from '../api/types';
-import { paper, rem } from '../ui/theme';
+import { onDark, rem } from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import { cueAt, ThumbnailCue } from '../utils/vtt';
 import { chapterAt, clampTooltip } from './playback';
@@ -34,7 +34,7 @@ const titleStyles = css({
   whiteSpace: 'nowrap',
   fontSize: rem(14),
   fontWeight: 'bold',
-  color: paper.rgb,
+  color: onDark.rgb,
   textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
 });
 

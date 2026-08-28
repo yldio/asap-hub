@@ -2,7 +2,7 @@
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 
-import { paper, rem } from '../ui/theme';
+import { onDark, rem } from '../ui/theme';
 import { thumbnailUrl } from './state';
 
 const frameStyles = css({
@@ -42,7 +42,7 @@ const badgeStyles = css({
   padding: `${rem(2)} ${rem(6)}`,
   borderRadius: rem(4),
   backgroundColor: 'rgba(0, 0, 0, 0.75)',
-  color: paper.rgb,
+  color: onDark.rgb,
   fontSize: rem(12),
   fontVariantNumeric: 'tabular-nums',
 });

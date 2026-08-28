@@ -49,23 +49,23 @@ Four ideas carry the whole design:
 
 ### Where things live
 
-| Thing                                          | Storage                                                     | Why                                                      |
-| ---------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------- |
-| Video metadata, chapters, publish state        | DynamoDB `VIDEO#{id}` / `META` (unchanged)                  | Watch and library already read it                        |
-| Timeline document                              | S3 `projects/{videoId}/timeline-{version}.json`             | Too big for an item; immutable versions give history     |
-| Timeline pointer + version + hash              | New attributes on the video item                            | Optimistic concurrency, same as `version` today          |
-| Source assets (recordings, imports, narration) | S3 `sources/{videoId}/{assetId}/original.*` and `proxy.mp4` | Outside `raw/`, so the existing encoder rule never fires |
-| Asset metadata                                 | DynamoDB `VIDEO#{id}` / `ASSET#{assetId}`                   | Small, queryable, cascade-deletes with the video         |
-| Raw cursor event stream                        | S3 `sources/{videoId}/cursor/{sessionId}.json`              | Bulk, immutable, re-derivable                            |
-| Rendered output                                | S3 `media/{videoId}/…` (unchanged)                          | Watch page needs zero changes                            |
+| Thing                                          | Storage                                                             | Why                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| Video metadata, chapters, publish state        | DynamoDB `VIDEO#{id}` / `META` (unchanged)                          | Watch and library already read it                        |
+| Timeline document                              | S3 `projects/{videoId}/timeline-{version}.json`                     | Too big for an item; immutable versions give history     |
+| Timeline pointer + version + hash              | New attributes on the video item                                    | Optimistic concurrency, same as `version` today          |
+| Source assets (recordings, imports, narration) | S3 `projects/{videoId}/assets/{assetId}/original.*` and `proxy.mp4` | Outside `raw/`, so the existing encoder rule never fires |
+| Asset metadata                                 | DynamoDB `VIDEO#{id}` / `ASSET#{assetId}`                           | Small, queryable, cascade-deletes with the video         |
+| Raw cursor event stream                        | S3 `projects/{videoId}/capture/{sessionId}.json`                    | Bulk, immutable, re-derivable                            |
+| Rendered output                                | S3 `media/{videoId}/…` (unchanged)                                  | Watch page needs zero changes                            |
 
-Key layout matters: `sources/` and `projects/` sit outside `raw/`, so the `EncoderRule` in
+Key layout matters: everything the studio writes sits under `projects/`, outside `raw/`, so the `EncoderRule` in
 `serverless.ts` (prefix `raw/`) does not fire one Fargate task per recorded segment.
 
 ### The timeline document
 
-`packages/demo-timeline/src/types.ts`, versioned with `schemaVersion` and migrated by a small
-`migrate(doc)` chain so old projects keep opening.
+`packages/demo-timeline/src/schema.ts`, versioned with `schemaVersion` and migrated by a small
+`migrateTimeline(doc)` chain so old projects keep opening.
 
 ```ts
 type TimelineDoc = {
@@ -74,8 +74,9 @@ type TimelineDoc = {
   clips: Clip[]; // ordered, the video track; gaps are not allowed
   banners: Banner[]; // overlay track, absolute times on the rendered timeline
   narration: NarrationClip[]; // audio track
-  zooms: ZoomKeyframe[]; // effects track
+  zooms: Zoom[]; // effects track, clip-anchored
   cursor: CursorLayer[]; // one per source clip that has captured data
+  chapters: ChapterMarker[]; // clip-anchored, resolved to video.chapters at render
 };
 
 type Clip =
@@ -109,14 +110,22 @@ type Banner = {
   position: 'bottom' | 'top';
   animation: 'fade' | 'slide';
 };
-type ZoomKeyframe = {
+type Zoom = {
   id: string;
+  clipId: string; // clip-anchored, times below are clip-local
   startMs: number;
-  durationMs: number;
+  rampInMs: number;
   holdMs: number;
+  rampOutMs: number;
   focus: { x: number; y: number };
   scale: number;
-  easing: 'easeInOut';
+  easing: 'linear' | 'easeInOut';
+};
+type ChapterMarker = {
+  id: string;
+  clipId: string;
+  offsetMs: number;
+  title: string;
 };
 type CursorEffect = {
   id: string;
@@ -135,7 +144,9 @@ type CursorLayer = {
 ```
 
 All times are milliseconds, matching `Chapter.startMs` and `durationMs` today. Coordinates are
-normalised 0..1 against the source frame so they survive scaling.
+normalised 0..1 against the source frame so they survive scaling. Zooms, cursor layers and chapter
+markers carry a `clipId` and clip-local times, so reordering, trimming and splitting carry them
+along; banners stay program-anchored because a banner may deliberately span a transition.
 
 **Cursor events stay editable.** The raw stream in S3 is never mutated. Importing it runs
 `deriveCursorEffects(events, options)` (pure, unit-tested) which produces `CursorEffect[]` and the
@@ -175,7 +186,7 @@ The uploads flow today couples "create the video row" with "open the multipart u
 `POST /uploads` (unchanged behaviour, unchanged response) and the new asset endpoint. The part-signing
 guard (`processingState === 'uploading'`) becomes a per-asset check on the ASSET item.
 
-`deleteVideoCascade` (`routes/cascade.ts`) additionally deletes `sources/{id}/` and `projects/{id}/`
+`deleteVideoCascade` (`routes/cascade.ts`) additionally deletes `projects/{id}/`
 and the ASSET items.
 
 **Lease semantics.** Editing keeps today's 90s lease and 30s heartbeat unchanged
@@ -296,16 +307,22 @@ nudge in the editor.
 Each is independently shippable.
 
 - **M0 Foundations.** `packages/demo-timeline` package wired into vite, jest and the server build;
-  project and asset entities; decoupled upload; ingest job producing proxies; `sources/` and
-  `projects/` key layout; lifecycle rules (90 day hot, then Glacier IR); studio route skeleton.
+  project and asset entities; decoupled upload; ingest job producing proxies; the `projects/` key
+  layout; lifecycle rules (90 day hot, then Glacier IR); studio route skeleton.
 - **M1 Timeline and render** (first shippable studio). Import several videos, trim, split, reorder,
   DOM preview, autosave, server render with concat at 1080p, publish. Chapters still hand-marked.
 - **M2 Text and transitions.** Title cards and banners from the shared SVG presets, transitions
   (`xfade`), auto-chapters from title cards.
 - **M3 Recording and voice-over.** In-app screen recording, multi-segment takes, mic capture,
   narration recorded over the timeline, audio mixing in the render.
-- **M4 Cursor and zoom.** Companion snippet, recording sessions, derived and editable cursor effects,
-  manual zoom keyframes plus auto-zoom from clicks, spotlight.
+- **M4 Cursor and zoom**, in two halves because the capture half depends on the manual half:
+  - **M4a** the editable effect model itself: manual zoom keyframes with smooth pan, hand-placed
+    click highlights and spotlight, the effects track and its inspector.
+  - **M4b** the companion snippet, recording sessions, derivation of effects from captured events,
+    the re-derive merge that preserves hand edits, and the offset nudge.
+
+The M4 split is deliberate: captured events must land in the same editable model as the manual
+fallback, so that model has to exist and render correctly before anything derives into it.
 
 ## Local environment equals production
 
@@ -383,7 +400,7 @@ Per the repo convention, scope every run to the touched file with `--testPathPat
 | WebM without duration or cues cannot be seeked | The editor only ever previews the ingested `proxy.mp4`, never the original                                             |
 | 16s Lambda timeout                             | Every long operation is a Fargate task; Lambda only signs, writes JSON and calls `RunTask`                             |
 | DynamoDB 400KB item cap                        | Timeline and cursor data live in S3, item holds a pointer                                                              |
-| `raw/` EventBridge rule firing per segment     | New prefixes (`sources/`, `projects/`) plus explicit `RunTask`                                                         |
+| `raw/` EventBridge rule firing per segment     | One new prefix (`projects/`) plus explicit `RunTask`                                                                   |
 | Filtergraph complexity and render time         | Per-clip intermediates instead of one giant graph; snapshot-tested builder                                             |
 | Font licensing for burned-in text              | Bundle OFL-licensed fonts in the image and load the same faces via `@font-face`                                        |
 | Preview and render drift                       | Shared SVG preset module is the single source of truth for text layout                                                 |
@@ -392,8 +409,8 @@ Per the repo convention, scope every run to the touched file with `--testPathPat
 ## Infrastructure changes (product owner deploys)
 
 All in `apps/demo-server/serverless.ts`, implemented in code but requiring his AWS deploy:
-lifecycle rules for `sources/` and `projects/`; Fargate `EphemeralStorage` raised to 100GB;
-`ecs:RunTask` and `iam:PassRole` on the Lambda role; `s3:GetObject` on `sources/*` and `projects/*`
+lifecycle rules for `projects/`; Fargate `EphemeralStorage` raised to 100GB;
+`ecs:RunTask` and `iam:PassRole` on the Lambda role; `s3:GetObject` on `projects/*`
 plus `dynamodb:GetItem` on the task role; a CORS-open route for the cursor session endpoint (M4).
 
 ## Verification
@@ -429,3 +446,51 @@ account.
 Deployment readiness is verified at the end of each milestone by confirming the local run used the
 production code path (container job runner, not the fallback) and by listing any `serverless.ts`
 changes the product owner needs to deploy.
+
+## Implementation notes locked in
+
+Details that are easy to lose and expensive to discover late. Each is settled; the milestone that
+consumes it is named.
+
+**Clip-anchored effects (M0, done).** Zoom keyframes, cursor layers and chapter markers carry a
+`clipId` and clip-local times rather than absolute program times, so reordering, trimming and
+splitting carry them along instead of silently desynchronising them. Banners stay program-anchored
+because a banner may deliberately span a transition.
+
+**Versioned render output (M1).** The render writes `media/{videoId}/r{n}/` and the item records
+which revision is live. CloudFront caches `/media/*` for a day, so overwriting `stream.mp4` on a
+re-render would hide the new cut from members until the TTL expired. Versioned directories cost
+nothing, are atomic, cache forever and give a free rollback. `POST /videos/:id/access` composes the
+current revision into the URLs, which is why the Watch page still needs no change.
+
+**Constant frame rate on every clip (M1).** Screen recordings from `MediaRecorder` are heavily
+variable frame rate, and `concat` or `xfade` over a variable-frame-rate source drifts audio out of
+sync. Every per-clip intermediate is encoded with `-fps_mode cfr -r <canvas fps>`.
+
+**Zoom uses `zoompan`, not `crop` (M4a).** A filtergraph fixes `crop`'s output size once at
+configuration time, so an animated zoom level cannot be expressed with `crop` alone. `zoompan`
+evaluates `z`, `x` and `y` per output frame against `ot`. Pre-scale the input, and omit the zoom
+branch entirely for clips without keyframes so the common case pays nothing.
+
+**Audio mixing needs `amix=normalize=0` (M3).** Left at its default, `amix` quietly attenuates every
+input by one over the number of inputs, which sounds like a bug in the voice-over feature.
+
+**Text rendering: SVG for banners and title cards, ASS for click ripples (M2, M4a).** Banners and
+title cards are generated as SVG by shared preset code, inlined in the browser preview and rasterised
+in the container, which makes preview and output the same artwork by construction. Click ripples are
+an expanding, fading ring, which is per-frame animation that a static overlay cannot express, so they
+are emitted as ASS drawings and burned in with libass (already linked into ffmpeg).
+
+**Bridge for existing uploads (M1).** `raw/` expires after 30 days, so converting an existing upload
+into a project copies its source into `projects/{id}/assets/` first, server side, and carries its
+chapters across.
+
+**Collapse the triplicated update expression (M0/M1).** `PATCH /videos/:id`, `/publish` and
+`/unpublish` each hand-roll the same lease-and-version conditional update. Extract one tested
+`guardedUpdate({ set, remove, expectedVersion })` helper and express all three through it, so future
+attributes are one map entry instead of a five-place edit.
+
+**Recording never uses `requestAnimationFrame` (M3).** The studio tab is in the background for the
+whole recording, because the creator is on the tab being demoed. Every recording path is driven by
+`ondataavailable`, and chunks stream into multipart parts as they arrive rather than being buffered
+to the end, so a long take does not risk a five-minute upload or total loss on a tab crash.

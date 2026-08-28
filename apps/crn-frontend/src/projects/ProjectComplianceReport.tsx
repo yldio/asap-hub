@@ -9,12 +9,12 @@ import {
 import { projects } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import {
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostComplianceReport,
-  useInvalidateWorkspaceManuscripts,
-} from '../network/teams/state';
-import { useManuscriptToast } from '../network/teams/useManuscriptToast';
+} from './state';
 
 type ProjectComplianceReportProps = {
   projectId: string;

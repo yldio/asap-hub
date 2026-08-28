@@ -18,17 +18,17 @@ import {
   useTeamSuggestions,
   useImpactSuggestions,
 } from '../shared-state';
+import { usePutManuscript } from '../network/teams/state';
+import { useEligibilityReason } from './useEligibilityReason';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import {
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostManuscript,
-  usePutManuscript,
+  useProjectById,
   useResubmitManuscript,
   useUploadManuscriptFileViaPresignedUrl,
-  useInvalidateWorkspaceManuscripts,
-} from '../network/teams/state';
-import { useEligibilityReason } from '../network/teams/useEligibilityReason';
-import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { useProjectById } from './state';
+} from './state';
 
 const loadManuscriptForm = () =>
   import(

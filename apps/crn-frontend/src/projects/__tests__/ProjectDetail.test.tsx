@@ -29,13 +29,19 @@ jest.mock('../../network/teams/state', () => ({
   useMarkDiscussionAsRead: jest
     .fn()
     .mockReturnValue(jest.fn().mockResolvedValue(undefined)),
-  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
   useTeamById: jest.fn(() => jest.fn().mockResolvedValue({ id: 'team-1' })),
   usePostPreprintResearchOutput: jest.fn(),
   useManuscriptVersionSuggestions: jest.fn(() =>
     jest.fn().mockResolvedValue([]),
   ),
 }));
+jest.mock('../state', () => {
+  const actual = jest.requireActual('../state');
+  return {
+    ...actual,
+    useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  };
+});
 jest.mock('../../shared-state', () => ({
   useTeamSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
   useLabSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),

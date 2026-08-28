@@ -7,15 +7,12 @@ import {
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import {
-  ComplianceReportPostRequest,
   DiscussionRequest,
   DiscussionResponse,
   ListPartialManuscriptResponse,
   ListTeamResponse,
   ManuscriptDataObject,
   ManuscriptFileResponse,
-  ManuscriptFileType,
-  ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptWorkspaceTab,
@@ -30,30 +27,24 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import {
-  createComplianceReport,
   createDiscussion,
-  createManuscript,
   createPreprintResearchOutput,
   downloadFullComplianceDataset,
   getManuscript,
   getManuscriptWorkspaceUrl,
   getManuscripts,
-  getWorkspaceManuscripts,
-  WorkspaceManuscriptsParams,
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
   getTeam,
   ManuscriptsOptions,
   markDiscussionAsRead,
-  resubmitManuscript,
   updateDiscussion,
   updateManuscript,
-  uploadManuscriptFileViaPresignedUrl,
   GetTeamsListOptions,
   getAlgoliaTeams,
 } from './api';
@@ -101,44 +92,6 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   return data ?? undefined;
 };
 
-// An empty id (form in create mode) resolves undefined without hitting the API.
-export const useManuscriptById = (
-  id: string,
-): [
-  ManuscriptResponse | undefined,
-  Dispatch<SetStateAction<ManuscriptResponse | undefined>>,
-] => {
-  const getAuthorization = useAuthorization();
-  const queryClient = useQueryClient();
-  const { data } = useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.detail(id),
-    queryFn: () =>
-      id
-        ? nullOnUndefined(async () =>
-            getManuscript(id, await getAuthorization()),
-          )
-        : null,
-  });
-  const setManuscript = useCallback<
-    Dispatch<SetStateAction<ManuscriptResponse | undefined>>
-  >(
-    (action) => {
-      queryClient.setQueryData<ManuscriptResponse | null>(
-        manuscriptQueryKeys.detail(id),
-        (cached) => {
-          const next =
-            typeof action === 'function' ? action(cached ?? undefined) : action;
-          // setQueryData treats an undefined updater result as "no update";
-          // cache null instead so writes of undefined still land.
-          return next ?? null;
-        },
-      );
-    },
-    [queryClient, id],
-  );
-  return [data ?? undefined, setManuscript];
-};
-
 export const useManuscriptWorkspaceUrl = (
   manuscriptId: string,
   tab?: ManuscriptWorkspaceTab,
@@ -157,33 +110,6 @@ export const useManuscriptWorkspaceUrl = (
   return data ?? undefined;
 };
 
-// `null` means there is nothing to fetch (e.g. a team-based project without a
-// resolved team) — the query resolves to empty lists without hitting the API.
-export const useWorkspaceManuscripts = (
-  params: WorkspaceManuscriptsParams | null,
-): WorkspaceManuscriptsResponse => {
-  const getAuthorization = useAuthorization();
-  const { data } = useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.workspace(params ?? {}),
-    queryFn: async (): Promise<WorkspaceManuscriptsResponse> =>
-      params
-        ? getWorkspaceManuscripts(params, await getAuthorization())
-        : { manuscripts: [], collaborationManuscripts: [] },
-  });
-  return data;
-};
-
-export const useInvalidateWorkspaceManuscripts = () => {
-  const queryClient = useQueryClient();
-  return useCallback(
-    () =>
-      queryClient.invalidateQueries({
-        queryKey: manuscriptQueryKeys.workspaceAll,
-      }),
-    [queryClient],
-  );
-};
-
 // Writes a mutation response into the manuscript detail cache — never
 // refetched, because Contentful has read-after-write lag. The manuscripts
 // list re-syncs via useManuscripts's refresh updater instead.
@@ -198,58 +124,6 @@ export const useSetManuscriptItem = () => {
     },
     [queryClient],
   );
-};
-
-export const usePostManuscript = () => {
-  const getAuthorization = useAuthorization();
-  const setManuscriptItem = useSetManuscriptItem();
-  const { mutateAsync } = useMutation({
-    mutationFn: async (payload: ManuscriptPostRequest) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return createManuscript(
-        {
-          ...payload,
-          notificationList,
-        },
-        await getAuthorization(),
-      );
-    },
-    onSuccess: (manuscript) => {
-      setManuscriptItem(manuscript);
-    },
-  });
-  return mutateAsync;
-};
-
-export const useResubmitManuscript = () => {
-  const getAuthorization = useAuthorization();
-  const setManuscriptItem = useSetManuscriptItem();
-  const { mutateAsync } = useMutation({
-    mutationFn: async ({
-      id,
-      payload,
-    }: {
-      id: string;
-      payload: ManuscriptPostRequest;
-    }) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return resubmitManuscript(
-        id,
-        {
-          ...payload,
-          notificationList,
-        },
-        await getAuthorization(),
-      );
-    },
-    onSuccess: (manuscript) => {
-      setManuscriptItem(manuscript);
-    },
-  });
-  return (id: string, payload: ManuscriptPostRequest) =>
-    mutateAsync({ id, payload });
 };
 
 export const usePutManuscript = () => {
@@ -310,54 +184,9 @@ export const usePutManuscript = () => {
     mutateAsync({ id, payload });
 };
 
-export const usePostComplianceReport = () => {
-  const getAuthorization = useAuthorization();
-  const { mutateAsync } = useMutation({
-    mutationFn: async (payload: ComplianceReportPostRequest) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return createComplianceReport(
-        {
-          ...payload,
-          notificationList,
-        },
-        await getAuthorization(),
-      );
-    },
-  });
-  return mutateAsync;
-};
-
 export const useIsComplianceReviewer = (): boolean => {
   const { role, openScienceTeamMember } = useCurrentUserCRN() ?? {};
   return role === 'Staff' && !!openScienceTeamMember;
-};
-
-// Uses S3 presigned URL to upload file
-export const useUploadManuscriptFileViaPresignedUrl = () => {
-  const getAuthorization = useAuthorization();
-  const { mutateAsync } = useMutation({
-    mutationFn: async ({
-      file,
-      fileType,
-      handleError,
-    }: {
-      file: File;
-      fileType: ManuscriptFileType;
-      handleError: (errorMessage: string) => void;
-    }) =>
-      uploadManuscriptFileViaPresignedUrl(
-        file,
-        fileType,
-        await getAuthorization(),
-        handleError,
-      ),
-  });
-  return (
-    file: File,
-    fileType: ManuscriptFileType,
-    handleError: (errorMessage: string) => void,
-  ) => mutateAsync({ file, fileType, handleError });
 };
 
 export const useDownloadFullComplianceDataset = () => {

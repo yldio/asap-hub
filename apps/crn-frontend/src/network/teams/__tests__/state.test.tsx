@@ -1,7 +1,6 @@
 import { reset } from '@asap-hub/flags';
 import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
-  ManuscriptPostRequest,
   ManuscriptResponse,
   TeamResponse,
   TeamStatus,
@@ -15,53 +14,40 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { researchOutputQueryKeys } from '../../../shared-research/state';
 import {
   createDiscussion,
-  createManuscript,
   createPreprintResearchOutput,
   getAlgoliaTeams,
   GetTeamsListOptions,
   getManuscript,
   getManuscripts,
-  getWorkspaceManuscripts,
   getTeam,
   markDiscussionAsRead,
-  resubmitManuscript,
   updateDiscussion,
   updateManuscript,
-  uploadManuscriptFileViaPresignedUrl,
 } from '../api';
 import {
   discussionQueryKeys,
   manuscriptQueryKeys,
   teamQueryKeys,
   useCreateDiscussion,
-  useManuscriptById,
   useManuscripts,
   useMarkDiscussionAsRead,
-  usePostManuscript,
   usePostPreprintResearchOutput,
   usePutManuscript,
   useReplyToDiscussion,
-  useResubmitManuscript,
   useTeamById,
   useTeams,
-  useUploadManuscriptFileViaPresignedUrl,
-  useWorkspaceManuscripts,
 } from '../state';
 
 jest.mock('../api', () => ({
   createDiscussion: jest.fn(),
-  createManuscript: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
   getAlgoliaTeams: jest.fn(),
   getManuscript: jest.fn(),
   getManuscripts: jest.fn(),
-  getWorkspaceManuscripts: jest.fn(),
   getTeam: jest.fn().mockResolvedValue(undefined),
   markDiscussionAsRead: jest.fn(),
-  resubmitManuscript: jest.fn(),
   updateDiscussion: jest.fn(),
   updateManuscript: jest.fn(),
-  uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
 
 jest.mock('../../../hooks/algolia', () => ({
@@ -179,57 +165,6 @@ describe('useTeamById', () => {
 
     await waitFor(() => expect(result.current).toEqual(teamMock));
     expect(getTeam).not.toHaveBeenCalled();
-  });
-});
-
-describe('useManuscriptById', () => {
-  const manuscriptMock = {
-    id: manuscriptId,
-    title: 'The Manuscript',
-    status: 'Waiting for Report',
-    versions: [],
-    discussions: [],
-  } as unknown as ManuscriptResponse;
-
-  it('fetches the manuscript and returns a working setter', async () => {
-    (getManuscript as jest.Mock).mockResolvedValue(manuscriptMock);
-
-    const { result } = renderStateHook(() => useManuscriptById(manuscriptId));
-
-    await waitFor(() => expect(result.current?.[0]).toEqual(manuscriptMock));
-    expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
-
-    const updated = { ...manuscriptMock, title: 'Renamed' };
-    act(() => {
-      result.current[1](updated);
-    });
-    await waitFor(() => expect(result.current[0]).toEqual(updated));
-  });
-
-  it('resolves undefined without calling the API when the id is empty', async () => {
-    const { result } = renderStateHook(() => useManuscriptById(''));
-
-    await waitFor(() => expect(result.current).toBeTruthy());
-    expect(result.current[0]).toBeUndefined();
-    expect(getManuscript).not.toHaveBeenCalled();
-  });
-
-  it('supports functional updates like React state setters', async () => {
-    (getManuscript as jest.Mock).mockResolvedValue(manuscriptMock);
-
-    const { result } = renderStateHook(() => useManuscriptById(manuscriptId));
-
-    await waitFor(() => expect(result.current?.[0]).toEqual(manuscriptMock));
-
-    act(() => {
-      result.current[1](
-        (manuscript) =>
-          manuscript && { ...manuscript, status: 'Addendum Required' },
-      );
-    });
-    await waitFor(() =>
-      expect(result.current[0]?.status).toBe('Addendum Required'),
-    );
   });
 });
 
@@ -484,43 +419,6 @@ describe('useMarkDiscussionAsRead', () => {
   });
 });
 
-describe('useWorkspaceManuscripts', () => {
-  it('fetches the workspace manuscripts by teamId', async () => {
-    const response = {
-      manuscripts: [{ id: 'm-1', title: 'One' }],
-      collaborationManuscripts: [{ id: 'm-2', title: 'Two' }],
-    };
-    (getWorkspaceManuscripts as jest.Mock).mockResolvedValue(response);
-
-    const { result } = renderStateHook(() =>
-      useWorkspaceManuscripts({ teamId }),
-    );
-
-    await waitFor(() => expect(result.current).toEqual(response));
-    expect(getWorkspaceManuscripts).toHaveBeenCalledWith(
-      { teamId },
-      mockAuthorization,
-    );
-  });
-
-  it('resolves null params to empty lists without calling the API', async () => {
-    const { result, queryClient } = renderStateHook(() =>
-      useWorkspaceManuscripts(null),
-    );
-
-    await waitFor(() =>
-      expect(result.current).toEqual({
-        manuscripts: [],
-        collaborationManuscripts: [],
-      }),
-    );
-    expect(getWorkspaceManuscripts).not.toHaveBeenCalled();
-    expect(queryClient.getQueryData(manuscriptQueryKeys.workspace({}))).toEqual(
-      { manuscripts: [], collaborationManuscripts: [] },
-    );
-  });
-});
-
 describe('usePutManuscript', () => {
   it('calls updateManuscript API with the correct parameters', async () => {
     (updateManuscript as jest.Mock).mockResolvedValue({
@@ -619,73 +517,6 @@ describe('usePutManuscript', () => {
   });
 });
 
-const manuscriptPostPayload: ManuscriptPostRequest = {
-  title: 'The Manuscript',
-  teamId: '42',
-  eligibilityReasons: [],
-  impact: 'impact-id-1',
-  categories: ['category-id-1'],
-  versions: [
-    {
-      lifecycle: 'Publication',
-      type: 'Original Research',
-      manuscriptFile: {
-        id: '42',
-        filename: 'test-file',
-        url: 'https://example.com/test-file',
-      },
-      teams: ['42'],
-      labs: [],
-      description: '',
-      shortDescription: '',
-      firstAuthors: [],
-    },
-  ],
-};
-
-describe('usePostManuscript', () => {
-  it('calls createManuscript API with the correct parameters', async () => {
-    (createManuscript as jest.Mock).mockResolvedValue({ id: manuscriptId });
-
-    const { result } = renderStateHook(() => usePostManuscript());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await result.current(manuscriptPostPayload);
-    });
-
-    expect(createManuscript).toHaveBeenCalledWith(
-      {
-        ...manuscriptPostPayload,
-        notificationList: undefined,
-      },
-      mockAuthorization,
-    );
-  });
-});
-
-describe('useResubmitManuscript', () => {
-  it('calls resubmitManuscript API with the correct parameters', async () => {
-    (resubmitManuscript as jest.Mock).mockResolvedValue({ id: manuscriptId });
-
-    const { result } = renderStateHook(() => useResubmitManuscript());
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await result.current(manuscriptId, manuscriptPostPayload);
-    });
-
-    expect(resubmitManuscript).toHaveBeenCalledWith(
-      manuscriptId,
-      {
-        ...manuscriptPostPayload,
-        notificationList: undefined,
-      },
-      mockAuthorization,
-    );
-  });
-});
-
 describe('useManuscripts', () => {
   const listOptions = {
     searchQuery: '',
@@ -775,70 +606,6 @@ describe('useManuscripts', () => {
 
     await waitFor(() => expect(getByText('errored')).toBeInTheDocument());
     consoleErrorSpy.mockRestore();
-  });
-});
-
-describe('useUploadManuscriptFileViaPresignedUrl', () => {
-  const mockHandleError = jest.fn();
-  const file = new File(['test content'], 'file.pdf', {
-    type: 'application/pdf',
-  });
-
-  it('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
-    (uploadManuscriptFileViaPresignedUrl as jest.Mock).mockResolvedValueOnce({
-      success: true,
-    });
-
-    const { result } = renderStateHook(() =>
-      useUploadManuscriptFileViaPresignedUrl(),
-    );
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      const resultValue = await result.current(
-        file,
-        'Manuscript File',
-        mockHandleError,
-      );
-      expect(resultValue).toEqual({ success: true });
-    });
-
-    expect(uploadManuscriptFileViaPresignedUrl).toHaveBeenCalledWith(
-      file,
-      'Manuscript File',
-      mockAuthorization,
-      mockHandleError,
-    );
-  });
-
-  it('handles upload errors and calls error handler', async () => {
-    const errorMessage = 'Upload failed!';
-
-    (uploadManuscriptFileViaPresignedUrl as jest.Mock).mockImplementationOnce(
-      async (
-        _file: File,
-        _type: string,
-        _auth: string,
-        handleError: (msg: string) => void,
-      ) => {
-        handleError(errorMessage);
-        throw new Error(errorMessage);
-      },
-    );
-
-    const { result } = renderStateHook(() =>
-      useUploadManuscriptFileViaPresignedUrl(),
-    );
-    await waitFor(() => expect(result.current).toBeTruthy());
-
-    await act(async () => {
-      await expect(
-        result.current(file, 'Manuscript File', mockHandleError),
-      ).rejects.toThrow(errorMessage);
-    });
-
-    expect(uploadManuscriptFileViaPresignedUrl).toHaveBeenCalled();
-    expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
   });
 });
 

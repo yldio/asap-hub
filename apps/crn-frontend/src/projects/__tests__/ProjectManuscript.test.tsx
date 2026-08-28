@@ -7,7 +7,7 @@ import { projects } from '@asap-hub/routing';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
-import { EligibilityReasonProvider } from '../../network/teams/EligibilityReasonProvider';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import ProjectManuscript from '../ProjectManuscript';
 
 jest.setTimeout(60000);
@@ -16,14 +16,7 @@ const projectId = 'proj-1';
 
 const mockUseManuscriptById = jest.fn((_id?: string) => [undefined, jest.fn()]);
 jest.mock('../../network/teams/state', () => ({
-  useManuscriptById: (id: string) => mockUseManuscriptById(id),
-  usePostManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
-  useResubmitManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
-  useInvalidateWorkspaceManuscripts: jest.fn(() => jest.fn()),
-  useUploadManuscriptFileViaPresignedUrl: jest
-    .fn()
-    .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
 const mockUseProjectById = jest.fn((_id?: string) => undefined);
@@ -32,6 +25,13 @@ jest.mock('../state', () => {
   return {
     ...actual,
     useProjectById: (id: string) => mockUseProjectById(id),
+    useManuscriptById: (id: string) => mockUseManuscriptById(id),
+    usePostManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
+    useResubmitManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
+    useInvalidateWorkspaceManuscripts: jest.fn(() => jest.fn()),
+    useUploadManuscriptFileViaPresignedUrl: jest
+      .fn()
+      .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
   };
 });
 
@@ -54,7 +54,7 @@ jest.mock('../../network/teams/useManuscriptToast', () => ({
   })),
 }));
 
-jest.mock('../../network/teams/useEligibilityReason', () => ({
+jest.mock('../useEligibilityReason', () => ({
   useEligibilityReason: jest.fn(() => ({
     eligibilityReasons: new Set(),
   })),

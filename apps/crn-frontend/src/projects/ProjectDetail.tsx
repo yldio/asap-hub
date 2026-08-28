@@ -17,7 +17,7 @@ import {
 import { getProjectResearchOutputListScope } from './projectResearchOutputScope';
 import { useFetchAimArticles } from './articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
-import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
+import { EligibilityReasonProvider } from './EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
 import ProjectOutputs from './ProjectOutputs';
 import type { ProjectDetailConfig } from './projectDetailConfig';

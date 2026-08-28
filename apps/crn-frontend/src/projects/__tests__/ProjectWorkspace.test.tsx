@@ -8,7 +8,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 import ProjectWorkspace from '../ProjectWorkspace';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
-import { EligibilityReasonProvider } from '../../network/teams/EligibilityReasonProvider';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 
 const mockUpdateManuscript = jest.fn().mockResolvedValue({});
 const mockCreateDiscussion = jest.fn().mockResolvedValue('disc-1');
@@ -17,19 +17,11 @@ const mockMarkDiscussionAsRead = jest.fn().mockResolvedValue(undefined);
 const mockSetFormType = jest.fn();
 
 jest.mock('../../network/teams/state', () => ({
-  useWorkspaceManuscripts: jest.fn(() => ({
-    manuscripts: [],
-    collaborationManuscripts: [],
-  })),
   useIsComplianceReviewer: jest.fn(() => false),
   usePutManuscript: jest.fn(() => mockUpdateManuscript),
   useCreateDiscussion: jest.fn(() => mockCreateDiscussion),
   useReplyToDiscussion: jest.fn(() => mockReplyToDiscussion),
   useMarkDiscussionAsRead: jest.fn(() => mockMarkDiscussionAsRead),
-  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
-  useUploadManuscriptFileViaPresignedUrl: jest
-    .fn()
-    .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
 jest.mock('../../network/teams/useManuscriptToast', () => ({
@@ -43,6 +35,14 @@ const mockPatchProject = jest.fn().mockResolvedValue({});
 jest.mock('../state', () => ({
   ...jest.requireActual('../state'),
   usePatchProjectById: jest.fn(() => mockPatchProject),
+  useWorkspaceManuscripts: jest.fn(() => ({
+    manuscripts: [],
+    collaborationManuscripts: [],
+  })),
+  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  useUploadManuscriptFileViaPresignedUrl: jest
+    .fn()
+    .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
 type CapturedProps = Record<string, unknown> & {
@@ -170,9 +170,7 @@ describe('ProjectWorkspace', () => {
   });
 
   it('fetches workspace manuscripts by teamId for team-based projects', async () => {
-    const { useWorkspaceManuscripts } = jest.requireMock(
-      '../../network/teams/state',
-    ) as {
+    const { useWorkspaceManuscripts } = jest.requireMock('../state') as {
       useWorkspaceManuscripts: jest.Mock;
     };
 
@@ -182,9 +180,7 @@ describe('ProjectWorkspace', () => {
   });
 
   it('fetches nothing for a team-based project without a teamId', async () => {
-    const { useWorkspaceManuscripts } = jest.requireMock(
-      '../../network/teams/state',
-    ) as {
+    const { useWorkspaceManuscripts } = jest.requireMock('../state') as {
       useWorkspaceManuscripts: jest.Mock;
     };
 
@@ -194,9 +190,7 @@ describe('ProjectWorkspace', () => {
   });
 
   it('fetches workspace manuscripts by projectId for non-team-based projects', async () => {
-    const { useWorkspaceManuscripts } = jest.requireMock(
-      '../../network/teams/state',
-    ) as {
+    const { useWorkspaceManuscripts } = jest.requireMock('../state') as {
       useWorkspaceManuscripts: jest.Mock;
     };
 

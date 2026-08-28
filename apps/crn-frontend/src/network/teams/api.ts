@@ -7,8 +7,6 @@ import {
 import {
   CompletedStatusOption,
   RequestedAPCCoverageOption,
-  ComplianceReportPostRequest,
-  ComplianceReportResponse,
   DiscussionCreateRequest,
   DiscussionRequest,
   DiscussionResponse,
@@ -17,7 +15,6 @@ import {
   ListTeamResponse,
   ManuscriptFileResponse,
   ManuscriptFileType,
-  ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
@@ -30,7 +27,6 @@ import {
   ManuscriptVersionResponse,
   TeamType,
   TeamStatus,
-  WorkspaceManuscriptsResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -255,30 +251,6 @@ export const getLabs = async (
   return resp.json();
 };
 
-export const createManuscript = async (
-  manuscript: ManuscriptPostRequest,
-  authorization: string,
-): Promise<ManuscriptResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/manuscripts`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(manuscript),
-  });
-  const response = await resp.json();
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to create manuscript. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-  return response;
-};
-
 export const updateManuscript = async (
   manuscriptId: string,
   manuscript: ManuscriptPutRequest,
@@ -297,31 +269,6 @@ export const updateManuscript = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to update manuscript with id ${manuscriptId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-  return response;
-};
-
-export const resubmitManuscript = async (
-  manuscriptId: string,
-  manuscript: ManuscriptPostRequest,
-  authorization: string,
-): Promise<ManuscriptResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/manuscripts/${manuscriptId}`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(manuscript),
-  });
-  const response = await resp.json();
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to resubmit manuscript with id ${manuscriptId}. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );
@@ -470,31 +417,6 @@ export const getManuscriptWorkspaceUrl = async (
   return resp.json();
 };
 
-export type WorkspaceManuscriptsParams =
-  | { teamId: string }
-  | { projectId: string };
-
-export const getWorkspaceManuscripts = async (
-  params: WorkspaceManuscriptsParams,
-  authorization: string,
-): Promise<WorkspaceManuscriptsResponse> => {
-  const query = new URLSearchParams(params).toString();
-  const resp = await fetch(`${API_BASE_URL}/manuscripts?${query}`, {
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
-    },
-  });
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch workspace manuscripts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-
-  return resp.json();
-};
-
 export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
   teamId?: string;
   projectId?: string;
@@ -575,30 +497,6 @@ export const uploadManuscriptFile = async (
   }
 
   return resp.json();
-};
-
-export const createComplianceReport = async (
-  complianceReport: ComplianceReportPostRequest,
-  authorization: string,
-): Promise<ComplianceReportResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/compliance-reports`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(complianceReport),
-  });
-  const response = await resp.json();
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to create compliance report. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-  return response;
 };
 
 export const updateDiscussion = async (
@@ -692,79 +590,6 @@ export const createDiscussion = async (
     );
   }
   return response;
-};
-
-// Requests presigned URL from the backend, uploads the file to S3, and then sends the URL to the backend to create the asset
-export const uploadManuscriptFileViaPresignedUrl = async (
-  file: File,
-  fileType: ManuscriptFileType,
-  authorization: string,
-  handleError: (errorMessage: string) => void,
-): Promise<ManuscriptFileResponse | undefined> => {
-  try {
-    // Request presigned S3 URL
-    const { presignedUrl: uploadUrl } = await getPresignedUrl(
-      file.name,
-      authorization,
-      file.type,
-      'upload',
-    );
-
-    // Upload file to S3
-    const s3UploadResp = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file.type,
-      },
-      body: file,
-    });
-
-    if (!s3UploadResp.ok) {
-      throw new Error(`S3 upload failed: ${s3UploadResp.statusText}`);
-    }
-
-    // Send the URL to the backend to create the asset
-    const fileUrl = uploadUrl.split('?')[0];
-
-    const resp = await fetch(
-      `${API_BASE_URL}/manuscripts/file-upload-from-url`,
-      {
-        method: 'POST',
-        headers: {
-          authorization,
-          'Content-Type': 'application/json',
-          ...createSentryHeaders(),
-        },
-        body: JSON.stringify({
-          fileType,
-          url: fileUrl,
-          filename: file.name,
-          contentType: file.type,
-        }),
-      },
-    );
-
-    if (!resp.ok) {
-      if (resp.status === 400 && handleError) {
-        handleError((await resp.json()).message);
-        return undefined;
-      }
-      throw new Error(
-        `Failed to upload ${fileType.toLowerCase()} via presigned URL. Received status ${
-          resp.status
-        }: ${resp.statusText}`,
-      );
-    }
-
-    return await resp.json();
-  } catch (error) {
-    handleError(
-      error instanceof Error
-        ? error.message
-        : 'Unexpected error during file upload',
-    );
-    return undefined;
-  }
 };
 
 export const downloadFullComplianceDataset = async (

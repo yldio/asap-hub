@@ -8,13 +8,20 @@ export type EditorShortcuts = {
   onDuplicate: () => void;
   onToggleMute: () => void;
   onRemove: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
 };
 
-const isTyping = (target: EventTarget | null): boolean =>
+// A shortcut must never take a key away from whatever the creator is actually
+// using: Space presses a focused button, the arrows drive a focused slider, and
+// a text field owns every key it is given.
+export const claimsKeyboard = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&
   (target.tagName === 'INPUT' ||
     target.tagName === 'TEXTAREA' ||
-    target.isContentEditable);
+    target.tagName === 'SELECT' ||
+    target.isContentEditable ||
+    Boolean(target.closest('button, a[href], select, [role="slider"]')));
 
 // The handlers change on every frame of playback, so the listener reads the
 // latest ones through a ref rather than resubscribing sixty times a second.
@@ -24,7 +31,7 @@ export const useEditorShortcuts = (shortcuts: EditorShortcuts): void => {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (isTyping(event.target)) {
+      if (claimsKeyboard(event.target)) {
         return;
       }
       const {
@@ -35,7 +42,23 @@ export const useEditorShortcuts = (shortcuts: EditorShortcuts): void => {
         onDuplicate,
         onToggleMute,
         onRemove,
+        onUndo,
+        onRedo,
       } = latest.current;
+
+      // undo is the one binding that wants the modifier; everything else must
+      // stay out of the way of Cmd+S, Cmd+D and the rest of the browser
+      const accelerator = event.metaKey || event.ctrlKey;
+      if (accelerator && event.code === 'KeyZ') {
+        event.preventDefault();
+        if (!readOnly) {
+          (event.shiftKey ? onRedo : onUndo)();
+        }
+        return;
+      }
+      if (accelerator || event.altKey) {
+        return;
+      }
 
       const transport: Record<string, () => void> = {
         Space: onToggle,

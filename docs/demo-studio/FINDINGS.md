@@ -13,6 +13,126 @@ dropped.
 
 ---
 
+## F-020 (P2, backlog) Structural work the architecture review called for
+
+Three reviewers went over the whole codebase. Everything they found that was a
+*correctness* problem is fixed and logged below. These are the structural ones,
+recorded here rather than done, because each is a refactor with no behaviour
+change and they are better done deliberately than in the middle of a bug-fix
+pass.
+
+- **One save model, not three.** `studio/project/useProjectEditor.ts` and the
+  `Editor` in `pages/StudioVideo.tsx` are the same machinery written twice
+  (debounce, single flight, 409 rebase, version ref) and they have already
+  drifted: one retries a conflict immediately, the other waits for the next
+  autosave. Extract one `useVersionedSave<T>`.
+- **`pages/Home.tsx` is 963 lines and twenty pieces of state.** The seams are
+  already visible: `useLibrarySelection`, `useLibraryDnd`, and the two delete
+  modals as components.
+- **`pages/StudioVideo.tsx`'s `Editor` is 560 lines**, with the row-editing
+  state (`drafts`/`invalid`/`endDrafts`/`endInvalid`/`focusedKey`) wanting to be
+  a `useChapterRows` reducer.
+- **The encode pipeline exists three times**: `encoder/finish.sh` in bash,
+  `encoder/render.ts` in TypeScript, and `src/local-encoder.ts` again. The
+  sprite grid, VTT arithmetic and poster offset must stay numerically identical
+  across all three or a locally encoded video and a rendered one disagree about
+  where the tiles are. Lift the pure parts into `@asap-hub/demo-timeline`, give
+  `render.js` a `finish` sub-command, and delete `local-encoder.ts` now that
+  `DockerJobRunner` covers the local path.
+- **The S3 key layout is authored in five places** (`src/storage.ts`,
+  `ingest.sh`, `finish.sh`, `encoder/render.ts`, `encode.sh`), and
+  `storage.ts:assetProxyKey` has no callers while `ingest.sh` hardcodes the same
+  string. Rename a prefix and a job breaks at runtime rather than at build.
+- **The confirm dialog and the admin table are copy-pasted three ways**
+  (`Users.tsx`, `Invites.tsx`, `Home.tsx`) — about 150 lines deletable with no
+  behaviour change.
+- **Every guarded write costs an extra read.** `respondWithVideo` is defined
+  identically in two route files and re-gets the row that was just written;
+  `UpdateCommand` already supports `ReturnValues: 'ALL_NEW'`.
+- **Listing endpoints fan out unboundedly.** `videosInFolder` always uses
+  `pages: 'all'`; `/videos/all` and `/folders/counts` each run one unbounded
+  query per folder, and counts materialises every item to call `.length`.
+- **Three composition shapes for one resource**: `registerAssetRoutes(router)`
+  mutates a router, `recordingsRouter()` is mounted separately at the same path,
+  and the rest are ordinary mounts, so `/projects/:id/assets` is undiscoverable
+  from `app.ts`.
+- **The timeline has no keyboard path.** Trimming and reordering are pointer
+  only, and the clip and lane blocks nest real buttons inside a
+  `div role="button"`, which is invalid for assistive technology.
+- **The inspectors ask creators to type milliseconds**, while `formatTimecode`
+  and `parseTimecode` both already exist and `StudioVideo` already pairs them.
+  A `TimecodeField` in `fields.tsx` would fix every inspector at once.
+- **Text edits still push one undo entry per keystroke.** The gesture model
+  added for drags (F-016) covers pointer work; the inspectors and the chapter
+  list want the same treatment on focus and blur.
+
+## F-019 (P1, fixed) A screen share ended from the browser's own bar lost the take
+
+**Observed.** The `ended` listener on the display track only called
+`setStatus('finishing')`. Nothing stopped the recorder, nothing awaited it,
+nothing uploaded, and the microphone stream stayed live — while the panel
+disabled every control because the status said it was saving. Chrome's own
+"Stop sharing" bar is how most recordings end, so this was the common path.
+
+**Why it matters.** The take was unrecoverable, and a later `stop()` would throw
+`InvalidStateError` on an already-inactive recorder, which was then swallowed.
+
+**Fixed.** The track's `ended` handler runs the real stop path and hands the
+finished take to `onEnded`, which `useRecordingTake` wires to its upload;
+`session.finish()` resolves immediately when the recorder is already inactive;
+a refused microphone degrades to video-only instead of abandoning a shared
+screen with no way to stop it; and `start()` will not run twice over itself.
+
+## F-018 (P1, fixed) The editor took keys away from whatever was focused
+
+**Observed.** The shortcut listener only excluded inputs and textareas, so Space
+on a focused button toggled playback instead of pressing it (making the action
+bar keyboard-unreachable), the arrow keys fought the seek bar's own handler and
+moved 1100ms per press, and there was no modifier guard at all — **Cmd+S split
+the clip**. There was no undo shortcut, in an editor.
+
+**Fixed.** `claimsKeyboard` also stands aside for buttons, links, selects and
+anything with `role="slider"`; a modifier now suppresses the unmodified
+bindings; and Cmd/Ctrl+Z and Cmd/Ctrl+Shift+Z undo and redo.
+
+## F-017 (P1, fixed) The editor re-rendered everything sixty times a second
+
+**Observed.** `playheadMs` lives in `ProjectEditor`, so every animation frame
+re-rendered the whole tree. Only `Timeline`'s lanes were memoised. Per frame it
+re-ran `resolveChapters` (a second full layout pass, a map build, a sort and a
+dedupe), rebuilt the entire recorder panel tree by calling the render prop
+during render, and allocated a fresh selection object and a fresh empty array so
+nothing downstream could ever be skipped.
+
+**Fixed.** The chapter list, the recorder tree and the resolved selection are
+memoised, the empty cursor list is a module constant, and the five panels are
+`memo`. Moving the playhead into its own subscription is the next step if the
+timeline ever gets long enough to need it.
+
+## F-016 (P1, fixed) One drag filled the undo history
+
+**Observed.** Every pointer move dispatched a reducer action and every action
+recorded a history entry. With a limit of 100, a two-second drag produced about
+120 entries: one undo stepped back a single frame of the drag, and two drags
+flushed everything before them out of the past.
+
+**Fixed.** The editor has gestures. `beginGesture`/`endGesture` bracket a drag,
+and inside one the first edit records a history entry while the rest replace it,
+so a drag is one undoable step. It also means one autosave rather than one per
+frame.
+
+## F-015 (P0, fixed) The last edit was dropped when the editor was left
+
+**Observed.** The autosave effect cleared its timer on unmount, so navigating
+away or closing the tab inside the 1.5s debounce discarded the edit with no
+flush and no warning — while `useEditLease` released the lease on `beforeunload`
+regardless, so the next editor opened a document quietly missing it.
+
+**Fixed.** `useProjectEditor` exposes `dirty` and `flush`. Unmount flushes (the
+page is still alive on an in-app navigation), `beforeunload` flushes and warns,
+and the export flushes before it starts so the container never renders a
+timeline older than what is on screen.
+
 ## F-014 (P1, fixed) A studio project looked like a demo stuck in encoding
 
 **Observed.** Creating a project writes a `Video` row straight away with `processingState: 'empty'`,

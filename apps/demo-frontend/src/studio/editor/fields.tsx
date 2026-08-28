@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { editorTheme } from './editorTheme';
+import { formatMs, parseMs } from './timecode';
 
 // the label and its control, for the fields below and for the one-off controls
 // an inspector needs that are not worth a component of their own
@@ -25,6 +26,8 @@ const controlStyles = css({
   width: '100%',
   boxSizing: 'border-box',
 });
+
+const invalidStyles = css({ borderColor: editorTheme.record });
 
 export const panelStyles = css({
   gridColumn: 3,
@@ -77,28 +80,6 @@ export const TextField: FC<{
       onChange={(event: ChangeEvent<HTMLInputElement>) =>
         onChange(event.target.value)
       }
-    />
-  </label>
-);
-
-export const NumberField: FC<{
-  readonly label: string;
-  readonly value: number;
-  readonly step?: number;
-  readonly min?: number;
-  readonly disabled?: boolean;
-  readonly onChange: (value: number) => void;
-}> = ({ label, value, step = 100, min = 0, disabled, onChange }) => (
-  <label css={fieldStyles}>
-    {label}
-    <input
-      css={controlStyles}
-      type="number"
-      value={value}
-      step={step}
-      min={min}
-      disabled={disabled}
-      onChange={(event) => onChange(Number(event.target.value))}
     />
   </label>
 );
@@ -157,3 +138,55 @@ export const FadeField: FC<{
     />
   </label>
 );
+
+// Every time in the studio is entered the way it is read: m:ss.cc. The draft is
+// held while it is being typed so a half finished value never reaches the
+// document, and an unparseable one is shown as wrong rather than swallowed.
+export const TimecodeField: FC<{
+  readonly label: string;
+  readonly value: number;
+  readonly disabled?: boolean;
+  readonly onChange: (ms: number) => void;
+}> = ({ label, value, disabled, onChange }) => {
+  const [draft, setDraft] = useState(formatMs(value));
+  const [editing, setEditing] = useState(false);
+  useEffect(() => {
+    if (!editing) {
+      setDraft(formatMs(value));
+    }
+  }, [editing, value]);
+
+  const parsed = parseMs(draft);
+
+  return (
+    <label css={fieldStyles}>
+      {label}
+      <input
+        css={[controlStyles, editing && parsed === undefined && invalidStyles]}
+        value={draft}
+        disabled={disabled}
+        inputMode="decimal"
+        aria-invalid={editing && parsed === undefined}
+        onFocus={() => setEditing(true)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          setDraft(event.target.value)
+        }
+        onBlur={() => {
+          setEditing(false);
+          if (parsed !== undefined && parsed !== value) {
+            onChange(parsed);
+          } else {
+            setDraft(formatMs(value));
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') event.currentTarget.blur();
+          if (event.key === 'Escape') {
+            setDraft(formatMs(value));
+            event.currentTarget.blur();
+          }
+        }}
+      />
+    </label>
+  );
+};

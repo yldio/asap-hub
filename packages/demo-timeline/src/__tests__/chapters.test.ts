@@ -1,0 +1,113 @@
+import { resolveChapters } from '../chapters';
+import { createEmptyTimeline } from '../document';
+import { Timeline } from '../schema';
+
+const source = (id: string, durationMs: number) =>
+  ({
+    kind: 'source' as const,
+    id,
+    assetId: `asset-${id}`,
+    inMs: 0,
+    outMs: durationMs,
+    volume: 1,
+  }) as const;
+
+const title = (id: string, text: string, durationMs = 3000) =>
+  ({
+    kind: 'title' as const,
+    id,
+    durationMs,
+    preset: 'centered' as const,
+    text,
+  }) as const;
+
+const timeline = (overrides: Partial<Timeline> = {}): Timeline => ({
+  ...createEmptyTimeline(),
+  ...overrides,
+});
+
+describe('resolveChapters', () => {
+  it('has none for an empty timeline', () => {
+    expect(resolveChapters(timeline())).toEqual([]);
+  });
+
+  it('makes a chapter of every title card, at its place in the program', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [
+            source('a', 4000),
+            title('t1', 'Attendance'),
+            source('b', 5000),
+            title('t2', 'Speakers'),
+          ],
+        }),
+      ),
+    ).toEqual([
+      { startMs: 4000, title: 'Attendance' },
+      { startMs: 12000, title: 'Speakers' },
+    ]);
+  });
+
+  it('resolves a marker against the clip it is anchored to', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [source('a', 4000), source('b', 5000)],
+          chapters: [
+            { id: 'c1', clipId: 'b', offsetMs: 1500, title: 'The new page' },
+          ],
+        }),
+      ),
+    ).toEqual([{ startMs: 5500, title: 'The new page' }]);
+  });
+
+  it('sorts markers and title cards together', () => {
+    const resolved = resolveChapters(
+      timeline({
+        clips: [source('a', 6000), title('t1', 'Speakers')],
+        chapters: [{ id: 'c1', clipId: 'a', offsetMs: 2000, title: 'Intro' }],
+      }),
+    );
+
+    expect(resolved.map(({ title: name }) => name)).toEqual([
+      'Intro',
+      'Speakers',
+    ]);
+  });
+
+  it('ignores a marker whose clip has gone', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [source('a', 4000)],
+          chapters: [{ id: 'c1', clipId: 'ghost', offsetMs: 0, title: 'Gone' }],
+        }),
+      ),
+    ).toEqual([]);
+  });
+
+  it('ignores an untitled marker or title card', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [source('a', 4000), title('t1', '   ')],
+          chapters: [{ id: 'c1', clipId: 'a', offsetMs: 0, title: '  ' }],
+        }),
+      ),
+    ).toEqual([]);
+  });
+
+  it('never emits two chapters on the same frame', () => {
+    expect(
+      resolveChapters(
+        timeline({
+          clips: [source('a', 4000), title('t1', 'Attendance')],
+          chapters: [
+            { id: 'c1', clipId: 't1', offsetMs: 0, title: 'Also attendance' },
+          ],
+        }),
+      ),
+    ).toHaveLength(1);
+  });
+});

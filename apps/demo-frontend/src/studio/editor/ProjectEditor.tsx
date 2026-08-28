@@ -33,6 +33,7 @@ import PreviewStage from './PreviewStage';
 import Timeline from './Timeline';
 import TransportBar from './TransportBar';
 import { useAssetDurations } from './useAssetDurations';
+import { useFittedBox } from './useFittedBox';
 import { usePlayback } from './usePlayback';
 
 const shellStyles = css({
@@ -52,12 +53,14 @@ const shellStyles = css({
 const bodyStyles = css({
   display: 'grid',
   gridTemplateColumns: '280px minmax(0, 1fr) 260px',
+  gridTemplateRows: 'minmax(0, 1fr)',
   flex: 1,
   minHeight: 0,
   minWidth: 0,
   overflow: 'hidden',
   '@media (max-width: 1100px)': {
     gridTemplateColumns: 'minmax(0, 1fr)',
+    gridTemplateRows: 'auto',
     flex: 'none',
     overflow: 'auto',
   },
@@ -67,6 +70,7 @@ const bodyStyles = css({
 // is centred in it rather than stretched
 const centreStyles = css({
   gridColumn: 2,
+  gridRow: 1,
   '@media (max-width: 1100px)': { gridColumn: 1 },
   flex: 1,
   display: 'flex',
@@ -130,6 +134,10 @@ const ProjectEditor: FC<Props> = ({
   const { playheadMs, playing, toggle, seek, nudge } = usePlayback({
     durationMs,
   });
+  const previewBox = useFittedBox(
+    stageRef,
+    timeline.canvas.width / timeline.canvas.height,
+  );
 
   const current = placementAt(placements, playheadMs);
   const selected = placements.find(({ clip }) => clip.id === selectedClipId);
@@ -439,8 +447,20 @@ const ProjectEditor: FC<Props> = ({
       />
 
       <div css={bodyStyles}>
+        <AssetPanel
+          recorder={recorder}
+          assets={assets}
+          busy={uploading}
+          progress={uploadProgress}
+          readOnly={readOnly}
+          onImport={onImport}
+          onAdd={addAsset}
+          onDelete={onDeleteAsset}
+        />
+
         <div css={centreStyles} ref={stageRef}>
           <PreviewStage
+            box={previewBox}
             placement={current}
             banners={timeline.banners}
             zooms={timeline.zooms}
@@ -474,17 +494,6 @@ const ProjectEditor: FC<Props> = ({
             }
           />
         </div>
-
-        <AssetPanel
-          recorder={recorder}
-          assets={assets}
-          busy={uploading}
-          progress={uploadProgress}
-          readOnly={readOnly}
-          onImport={onImport}
-          onAdd={addAsset}
-          onDelete={onDeleteAsset}
-        />
 
         {selectedEffect && current ? (
           <CursorEffectInspector

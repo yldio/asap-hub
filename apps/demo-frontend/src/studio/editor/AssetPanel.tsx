@@ -9,6 +9,7 @@ import { PlusIcon, TrashIcon } from './icons';
 
 const panelStyles = css({
   gridColumn: 1,
+  gridRow: 1,
   display: 'flex',
   flexDirection: 'column',
   gap: 12,

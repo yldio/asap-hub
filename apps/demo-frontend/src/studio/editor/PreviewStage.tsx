@@ -17,16 +17,11 @@ import { zoomTransformAt } from './zoom';
 
 const pickingStyles = css({ cursor: 'crosshair' });
 
-// the stage keeps 16:9 and shrinks to whatever the panels and the timeline
-// leave, in either direction, rather than stretching the window
+// the size is measured and set by the editor, so the frame keeps its ratio
+// whichever way the window is constrained
 const stageStyles = css({
   containerType: 'inline-size',
   position: 'relative',
-  width: '100%',
-  height: 'auto',
-  maxWidth: '100%',
-  maxHeight: '100%',
-  aspectRatio: '16 / 9',
   backgroundColor: charcoal.rgb,
   borderRadius: rem(8),
   overflow: 'hidden',
@@ -75,6 +70,7 @@ const subheadingStyles = css({
 });
 
 type Props = {
+  readonly box: { width: number; height: number };
   readonly placement?: ClipPlacement;
   readonly banners: Banner[];
   readonly zooms: Zoom[];
@@ -89,6 +85,7 @@ type Props = {
 // one video element, re-pointed as the playhead crosses a clip boundary. The
 // timeline clock owns the time; the element is told where to be, never asked.
 const PreviewStage: FC<Props> = ({
+  box,
   placement,
   banners,
   zooms,
@@ -143,9 +140,11 @@ const PreviewStage: FC<Props> = ({
     }
   }, [playing, url]);
 
+  const size = { width: box.width, height: box.height };
+
   if (!clip) {
     return (
-      <div css={stageStyles}>
+      <div css={stageStyles} style={size}>
         <p css={emptyStyles}>Add a clip to the timeline to see it here.</p>
       </div>
     );
@@ -153,7 +152,7 @@ const PreviewStage: FC<Props> = ({
 
   if (clip.kind === 'title') {
     return (
-      <div css={stageStyles}>
+      <div css={stageStyles} style={size}>
         <div css={titleCardStyles}>
           <h2 css={headingStyles}>{clip.text}</h2>
           {clip.subtitle ? <p css={subheadingStyles}>{clip.subtitle}</p> : null}
@@ -183,6 +182,7 @@ const PreviewStage: FC<Props> = ({
   return (
     <div
       css={[stageStyles, pick && pickingStyles]}
+      style={size}
       onClick={pick}
       role={pick ? 'button' : undefined}
       tabIndex={pick ? 0 : undefined}

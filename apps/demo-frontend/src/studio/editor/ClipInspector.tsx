@@ -11,6 +11,7 @@ import { TrashIcon } from './icons';
 
 const panelStyles = css({
   gridColumn: 3,
+  gridRow: 1,
   display: 'flex',
   flexDirection: 'column',
   gap: 12,

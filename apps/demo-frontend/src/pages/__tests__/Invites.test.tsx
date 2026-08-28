@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ApiError } from '../../api/client';
 import type { Invite } from '../../api/types';
 import { adminMe, creatorMe, memberMe, renderApp } from '../../test-utils';
 import Invites from '../Invites';
@@ -155,6 +156,48 @@ it('surfaces a failed invite', async () => {
       'We could not send that invite. Check the address and try again.',
     ),
   ).toBeVisible();
+});
+
+it('says the person already has an account rather than blaming the address', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      createInvite: () =>
+        Promise.reject(new ApiError(409, 'conflict', 'already_invited')),
+    },
+  });
+
+  await screen.findByText('jane@example.com');
+  await userEvent.type(
+    screen.getByLabelText('Email address'),
+    'taken@example.com',
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    /already accepted an invite/i,
+  );
+});
+
+it('clears a failed invite once the address is edited again', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () => Promise.resolve(items),
+      createInvite: () => Promise.reject(new Error('nope')),
+    },
+  });
+
+  await screen.findByText('jane@example.com');
+  const email = screen.getByLabelText('Email address');
+  await userEvent.type(email, 'new@example.com');
+  await userEvent.click(screen.getByRole('button', { name: 'Send invite' }));
+  await screen.findByRole('alert');
+
+  await userEvent.type(email, 'x');
+
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
 
 it('narrows the table by email search', async () => {

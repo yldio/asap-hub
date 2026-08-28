@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import { FC, FormEvent, useMemo, useState } from 'react';
 
+import { ApiError } from '../api/client';
 import { useCancelInvite, useCreateInvite, useInvites } from '../api/hooks';
 import type { Invite, Role } from '../api/types';
 import { useIsAdmin, useIsCreator } from '../auth/MeContext';
@@ -144,6 +145,15 @@ const Invites: FC = () => {
     createInvite.mutate({ email, role }, { onSuccess: () => setEmail('') });
   };
 
+  // a failure that stays on screen while the admin goes on to do something else
+  // reads as though that other thing failed
+  const changeEmail = (next: string) => {
+    if (createInvite.isError) {
+      createInvite.reset();
+    }
+    setEmail(next);
+  };
+
   return (
     <>
       <Headline level={2}>Invites</Headline>
@@ -158,7 +168,7 @@ const Invites: FC = () => {
               type="email"
               required
               value={email}
-              onChange={(event) => setEmail(event.currentTarget.value)}
+              onChange={(event) => changeEmail(event.currentTarget.value)}
             />
           </label>
           <label css={fieldStyles}>
@@ -178,8 +188,14 @@ const Invites: FC = () => {
           </Button>
         </form>
         {createInvite.isError && (
-          <p css={[errorStyles, { padding: `0 ${rem(24)} ${rem(24)}` }]}>
-            We could not send that invite. Check the address and try again.
+          <p
+            role="alert"
+            css={[errorStyles, { padding: `0 ${rem(24)} ${rem(24)}` }]}
+          >
+            {createInvite.error instanceof ApiError &&
+            createInvite.error.code === 'already_invited'
+              ? 'That person has already accepted an invite, so they have an account already. Change their role from the users page.'
+              : 'We could not send that invite. Check the address and try again.'}
           </p>
         )}
       </Card>

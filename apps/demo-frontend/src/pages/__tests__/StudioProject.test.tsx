@@ -233,7 +233,7 @@ describe('rendering', () => {
           renderId: 'render-1',
           state: 'rendering',
           timelineVersion: 4,
-          stage: 'clips',
+          stage: 'clip 0 (source asset-1)',
           progress: 40,
         },
       }),
@@ -309,5 +309,41 @@ describe('chapters', () => {
     expect(
       await screen.findByRole('button', { name: 'Chapter at the playhead' }),
     ).toBeDisabled();
+  });
+});
+
+describe('when a source cannot be changed', () => {
+  it('explains why the clip still using it blocks the removal', async () => {
+    const deleteAsset = jest
+      .fn()
+      .mockRejectedValue(new ApiError(409, 'conflict', 'asset_in_use'));
+    renderStudio({
+      deleteAsset,
+      listAssets: jest.fn().mockResolvedValue([asset()]),
+    });
+
+    await userEvent.click(await screen.findByLabelText('Remove Intro take'));
+
+    expect(deleteAsset).toHaveBeenCalled();
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /still used on the timeline/i,
+    );
+  });
+
+  it('says so when the rename is refused', async () => {
+    const renameAsset = jest
+      .fn()
+      .mockRejectedValue(new ApiError(409, 'conflict', 'locked'));
+    renderStudio({ renameAsset });
+
+    const name = await screen.findByDisplayValue('Intro take');
+    await userEvent.clear(name);
+    await userEvent.type(name, 'Attendance');
+    await userEvent.tab();
+
+    await waitFor(() => expect(renameAsset).toHaveBeenCalled());
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /someone else is editing/i,
+    );
   });
 });

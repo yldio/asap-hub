@@ -106,6 +106,7 @@ const StudioProject: FC = () => {
   const readOnly = lease.status !== 'held';
 
   const upload = useAssetUpload(id);
+  const [assetError, setAssetError] = useState<string>();
 
   const refreshAssets = useCallback(
     () => queryClient.invalidateQueries({ queryKey: ['project-assets', id] }),
@@ -131,16 +132,38 @@ const StudioProject: FC = () => {
     [refreshAssets, upload],
   );
 
+  // a rejected rename leaves the typed name on screen looking saved, so the
+  // panel is refreshed either way and the reason is shown
   const onRenameAsset = useCallback(
     (asset: ProjectAsset, label: string) => {
-      void api.renameAsset(id, asset.assetId, label).then(refreshAssets);
+      setAssetError(undefined);
+      void api
+        .renameAsset(id, asset.assetId, label)
+        .catch((cause: unknown) =>
+          setAssetError(
+            cause instanceof ApiError && cause.code === 'locked'
+              ? 'Someone else is editing this demo, so the sources cannot be renamed.'
+              : 'Could not rename that source.',
+          ),
+        )
+        .finally(refreshAssets);
     },
     [api, id, refreshAssets],
   );
 
   const onDeleteAsset = useCallback(
     (asset: ProjectAsset) => {
-      void api.deleteAsset(id, asset.assetId).then(refreshAssets);
+      setAssetError(undefined);
+      void api
+        .deleteAsset(id, asset.assetId)
+        .catch((cause: unknown) =>
+          setAssetError(
+            cause instanceof ApiError && cause.code === 'asset_in_use'
+              ? 'That source is still used on the timeline. Remove its clips first.'
+              : 'Could not remove that source.',
+          ),
+        )
+        .finally(refreshAssets);
     },
     [api, id, refreshAssets],
   );
@@ -183,6 +206,7 @@ const StudioProject: FC = () => {
       markLost={markLost}
       onImport={onImport}
       onImportAudio={onImportAudio}
+      assetError={assetError}
       onRenameAsset={onRenameAsset}
       onDeleteAsset={onDeleteAsset}
       upload={upload}
@@ -204,6 +228,7 @@ type EditorProps = {
   readonly markLost: (holderName?: string) => void;
   readonly onImport: (file: File) => void;
   readonly onImportAudio: (file: File) => void;
+  readonly assetError?: string;
   readonly onRenameAsset: (asset: ProjectAsset, label: string) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly upload: AssetUpload;
@@ -225,6 +250,7 @@ const Editor: FC<EditorProps> = ({
   markLost,
   onImport,
   onImportAudio,
+  assetError,
   onRenameAsset,
   onDeleteAsset,
   upload,
@@ -362,9 +388,8 @@ const Editor: FC<EditorProps> = ({
 
   const startRender = useCallback(() => {
     setRenderError(undefined);
-    // an edit inside the autosave debounce is not on the server yet, and the
-    // container renders the server's copy
-    editor.flush();
+    // no flush here: the button is only live once the document is settled, and
+    // a save from this point would move the version the render is about to send
     api
       .startRender(id, editor.version)
       .then(applyWrite)
@@ -375,7 +400,7 @@ const Editor: FC<EditorProps> = ({
             : 'Could not start the export.',
         ),
       );
-  }, [api, applyWrite, editor, id]);
+  }, [api, applyWrite, editor.version, id]);
 
   const cancelRender = useCallback(() => {
     api
@@ -516,6 +541,7 @@ const Editor: FC<EditorProps> = ({
         assetUrl={assetUrl}
         onImport={onImport}
         onImportAudio={onImportAudio}
+        assetError={assetError}
         onRenameAsset={onRenameAsset}
         onDeleteAsset={onDeleteAsset}
         uploading={upload.busy}

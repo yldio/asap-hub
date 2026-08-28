@@ -142,6 +142,7 @@ type Props = {
   readonly recorder?: ReactNode;
   readonly chapters?: ReactNode;
   readonly busy: boolean;
+  readonly error?: string;
   readonly progress?: number;
   readonly readOnly: boolean;
   readonly onImport: (file: File) => void;
@@ -156,6 +157,7 @@ const AssetPanel: FC<Props> = ({
   recorder,
   chapters,
   busy,
+  error,
   progress,
   readOnly,
   onImport,
@@ -181,6 +183,11 @@ const AssetPanel: FC<Props> = ({
   return (
     <aside css={panelStyles} aria-label="Media">
       <h2 css={headingStyles}>Media</h2>
+      {error ? (
+        <p css={errorStyles} role="alert">
+          {error}
+        </p>
+      ) : null}
       {recorder}
       <input
         ref={videoRef}

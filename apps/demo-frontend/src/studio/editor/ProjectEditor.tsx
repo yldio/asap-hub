@@ -115,6 +115,7 @@ type Props = {
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
   readonly onImport: (file: File) => void;
   readonly onImportAudio: (file: File) => void;
+  readonly assetError?: string;
   readonly onRenameAsset: (asset: ProjectAsset, label: string) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly uploading: boolean;
@@ -132,6 +133,7 @@ const ProjectEditor: FC<Props> = ({
   assetUrl,
   onImport,
   onImportAudio,
+  assetError,
   onRenameAsset,
   onDeleteAsset,
   uploading,
@@ -566,6 +568,7 @@ const ProjectEditor: FC<Props> = ({
           readOnly={readOnly}
           onImport={onImport}
           onImportAudio={onImportAudio}
+          error={assetError}
           onRename={onRenameAsset}
           onAdd={addAsset}
           onDelete={onDeleteAsset}

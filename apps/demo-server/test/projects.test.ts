@@ -373,3 +373,38 @@ describe('PUT /api/projects/:id/timeline', () => {
     expect(response.status).toBe(403);
   });
 });
+
+describe('POST /api/videos/:id/access for a studio render', () => {
+  it('points at the revision the item names', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(
+      projectItem({
+        status: 'published',
+        mediaPath: 'r2',
+        processingState: 'ready',
+      }),
+    );
+
+    const response = await api
+      .post('/api/videos/project-1/access')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      streamUrl: '/media/project-1/r2/stream.mp4',
+      spriteUrl: '/media/project-1/r2/sprite.jpg',
+      thumbnailsVttUrl: '/media/project-1/r2/thumbnails.vtt',
+    });
+  });
+
+  it('falls back to the flat path for an upload that has no revision', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ kind: 'upload', mediaPath: undefined }));
+
+    const response = await api
+      .post('/api/videos/project-1/access')
+      .set('Authorization', creatorToken);
+
+    expect(response.body.streamUrl).toBe('/media/project-1/stream.mp4');
+  });
+});

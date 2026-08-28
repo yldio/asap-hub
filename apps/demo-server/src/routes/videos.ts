@@ -544,10 +544,17 @@ export const videosRouter = (): Router => {
       });
     }
 
+    // a studio render writes into media/{id}/r{n}/ so a re-render is not hidden
+    // behind the day long CloudFront TTL on the previous output
+    const base =
+      typeof data.mediaPath === 'string' && data.mediaPath
+        ? `/media/${id}/${data.mediaPath}`
+        : `/media/${id}`;
+
     res.json({
-      streamUrl: `/media/${id}/stream.mp4`,
-      spriteUrl: `/media/${id}/sprite.jpg`,
-      thumbnailsVttUrl: `/media/${id}/thumbnails.vtt`,
+      streamUrl: `${base}/stream.mp4`,
+      spriteUrl: `${base}/sprite.jpg`,
+      thumbnailsVttUrl: `${base}/thumbnails.vtt`,
     });
   });
 

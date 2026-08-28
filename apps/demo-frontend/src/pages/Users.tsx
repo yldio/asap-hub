@@ -14,7 +14,7 @@ import {
   Modal,
   Spinner,
 } from '../ui/components';
-import { TableFilters, useDebounced } from '../ui/TableFilters';
+import { TableFilters } from '../ui/TableFilters';
 import {
   charcoal,
   ember,
@@ -26,6 +26,7 @@ import {
   steel,
 } from '../ui/theme';
 import { formatRecordedAt } from '../utils/time';
+import { useDebounced } from '../utils/useDebounced';
 
 const tableStyles = css({
   width: '100%',

@@ -13,10 +13,11 @@ import {
   Modal,
   Spinner,
 } from '../ui/components';
-import { TableFilters, useDebounced } from '../ui/TableFilters';
+import { TableFilters } from '../ui/TableFilters';
 import { charcoal, ember, lead, paper, rem, silver, steel } from '../ui/theme';
 import { roleLabel } from '../utils/format';
 import { formatRecordedAt } from '../utils/time';
+import { useDebounced } from '../utils/useDebounced';
 
 const formStyles = css({
   padding: rem(24),

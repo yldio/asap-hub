@@ -187,10 +187,6 @@ export const Headline: FC<{
   return <Tag css={headlineStyles[level]}>{children}</Tag>;
 };
 
-export const Caption: FC<{ readonly children: ReactNode }> = ({ children }) => (
-  <p css={[captionStyles, { color: lead.rgb }]}>{children}</p>
-);
-
 const badgeStyles = css({
   ...captionStyles,
   display: 'inline-flex',

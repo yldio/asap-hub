@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import Dropdown from './Dropdown';
-import { SearchIcon } from '../library/icons';
+import { SearchIcon } from './icons';
 import { charcoal, paper, pine, rem, steel, tin } from './theme';
 
 const barStyles = css({
@@ -53,15 +53,6 @@ export type FilterSelect = {
   readonly value: string;
   readonly options: ReadonlyArray<FilterOption<string>>;
   readonly onChange: (value: string) => void;
-};
-
-export const useDebounced = <T,>(value: T, delayMs = 250): T => {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebounced(value), delayMs);
-    return () => clearTimeout(timer);
-  }, [value, delayMs]);
-  return debounced;
 };
 
 export const TableFilters: FC<{

@@ -20,16 +20,10 @@ const lightTokens = {
   '--demo-mint': 'rgb(228, 245, 238)',
 
   '--demo-cerulean': 'rgb(0, 140, 198)',
-  '--demo-denim': 'rgb(0, 106, 146)',
 
   '--demo-info100': 'rgb(230, 243, 249)',
-  '--demo-info500': 'rgb(12, 141, 195)',
-
-  '--demo-neutral200': 'rgb(246, 249, 251)',
-  '--demo-neutral300': 'rgb(237, 241, 243)',
 
   '--demo-warning100': 'rgb(248, 237, 222)',
-  '--demo-warning500': 'rgb(206, 128, 26)',
   '--demo-warning900': 'rgb(181, 107, 11)',
 
   '--demo-overlay': 'rgba(0, 0, 0, 0.45)',
@@ -85,16 +79,10 @@ const darkTokens = {
   '--demo-mint': 'rgba(90, 202, 148, 0.18)',
 
   '--demo-cerulean': 'rgb(84, 186, 234)',
-  '--demo-denim': 'rgb(122, 202, 240)',
 
   '--demo-info100': 'rgba(84, 186, 234, 0.16)',
-  '--demo-info500': 'rgb(84, 186, 234)',
-
-  '--demo-neutral200': 'rgb(28, 32, 36)',
-  '--demo-neutral300': 'rgb(33, 37, 41)',
 
   '--demo-warning100': 'rgba(229, 165, 74, 0.16)',
-  '--demo-warning500': 'rgb(229, 165, 74)',
   '--demo-warning900': 'rgb(240, 190, 120)',
 
   '--demo-overlay': 'rgba(0, 0, 0, 0.65)',

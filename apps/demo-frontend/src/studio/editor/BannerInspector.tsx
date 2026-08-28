@@ -52,6 +52,7 @@ const BannerInspector: FC<Props> = ({
       label="Length"
       value={banner.durationMs}
       disabled={readOnly}
+      minMs={200}
       onChange={(durationMs) => onChange({ durationMs })}
     />
     <SelectField

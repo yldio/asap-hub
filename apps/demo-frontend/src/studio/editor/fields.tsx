@@ -146,8 +146,9 @@ export const TimecodeField: FC<{
   readonly label: string;
   readonly value: number;
   readonly disabled?: boolean;
+  readonly minMs?: number;
   readonly onChange: (ms: number) => void;
-}> = ({ label, value, disabled, onChange }) => {
+}> = ({ label, value, disabled, minMs = 0, onChange }) => {
   const [draft, setDraft] = useState(formatMs(value));
   const [editing, setEditing] = useState(false);
   useEffect(() => {
@@ -173,8 +174,13 @@ export const TimecodeField: FC<{
         }
         onBlur={() => {
           setEditing(false);
-          if (parsed !== undefined && parsed !== value) {
-            onChange(parsed);
+          const next =
+            parsed === undefined ? undefined : Math.max(minMs, parsed);
+          // the field only shows hundredths, so a value that reads back the
+          // same was not edited: firing anyway retimed the item by a few
+          // milliseconds and recorded an undo step for merely tabbing through
+          if (next !== undefined && formatMs(next) !== formatMs(value)) {
+            onChange(next);
           } else {
             setDraft(formatMs(value));
           }

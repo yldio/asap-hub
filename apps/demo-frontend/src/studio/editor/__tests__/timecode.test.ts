@@ -42,3 +42,25 @@ describe('parseMs', () => {
     );
   });
 });
+
+describe('rounding up to the next hundredth', () => {
+  // 1999ms used to print 0:01.100, which reads back as 1100ms: the clip jumped
+  // most of a second backwards from merely being displayed
+  it('carries into the seconds instead of printing three digits', () => {
+    expect(formatMs(1999)).toBe('0:02.00');
+    expect(formatMs(59_999)).toBe('1:00.00');
+    expect(formatMs(995)).toBe('0:01.00');
+  });
+
+  it('never widens the hundredths past two digits', () => {
+    for (let ms = 0; ms < 5000; ms += 1) {
+      expect(formatMs(ms)).toMatch(/^\d+:[0-5]\d\.\d{2}$/);
+    }
+  });
+
+  it('reads back what it printed', () => {
+    for (let ms = 0; ms < 5000; ms += 1) {
+      expect(parseMs(formatMs(ms))).toBe(Math.round(ms / 10) * 10);
+    }
+  });
+});

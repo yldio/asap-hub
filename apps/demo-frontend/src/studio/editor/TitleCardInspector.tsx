@@ -65,6 +65,7 @@ const TitleCardInspector: FC<Props> = ({
       label="Length"
       value={clip.durationMs}
       disabled={readOnly}
+      minMs={500}
       onChange={(durationMs) => onChange({ durationMs })}
     />
 

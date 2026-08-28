@@ -1,7 +1,9 @@
+import type { Timeline } from '@asap-hub/demo-timeline';
 import { API_BASE_URL } from '../config';
 import type {
   BulkDeleteResult,
   BulkMoveResult,
+  CreatedAsset,
   CreatedUpload,
   Folder,
   FolderCounts,
@@ -11,7 +13,9 @@ import type {
   ManagedUser,
   Me,
   PartUrl,
+  ProjectAsset,
   Role,
+  SavedTimeline,
   UploadedPart,
   UserStatus,
   Video,
@@ -205,6 +209,93 @@ export const createApi = (getToken: GetToken) => ({
       await getToken(),
       { method: 'POST', credentials: 'include' },
     ),
+
+  createProject: async (input: {
+    title: string;
+    folderId?: string;
+    recordedAt?: string;
+  }): Promise<{ video: Video; timeline: Timeline; timelineVersion: number }> =>
+    request('/projects', await getToken(), { method: 'POST', body: input }),
+
+  getTimeline: async (
+    id: string,
+  ): Promise<{ timeline: Timeline; timelineVersion: number }> =>
+    request(`/projects/${encodeURIComponent(id)}/timeline`, await getToken()),
+
+  saveTimeline: async (
+    id: string,
+    input: { timeline: Timeline; timelineVersion: number; version: number },
+  ): Promise<SavedTimeline> =>
+    request<SavedTimeline>(
+      `/projects/${encodeURIComponent(id)}/timeline`,
+      await getToken(),
+      { method: 'PUT', body: input },
+    ),
+
+  listAssets: async (id: string): Promise<ProjectAsset[]> =>
+    (
+      await request<{ assets: ProjectAsset[] }>(
+        `/projects/${encodeURIComponent(id)}/assets`,
+        await getToken(),
+      )
+    ).assets,
+
+  createAsset: async (
+    id: string,
+    input: {
+      kind: 'video' | 'audio';
+      mimeType: string;
+      label: string;
+      extension: string;
+    },
+  ): Promise<CreatedAsset> =>
+    request<CreatedAsset>(
+      `/projects/${encodeURIComponent(id)}/assets`,
+      await getToken(),
+      { method: 'POST', body: input },
+    ),
+
+  createAssetPartUrls: async (
+    id: string,
+    assetId: string,
+    uploadId: string,
+    partNumbers: number[],
+  ): Promise<PartUrl[]> =>
+    (
+      await request<{ urls: PartUrl[] }>(
+        `/projects/${encodeURIComponent(id)}/assets/${encodeURIComponent(
+          assetId,
+        )}/parts`,
+        await getToken(),
+        { method: 'POST', body: { uploadId, partNumbers } },
+      )
+    ).urls,
+
+  completeAsset: async (
+    id: string,
+    assetId: string,
+    uploadId: string,
+    parts: UploadedPart[],
+  ): Promise<ProjectAsset> =>
+    (
+      await request<{ asset: ProjectAsset }>(
+        `/projects/${encodeURIComponent(id)}/assets/${encodeURIComponent(
+          assetId,
+        )}/complete`,
+        await getToken(),
+        { method: 'POST', body: { uploadId, parts } },
+      )
+    ).asset,
+
+  deleteAsset: async (id: string, assetId: string): Promise<void> => {
+    await request<void>(
+      `/projects/${encodeURIComponent(id)}/assets/${encodeURIComponent(
+        assetId,
+      )}`,
+      await getToken(),
+      { method: 'DELETE' },
+    );
+  },
 
   createUpload: async (input: {
     title: string;

@@ -188,10 +188,45 @@ const StudioUpload: FC = () => {
   const busy = phase === 'uploading' || phase === 'done';
   const percent = file && file.size > 0 ? (transferred / file.size) * 100 : 0;
 
+  const startProject = async () => {
+    setError(undefined);
+    try {
+      const created = await api.createProject({
+        title: title.trim() || 'Untitled demo',
+        folderId,
+        recordedAt: new Date(recordedAt).toISOString(),
+      });
+      void navigate(`/studio/projects/${created.video.id}`);
+    } catch (cause) {
+      setError(
+        cause instanceof Error ? cause.message : 'Could not start the demo',
+      );
+    }
+  };
+
   return (
     <>
-      <Headline level={2}>Upload a demo</Headline>
+      <Headline level={2}>Create a demo</Headline>
       <div css={{ height: rem(16) }} />
+
+      <Card overrideStyles={cardStyles}>
+        <div css={{ display: 'grid', gap: rem(12) }}>
+          <Headline level={3}>Build one in the studio</Headline>
+          <p css={{ margin: 0 }}>
+            Start an empty demo, then bring in as many clips as you need and
+            edit them on a timeline.
+          </p>
+          <div>
+            <Button primary disabled={busy} onClick={startProject}>
+              Open the studio
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <div css={{ height: rem(16) }} />
+      <Headline level={3}>Or upload a finished video</Headline>
+      <div css={{ height: rem(8) }} />
 
       <Card overrideStyles={cardStyles}>
         <form css={{ display: 'grid', gap: rem(20) }} onSubmit={onSubmit}>

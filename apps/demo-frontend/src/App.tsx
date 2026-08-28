@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Invites from './pages/Invites';
 import NotFound from './pages/NotFound';
 import StudioUpload from './pages/StudioUpload';
+import StudioProject from './pages/StudioProject';
 import StudioVideo from './pages/StudioVideo';
 import Users from './pages/Users';
 import Watch from './pages/Watch';
@@ -38,6 +39,10 @@ const App: FC = () => (
                 <Route path="/users" element={<Users />} />
                 <Route path="/studio/upload" element={<StudioUpload />} />
                 <Route path="/studio/videos/:id" element={<StudioVideo />} />
+                <Route
+                  path="/studio/projects/:id"
+                  element={<StudioProject />}
+                />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

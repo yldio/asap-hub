@@ -105,7 +105,7 @@ const setupBucket = async (): Promise<void> => {
   }
 };
 
-// lets the Vite proxy stream media straight from MinIO; local dev only
+// lets the Vite proxy stream media and project assets straight from MinIO; local dev only
 const setupMediaReadPolicy = async (): Promise<void> => {
   try {
     await s3.send(
@@ -118,7 +118,12 @@ const setupMediaReadPolicy = async (): Promise<void> => {
               Effect: 'Allow',
               Principal: { AWS: ['*'] },
               Action: ['s3:GetObject'],
-              Resource: [`arn:aws:s3:::${bucketName}/media/*`],
+              Resource: [
+                `arn:aws:s3:::${bucketName}/media/*`,
+                // the studio previews source assets straight from the bucket,
+                // the same way the deployed stack serves them behind a cookie
+                `arn:aws:s3:::${bucketName}/projects/*`,
+              ],
             },
           ],
         }),

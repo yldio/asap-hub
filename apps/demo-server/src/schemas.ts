@@ -113,6 +113,24 @@ export const createAssetSchema = z.object({
     .regex(/^[a-z0-9]+$/, 'invalid extension'),
 });
 
+export const assetPartsSchema = z.object({
+  uploadId: z.string().min(1).max(256),
+  partNumbers: z.array(z.number().int().positive().max(10000)).min(1).max(1000),
+});
+
+export const completeAssetSchema = z.object({
+  uploadId: z.string().min(1).max(256),
+  parts: z
+    .array(
+      z.object({
+        partNumber: z.number().int().positive().max(10000),
+        eTag: z.string().min(1).max(256),
+      }),
+    )
+    .min(1)
+    .max(10000),
+});
+
 export const createInviteSchema = z.object({
   email: z.string().email(),
   role: roleSchema,

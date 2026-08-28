@@ -12,6 +12,7 @@ import { requireCreator } from '../auth';
 import { videoEntity } from '../data/entities';
 import { createProjectSchema, saveTimelineSchema } from '../schemas';
 import { getObject, putObject, timelineKey } from '../storage';
+import { registerAssetRoutes } from './assets';
 import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
@@ -203,6 +204,8 @@ export const projectsRouter = (): Router => {
       });
     },
   );
+
+  registerAssetRoutes(router, loadProject);
 
   return router;
 };

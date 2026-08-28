@@ -18,6 +18,7 @@ const video: Video = {
   ],
   processingState: 'ready',
   createdBy: { sub: 'auth0|2', name: 'Sam Creator' },
+  kind: 'upload',
   version: 1,
 };
 

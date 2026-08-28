@@ -54,6 +54,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (proxyPath) => `/demo-hub-local-storage${proxyPath}`,
       },
+      // studio source assets, served the same way as the rendered media
+      '/projects': {
+        target: 'http://localhost:9010',
+        changeOrigin: true,
+        rewrite: (proxyPath) => `/demo-hub-local-storage${proxyPath}`,
+      },
     },
   },
   define: {

@@ -15,6 +15,7 @@ const uploadedVideo: Video = {
   chapters: [],
   processingState: 'processing',
   createdBy: { sub: 'auth0|2', name: 'Sam Creator' },
+  kind: 'upload',
   version: 1,
 };
 

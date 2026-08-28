@@ -55,6 +55,7 @@ export const makeVideo = (overrides: Partial<Video> = {}): Video => ({
   chapters: [],
   processingState: 'ready',
   createdBy: { sub: 'auth0|2', name: 'Sam Creator' },
+  kind: 'upload',
   version: 1,
   ...overrides,
 });

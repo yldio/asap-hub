@@ -46,7 +46,30 @@ export type Chapter = {
 
 export type VideoStatus = 'draft' | 'published';
 
-export type ProcessingState = 'uploading' | 'processing' | 'ready' | 'failed';
+// 'empty' is a studio project that has never been rendered
+export type ProcessingState =
+  'empty' | 'uploading' | 'processing' | 'ready' | 'failed';
+
+export type VideoKind = 'upload' | 'studio';
+
+export type RenderState =
+  'queued' | 'rendering' | 'done' | 'failed' | 'cancelled';
+
+export type TimelinePointer = {
+  key: string;
+  timelineVersion: number;
+  schemaVersion: number;
+  updatedAt: string;
+};
+
+export type RenderJob = {
+  renderId: string;
+  state: RenderState;
+  timelineVersion: number;
+  stage?: string;
+  progress?: number;
+  error?: string;
+};
 
 export type Video = {
   id: string;
@@ -63,6 +86,10 @@ export type Video = {
   lockedByName?: string;
   lockExpiresAt?: string;
   version: number;
+  kind: VideoKind;
+  mediaPath?: string;
+  timeline?: TimelinePointer;
+  render?: RenderJob;
 };
 
 export type VideoAccess = {
@@ -97,6 +124,39 @@ export type VideoPatch = {
   chapters?: Chapter[];
   recordedAt?: string;
   version: number;
+};
+
+export type AssetKind = 'video' | 'audio';
+
+export type AssetState = 'uploading' | 'preparing' | 'ready' | 'failed';
+
+export type ProjectAsset = {
+  assetId: string;
+  kind: AssetKind;
+  state: AssetState;
+  mimeType: string;
+  label: string;
+  bytes?: number;
+  durationMs?: number;
+  width?: number;
+  height?: number;
+  error?: string;
+  // server-issued playable path; the editor never builds media urls itself
+  url?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreatedAsset = {
+  assetId: string;
+  uploadId: string;
+  key: string;
+  partSize: number;
+};
+
+export type SavedTimeline = {
+  video: Video;
+  timelineVersion: number;
 };
 
 export type Lease = {

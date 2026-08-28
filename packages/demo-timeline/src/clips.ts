@@ -148,8 +148,10 @@ export const trimClip = (
   });
 
 const splitPieces = (clip: Clip, localMs: number): [Clip, Clip] | undefined => {
-  const leftMs = localMs;
-  const rightMs = clipDurationMs(clip) - localMs;
+  // the playhead carries fractional milliseconds once playback has run, and a
+  // document with a fractional time is rejected whole by the server
+  const leftMs = Math.round(localMs);
+  const rightMs = clipDurationMs(clip) - leftMs;
   if (leftMs < limits.minClipMs || rightMs < limits.minClipMs) {
     return undefined;
   }

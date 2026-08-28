@@ -364,3 +364,31 @@ describe('splitAt', () => {
     expect(splitAt(clips, -5, 'new')).toEqual(clips);
   });
 });
+
+describe('splitting at a fractional time', () => {
+  // the editor's playhead accumulates fractional timestamps during playback,
+  // and msSchema is an integer, so a fractional split makes the whole document
+  // unsaveable rather than just imprecise
+  it('lands both pieces on whole milliseconds', () => {
+    const clips: Clip[] = [
+      {
+        kind: 'source',
+        id: 'c1',
+        assetId: 'a1',
+        inMs: 0,
+        outMs: 10_000,
+        volume: 1,
+      },
+    ];
+
+    const split = splitAt(clips, 5123.400000000001, 'c2');
+
+    expect(split).toHaveLength(2);
+    split.forEach((clip) => {
+      if (clip.kind === 'source') {
+        expect(Number.isInteger(clip.inMs)).toBe(true);
+        expect(Number.isInteger(clip.outMs)).toBe(true);
+      }
+    });
+  });
+});

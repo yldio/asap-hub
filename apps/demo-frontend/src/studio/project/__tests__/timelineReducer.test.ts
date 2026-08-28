@@ -1,4 +1,8 @@
-import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
+import {
+  createEmptyTimeline,
+  parseTimeline,
+  Timeline,
+} from '@asap-hub/demo-timeline';
 import { timelineReducer } from '../timelineReducer';
 
 const withClips = (): Timeline => {
@@ -450,5 +454,37 @@ describe('chapters', () => {
       timelineReducer(withMarker(), { type: 'removeClip', clipId: 'clip-1' })
         .chapters,
     ).toEqual([]);
+  });
+});
+
+describe('a playhead that is not on a whole millisecond', () => {
+  // playback accumulates fractional DOMHighResTimeStamp deltas, and every
+  // millisecond in the document has to be an integer or the server rejects the
+  // whole timeline and no further save can succeed
+  it('splits on whole milliseconds', () => {
+    const next = timelineReducer(withClips(), {
+      type: 'splitAt',
+      tMs: 2123.400000000001,
+      clipId: 'clip-3',
+    });
+
+    next.clips.forEach((clip) => {
+      if (clip.kind === 'source') {
+        expect(Number.isInteger(clip.inMs)).toBe(true);
+        expect(Number.isInteger(clip.outMs)).toBe(true);
+      } else {
+        expect(Number.isInteger(clip.durationMs)).toBe(true);
+      }
+    });
+  });
+
+  it('keeps the document valid for the server', () => {
+    const next = timelineReducer(withClips(), {
+      type: 'splitAt',
+      tMs: 2123.400000000001,
+      clipId: 'clip-3',
+    });
+
+    expect(() => parseTimeline(JSON.parse(JSON.stringify(next)))).not.toThrow();
   });
 });

@@ -50,11 +50,54 @@ export const videoEntity = new Entity(
       lockedByName: { type: 'string' },
       lockExpiresAt: { type: 'number' },
       version: { type: 'number', required: true, default: 1 },
+      // 'empty' is a studio project that has never been rendered; uploads never sit in it
       processingState: {
-        type: ['uploading', 'processing', 'ready', 'failed'] as const,
+        type: ['empty', 'uploading', 'processing', 'ready', 'failed'] as const,
         required: true,
       },
       processingError: { type: 'string' },
+      kind: {
+        type: ['upload', 'studio'] as const,
+        required: true,
+        default: 'upload',
+      },
+      // pointer to the timeline document in S3; the document itself is far too
+      // big for a 400KB item, and every version is kept under its own key
+      timeline: {
+        type: 'map',
+        properties: {
+          key: { type: 'string', required: true },
+          timelineVersion: { type: 'number', required: true },
+          schemaVersion: { type: 'number', required: true },
+          updatedAt: { type: 'string', required: true },
+        },
+      },
+      // renders write to media/{id}/{mediaPath}/ so a re-render cannot be hidden
+      // behind the day-long CloudFront TTL on the previous output
+      mediaPath: { type: 'string' },
+      render: {
+        type: 'map',
+        properties: {
+          renderId: { type: 'string', required: true },
+          state: {
+            type: [
+              'queued',
+              'rendering',
+              'done',
+              'failed',
+              'cancelled',
+            ] as const,
+            required: true,
+          },
+          timelineVersion: { type: 'number', required: true },
+          stage: { type: 'string' },
+          progress: { type: 'number' },
+          taskArn: { type: 'string' },
+          requestedAt: { type: 'string' },
+          finishedAt: { type: 'string' },
+          error: { type: 'string' },
+        },
+      },
       createdAt: { type: 'string', required: true },
       updatedAt: { type: 'string', required: true },
     },
@@ -87,6 +130,53 @@ export const videoEntity = new Entity(
           // status is uppercased into the key by statusKey so begins_with can isolate published items
           composite: ['statusKey', 'recordedAt', 'id'],
           template: '${statusKey}#${recordedAt}#${id}',
+        },
+      },
+    },
+  },
+  entityConfiguration(),
+);
+
+// one row per source file of a studio project: recorded segments, imported
+// videos and narration takes. Kept out of the video item so each stays small
+// and can be added or deleted on its own.
+export const assetEntity = new Entity(
+  {
+    model: { entity: 'asset', version: '1', service: 'demo' },
+    attributes: {
+      videoId: { type: 'string', required: true },
+      assetId: { type: 'string', required: true },
+      kind: { type: ['video', 'audio'] as const, required: true },
+      state: {
+        type: ['uploading', 'preparing', 'ready', 'failed'] as const,
+        required: true,
+      },
+      key: { type: 'string', required: true },
+      proxyKey: { type: 'string' },
+      mimeType: { type: 'string', required: true },
+      label: { type: 'string', required: true },
+      bytes: { type: 'number' },
+      // written by the ingest job once the source has actually been probed
+      durationMs: { type: 'number' },
+      width: { type: 'number' },
+      height: { type: 'number' },
+      error: { type: 'string' },
+      createdAt: { type: 'string', required: true },
+      updatedAt: { type: 'string', required: true },
+    },
+    indexes: {
+      byVideo: {
+        pk: {
+          casing: 'none' as const,
+          field: 'PK',
+          composite: ['videoId'],
+          template: 'VIDEO#${videoId}',
+        },
+        sk: {
+          casing: 'none' as const,
+          field: 'SK',
+          composite: ['assetId'],
+          template: 'ASSET#${assetId}',
         },
       },
     },
@@ -252,6 +342,7 @@ export const createService = () =>
   new Service(
     {
       video: videoEntity,
+      asset: assetEntity,
       folder: folderEntity,
       user: userEntity,
       invite: inviteEntity,

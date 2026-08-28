@@ -59,11 +59,14 @@ const titleInput = (canvas: Canvas, seconds: string): string[] => [
   `color=c=black:s=${canvas.width}x${canvas.height}:r=${canvas.fps}`,
 ];
 
+// only the text fades: the black card behind it is the clip's own picture, so
+// the section reads as a held frame the words arrive on and leave from
 const titleOverlay = (
   clip: TitleClip,
   canvas: Canvas,
   workDir: string,
   index: number,
+  durationMs: number,
 ): Overlay => ({
   path: titlePngPath(workDir, index),
   svg: titleCardSvg({
@@ -72,6 +75,12 @@ const titleOverlay = (
     subtitle: clip.subtitle,
     canvas,
   }),
+  visible: {
+    startMs: 0,
+    endMs: durationMs,
+    fadeInMs: clip.fadeInMs,
+    fadeOutMs: clip.fadeOutMs,
+  },
 });
 
 // the banner travels the height of its own band, so it comes from the frame
@@ -113,6 +122,8 @@ const bannerOverlays = (
             visible: {
               startMs: startMs - placement.startMs,
               endMs: endMs - placement.startMs,
+              fadeInMs: banner.fadeInMs,
+              fadeOutMs: banner.fadeOutMs,
             },
             slide: bannerSlide(banner, canvas),
           },
@@ -152,7 +163,7 @@ export const buildClipStep = ({
 
   const overlays: Overlay[] = [
     ...(clip.kind === 'title'
-      ? [titleOverlay(clip, canvas, workDir, index)]
+      ? [titleOverlay(clip, canvas, workDir, index, durationMs)]
       : []),
     ...bannerOverlays(banners, placement, canvas, workDir),
   ];

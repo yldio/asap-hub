@@ -6,7 +6,7 @@ import {
   filterSegment,
   fitToCanvasFilters,
   graph,
-  overlayFadeDurationMs,
+  overlayFadeRamps,
   overlayFilter,
   overlayInputFilters,
   secondsFromMs,
@@ -145,17 +145,47 @@ describe('overlay filters', () => {
   });
 });
 
-describe('overlayFadeDurationMs', () => {
-  it('is the full fade when there is room for both ramps', () => {
-    expect(overlayFadeDurationMs({ startMs: 0, endMs: 5000 })).toBe(300);
+describe('overlayFadeRamps', () => {
+  it('uses the default ramp when nothing was asked for', () => {
+    expect(overlayFadeRamps({ startMs: 0, endMs: 5000 })).toEqual({
+      inMs: 300,
+      outMs: 300,
+    });
   });
 
-  it('is half of a short window', () => {
-    expect(overlayFadeDurationMs({ startMs: 0, endMs: 400 })).toBe(200);
+  it('takes the ramps the creator asked for', () => {
+    expect(
+      overlayFadeRamps({
+        startMs: 0,
+        endMs: 5000,
+        fadeInMs: 1200,
+        fadeOutMs: 200,
+      }),
+    ).toEqual({ inMs: 1200, outMs: 200 });
   });
 
-  it('is nothing at all for an empty window', () => {
-    expect(overlayFadeDurationMs({ startMs: 1000, endMs: 1000 })).toBe(0);
+  // both are scaled together rather than one eating the other, so the shape
+  // the creator asked for survives on a card too short to hold it
+  it('scales both ramps down to fit a short window', () => {
+    expect(
+      overlayFadeRamps({
+        startMs: 0,
+        endMs: 600,
+        fadeInMs: 900,
+        fadeOutMs: 300,
+      }),
+    ).toEqual({ inMs: 450, outMs: 150 });
+  });
+
+  it('honours a ramp asked to be nothing at all', () => {
+    expect(
+      overlayFadeRamps({
+        startMs: 0,
+        endMs: 5000,
+        fadeInMs: 0,
+        fadeOutMs: 800,
+      }),
+    ).toEqual({ inMs: 0, outMs: 800 });
   });
 });
 

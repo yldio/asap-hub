@@ -341,7 +341,7 @@ exports[`buildRenderPlan a title card between two clips generates a background a
       "-i",
       "/work/title-1.png",
       "-filter_complex",
-      "[0:v]setsar=1[v0];[2:v]format=rgba[o0];[v0][o0]overlay=0:0[v1]",
+      "[0:v]setsar=1[v0];[2:v]format=rgba,fade=t=in:st=0.000:d=0.300:alpha=1,fade=t=out:st=2.700:d=0.300:alpha=1[o0];[v0][o0]overlay=0:0:enable='between(t,0.000,3.000)'[v1]",
       "-map",
       "[v1]",
       "-map",

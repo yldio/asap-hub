@@ -1,4 +1,5 @@
 import { ClipPlacement } from '../clips';
+import { Fade, FadeRamps, resolveFade } from '../fade';
 import { Canvas, Clip, Transition } from '../schema';
 
 export const secondsFromMs = (ms: number): string => (ms / 1000).toFixed(3);
@@ -51,29 +52,31 @@ export const clipAudioFilters = (clip: Clip): string[] =>
     ? [`volume=${clip.volume}`, resampleFilter, audioFormatFilter]
     : [resampleFilter, audioFormatFilter];
 
-export const overlayFadeMs = 300;
-
-export type OverlayWindow = { startMs: number; endMs: number };
+export type OverlayWindow = Fade & { startMs: number; endMs: number };
 
 // a signed distance in pixels: the offset the overlay travels from and back to
 export type OverlaySlide = { distancePx: number };
 
-// an overlay shorter than two fades gets none, there is no room for the ramps
-export const overlayFadeDurationMs = (visible: OverlayWindow): number =>
-  Math.min(overlayFadeMs, Math.floor((visible.endMs - visible.startMs) / 2));
+export const overlayFadeRamps = (visible: OverlayWindow): FadeRamps =>
+  resolveFade(visible, visible.endMs - visible.startMs);
 
 const overlayFadeFilters = (visible: OverlayWindow): string[] => {
-  const fadeMs = overlayFadeDurationMs(visible);
-  if (fadeMs <= 0) {
-    return [];
-  }
+  const { inMs, outMs } = overlayFadeRamps(visible);
   return [
-    `fade=t=in:st=${secondsFromMs(visible.startMs)}:d=${secondsFromMs(
-      fadeMs,
-    )}:alpha=1`,
-    `fade=t=out:st=${secondsFromMs(visible.endMs - fadeMs)}:d=${secondsFromMs(
-      fadeMs,
-    )}:alpha=1`,
+    ...(inMs > 0
+      ? [
+          `fade=t=in:st=${secondsFromMs(visible.startMs)}:d=${secondsFromMs(
+            inMs,
+          )}:alpha=1`,
+        ]
+      : []),
+    ...(outMs > 0
+      ? [
+          `fade=t=out:st=${secondsFromMs(
+            visible.endMs - outMs,
+          )}:d=${secondsFromMs(outMs)}:alpha=1`,
+        ]
+      : []),
   ];
 };
 
@@ -89,21 +92,21 @@ export const overlayOrigin = '0:0';
 const slideExpression = (
   distancePx: number,
   visible: OverlayWindow,
-  fadeMs: number,
+  { inMs, outMs }: FadeRamps,
 ): string =>
   `${distancePx}*(1-min(1,max(0,(t-${secondsFromMs(
     visible.startMs,
-  )})/${secondsFromMs(fadeMs)}))+min(1,max(0,(t-${secondsFromMs(
-    visible.endMs - fadeMs,
-  )})/${secondsFromMs(fadeMs)})))`;
+  )})/${secondsFromMs(inMs)}))+min(1,max(0,(t-${secondsFromMs(
+    visible.endMs - outMs,
+  )})/${secondsFromMs(outMs)})))`;
 
 const overlayPosition = (
   visible: OverlayWindow,
   slide: OverlaySlide | undefined,
 ): string => {
-  const fadeMs = overlayFadeDurationMs(visible);
-  return slide && fadeMs > 0
-    ? `x=0:y='${slideExpression(slide.distancePx, visible, fadeMs)}'`
+  const ramps = overlayFadeRamps(visible);
+  return slide && ramps.inMs > 0 && ramps.outMs > 0
+    ? `x=0:y='${slideExpression(slide.distancePx, visible, ramps)}'`
     : overlayOrigin;
 };
 

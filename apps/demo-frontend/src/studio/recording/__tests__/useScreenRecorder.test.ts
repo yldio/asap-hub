@@ -173,6 +173,59 @@ it('pauses and resumes', async () => {
   expect(view.result.current.status).toBe('recording');
 });
 
+// a pause stops the recorder, so the file holds none of it; counting the wall
+// clock alone reported 0:35 for a take that was only 0:27 of footage
+describe('a take that was paused', () => {
+  const clock = () => {
+    let atMs = 1000;
+    return Object.assign(() => atMs, {
+      advance: (ms: number) => {
+        atMs += ms;
+      },
+    });
+  };
+
+  it('reports only the time it was actually recording', async () => {
+    const now = clock();
+    const { view } = setup({ now });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    now.advance(18000);
+    act(() => view.result.current.pause());
+    now.advance(9000);
+    act(() => view.result.current.resume());
+    now.advance(9000);
+
+    let take;
+    await act(async () => {
+      take = await view.result.current.stop();
+    });
+
+    expect(take).toMatchObject({ durationMs: 27000 });
+  });
+
+  it('reports the same length when it is stopped while still paused', async () => {
+    const now = clock();
+    const { view } = setup({ now });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    now.advance(5000);
+    act(() => view.result.current.pause());
+    now.advance(20000);
+
+    let take;
+    await act(async () => {
+      take = await view.result.current.stop();
+    });
+
+    expect(take).toMatchObject({ durationMs: 5000 });
+  });
+});
+
 it('explains a declined screen share', async () => {
   const declined = Object.assign(new Error('no'), { name: 'NotAllowedError' });
   const { view } = setup({

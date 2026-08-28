@@ -122,7 +122,21 @@ export const useScreenRecorder = ({
   const onEndedRef = useRef(onEnded);
   onEndedRef.current = onEnded;
   const startedAtRef = useRef(0);
+  // A pause stops the recorder, so the file it writes holds none of it. Counting
+  // the wall clock alone reported a take longer than the footage and put a clip
+  // on the timeline with the paused span frozen into it.
+  const pausedMsRef = useRef(0);
+  const pausedAtRef = useRef<number>();
   const tickRef = useRef<ReturnType<typeof setInterval>>();
+
+  const recordedMs = useCallback(
+    (): number =>
+      now() -
+      startedAtRef.current -
+      pausedMsRef.current -
+      (pausedAtRef.current === undefined ? 0 : now() - pausedAtRef.current),
+    [now],
+  );
 
   const stopTicking = useCallback(() => {
     if (tickRef.current) {
@@ -133,11 +147,8 @@ export const useScreenRecorder = ({
 
   const startTicking = useCallback(() => {
     stopTicking();
-    tickRef.current = setInterval(
-      () => setElapsedMs(now() - startedAtRef.current),
-      500,
-    );
-  }, [now, stopTicking]);
+    tickRef.current = setInterval(() => setElapsedMs(recordedMs()), 500);
+  }, [recordedMs, stopTicking]);
 
   // leaving the editor mid take must not leave the browser sharing the screen
   useEffect(
@@ -230,6 +241,8 @@ export const useScreenRecorder = ({
       }
 
       startedAtRef.current = now();
+      pausedMsRef.current = 0;
+      pausedAtRef.current = undefined;
       setElapsedMs(0);
       recorder.start(5000);
       setStatus('recording');
@@ -255,16 +268,21 @@ export const useScreenRecorder = ({
   const pause = useCallback(() => {
     screenRef.current?.recorder.pause();
     micRef.current?.recorder.pause();
+    pausedAtRef.current = now();
     stopTicking();
     setStatus('paused');
-  }, [stopTicking]);
+  }, [now, stopTicking]);
 
   const resume = useCallback(() => {
     screenRef.current?.recorder.resume();
     micRef.current?.recorder.resume();
+    if (pausedAtRef.current !== undefined) {
+      pausedMsRef.current += now() - pausedAtRef.current;
+      pausedAtRef.current = undefined;
+    }
     startTicking();
     setStatus('recording');
-  }, [startTicking]);
+  }, [now, startTicking]);
 
   const stop = useCallback(async (): Promise<RecordedTake | undefined> => {
     const screen = screenRef.current;
@@ -273,6 +291,9 @@ export const useScreenRecorder = ({
     }
     setStatus('finishing');
     stopTicking();
+    // read before the awaits: how long the finishing itself takes is not part
+    // of the take
+    const durationMs = Math.max(0, recordedMs());
 
     await screen.finish();
     const mic = micRef.current;
@@ -286,7 +307,6 @@ export const useScreenRecorder = ({
     micRef.current = undefined;
     setStatus('idle');
 
-    const durationMs = now() - startedAtRef.current;
     return {
       blob: new Blob(screen.chunks, { type: screen.mimeType }),
       mimeType: screen.mimeType,
@@ -303,7 +323,7 @@ export const useScreenRecorder = ({
           }
         : {}),
     };
-  }, [now, stopTicking]);
+  }, [recordedMs, stopTicking]);
 
   stopRef.current = stop;
 

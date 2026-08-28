@@ -346,6 +346,12 @@ const serverlessConfig: AWS = {
           PointInTimeRecoverySpecification: {
             PointInTimeRecoveryEnabled: true,
           },
+          // DynamoDB reads a TTL attribute as epoch seconds, and the sessions'
+          // expiresAt is in milliseconds, so the rows carry a separate ttl
+          TimeToLiveSpecification: {
+            AttributeName: 'ttl',
+            Enabled: true,
+          },
         },
       },
       StorageBucket: {
@@ -388,6 +394,23 @@ const serverlessConfig: AWS = {
                     TransitionInDays: 90,
                   },
                 ],
+              },
+              // projects/{id}/capture/ and projects/{id}/renders/ hold nothing
+              // but intermediates, but a lifecycle prefix cannot carry the
+              // wildcard that would name them, so the writes tag themselves and
+              // these rules filter on the tag. projects/{id}/timeline/ is
+              // deliberately left alone: the item's pointer names a live object.
+              {
+                Id: 'expire-capture-intermediates',
+                Status: 'Enabled',
+                TagFilters: [{ Key: 'lifecycle', Value: 'capture' }],
+                ExpirationInDays: 30,
+              },
+              {
+                Id: 'expire-render-intermediates',
+                Status: 'Enabled',
+                TagFilters: [{ Key: 'lifecycle', Value: 'render' }],
+                ExpirationInDays: 30,
               },
             ],
           },
@@ -542,19 +565,42 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      // the SPA fallback has to be scoped to the frontend behaviour: a
+      // distribution-level CustomErrorResponse rewrites every /api/* 404 into a
+      // 200 carrying index.html, which the client then tries to JSON.parse
+      SpaFallbackFunction: {
+        Type: 'AWS::CloudFront::Function',
+        Properties: {
+          Name: `${service}-${stage}-spa-fallback`,
+          AutoPublish: true,
+          FunctionConfig: {
+            Comment: 'Serves index.html for extension-less frontend routes',
+            Runtime: 'cloudfront-js-2.0',
+          },
+          FunctionCode: [
+            'function handler(event) {',
+            '  var request = event.request;',
+            '  var uri = request.uri;',
+            "  if (uri.indexOf('/api/') === 0 || uri.indexOf('/media/') === 0) {",
+            '    return request;',
+            '  }',
+            "  var segment = uri.substring(uri.lastIndexOf('/') + 1);",
+            "  if (segment === '') {",
+            "    request.uri = uri + 'index.html';",
+            "  } else if (segment.indexOf('.') === -1) {",
+            "    request.uri = '/index.html';",
+            '  }',
+            '  return request;',
+            '}',
+          ].join('\n'),
+        },
+      },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
         DependsOn: ['FrontendBucket', 'StorageBucket'],
         Properties: {
           DistributionConfig: {
             Aliases: [demoHostname],
-            CustomErrorResponses: [
-              {
-                ErrorCode: 404,
-                ResponseCode: 200,
-                ResponsePagePath: '/index.html',
-              },
-            ],
             Origins: [
               {
                 DomainName: {
@@ -621,6 +667,14 @@ const serverlessConfig: AWS = {
               },
               TargetOriginId: 's3origin-frontend',
               ViewerProtocolPolicy: 'redirect-to-https',
+              FunctionAssociations: [
+                {
+                  EventType: 'viewer-request',
+                  FunctionARN: {
+                    'Fn::GetAtt': ['SpaFallbackFunction', 'FunctionARN'],
+                  },
+                },
+              ],
             },
             CacheBehaviors: [
               {

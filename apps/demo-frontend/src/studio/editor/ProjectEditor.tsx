@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   chooseCanvas,
   clipLocalMs,
+  resolveChapters,
   layoutClips,
   placementAt,
   timelineDurationMs,
@@ -23,6 +24,7 @@ import { ProjectEditor as Editor } from '../project/useProjectEditor';
 import ActionBar from './ActionBar';
 import AssetPanel from './AssetPanel';
 import BannerInspector from './BannerInspector';
+import ChapterList from './ChapterList';
 import ClipInspector from './ClipInspector';
 import CursorEffectInspector from './CursorEffectInspector';
 import TitleCardInspector from './TitleCardInspector';
@@ -359,6 +361,17 @@ const ProjectEditor: FC<Props> = ({
     selectEffect(effectId);
   }, [current, dispatch, playheadMs, selectEffect]);
 
+  const addChapter = useCallback(() => {
+    if (!current) return;
+    dispatch({
+      type: 'addChapter',
+      id: createId('chapter'),
+      clipId: current.clip.id,
+      offsetMs: Math.round(clipLocalMs(current, playheadMs)),
+      title: 'New chapter',
+    });
+  }, [current, dispatch, playheadMs]);
+
   const addBanner = useCallback(() => {
     const id = createId('banner');
     dispatch({
@@ -449,6 +462,20 @@ const ProjectEditor: FC<Props> = ({
       <div css={bodyStyles}>
         <AssetPanel
           recorder={recorder}
+          chapters={
+            <ChapterList
+              resolved={resolveChapters(timeline, { includeUntitled: true })}
+              readOnly={readOnly}
+              canAdd={Boolean(current)}
+              onAdd={addChapter}
+              onRename={(chapterId, title) =>
+                dispatch({ type: 'updateChapter', chapterId, title })
+              }
+              onRemove={(chapterId) =>
+                dispatch({ type: 'removeChapter', chapterId })
+              }
+            />
+          }
           assets={assets}
           busy={uploading}
           progress={uploadProgress}

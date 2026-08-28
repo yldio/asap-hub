@@ -264,3 +264,37 @@ describe('rendering', () => {
     ).toHaveAttribute('href', '/videos/project-1');
   });
 });
+
+describe('chapters', () => {
+  it('explains how chapters work before there are any', async () => {
+    renderStudio();
+
+    expect(await screen.findByText(/No chapters yet/)).toBeVisible();
+  });
+
+  it('adds one at the playhead and lets it be renamed', async () => {
+    renderStudio();
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Chapter at the playhead' }),
+    );
+
+    const field = screen.getByDisplayValue('New chapter');
+
+    await userEvent.clear(field);
+    await userEvent.type(field, 'Attendance');
+
+    expect(screen.getByDisplayValue('Attendance')).toBeVisible();
+  });
+
+  it('cannot add a chapter with nothing on the timeline', async () => {
+    renderStudio();
+
+    expect(
+      await screen.findByRole('button', { name: 'Chapter at the playhead' }),
+    ).toBeDisabled();
+  });
+});

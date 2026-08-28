@@ -1,4 +1,8 @@
-import { parseTimeline, serialiseTimeline } from '@asap-hub/demo-timeline';
+import {
+  parseTimeline,
+  resolveChapters,
+  serialiseTimeline,
+} from '@asap-hub/demo-timeline';
 import { Request, Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { videoEntity } from '../data/entities';
@@ -135,7 +139,13 @@ export const registerRenderRoutes = (
         sub,
         now: Date.now(),
         expectedVersion: version,
-        set: { render, updatedAt: requestedAt },
+        // the watch page reads chapters off the item, so they are resolved from
+        // the snapshot being rendered rather than after the fact
+        set: {
+          render,
+          chapters: resolveChapters(timeline),
+          updatedAt: requestedAt,
+        },
       });
       if (!queued) {
         return;

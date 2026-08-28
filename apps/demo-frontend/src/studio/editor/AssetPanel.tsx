@@ -86,6 +86,7 @@ const stateLabel: Record<ProjectAsset['state'], string> = {
 type Props = {
   readonly assets: ProjectAsset[];
   readonly recorder?: ReactNode;
+  readonly chapters?: ReactNode;
   readonly busy: boolean;
   readonly progress?: number;
   readonly readOnly: boolean;
@@ -97,6 +98,7 @@ type Props = {
 const AssetPanel: FC<Props> = ({
   assets,
   recorder,
+  chapters,
   busy,
   progress,
   readOnly,
@@ -137,6 +139,10 @@ const AssetPanel: FC<Props> = ({
           : 'Import a video'}
       </EditorButton>
 
+      <h2 css={headingStyles}>Chapters</h2>
+      {chapters}
+
+      <h2 css={headingStyles}>Clips</h2>
       {assets.length === 0 ? (
         <p css={emptyStyles}>
           Nothing here yet. Import a video, then add it to the timeline to start

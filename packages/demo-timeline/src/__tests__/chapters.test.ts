@@ -44,8 +44,8 @@ describe('resolveChapters', () => {
         }),
       ),
     ).toEqual([
-      { startMs: 4000, title: 'Attendance' },
-      { startMs: 12000, title: 'Speakers' },
+      { id: 't1', kind: 'title', startMs: 4000, title: 'Attendance' },
+      { id: 't2', kind: 'title', startMs: 12000, title: 'Speakers' },
     ]);
   });
 
@@ -59,7 +59,9 @@ describe('resolveChapters', () => {
           ],
         }),
       ),
-    ).toEqual([{ startMs: 5500, title: 'The new page' }]);
+    ).toEqual([
+      { id: 'c1', kind: 'marker', startMs: 5500, title: 'The new page' },
+    ]);
   });
 
   it('sorts markers and title cards together', () => {
@@ -85,6 +87,20 @@ describe('resolveChapters', () => {
         }),
       ),
     ).toEqual([]);
+  });
+
+  it('keeps an untitled marker when the editor asks for it', () => {
+    const resolved = resolveChapters(
+      timeline({
+        clips: [source('a', 4000)],
+        chapters: [{ id: 'c1', clipId: 'a', offsetMs: 0, title: '' }],
+      }),
+      { includeUntitled: true },
+    );
+
+    expect(resolved).toEqual([
+      { id: 'c1', kind: 'marker', startMs: 0, title: '' },
+    ]);
   });
 
   it('ignores an untitled marker or title card', () => {

@@ -80,6 +80,15 @@ export type TimelineAction =
       path: CursorLayer['path'];
       effects: CursorEffect[];
     }
+  | {
+      type: 'addChapter';
+      id: string;
+      clipId: string;
+      offsetMs: number;
+      title: string;
+    }
+  | { type: 'updateChapter'; chapterId: string; title: string }
+  | { type: 'removeChapter'; chapterId: string }
   | { type: 'setCanvas'; canvas: Canvas }
   | { type: 'replaceTimeline'; timeline: Timeline };
 
@@ -373,6 +382,38 @@ export const timelineReducer = (
           ...layer,
           offsetMs: action.offsetMs,
         })),
+      };
+
+    case 'addChapter':
+      return {
+        ...timeline,
+        chapters: [
+          ...timeline.chapters,
+          {
+            id: action.id,
+            clipId: action.clipId,
+            offsetMs: action.offsetMs,
+            title: action.title,
+          },
+        ],
+      };
+
+    case 'updateChapter':
+      return {
+        ...timeline,
+        chapters: timeline.chapters.map((chapter) =>
+          chapter.id === action.chapterId
+            ? { ...chapter, title: action.title }
+            : chapter,
+        ),
+      };
+
+    case 'removeChapter':
+      return {
+        ...timeline,
+        chapters: timeline.chapters.filter(
+          (chapter) => chapter.id !== action.chapterId,
+        ),
       };
 
     case 'setCanvas':

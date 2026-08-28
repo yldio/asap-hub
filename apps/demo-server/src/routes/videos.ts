@@ -14,7 +14,12 @@ import {
 import { buildSignedCookies } from '../signed-cookies';
 import { deleteVideoCascade } from './cascade';
 import { rootFolderId } from './folders';
-import { currentUser, pathParam, requireVideoIdParam } from './request';
+import {
+  currentUser,
+  isFolderId,
+  pathParam,
+  requireVideoIdParam,
+} from './request';
 import { validate } from './validate';
 import { asyncRouter } from './async-router';
 import {
@@ -49,6 +54,12 @@ export const videosRouter = (): Router => {
 
   router.get('/', async (req: Request, res: Response) => {
     const folderId = (req.query.folderId as string | undefined) || 'ROOT';
+    // the query string is the one folder id that reaches a key template without
+    // passing through requireFolderIdParam or folderIdField
+    if (!isFolderId(folderId)) {
+      res.status(400).json({ error: 'invalid_folder_id' });
+      return;
+    }
     const data = await videosInFolder(folderId, canViewDrafts(req.user?.role));
 
     res.json({

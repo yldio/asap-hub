@@ -157,6 +157,20 @@ describe('GET /api/videos draft visibility', () => {
 
     expect(byFolder).toHaveBeenCalledWith({ folderId: 'folder-9' });
   });
+
+  // the query string is the one folder id that used to reach the key template
+  // without ever meeting the safe alphabet
+  it('rejects a folderId outside the safe alphabet without querying', async () => {
+    const byFolder = jest.spyOn(videoEntity.query, 'byFolder');
+
+    const response = await api
+      .get('/api/videos?folderId=..%2Fother')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('invalid_folder_id');
+    expect(byFolder).not.toHaveBeenCalled();
+  });
 });
 
 describe('GET /api/videos/all', () => {

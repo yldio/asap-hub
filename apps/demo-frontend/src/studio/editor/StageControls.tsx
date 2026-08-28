@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, PointerEvent as ReactPointerEvent, useRef } from 'react';
+import { FC, PointerEvent as ReactPointerEvent, memo, useRef } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { formatTimecode } from './geometry';
@@ -207,4 +207,6 @@ const StageControls: FC<Props> = ({
   );
 };
 
-export default StageControls;
+// the playhead re-renders the editor on every frame; these panels only ever
+// change when the document or the selection does
+export default memo(StageControls);

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { RedoIcon, UndoIcon } from './icons';
@@ -103,4 +103,6 @@ const TransportBar: FC<Props> = ({
   </div>
 );
 
-export default TransportBar;
+// the playhead re-renders the editor on every frame; these panels only ever
+// change when the document or the selection does
+export default memo(TransportBar);

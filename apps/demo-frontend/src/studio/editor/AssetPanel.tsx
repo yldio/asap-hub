@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, ReactNode, useRef } from 'react';
+import { FC, ReactNode, memo, useRef } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
@@ -210,4 +210,6 @@ const AssetPanel: FC<Props> = ({
   );
 };
 
-export default AssetPanel;
+// the playhead re-renders the editor on every frame; these panels only ever
+// change when the document or the selection does
+export default memo(AssetPanel);

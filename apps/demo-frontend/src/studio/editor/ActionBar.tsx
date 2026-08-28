@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import {
@@ -146,4 +146,6 @@ const ActionBar: FC<Props> = ({
   </div>
 );
 
-export default ActionBar;
+// the playhead re-renders the editor on every frame; these panels only ever
+// change when the document or the selection does
+export default memo(ActionBar);

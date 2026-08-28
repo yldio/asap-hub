@@ -1,5 +1,5 @@
 import { ClipPlacement } from '@asap-hub/demo-timeline';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { TimelineAction } from '../project/timelineReducer';
 import BannerInspector from './BannerInspector';
@@ -147,4 +147,6 @@ const InspectorPanel: FC<Props> = ({
   );
 };
 
-export default InspectorPanel;
+// the playhead re-renders the editor on every frame; these panels only ever
+// change when the document or the selection does
+export default memo(InspectorPanel);

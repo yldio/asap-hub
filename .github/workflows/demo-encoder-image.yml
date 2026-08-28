@@ -1,16 +1,22 @@
 name: Demo encoder image
 
+# render.ts bundles @asap-hub/demo-timeline, so a change to the shared package
+# changes the image just as much as a change to the encoder directory does
 on:
   push:
     branches:
       - master
     paths:
       - 'apps/demo-server/encoder/**'
+      - 'packages/demo-timeline/**'
+      - '.github/workflows/demo-encoder-image.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'apps/demo-server/encoder/**'
+      - 'packages/demo-timeline/**'
+      - '.github/workflows/demo-encoder-image.yml'
 
 jobs:
   build-and-push:
@@ -25,6 +31,19 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ github.event_name == 'pull_request' && 'Branch' || 'Development' }}
+      # dist/render.js is generated and gitignored, so the Dockerfile's COPY has
+      # nothing to find unless the bundle is built here first
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Build the render bundle
+        run: |
+          corepack enable
+          yarn install --immutable
+          yarn workspaces foreach -vptR --from '@asap-hub/demo-timeline' run build:babel
+          yarn workspace @asap-hub/demo-server build:encoder
+          test -s apps/demo-server/encoder/dist/render.js
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Buildx

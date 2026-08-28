@@ -86,6 +86,9 @@ const StudioUpload: FC = () => {
 
   const [file, setFile] = useState<File>();
   const [title, setTitle] = useState('');
+  // the studio card names its demo itself: the button used to create a project
+  // on the first click, so every stray one left an "Untitled demo" behind
+  const [studioTitle, setStudioTitle] = useState('');
   const [folderId, setFolderId] = useState(ROOT_FOLDER);
   const [recordedAt, setRecordedAt] = useState(today);
 
@@ -189,10 +192,12 @@ const StudioUpload: FC = () => {
   const percent = file && file.size > 0 ? (transferred / file.size) * 100 : 0;
 
   const startProject = async () => {
+    const named = studioTitle.trim();
+    if (!named) return;
     setError(undefined);
     try {
       const created = await api.createProject({
-        title: title.trim() || 'Untitled demo',
+        title: named,
         folderId,
         recordedAt: new Date(recordedAt).toISOString(),
       });
@@ -213,11 +218,27 @@ const StudioUpload: FC = () => {
         <div css={{ display: 'grid', gap: rem(12) }}>
           <Headline level={3}>Build one in the studio</Headline>
           <p css={{ margin: 0 }}>
-            Start an empty demo, then bring in as many clips as you need and
-            edit them on a timeline.
+            Name it, then bring in as many clips as you need and edit them on a
+            timeline. The demo appears in the library as soon as you open the
+            studio.
           </p>
+          <label css={fieldStyles}>
+            <span css={labelStyles}>Name</span>
+            <input
+              css={controlStyles}
+              type="text"
+              placeholder="Sprint 42 demo"
+              disabled={busy}
+              value={studioTitle}
+              onChange={(event) => setStudioTitle(event.currentTarget.value)}
+            />
+          </label>
           <div>
-            <Button primary disabled={busy} onClick={startProject}>
+            <Button
+              primary
+              disabled={busy || !studioTitle.trim()}
+              onClick={startProject}
+            >
               Open the studio
             </Button>
           </div>

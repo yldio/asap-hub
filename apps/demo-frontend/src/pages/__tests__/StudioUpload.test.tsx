@@ -1,3 +1,4 @@
+import { createEmptyTimeline } from '@asap-hub/demo-timeline';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -55,6 +56,13 @@ const baseApi = {
   ),
   completeUpload: jest.fn(() => Promise.resolve(uploadedVideo)),
   abortUpload: jest.fn(() => Promise.resolve()),
+  createProject: jest.fn(() =>
+    Promise.resolve({
+      video: { ...uploadedVideo, id: 'project-9', kind: 'studio' as const },
+      timeline: createEmptyTimeline(),
+      timelineVersion: 1,
+    }),
+  ),
 };
 
 const renderUpload = (api: Partial<typeof baseApi> = {}) =>
@@ -177,6 +185,52 @@ it('aborts the multipart upload when cancelled', async () => {
   await waitFor(() =>
     expect(abortUpload).toHaveBeenCalledWith('video-1', 'upload-1'),
   );
+});
+
+describe('starting a demo in the studio', () => {
+  // the button used to post a project on the first click, so every stray one
+  // left an "Untitled demo" in the library for good
+  it('creates nothing until the demo has been named', async () => {
+    renderUpload();
+
+    expect(
+      screen.getByRole('button', { name: 'Open the studio' }),
+    ).toBeDisabled();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Open the studio' }),
+    );
+
+    expect(baseApi.createProject).not.toHaveBeenCalled();
+  });
+
+  it('creates it under the name that was given', async () => {
+    renderUpload();
+
+    await userEvent.type(screen.getByLabelText('Name'), 'Sprint 43 demo');
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Open the studio' }),
+    );
+
+    await waitFor(() =>
+      expect(baseApi.createProject).toHaveBeenCalledWith(
+        expect.objectContaining({ title: 'Sprint 43 demo' }),
+      ),
+    );
+  });
+
+  it('does not take the name of the video being uploaded', async () => {
+    renderUpload();
+
+    await userEvent.upload(
+      screen.getByLabelText('Recording'),
+      makeFile(partSize * 2),
+    );
+
+    expect(screen.getByLabelText('Name')).toHaveValue('');
+    expect(
+      screen.getByRole('button', { name: 'Open the studio' }),
+    ).toBeDisabled();
+  });
 });
 
 it('redirects a member away from the upload page', () => {

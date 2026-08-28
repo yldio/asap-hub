@@ -219,12 +219,16 @@ const PreviewStage: FC<Props> = ({
     }
   }, [playing, url]);
 
+  // the clip's own level and the preview slider both apply, the way the render
+  // applies the clip's. An element can only be turned down, so a clip pushed
+  // above 1 sounds like 1 here and louder in the export.
+  const clipVolume = clip?.kind === 'source' ? clip.volume : 1;
   useEffect(() => {
     const element = videoRef.current;
     if (element) {
-      element.volume = Math.min(1, Math.max(0, volume));
+      element.volume = Math.min(1, Math.max(0, volume * clipVolume));
     }
-  }, [volume]);
+  }, [clipVolume, volume]);
 
   const size = { width: box.width, height: box.height };
 

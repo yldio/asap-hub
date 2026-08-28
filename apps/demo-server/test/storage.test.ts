@@ -1,8 +1,15 @@
-// this file owns its env: BUCKET_NAME is deleted so the driver exercises the
-// local fallback in config.getBucketName(), regardless of what other test
-// files set on the shared process
-process.env.SLS_STAGE = 'local';
-delete process.env.BUCKET_NAME;
+// This file owns its env: BUCKET_NAME is cleared so the driver exercises the
+// local fallback in config.getBucketName(), regardless of what other test files
+// set on the shared process.
+//
+// It goes through an alias because babel-base.config.js turns on
+// transform-inline-environment-variables for any NODE_ENV other than 'test',
+// and that plugin rewrites a literal `process.env.NAME` to its value at build
+// time. `delete process.env.BUCKET_NAME` then compiles to `delete undefined`,
+// which is a syntax error in strict mode and takes the whole suite with it.
+const env: NodeJS.ProcessEnv = process.env;
+env.SLS_STAGE = 'local';
+delete env.BUCKET_NAME;
 
 const bucket = 'demo-hub-local-storage';
 
@@ -65,7 +72,8 @@ describe('client configuration', () => {
     expect(await client.config.region()).toBe('us-east-1');
     const endpoint = await client.config.endpoint!();
     expect(endpoint.hostname).toBe('localhost');
-    expect(endpoint.port).toBe(9000);
+    // 9010, not the MinIO default: another project on this machine owns 9000
+    expect(endpoint.port).toBe(9010);
     const credentials = await client.config.credentials();
     expect(credentials.accessKeyId).toBe('minioadmin');
     expect(credentials.secretAccessKey).toBe('minioadmin');

@@ -216,12 +216,31 @@ describe('POST /api/projects/:id/render', () => {
     expect(tracked.UpdateExpression).toBe(
       'SET #render.#taskArn = :taskArn ADD #version :one',
     );
-    expect(tracked.ConditionExpression).toBe('#render.#renderId = :renderId');
+    expect(tracked.ConditionExpression).toBe(
+      '#render.#renderId = :renderId AND #render.#state IN (:queued, :rendering)',
+    );
     expect(tracked.ExpressionAttributeValues).toEqual({
       ':taskArn': 'task-arn-1',
       ':renderId': 'generated-render-id',
+      ':queued': 'queued',
+      ':rendering': 'rendering',
       ':one': 1,
     });
+  });
+
+  // a cancel strips the arn from the render it belonged to; re-attaching it
+  // would hand the next cancel a task that is already being stopped
+  it('will not re-attach the arn to a render the cancel already ended', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    await start();
+
+    const tracked = mockSend.mock.calls[1]![0].input;
+    expect(tracked.ExpressionAttributeNames['#state']).toBe('state');
+    expect(tracked.ConditionExpression).toContain(
+      '#render.#state IN (:queued, :rendering)',
+    );
   });
 
   it('still answers when the row no longer names the render', async () => {

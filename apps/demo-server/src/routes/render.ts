@@ -83,16 +83,23 @@ const recordTaskArn = async (
         TableName: getTableName(),
         Key: videoKey(id),
         UpdateExpression: 'SET #render.#taskArn = :taskArn ADD #version :one',
-        ConditionExpression: '#render.#renderId = :renderId',
+        // the state clause matters as much as the render id: a cancel strips the
+        // arn deliberately, and re-attaching it would have the next cancel stop
+        // a task that is already on its way out
+        ConditionExpression:
+          '#render.#renderId = :renderId AND #render.#state IN (:queued, :rendering)',
         ExpressionAttributeNames: {
           '#render': 'render',
           '#taskArn': 'taskArn',
           '#renderId': 'renderId',
+          '#state': 'state',
           '#version': 'version',
         },
         ExpressionAttributeValues: {
           ':taskArn': taskArn,
           ':renderId': renderId,
+          ':queued': 'queued',
+          ':rendering': 'rendering',
           ':one': 1,
         },
       }),

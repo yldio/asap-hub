@@ -17,9 +17,43 @@ const pollMs = 5000;
 
 // The raw stream stays immutable in S3. This turns it into ordinary timeline
 // items once, and every later edit of those items is the creator's, not ours.
+// The session lives on the server for hours, but it used to live only in this
+// hook's state, so a page reload stranded every event already captured: no
+// session meant no status, and no status disabled the button that applies them.
+const sessionKey = (projectId: string) => `demo-hub.capture.${projectId}`;
+
+const storedSession = (projectId: string): RecordingSession | undefined => {
+  try {
+    const raw = window.localStorage.getItem(sessionKey(projectId));
+    return raw ? (JSON.parse(raw) as RecordingSession) : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const rememberSession = (
+  projectId: string,
+  session: RecordingSession | undefined,
+): void => {
+  try {
+    if (session) {
+      window.localStorage.setItem(
+        sessionKey(projectId),
+        JSON.stringify(session),
+      );
+    } else {
+      window.localStorage.removeItem(sessionKey(projectId));
+    }
+  } catch {
+    // a browser refusing storage is not a reason to refuse the capture
+  }
+};
+
 export const useCursorCapture = (projectId: string) => {
   const api = useApi();
-  const [session, setSession] = useState<RecordingSession>();
+  const [session, setSession] = useState<RecordingSession | undefined>(() =>
+    storedSession(projectId),
+  );
   const [status, setStatus] = useState<RecordingSessionStatus>();
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState<string>();
@@ -28,7 +62,10 @@ export const useCursorCapture = (projectId: string) => {
     setError(undefined);
     api
       .startCapture(projectId)
-      .then(setSession)
+      .then((started) => {
+        rememberSession(projectId, started);
+        setSession(started);
+      })
       .catch(() => setError('Could not start the cursor capture.'));
   }, [api, projectId]);
 
@@ -39,8 +76,19 @@ export const useCursorCapture = (projectId: string) => {
     const poll = () => {
       api
         .captureStatus(projectId, session.sessionId)
-        .then(setStatus)
-        .catch(() => undefined);
+        .then((next) => {
+          setStatus(next);
+          // a restored session the server has since let go would leave a dead
+          // panel, so it is dropped and the creator can start another
+          if (next.state === 'expired') {
+            rememberSession(projectId, undefined);
+          }
+        })
+        .catch(() => {
+          rememberSession(projectId, undefined);
+          setSession(undefined);
+          setStatus(undefined);
+        });
     };
     poll();
     const handle = setInterval(poll, pollMs);

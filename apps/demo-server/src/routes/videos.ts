@@ -311,8 +311,11 @@ export const videosRouter = (): Router => {
           Key: videoKey(id),
           UpdateExpression:
             'SET lockedBy = :sub, lockedByName = :name, lockExpiresAt = :expires',
+          // UpdateItem upserts, and every lease clause is true of an item that
+          // does not exist, so without attribute_exists any id at all would mint
+          // a VIDEO# row carrying none of the entity's required attributes
           ConditionExpression:
-            'attribute_not_exists(lockedBy) OR lockedBy = :sub OR lockExpiresAt < :now',
+            'attribute_exists(PK) AND (attribute_not_exists(lockedBy) OR lockedBy = :sub OR lockExpiresAt < :now)',
           ExpressionAttributeValues: {
             ':sub': currentUser(req).sub,
             ':name': currentUser(req).name,
@@ -323,8 +326,13 @@ export const videosRouter = (): Router => {
         }),
       );
     } catch (error) {
-      const failed = failedItem(error);
-      if (failed) {
+      if (error instanceof ConditionalCheckFailedException) {
+        const failed = failedItem(error);
+        // nothing came back on the failed condition, so there was no row to lease
+        if (!failed) {
+          res.status(404).json({ error: 'not_found' });
+          return;
+        }
         res.status(409).json({
           error: 'locked',
           ...(holderNameOf(failed) ? { holderName: holderNameOf(failed) } : {}),

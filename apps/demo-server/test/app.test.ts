@@ -248,9 +248,28 @@ describe('leases', () => {
     expect(response.body.lockedBy).toBe('auth0|creator');
     const params = mockSend.mock.calls[0][0].input;
     expect(params.ConditionExpression).toBe(
-      'attribute_not_exists(lockedBy) OR lockedBy = :sub OR lockExpiresAt < :now',
+      'attribute_exists(PK) AND (attribute_not_exists(lockedBy) OR lockedBy = :sub OR lockExpiresAt < :now)',
     );
     expect(params.ReturnValuesOnConditionCheckFailure).toBe('ALL_OLD');
+  });
+
+  // UpdateItem upserts, and every lease clause holds of an item that is not
+  // there, so without attribute_exists any id at all would mint a VIDEO# row
+  it('is not found, and creates nothing, for an id that has no row', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await api
+      .post('/api/videos/video-1/lease')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
   });
 
   it('returns 409 with the holder name when someone else holds the lease', async () => {

@@ -131,6 +131,13 @@ const StudioProject: FC = () => {
     [refreshAssets, upload],
   );
 
+  const onRenameAsset = useCallback(
+    (asset: ProjectAsset, label: string) => {
+      void api.renameAsset(id, asset.assetId, label).then(refreshAssets);
+    },
+    [api, id, refreshAssets],
+  );
+
   const onDeleteAsset = useCallback(
     (asset: ProjectAsset) => {
       void api.deleteAsset(id, asset.assetId).then(refreshAssets);
@@ -176,6 +183,7 @@ const StudioProject: FC = () => {
       markLost={markLost}
       onImport={onImport}
       onImportAudio={onImportAudio}
+      onRenameAsset={onRenameAsset}
       onDeleteAsset={onDeleteAsset}
       upload={upload}
       onAssetsChanged={refreshAssets}
@@ -196,6 +204,7 @@ type EditorProps = {
   readonly markLost: (holderName?: string) => void;
   readonly onImport: (file: File) => void;
   readonly onImportAudio: (file: File) => void;
+  readonly onRenameAsset: (asset: ProjectAsset, label: string) => void;
   readonly onDeleteAsset: (asset: ProjectAsset) => void;
   readonly upload: AssetUpload;
   readonly onAssetsChanged: () => void;
@@ -216,6 +225,7 @@ const Editor: FC<EditorProps> = ({
   markLost,
   onImport,
   onImportAudio,
+  onRenameAsset,
   onDeleteAsset,
   upload,
   onAssetsChanged,
@@ -506,6 +516,7 @@ const Editor: FC<EditorProps> = ({
         assetUrl={assetUrl}
         onImport={onImport}
         onImportAudio={onImportAudio}
+        onRenameAsset={onRenameAsset}
         onDeleteAsset={onDeleteAsset}
         uploading={upload.busy}
         uploadProgress={upload.progress}

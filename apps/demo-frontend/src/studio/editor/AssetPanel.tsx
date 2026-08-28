@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, ReactNode, memo, useRef } from 'react';
+import { FC, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
@@ -53,10 +53,26 @@ const itemStyles = css({
   gap: 8,
 });
 
+// the label reads as plain text until it is focused, so the list stays quiet
+// while still being editable in place
 const labelStyles = css({
   fontSize: 13,
   fontWeight: 600,
-  wordBreak: 'break-word',
+  width: '100%',
+  boxSizing: 'border-box',
+  color: editorTheme.text,
+  backgroundColor: 'transparent',
+  border: '1px solid transparent',
+  borderRadius: 4,
+  padding: '2px 4px',
+  margin: '-2px -4px',
+  font: 'inherit',
+  ':hover:not(:disabled)': { borderColor: editorTheme.line },
+  ':focus': {
+    borderColor: editorTheme.selected,
+    outline: 'none',
+    backgroundColor: editorTheme.surface,
+  },
 });
 
 const metaStyles = css({
@@ -85,6 +101,42 @@ const stateLabel: Record<ProjectAsset['state'], string> = {
   failed: 'Failed',
 };
 
+// a rename only reaches the server when it has actually changed and is not
+// empty, so a stray focus costs nothing and a cleared field falls back
+const AssetLabel: FC<{
+  readonly asset: ProjectAsset;
+  readonly readOnly: boolean;
+  readonly onRename: (asset: ProjectAsset, label: string) => void;
+}> = ({ asset, readOnly, onRename }) => {
+  const [draft, setDraft] = useState(asset.label);
+  useEffect(() => setDraft(asset.label), [asset.label]);
+
+  return (
+    <input
+      css={labelStyles}
+      value={draft}
+      disabled={readOnly}
+      aria-label={`Name of ${asset.label}`}
+      onChange={(event) => setDraft(event.target.value)}
+      onBlur={() => {
+        const next = draft.trim();
+        if (next && next !== asset.label) {
+          onRename(asset, next);
+        } else {
+          setDraft(asset.label);
+        }
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') event.currentTarget.blur();
+        if (event.key === 'Escape') {
+          setDraft(asset.label);
+          event.currentTarget.blur();
+        }
+      }}
+    />
+  );
+};
+
 type Props = {
   readonly assets: ProjectAsset[];
   readonly recorder?: ReactNode;
@@ -94,6 +146,7 @@ type Props = {
   readonly readOnly: boolean;
   readonly onImport: (file: File) => void;
   readonly onImportAudio: (file: File) => void;
+  readonly onRename: (asset: ProjectAsset, label: string) => void;
   readonly onAdd: (asset: ProjectAsset) => void;
   readonly onDelete: (asset: ProjectAsset) => void;
 };
@@ -107,6 +160,7 @@ const AssetPanel: FC<Props> = ({
   readOnly,
   onImport,
   onImportAudio,
+  onRename,
   onAdd,
   onDelete,
 }) => {
@@ -175,7 +229,11 @@ const AssetPanel: FC<Props> = ({
         <ul css={listStyles}>
           {assets.map((asset) => (
             <li key={asset.assetId} css={itemStyles}>
-              <span css={labelStyles}>{asset.label}</span>
+              <AssetLabel
+                asset={asset}
+                readOnly={readOnly}
+                onRename={onRename}
+              />
               <span css={metaStyles}>
                 {asset.kind === 'audio' ? 'Audio · ' : ''}
                 {stateLabel[asset.state]}

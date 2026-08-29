@@ -2,7 +2,7 @@
 import { css } from '@emotion/react';
 import { timelineDurationMs } from '@asap-hub/demo-timeline';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { useApi } from '../api/ApiProvider';
@@ -413,6 +413,17 @@ const Editor: FC<EditorProps> = ({
   // the recorder knows what the picker was pointed at, and the capture in the
   // page being demoed cannot: it is the same take, read from the two ends
   const capture = useCursorCapture(id, take.displaySurface);
+
+  // A project that tracks the cursor keeps a session open while the studio is,
+  // so the tab being demoed shows up as connected before a recording starts
+  // rather than after: the demo tab's reporter keeps sending, and only an open
+  // session counts it. A project that never tracked the cursor is left alone.
+  const { ensureOpen } = capture;
+  useEffect(() => {
+    if (!readOnly) {
+      ensureOpen();
+    }
+  }, [ensureOpen, readOnly]);
 
   // the autosave debounce means a departure can outrun the last edit, so the
   // studio asks rather than losing it quietly. A read only editor is asked too:

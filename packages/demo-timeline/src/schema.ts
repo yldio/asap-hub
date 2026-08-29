@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pointerVariantIds } from './cursor/pointerArt';
 
 export const currentSchemaVersion = 1;
 
@@ -150,6 +151,9 @@ export const cursorLayerSchema = z.object({
   offsetMs: z.number().int().min(-limits.offsetMs).max(limits.offsetMs),
   path: z.array(cursorPathPointSchema).max(limits.cursorPathPoints),
   effects: z.array(cursorEffectSchema).max(limits.cursorEffects),
+  // which drawn pointer walks the path; the whole capture shares one, and a
+  // layer saved before the picker existed falls back to the default
+  pointer: z.enum(pointerVariantIds).optional(),
 });
 
 export const canvasSchema = z.object({

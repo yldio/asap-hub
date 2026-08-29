@@ -29,10 +29,14 @@ export const useRecordingTake = (
   onTake: (result: TakeResult) => void,
 ) => {
   const [withMicrophone, setWithMicrophone] = useState(true);
+  // three seconds of grace by default: enough to get to the tab being demoed
+  // once the picker closes, short enough not to feel like a wait
+  const [countdownMs, setCountdownMs] = useState(3000);
   const [saving, setSaving] = useState(false);
   const saveRef = useRef<(take: RecordedTake) => Promise<void>>();
   const recorder = useScreenRecorder({
     withMicrophone,
+    countdownMs,
     // the browser's own Stop sharing button finishes the take, and it still has
     // to be uploaded and put on the timeline
     onEnded: (take) => {
@@ -93,6 +97,8 @@ export const useRecordingTake = (
     status: saving ? ('finishing' as const) : recorder.status,
     withMicrophone,
     setWithMicrophone,
+    countdownMs,
+    setCountdownMs,
     stop,
   };
 };

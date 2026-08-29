@@ -566,10 +566,13 @@ const Editor: FC<EditorProps> = ({
             <RecorderPanel
               status={take.status}
               elapsedMs={take.elapsedMs}
+              countdownMsLeft={take.countdownMsLeft}
+              countdownMs={take.countdownMs}
               error={take.error}
               withMicrophone={take.withMicrophone}
               readOnly={readOnly}
               unsupportedReason={support.supported ? undefined : support.reason}
+              onCountdownChange={take.setCountdownMs}
               onMicrophoneChange={take.setWithMicrophone}
               onStart={() => {
                 // a capture spent by an earlier apply is replaced on the spot,
@@ -578,6 +581,8 @@ const Editor: FC<EditorProps> = ({
                 capture.ensureOpen();
                 take.start().catch(() => undefined);
               }}
+              onStartNow={take.startNow}
+              onCancel={take.cancel}
               onPause={take.pause}
               onResume={take.resume}
               onStop={() => {

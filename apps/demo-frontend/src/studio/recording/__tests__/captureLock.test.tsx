@@ -12,10 +12,15 @@ const Both: FC<{ readonly screen: RecorderStatus }> = ({ screen: status }) => (
     <RecorderPanel
       status={status}
       elapsedMs={1000}
+      countdownMsLeft={0}
+      countdownMs={3000}
       withMicrophone
       readOnly={false}
+      onCountdownChange={jest.fn()}
       onMicrophoneChange={jest.fn()}
       onStart={jest.fn()}
+      onStartNow={jest.fn()}
+      onCancel={jest.fn()}
       onPause={jest.fn()}
       onResume={jest.fn()}
       onStop={jest.fn()}

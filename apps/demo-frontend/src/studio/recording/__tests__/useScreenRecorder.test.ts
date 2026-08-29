@@ -372,3 +372,91 @@ describe('what the picker was pointed at', () => {
     expect(view.result.current.displaySurface).toBe('monitor');
   });
 });
+
+describe('a countdown before the take', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
+  const counting = () => {
+    let clock = 1000;
+    const built = setup({ countdownMs: 3000, now: jest.fn(() => clock) });
+    return {
+      ...built,
+      tick: (ms: number) => {
+        clock += ms;
+        jest.advanceTimersByTime(ms);
+      },
+    };
+  };
+
+  it('shares the screen at once but records only when the count ends', async () => {
+    const { view, recorders, tick } = counting();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    expect(view.result.current.status).toBe('counting');
+    expect(recorders[0]?.started).toBeUndefined();
+
+    act(() => tick(3000));
+    expect(view.result.current.status).toBe('recording');
+    expect(recorders[0]?.started).toBe(5000);
+  });
+
+  it('says how much of the count is left', async () => {
+    const { view, tick } = counting();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    expect(view.result.current.countdownMsLeft).toBe(3000);
+
+    act(() => tick(1000));
+    expect(view.result.current.countdownMsLeft).toBeLessThanOrEqual(2000);
+    expect(view.result.current.countdownMsLeft).toBeGreaterThan(0);
+  });
+
+  it('starts at once when the creator says to skip the wait', async () => {
+    const { view, recorders } = counting();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => view.result.current.startNow());
+
+    expect(view.result.current.status).toBe('recording');
+    expect(recorders[0]?.started).toBe(5000);
+  });
+
+  it('hands the screen back without recording when the count is cancelled', async () => {
+    const { view, recorders, stream, tick } = counting();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => view.result.current.cancel());
+
+    expect(view.result.current.status).toBe('idle');
+    expect(stream.track.stop).toHaveBeenCalled();
+
+    // a count that was cancelled must never go on to record
+    act(() => tick(5000));
+    expect(view.result.current.status).toBe('idle');
+    expect(recorders[0]?.started).toBeUndefined();
+  });
+
+  // the cursor capture is read against this instant, so a take that began
+  // after the count must not carry the moment the screen was shared
+  it('clocks the take from the end of the count', async () => {
+    const { view, recorders, tick } = counting();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => tick(3000));
+    act(() => recorders[0]?.emit(16));
+    const take = await act(async () => view.result.current.stop());
+
+    expect(take?.startedAtEpochMs).toBe(4000);
+  });
+});

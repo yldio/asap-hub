@@ -17,7 +17,12 @@ export type RecordedTake = {
   microphone?: { blob: Blob; mimeType: string; extension: string };
 };
 
-export type RecorderStatus = 'idle' | 'recording' | 'paused' | 'finishing';
+export type RecorderStatus =
+  | 'idle'
+  | 'counting'
+  | 'recording'
+  | 'paused'
+  | 'finishing';
 
 // What the creator actually handed over in the picker, which is what the frame
 // shows and so which of a capture's coordinates land on it. `displaySurface` is
@@ -47,6 +52,10 @@ type RecorderFactory = (
 
 export type ScreenRecorderOptions = {
   withMicrophone: boolean;
+  // how long the screen is shared before the recorder actually starts, so the
+  // creator has time to get to the tab they are demoing; the take begins when
+  // the count ends, which is the instant its startedAtEpochMs records
+  countdownMs?: number;
   // the browser's own Stop sharing button ends a take without anyone calling
   // stop(), and the recording still has to be saved
   onEnded?: (take: RecordedTake) => void;
@@ -63,10 +72,15 @@ export type ScreenRecorder = {
   status: RecorderStatus;
   error?: string;
   elapsedMs: number;
+  countdownMsLeft: number;
   // what the last take was a recording of; it outlives the take, because the
   // cursor capture is applied after the recording has already been saved
   displaySurface?: CaptureSurface;
   start: () => Promise<void>;
+  // both are only meaningful while the count is running: one lets the take
+  // begin at once, the other hands the screen back without recording anything
+  startNow: () => void;
+  cancel: () => void;
   pause: () => void;
   resume: () => void;
   stop: () => Promise<RecordedTake | undefined>;
@@ -141,6 +155,7 @@ const systemNow = () => Date.now();
 // throttled.
 export const useScreenRecorder = ({
   withMicrophone,
+  countdownMs = 0,
   onEnded,
   getDisplayMedia,
   getUserMedia,
@@ -151,6 +166,7 @@ export const useScreenRecorder = ({
   const [status, setStatus] = useState<RecorderStatus>('idle');
   const [error, setError] = useState<string>();
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [countdownMsLeft, setCountdownMsLeft] = useState(0);
   const [displaySurface, setDisplaySurface] = useState<CaptureSurface>();
   // read while the track is still live: a stopped track reports nothing
   const surfaceRef = useRef<CaptureSurface>();
@@ -167,6 +183,17 @@ export const useScreenRecorder = ({
   const pausedMsRef = useRef(0);
   const pausedAtRef = useRef<number>();
   const tickRef = useRef<ReturnType<typeof setInterval>>();
+  const countdownRef = useRef<ReturnType<typeof setInterval>>();
+  const beginRef = useRef<() => void>();
+
+  const stopCounting = useCallback(() => {
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = undefined;
+    }
+    beginRef.current = undefined;
+    setCountdownMsLeft(0);
+  }, []);
 
   const recordedMs = useCallback(
     (): number =>
@@ -194,6 +221,9 @@ export const useScreenRecorder = ({
     () => () => {
       if (tickRef.current) {
         clearInterval(tickRef.current);
+      }
+      if (countdownRef.current) {
+        clearInterval(countdownRef.current);
       }
       stopTracks(screenRef.current?.stream);
       stopTracks(micRef.current?.stream);
@@ -274,20 +304,53 @@ export const useScreenRecorder = ({
             });
             const micRecorder = factory(micStream, { mimeType: micMimeType });
             micRef.current = session(micRecorder, micStream, micMimeType);
-            micRecorder.start(5000);
           } catch {
             setError('The microphone was not available, recording without it.');
           }
         }
       }
 
-      startedAtRef.current = now();
-      pausedMsRef.current = 0;
-      pausedAtRef.current = undefined;
-      setElapsedMs(0);
-      recorder.start(5000);
-      setStatus('recording');
-      startTicking();
+      const begin = () => {
+        beginRef.current = undefined;
+        try {
+          startedAtRef.current = now();
+          pausedMsRef.current = 0;
+          pausedAtRef.current = undefined;
+          setElapsedMs(0);
+          micRef.current?.recorder.start(5000);
+          recorder.start(5000);
+          setStatus('recording');
+          startTicking();
+        } catch {
+          stopTracks(stream);
+          stopTracks(micRef.current?.stream);
+          screenRef.current = undefined;
+          micRef.current = undefined;
+          setError('Could not start the recording.');
+          setStatus('idle');
+        }
+      };
+
+      if (countdownMs > 0) {
+        // the wall clock, not the interval, decides when the count ends: the
+        // studio tab sits in the background while the creator gets to the tab
+        // they are demoing, and background intervals are throttled
+        setStatus('counting');
+        setCountdownMsLeft(countdownMs);
+        beginRef.current = begin;
+        const deadline = now() + countdownMs;
+        countdownRef.current = setInterval(() => {
+          const left = deadline - now();
+          if (left > 0) {
+            setCountdownMsLeft(left);
+            return;
+          }
+          stopCounting();
+          begin();
+        }, 200);
+      } else {
+        begin();
+      }
     } catch {
       stopTracks(stream);
       stopTracks(micRef.current?.stream);
@@ -297,14 +360,39 @@ export const useScreenRecorder = ({
       setStatus('idle');
     }
   }, [
+    countdownMs,
     createRecorder,
     getDisplayMedia,
     getUserMedia,
     isTypeSupported,
     now,
     startTicking,
+    stopCounting,
     withMicrophone,
   ]);
+
+  // the count is a promise to record, not a recording: skipping it starts the
+  // take at once, and backing out of it hands the screen straight back
+  const startNow = useCallback(() => {
+    const begin = beginRef.current;
+    if (!begin) {
+      return;
+    }
+    stopCounting();
+    begin();
+  }, [stopCounting]);
+
+  const cancel = useCallback(() => {
+    if (!beginRef.current) {
+      return;
+    }
+    stopCounting();
+    stopTracks(screenRef.current?.stream);
+    stopTracks(micRef.current?.stream);
+    screenRef.current = undefined;
+    micRef.current = undefined;
+    setStatus('idle');
+  }, [stopCounting]);
 
   const pause = useCallback(() => {
     screenRef.current?.recorder.pause();
@@ -330,6 +418,9 @@ export const useScreenRecorder = ({
     if (!screen) {
       return undefined;
     }
+    // the browser's own Stop sharing can land mid count; the take it ends
+    // holds nothing, and the empty blob it hands back says so
+    stopCounting();
     setStatus('finishing');
     stopTicking();
     // read before the awaits: how long the finishing itself takes is not part
@@ -365,7 +456,7 @@ export const useScreenRecorder = ({
           }
         : {}),
     };
-  }, [recordedMs, stopTicking]);
+  }, [recordedMs, stopCounting, stopTicking]);
 
   stopRef.current = stop;
 
@@ -373,8 +464,11 @@ export const useScreenRecorder = ({
     status,
     error,
     elapsedMs,
+    countdownMsLeft,
     displaySurface,
     start,
+    startNow,
+    cancel,
     pause,
     resume,
     stop,

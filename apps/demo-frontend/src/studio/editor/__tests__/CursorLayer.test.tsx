@@ -43,6 +43,23 @@ describe('the cursor layer', () => {
     expect(rippleCount(600, -400)).toBe(1);
     expect(rippleCount(1000 + rippleMs, -400)).toBe(0);
   });
+
+  // capture times are moments in the footage: trimming the start of a clip
+  // used to slide every click late by exactly the trim
+  it('keeps a click on its footage moment when the clip start is trimmed', () => {
+    const trimmed = (tMs: number): number => {
+      const { container, unmount } = render(
+        <CursorLayer effects={[ripple]} tMs={tMs} inMs={400} />,
+      );
+      const count = container.querySelectorAll('span').length;
+      unmount();
+      return count;
+    };
+    // the ripple sits at footage 1000ms, which is 600ms into the trimmed clip
+    expect(trimmed(600)).toBe(1);
+    expect(trimmed(1000)).toBe(1);
+    expect(trimmed(600 + rippleMs + 1)).toBe(0);
+  });
 });
 
 describe('a click the creator is parked on', () => {

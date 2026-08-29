@@ -617,12 +617,17 @@ const ProjectEditor: FC<Props> = ({
         const atMs = Math.max(0, Math.round(span.startMs));
         const onto = placementAt(placements, atMs) ?? placements.at(-1);
         if (!onto) return;
+        // the drag lands in programme time; the effect is stored against the
+        // footage, so the landing clip's own trim goes back on
+        const trimMs = onto.clip.kind === 'source' ? onto.clip.inMs : 0;
         dispatch({
           type: 'moveCursorEffect',
           fromClipId: layer.clipId,
           toClipId: onto.clip.id,
           effectId: id,
-          tMs: effectChange(span, onto.startMs, onto.durationMs).tMs ?? 0,
+          tMs:
+            (effectChange(span, onto.startMs, onto.durationMs).tMs ?? 0) +
+            trimMs,
         });
         return;
       }

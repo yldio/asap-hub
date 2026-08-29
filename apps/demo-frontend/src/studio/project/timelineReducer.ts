@@ -4,10 +4,12 @@ import {
   Clip,
   CursorEffect,
   CursorLayer,
+  layoutClips,
   limits,
   NarrationClip,
   insertClipAt,
   moveClip,
+  placementAt,
   removeClip,
   SourceClip,
   splitAt,
@@ -145,6 +147,22 @@ const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
   };
 };
 
+// Cursor times are moments in the footage, so a second clip showing the same
+// footage shows the same capture: splitting or duplicating a clip carries the
+// layer to the new piece whole, take start and all, and each piece draws only
+// the span its own trim shows.
+const copyCursorLayer = (
+  timeline: Timeline,
+  fromClipId: string,
+  toClipId: string,
+): Timeline['cursor'] => {
+  const from = timeline.cursor.find((layer) => layer.clipId === fromClipId);
+  if (!from || timeline.cursor.some((layer) => layer.clipId === toClipId)) {
+    return timeline.cursor;
+  }
+  return [...timeline.cursor, { ...from, clipId: toClipId }];
+};
+
 // a clip gains its cursor layer the first time something is put on it
 const withCursorLayer = (
   timeline: Timeline,
@@ -247,11 +265,20 @@ export const timelineReducer = (
         ),
       );
 
-    case 'splitAt':
+    case 'splitAt': {
+      const parent = placementAt(layoutClips(timeline.clips), action.tMs)?.clip
+        .id;
+      const split = parent
+        ? {
+            ...timeline,
+            cursor: copyCursorLayer(timeline, parent, action.clipId),
+          }
+        : timeline;
       return withClips(
-        timeline,
+        split,
         splitAt(timeline.clips, action.tMs, action.clipId),
       );
+    }
 
     case 'duplicateClip': {
       const index = timeline.clips.findIndex(
@@ -268,7 +295,13 @@ export const timelineReducer = (
         id: action.newClipId,
         transitionIn: undefined,
       };
-      return withClips(timeline, insertClipAt(timeline.clips, copy, index + 1));
+      return withClips(
+        {
+          ...timeline,
+          cursor: copyCursorLayer(timeline, action.clipId, action.newClipId),
+        },
+        insertClipAt(timeline.clips, copy, index + 1),
+      );
     }
 
     case 'toggleMute':

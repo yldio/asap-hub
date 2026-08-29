@@ -195,8 +195,11 @@ export const ringMove = (
   };
 };
 
-// the effects are timed against the capture, and the layer's offset is what
-// lines that capture up with the clip
+// capture times are footage times, so what lines them up with the clip is the
+// creator's nudge less however much of the footage the trim cut off the front
+const captureShiftMs = (layer: CursorLayer, placement: ClipPlacement): number =>
+  layer.offsetMs - (placement.clip.kind === 'source' ? placement.clip.inMs : 0);
+
 const cursorOverlays = (
   cursor: CursorLayer[],
   placement: ClipPlacement,
@@ -212,7 +215,7 @@ const cursorOverlays = (
         if (!art) {
           return [];
         }
-        const atMs = effect.tMs + layer.offsetMs;
+        const atMs = effect.tMs + captureShiftMs(layer, placement);
         const startMs = Math.max(0, atMs);
         const endMs = Math.min(placement.durationMs, atMs + art.durationMs);
         // a spotlight is a scrim over the whole frame, and moving it would
@@ -256,7 +259,10 @@ const pointerOverlays = (
     .filter((layer) => layer.clipId === placement.clip.id)
     .flatMap((layer) => {
       const art = { canvas, variant: layer.pointer };
-      const track = cursorPointerTrack(layer);
+      const track = cursorPointerTrack({
+        path: layer.path,
+        offsetMs: captureShiftMs(layer, placement),
+      });
       const motion = pointerMotion(
         track,
         art,

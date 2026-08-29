@@ -402,6 +402,7 @@ const PreviewStage: FC<Props> = ({
         pointer={cursorPointer}
         tMs={localMs}
         offsetMs={cursorOffsetMs}
+        inMs={clip?.kind === 'source' ? clip.inMs : 0}
         playing={playing}
       />
       <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />

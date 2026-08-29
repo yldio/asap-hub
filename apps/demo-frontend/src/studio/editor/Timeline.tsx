@@ -535,6 +535,11 @@ const EffectTrack = memo<{
     const startOf = (clipId: string): number | undefined =>
       placements.find(({ clip }) => clip.id === clipId)?.startMs;
 
+    const trimOf = (clipId: string): number => {
+      const clip = placements.find((each) => each.clip.id === clipId)?.clip;
+      return clip?.kind === 'source' ? clip.inMs : 0;
+    };
+
     return (
       <div css={overlayTrackStyles}>
         {zooms.map((zoom) => {
@@ -572,16 +577,26 @@ const EffectTrack = memo<{
         })}
 
         {cursorLayers.flatMap((layer) => {
-          const clipStartMs = startOf(layer.clipId);
-          if (clipStartMs === undefined) {
+          const placement = placements.find(
+            ({ clip }) => clip.id === layer.clipId,
+          );
+          if (!placement) {
             return [];
           }
-          return layer.effects.map((effect) => {
-            // the lane speaks programme time; the effect is stored against its
-            // clip, and the editor converts back
-            const atMs = clipStartMs + effect.tMs;
+          const clipStartMs = placement.startMs;
+          const trimMs = trimOf(layer.clipId);
+          return layer.effects.flatMap((effect) => {
+            // the lane speaks programme time; the effect is stored against the
+            // footage, so the clip's own trim comes off on the way out and the
+            // editor puts it back when a drag lands. A moment the trim cut out
+            // is not on the programme at all, so it gets no marker.
+            const localMs = effect.tMs - trimMs;
+            if (localMs < 0 || localMs > placement.durationMs) {
+              return [];
+            }
+            const atMs = clipStartMs + localMs;
             const point = { startMs: atMs, durationMs: 0 };
-            return (
+            return [
               <EffectMarker
                 key={effect.id}
                 effect={effect}
@@ -596,8 +611,8 @@ const EffectTrack = memo<{
                 onNudge={(deltaMs) =>
                   onNudge('effect', effect.id, point, 'move', deltaMs)
                 }
-              />
-            );
+              />,
+            ];
           });
         })}
       </div>

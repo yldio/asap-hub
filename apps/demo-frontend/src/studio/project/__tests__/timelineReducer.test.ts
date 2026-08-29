@@ -208,6 +208,82 @@ describe('splitAt', () => {
     expect(timeline.clips[0]).toMatchObject({ inMs: 0, outMs: 2000 });
     expect(timeline.clips[1]).toMatchObject({ inMs: 2000, outMs: 5000 });
   });
+
+  // cursor times are moments in the footage, so both pieces of a split show
+  // the same capture and each draws only the span its own trim shows; without
+  // the copy the right piece lost its clicks and a later regenerate skipped it
+  it('carries the cursor layer to both pieces', () => {
+    const captured = timelineReducer(withClips(), {
+      type: 'applyCapture',
+      clipId: 'clip-1',
+      surface: 'monitor',
+      path: [{ tMs: 100, x: 0.5, y: 0.5 }],
+      effects: [
+        {
+          id: 'ripple-1',
+          tMs: 3000,
+          type: 'ripple',
+          point: { x: 0.2, y: 0.3 },
+          origin: 'derived',
+        },
+      ],
+    });
+    const seeded = {
+      ...captured,
+      cursor: captured.cursor.map((layer) => ({
+        ...layer,
+        recordedAtEpochMs: 1_700_000_000_000,
+      })),
+    };
+
+    const timeline = timelineReducer(seeded, {
+      type: 'splitAt',
+      tMs: 2000,
+      clipId: 'clip-new',
+    });
+
+    const right = timeline.cursor.find((layer) => layer.clipId === 'clip-new');
+    expect(right).toMatchObject({
+      recordedAtEpochMs: 1_700_000_000_000,
+      effects: [{ id: 'ripple-1', tMs: 3000 }],
+    });
+    expect(
+      timeline.cursor.find((layer) => layer.clipId === 'clip-1'),
+    ).toBeDefined();
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+});
+
+describe('duplicateClip', () => {
+  it('carries the cursor layer to the copy', () => {
+    const captured = timelineReducer(withClips(), {
+      type: 'applyCapture',
+      clipId: 'clip-1',
+      surface: 'monitor',
+      path: [{ tMs: 100, x: 0.5, y: 0.5 }],
+      effects: [
+        {
+          id: 'ripple-1',
+          tMs: 500,
+          type: 'ripple',
+          point: { x: 0.2, y: 0.3 },
+          origin: 'derived',
+        },
+      ],
+    });
+
+    const timeline = timelineReducer(captured, {
+      type: 'duplicateClip',
+      clipId: 'clip-1',
+      newClipId: 'clip-copy',
+    });
+
+    expect(
+      timeline.cursor.find((layer) => layer.clipId === 'clip-copy')?.effects,
+    ).toEqual(
+      timeline.cursor.find((layer) => layer.clipId === 'clip-1')?.effects,
+    );
+  });
 });
 
 describe('setClipVolume', () => {

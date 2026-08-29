@@ -143,14 +143,18 @@ const pointerTransform = (x: number, y: number): string =>
 
 type Props = {
   readonly effects: CursorEffect[];
-  // the captured path the pointer walks, in the same clip-local time the render
-  // reads it in
+  // the captured path the pointer walks, in the footage's own time: a moment
+  // in the source, however the clip showing it is trimmed
   readonly path?: CursorPathPoint[];
   // which drawn pointer walks it; the whole capture shares one
   readonly pointer?: string;
   // where the layer starts; the stage drives it from there
   readonly tMs?: number;
   readonly offsetMs?: number;
+  // how far into the footage the clip starts: capture times are footage times,
+  // and the stage drives this layer in the clip's own time, so trimming the
+  // start of a clip must not slide its clicks late by the trim
+  readonly inMs?: number;
   readonly playing?: boolean;
   // what the zoom is doing to the picture at a moment. The pointer and the
   // rings ride the zoomed picture rather than the frame it is drawn on, and the
@@ -166,13 +170,17 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
       pointer: pointerId,
       tMs = 0,
       offsetMs = 0,
+      inMs = 0,
       playing = false,
       zoomAt = atRest,
     },
     ref,
   ) => {
+    // one shift takes a footage time to this clip's own: the creator's nudge,
+    // less however much of the footage the trim cut off the front
+    const shiftMs = offsetMs - inMs;
     const [timeMs, setTimeMs] = useState(tMs);
-    const shown = shownAt(effects, timeMs, offsetMs);
+    const shown = shownAt(effects, timeMs, shiftMs);
     const shownKey = keyOf(shown);
     const shownKeyRef = useRef(shownKey);
     const pointerRef = useRef<HTMLDivElement>(null);
@@ -187,8 +195,8 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
 
     // the same simplified track the render walks, so the two draw one path
     const track = useMemo(
-      () => cursorPointerTrack({ path, offsetMs }),
-      [offsetMs, path],
+      () => cursorPointerTrack({ path, offsetMs: shiftMs }),
+      [path, shiftMs],
     );
     const pointer = pointerPositionAt(track, timeMs);
     const variant = useMemo(() => pointerVariant(pointerId), [pointerId]);
@@ -240,7 +248,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
         setTime: (ms: number) => {
           latestMsRef.current = ms;
           place(ms);
-          const key = keyOf(shownAt(effects, ms, offsetMs));
+          const key = keyOf(shownAt(effects, ms, shiftMs));
           if (key === shownKeyRef.current) {
             return;
           }
@@ -248,7 +256,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           setTimeMs(ms);
         },
       }),
-      [effects, offsetMs, place],
+      [effects, place, shiftMs],
     );
 
     const spotlight = shown.find((effect) => effect.type === 'spotlight');

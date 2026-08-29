@@ -426,6 +426,36 @@ describe('buildRenderPlan', () => {
       expect(args).toContain("enable='between(t,2.500,3.100)'");
     });
 
+    // capture times are moments in the footage: trimming the start of a clip
+    // used to burn every click in late by exactly the trim
+    it('keeps a click on its footage moment when the clip start is trimmed', () => {
+      const args =
+        planFor({
+          clips: [source({ inMs: 1500 })],
+          cursor: [cursorLayer()],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain("enable='between(t,0.500,1.100)'");
+    });
+
+    it('walks the drawn pointer in the trimmed clip time as well', () => {
+      const layer = cursorLayer({
+        pointer: 'arrow',
+        path: [
+          { tMs: 2000, x: 0.2, y: 0.2 },
+          { tMs: 4000, x: 0.8, y: 0.8 },
+        ],
+      });
+      const trimmed =
+        planFor({
+          clips: [source({ inMs: 1500 })],
+          cursor: [layer],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      // the walk starts at footage 2000ms, which is 500ms into the clip
+      expect(trimmed).toContain('(t-0.500)');
+    });
+
     it('ignores a zoom marker, which the editor materialises as a zoom', () => {
       expect(
         planFor({

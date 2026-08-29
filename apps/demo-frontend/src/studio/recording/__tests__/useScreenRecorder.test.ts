@@ -309,3 +309,17 @@ describe('starting twice', () => {
     expect(options.getDisplayMedia).toHaveBeenCalledTimes(1);
   });
 });
+
+// without it the browser is free to leave the pointer out, and a tab capture
+// and a Wayland screen capture both do: the recording comes back with no cursor
+// in it, which is not a demo of anything
+it('asks for the pointer to be drawn into the recording', async () => {
+  const { view, options } = setup();
+
+  await act(async () => {
+    await view.result.current.start();
+  });
+
+  const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
+  expect(request?.video).toMatchObject({ cursor: 'always' });
+});

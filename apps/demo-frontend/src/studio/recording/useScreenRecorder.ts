@@ -45,12 +45,21 @@ export type ScreenRecorder = {
   stop: () => Promise<RecordedTake | undefined>;
 };
 
+// `cursor` is not in the DOM lib's constraint type, but it is what decides
+// whether the pointer is drawn into the captured frames at all. Left out, a tab
+// capture and a Wayland screen capture both hand back a recording with no
+// pointer in it, which is not a demo of anything.
+type DisplayVideoConstraints = MediaTrackConstraints & {
+  cursor?: 'always' | 'motion' | 'never';
+};
+
 const displayConstraints: DisplayMediaStreamOptions = {
   video: {
     frameRate: { ideal: 30, max: 60 },
     width: { ideal: 1920 },
     height: { ideal: 1080 },
-  },
+    cursor: 'always',
+  } as DisplayVideoConstraints,
   audio: false,
 };
 

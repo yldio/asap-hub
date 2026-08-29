@@ -21,7 +21,7 @@ import {
 import { ProjectAsset } from '../../api/types';
 import { createId } from '../project/ids';
 import { useCaptureHolder } from '../recording/captureLock';
-import { CaptureApply, captureTarget } from '../recording/cursorPlacement';
+import { CaptureApply, captureTargets } from '../recording/cursorPlacement';
 import {
   ProjectEditor as Editor,
   SaveState,
@@ -440,27 +440,34 @@ const ProjectEditor: FC<Props> = ({
     select('effect', effectId);
   }, [current, dispatch, getPlayheadMs, select]);
 
-  // the cursor capture lands on the clip under the playhead, the same place a
-  // hand placed click does; only the reading of the raw stream lives elsewhere
+  // the cursor capture lands on every clip that knows when its take ran, each
+  // given its own slice of the stream; a timeline with no such clip falls back
+  // to the clip under the playhead, the same place a hand placed click does
   const applyCursorCapture = useCallback(
     (apply: CaptureApply) => {
       // the playhead parked past the last clip left no placement under it, and
       // the button then did nothing at all with no word about why
       const onto = current ?? placements.at(-1);
-      const target = captureTarget(timeline, onto, Date.now());
-      if (!target) return;
-      void apply(target.request).then((applied) => {
-        if (!applied) return;
-        dispatch({
-          type: 'applyCapture',
-          clipId: target.clipId,
-          path: applied.path,
-          effects: applied.effects,
-          ...(applied.surface ? { surface: applied.surface } : {}),
+      const request = captureTargets(
+        timeline,
+        onto,
+        Date.now(),
+        assetDurationOf,
+      );
+      if (!request) return;
+      void apply(request).then((applied) => {
+        applied?.forEach((layer) => {
+          dispatch({
+            type: 'applyCapture',
+            clipId: layer.clipId,
+            path: layer.path,
+            effects: layer.effects,
+            ...(layer.surface ? { surface: layer.surface } : {}),
+          });
         });
       });
     },
-    [current, dispatch, placements, timeline],
+    [assetDurationOf, current, dispatch, placements, timeline],
   );
 
   const addChapter = useCallback(() => {

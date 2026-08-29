@@ -4,7 +4,10 @@ import {
   placementAt,
   Timeline,
 } from '@asap-hub/demo-timeline';
-import { captureTarget } from '../cursorPlacement';
+import { captureTargets } from '../cursorPlacement';
+
+const takeOneStart = 1_700_000_000_000;
+const takeTwoStart = takeOneStart + 40_000;
 
 const timeline = (): Timeline => ({
   ...createEmptyTimeline(),
@@ -30,7 +33,7 @@ const timeline = (): Timeline => ({
     {
       clipId: 'clip-b',
       offsetMs: 0,
-      recordedAtEpochMs: 1_700_000_000_000,
+      recordedAtEpochMs: takeOneStart,
       path: [],
       effects: [
         {
@@ -45,50 +48,108 @@ const timeline = (): Timeline => ({
   ],
 });
 
-const targetAt = (playheadMs: number) => {
-  const document = timeline();
-  const placements = layoutClips(document.clips);
-  return captureTarget(document, placementAt(placements, playheadMs), 100000);
-};
+const durations: Record<string, number> = { 'asset-b': 6500 };
+const assetDurationOf = (assetId: string) => durations[assetId];
 
-describe('captureTarget', () => {
-  // it used to land on clips[0] whatever the playhead was over, which is not
-  // the recording the creator had just made
-  it('lands on the clip under the playhead', () => {
-    expect(targetAt(5000)?.clipId).toBe('clip-b');
+const request = (document: Timeline, playheadMs: number) =>
+  captureTargets(
+    document,
+    placementAt(layoutClips(document.clips), playheadMs),
+    100000,
+    assetDurationOf,
+  );
+
+describe('captureTargets', () => {
+  // one session collects every take made before the apply, so every clip that
+  // knows when its footage ran is a target with its own slice of the stream
+  it('targets every clip that carries its take start', () => {
+    const document = timeline();
+    document.cursor = [
+      ...document.cursor,
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        recordedAtEpochMs: takeTwoStart,
+        path: [],
+        effects: [],
+      },
+    ];
+
+    const targets = request(document, 0)?.targets;
+
+    expect(targets?.map(({ clipId }) => clipId)).toEqual(['clip-a', 'clip-b']);
+    expect(targets?.map(({ startedAtEpochMs }) => startedAtEpochMs)).toEqual([
+      takeTwoStart,
+      takeOneStart,
+    ]);
   });
 
-  it('lands on the first clip when the playhead is over it', () => {
-    expect(targetAt(1000)?.clipId).toBe('clip-a');
+  it('windows each take by the footage the source actually holds', () => {
+    const [target] = request(timeline(), 5000)?.targets ?? [];
+
+    expect(target?.startedAtEpochMs).toBe(takeOneStart);
+    expect(target?.durationMs).toBe(6500);
   });
 
-  // the origin is the moment the take started, written on the layer when the
-  // clip was recorded, so a studio reopened since still has it
-  it('takes the time origin from the clip that was recorded', () => {
-    expect(targetAt(5000)?.request.startedAtEpochMs).toBe(1_700_000_000_000);
-    expect(targetAt(5000)?.request.stoppedAtEpochMs).toBe(100000);
+  it('falls back to the clip length when the asset is not yet probed', () => {
+    const document = timeline();
+    document.cursor = [
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        recordedAtEpochMs: takeTwoStart,
+        path: [],
+        effects: [],
+      },
+    ];
+
+    const [target] = request(document, 0)?.targets ?? [];
+
+    expect(target?.clipId).toBe('clip-a');
+    expect(target?.durationMs).toBe(4000);
   });
 
-  // an imported video, or a clip recorded before the studio kept the start
-  it('leaves the origin to the events on a clip that never carried one', () => {
-    expect(targetAt(1000)?.request.startedAtEpochMs).toBeUndefined();
+  it('carries the effects already on each clip so hand edits survive', () => {
+    const [target] = request(timeline(), 5000)?.targets ?? [];
+
+    expect(target?.existing).toHaveLength(1);
   });
 
-  it('carries the effects already on that clip so hand edits survive', () => {
-    expect(targetAt(5000)?.request.existing).toHaveLength(1);
-    expect(targetAt(1000)?.request.existing).toEqual([]);
+  it('leaves a clip that never carried a take start out of the slicing', () => {
+    const targets = request(timeline(), 1000)?.targets;
+
+    expect(targets?.map(({ clipId }) => clipId)).toEqual(['clip-b']);
   });
 
-  it('frames the capture with the canvas the export uses', () => {
-    expect(targetAt(1000)?.request.frame).toEqual({
-      width: 1920,
-      height: 1080,
+  // an imported video, or a document from before the studio kept take starts
+  describe('a timeline with no recorded take at all', () => {
+    const imported = (): Timeline => {
+      const document = timeline();
+      document.cursor = [];
+      return document;
+    };
+
+    it('falls back to the one clip under the playhead', () => {
+      const targets = request(imported(), 5000)?.targets;
+
+      expect(targets).toHaveLength(1);
+      expect(targets?.[0]?.clipId).toBe('clip-b');
+      expect(targets?.[0]?.startedAtEpochMs).toBeUndefined();
+      expect(targets?.[0]?.durationMs).toBeUndefined();
+    });
+
+    it('has nothing to apply to on an empty timeline', () => {
+      expect(
+        captureTargets(createEmptyTimeline(), undefined, 1000, () => undefined),
+      ).toBeUndefined();
     });
   });
 
-  it('has nothing to apply to on an empty timeline', () => {
-    expect(
-      captureTarget(createEmptyTimeline(), undefined, 1000),
-    ).toBeUndefined();
+  it('frames the capture with the canvas the export uses', () => {
+    expect(request(timeline(), 1000)?.frame).toEqual({
+      width: 1920,
+      height: 1080,
+    });
+    expect(request(timeline(), 1000)?.stoppedAtEpochMs).toBe(100000);
   });
 });

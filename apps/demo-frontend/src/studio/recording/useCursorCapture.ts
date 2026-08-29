@@ -1,18 +1,19 @@
 import {
+  CaptureEvent,
   CaptureSurface,
   deriveCursorEffects,
   mergeDerivedEffects,
   parseCaptureEvents,
+  sliceCaptureEvents,
 } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useState } from 'react';
 import { useApi } from '../../api/ApiProvider';
 import { RecordingSession, RecordingSessionStatus } from '../../api/types';
-
-export type AppliedCapture = {
-  path: ReturnType<typeof deriveCursorEffects>['path'];
-  effects: ReturnType<typeof deriveCursorEffects>['effects'];
-  startedAtEpochMs: number;
-};
+import {
+  CaptureApplied,
+  CaptureClipTarget,
+  CaptureRequest,
+} from './cursorPlacement';
 
 const pollMs = 5000;
 
@@ -132,25 +133,55 @@ export const useCursorCapture = (
     return () => clearInterval(handle);
   }, [api, projectId, session]);
 
+  // one session collects every take made before the creator applies, so the
+  // stream is cut per clip: each target with a take start and a length gets
+  // exactly the events its footage was filming, and an event that fell between
+  // takes lands on no clip at all
+  const deriveTarget = useCallback(
+    (
+      target: CaptureClipTarget,
+      events: CaptureEvent[],
+      frame: CaptureRequest['frame'],
+    ): CaptureApplied | undefined => {
+      if (events.length === 0) {
+        return undefined;
+      }
+      const surface = recorded ?? target.surface;
+      const derived = deriveCursorEffects(events, {
+        frame,
+        surface,
+        ...(target.startedAtEpochMs
+          ? { startedAtEpochMs: target.startedAtEpochMs }
+          : {}),
+      });
+      const merged = mergeDerivedEffects(target.existing, derived.effects);
+      return {
+        clipId: target.clipId,
+        path: derived.path,
+        effects: merged.effects,
+        ...(surface ? { surface } : {}),
+      };
+    },
+    [recorded],
+  );
+
   const apply = useCallback(
-    async (input: {
-      // when the take started; absent, the capture's own events carry the origin
-      startedAtEpochMs?: number;
-      stoppedAtEpochMs: number;
-      frame: { width: number; height: number };
-      existing: Parameters<typeof mergeDerivedEffects>[0];
-      surface?: CaptureSurface;
-    }) => {
-      if (!session) {
+    async (request: CaptureRequest): Promise<CaptureApplied[] | undefined> => {
+      if (!session || request.targets.length === 0) {
         return undefined;
       }
       setApplying(true);
       setError(undefined);
       try {
+        const takeStarts = request.targets.flatMap((target) =>
+          target.startedAtEpochMs ? [target.startedAtEpochMs] : [],
+        );
         await api
           .finaliseCapture(projectId, session.sessionId, {
-            startedAtEpochMs: input.startedAtEpochMs,
-            stoppedAtEpochMs: input.stoppedAtEpochMs,
+            ...(takeStarts.length
+              ? { startedAtEpochMs: Math.min(...takeStarts) }
+              : {}),
+            stoppedAtEpochMs: request.stoppedAtEpochMs,
           })
           .catch(() => undefined);
 
@@ -161,24 +192,32 @@ export const useCursorCapture = (
           return undefined;
         }
 
-        // the take's own start, kept on the clip when it was recorded, so the
-        // capture lines up with what the footage shows at that moment; without
-        // one the derivation falls back to the capture's first event
-        const surface = recorded ?? input.surface;
-        const derived = deriveCursorEffects(events, {
-          frame: input.frame,
-          surface,
-          ...(input.startedAtEpochMs
-            ? { startedAtEpochMs: input.startedAtEpochMs }
-            : {}),
-        });
-        const merged = mergeDerivedEffects(input.existing, derived.effects);
+        const windows = request.targets.flatMap((target) =>
+          target.startedAtEpochMs && target.durationMs !== undefined
+            ? [
+                {
+                  clipId: target.clipId,
+                  recordedAtEpochMs: target.startedAtEpochMs,
+                  durationMs: target.durationMs,
+                },
+              ]
+            : [],
+        );
+        const sliced = sliceCaptureEvents(events, windows);
 
-        return {
-          path: derived.path,
-          ...merged,
-          ...(surface ? { surface } : {}),
-        };
+        const applied = request.targets.flatMap((target) => {
+          const own = windows.some((window) => window.clipId === target.clipId)
+            ? sliced.get(target.clipId) ?? []
+            : events;
+          const result = deriveTarget(target, own, request.frame);
+          return result ? [result] : [];
+        });
+
+        if (applied.length === 0) {
+          setError('That capture has no events during any recorded take.');
+          return undefined;
+        }
+        return applied;
       } catch {
         setError('Could not read the captured events.');
         return undefined;
@@ -186,7 +225,7 @@ export const useCursorCapture = (
         setApplying(false);
       }
     },
-    [api, projectId, recorded, session],
+    [api, deriveTarget, projectId, session],
   );
 
   return { session, status, applying, error, start, newBookmark, apply };

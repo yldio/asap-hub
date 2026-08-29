@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 
-import { CaptureSurface } from '@asap-hub/demo-timeline';
+import { CaptureSurface, CursorEffect } from '@asap-hub/demo-timeline';
 import { TestApiProvider } from '../../../api/ApiProvider';
 import type { Api } from '../../../api/client';
 import { AuthContext, AuthState } from '../../../auth/AuthProvider';
@@ -164,14 +164,20 @@ describe('mapping a capture onto what was recorded', () => {
     await act(async () => view.result.current.start());
     await waitFor(() => expect(view.result.current.session).toBeDefined());
 
-    return act(async () =>
+    const results = await act(async () =>
       view.result.current.apply({
         stoppedAtEpochMs: 2000,
         frame: { width: 1920, height: 1080 },
-        existing: [],
-        ...(stored ? { surface: stored } : {}),
+        targets: [
+          {
+            clipId: 'clip-1',
+            existing: [],
+            ...(stored ? { surface: stored } : {}),
+          },
+        ],
       }),
     );
+    return results?.[0];
   };
 
   it('places a whole screen take by the screen', async () => {
@@ -238,14 +244,20 @@ describe('lining a capture up with the take', () => {
     await act(async () => view.result.current.start());
     await waitFor(() => expect(view.result.current.session).toBeDefined());
 
-    return act(async () =>
+    const results = await act(async () =>
       view.result.current.apply({
         stoppedAtEpochMs: startedAtEpochMs + 60_000,
         frame: { width: 1280, height: 720 },
-        existing: [],
-        ...(origin ? { startedAtEpochMs: origin } : {}),
+        targets: [
+          {
+            clipId: 'clip-1',
+            existing: [],
+            ...(origin ? { startedAtEpochMs: origin } : {}),
+          },
+        ],
       }),
     );
+    return results?.[0];
   };
 
   // this hook is mounted fresh, the way it is after a reload: the origin only
@@ -262,5 +274,136 @@ describe('lining a capture up with the take', () => {
 
     expect(result?.effects[0]?.tMs).toBe(24_314);
     expect(result?.path[0]?.tMs).toBe(0);
+  });
+});
+
+// One session collects everything from the first take to the apply: take one,
+// the fiddling in the studio between takes, take two. Each take's clip carries
+// its own start and length, so each gets its own slice of the stream.
+describe('two takes captured in one session', () => {
+  const takeOneStart = 1_700_000_000_000;
+  const takeOneClickMs = 2_000;
+  // stopped after 10s, recorded again 30s later
+  const takeTwoStart = takeOneStart + 40_000;
+  const takeTwoClickMs = 3_000;
+
+  const ndjson = [
+    { id: 'c1', type: 'click', t: takeOneStart + takeOneClickMs },
+    { id: 'between', type: 'click', t: takeOneStart + 20_000 },
+    { id: 'c2', type: 'click', t: takeTwoStart + takeTwoClickMs },
+  ]
+    .map((line) =>
+      JSON.stringify({
+        ...line,
+        x: 640,
+        y: 360,
+        viewportW: 1280,
+        viewportH: 720,
+      }),
+    )
+    .join('\n');
+
+  const view = async () => {
+    const rendered = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents: jest.fn().mockResolvedValue(ndjson),
+    });
+    await act(async () => rendered.result.current.start());
+    await waitFor(() => expect(rendered.result.current.session).toBeDefined());
+    return rendered;
+  };
+
+  const targets = (existingOnTakeOne: CursorEffect[] = []) => [
+    {
+      clipId: 'clip-take-1',
+      existing: existingOnTakeOne,
+      startedAtEpochMs: takeOneStart,
+      durationMs: 10_000,
+    },
+    {
+      clipId: 'clip-take-2',
+      existing: [],
+      startedAtEpochMs: takeTwoStart,
+      durationMs: 8_000,
+    },
+  ];
+
+  it('lands each take on its own clip at its own times', async () => {
+    const rendered = await view();
+
+    const applied = await act(async () =>
+      rendered.result.current.apply({
+        stoppedAtEpochMs: takeTwoStart + 8_000,
+        frame: { width: 1280, height: 720 },
+        targets: targets(),
+      }),
+    );
+
+    expect(applied?.map(({ clipId }) => clipId)).toEqual([
+      'clip-take-1',
+      'clip-take-2',
+    ]);
+    expect(applied?.[0]?.effects.map(({ tMs }) => tMs)).toEqual([
+      takeOneClickMs,
+    ]);
+    expect(applied?.[1]?.effects.map(({ tMs }) => tMs)).toEqual([
+      takeTwoClickMs,
+    ]);
+    // the click between the takes was filming nothing and lands nowhere
+    expect(applied?.[0]?.path.map(({ tMs }) => tMs)).toEqual([takeOneClickMs]);
+    expect(applied?.[1]?.path.map(({ tMs }) => tMs)).toEqual([takeTwoClickMs]);
+  });
+
+  it('keeps a hand moved effect on one clip while refreshing the other', async () => {
+    const rendered = await view();
+    const moved = {
+      id: 'ripple-c1',
+      tMs: 1_234,
+      type: 'ripple' as const,
+      point: { x: 0.9, y: 0.9 },
+      origin: 'derived-edited' as const,
+      sourceEventId: 'c1',
+    };
+
+    const applied = await act(async () =>
+      rendered.result.current.apply({
+        stoppedAtEpochMs: takeTwoStart + 8_000,
+        frame: { width: 1280, height: 720 },
+        targets: targets([moved]),
+      }),
+    );
+
+    expect(applied?.[0]?.effects).toEqual([moved]);
+    expect(applied?.[1]?.effects[0]).toMatchObject({
+      tMs: takeTwoClickMs,
+      origin: 'derived',
+      sourceEventId: 'c2',
+    });
+  });
+
+  it('says so when no event fell inside any take', async () => {
+    const rendered = await view();
+
+    const applied = await act(async () =>
+      rendered.result.current.apply({
+        stoppedAtEpochMs: takeTwoStart + 8_000,
+        frame: { width: 1280, height: 720 },
+        targets: [
+          {
+            clipId: 'clip-elsewhere',
+            existing: [],
+            startedAtEpochMs: takeOneStart - 500_000,
+            durationMs: 10_000,
+          },
+        ],
+      }),
+    );
+
+    expect(applied).toBeUndefined();
+    expect(rendered.result.current.error).toBe(
+      'That capture has no events during any recorded take.',
+    );
   });
 });

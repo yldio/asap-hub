@@ -444,7 +444,10 @@ const ProjectEditor: FC<Props> = ({
   // hand placed click does; only the reading of the raw stream lives elsewhere
   const applyCursorCapture = useCallback(
     (apply: CaptureApply) => {
-      const target = captureTarget(timeline, current, Date.now());
+      // the playhead parked past the last clip left no placement under it, and
+      // the button then did nothing at all with no word about why
+      const onto = current ?? placements.at(-1);
+      const target = captureTarget(timeline, onto, Date.now());
       if (!target) return;
       void apply(target.request).then((applied) => {
         if (!applied) return;
@@ -456,7 +459,7 @@ const ProjectEditor: FC<Props> = ({
         });
       });
     },
-    [current, dispatch, timeline],
+    [current, dispatch, placements, timeline],
   );
 
   const addChapter = useCallback(() => {

@@ -5,6 +5,7 @@ import {
   clipLocalMs,
   ClipPlacement,
   CursorEffect,
+  CursorPathPoint,
   fadeOpacityAt,
   Point,
   sourceTimeAt,
@@ -138,6 +139,9 @@ type Props = {
   readonly banners: Banner[];
   readonly zooms: Zoom[];
   readonly cursorEffects: CursorEffect[];
+  // the captured path the drawn pointer walks, and which pointer walks it
+  readonly cursorPath?: CursorPathPoint[];
+  readonly cursorPointer?: string;
   // the layer's own nudge, applied here exactly as the render applies it
   readonly cursorOffsetMs?: number;
   readonly playing: boolean;
@@ -162,6 +166,8 @@ const PreviewStage: FC<Props> = ({
   banners,
   zooms,
   cursorEffects,
+  cursorPath,
+  cursorPointer,
   cursorOffsetMs,
   playing,
   volume,
@@ -381,6 +387,8 @@ const PreviewStage: FC<Props> = ({
       <CursorLayer
         ref={cursorRef}
         effects={cursorEffects}
+        path={cursorPath}
+        pointer={cursorPointer}
         tMs={localMs}
         offsetMs={cursorOffsetMs}
         playing={playing}

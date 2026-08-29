@@ -1,6 +1,11 @@
-import { render } from '@testing-library/react';
-import { CursorEffect, defaultCursorColor } from '@asap-hub/demo-timeline';
-import CursorLayer, { rippleMs } from '../CursorLayer';
+import { act, render } from '@testing-library/react';
+import {
+  CursorEffect,
+  CursorPathPoint,
+  defaultCursorColor,
+} from '@asap-hub/demo-timeline';
+import { createRef, Profiler } from 'react';
+import CursorLayer, { CursorLayerHandle, rippleMs } from '../CursorLayer';
 
 const ripple: CursorEffect = {
   id: 'effect-1',
@@ -82,5 +87,130 @@ describe('the colour of a click', () => {
   // a white ring on a white page is invisible without it
   it('always carries a dark edge, whatever the colour', () => {
     expect(ringOf('#ffffff').shadow).toContain('rgba(0, 0, 0');
+  });
+});
+
+// evenly spaced along a straight line, so the damping and the curve are no-ops
+// and the drawn position is the one the arithmetic says it is
+const path: CursorPathPoint[] = [
+  { tMs: 0, x: 0.2, y: 0.2 },
+  { tMs: 500, x: 0.5, y: 0.5 },
+  { tMs: 1000, x: 0.8, y: 0.8 },
+];
+
+const pointerAt = (tMs: number, pointer?: string) => {
+  const { container, unmount } = render(
+    <CursorLayer effects={[]} path={path} tMs={tMs} pointer={pointer} />,
+  );
+  const found = container.querySelector<HTMLElement>(
+    '[data-testid="cursor-pointer"]',
+  );
+  const state = {
+    transform: found?.style.transform ?? '',
+    display: found?.style.display ?? '',
+    shapes: [...(found?.querySelectorAll('path') ?? [])].map((node) =>
+      node.getAttribute('d'),
+    ),
+  };
+  unmount();
+  return state;
+};
+
+describe('the drawn pointer', () => {
+  it('stands where the capture had it', () => {
+    expect(pointerAt(500).transform).toBe('translate(50%, 50%)');
+  });
+
+  it('runs between two samples rather than jumping between them', () => {
+    expect(pointerAt(250).transform).toBe('translate(35%, 35%)');
+  });
+
+  // held at the nearest sample it would sit somewhere the creator never put it
+  it('is hidden before the capture starts and after it ends', () => {
+    expect(pointerAt(-1).display).toBe('none');
+    expect(pointerAt(1001).display).toBe('none');
+  });
+
+  it('is not drawn at all for a clip with no capture', () => {
+    const { container } = render(<CursorLayer effects={[]} />);
+    expect(
+      container.querySelector('[data-testid="cursor-pointer"]'),
+    ).toBeNull();
+  });
+
+  it('draws the pointer the layer asked for', () => {
+    expect(pointerAt(500, 'ring').shapes[0]).toContain('A150,150');
+    expect(pointerAt(500).shapes[0]).toContain('M0,0 L0,750');
+  });
+
+  it('falls back to the arrow for a layer saved before the picker', () => {
+    expect(pointerAt(500, undefined).shapes).toEqual(
+      pointerAt(500, 'arrow').shapes,
+    );
+  });
+});
+
+describe('following the playhead', () => {
+  // the editor sat at 93% of the main thread when every frame was a render, so
+  // the pointer is moved by writing to the node and nothing else
+  it('moves the pointer without React committing a render', () => {
+    const ref = createRef<CursorLayerHandle>();
+    const commits: string[] = [];
+    const { container } = render(
+      <Profiler id="cursor" onRender={(id) => commits.push(id)}>
+        <CursorLayer ref={ref} effects={[]} path={path} tMs={0} />
+      </Profiler>,
+    );
+    const node = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-pointer"]',
+    );
+    const mounted = commits.length;
+
+    act(() => {
+      ref.current?.setTime(500);
+    });
+
+    expect(node?.style.transform).toBe('translate(50%, 50%)');
+    expect(commits).toHaveLength(mounted);
+  });
+
+  it('hides the pointer as the playhead leaves the capture', () => {
+    const ref = createRef<CursorLayerHandle>();
+    const { container } = render(
+      <CursorLayer ref={ref} effects={[]} path={path} tMs={0} />,
+    );
+    const node = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-pointer"]',
+    );
+
+    act(() => {
+      ref.current?.setTime(2000);
+    });
+    expect(node?.style.display).toBe('none');
+
+    act(() => {
+      ref.current?.setTime(500);
+    });
+    expect(node?.style.display).toBe('');
+  });
+});
+
+describe('a click and a pointer together', () => {
+  const click: CursorEffect = {
+    id: 'effect-9',
+    tMs: 500,
+    type: 'ripple',
+    point: { x: 0.5, y: 0.5 },
+    origin: 'derived',
+  };
+
+  it('draws both, with the pointer last so it sits over the ring', () => {
+    const { container } = render(
+      <CursorLayer effects={[click]} path={path} tMs={500} />,
+    );
+    const drawn = [...container.querySelectorAll('[data-testid]')].map((node) =>
+      node.getAttribute('data-testid'),
+    );
+    expect(drawn).toEqual(['cursor-ripple', 'cursor-pointer']);
   });
 });

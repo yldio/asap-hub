@@ -2,14 +2,22 @@
 import { css, keyframes } from '@emotion/react';
 import {
   CursorEffect,
+  CursorPathPoint,
+  cursorPointerTrack,
   defaultCursorColor,
   edgeFor,
   isCursorColor,
+  pointerBox,
+  pointerLayers,
+  pointerPositionAt,
+  pointerVariant,
 } from '@asap-hub/demo-timeline';
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -62,6 +70,25 @@ const spotlightStyles = css({
   inset: 0,
 });
 
+// The holder fills the layer, so a translate in percent of its own size is a
+// translate in percent of the frame: the pointer is placed by writing one
+// transform, with nothing to measure and no layout to read.
+const pointerHolderStyles = css({
+  position: 'absolute',
+  inset: 0,
+  transformOrigin: '0 0',
+  willChange: 'transform',
+});
+
+// hung off its own hotspot, so the part that points lands on the captured
+// position rather than the middle of the sprite
+const pointerArtStyles = css({
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  overflow: 'visible',
+});
+
 // how long a ripple stays on screen; the render burns the same window
 export const rippleMs = 600;
 export const spotlightMs = 1200;
@@ -102,8 +129,18 @@ export type CursorLayerHandle = {
   setTime: (ms: number) => void;
 };
 
+const noPath: CursorPathPoint[] = [];
+
+const pointerTransform = (x: number, y: number): string =>
+  `translate(${x * 100}%, ${y * 100}%)`;
+
 type Props = {
   readonly effects: CursorEffect[];
+  // the captured path the pointer walks, in the same clip-local time the render
+  // reads it in
+  readonly path?: CursorPathPoint[];
+  // which drawn pointer walks it; the whole capture shares one
+  readonly pointer?: string;
   // where the layer starts; the stage drives it from there
   readonly tMs?: number;
   readonly offsetMs?: number;
@@ -111,20 +148,64 @@ type Props = {
 };
 
 const CursorLayer = forwardRef<CursorLayerHandle, Props>(
-  ({ effects, tMs = 0, offsetMs = 0, playing = false }, ref) => {
+  (
+    {
+      effects,
+      path = noPath,
+      pointer: pointerId,
+      tMs = 0,
+      offsetMs = 0,
+      playing = false,
+    },
+    ref,
+  ) => {
     const [timeMs, setTimeMs] = useState(tMs);
     const shown = shownAt(effects, timeMs, offsetMs);
     const shownKey = keyOf(shown);
     const shownKeyRef = useRef(shownKey);
+    const pointerRef = useRef<HTMLDivElement>(null);
+    const latestMsRef = useRef(tMs);
+
+    // the same simplified track the render walks, so the two draw one path
+    const track = useMemo(
+      () => cursorPointerTrack({ path, offsetMs }),
+      [offsetMs, path],
+    );
+    const pointer = pointerPositionAt(track, timeMs);
+    const variant = useMemo(() => pointerVariant(pointerId), [pointerId]);
+    const box = useMemo(() => pointerBox(variant), [variant]);
 
     useEffect(() => {
       shownKeyRef.current = shownKey;
     }, [shownKey]);
 
+    // the pointer moves every frame, which is exactly what a render sixty times
+    // a second used to cost, so its transform is written straight to the node
+    const placePointer = useCallback(
+      (ms: number) => {
+        const node = pointerRef.current;
+        if (!node) {
+          return;
+        }
+        const at = pointerPositionAt(track, ms);
+        node.style.display = at ? '' : 'none';
+        if (at) {
+          node.style.transform = pointerTransform(at.x, at.y);
+        }
+      },
+      [track],
+    );
+
+    useEffect(() => {
+      placePointer(latestMsRef.current);
+    }, [placePointer]);
+
     useImperativeHandle(
       ref,
       () => ({
         setTime: (ms: number) => {
+          latestMsRef.current = ms;
+          placePointer(ms);
           const key = keyOf(shownAt(effects, ms, offsetMs));
           if (key === shownKeyRef.current) {
             return;
@@ -133,7 +214,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           setTimeMs(ms);
         },
       }),
-      [effects, offsetMs],
+      [effects, offsetMs, placePointer],
     );
 
     const spotlight = shown.find((effect) => effect.type === 'spotlight');
@@ -171,6 +252,49 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
               }}
             />
           ))}
+
+        {track.length > 0 ? (
+          <div
+            ref={pointerRef}
+            data-testid="cursor-pointer"
+            css={pointerHolderStyles}
+            style={{
+              display: pointer ? undefined : 'none',
+              transform: pointer
+                ? pointerTransform(pointer.x, pointer.y)
+                : undefined,
+            }}
+          >
+            <svg
+              css={pointerArtStyles}
+              style={{
+                height: `${box.heightRatio * 100}%`,
+                aspectRatio: `${box.aspectRatio}`,
+                transform: `translate(${box.hotspotX * -100}%, ${
+                  box.hotspotY * -100
+                }%)`,
+              }}
+              viewBox={box.viewBox}
+              preserveAspectRatio="xMinYMin meet"
+              aria-hidden="true"
+            >
+              {pointerLayers(variant).map((layer, index) => (
+                <path
+                  key={`${index === 0 ? 'edge' : 'ink'}-${layer.d}`}
+                  d={layer.d}
+                  fillRule={layer.fillRule}
+                  fill={layer.fill}
+                  fillOpacity={layer.fillOpacity}
+                  stroke={layer.stroke}
+                  strokeOpacity={layer.strokeOpacity}
+                  strokeWidth={layer.strokeWidth}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                />
+              ))}
+            </svg>
+          </div>
+        ) : null}
       </div>
     );
   },

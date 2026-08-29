@@ -94,6 +94,9 @@ export type TimelineAction =
       clipId: string;
       path: CursorLayer['path'];
       effects: CursorEffect[];
+      // what the capture was mapped through, kept so re-applying one after a
+      // reload reads it the same way
+      surface?: CursorLayer['surface'];
     }
   | {
       type: 'addChapter';
@@ -493,6 +496,7 @@ export const timelineReducer = (
           ...layer,
           path: action.path,
           effects: action.effects,
+          ...(action.surface ? { surface: action.surface } : {}),
         })),
       };
 

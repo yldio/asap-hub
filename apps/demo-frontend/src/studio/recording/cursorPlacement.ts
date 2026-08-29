@@ -1,4 +1,5 @@
 import {
+  CaptureSurface,
   ClipPlacement,
   CursorEffect,
   CursorLayer,
@@ -13,11 +14,15 @@ export type CaptureRequest = {
   stoppedAtEpochMs: number;
   frame: { width: number; height: number };
   existing: CursorEffect[];
+  // what the last capture on this clip was mapped through, for a studio reopened
+  // since the recording was made; a live recorder's answer beats it
+  surface?: CaptureSurface;
 };
 
 export type CaptureApplied = {
   path: CursorLayer['path'];
   effects: CursorEffect[];
+  surface?: CaptureSurface;
 };
 
 export type CaptureApply = (
@@ -48,6 +53,7 @@ export const captureTarget = (
       // a hand edited effect survives the merge, so re-applying a capture does
       // not walk over what the creator already moved
       existing: layer?.effects ?? [],
+      ...(layer?.surface ? { surface: layer.surface } : {}),
     },
   };
 };

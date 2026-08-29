@@ -404,7 +404,9 @@ const Editor: FC<EditorProps> = ({
     [onAssetsChanged, upload, voice],
   );
 
-  const capture = useCursorCapture(id);
+  // the recorder knows what the picker was pointed at, and the capture in the
+  // page being demoed cannot: it is the same take, read from the two ends
+  const capture = useCursorCapture(id, take.displaySurface);
 
   // the autosave debounce means a departure can outrun the last edit, so the
   // studio asks rather than losing it quietly. A read only editor is asked too:

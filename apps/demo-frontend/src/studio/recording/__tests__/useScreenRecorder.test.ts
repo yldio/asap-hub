@@ -37,10 +37,11 @@ const fakeRecorder = (): FakeRecorder => {
   return recorder as unknown as FakeRecorder;
 };
 
-const fakeStream = () => {
+const fakeStream = (displaySurface?: string) => {
   const ended: (() => void)[] = [];
   const track = {
     stop: jest.fn(),
+    getSettings: () => (displaySurface ? { displaySurface } : {}),
     addEventListener: jest.fn((type: string, listener: () => void) => {
       if (type === 'ended') ended.push(listener);
     }),
@@ -53,9 +54,12 @@ const fakeStream = () => {
   } as unknown as MediaStream & { track: typeof track };
 };
 
-const setup = (overrides: Record<string, unknown> = {}) => {
+const setup = (
+  overrides: Record<string, unknown> = {},
+  displaySurface?: string,
+) => {
   const recorders: FakeRecorder[] = [];
-  const stream = fakeStream();
+  const stream = fakeStream(displaySurface);
   const options = {
     withMicrophone: false,
     getDisplayMedia: jest.fn().mockResolvedValue(stream),
@@ -322,4 +326,49 @@ it('asks for the pointer to be drawn into the recording', async () => {
 
   const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
   expect(request?.video).toMatchObject({ cursor: 'always' });
+});
+
+// The capture snippet runs in the page being demoed and cannot know whether the
+// creator handed over that tab, the window or the whole screen, yet that is what
+// decides where the page sits in the recorded frame.
+describe('what the picker was pointed at', () => {
+  it('knows nothing before a recording has been started', () => {
+    expect(setup().view.result.current.displaySurface).toBeUndefined();
+  });
+
+  it.each(['browser', 'window', 'monitor'])(
+    'reports a %s share as soon as the take starts',
+    async (surface) => {
+      const { view } = setup({}, surface);
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+
+      expect(view.result.current.displaySurface).toBe(surface);
+    },
+  );
+
+  it('ignores a surface it has no mapping for', async () => {
+    const { view } = setup({}, 'application');
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(view.result.current.displaySurface).toBeUndefined();
+  });
+
+  it('still knows it once the take is saved, which is when it is needed', async () => {
+    const { view, recorders } = setup({}, 'monitor');
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => recorders[0]?.emit(10));
+    const take = await act(async () => view.result.current.stop());
+
+    expect(take).toEqual(expect.objectContaining({ surface: 'monitor' }));
+    expect(view.result.current.displaySurface).toBe('monitor');
+  });
 });

@@ -1,3 +1,4 @@
+import { CaptureSurface, captureSurfaces } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   extensionForMimeType,
@@ -11,10 +12,33 @@ export type RecordedTake = {
   extension: string;
   durationMs: number;
   startedAtEpochMs: number;
+  // browser, window or monitor: what the picker was pointed at
+  surface?: CaptureSurface;
   microphone?: { blob: Blob; mimeType: string; extension: string };
 };
 
 export type RecorderStatus = 'idle' | 'recording' | 'paused' | 'finishing';
+
+// What the creator actually handed over in the picker, which is what the frame
+// shows and so which of a capture's coordinates land on it. `displaySurface` is
+// not in the DOM lib's settings type, and a browser that does not report it
+// leaves the studio with nothing to guess from.
+type DisplayTrackSettings = MediaTrackSettings & { displaySurface?: string };
+
+const isCaptureSurface = (value: unknown): value is CaptureSurface =>
+  typeof value === 'string' &&
+  (captureSurfaces as readonly string[]).includes(value);
+
+export const sharedSurface = (
+  stream: MediaStream,
+): CaptureSurface | undefined => {
+  const settings = stream.getVideoTracks()[0]?.getSettings?.() as
+    | DisplayTrackSettings
+    | undefined;
+  return isCaptureSurface(settings?.displaySurface)
+    ? settings?.displaySurface
+    : undefined;
+};
 
 type RecorderFactory = (
   stream: MediaStream,
@@ -39,6 +63,9 @@ export type ScreenRecorder = {
   status: RecorderStatus;
   error?: string;
   elapsedMs: number;
+  // what the last take was a recording of; it outlives the take, because the
+  // cursor capture is applied after the recording has already been saved
+  displaySurface?: CaptureSurface;
   start: () => Promise<void>;
   pause: () => void;
   resume: () => void;
@@ -124,6 +151,9 @@ export const useScreenRecorder = ({
   const [status, setStatus] = useState<RecorderStatus>('idle');
   const [error, setError] = useState<string>();
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [displaySurface, setDisplaySurface] = useState<CaptureSurface>();
+  // read while the track is still live: a stopped track reports nothing
+  const surfaceRef = useRef<CaptureSurface>();
 
   const screenRef = useRef<Session>();
   const micRef = useRef<Session>();
@@ -211,6 +241,8 @@ export const useScreenRecorder = ({
     }
 
     try {
+      surfaceRef.current = sharedSurface(stream);
+      setDisplaySurface(surfaceRef.current);
       const recorder = factory(stream, { mimeType: videoMimeType });
       screenRef.current = session(recorder, stream, videoMimeType);
 
@@ -322,6 +354,7 @@ export const useScreenRecorder = ({
       extension: extensionForMimeType(screen.mimeType),
       durationMs,
       startedAtEpochMs: startedAtRef.current,
+      ...(surfaceRef.current ? { surface: surfaceRef.current } : {}),
       ...(mic && mic.chunks.length > 0
         ? {
             microphone: {
@@ -336,5 +369,14 @@ export const useScreenRecorder = ({
 
   stopRef.current = stop;
 
-  return { status, error, elapsedMs, start, pause, resume, stop };
+  return {
+    status,
+    error,
+    elapsedMs,
+    displaySurface,
+    start,
+    pause,
+    resume,
+    stop,
+  };
 };

@@ -1,4 +1,5 @@
 import {
+  CaptureSurface,
   deriveCursorEffects,
   mergeDerivedEffects,
   parseCaptureEvents,
@@ -58,7 +59,14 @@ const rememberSession = (
   }
 };
 
-export const useCursorCapture = (projectId: string) => {
+// `recorded` is what the browser said the last take was a recording of. The
+// capture snippet cannot know it: it runs in the page being demoed and has no
+// idea whether the creator handed over that tab, this window or the whole
+// screen, and each of those puts the page somewhere different in the frame.
+export const useCursorCapture = (
+  projectId: string,
+  recorded?: CaptureSurface,
+) => {
   const api = useApi();
   const [session, setSession] = useState<RecordingSession | undefined>(() =>
     storedSession(projectId),
@@ -131,6 +139,7 @@ export const useCursorCapture = (projectId: string) => {
       stoppedAtEpochMs: number;
       frame: { width: number; height: number };
       existing: Parameters<typeof mergeDerivedEffects>[0];
+      surface?: CaptureSurface;
     }) => {
       if (!session) {
         return undefined;
@@ -155,10 +164,18 @@ export const useCursorCapture = (projectId: string) => {
         // no startedAtEpochMs: the capture's own first event is the origin. The
         // caller cannot know it, and guessing one put every event before zero,
         // where they were all dropped and the button silently did nothing
-        const derived = deriveCursorEffects(events, { frame: input.frame });
+        const surface = recorded ?? input.surface;
+        const derived = deriveCursorEffects(events, {
+          frame: input.frame,
+          surface,
+        });
         const merged = mergeDerivedEffects(input.existing, derived.effects);
 
-        return { path: derived.path, ...merged };
+        return {
+          path: derived.path,
+          ...merged,
+          ...(surface ? { surface } : {}),
+        };
       } catch {
         setError('Could not read the captured events.');
         return undefined;
@@ -166,7 +183,7 @@ export const useCursorCapture = (projectId: string) => {
         setApplying(false);
       }
     },
-    [api, projectId, session],
+    [api, projectId, recorded, session],
   );
 
   return { session, status, applying, error, start, newBookmark, apply };

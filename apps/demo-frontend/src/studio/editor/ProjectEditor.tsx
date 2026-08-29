@@ -456,6 +456,7 @@ const ProjectEditor: FC<Props> = ({
           clipId: target.clipId,
           path: applied.path,
           effects: applied.effects,
+          ...(applied.surface ? { surface: applied.surface } : {}),
         });
       });
     },

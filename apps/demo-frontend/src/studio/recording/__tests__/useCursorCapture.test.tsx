@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 
+import { CaptureSurface } from '@asap-hub/demo-timeline';
 import { TestApiProvider } from '../../../api/ApiProvider';
 import type { Api } from '../../../api/client';
 import { AuthContext, AuthState } from '../../../auth/AuthProvider';
@@ -18,13 +19,13 @@ const session = {
 
 const open = { state: 'open' as const, eventCount: 42, clientCount: 1 };
 
-const render = (api: Partial<Api>) => {
+const render = (api: Partial<Api>, recorded?: CaptureSurface) => {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <AuthContext.Provider value={authenticatedState as AuthState}>
       <TestApiProvider api={api}>{children}</TestApiProvider>
     </AuthContext.Provider>
   );
-  return renderHook(() => useCursorCapture('project-1'), { wrapper });
+  return renderHook(() => useCursorCapture('project-1', recorded), { wrapper });
 };
 
 beforeEach(() => window.localStorage.clear());
@@ -121,4 +122,81 @@ it('does not offer a bookmark stored from before it named the project', async ()
 
   expect(view.result.current.session?.sessionId).toBe('session-1');
   expect(view.result.current.session?.snippetUrl).toBeUndefined();
+});
+
+// The whole screen holds the OS bar, the browser chrome and the page inside it,
+// so stretching the page across the frame threw every click hundreds of pixels
+// off. The recorder is the only thing that knows which it was.
+describe('mapping a capture onto what was recorded', () => {
+  const event = {
+    id: 'e1',
+    type: 'click',
+    t: 1000,
+    x: 1129.4,
+    y: 593.1,
+    viewportW: 1134,
+    viewportH: 943,
+    screenX: 1129.4,
+    screenY: 680.1,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1134,
+    winH: 1030,
+  };
+
+  const applied = async (
+    recorded?: CaptureSurface,
+    stored?: CaptureSurface,
+  ) => {
+    const view = render(
+      {
+        startCapture: jest.fn().mockResolvedValue(session),
+        captureStatus: jest.fn().mockResolvedValue(open),
+        finaliseCapture: jest.fn().mockResolvedValue(undefined),
+        captureEvents: jest.fn().mockResolvedValue(JSON.stringify(event)),
+      },
+      recorded,
+    );
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    return act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: 2000,
+        frame: { width: 1920, height: 1080 },
+        existing: [],
+        ...(stored ? { surface: stored } : {}),
+      }),
+    );
+  };
+
+  it('places a whole screen take by the screen', async () => {
+    const result = await applied('monitor');
+
+    expect(result?.effects[0]?.point.x).toBeCloseTo(1129.4 / 1920, 3);
+    expect(result?.surface).toBe('monitor');
+  });
+
+  it('places a tab take by the page, as it always did', async () => {
+    const result = await applied('browser');
+
+    expect(result?.effects[0]?.point.x).toBeGreaterThan(0.8);
+  });
+
+  it('falls back to what the layer was mapped through before', async () => {
+    const result = await applied(undefined, 'monitor');
+
+    expect(result?.surface).toBe('monitor');
+    expect(result?.effects[0]?.point.x).toBeCloseTo(1129.4 / 1920, 3);
+  });
+
+  it('lets the live recorder overrule a stale one on the layer', async () => {
+    const result = await applied('monitor', 'browser');
+
+    expect(result?.surface).toBe('monitor');
+  });
 });

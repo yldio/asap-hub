@@ -71,6 +71,40 @@ describe('addClip', () => {
       'clip-2',
     ]);
   });
+
+  // the take's start is the video's t=0, and it has to outlive the recorder:
+  // the capture is often applied in a later session, from the saved document
+  it('writes the take start on the clip so a later capture can line up', () => {
+    const timeline = timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 5000,
+      clipId: 'clip-1',
+      recordedAtEpochMs: 1_700_000_000_000,
+    });
+
+    expect(timeline.cursor).toEqual([
+      {
+        clipId: 'clip-1',
+        offsetMs: 0,
+        path: [],
+        effects: [],
+        recordedAtEpochMs: 1_700_000_000_000,
+      },
+    ]);
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
+  it('leaves an imported clip with no take start at all', () => {
+    expect(
+      timelineReducer(createEmptyTimeline(), {
+        type: 'addClip',
+        assetId: 'asset-1',
+        durationMs: 5000,
+        clipId: 'clip-1',
+      }).cursor,
+    ).toEqual([]);
+  });
 });
 
 describe('removeClip', () => {
@@ -556,3 +590,4 @@ describe('a playhead that is not on a whole millisecond', () => {
     expect(() => parseTimeline(JSON.parse(JSON.stringify(next)))).not.toThrow();
   });
 });
+

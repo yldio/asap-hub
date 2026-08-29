@@ -134,7 +134,7 @@ export const useCursorCapture = (
 
   const apply = useCallback(
     async (input: {
-      // optional: the capture's own events carry the origin
+      // when the take started; absent, the capture's own events carry the origin
       startedAtEpochMs?: number;
       stoppedAtEpochMs: number;
       frame: { width: number; height: number };
@@ -161,13 +161,16 @@ export const useCursorCapture = (
           return undefined;
         }
 
-        // no startedAtEpochMs: the capture's own first event is the origin. The
-        // caller cannot know it, and guessing one put every event before zero,
-        // where they were all dropped and the button silently did nothing
+        // the take's own start, kept on the clip when it was recorded, so the
+        // capture lines up with what the footage shows at that moment; without
+        // one the derivation falls back to the capture's first event
         const surface = recorded ?? input.surface;
         const derived = deriveCursorEffects(events, {
           frame: input.frame,
           surface,
+          ...(input.startedAtEpochMs
+            ? { startedAtEpochMs: input.startedAtEpochMs }
+            : {}),
         });
         const merged = mergeDerivedEffects(input.existing, derived.effects);
 

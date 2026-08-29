@@ -6,6 +6,9 @@ import { RecordedTake, useScreenRecorder } from './useScreenRecorder';
 export type TakeResult = {
   video: ProjectAsset;
   durationMs: number;
+  // when the take started, in wall clock: the instant the footage shows at t=0,
+  // and so the origin a cursor capture applied to it has to be read against
+  startedAtEpochMs: number;
   narration?: ProjectAsset;
 };
 
@@ -63,7 +66,12 @@ export const useRecordingTake = (
             })
           : undefined;
 
-        onTake({ video, durationMs: take.durationMs, narration });
+        onTake({
+          video,
+          durationMs: take.durationMs,
+          startedAtEpochMs: take.startedAtEpochMs,
+          narration,
+        });
       } finally {
         setSaving(false);
       }

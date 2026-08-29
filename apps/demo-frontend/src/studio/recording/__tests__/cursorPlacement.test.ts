@@ -30,6 +30,7 @@ const timeline = (): Timeline => ({
     {
       clipId: 'clip-b',
       offsetMs: 0,
+      recordedAtEpochMs: 1_700_000_000_000,
       path: [],
       effects: [
         {
@@ -61,11 +62,16 @@ describe('captureTarget', () => {
     expect(targetAt(1000)?.clipId).toBe('clip-a');
   });
 
-  // working the origin back from the timeline put it minutes away from when the
-  // capture ran, and every event fell before zero and was thrown away
-  it('leaves the time origin to the events themselves', () => {
-    expect(targetAt(5000)?.request.startedAtEpochMs).toBeUndefined();
+  // the origin is the moment the take started, written on the layer when the
+  // clip was recorded, so a studio reopened since still has it
+  it('takes the time origin from the clip that was recorded', () => {
+    expect(targetAt(5000)?.request.startedAtEpochMs).toBe(1_700_000_000_000);
     expect(targetAt(5000)?.request.stoppedAtEpochMs).toBe(100000);
+  });
+
+  // an imported video, or a clip recorded before the studio kept the start
+  it('leaves the origin to the events on a clip that never carried one', () => {
+    expect(targetAt(1000)?.request.startedAtEpochMs).toBeUndefined();
   });
 
   it('carries the effects already on that clip so hand edits survive', () => {

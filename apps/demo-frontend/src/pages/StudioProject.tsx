@@ -338,7 +338,12 @@ const Editor: FC<EditorProps> = ({
   // a finished take lands as a clip at the end, with its microphone track
   // starting at the same point on the voice over lane
   const onTake = useCallback(
-    ({ video: recorded, durationMs, narration }: TakeResult) => {
+    ({
+      video: recorded,
+      durationMs,
+      startedAtEpochMs,
+      narration,
+    }: TakeResult) => {
       const clipId = createId('clip');
       const startMs = timelineDurationMs(editor.timeline.clips);
       editor.dispatch({
@@ -346,6 +351,7 @@ const Editor: FC<EditorProps> = ({
         assetId: recorded.assetId,
         durationMs: recorded.durationMs ?? durationMs,
         clipId,
+        recordedAtEpochMs: startedAtEpochMs,
       });
       if (narration) {
         editor.dispatch({

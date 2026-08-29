@@ -24,6 +24,10 @@ export type TimelineAction =
       durationMs: number;
       clipId: string;
       index?: number;
+      // wall clock when this footage was recorded, for a take the studio made
+      // itself; it seeds the clip's cursor layer so a capture applied later,
+      // even in another session, is read against the right moment
+      recordedAtEpochMs?: number;
     }
   | { type: 'removeClip'; clipId: string }
   | { type: 'moveClip'; clipId: string; toIndex: number }
@@ -194,7 +198,7 @@ export const timelineReducer = (
         outMs: atLeastMinimum(action.durationMs),
         volume: 1,
       };
-      return withClips(
+      const added = withClips(
         timeline,
         insertClipAt(
           timeline.clips,
@@ -202,6 +206,17 @@ export const timelineReducer = (
           action.index ?? timeline.clips.length,
         ),
       );
+      const { recordedAtEpochMs } = action;
+      if (recordedAtEpochMs === undefined || recordedAtEpochMs <= 0) {
+        return added;
+      }
+      return {
+        ...added,
+        cursor: withCursorLayer(added, action.clipId, (layer) => ({
+          ...layer,
+          recordedAtEpochMs: Math.round(recordedAtEpochMs),
+        })),
+      };
     }
 
     case 'removeClip':

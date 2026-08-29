@@ -200,3 +200,67 @@ describe('mapping a capture onto what was recorded', () => {
     expect(result?.surface).toBe('monitor');
   });
 });
+
+// The creator starts the take, switches to the tab they are demoing and only
+// then clicks the bookmark. Reading the capture from its own first event drew
+// every click that delay early: measured at 4286ms on a real capture.
+describe('lining a capture up with the take', () => {
+  const startedAtEpochMs = 1_700_000_000_000;
+  const bookmarkDelayMs = 4286;
+  const clickAtMs = 28_600;
+
+  const ndjson = [
+    {
+      id: 'first',
+      type: 'move',
+      t: startedAtEpochMs + bookmarkDelayMs,
+      x: 640,
+      y: 360,
+    },
+    {
+      id: 'click',
+      type: 'click',
+      t: startedAtEpochMs + clickAtMs,
+      x: 640,
+      y: 360,
+    },
+  ]
+    .map((line) => JSON.stringify({ ...line, viewportW: 1280, viewportH: 720 }))
+    .join('\n');
+
+  const applied = async (origin?: number) => {
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents: jest.fn().mockResolvedValue(ndjson),
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    return act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: startedAtEpochMs + 60_000,
+        frame: { width: 1280, height: 720 },
+        existing: [],
+        ...(origin ? { startedAtEpochMs: origin } : {}),
+      }),
+    );
+  };
+
+  // this hook is mounted fresh, the way it is after a reload: the origin only
+  // reaches it because the document kept it on the clip
+  it('times the capture from the take start the document kept', async () => {
+    const result = await applied(startedAtEpochMs);
+
+    expect(result?.effects[0]?.tMs).toBe(clickAtMs);
+    expect(result?.path[0]?.tMs).toBe(bookmarkDelayMs);
+  });
+
+  it('falls back to the first event for a clip with no take start', async () => {
+    const result = await applied();
+
+    expect(result?.effects[0]?.tMs).toBe(24_314);
+    expect(result?.path[0]?.tMs).toBe(0);
+  });
+});

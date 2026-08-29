@@ -6,9 +6,11 @@ import {
   Timeline,
 } from '@asap-hub/demo-timeline';
 
-// The time origin is not guessed here. Working it back from the timeline put it
-// minutes away from when the capture actually ran and every event fell before
-// zero and was dropped; the derivation takes it from the events themselves.
+// The time origin is not guessed here, and it is not worked back from the
+// timeline either: that put it minutes away from when the capture ran and every
+// event fell before zero and was dropped. It is the wall clock the studio wrote
+// on the clip's cursor layer when it recorded the take, and it is absent for an
+// imported clip, where the derivation falls back to the capture's own events.
 export type CaptureRequest = {
   startedAtEpochMs?: number;
   stoppedAtEpochMs: number;
@@ -54,6 +56,9 @@ export const captureTarget = (
       // not walk over what the creator already moved
       existing: layer?.effects ?? [],
       ...(layer?.surface ? { surface: layer.surface } : {}),
+      ...(layer?.recordedAtEpochMs
+        ? { startedAtEpochMs: layer.recordedAtEpochMs }
+        : {}),
     },
   };
 };

@@ -52,6 +52,41 @@ const tabView = (event: CapturePlacement): SharedView | undefined =>
 const displayOrigin = (at: number, size: number, workArea: number): number =>
   at >= 0 && at < size ? 0 : workArea;
 
+// Wayland never tells the browser where its window sits: the window reports
+// the desktop corner and every screen coordinate is fabricated from the page
+// as if that were true, while the footage shows the window sitting under the
+// compositor's bar and inside its gaps. The space left over between window and
+// screen is the only trace of the real arrangement the events carry, so when
+// an axis has little enough left over to be gaps and bars it is dealt back:
+// the same gap on either side, and whatever remains above, where bars live. A
+// window sharing its screen with another leaves far more over than any gap,
+// and an axis like that is left alone rather than guessed at.
+const fabricatedLeeway = 0.1;
+
+const fabricatedShift = (event: CapturePlacement): Point => {
+  if (
+    event.winX !== 0 ||
+    event.winY !== 0 ||
+    finite(event.screenLeft) !== 0 ||
+    finite(event.screenTop) !== 0 ||
+    !positive(event.winW) ||
+    !positive(event.winH) ||
+    !positive(event.screenW) ||
+    !positive(event.screenH)
+  ) {
+    return { x: 0, y: 0 };
+  }
+  const spareW = event.screenW - event.winW;
+  const spareH = event.screenH - event.winH;
+  const dx =
+    spareW > 0 && spareW <= event.screenW * fabricatedLeeway ? spareW / 2 : 0;
+  const dy =
+    spareH > 0 && spareH <= event.screenH * fabricatedLeeway
+      ? Math.max(0, spareH - dx)
+      : 0;
+  return { x: dx, y: dy };
+};
+
 // A whole screen share shows one display, so the pointer is placed on that
 // display. Both the display and the pointer are recorded per event, so a window
 // dragged to another monitor mid take keeps mapping correctly from the moment
@@ -60,7 +95,11 @@ const monitorView = (event: CapturePlacement): SharedView | undefined => {
   if (!positive(event.screenW) || !positive(event.screenH)) {
     return undefined;
   }
-  const at = { x: finite(event.screenX), y: finite(event.screenY) };
+  const shift = fabricatedShift(event);
+  const at = {
+    x: finite(event.screenX) + shift.x,
+    y: finite(event.screenY) + shift.y,
+  };
   return {
     rect: {
       x: displayOrigin(at.x, event.screenW, finite(event.screenLeft)),

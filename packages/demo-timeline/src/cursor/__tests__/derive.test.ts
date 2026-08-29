@@ -383,8 +383,10 @@ describe('the surface the take was recorded from', () => {
     deriveCursorEffects([clicked], { frame: into, surface }).effects[0]?.point;
 
   it('places a whole screen take on the screen it was recorded from', () => {
+    // the window claims the desktop corner, so the 50 spare vertical pixels
+    // are dealt back above it as the compositor's bar
     expect(pointOf('monitor')?.x).toBeCloseTo(1129.4 / 1920, 3);
-    expect(pointOf('monitor')?.y).toBeCloseTo(680.1 / 1080, 3);
+    expect(pointOf('monitor')?.y).toBeCloseTo(730.1 / 1080, 3);
   });
 
   it('places a window take from the window corner', () => {

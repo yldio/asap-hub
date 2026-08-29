@@ -53,9 +53,48 @@ describe('what the recording actually shows', () => {
   // stretching the page across a frame that holds the whole screen threw every
   // effect hundreds of pixels to the right of what it was pointing at
   it('places a whole screen recording by the screen, not the page', () => {
+    // the window claims the desktop corner, so the 50 spare vertical pixels
+    // are dealt back above it as the compositor's bar; the 786 spare across
+    // are another window's half of the screen, not a gap, and stay put
     expect(pixels(real, 'monitor')).toEqual({
       x: expect.closeTo(1129.4, 0),
-      y: expect.closeTo(680.1, 0),
+      y: expect.closeTo(730.1, 0),
+    });
+  });
+
+  // the creator's own click on a Filters button, from a full width window on a
+  // Wayland desktop: the compositor keeps the window under a 26 pixel bar and
+  // inside 12 pixel gaps but the browser believes it sits at the corner, so
+  // the raw screen numbers point 12 left and 38 above the button the footage
+  // shows being clicked
+  it('deals the spare screen space back as gaps and bar on Wayland', () => {
+    const filters: CapturePlacement = {
+      x: 1727,
+      y: 154,
+      viewportW: 1896,
+      viewportH: 909,
+      screenX: 1727,
+      screenY: 275,
+      screenW: 1920,
+      screenH: 1080,
+      screenLeft: 0,
+      screenTop: 0,
+      winX: 0,
+      winY: 0,
+      winW: 1896,
+      winH: 1030,
+    };
+    expect(pixels(filters, 'monitor')).toEqual({
+      x: expect.closeTo(1739, 0),
+      y: expect.closeTo(313, 0),
+    });
+  });
+
+  it('trusts a window that truly says where it sits', () => {
+    const onX11 = { ...real, winX: 12, winY: 38, screenY: 718.2 };
+    expect(pixels(onX11, 'monitor')).toEqual({
+      x: expect.closeTo(1129.4, 0),
+      y: expect.closeTo(718.2, 0),
     });
   });
 

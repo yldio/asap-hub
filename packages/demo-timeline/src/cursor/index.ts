@@ -4,3 +4,5 @@ export * from './geometry';
 export * from './path';
 export * from './derive';
 export * from './merge';
+export * from './pointer';
+export * from './pointerArt';

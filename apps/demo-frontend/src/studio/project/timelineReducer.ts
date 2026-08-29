@@ -78,6 +78,13 @@ export type TimelineAction =
     }
   | { type: 'removeCursorEffect'; clipId: string; effectId: string }
   | {
+      type: 'moveCursorEffect';
+      fromClipId: string;
+      toClipId: string;
+      effectId: string;
+      tMs: number;
+    }
+  | {
       type: 'applyCapture';
       clipId: string;
       path: CursorLayer['path'];
@@ -390,6 +397,69 @@ export const timelineReducer = (
           ),
         })),
       };
+
+    // a click dragged past the end of its clip belongs to the clip it landed on:
+    // clamping it to the one it started on pinned it in place instead
+    case 'moveCursorEffect': {
+      const from = timeline.cursor.find(
+        (layer) => layer.clipId === action.fromClipId,
+      );
+      const moving = from?.effects.find(
+        (effect) => effect.id === action.effectId,
+      );
+      if (!from || !moving) {
+        return timeline;
+      }
+
+      const moved: CursorEffect = {
+        ...moving,
+        tMs: action.tMs,
+        origin: moving.origin === 'derived' ? 'derived-edited' : moving.origin,
+      };
+      const byTime = (a: CursorEffect, b: CursorEffect) => a.tMs - b.tMs;
+
+      if (action.fromClipId === action.toClipId) {
+        return {
+          ...timeline,
+          cursor: withCursorLayer(timeline, action.toClipId, (layer) => ({
+            ...layer,
+            effects: layer.effects
+              .map((effect) => (effect.id === action.effectId ? moved : effect))
+              .sort(byTime),
+          })),
+        };
+      }
+
+      const without = timeline.cursor.map((layer) =>
+        layer.clipId === action.fromClipId
+          ? {
+              ...layer,
+              effects: layer.effects.filter(
+                (effect) => effect.id !== action.effectId,
+              ),
+            }
+          : layer,
+      );
+
+      return {
+        ...timeline,
+        cursor: without.some((layer) => layer.clipId === action.toClipId)
+          ? without.map((layer) =>
+              layer.clipId === action.toClipId
+                ? { ...layer, effects: [...layer.effects, moved].sort(byTime) }
+                : layer,
+            )
+          : [
+              ...without,
+              {
+                clipId: action.toClipId,
+                offsetMs: 0,
+                path: [],
+                effects: [moved],
+              },
+            ],
+      };
+    }
 
     case 'removeCursorEffect':
       return {

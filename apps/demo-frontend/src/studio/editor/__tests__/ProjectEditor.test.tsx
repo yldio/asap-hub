@@ -390,9 +390,11 @@ describe('retiming a cursor effect on the lane', () => {
   const marker = (label: string) =>
     screen.getByRole('button', { name: `ripple effect at ${label}` });
 
-  const changes = (calls: Call[]) =>
+  const moves = (calls: Call[]) =>
     calls.flatMap((call) =>
-      call.action?.type === 'updateCursorEffect' ? [call.action.change] : [],
+      call.action?.type === 'moveCursorEffect'
+        ? [{ toClipId: call.action.toClipId, tMs: call.action.tMs }]
+        : [],
     );
 
   it('stores the new moment against the clip the effect belongs to', () => {
@@ -401,29 +403,31 @@ describe('retiming a cursor effect on the lane', () => {
     fireEvent.keyDown(marker('0:01.00'), { key: 'ArrowRight' });
 
     expect(calls.map((call) => call.action).filter(Boolean)).toContainEqual({
-      type: 'updateCursorEffect',
-      clipId: 'clip-a',
+      type: 'moveCursorEffect',
+      fromClipId: 'clip-a',
+      toClipId: 'clip-a',
       effectId: 'effect-a',
-      change: { tMs: 1100 },
+      tMs: 1100,
     });
   });
 
-  // a moment outside the clip, or one with a fraction of a millisecond in it,
-  // is a document the server refuses in full, and every later save fails
-  it('will not push an effect past the end of its clip', () => {
+  // it stays on the clip it lands on, and its moment stays a whole millisecond
+  // inside that clip: a fraction, or a moment past the end, is a document the
+  // server refuses in full, and every later save then fails
+  it('holds an effect at the end of the last clip rather than past it', () => {
     const { calls } = renderEditor({ timeline: withEffect(8000) });
 
     fireEvent.keyDown(marker('0:08.00'), { key: 'ArrowRight', shiftKey: true });
 
-    expect(changes(calls)).toEqual([{ tMs: 8000 }]);
+    expect(moves(calls)).toEqual([{ toClipId: 'clip-a', tMs: 8000 }]);
   });
 
-  it('will not pull an effect back before its clip starts', () => {
+  it('will not pull an effect back before the timeline starts', () => {
     const { calls } = renderEditor({ timeline: withEffect(0) });
 
     fireEvent.keyDown(marker('0:00.00'), { key: 'ArrowLeft' });
 
-    expect(changes(calls)).toEqual([{ tMs: 0 }]);
+    expect(moves(calls)).toEqual([{ toClipId: 'clip-a', tMs: 0 }]);
   });
 
   // one entry per pointer move would leave the whole undo history holding a
@@ -443,7 +447,7 @@ describe('retiming a cursor effect on the lane', () => {
     expect(drag.at(0)?.name).toBe('beginGesture');
     expect(drag.at(-1)?.name).toBe('endGesture');
 
-    const moved = changes(drag).map((change) => change.tMs);
+    const moved = moves(drag).map((move) => move.tMs);
     expect(moved.length).toBeGreaterThan(0);
     expect(moved.every((tMs) => Number.isInteger(tMs))).toBe(true);
   });
@@ -653,5 +657,66 @@ describe('dropping a clip over its neighbour', () => {
         name: /crossfade from the clip before$/,
       }),
     ).toBeInTheDocument();
+  });
+});
+
+describe('dragging a click onto another clip', () => {
+  // it used to be clamped to the clip it started on, so a click on a short
+  // first clip could not be moved anywhere useful and read as stuck
+  const twoClips = (): Timeline => ({
+    ...createEmptyTimeline(),
+    clips: [
+      {
+        kind: 'source',
+        id: 'clip-a',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 2000,
+        volume: 1,
+      },
+      {
+        kind: 'source',
+        id: 'clip-b',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 8000,
+        volume: 1,
+      },
+    ],
+    cursor: [
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        path: [],
+        effects: [
+          {
+            id: 'effect-a',
+            tMs: 1900,
+            type: 'ripple',
+            point: { x: 0.5, y: 0.5 },
+            origin: 'manual',
+          },
+        ],
+      },
+    ],
+  });
+
+  it('re-homes it onto the clip it was dropped on', () => {
+    const { calls } = renderEditor({ timeline: twoClips() });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'ripple effect at 0:01.90' }),
+      { key: 'ArrowRight', shiftKey: true },
+    );
+
+    const move = calls
+      .map((call) => call.action)
+      .find((action) => action?.type === 'moveCursorEffect');
+
+    expect(move).toMatchObject({
+      fromClipId: 'clip-a',
+      toClipId: 'clip-b',
+      tMs: 900,
+    });
   });
 });

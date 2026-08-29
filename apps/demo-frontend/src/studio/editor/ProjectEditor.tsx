@@ -526,16 +526,15 @@ const ProjectEditor: FC<Props> = ({
     (clipId: string, blendMs: number) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
       if (!clip) return;
-      const kept = clip.transitionIn;
+      // dragging one clip over another asks for a fade between them. Carrying a
+      // slide over from the inspector left the overlap drawn with no fade in it,
+      // which reads as the drag having done nothing
       dispatch({
         type: 'setTransition',
         clipId,
         transition:
           blendMs > 0
-            ? {
-                type: kept && kept.type !== 'cut' ? kept.type : 'crossfade',
-                durationMs: Math.round(blendMs),
-              }
+            ? { type: 'crossfade', durationMs: Math.round(blendMs) }
             : undefined,
       });
     },
@@ -601,13 +600,18 @@ const ProjectEditor: FC<Props> = ({
         const layer = timeline.cursor.find((item) =>
           item.effects.some((effect) => effect.id === id),
         );
-        const onClip = placements.find(({ clip }) => clip.id === layer?.clipId);
-        if (!layer || !onClip) return;
+        if (!layer) return;
+        // the click goes to whichever clip it was dropped on, so dragging it
+        // past the end of its own clip carries it across rather than stopping
+        const atMs = Math.max(0, Math.round(span.startMs));
+        const onto = placementAt(placements, atMs) ?? placements.at(-1);
+        if (!onto) return;
         dispatch({
-          type: 'updateCursorEffect',
-          clipId: layer.clipId,
+          type: 'moveCursorEffect',
+          fromClipId: layer.clipId,
+          toClipId: onto.clip.id,
           effectId: id,
-          change: effectChange(span, onClip.startMs, onClip.durationMs),
+          tMs: effectChange(span, onto.startMs, onto.durationMs).tMs ?? 0,
         });
         return;
       }

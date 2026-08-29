@@ -17,11 +17,15 @@ const move = (overrides: Record<string, unknown> = {}) => ({
 });
 
 describe('parseCaptureEvents', () => {
+  // the screen geometry is what places a whole screen or a window recording, so
+  // it is kept; the pixel ratio divides out of every ratio and is not
   it('reads one event per line and keeps only the fields the derivation needs', () => {
     expect(parseCaptureEvents(`${line(move())}\n`)).toEqual([
       {
         id: 'e1',
         type: 'move',
+        screenX: 100,
+        screenY: 200,
         t: 1_000,
         x: 640,
         y: 360,
@@ -69,5 +73,62 @@ describe('parseCaptureEvents', () => {
 
   it('drops a line that is not an object', () => {
     expect(parseCaptureEvents('42\n"nope"\nnull')).toEqual([]);
+  });
+});
+
+// a whole screen or a window recording cannot be placed without them
+describe('the screen geometry', () => {
+  it('reads every field the mappings need', () => {
+    const [event] = parseCaptureEvents(
+      line(
+        move({
+          screenW: 1920,
+          screenH: 1080,
+          screenLeft: -1920,
+          screenTop: 0,
+          winX: 40,
+          winY: 25,
+          winW: 1280,
+          winH: 800,
+        }),
+      ),
+    );
+
+    expect(event).toEqual(
+      expect.objectContaining({
+        screenW: 1920,
+        screenH: 1080,
+        screenLeft: -1920,
+        screenTop: 0,
+        winX: 40,
+        winY: 25,
+        winW: 1280,
+        winH: 800,
+      }),
+    );
+  });
+
+  it('leaves out anything the snippet did not send, rather than inventing a zero', () => {
+    const [event] = parseCaptureEvents(
+      line({
+        id: 'e3',
+        type: 'move',
+        t: 1000,
+        x: 10,
+        y: 20,
+        viewportW: 800,
+        viewportH: 600,
+      }),
+    );
+
+    expect(event).not.toHaveProperty('screenW');
+    expect(event).not.toHaveProperty('winX');
+  });
+
+  it('drops a field that is not a number at all', () => {
+    const [event] = parseCaptureEvents(line(move({ screenW: 'wide' })));
+
+    expect(event).not.toHaveProperty('screenW');
+    expect(event?.screenX).toBe(100);
   });
 });

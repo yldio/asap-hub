@@ -146,6 +146,14 @@ export const cursorPathPointSchema = z.object({
   y: unitSchema,
 });
 
+// What the creator handed the browser to record. It decides what the video
+// frame actually shows, and so which of the capture's coordinates map onto it:
+// a tab shows the page viewport, a window shows the browser window, a monitor
+// shows the whole screen with the OS bar and the browser chrome in it.
+export const captureSurfaces = ['browser', 'window', 'monitor'] as const;
+
+export type CaptureSurface = (typeof captureSurfaces)[number];
+
 export const cursorLayerSchema = z.object({
   clipId: idSchema,
   offsetMs: z.number().int().min(-limits.offsetMs).max(limits.offsetMs),
@@ -154,6 +162,9 @@ export const cursorLayerSchema = z.object({
   // which drawn pointer walks the path; the whole capture shares one, and a
   // layer saved before the picker existed falls back to the default
   pointer: z.enum(pointerVariantIds).optional(),
+  // what the recording shows, which is what the capture was mapped through; a
+  // layer saved before the studio asked the browser falls back to the tab
+  surface: z.enum(captureSurfaces).optional(),
 });
 
 export const canvasSchema = z.object({

@@ -43,12 +43,7 @@ const place = (
       if (tMs < 0 || tMs > limits.maxTimelineMs) {
         return [];
       }
-      const point = toFramePoint(
-        event.x,
-        event.y,
-        { width: event.viewportW, height: event.viewportH },
-        options.frame,
-      );
+      const point = toFramePoint(event, options.frame, options.surface);
       return point ? [{ event, tMs, point }] : [];
     })
     .sort((a, b) => a.tMs - b.tMs);

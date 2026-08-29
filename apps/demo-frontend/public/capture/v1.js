@@ -71,7 +71,7 @@
   var eventId = 0;
   var total = 0;
   var stopped = false;
-  var lastMove = { t: 0, x: 0, y: 0 };
+  var lastMove = { t: 0, x: 0, y: 0, screenX: 0, screenY: 0 };
   var lastCoarse = 0;
 
   function randomId() {
@@ -131,6 +131,39 @@
     return window.innerHeight || document.documentElement.clientHeight || 0;
   }
 
+  function number(value) {
+    return typeof value === 'number' && isFinite(value) ? value : 0;
+  }
+
+  /*
+   * Where this page sits on the screen, in the same CSS pixels the pointer's
+   * screenX and screenY are reported in. The studio has no idea whether the
+   * creator shared a tab, this window or the whole screen, so everything the
+   * three mappings could need is recorded and it picks.
+   *
+   * screen.availLeft and availTop are the origin of the display this window is
+   * on, inside the virtual desktop that screenX counts from. Without them a
+   * pointer on a second monitor reads as off the right hand edge of the first,
+   * or as a negative number on a monitor placed to the left.
+   *
+   * Recorded on every event rather than once, so a window dragged, resized or
+   * moved to another display mid recording is still mapped correctly from the
+   * moment it moved.
+   */
+  function placement() {
+    var screen = window.screen || {};
+    return {
+      screenW: number(screen.width),
+      screenH: number(screen.height),
+      screenLeft: number(screen.availLeft),
+      screenTop: number(screen.availTop),
+      winX: number(window.screenX),
+      winY: number(window.screenY),
+      winW: number(window.outerWidth),
+      winH: number(window.outerHeight),
+    };
+  }
+
   function record(type, nativeEvent, extra) {
     if (total >= MAX_EVENTS) {
       stop();
@@ -138,25 +171,42 @@
     }
 
     eventId += 1;
+    var x =
+      nativeEvent && nativeEvent.clientX != null
+        ? nativeEvent.clientX
+        : lastMove.x;
+    var y =
+      nativeEvent && nativeEvent.clientY != null
+        ? nativeEvent.clientY
+        : lastMove.y;
+    var where = placement();
     var event = {
       id: 'e' + eventId,
       type: type,
       t: Date.now(),
-      x:
-        nativeEvent && nativeEvent.clientX != null
-          ? nativeEvent.clientX
-          : lastMove.x,
-      y:
-        nativeEvent && nativeEvent.clientY != null
-          ? nativeEvent.clientY
-          : lastMove.y,
+      x: x,
+      y: y,
       viewportW: viewportWidth(),
       viewportH: viewportHeight(),
       devicePixelRatio: window.devicePixelRatio || 1,
+      // a scroll or a resize carries no pointer of its own, so it reports the
+      // last position that did rather than inventing one
       screenX:
-        nativeEvent && nativeEvent.screenX != null ? nativeEvent.screenX : 0,
+        nativeEvent && nativeEvent.screenX != null
+          ? nativeEvent.screenX
+          : lastMove.screenX,
       screenY:
-        nativeEvent && nativeEvent.screenY != null ? nativeEvent.screenY : 0,
+        nativeEvent && nativeEvent.screenY != null
+          ? nativeEvent.screenY
+          : lastMove.screenY,
+      screenW: where.screenW,
+      screenH: where.screenH,
+      screenLeft: where.screenLeft,
+      screenTop: where.screenTop,
+      winX: where.winX,
+      winY: where.winY,
+      winW: where.winW,
+      winH: where.winH,
     };
 
     if (extra) {
@@ -269,7 +319,13 @@
     ) {
       return;
     }
-    lastMove = { t: now, x: nativeEvent.clientX, y: nativeEvent.clientY };
+    lastMove = {
+      t: now,
+      x: nativeEvent.clientX,
+      y: nativeEvent.clientY,
+      screenX: nativeEvent.screenX,
+      screenY: nativeEvent.screenY,
+    };
     record('move', nativeEvent);
   });
 
@@ -280,6 +336,8 @@
       t: Date.now(),
       x: nativeEvent.clientX,
       y: nativeEvent.clientY,
+      screenX: nativeEvent.screenX,
+      screenY: nativeEvent.screenY,
     };
     record('down', nativeEvent);
   });

@@ -1,4 +1,9 @@
-import { CaptureEvent, CaptureEventType, captureEventTypes } from './types';
+import {
+  CaptureEvent,
+  CaptureEventType,
+  captureEventTypes,
+  CaptureGeometry,
+} from './types';
 
 const isCaptureEventType = (value: unknown): value is CaptureEventType =>
   typeof value === 'string' &&
@@ -6,6 +11,27 @@ const isCaptureEventType = (value: unknown): value is CaptureEventType =>
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
+
+const geometryFields = [
+  'screenX',
+  'screenY',
+  'screenW',
+  'screenH',
+  'screenLeft',
+  'screenTop',
+  'winX',
+  'winY',
+  'winW',
+  'winH',
+] as const;
+
+// a stream written before the snippet reported the screen simply has none of
+// these, and the event maps through the viewport the way it always did
+const geometryOf = (record: Record<string, unknown>): CaptureGeometry =>
+  geometryFields.reduce<CaptureGeometry>((geometry, field) => {
+    const value = record[field];
+    return isFiniteNumber(value) ? { ...geometry, [field]: value } : geometry;
+  }, {});
 
 const toCaptureEvent = (line: string): CaptureEvent | undefined => {
   let raw: unknown;
@@ -41,6 +67,7 @@ const toCaptureEvent = (line: string): CaptureEvent | undefined => {
     y,
     viewportW,
     viewportH,
+    ...geometryOf(record),
     ...(typeof target === 'string' ? { target } : {}),
   };
 };

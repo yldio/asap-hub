@@ -337,3 +337,44 @@ describe('a capture with no start time given', () => {
     ).not.toHaveLength(0);
   });
 });
+
+// the whole screen holds the OS bar and the browser chrome as well as the page,
+// so stretching the page across the frame put every click hundreds of pixels off
+describe('the surface the take was recorded from', () => {
+  const clicked = {
+    id: 'e1',
+    type: 'click' as const,
+    t: 1000,
+    x: 1129.4,
+    y: 593.1,
+    viewportW: 1134,
+    viewportH: 943,
+    screenX: 1129.4,
+    screenY: 680.1,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1134,
+    winH: 1030,
+  };
+  const into = { width: 1920, height: 1080 };
+
+  const pointOf = (surface?: 'browser' | 'window' | 'monitor') =>
+    deriveCursorEffects([clicked], { frame: into, surface }).effects[0]?.point;
+
+  it('places a whole screen take on the screen it was recorded from', () => {
+    expect(pointOf('monitor')?.x).toBeCloseTo(1129.4 / 1920, 3);
+    expect(pointOf('monitor')?.y).toBeCloseTo(680.1 / 1080, 3);
+  });
+
+  it('places a window take from the window corner', () => {
+    expect(pointOf('window')?.y).toBeCloseTo(680.1 / 1030, 2);
+  });
+
+  it('reads a capture with no surface as a tab, the way it always was', () => {
+    expect(pointOf()).toEqual(pointOf('browser'));
+  });
+});

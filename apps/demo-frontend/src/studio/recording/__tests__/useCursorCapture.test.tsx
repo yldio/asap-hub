@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 import { TestApiProvider } from '../../../api/ApiProvider';
@@ -10,7 +10,8 @@ import { useCursorCapture } from '../useCursorCapture';
 const session = {
   sessionId: 'session-1',
   token: 'token-1',
-  snippetUrl: 'http://localhost/snippet',
+  snippetUrl: 'http://localhost/capture/v1.js#project.project-1.first',
+  bookmarkReady: false,
   captureUrl: 'http://localhost/capture',
   expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
 };
@@ -57,4 +58,54 @@ it('lets go of a session the server no longer has', async () => {
 
   await waitFor(() => expect(view.result.current.session).toBeUndefined());
   expect(window.localStorage.getItem('demo-hub.capture.project-1')).toBeNull();
+});
+
+// the bookmark is handed out the once it is minted, so a creator who lost
+// theirs asks for another and has to be shown it in the panel they are looking at
+it('keeps a replacement bookmark on the session it is showing', async () => {
+  const startCapture = jest.fn().mockResolvedValue({
+    ...session,
+    snippetUrl: undefined,
+    bookmarkReady: true,
+  });
+  const captureStatus = jest.fn().mockResolvedValue(open);
+  const newCaptureBookmark = jest.fn().mockResolvedValue({
+    snippetUrl: 'http://localhost/capture/v1.js#project.project-1.second',
+    captureUrl: 'http://localhost/capture',
+  });
+
+  const view = render({ startCapture, captureStatus, newCaptureBookmark });
+  await act(async () => view.result.current.start());
+  await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+  await act(async () => view.result.current.newBookmark());
+
+  await waitFor(() =>
+    expect(view.result.current.session?.snippetUrl).toBe(
+      'http://localhost/capture/v1.js#project.project-1.second',
+    ),
+  );
+  // and it survives the reload the panel used to lose it on
+  expect(window.localStorage.getItem('demo-hub.capture.project-1')).toContain(
+    'project-1.second',
+  );
+});
+
+it('reports a bookmark it could not replace', async () => {
+  const startCapture = jest.fn().mockResolvedValue(session);
+  const captureStatus = jest.fn().mockResolvedValue(open);
+  const newCaptureBookmark = jest.fn().mockRejectedValue(new Error('nope'));
+
+  const view = render({ startCapture, captureStatus, newCaptureBookmark });
+  await act(async () => view.result.current.start());
+  await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+  await act(async () => view.result.current.newBookmark());
+
+  await waitFor(() =>
+    expect(view.result.current.error).toBe(
+      'Could not make a new capture bookmark.',
+    ),
+  );
+  expect(view.result.current.session?.snippetUrl).toBe(session.snippetUrl);
 });

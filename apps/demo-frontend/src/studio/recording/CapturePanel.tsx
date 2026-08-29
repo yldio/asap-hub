@@ -57,20 +57,20 @@ const methods: { id: Method; label: string }[] = [
 // Capturing clicks means running code in the page being demoed, but nothing
 // says that code has to live in its HTML: a bookmark or one line pasted into
 // the console loads the same file for one visit and leaves no trace.
-const loader = (session: RecordingSession): Record<Method, string> => ({
+const loader = (snippetUrl: string): Record<Method, string> => ({
   bookmarklet:
     // eslint-disable-next-line no-script-url -- a bookmarklet address is literally a javascript: URL
     `javascript:(function(){var s=document.createElement('script');` +
-    `s.src='${session.snippetUrl}';document.body.appendChild(s);})();`,
+    `s.src='${snippetUrl}';document.body.appendChild(s);})();`,
   console:
     `var s=document.createElement('script');` +
-    `s.src='${session.snippetUrl}';document.body.appendChild(s);`,
-  script: `<script src="${session.snippetUrl}"></script>`,
+    `s.src='${snippetUrl}';document.body.appendChild(s);`,
+  script: `<script src="${snippetUrl}"></script>`,
 });
 
 const instructions: Record<Method, string> = {
   bookmarklet:
-    'Make a new bookmark and paste this as its address. On the site you are demoing, click the bookmark once and start recording. Nothing is added to the site itself.',
+    'Make a new bookmark and paste this as its address. You only ever do this once: it belongs to this project, not to this recording, so every later take uses the same bookmark. On the site you are demoing, click it once. Nothing is added to the site itself.',
   console:
     'Open the developer console on the site you are demoing and paste this in. It lasts until the page is reloaded, and changes nothing on the site.',
   script:
@@ -82,6 +82,7 @@ type Props = {
   readonly status?: RecordingSessionStatus;
   readonly readOnly: boolean;
   readonly onStart: () => void;
+  readonly onNewBookmark: () => void;
   readonly onApply: () => void;
   readonly applying: boolean;
   readonly error?: string;
@@ -94,6 +95,7 @@ const CapturePanel: FC<Props> = ({
   status,
   readOnly,
   onStart,
+  onNewBookmark,
   onApply,
   applying,
   error,
@@ -106,7 +108,8 @@ const CapturePanel: FC<Props> = ({
       <div css={panelStyles}>
         <p css={hintStyles}>
           Track the mouse on the site you are demoing, so clicks become
-          highlights and zooms you can edit afterwards.
+          highlights and zooms you can edit afterwards. The bookmark that does
+          it is set up once and reused by every recording of this project.
         </p>
         <EditorButton
           icon={<PlusIcon size={15} />}
@@ -119,44 +122,71 @@ const CapturePanel: FC<Props> = ({
     );
   }
 
-  const text = loader(session)[method];
+  const text = session.snippetUrl ? loader(session.snippetUrl)[method] : '';
 
   return (
     <div css={panelStyles}>
-      <div css={tabsStyles} role="group" aria-label="How to load the capture">
-        {methods.map(({ id, label }) => (
+      {session.snippetUrl ? (
+        <>
+          <p css={hintStyles}>
+            Save this once. It belongs to the project, so the same bookmark
+            keeps working for every recording you make from now on.
+          </p>
+          <div
+            css={tabsStyles}
+            role="group"
+            aria-label="How to load the capture"
+          >
+            {methods.map(({ id, label }) => (
+              <EditorButton
+                key={id}
+                primary={id === method}
+                onClick={() => {
+                  setMethod(id);
+                  setCopied(false);
+                }}
+              >
+                {label}
+              </EditorButton>
+            ))}
+          </div>
+
+          <p css={hintStyles}>{instructions[method]}</p>
+          <textarea
+            css={snippetStyles}
+            readOnly
+            rows={3}
+            value={text}
+            aria-label="Capture snippet"
+            onFocus={(event) => event.target.select()}
+          />
           <EditorButton
-            key={id}
-            primary={id === method}
             onClick={() => {
-              setMethod(id);
-              setCopied(false);
+              void navigator.clipboard
+                ?.writeText(text)
+                .then(() => setCopied(true))
+                .catch(() => setCopied(false));
             }}
           >
-            {label}
+            {copied ? 'Copied' : 'Copy'}
           </EditorButton>
-        ))}
-      </div>
-
-      <p css={hintStyles}>{instructions[method]}</p>
-      <textarea
-        css={snippetStyles}
-        readOnly
-        rows={3}
-        value={text}
-        aria-label="Capture snippet"
-        onFocus={(event) => event.target.select()}
-      />
-      <EditorButton
-        onClick={() => {
-          void navigator.clipboard
-            ?.writeText(text)
-            .then(() => setCopied(true))
-            .catch(() => setCopied(false));
-        }}
-      >
-        {copied ? 'Copied' : 'Copy'}
-      </EditorButton>
+        </>
+      ) : (
+        <>
+          <p css={hintStyles}>
+            This project already has a capture bookmark, and it works for this
+            recording too. Click it on the tab you are demoing; there is nothing
+            new to copy.
+          </p>
+          <EditorButton disabled={readOnly} onClick={onNewBookmark}>
+            Show a new bookmark
+          </EditorButton>
+          <p css={hintStyles}>
+            Only if you lost it: a new bookmark replaces the one you saved
+            before, which stops sending.
+          </p>
+        </>
+      )}
 
       {status && status.eventCount > 0 ? (
         <span css={liveStyles}>
@@ -165,7 +195,10 @@ const CapturePanel: FC<Props> = ({
           } connected, ${status.eventCount} events`}
         </span>
       ) : (
-        <span css={waitingStyles}>Waiting for the first events…</span>
+        <span css={waitingStyles}>
+          Waiting for the first events… Click your capture bookmark on the tab
+          you are demoing.
+        </span>
       )}
 
       <EditorButton

@@ -69,6 +69,26 @@ export const useCursorCapture = (projectId: string) => {
       .catch(() => setError('Could not start the cursor capture.'));
   }, [api, projectId]);
 
+  // the bookmark is handed out the once it is minted, so a creator who lost
+  // theirs asks for another; it is kept on the session the panel is showing,
+  // which is what survives a reload
+  const newBookmark = useCallback(() => {
+    setError(undefined);
+    api
+      .newCaptureBookmark(projectId)
+      .then(({ snippetUrl }) => {
+        setSession((current) => {
+          if (!current) {
+            return current;
+          }
+          const next = { ...current, snippetUrl, bookmarkReady: true };
+          rememberSession(projectId, next);
+          return next;
+        });
+      })
+      .catch(() => setError('Could not make a new capture bookmark.'));
+  }, [api, projectId]);
+
   useEffect(() => {
     if (!session) {
       return undefined;
@@ -140,5 +160,5 @@ export const useCursorCapture = (projectId: string) => {
     [api, projectId, session],
   );
 
-  return { session, status, applying, error, start, apply };
+  return { session, status, applying, error, start, newBookmark, apply };
 };

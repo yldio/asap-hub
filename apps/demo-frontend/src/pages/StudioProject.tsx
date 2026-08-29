@@ -595,6 +595,7 @@ const Editor: FC<EditorProps> = ({
               applying={capture.applying}
               error={capture.error}
               onStart={capture.start}
+              onNewBookmark={capture.newBookmark}
               onApply={() => applyCursorCapture(capture.apply)}
             />
           </>

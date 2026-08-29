@@ -181,9 +181,17 @@ export type CreatedAsset = {
 export type RecordingSession = {
   sessionId: string;
   token: string;
-  snippetUrl: string;
+  // the reusable bookmark, handed back only when it was just minted or replaced;
+  // a project that already has one has nothing new to show
+  snippetUrl?: string;
+  bookmarkReady?: boolean;
   captureUrl: string;
   expiresAt: string;
+};
+
+export type CaptureBookmark = {
+  snippetUrl: string;
+  captureUrl: string;
 };
 
 export type RecordingSessionStatus = {

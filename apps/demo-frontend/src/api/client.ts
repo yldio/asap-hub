@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../config';
 import type {
   BulkDeleteResult,
   BulkMoveResult,
+  CaptureBookmark,
   FolderDeleteResult,
   CreatedAsset,
   CreatedUpload,
@@ -350,6 +351,14 @@ export const createApi = (getToken: GetToken) => ({
   startCapture: async (id: string): Promise<RecordingSession> =>
     request<RecordingSession>(
       `/projects/${encodeURIComponent(id)}/recordings`,
+      await getToken(),
+      { method: 'POST' },
+    ),
+
+  // replaces the project's bookmark: the one saved before stops being accepted
+  newCaptureBookmark: async (id: string): Promise<CaptureBookmark> =>
+    request<CaptureBookmark>(
+      `/projects/${encodeURIComponent(id)}/capture-bookmark`,
       await getToken(),
       { method: 'POST' },
     ),

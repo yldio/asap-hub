@@ -155,6 +155,23 @@ describe('deriveCursorEffects', () => {
     ]);
   });
 
+  // a stream already polluted by a stacked snippet, applied before the parser
+  // learned to dedupe, must still come out clean
+  it('derives one ripple from a click a stacked snippet tripled', () => {
+    const { path, effects } = deriveCursorEffects(
+      [
+        at(1000, { id: 'e86', type: 'click', x: 320, y: 180 }),
+        at(1000, { id: 'e135', type: 'click', x: 320, y: 180 }),
+        at(1000, { id: 'e208', type: 'click', x: 320, y: 180 }),
+        at(2000, { id: 'e90', type: 'click', x: 960, y: 540 }),
+      ],
+      options(),
+    );
+
+    expect(effects.map(({ id }) => id)).toEqual(['ripple-e86', 'ripple-e90']);
+    expect(path.map(({ tMs }) => tMs)).toEqual([1000, 2000]);
+  });
+
   it('keeps repeat clicks that fall outside a shortened dedupe window', () => {
     const { effects } = deriveCursorEffects(
       [

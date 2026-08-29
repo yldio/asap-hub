@@ -60,6 +60,28 @@
     return;
   }
 
+  /*
+   * One reporter per page. The bookmark appends a fresh copy of this script on
+   * every click, and nothing used to stop the second copy from running: each
+   * one reported the same pointer under its own event ids, so every click
+   * arrived twice or three times over. A live reporter for the same project or
+   * session now stays and the new copy bows out; a reporter for something else
+   * is stopped and replaced, so a new bookmark takes over from an old one.
+   */
+  var REGISTRY = '__asapDemoCaptureV1';
+  var registryKey = projectId ? 'project.' + projectId : 'session.' + sessionId;
+  var previous = window[REGISTRY];
+  if (previous) {
+    try {
+      if (previous.key === registryKey && !previous.stopped()) {
+        return;
+      }
+      previous.stop();
+    } catch (error) {
+      // a broken older copy must not stop this one from starting
+    }
+  }
+
   var captureUrl = originOf(script.src) + '/api/capture';
 
   // one id per tab: several tabs share a session when the whole screen is being
@@ -307,6 +329,17 @@
     }
   }
 
+  // a replacement bookmark stops this copy through here, so what it already
+  // captured is sent rather than left in the queue
+  function handOver() {
+    try {
+      flush(false);
+    } catch (error) {
+      // nothing captured is worth breaking the host page over
+    }
+    stop();
+  }
+
   var onMove = guard(function (nativeEvent) {
     var now = Date.now();
     var dx = nativeEvent.clientX - lastMove.x;
@@ -409,6 +442,14 @@
       // never let the interval surface an error in the host page
     }
   }, FLUSH_INTERVAL_MS);
+
+  window[REGISTRY] = {
+    key: registryKey,
+    stop: handOver,
+    stopped: function () {
+      return stopped;
+    },
+  };
 
   window.addEventListener('pointermove', onMove, true);
   window.addEventListener('pointerdown', onDown, true);

@@ -72,14 +72,32 @@ const toCaptureEvent = (line: string): CaptureEvent | undefined => {
   };
 };
 
+// The snippet injected into one page more than once runs a full reporter per
+// copy, and every copy reports the same pointer under its own event ids. The
+// copies read the same clock and the same pointer, so an event repeating
+// another's instant, type and position is the same event and only one is kept.
+export const dedupeCaptureEvents = (events: CaptureEvent[]): CaptureEvent[] => {
+  const seen = new Set<string>();
+  return events.filter((event) => {
+    const key = `${event.t}|${event.type}|${event.x}|${event.y}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
 // the stream is written by a snippet running in someone else's page, so a
 // truncated or unknown line is skipped rather than failing the whole recording
 export const parseCaptureEvents = (ndjson: string): CaptureEvent[] =>
-  ndjson
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .flatMap((line) => {
-      const event = toCaptureEvent(line);
-      return event ? [event] : [];
-    });
+  dedupeCaptureEvents(
+    ndjson
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+      .flatMap((line) => {
+        const event = toCaptureEvent(line);
+        return event ? [event] : [];
+      }),
+  );

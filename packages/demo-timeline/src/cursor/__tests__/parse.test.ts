@@ -46,16 +46,18 @@ describe('parseCaptureEvents', () => {
   it('ignores blank lines and surrounding whitespace', () => {
     expect(
       parseCaptureEvents(
-        `\n  ${line(move())}  \n\n${line(move({ id: 'e2' }))}`,
+        `\n  ${line(move())}  \n\n${line(move({ id: 'e2', t: 1_050 }))}`,
       ),
     ).toHaveLength(2);
   });
 
   it('skips a truncated line rather than failing the whole recording', () => {
     const events = parseCaptureEvents(
-      [line(move()), '{"id":"e2","type":"mo', line(move({ id: 'e3' }))].join(
-        '\n',
-      ),
+      [
+        line(move()),
+        '{"id":"e2","type":"mo',
+        line(move({ id: 'e3', t: 1_050 })),
+      ].join('\n'),
     );
 
     expect(events.map(({ id }) => id)).toEqual(['e1', 'e3']);
@@ -73,6 +75,32 @@ describe('parseCaptureEvents', () => {
 
   it('drops a line that is not an object', () => {
     expect(parseCaptureEvents('42\n"nope"\nnull')).toEqual([]);
+  });
+
+  // seen in a real capture: the snippet injected three times into one page ran
+  // three reporters, and every event arrived three times under three ids
+  it('keeps one of the copies a stacked snippet reported', () => {
+    const events = parseCaptureEvents(
+      [
+        line(move({ id: 'e86', type: 'click', t: 5_000 })),
+        line(move({ id: 'e135', type: 'click', t: 5_000 })),
+        line(move({ id: 'e208', type: 'click', t: 5_000 })),
+        line(move({ id: 'e87', type: 'move', t: 5_050, x: 700 })),
+      ].join('\n'),
+    );
+
+    expect(events.map(({ id }) => id)).toEqual(['e86', 'e87']);
+  });
+
+  it('keeps two genuine events that only differ in position', () => {
+    const events = parseCaptureEvents(
+      [
+        line(move({ id: 'e1', t: 5_000, x: 640 })),
+        line(move({ id: 'e2', t: 5_000, x: 644 })),
+      ].join('\n'),
+    );
+
+    expect(events).toHaveLength(2);
   });
 });
 

@@ -1,5 +1,6 @@
 import { CursorEffect, CursorPathPoint, limits, Point } from '../schema';
 import { toFramePoint } from './geometry';
+import { dedupeCaptureEvents } from './parse';
 import { resamplePath } from './path';
 import {
   CaptureEvent,
@@ -129,7 +130,9 @@ export const deriveCursorEffects = (
   events: CaptureEvent[],
   options: DeriveOptions,
 ): DerivedCursor => {
-  const placed = place(events, options);
+  // a stream polluted by a stacked snippet carries every event several times,
+  // and a tripled click must still come out as one ripple
+  const placed = place(dedupeCaptureEvents(events), options);
   const dedupeWindowMs = options.dedupeWindowMs ?? defaultDedupeWindowMs;
 
   const path: CursorPathPoint[] = resamplePath(

@@ -56,9 +56,10 @@ export type AutoZoomOptions = {
 };
 
 export type DeriveOptions = {
-  // when the take this capture belongs to started, in wall clock. Left out, the
-  // capture's own first event is the origin, which is what a creator means by
-  // "add the effects I just recorded"
+  // when the take this capture belongs to started, in wall clock, which is what
+  // the footage shows at t=0. Left out, the capture's own first event is the
+  // origin, which is late by however long the creator took to click the
+  // bookmark, and only stands when nothing better is known
   startedAtEpochMs?: number;
   // shifts every derived time, for a take whose capture and whose clip did not
   // start together; anything pushed before the clip start is dropped

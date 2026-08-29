@@ -24,17 +24,27 @@ const pathEventTypes: readonly CaptureEventType[] = ['move', 'down', 'click'];
 const effectId = (type: CursorEffect['type'], eventId: string): string =>
   `${type}-${eventId}`.slice(0, 64);
 
+// The video's t=0 is the instant the take started, so that is the origin the
+// capture has to be read against. The creator switches to the tab they are
+// demoing and clicks the bookmark seconds later, so the capture's own first
+// event is only the origin when the take's start is not known at all: an
+// imported video, or a clip recorded before the studio kept it.
+export const captureOriginMs = (
+  events: CaptureEvent[],
+  startedAtEpochMs?: number,
+): number =>
+  startedAtEpochMs ??
+  events.reduce(
+    (earliest, event) => Math.min(earliest, event.t),
+    Number.POSITIVE_INFINITY,
+  );
+
 const place = (
   events: CaptureEvent[],
   options: DeriveOptions,
 ): PlacedEvent[] => {
   const offsetMs = options.offsetMs ?? 0;
-  const origin =
-    options.startedAtEpochMs ??
-    events.reduce(
-      (earliest, event) => Math.min(earliest, event.t),
-      Number.POSITIVE_INFINITY,
-    );
+  const origin = captureOriginMs(events, options.startedAtEpochMs);
   return events
     .flatMap((event) => {
       // wall clock to clip-local: anything before the take started, or past the

@@ -1,5 +1,5 @@
 import { limits } from '../../schema';
-import { deriveCursorEffects } from '../derive';
+import { captureOriginMs, deriveCursorEffects } from '../derive';
 import { parseCaptureEvents } from '../parse';
 import { CaptureEvent, DeriveOptions } from '../types';
 
@@ -376,5 +376,40 @@ describe('the surface the take was recorded from', () => {
 
   it('reads a capture with no surface as a tab, the way it always was', () => {
     expect(pointOf()).toEqual(pointOf('browser'));
+  });
+});
+
+// Measured on a real capture: the creator started the take, switched to the tab
+// they were demoing and clicked the bookmark 4286ms later, so every click was
+// drawn 4286ms early against the footage.
+describe('the time origin', () => {
+  const bookmarkDelayMs = 4286;
+  const clickAtMs = 28_600;
+
+  const events = [
+    at(bookmarkDelayMs, { id: 'first' }),
+    at(clickAtMs, { id: 'click', type: 'click' }),
+  ];
+
+  it('reads the capture against the moment the take started', () => {
+    const { path, effects } = deriveCursorEffects(events, options());
+
+    expect(effects[0]?.tMs).toBe(clickAtMs);
+    expect(path[0]?.tMs).toBe(bookmarkDelayMs);
+  });
+
+  it('falls back to the first event when the take start is unknown', () => {
+    const { path, effects } = deriveCursorEffects(events, {
+      frame,
+    });
+
+    expect(effects[0]?.tMs).toBe(clickAtMs - bookmarkDelayMs);
+    expect(effects[0]?.tMs).toBe(24_314);
+    expect(path[0]?.tMs).toBe(0);
+  });
+
+  it('takes the earliest event as the fallback origin', () => {
+    expect(captureOriginMs(events)).toBe(startedAtEpochMs + bookmarkDelayMs);
+    expect(captureOriginMs(events, startedAtEpochMs)).toBe(startedAtEpochMs);
   });
 });

@@ -165,6 +165,12 @@ export const cursorLayerSchema = z.object({
   // what the recording shows, which is what the capture was mapped through; a
   // layer saved before the studio asked the browser falls back to the tab
   surface: z.enum(captureSurfaces).optional(),
+  // Wall clock when the take in this clip started, which is the instant the
+  // footage shows at t=0. A capture is clicked on a few seconds into the take,
+  // so reading its origin from its own first event drew every click late by
+  // exactly that delay. Absent on an imported clip and on anything recorded
+  // before this was kept, and then the first event is the origin again.
+  recordedAtEpochMs: z.number().int().positive().optional(),
 });
 
 export const canvasSchema = z.object({

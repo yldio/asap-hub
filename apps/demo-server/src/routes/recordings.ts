@@ -18,7 +18,7 @@ import { mergeByTimestamp, partsByClient } from './capture-merge';
 import { asyncRouter } from './async-router';
 import { currentUser, pathParam, requireVideoIdParam } from './request';
 import { validate } from './validate';
-import { loadProject } from './video-shared';
+import { loadProject, videoKey } from './video-shared';
 
 export const recordingSessionKey = (sessionId: string) => ({
   PK: `RECORDING#${sessionId}`,
@@ -72,6 +72,10 @@ export const captureTokenMatches = (
   return provided.length === stored.length && timingSafeEqual(provided, stored);
 };
 
+// base64url so the token survives the snippet's URL fragment
+export const newCaptureToken = (): string =>
+  randomBytes(32).toString('base64url');
+
 export type RecordingSessionItem = {
   sessionId: string;
   videoId: string;
@@ -93,6 +97,40 @@ export type RecordingSessionItem = {
 const appOrigin = (): string => {
   const hostname = getDemoHostname();
   return hostname ? `https://${hostname}` : 'http://localhost:3500';
+};
+
+// the reusable bookmark names the project, not a take, so one bookmark saved
+// once keeps sending to whichever session the studio has open
+export const projectSnippetUrl = (videoId: string, token: string): string =>
+  `${appOrigin()}/capture/v1.js#project.${videoId}.${token}`;
+
+// one write points the project at the session it just opened and, only if the
+// project has no bookmark yet, mints its token. The row comes back, so an equal
+// hash is what says this call is the one that minted it and may hand it out.
+const claimCaptureSession = async (
+  videoId: string,
+  sessionId: string,
+  tokenHash: string,
+): Promise<boolean> => {
+  const { Attributes } = await getDocumentClient().send(
+    new UpdateCommand({
+      TableName: getTableName(),
+      Key: videoKey(videoId),
+      UpdateExpression: [
+        'SET captureSessionId = :sessionId,',
+        'captureTokenHash = if_not_exists(captureTokenHash, :tokenHash)',
+      ].join(' '),
+      ExpressionAttributeValues: {
+        ':sessionId': sessionId,
+        ':tokenHash': tokenHash,
+      },
+      ReturnValues: 'ALL_NEW',
+    }),
+  );
+  return (
+    (Attributes as { captureTokenHash?: string } | undefined)
+      ?.captureTokenHash === tokenHash
+  );
 };
 
 const loadSession = async (
@@ -184,8 +222,9 @@ export const recordingsRouter = (): Router => {
 
     const id = pathParam(req, 'id');
     const newSessionId = randomBytes(16).toString('hex');
-    // base64url so the token survives the snippet's `#session.token` fragment
-    const token = randomBytes(32).toString('base64url');
+    // still minted, so a bookmark saved before the reusable one keeps a session
+    // token of its own to present
+    const token = newCaptureToken();
     const now = Date.now();
     const timestamp = new Date(now).toISOString();
 
@@ -208,14 +247,54 @@ export const recordingsRouter = (): Router => {
       })
       .go();
 
+    const captureToken = newCaptureToken();
+    const minted = await claimCaptureSession(
+      id,
+      newSessionId,
+      hashCaptureToken(captureToken),
+    );
+
     res.status(201).json({
       sessionId: newSessionId,
       token,
-      // the credentials ride in the fragment, which no proxy, referrer or
-      // access log along the way ever sees
-      snippetUrl: `${appOrigin()}/capture/v1.js#${newSessionId}.${token}`,
+      // the bookmark is handed out the once it is minted and never again; a
+      // creator who lost it asks for a new one, which revokes the old
+      ...(minted
+        ? // the credentials ride in the fragment, which no proxy, referrer or
+          // access log along the way ever sees
+          { snippetUrl: projectSnippetUrl(id, captureToken) }
+        : {}),
+      bookmarkReady: !minted,
       captureUrl: `${appOrigin()}/api/capture`,
       expiresAt: new Date(now + sessionTtlMs).toISOString(),
+    });
+  });
+
+  // the bookmark is a bearer secret on someone else's origin, so it has to be
+  // replaceable: this overwrites the hash, and every bookmark carrying the old
+  // token stops being accepted from here on
+  router.post('/:id/capture-bookmark', videoId, async (req, res) => {
+    const project = await loadProject(req, res);
+    if (!project) {
+      return;
+    }
+
+    const id = pathParam(req, 'id');
+    const token = newCaptureToken();
+    await getDocumentClient().send(
+      new UpdateCommand({
+        TableName: getTableName(),
+        Key: videoKey(id),
+        UpdateExpression: 'SET captureTokenHash = :tokenHash',
+        ExpressionAttributeValues: {
+          ':tokenHash': hashCaptureToken(token),
+        },
+      }),
+    );
+
+    res.status(201).json({
+      snippetUrl: projectSnippetUrl(id, token),
+      captureUrl: `${appOrigin()}/api/capture`,
     });
   });
 

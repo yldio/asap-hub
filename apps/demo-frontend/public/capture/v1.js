@@ -2,14 +2,21 @@
  * ASAP Demos cursor capture, v1.
  *
  * Dropped into the page being demoed as
+ *   <script src="https://<host>/capture/v1.js#project.PROJECT.TOKEN" async></script>
+ * and, for a bookmark saved before that shape existed,
  *   <script src="https://<host>/capture/v1.js#SESSION.TOKEN" async></script>
  *
  * It records where the pointer went and what it touched, and posts the stream
  * to /api/capture. The recording is raw and immutable: the studio derives
  * ripples, spotlights and zooms from it afterwards, and the creator edits those.
  *
+ * The project form is the one to save: the bookmark is set up once and the
+ * server routes its events to whichever session the studio has open, so a new
+ * recording never means a new bookmark. The session form still works, and still
+ * only ever reaches the one session it was minted for.
+ *
  * Two deliberate choices:
- *  - the session and token ride in the URL fragment, which the browser never
+ *  - the ids and the token ride in the URL fragment, which the browser never
  *    sends to a server, so the credentials stay out of proxy and CDN logs;
  *  - batches are posted as text/plain with mode 'no-cors', which keeps the
  *    request "simple" so the host page never pays for a CORS preflight. The
@@ -36,11 +43,20 @@
     return;
   }
 
+  // ids carry no dot and the token is base64url, so the fragment splits cleanly
   var credentials = String(script.src || '').split('#')[1] || '';
-  var separator = credentials.indexOf('.');
-  var sessionId = separator > 0 ? credentials.slice(0, separator) : '';
-  var token = separator > 0 ? credentials.slice(separator + 1) : '';
-  if (!sessionId || !token) {
+  var parts = credentials.split('.');
+  var projectId = '';
+  var sessionId = '';
+  var token = '';
+  if (parts.length === 3 && parts[0] === 'project') {
+    projectId = parts[1];
+    token = parts[2];
+  } else if (parts.length === 2) {
+    sessionId = parts[0];
+    token = parts[1];
+  }
+  if ((!projectId && !sessionId) || !token) {
     return;
   }
 
@@ -186,12 +202,16 @@
     }
     seq += 1;
     var batch = {
-      sessionId: sessionId,
       token: token,
       clientId: clientId,
       seq: seq,
       events: queue,
     };
+    if (projectId) {
+      batch.projectId = projectId;
+    } else {
+      batch.sessionId = sessionId;
+    }
     queue = [];
     send(JSON.stringify(batch), useBeacon);
   }

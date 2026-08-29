@@ -75,6 +75,13 @@ export const videoEntity = new Entity(
       // renders write to media/{id}/{mediaPath}/ so a re-render cannot be hidden
       // behind the day-long CloudFront TTL on the previous output
       mediaPath: { type: 'string' },
+      // the capture bookmark is set up once per project and reused by every
+      // take, so its token lives here rather than on a session. Only the
+      // SHA-256 is stored, and rotating it is what revokes the old bookmarks.
+      captureTokenHash: { type: 'string' },
+      // whichever session is open, so a batch that names the project alone can
+      // be routed to it
+      captureSessionId: { type: 'string' },
       render: {
         type: 'map',
         properties: {

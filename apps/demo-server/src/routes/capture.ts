@@ -5,7 +5,7 @@ import { getTableName } from '../config';
 import { captureBatchSchema } from '../schemas';
 import { captureLifecycleTag, putObject } from '../storage';
 import { getDocumentClient } from '../data/client';
-import { recordingSessionEntity } from '../data/entities';
+import { recordingSessionEntity, videoEntity } from '../data/entities';
 import { asyncRouter } from './async-router';
 import {
   capturePartId,
@@ -23,7 +23,10 @@ import {
 export const maxCaptureBodyBytes = 1024 * 1024;
 
 type CaptureBatch = {
-  sessionId: string;
+  // the reusable bookmark names the project; a bookmark saved before it names
+  // the one session it was minted for
+  projectId?: string;
+  sessionId?: string;
   token: string;
   clientId: string;
   seq: number;
@@ -47,6 +50,50 @@ const parseBatch = (body: unknown): CaptureBatch | undefined => {
   return result.success ? result.data : undefined;
 };
 
+const loadSession = async (
+  sessionId: string,
+): Promise<RecordingSessionItem | undefined> => {
+  const { data } = await recordingSessionEntity.get({ sessionId }).go();
+  return (data as RecordingSessionItem | null) ?? undefined;
+};
+
+// what a bookmark saved before the reusable one sends: it carries the token of
+// the one session it was minted for, and only ever appends to that session
+const sessionByToken = async (
+  sessionId: string,
+  token: string,
+): Promise<RecordingSessionItem | undefined> => {
+  const session = await loadSession(sessionId);
+  return session && captureTokenMatches(token, session.tokenHash)
+    ? session
+    : undefined;
+};
+
+// the reusable bookmark: the project's own token authenticates it, and the row
+// says which session is open, so one bookmark saved once follows the creator
+// from take to take. No session open means the batch is dropped: the snippet
+// posts no-cors and cannot read an answer of any kind, so the studio panel,
+// which is still showing no events, is where that shows up.
+const sessionByProject = async (
+  projectId: string,
+  token: string,
+): Promise<RecordingSessionItem | undefined> => {
+  const { data } = await videoEntity.get({ id: projectId }).go();
+  const project = data as {
+    captureTokenHash?: string;
+    captureSessionId?: string;
+  } | null;
+  if (
+    !project?.captureTokenHash ||
+    !project.captureSessionId ||
+    !captureTokenMatches(token, project.captureTokenHash)
+  ) {
+    return undefined;
+  }
+  const session = await loadSession(project.captureSessionId);
+  return session?.videoId === projectId ? session : undefined;
+};
+
 const accepts = (
   session: RecordingSessionItem | undefined,
   batch: CaptureBatch,
@@ -54,7 +101,6 @@ const accepts = (
   session !== undefined &&
   session.state === 'open' &&
   session.expiresAt > Date.now() &&
-  captureTokenMatches(batch.token, session.tokenHash) &&
   // each tab numbers its own batches, so the guard is per client: a replay is
   // rejected while a second tab recording the same screen is not
   !session.parts.includes(capturePartId(batch.clientId, batch.seq)) &&
@@ -123,14 +169,13 @@ export const captureRouter = (): Router => {
       return;
     }
 
-    const { data } = await recordingSessionEntity
-      .get({ sessionId: batch.sessionId })
-      .go();
-    const session = (data as RecordingSessionItem | null) ?? undefined;
+    const session = batch.projectId
+      ? await sessionByProject(batch.projectId, batch.token)
+      : await sessionByToken(batch.sessionId ?? '', batch.token);
 
     // every rejection from here answers exactly as an accepted batch does: an
     // unauthenticated caller must not be able to tell a wrong token from a
-    // session that was never created
+    // session that was never created, or from a project with nothing recording
     if (!accepts(session, batch)) {
       res.status(204).end();
       return;

@@ -151,16 +151,31 @@ export const completeAssetSchema = z.object({
 // object and the DynamoDB counters the capture endpoint bumps
 export const maxCaptureBatchEvents = 5000;
 
-// the capture endpoint is unauthenticated, so the session id is held to the
-// same safe alphabet as a path param before it reaches a key template
-export const captureBatchSchema = z.object({
-  sessionId: z.string().refine(isVideoId, { message: 'invalid session id' }),
-  token: z.string().min(1).max(256),
-  // one per tab: several tabs share a session when the whole screen is recorded
-  clientId: z.string().refine(isVideoId, { message: 'invalid client id' }),
-  seq: z.number().int().positive().max(1_000_000),
-  events: z.array(z.record(z.unknown())).min(1).max(maxCaptureBatchEvents),
-});
+// the capture endpoint is unauthenticated, so every id is held to the same safe
+// alphabet as a path param before it reaches a key template. A batch names
+// either the project, which is the reusable bookmark and is routed to whichever
+// session is open, or one session, which is what bookmarks saved before it send.
+export const captureBatchSchema = z
+  .object({
+    projectId: z
+      .string()
+      .refine(isVideoId, { message: 'invalid project id' })
+      .optional(),
+    sessionId: z
+      .string()
+      .refine(isVideoId, { message: 'invalid session id' })
+      .optional(),
+    token: z.string().min(1).max(256),
+    // one per tab: several tabs share a session when the whole screen is recorded
+    clientId: z.string().refine(isVideoId, { message: 'invalid client id' }),
+    seq: z.number().int().positive().max(1_000_000),
+    events: z.array(z.record(z.unknown())).min(1).max(maxCaptureBatchEvents),
+  })
+  .refine(
+    ({ projectId, sessionId }) =>
+      (projectId === undefined) !== (sessionId === undefined),
+    { message: 'exactly one of projectId and sessionId is required' },
+  );
 
 // the take's start is optional: a capture applied from the editor knows when it
 // stopped but not when the recording it belongs to began, and the events carry

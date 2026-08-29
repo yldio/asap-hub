@@ -160,10 +160,46 @@ const batch = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+// the reusable bookmark: the token lives on the project row and the row says
+// which session is open, so one bookmark saved once serves every take
+const projectToken = 'a-project-token';
+
+const bookmarkedProject = (overrides: Record<string, unknown> = {}) =>
+  projectItem({
+    captureTokenHash: createHash('sha256').update(projectToken).digest('hex'),
+    captureSessionId: 'session-1',
+    ...overrides,
+  });
+
+const projectBatch = (overrides: Record<string, unknown> = {}) => {
+  const { sessionId, ...rest } = batch();
+  return { ...rest, projectId: 'project-1', token: projectToken, ...overrides };
+};
+
 // the capture endpoint writes through the document client so the idempotency
 // guard can ride on the update's own ConditionExpression
 const captureWrites = () =>
   mockSend.mock.calls.map(([command]) => command.input);
+
+// a row write echoes what it set, which is how the route tells the token it
+// minted from one the project already had
+const echoVideoWrite = () =>
+  mockSend.mockImplementation(
+    async (command: {
+      input: { ExpressionAttributeValues?: Record<string, string> };
+    }) => ({
+      Attributes: {
+        captureTokenHash:
+          command.input.ExpressionAttributeValues?.[':tokenHash'],
+      },
+    }),
+  );
+
+const hashOf = (token: string) =>
+  createHash('sha256').update(token).digest('hex');
+
+const bookmarkTokenOf = (snippetUrl: string) =>
+  snippetUrl.split('#project.project-1.')[1] ?? '';
 
 beforeEach(() => {
   jest.restoreAllMocks();
@@ -174,10 +210,11 @@ beforeEach(() => {
 });
 
 describe('POST /api/projects/:id/recordings', () => {
-  it('hands the token back once and stores only its hash', async () => {
+  it('hands a bookmark for the project back once and stores only its hash', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
     const create = mockSessionCreate();
+    echoVideoWrite();
 
     const response = await api
       .post('/api/projects/project-1/recordings')
@@ -186,11 +223,26 @@ describe('POST /api/projects/:id/recordings', () => {
     expect(response.status).toBe(201);
     const { sessionId, token: issued, snippetUrl, captureUrl } = response.body;
     expect(sessionId).toMatch(/^[0-9a-f]{32}$/);
-    expect(issued).toEqual(expect.any(String));
+    // the bookmark names the project, not the take, so it is saved once and
+    // reused by every recording after this one
     expect(snippetUrl).toBe(
-      `http://localhost:3500/capture/v1.js#${sessionId}.${issued}`,
+      `http://localhost:3500/capture/v1.js#project.project-1.${bookmarkTokenOf(
+        snippetUrl,
+      )}`,
     );
+    expect(response.body.bookmarkReady).toBe(false);
     expect(captureUrl).toBe('http://localhost:3500/api/capture');
+
+    const [write] = captureWrites();
+    expect(write.Key).toEqual({ PK: 'VIDEO#project-1', SK: 'META' });
+    expect(write.UpdateExpression).toContain(
+      'captureTokenHash = if_not_exists(captureTokenHash, :tokenHash)',
+    );
+    expect(write.ExpressionAttributeValues[':sessionId']).toBe(sessionId);
+    expect(write.ExpressionAttributeValues[':tokenHash']).toBe(
+      hashOf(bookmarkTokenOf(snippetUrl)),
+    );
+    expect(JSON.stringify(write)).not.toContain(bookmarkTokenOf(snippetUrl));
 
     const stored = create.mock.calls[0]?.[0] as Record<string, unknown>;
     expect(stored).toMatchObject({
@@ -202,6 +254,42 @@ describe('POST /api/projects/:id/recordings', () => {
       tokenHash: createHash('sha256').update(issued).digest('hex'),
     });
     expect(JSON.stringify(stored)).not.toContain(issued);
+  });
+
+  // the whole point of the reusable bookmark: a second recording must not
+  // silently replace the token the creator already saved in their browser
+  it('leaves the bookmark a project already has alone', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(bookmarkedProject());
+    mockSessionCreate();
+    mockSend.mockResolvedValue({
+      Attributes: { captureTokenHash: hashOf(projectToken) },
+    });
+
+    const response = await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(201);
+    expect(response.body.snippetUrl).toBeUndefined();
+    expect(response.body.bookmarkReady).toBe(true);
+  });
+
+  it('points the project at the session it just opened', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(bookmarkedProject());
+    mockSessionCreate();
+    echoVideoWrite();
+
+    const response = await api
+      .post('/api/projects/project-1/recordings')
+      .set('Authorization', creatorToken);
+
+    const [write] = captureWrites();
+    expect(write.UpdateExpression).toContain('captureSessionId = :sessionId');
+    expect(write.ExpressionAttributeValues[':sessionId']).toBe(
+      response.body.sessionId,
+    );
   });
 
   // DynamoDB reads a TTL attribute as epoch seconds, so the row carries the
@@ -239,6 +327,78 @@ describe('POST /api/projects/:id/recordings', () => {
 
     const response = await api
       .post('/api/projects/project-1/recordings')
+      .set('Authorization', memberToken);
+
+    expect(response.status).toBe(403);
+  });
+});
+
+describe('POST /api/projects/:id/capture-bookmark', () => {
+  it('mints a new bookmark and overwrites the hash the old one is checked against', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(bookmarkedProject());
+
+    const response = await api
+      .post('/api/projects/project-1/capture-bookmark')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(201);
+    const rotated = bookmarkTokenOf(response.body.snippetUrl);
+    expect(rotated).not.toBe(projectToken);
+    expect(response.body.snippetUrl).toBe(
+      `http://localhost:3500/capture/v1.js#project.project-1.${rotated}`,
+    );
+
+    const [write] = captureWrites();
+    expect(write.Key).toEqual({ PK: 'VIDEO#project-1', SK: 'META' });
+    expect(write.UpdateExpression).toBe('SET captureTokenHash = :tokenHash');
+    expect(write.ExpressionAttributeValues[':tokenHash']).toBe(hashOf(rotated));
+    expect(JSON.stringify(write)).not.toContain(rotated);
+  });
+
+  // rotating is the whole revocation story: the row holds one hash, so a
+  // bookmark carrying the token it replaced stops being accepted
+  it('leaves a bookmark carrying the replaced token unaccepted', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(bookmarkedProject());
+
+    const rotation = await api
+      .post('/api/projects/project-1/capture-bookmark')
+      .set('Authorization', creatorToken);
+    const rotated = bookmarkTokenOf(rotation.body.snippetUrl);
+
+    jest.restoreAllMocks();
+    mockSend.mockReset().mockResolvedValue({});
+    mockVideoGet(bookmarkedProject({ captureTokenHash: hashOf(rotated) }));
+    mockSessionGet(sessionItem());
+
+    const refused = await postCapture(projectBatch());
+    expect(refused.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+
+    const accepted = await postCapture(projectBatch({ token: rotated }));
+    expect(accepted.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledTimes(1);
+  });
+
+  it('is not found for a plain upload', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ kind: 'upload' }));
+
+    const response = await api
+      .post('/api/projects/project-1/capture-bookmark')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('refuses a member', async () => {
+    mockUser('member', 'auth0|member');
+
+    const response = await api
+      .post('/api/projects/project-1/capture-bookmark')
       .set('Authorization', memberToken);
 
     expect(response.status).toBe(403);
@@ -453,6 +613,180 @@ describe('POST /api/capture', () => {
     );
 
     expect(response.status).toBe(400);
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+});
+
+describe('POST /api/capture from the reusable bookmark', () => {
+  // the bug this replaces: every recording minted a session, so a bookmark
+  // saved from an earlier one posted to a session that was already closed
+  it('routes a batch that names the project to the session it has open', async () => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(sessionItem());
+
+    const response = await postCapture(projectBatch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/parts/tab-a-3.ndjson',
+      expect.any(String),
+      'application/x-ndjson',
+      'lifecycle=capture',
+    );
+    const [write] = captureWrites();
+    expect(write.Key).toEqual({ PK: 'RECORDING#session-1', SK: 'META' });
+  });
+
+  it('follows the project to a session opened after the bookmark was saved', async () => {
+    mockVideoGet(bookmarkedProject({ captureSessionId: 'session-9' }));
+    mockSessionGet(sessionItem({ sessionId: 'session-9', parts: [] }));
+
+    const response = await postCapture(projectBatch());
+
+    expect(response.status).toBe(204);
+    const [write] = captureWrites();
+    expect(write.Key).toEqual({ PK: 'RECORDING#session-9', SK: 'META' });
+  });
+
+  // a bookmark saved before the reusable one carries its session's own token
+  // and must keep working for as long as that session is open
+  it('still accepts a bookmark that names the session', async () => {
+    mockSessionGet(sessionItem());
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/parts/tab-a-3.ndjson',
+      expect.any(String),
+      'application/x-ndjson',
+      'lifecycle=capture',
+    );
+  });
+
+  it.each([
+    [
+      'nothing is recording',
+      bookmarkedProject({ captureSessionId: undefined }),
+    ],
+    [
+      'the project has no bookmark',
+      projectItem({ captureSessionId: 'session-1' }),
+    ],
+    ['the project is gone', null],
+  ])('answers 204 and stores nothing when %s', async (_label, project) => {
+    mockVideoGet(project);
+    mockSessionGet(sessionItem());
+
+    const response = await postCapture(projectBatch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['the take has been finalised', sessionItem({ state: 'closed' })],
+    ['the session has expired', sessionItem({ expiresAt: Date.now() - 1 })],
+    [
+      'the session belongs to another project',
+      sessionItem({ videoId: 'project-2' }),
+    ],
+    ['the batch is a replay', sessionItem()],
+  ])('answers 204 and stores nothing when %s', async (label, session) => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(session);
+
+    const response = await postCapture(
+      projectBatch(label === 'the batch is a replay' ? { seq: 2 } : {}),
+    );
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('answers 204 for a token the project no longer holds', async () => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(sessionItem());
+
+    const response = await postCapture(
+      projectBatch({ token: 'not-the-token' }),
+    );
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  // the quota bounds the S3 writes, not only the counters, so it has to hold on
+  // the routed session exactly as it does on a named one
+  it('holds the event quota and keeps it a condition of the write', async () => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(sessionItem({ eventCount: 199_999 }));
+
+    const over = await postCapture(projectBatch());
+
+    expect(over.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+
+    mockSessionGet(sessionItem());
+    await postCapture(projectBatch());
+
+    const [{ ConditionExpression, ExpressionAttributeValues }] =
+      captureWrites();
+    expect(ConditionExpression).toContain('eventCount <= :maxEventCount');
+    expect(ConditionExpression).toContain('size(#parts) < :maxParts');
+    expect(ExpressionAttributeValues[':maxEventCount']).toBe(200_000 - 2);
+  });
+
+  it('holds the batch quota on the routed session', async () => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(sessionItem({ parts: new Array(500).fill('tab-a:1') }));
+
+    const response = await postCapture(projectBatch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('writes nothing to s3 when the counter write loses its condition', async () => {
+    mockVideoGet(bookmarkedProject());
+    mockSessionGet(sessionItem());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await postCapture(projectBatch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      'names both a project and a session',
+      { ...projectBatch(), sessionId: 'session-1' },
+    ],
+    ['names neither', { ...projectBatch(), projectId: undefined }],
+    [
+      'names a project outside the safe alphabet',
+      projectBatch({ projectId: '../../etc' }),
+    ],
+  ])('answers 400 for a batch that %s', async (_label, body) => {
+    const videos = jest.spyOn(videoEntity, 'get');
+    const sessions = jest.spyOn(recordingSessionEntity, 'get');
+
+    const response = await postCapture(body);
+
+    expect(response.status).toBe(400);
+    expect(videos).not.toHaveBeenCalled();
+    expect(sessions).not.toHaveBeenCalled();
     expect(storage.putObject).not.toHaveBeenCalled();
   });
 });

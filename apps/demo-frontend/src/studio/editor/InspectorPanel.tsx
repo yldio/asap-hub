@@ -62,11 +62,19 @@ const InspectorPanel: FC<Props> = ({
         readOnly={readOnly}
         pointer={cursorLayer?.pointer}
         hasCapture={(cursorLayer?.path.length ?? 0) > 0}
+        offsetMs={cursorLayer?.offsetMs ?? 0}
         onChangePointer={(pointer) =>
           dispatch({
             type: 'setCursorPointer',
             clipId: current.clip.id,
             pointer,
+          })
+        }
+        onChangeOffset={(offsetMs) =>
+          dispatch({
+            type: 'setCursorOffset',
+            clipId: current.clip.id,
+            offsetMs,
           })
         }
         onChange={(change) =>

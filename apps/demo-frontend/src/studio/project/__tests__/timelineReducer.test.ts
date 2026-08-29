@@ -1,5 +1,6 @@
 import {
   createEmptyTimeline,
+  limits,
   parseTimeline,
   Timeline,
 } from '@asap-hub/demo-timeline';
@@ -591,3 +592,55 @@ describe('a playhead that is not on a whole millisecond', () => {
   });
 });
 
+describe('setCursorOffset', () => {
+  const withCapture = () =>
+    timelineReducer(
+      timelineReducer(createEmptyTimeline(), {
+        type: 'addClip',
+        assetId: 'asset-1',
+        durationMs: 5000,
+        clipId: 'clip-1',
+        recordedAtEpochMs: 1_700_000_000_000,
+      }),
+      {
+        type: 'applyCapture',
+        clipId: 'clip-1',
+        path: [{ tMs: 0, x: 0.1, y: 0.1 }],
+        effects: [],
+      },
+    );
+
+  const offsetOf = (offsetMs: number) =>
+    timelineReducer(withCapture(), {
+      type: 'setCursorOffset',
+      clipId: 'clip-1',
+      offsetMs,
+    }).cursor[0]?.offsetMs;
+
+  it('slides the whole capture either way', () => {
+    expect(offsetOf(1500)).toBe(1500);
+    expect(offsetOf(-4286)).toBe(-4286);
+  });
+
+  // the server rejects a fraction anywhere in the document, and then no later
+  // save succeeds either
+  it('keeps the nudge a whole millisecond', () => {
+    expect(offsetOf(1500.4000000000001)).toBe(1500);
+  });
+
+  it('holds the nudge inside what the document allows', () => {
+    expect(offsetOf(120_000)).toBe(limits.offsetMs);
+    expect(offsetOf(-120_000)).toBe(-limits.offsetMs);
+  });
+
+  it('leaves the take start it was recorded with alone', () => {
+    const next = timelineReducer(withCapture(), {
+      type: 'setCursorOffset',
+      clipId: 'clip-1',
+      offsetMs: 1500,
+    });
+
+    expect(next.cursor[0]?.recordedAtEpochMs).toBe(1_700_000_000_000);
+    expect(() => parseTimeline(JSON.parse(JSON.stringify(next)))).not.toThrow();
+  });
+});

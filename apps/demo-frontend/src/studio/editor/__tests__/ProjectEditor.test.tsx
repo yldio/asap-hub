@@ -575,6 +575,102 @@ describe('the colour of a click', () => {
   });
 });
 
+// the derived origin lines a capture up on its own, but imported footage has no
+// origin to derive and any take can still drift, so the nudge is the way out
+describe('lining a whole capture up by hand', () => {
+  const withCapture = (offsetMs: number): Timeline => ({
+    ...withClip(),
+    cursor: [
+      {
+        clipId: 'clip-a',
+        offsetMs,
+        path: [{ tMs: 0, x: 0.2, y: 0.2 }],
+        effects: [
+          {
+            id: 'effect-a',
+            tMs: 1000,
+            type: 'ripple',
+            point: { x: 0.5, y: 0.5 },
+            origin: 'derived',
+          },
+        ],
+      },
+    ],
+  });
+
+  const openInspector = async (offsetMs: number) => {
+    const view = renderEditor({ timeline: withCapture(offsetMs) });
+    await userEvent.click(
+      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+    );
+    return view;
+  };
+
+  it('reads the nudge in seconds, and which way it goes', async () => {
+    await openInspector(-4300);
+
+    expect(
+      await screen.findByRole('slider', { name: /Whole capture/ }),
+    ).toHaveAccessibleName('Whole capture: 4.30s earlier');
+  });
+
+  it('says so when the capture is already in step', async () => {
+    await openInspector(0);
+
+    expect(
+      await screen.findByRole('slider', { name: /Whole capture/ }),
+    ).toHaveAccessibleName('Whole capture: in step with the video');
+  });
+
+  it('writes the nudge onto the layer, not onto the one click', async () => {
+    const { calls } = await openInspector(0);
+
+    fireEvent.change(
+      await screen.findByRole('slider', { name: /Whole capture/ }),
+      {
+        target: { value: '1500' },
+      },
+    );
+
+    expect(
+      calls.flatMap((call) =>
+        call.action?.type === 'setCursorOffset' ? [call.action] : [],
+      ),
+    ).toEqual([{ type: 'setCursorOffset', clipId: 'clip-a', offsetMs: 1500 }]);
+  });
+
+  it('is not offered on a clip with no capture on it', async () => {
+    renderEditor({
+      timeline: {
+        ...withClip(),
+        cursor: [
+          {
+            clipId: 'clip-a',
+            offsetMs: 0,
+            path: [],
+            effects: [
+              {
+                id: 'effect-a',
+                tMs: 1000,
+                type: 'ripple',
+                point: { x: 0.5, y: 0.5 },
+                origin: 'manual',
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await userEvent.click(
+      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+    );
+
+    expect(
+      screen.queryByRole('slider', { name: /Whole capture/ }),
+    ).not.toBeInTheDocument();
+  });
+});
+
 // The video track is gapless and ordered: two clips can only share time by the
 // later one blending into the one before it, so an overlap dragged on the lane
 // is stored as that clip's incoming transition.

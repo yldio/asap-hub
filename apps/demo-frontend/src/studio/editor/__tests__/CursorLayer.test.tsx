@@ -151,6 +151,43 @@ describe('the drawn pointer', () => {
   });
 });
 
+// the nudge is one control over the whole layer, so whatever it does to a click
+// it has to do to the pointer as well, or the two come apart on screen
+describe('the nudge against the footage', () => {
+  const nudgedPointer = (tMs: number, offsetMs: number) => {
+    const { container, unmount } = render(
+      <CursorLayer effects={[]} path={path} tMs={tMs} offsetMs={offsetMs} />,
+    );
+    const found = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-pointer"]',
+    );
+    const state = {
+      transform: found?.style.transform ?? '',
+      display: found?.style.display ?? '',
+    };
+    unmount();
+    return state;
+  };
+
+  it('carries the drawn pointer with it', () => {
+    expect(nudgedPointer(500, 0).transform).toBe('translate(50%, 50%)');
+    expect(nudgedPointer(750, 250).transform).toBe('translate(50%, 50%)');
+    expect(nudgedPointer(250, -250).transform).toBe('translate(50%, 50%)');
+  });
+
+  it('moves where the capture starts and ends', () => {
+    expect(nudgedPointer(249, 250).display).toBe('none');
+    expect(nudgedPointer(250, 250).transform).toBe('translate(20%, 20%)');
+    expect(nudgedPointer(1250, 250).transform).toBe('translate(80%, 80%)');
+  });
+
+  it('moves a click ring by the same amount', () => {
+    expect(rippleCount(1250, 250)).toBe(1);
+    expect(rippleCount(1000, 250)).toBe(0);
+    expect(rippleCount(750, -250)).toBe(1);
+  });
+});
+
 describe('following the playhead', () => {
   // the editor sat at 93% of the main thread when every frame was a render, so
   // the pointer is moved by writing to the node and nothing else

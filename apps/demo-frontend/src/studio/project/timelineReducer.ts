@@ -94,6 +94,14 @@ export type TimelineAction =
       pointer: string;
     }
   | {
+      // slides the whole capture against the footage: the safety valve for the
+      // drift the derived origin cannot account for, and the only alignment an
+      // imported video has at all
+      type: 'setCursorOffset';
+      clipId: string;
+      offsetMs: number;
+    }
+  | {
       type: 'applyCapture';
       clipId: string;
       path: CursorLayer['path'];
@@ -501,6 +509,18 @@ export const timelineReducer = (
         cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
           ...layer,
           pointer: action.pointer,
+        })),
+      };
+
+    case 'setCursorOffset':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          offsetMs: Math.max(
+            -limits.offsetMs,
+            Math.min(limits.offsetMs, Math.round(action.offsetMs)),
+          ),
         })),
       };
 

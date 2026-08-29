@@ -174,6 +174,51 @@ export const FadeField: FC<{
   );
 };
 
+const nudgeStepMs = 50;
+
+// signed and read in seconds, because what the creator is judging is how far
+// the capture sits from the footage, not a count of milliseconds
+const describeNudge = (ms: number): string => {
+  if (ms === 0) {
+    return 'in step with the video';
+  }
+  const seconds = (Math.abs(ms) / 1000).toFixed(2);
+  return ms > 0 ? `${seconds}s later` : `${seconds}s earlier`;
+};
+
+// Slides a whole cursor capture against the clip it belongs to. The origin is
+// derived from the take, so this is only ever the residual, but an imported
+// video has no derived origin at all and this is the only alignment it has.
+export const NudgeField: FC<{
+  readonly label: string;
+  readonly value: number;
+  readonly limitMs: number;
+  readonly disabled?: boolean;
+  readonly onChange: (ms: number) => void;
+}> = ({ label, value, limitMs, disabled, onChange }) => {
+  const gesture = useGesture();
+  const bounded = Math.max(-limitMs, Math.min(limitMs, value));
+  return (
+    <label css={fieldStyles}>
+      {`${label}: ${describeNudge(value)}`}
+      <input
+        css={sliderStyles}
+        type="range"
+        min={-limitMs}
+        max={limitMs}
+        step={nudgeStepMs}
+        disabled={disabled}
+        value={bounded}
+        onFocus={() => gesture.begin(fieldGesture)}
+        onBlur={() => gesture.end(fieldGesture)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          onChange(Number(event.target.value))
+        }
+      />
+    </label>
+  );
+};
+
 export const maxVolume = 2;
 
 export const VolumeField: FC<{

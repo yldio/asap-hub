@@ -5,6 +5,7 @@ import {
   cursorColors,
   defaultCursorColor,
   defaultPointerVariant,
+  limits,
   pointerBox,
   pointerLayers,
   pointerVariants,
@@ -13,6 +14,7 @@ import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
   mutedStyles,
+  NudgeField,
   PointField,
   TimecodeField,
   panelHeadingStyles,
@@ -66,7 +68,10 @@ type Props = {
   // set here but written to the layer
   readonly pointer?: string;
   readonly hasCapture?: boolean;
+  // the capture's nudge against the footage, which is the layer's too
+  readonly offsetMs?: number;
   readonly onChangePointer?: (pointer: string) => void;
+  readonly onChangeOffset?: (offsetMs: number) => void;
   readonly onChange: (change: Partial<CursorEffect>) => void;
   readonly onRemove: () => void;
 };
@@ -76,7 +81,9 @@ const CursorEffectInspector: FC<Props> = ({
   readOnly,
   pointer,
   hasCapture,
+  offsetMs = 0,
   onChangePointer,
+  onChangeOffset,
   onChange,
   onRemove,
 }) => (
@@ -152,6 +159,22 @@ const CursorEffectInspector: FC<Props> = ({
           );
         })}
       </fieldset>
+    ) : null}
+
+    {hasCapture && onChangeOffset ? (
+      <>
+        <NudgeField
+          label="Whole capture"
+          value={offsetMs}
+          limitMs={limits.offsetMs}
+          disabled={readOnly}
+          onChange={onChangeOffset}
+        />
+        <p css={mutedStyles}>
+          Slides every click and the drawn pointer together, for when the
+          capture runs ahead of or behind the footage.
+        </p>
+      </>
     ) : null}
 
     <TimecodeField

@@ -1,4 +1,4 @@
-import { defaultCursorColor, edgeFor, isCursorColor } from '../cursorColors';
+import { edgeFor, resolveCursorColor } from '../cursorColors';
 import { PresetCanvas, svgDocument } from '../presets';
 import { CursorEffect, Point } from '../schema';
 
@@ -38,7 +38,7 @@ export const rippleSvg = ({ point, canvas, color }: CursorArtInput): string => {
     1,
     Math.round(canvas.height * rippleStyle.strokeWidth),
   );
-  const ink = color && isCursorColor(color) ? color : defaultCursorColor;
+  const ink = resolveCursorColor(color);
   const cx = Math.round(point.x * canvas.width);
   const cy = Math.round(point.y * canvas.height);
 

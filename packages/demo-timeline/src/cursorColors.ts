@@ -29,3 +29,8 @@ export const edgeFor = (hex: string): { color: string; opacity: number } =>
 
 export const isCursorColor = (value: string): boolean =>
   /^#[0-9a-f]{6}$/i.test(value);
+
+// anything saved before the picker existed, or anything that is not a colour at
+// all, falls back rather than reaching the SVG as an attribute of its own
+export const resolveCursorColor = (color?: string): string =>
+  color && isCursorColor(color) ? color : defaultCursorColor;

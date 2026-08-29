@@ -4,6 +4,7 @@ export * from './paths';
 export * from './filters';
 export * from './encoding';
 export * from './cursorArt';
+export * from './pointer';
 export * from './zoom';
 export * from './clipSteps';
 export * from './joinStep';

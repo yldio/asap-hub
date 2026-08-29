@@ -57,6 +57,10 @@ export type OverlayWindow = Fade & { startMs: number; endMs: number };
 // a signed distance in pixels: the offset the overlay travels from and back to
 export type OverlaySlide = { distancePx: number };
 
+// ffmpeg expressions in t for an overlay that is somewhere different on every
+// frame, rather than parked where its own image drew it
+export type OverlayMove = { x: string; y: string };
+
 export const overlayFadeRamps = (visible: OverlayWindow): FadeRamps =>
   resolveFade(visible, visible.endMs - visible.startMs);
 
@@ -103,7 +107,11 @@ const slideExpression = (
 const overlayPosition = (
   visible: OverlayWindow,
   slide: OverlaySlide | undefined,
+  move: OverlayMove | undefined,
 ): string => {
+  if (move) {
+    return `x='${move.x}':y='${move.y}'`;
+  }
   const ramps = overlayFadeRamps(visible);
   return slide && ramps.inMs > 0 && ramps.outMs > 0
     ? `x=0:y='${slideExpression(slide.distancePx, visible, ramps)}'`
@@ -113,11 +121,13 @@ const overlayPosition = (
 export const overlayFilter = (
   visible?: OverlayWindow,
   slide?: OverlaySlide,
+  move?: OverlayMove,
 ): string =>
   visible
     ? `overlay=${overlayPosition(
         visible,
         slide,
+        move,
       )}:enable='between(t,${secondsFromMs(visible.startMs)},${secondsFromMs(
         visible.endMs,
       )})'`

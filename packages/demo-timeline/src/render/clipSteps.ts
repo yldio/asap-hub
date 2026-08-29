@@ -1,4 +1,5 @@
 import { ClipPlacement } from '../clips';
+import { cursorPointerTrack } from '../cursor/pointer';
 import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
 import {
   Banner,
@@ -24,6 +25,7 @@ import {
   filterSegment,
   graph,
   label,
+  OverlayMove,
   OverlaySlide,
   OverlayWindow,
   overlayFilter,
@@ -35,8 +37,10 @@ import {
   bannerPngPath,
   clipOutputPath,
   cursorPngPath,
+  pointerPngPath,
   titlePngPath,
 } from './paths';
+import { pointerMotion, pointerSvg } from './pointer';
 import { FfmpegStep, RenderAsset, SvgFile } from './types';
 import { clipZooms, zoomFilters } from './zoom';
 
@@ -52,7 +56,11 @@ export type ClipStepInput = {
 
 export type ClipStepResult = { step: FfmpegStep; svgs: SvgFile[] };
 
-type Overlay = SvgFile & { visible?: OverlayWindow; slide?: OverlaySlide };
+type Overlay = SvgFile & {
+  visible?: OverlayWindow;
+  slide?: OverlaySlide;
+  move?: OverlayMove;
+};
 
 const sourceInput = (
   clip: SourceClip,
@@ -191,6 +199,42 @@ const cursorOverlays = (
       path: cursorPngPath(workDir, placement.index, position),
     }));
 
+// the drawn pointer: one image for the whole clip, walked along the captured
+// path by an expression, because it is somewhere different on every frame
+const pointerOverlays = (
+  cursor: CursorLayer[],
+  placement: ClipPlacement,
+  canvas: Canvas,
+  workDir: string,
+): Overlay[] =>
+  cursor
+    .filter((layer) => layer.clipId === placement.clip.id)
+    .flatMap((layer) => {
+      const art = { canvas, variant: layer.pointer };
+      const motion = pointerMotion(
+        cursorPointerTrack(layer),
+        art,
+        placement.durationMs,
+      );
+      return motion
+        ? [
+            {
+              path: pointerPngPath(workDir, placement.index),
+              svg: pointerSvg(art),
+              // the pointer arrives with the capture and leaves with it, the
+              // way the preview shows it, so neither end is ramped
+              visible: {
+                startMs: motion.startMs,
+                endMs: motion.endMs,
+                fadeInMs: 0,
+                fadeOutMs: 0,
+              },
+              move: { x: motion.x, y: motion.y },
+            },
+          ]
+        : [];
+    });
+
 const describeClip = (clip: Clip): string =>
   clip.kind === 'source' ? `source ${clip.assetId}` : `title "${clip.text}"`;
 
@@ -231,6 +275,7 @@ export const buildClipStep = ({
       ? [titleOverlay(clip, canvas, workDir, index, durationMs)]
       : []),
     ...cursorOverlays(cursor, placement, canvas, workDir),
+    ...pointerOverlays(cursor, placement, canvas, workDir),
     ...bannerOverlays(banners, placement, canvas, workDir),
   ];
 
@@ -251,7 +296,7 @@ export const buildClipStep = ({
       ),
       filterSegment(
         [`v${position}`, `o${position}`],
-        [overlayFilter(overlay.visible, overlay.slide)],
+        [overlayFilter(overlay.visible, overlay.slide, overlay.move)],
         `v${position + 1}`,
       ),
     ]),

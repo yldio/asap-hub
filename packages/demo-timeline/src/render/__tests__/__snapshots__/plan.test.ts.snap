@@ -160,6 +160,63 @@ exports[`buildRenderPlan a clip with a banner overlays the rasterised banner for
 ]
 `;
 
+exports[`buildRenderPlan a clip with a captured pointer walks one pointer image along the whole capture 1`] = `
+{
+  "args": [
+    "-nostdin",
+    "-y",
+    "-accurate_seek",
+    "-ss",
+    "0.000",
+    "-to",
+    "10.000",
+    "-i",
+    "/media/asset-1.mp4",
+    "-loop",
+    "1",
+    "-t",
+    "10.000",
+    "-i",
+    "/work/pointer-0.png",
+    "-filter_complex",
+    "[0:v]scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[v0];[1:v]format=rgba[o0];[v0][o0]overlay=x='381+432*clip((t-0.000)/0.375,0,1)+144*clip((t-0.375)/0.125,0,1)+144*clip((t-0.500)/0.125,0,1)+432*clip((t-0.625)/0.375,0,1)':y='213+166*clip((t-0.000)/0.375,0,1)+64*clip((t-0.375)/0.125,0,1)+71*clip((t-0.500)/0.125,0,1)+239*clip((t-0.625)/0.375,0,1)':enable='between(t,0.000,1.000)'[v1]",
+    "-map",
+    "[v1]",
+    "-map",
+    "0:a?",
+    "-fps_mode",
+    "cfr",
+    "-r",
+    "30",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "medium",
+    "-crf",
+    "20",
+    "-g",
+    "60",
+    "-keyint_min",
+    "60",
+    "-sc_threshold",
+    "0",
+    "-pix_fmt",
+    "yuv420p",
+    "-c:a",
+    "aac",
+    "-b:a",
+    "128k",
+    "-af",
+    "aresample=async=1:first_pts=0,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo",
+    "-movflags",
+    "+faststart",
+    "/work/clip-0.mp4",
+  ],
+  "label": "clip 0 (source asset-1)",
+  "output": "/work/clip-0.mp4",
+}
+`;
+
 exports[`buildRenderPlan a clip with a zoom and cursor effects zooms the picture and composites the effects over it 1`] = `
 {
   "args": [

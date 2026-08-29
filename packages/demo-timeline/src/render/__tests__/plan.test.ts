@@ -458,6 +458,77 @@ describe('buildRenderPlan', () => {
     });
   });
 
+  describe('a clip with a captured pointer', () => {
+    const captured = [
+      { tMs: 0, x: 0.2, y: 0.2 },
+      { tMs: 500, x: 0.5, y: 0.4 },
+      { tMs: 1000, x: 0.8, y: 0.7 },
+    ];
+
+    const plan = planFor({
+      clips: [source()],
+      cursor: [cursorLayer({ path: captured, effects: [] })],
+    });
+
+    it('walks one pointer image along the whole capture', () => {
+      expect(plan.steps[0]).toMatchSnapshot();
+    });
+
+    it('hands the caller one image to rasterise, however long the path', () => {
+      expect(plan.svgs.map(({ path }) => path)).toEqual([
+        '/work/pointer-0.png',
+      ]);
+    });
+
+    it('shows the pointer only for as long as the capture runs', () => {
+      expect(plan.steps[0]?.args.join(' ')).toContain(
+        "enable='between(t,0.000,1.000)'",
+      );
+    });
+
+    it('nudges the pointer by the layer offset, as it nudges the clicks', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [
+            cursorLayer({ path: captured, effects: [], offsetMs: 2000 }),
+          ],
+        }).steps[0]?.args.join(' '),
+      ).toContain("enable='between(t,2.000,3.000)'");
+    });
+
+    it('draws the pointer the layer asked for', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [
+            cursorLayer({ path: captured, effects: [], pointer: 'ring' }),
+          ],
+        }).svgs[0]?.svg,
+      ).toContain('A150,150');
+    });
+
+    it('draws no pointer for a clip whose capture is empty', () => {
+      expect(
+        planFor({ clips: [source()], cursor: [cursorLayer()] }).svgs,
+      ).toEqual([expect.objectContaining({ path: '/work/cursor-0-0.png' })]);
+    });
+
+    // the ring marks where a click landed and the pointer is what did the
+    // clicking, so the pointer goes on top
+    it('composites the pointer over the click rings', () => {
+      const args =
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer({ path: captured })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args.indexOf('/work/cursor-0-0.png')).toBeLessThan(
+        args.indexOf('/work/pointer-0.png'),
+      );
+    });
+  });
+
   describe('a clip with a zoom and cursor effects', () => {
     const plan = planFor({
       clips: [source()],

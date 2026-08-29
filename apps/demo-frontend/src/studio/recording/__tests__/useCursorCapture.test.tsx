@@ -407,3 +407,78 @@ describe('two takes captured in one session', () => {
     );
   });
 });
+
+// finalise closes the session, so after one apply a third take captured
+// nothing until the creator noticed; now the studio knows at once and opens a
+// fresh session when the next recording starts
+describe('the session after an apply', () => {
+  const ndjson = JSON.stringify({
+    id: 'c1',
+    type: 'click',
+    t: 5_000,
+    x: 640,
+    y: 360,
+    viewportW: 1280,
+    viewportH: 720,
+  });
+
+  const applyOnce = async (api: Partial<Parameters<typeof render>[0]>) => {
+    const rendered = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents: jest.fn().mockResolvedValue(ndjson),
+      ...api,
+    });
+    await act(async () => rendered.result.current.start());
+    await waitFor(() => expect(rendered.result.current.session).toBeDefined());
+    await act(async () =>
+      rendered.result.current.apply({
+        stoppedAtEpochMs: 10_000,
+        frame: { width: 1280, height: 720 },
+        targets: [{ clipId: 'clip-1', existing: [] }],
+      }),
+    );
+    return rendered;
+  };
+
+  it('reports the session closed as soon as it is applied', async () => {
+    const rendered = await applyOnce({});
+
+    expect(rendered.result.current.status?.state).toBe('closed');
+  });
+
+  it('opens a fresh session for the next recording', async () => {
+    const startCapture = jest.fn().mockResolvedValue(session);
+    const rendered = await applyOnce({ startCapture });
+
+    await act(async () => rendered.result.current.ensureOpen());
+
+    await waitFor(() => expect(startCapture).toHaveBeenCalledTimes(2));
+  });
+
+  it('leaves a session that is still open alone', async () => {
+    const startCapture = jest.fn().mockResolvedValue(session);
+    const rendered = render({
+      startCapture,
+      captureStatus: jest.fn().mockResolvedValue(open),
+    });
+    await act(async () => rendered.result.current.start());
+    await waitFor(() =>
+      expect(rendered.result.current.status?.state).toBe('open'),
+    );
+
+    await act(async () => rendered.result.current.ensureOpen());
+
+    expect(startCapture).toHaveBeenCalledTimes(1);
+  });
+
+  it('does nothing on a project that never tracked the cursor', async () => {
+    const startCapture = jest.fn();
+    const rendered = render({ startCapture });
+
+    await act(async () => rendered.result.current.ensureOpen());
+
+    expect(startCapture).not.toHaveBeenCalled();
+  });
+});

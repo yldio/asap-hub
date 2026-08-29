@@ -83,6 +83,9 @@ export const useCursorCapture = (
       .then((started) => {
         rememberSession(projectId, started);
         setSession(started);
+        // the fresh session's own poll answers for it; the old one's closed
+        // state must not linger on it
+        setStatus(undefined);
       })
       .catch(() => setError('Could not start the cursor capture.'));
   }, [api, projectId]);
@@ -184,6 +187,14 @@ export const useCursorCapture = (
             stoppedAtEpochMs: request.stoppedAtEpochMs,
           })
           .catch(() => undefined);
+        // finalising closed the session, whether just now or on an earlier
+        // apply; saying so at once is what lets the next recording open a
+        // fresh one without waiting on the poll
+        setStatus((current) =>
+          current
+            ? { ...current, state: 'closed' }
+            : { state: 'closed', eventCount: 0, clientCount: 0 },
+        );
 
         const ndjson = await api.captureEvents(projectId, session.sessionId);
         const events = parseCaptureEvents(ndjson);
@@ -228,5 +239,23 @@ export const useCursorCapture = (
     [api, deriveTarget, projectId, session],
   );
 
-  return { session, status, applying, error, start, newBookmark, apply };
+  // a new recording needs a session that is still taking events; a session
+  // spent by an earlier apply is replaced without the creator doing anything,
+  // and a project that never tracked the cursor is left alone
+  const ensureOpen = useCallback(() => {
+    if (session && status && status.state !== 'open') {
+      start();
+    }
+  }, [session, start, status]);
+
+  return {
+    session,
+    status,
+    applying,
+    error,
+    start,
+    newBookmark,
+    apply,
+    ensureOpen,
+  };
 };

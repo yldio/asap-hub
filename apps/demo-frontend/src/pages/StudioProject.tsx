@@ -572,6 +572,10 @@ const Editor: FC<EditorProps> = ({
               unsupportedReason={support.supported ? undefined : support.reason}
               onMicrophoneChange={take.setWithMicrophone}
               onStart={() => {
+                // a capture spent by an earlier apply is replaced on the spot,
+                // so stopping and recording again keeps the bookmark working
+                // without the creator thinking about sessions
+                capture.ensureOpen();
                 take.start().catch(() => undefined);
               }}
               onPause={take.pause}

@@ -123,6 +123,7 @@ const CapturePanel: FC<Props> = ({
   }
 
   const text = session.snippetUrl ? loader(session.snippetUrl)[method] : '';
+  const finished = Boolean(status) && status?.state !== 'open';
 
   return (
     <div css={panelStyles}>
@@ -208,6 +209,25 @@ const CapturePanel: FC<Props> = ({
       >
         {applying ? 'Adding effects…' : 'Add cursor effects'}
       </EditorButton>
+
+      {/* a capture stops the moment its effects are taken, so the next take
+          needs one of its own; recording again starts one by itself, and this
+          button covers capturing without recording */}
+      {finished ? (
+        <>
+          <p css={hintStyles}>
+            This capture has been used. Recording again starts a fresh one by
+            itself; only start one here to track the cursor without recording.
+          </p>
+          <EditorButton
+            icon={<PlusIcon size={15} />}
+            disabled={readOnly}
+            onClick={onStart}
+          >
+            Track the cursor again
+          </EditorButton>
+        </>
+      ) : null}
       {error ? (
         <p css={errorStyles} role="alert">
           {error}

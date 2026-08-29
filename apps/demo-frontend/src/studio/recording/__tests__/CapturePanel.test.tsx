@@ -96,3 +96,35 @@ it('renders an error from the capture', () => {
     'Could not make a new capture bookmark.',
   );
 });
+
+describe('a capture that has already been used', () => {
+  // the session closes when its effects are taken, so a second recording needs
+  // its own; without this the next take was given the first take's clicks
+  const closed = { state: 'closed' as const, eventCount: 143, clientCount: 0 };
+  const open = { state: 'open' as const, eventCount: 143, clientCount: 1 };
+
+  it('offers another capture for the next recording', async () => {
+    const onStart = jest.fn();
+    panel({ session, status: closed, onStart });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Track the cursor again' }),
+    );
+
+    expect(onStart).toHaveBeenCalled();
+  });
+
+  it('says why another one is needed', () => {
+    panel({ session, status: closed });
+
+    expect(screen.getByText(/has been used/i)).toBeVisible();
+  });
+
+  it('does not offer one while the capture is still running', () => {
+    panel({ session, status: open });
+
+    expect(
+      screen.queryByRole('button', { name: 'Track the cursor again' }),
+    ).not.toBeInTheDocument();
+  });
+});

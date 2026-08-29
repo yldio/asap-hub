@@ -593,6 +593,7 @@ const Editor: FC<EditorProps> = ({
               status={capture.status}
               readOnly={readOnly}
               applying={capture.applying}
+              error={capture.error}
               onStart={capture.start}
               onApply={() => applyCursorCapture(capture.apply)}
             />

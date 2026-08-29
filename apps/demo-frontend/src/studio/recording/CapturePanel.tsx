@@ -84,7 +84,10 @@ type Props = {
   readonly onStart: () => void;
   readonly onApply: () => void;
   readonly applying: boolean;
+  readonly error?: string;
 };
+
+const errorStyles = css({ fontSize: 12, color: editorTheme.record, margin: 0 });
 
 const CapturePanel: FC<Props> = ({
   session,
@@ -93,6 +96,7 @@ const CapturePanel: FC<Props> = ({
   onStart,
   onApply,
   applying,
+  error,
 }) => {
   const [method, setMethod] = useState<Method>('bookmarklet');
   const [copied, setCopied] = useState(false);
@@ -171,6 +175,11 @@ const CapturePanel: FC<Props> = ({
       >
         {applying ? 'Adding effects…' : 'Add cursor effects'}
       </EditorButton>
+      {error ? (
+        <p css={errorStyles} role="alert">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 };

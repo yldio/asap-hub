@@ -495,3 +495,20 @@ describe('createApi endpoints', () => {
     expect(init.method).toEqual('DELETE');
   });
 });
+
+describe('the captured event stream', () => {
+  // it is ndjson, not json. Read as json it parsed to undefined and tripped the
+  // "returned no JSON" guard, so every apply threw and the button did nothing
+  it('reads the stream as text rather than json', async () => {
+    const ndjson =
+      '{"id":"e1","type":"click","t":1}\n{"id":"e2","type":"move","t":2}\n';
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.reject(new Error('not json')),
+      text: () => Promise.resolve(ndjson),
+    });
+
+    await expect(api.captureEvents('p1', 's1')).resolves.toBe(ndjson);
+  });
+});

@@ -64,12 +64,21 @@ type RequestOptions = {
   body?: unknown;
   credentials?: RequestCredentials;
   keepalive?: boolean;
+  // the captured event stream is ndjson, not json, and reading it as json made
+  // every apply throw the "returned no JSON" guard below
+  as?: 'json' | 'text';
 };
 
 const request = async <T>(
   path: string,
   token: string,
-  { method = 'GET', body, credentials, keepalive }: RequestOptions = {},
+  {
+    method = 'GET',
+    body,
+    credentials,
+    keepalive,
+    as = 'json',
+  }: RequestOptions = {},
 ): Promise<T> => {
   const response = await fetch(`${API_BASE_URL}/api${path}`, {
     method,
@@ -85,7 +94,9 @@ const request = async <T>(
   const payload =
     response.status === 204
       ? undefined
-      : await response.json().catch(() => undefined);
+      : as === 'text'
+        ? await response.text().catch(() => undefined)
+        : await response.json().catch(() => undefined);
 
   // a 200 with an unparseable body is the SPA fallback masking an api miss
   if (response.ok && response.status !== 204 && payload === undefined) {
@@ -373,6 +384,7 @@ export const createApi = (getToken: GetToken) => ({
         sessionId,
       )}/events`,
       await getToken(),
+      { as: 'text' },
     ),
 
   startRender: async (id: string, version: number): Promise<Video> =>

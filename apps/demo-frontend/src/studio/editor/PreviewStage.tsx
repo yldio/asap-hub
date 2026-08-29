@@ -24,7 +24,15 @@ import BannerLayer, { BannerLayerHandle } from './BannerLayer';
 import { editorTheme } from './editorTheme';
 import CursorLayer, { CursorLayerHandle } from './CursorLayer';
 import { usePlaybackContext, usePlayheadEffect } from './usePlayback';
-import { panFocus, pointInBox, ZoomTransform, zoomTransformAt } from './zoom';
+import {
+  clampPoint,
+  panFocus,
+  pointInBox,
+  unzoomedPoint,
+  ZoomView,
+  zoomedPoint,
+  zoomViewAt,
+} from './zoom';
 
 // the size is measured and set by the editor, so the frame keeps its ratio
 // whichever way the window is constrained
@@ -192,18 +200,18 @@ const PreviewStage: FC<Props> = ({
   const startMs = playhead.getPlayheadMs();
   const localMs = placement ? clipLocalMs(placement, startMs) : 0;
 
-  const transformAt = (atMs: number): ZoomTransform =>
+  const viewAt = (atMs: number): ZoomView =>
     // aiming a zoom means seeing it, whatever the playhead is over
     focus
-      ? { scale: focus.scale, originX: focus.point.x, originY: focus.point.y }
-      : zoomTransformAt(zooms, clip?.id ?? '', atMs);
+      ? { scale: focus.scale, focus: focus.point }
+      : zoomViewAt(zooms, clip?.id ?? '', atMs);
 
-  const zoom = transformAt(localMs);
+  const zoom = viewAt(localMs);
   // the render pans by moving the crop window; the preview does the same by
   // scaling around the focus point, so the two frame the same thing
   const zoomStyle = {
     transform: `scale(${zoom.scale})`,
-    transformOrigin: `${zoom.originX * 100}% ${zoom.originY * 100}%`,
+    transformOrigin: `${zoom.focus.x * 100}% ${zoom.focus.y * 100}%`,
   };
 
   // every frame of playback is written straight to the DOM: re-rendering the
@@ -212,10 +220,10 @@ const PreviewStage: FC<Props> = ({
     const atMs = placement ? clipLocalMs(placement, ms) : 0;
     const element = videoRef.current;
     if (element) {
-      const frame = transformAt(atMs);
+      const frame = viewAt(atMs);
       element.style.transform = `scale(${frame.scale})`;
-      element.style.transformOrigin = `${frame.originX * 100}% ${
-        frame.originY * 100
+      element.style.transformOrigin = `${frame.focus.x * 100}% ${
+        frame.focus.y * 100
       }%`;
 
       const sourceMs =
@@ -334,10 +342,13 @@ const PreviewStage: FC<Props> = ({
     setPanning(false);
   };
 
+  // the marker is dropped on the picture the creator can see, and a zoom has
+  // moved that picture, so the click is read back through the same transform
   const dropPin = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!pin) return;
     const bounds = event.currentTarget.getBoundingClientRect();
-    pin.onChange(pointInBox(event.clientX, event.clientY, bounds));
+    const on = pointInBox(event.clientX, event.clientY, bounds);
+    pin.onChange(clampPoint(unzoomedPoint(on, viewAt(localMs))));
   };
 
   return (
@@ -399,8 +410,8 @@ const PreviewStage: FC<Props> = ({
         <span
           css={markerStyles}
           style={{
-            left: `${pin.point.x * 100}%`,
-            top: `${pin.point.y * 100}%`,
+            left: `${zoomedPoint(pin.point, zoom).x * 100}%`,
+            top: `${zoomedPoint(pin.point, zoom).y * 100}%`,
           }}
           aria-hidden="true"
         />

@@ -5,8 +5,11 @@ import {
 } from '../../cursor/pointer';
 import { pointerVariant, pointerVariants } from '../../cursor/pointerArt';
 import { cursorEdge, defaultCursorColor } from '../../cursorColors';
-import { CursorPathPoint } from '../../schema';
+import { Canvas, CursorPathPoint, Zoom } from '../../schema';
+import { zoomedPoint, zoomViewAt } from '../../zoom';
+import { ringMove } from '../clipSteps';
 import { pointerHotspotPx, pointerMotion, pointerSvg } from '../pointer';
+import { zoomExpressions } from '../zoom';
 
 const canvas = { width: 1920, height: 1080 };
 
@@ -189,5 +192,111 @@ describe('what ffmpeg is asked to draw', () => {
       (track[0]?.x ?? 0) * canvas.width - hotspot.x,
       0,
     );
+  });
+});
+
+/* the preview and the export riding one zoom */
+
+// ffmpeg's own expression language, as much of it as the filtergraph uses. `if`
+// is a JavaScript keyword, so it is renamed on the way in.
+const ffmpeg = (expression: string, tMs: number): number =>
+  Function(
+    't',
+    'clip',
+    'iff',
+    'between',
+    'lt',
+    `return ${expression.replace(/\bif\(/g, 'iff(')};`,
+  )(
+    tMs / 1000,
+    clip,
+    (condition: number, whenTrue: number, whenFalse: number) =>
+      condition !== 0 ? whenTrue : whenFalse,
+    (value: number, low: number, high: number) =>
+      value >= low && value <= high ? 1 : 0,
+    (left: number, right: number) => (left < right ? 1 : 0),
+  ) as number;
+
+describe('a pointer over a zoomed picture', () => {
+  const zoom: Zoom = {
+    id: 'zoom-1',
+    clipId: 'clip-1',
+    startMs: 1000,
+    rampInMs: 400,
+    holdMs: 1000,
+    rampOutMs: 400,
+    focus: { x: 0.25, y: 0.75 },
+    scale: 2.5,
+    easing: 'easeInOut',
+  };
+
+  const walked: CursorPathPoint[] = Array.from(
+    { length: 40 },
+    (_unused, index) => ({
+      tMs: index * 100,
+      x: 0.15 + (index / 39) * 0.7,
+      y: 0.8 - (index / 39) * 0.6,
+    }),
+  );
+
+  const track = trackOf(walked);
+  const expressions = zoomExpressions([zoom]) ?? {
+    scale: '1',
+    cropX: '0',
+    cropY: '0',
+  };
+  const motion = pointerMotion(track, { canvas }, 4000, expressions);
+  const hotspot = pointerHotspotPx({ canvas });
+
+  // at rest, mid ramp, held fully in, mid ramp out and back at rest
+  const moments = [
+    0, 900, 1100, 1200, 1399, 1500, 2000, 2400, 2600, 2799, 3000,
+  ];
+
+  it('puts the pointer where the preview puts it, through every ramp', () => {
+    const worst = moments.reduce((furthest, tMs) => {
+      const on = pointerPositionAt(track, tMs);
+      if (!on || !motion) {
+        return furthest;
+      }
+      const drawn = zoomedPoint(on, zoomViewAt([zoom], 'clip-1', tMs));
+      return Math.max(
+        furthest,
+        Math.abs(ffmpeg(motion.x, tMs) - (drawn.x * canvas.width - hotspot.x)),
+        Math.abs(ffmpeg(motion.y, tMs) - (drawn.y * canvas.height - hotspot.y)),
+      );
+    }, 0);
+
+    // the expression works in whole source pixels, which the zoom then magnifies
+    expect(worst).toBeLessThanOrEqual(zoom.scale / 2);
+  });
+
+  it('leaves the pointer exactly where it was before the zoom starts', () => {
+    const flat = pointerMotion(track, { canvas }, 4000);
+    expect(ffmpeg(motion?.x ?? '0', 500)).toBeCloseTo(
+      ffmpeg(flat?.x ?? '0', 500),
+      0,
+    );
+  });
+
+  // the ring the pointer is clicking has to travel with it, or the pointer lands
+  // on the right button while its ring sits on the one next door
+  it('shifts a click ring by exactly what the pointer moved', () => {
+    const at = { x: 0.6, y: 0.3 };
+    const shift = ringMove(at, { ...canvas, fps: 30 } as Canvas, expressions);
+
+    moments.forEach((tMs) => {
+      const view = zoomViewAt([zoom], 'clip-1', tMs);
+      const drawn = zoomedPoint(at, view);
+      const drawnPx = drawn.x * canvas.width;
+      // the ring image was drawn at the un-zoomed point, and the overlay offset
+      // is what carries it to the zoomed one
+      expect(
+        Math.round(at.x * canvas.width) + ffmpeg(shift.x, tMs),
+      ).toBeCloseTo(drawnPx, 0);
+      expect(
+        Math.round(at.y * canvas.height) + ffmpeg(shift.y, tMs),
+      ).toBeCloseTo(drawn.y * canvas.height, 0);
+    });
   });
 });

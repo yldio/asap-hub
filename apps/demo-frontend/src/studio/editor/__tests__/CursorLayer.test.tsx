@@ -3,6 +3,7 @@ import {
   CursorEffect,
   CursorPathPoint,
   defaultCursorColor,
+  ZoomView,
 } from '@asap-hub/demo-timeline';
 import { createRef, Profiler } from 'react';
 import CursorLayer, { CursorLayerHandle, rippleMs } from '../CursorLayer';
@@ -212,5 +213,78 @@ describe('a click and a pointer together', () => {
       node.getAttribute('data-testid'),
     );
     expect(drawn).toEqual(['cursor-ripple', 'cursor-pointer']);
+  });
+});
+
+// the pointer and the rings used to composite over the frame the zoom had
+// already moved, so both sat at the address the picture had before it started
+describe('riding a zoom', () => {
+  const click: CursorEffect = {
+    id: 'effect-z',
+    tMs: 0,
+    type: 'ripple',
+    point: { x: 0.5, y: 0.5 },
+    origin: 'derived',
+  };
+
+  const held: ZoomView = { scale: 2, focus: { x: 0.25, y: 0.75 } };
+
+  const drawn = (zoomAt?: (tMs: number) => ZoomView) => {
+    const { container, unmount } = render(
+      <CursorLayer effects={[click]} path={path} tMs={500} zoomAt={zoomAt} />,
+    );
+    const ring = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-ripple"]',
+    );
+    const state = {
+      ring: { left: ring?.style.left ?? '', top: ring?.style.top ?? '' },
+      pointer:
+        container.querySelector<HTMLElement>('[data-testid="cursor-pointer"]')
+          ?.style.transform ?? '',
+    };
+    unmount();
+    return state;
+  };
+
+  it('leaves both where the capture put them with no zoom running', () => {
+    expect(drawn()).toEqual({
+      ring: { left: '50%', top: '50%' },
+      pointer: 'translate(50%, 50%)',
+    });
+  });
+
+  it('carries the pointer and the ring it is over by the same amount', () => {
+    // the capture put both at the centre, and 2x about (0.25, 0.75) sends that
+    // to (0.75, 0.25)
+    expect(drawn(() => held)).toEqual({
+      ring: { left: '75%', top: '25%' },
+      pointer: 'translate(75%, 25%)',
+    });
+  });
+
+  it('moves them again as the playhead crosses a ramp', () => {
+    const ref = createRef<CursorLayerHandle>();
+    let scale = 1;
+    const { container } = render(
+      <CursorLayer
+        ref={ref}
+        effects={[click]}
+        path={path}
+        tMs={500}
+        zoomAt={() => ({ scale, focus: { x: 0.25, y: 0.75 } })}
+      />,
+    );
+    const ring = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-ripple"]',
+    );
+    const pointer = container.querySelector<HTMLElement>(
+      '[data-testid="cursor-pointer"]',
+    );
+
+    scale = 1.5;
+    act(() => ref.current?.setTime(500));
+
+    expect(ring?.style.left).toBe('62.5%');
+    expect(pointer?.style.transform).toBe('translate(62.5%, 37.5%)');
   });
 });

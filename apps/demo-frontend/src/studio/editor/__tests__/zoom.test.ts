@@ -1,10 +1,11 @@
 import { Zoom } from '@asap-hub/demo-timeline';
 import {
-  noZoom,
+  clampPoint,
   panFocus,
   pointInBox,
+  restingZoom,
   zoomDurationMs,
-  zoomTransformAt,
+  zoomViewAt,
 } from '../zoom';
 
 const zoom = (overrides: Partial<Zoom> = {}): Zoom => ({
@@ -26,50 +27,39 @@ describe('zoomDurationMs', () => {
   });
 });
 
-describe('zoomTransformAt', () => {
-  it('is at rest before the zoom starts', () => {
-    expect(zoomTransformAt([zoom()], 'clip-1', 0)).toEqual(noZoom);
+// the picture itself is described in the timeline package now, so the preview
+// and the export cannot frame two different things; this is the stage reading it
+describe('the picture the stage shows', () => {
+  it('is at rest before the zoom starts and after it ends', () => {
+    expect(zoomViewAt([zoom()], 'clip-1', 0)).toEqual(restingZoom);
+    expect(zoomViewAt([zoom()], 'clip-1', 3000)).toEqual(restingZoom);
   });
 
   it('is halfway in the middle of the ramp', () => {
-    expect(zoomTransformAt([zoom()], 'clip-1', 1200).scale).toBeCloseTo(1.5);
+    expect(zoomViewAt([zoom()], 'clip-1', 1200).scale).toBeCloseTo(1.5);
   });
 
-  it('is fully in during the hold, at the focus point', () => {
-    expect(zoomTransformAt([zoom()], 'clip-1', 2000)).toEqual({
+  it('is fully in during the hold, about the focus point', () => {
+    expect(zoomViewAt([zoom()], 'clip-1', 2000)).toEqual({
       scale: 2,
-      originX: 0.25,
-      originY: 0.75,
+      focus: { x: 0.25, y: 0.75 },
     });
   });
 
-  it('is back at rest after the zoom ends', () => {
-    expect(zoomTransformAt([zoom()], 'clip-1', 3000)).toEqual(noZoom);
-  });
-
   it('ignores a zoom belonging to another clip', () => {
-    expect(zoomTransformAt([zoom()], 'clip-2', 2000)).toEqual(noZoom);
-  });
-
-  it('takes the strongest of two overlapping zooms rather than compounding', () => {
-    const transform = zoomTransformAt(
-      [zoom(), zoom({ id: 'zoom-2', scale: 3, focus: { x: 0.9, y: 0.1 } })],
-      'clip-1',
-      2000,
-    );
-
-    expect(transform).toEqual({ scale: 3, originX: 0.9, originY: 0.1 });
+    expect(zoomViewAt([zoom()], 'clip-2', 2000)).toEqual(restingZoom);
   });
 
   it('eases rather than stepping when asked to', () => {
-    const eased = zoomTransformAt(
-      [zoom({ easing: 'easeInOut' })],
-      'clip-1',
-      1100,
-    ).scale;
-    const linear = zoomTransformAt([zoom()], 'clip-1', 1100).scale;
+    expect(
+      zoomViewAt([zoom({ easing: 'easeInOut' })], 'clip-1', 1100).scale,
+    ).toBeLessThan(zoomViewAt([zoom()], 'clip-1', 1100).scale);
+  });
+});
 
-    expect(eased).toBeLessThan(linear);
+describe('clampPoint', () => {
+  it('keeps a point the document can hold', () => {
+    expect(clampPoint({ x: 1.4, y: -0.2 })).toEqual({ x: 1, y: 0 });
   });
 });
 

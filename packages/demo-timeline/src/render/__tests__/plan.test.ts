@@ -530,14 +530,53 @@ describe('buildRenderPlan', () => {
   });
 
   describe('a clip with a zoom and cursor effects', () => {
+    const walked = [
+      { tMs: 0, x: 0.2, y: 0.2 },
+      { tMs: 2000, x: 0.5, y: 0.4 },
+      { tMs: 4000, x: 0.8, y: 0.7 },
+    ];
+
     const plan = planFor({
       clips: [source()],
       zooms: [zoom({ focus: { x: 0.25, y: 0.75 } })],
-      cursor: [cursorLayer()],
+      cursor: [cursorLayer({ path: walked })],
     });
+
+    const args = plan.steps[0]?.args.join(' ') ?? '';
 
     it('zooms the picture and composites the effects over it', () => {
       expect(plan.steps[0]).toMatchSnapshot();
+    });
+
+    // the ring used to sit at the address the button had before the zoom, while
+    // the pointer clicking it had already followed the picture
+    it('carries the click ring through the same window as the picture', () => {
+      expect(args).toContain("overlay=x='(((480)-(");
+      expect(args).toContain(')*1920)*(1+1.000*if(between(t,');
+    });
+
+    it('carries the pointer through it too, on the same clock', () => {
+      expect(args.match(/overlay=x='\(\(/g)).toHaveLength(2);
+    });
+
+    it('leaves the ring where it was drawn when nothing is zooming', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer()],
+        }).steps[0]?.args.join(' '),
+      ).toContain('overlay=0:0');
+    });
+
+    // moving a full frame scrim would uncover the very edge it is darkening
+    it('leaves a spotlight scrim covering the whole frame', () => {
+      expect(
+        planFor({
+          clips: [source()],
+          zooms: [zoom()],
+          cursor: [cursorLayer({ effects: [effect({ type: 'spotlight' })] })],
+        }).steps[0]?.args.join(' '),
+      ).toContain('overlay=0:0');
     });
   });
 

@@ -9,6 +9,7 @@ import {
 import { PresetCanvas, svgDocument } from '../presets';
 import { CursorPathPoint } from '../schema';
 import { secondsFromMs } from './filters';
+import { onZoomedFrame, ZoomExpressions } from './zoom';
 
 export type PointerArtInput = {
   canvas: PresetCanvas;
@@ -118,12 +119,33 @@ export type PointerMotion = {
   endMs: number;
 };
 
+// The pointer walks the picture, not the frame the picture is drawn on: with a
+// zoom running it is carried through the same window the picture is cropped to,
+// so it stays on whatever it was pointing at. Only where it is drawn moves; the
+// shape keeps its size, the way a real pointer does over a magnified page.
+const axis = (
+  track: CursorPointerTrack,
+  size: number,
+  hotspot: number,
+  read: (point: CursorPathPoint) => number,
+  zoom: { crop: string; scale: string } | undefined,
+): string =>
+  zoom
+    ? `${onZoomedFrame(
+        axisExpression(track, (point) => read(point) * size),
+        size,
+        zoom.crop,
+        zoom.scale,
+      )}-${hotspot}`
+    : axisExpression(track, (point) => read(point) * size - hotspot);
+
 // nothing to draw for a clip with no capture, or one whose capture lands wholly
 // outside it, which is the same nothing the preview shows
 export const pointerMotion = (
   track: CursorPointerTrack,
   { canvas, variant }: PointerArtInput,
   durationMs: number,
+  zoom?: ZoomExpressions,
 ): PointerMotion | undefined => {
   const first = track[0];
   const last = track[track.length - 1];
@@ -141,7 +163,19 @@ export const pointerMotion = (
   return {
     startMs,
     endMs,
-    x: axisExpression(track, (point) => point.x * canvas.width - hotspot.x),
-    y: axisExpression(track, (point) => point.y * canvas.height - hotspot.y),
+    x: axis(
+      track,
+      canvas.width,
+      hotspot.x,
+      (point) => point.x,
+      zoom && { crop: zoom.cropX, scale: zoom.scale },
+    ),
+    y: axis(
+      track,
+      canvas.height,
+      hotspot.y,
+      (point) => point.y,
+      zoom && { crop: zoom.cropY, scale: zoom.scale },
+    ),
   };
 };

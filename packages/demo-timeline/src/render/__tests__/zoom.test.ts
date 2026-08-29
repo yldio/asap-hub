@@ -1,5 +1,6 @@
 import { Canvas, Zoom } from '../../schema';
-import { clipZooms, zoomDurationMs, zoomFilters } from '../zoom';
+import { clipZooms, zoomDurationMs } from '../../zoom';
+import { onZoomedFrame, zoomExpressions, zoomFilters } from '../zoom';
 
 const canvas: Canvas = { width: 1920, height: 1080, fps: 30 };
 
@@ -80,6 +81,44 @@ describe('zoomFilters', () => {
   it('takes the focus from the zoom, in input pixels', () => {
     expect(graphOf([zoom({ focus: { x: 0.2, y: 0.9 } })])).toContain(
       "x='0.2000*(iw-iw/zoom)':y='0.9000*(ih-ih/zoom)'",
+    );
+  });
+});
+
+describe('zoomExpressions', () => {
+  it('has nothing to say about a clip with no zoom', () => {
+    expect(zoomExpressions([])).toBeUndefined();
+  });
+
+  // zoompan counts its own frames, which an overlay cannot see, so the same
+  // window is written against the overlay's clock
+  it('reads the same window on the overlay clock rather than the frame count', () => {
+    const written = zoomExpressions([zoom()]);
+    expect(written?.scale).toContain('between(t,1.000,3.300)');
+    expect(written?.scale).not.toContain('on/30');
+    expect(zoomFilters([zoom()], canvas).join(',')).toContain('on/30');
+  });
+
+  it('writes the crop as a share of the frame, not in input pixels', () => {
+    expect(
+      zoomExpressions([zoom({ focus: { x: 0.2, y: 0.9 } })])?.cropX,
+    ).toMatch(/^0\.2000\*\(1-1\/\(1\+/);
+  });
+
+  it('adds the windows of two overlapping zooms, as the picture does', () => {
+    const written = zoomExpressions([
+      zoom(),
+      zoom({ id: 'zoom-2', focus: { x: 0.2, y: 0.8 } }),
+    ]);
+    expect(written?.cropX.split('+0.2000*')).toHaveLength(2);
+    expect(written?.scale.startsWith('1+')).toBe(true);
+  });
+});
+
+describe('onZoomedFrame', () => {
+  it('crops then magnifies, the way zoompan does', () => {
+    expect(onZoomedFrame('960', 1920, '0.5000*(1-1/2)', '2')).toBe(
+      '((960)-(0.5000*(1-1/2))*1920)*(2)',
     );
   });
 });

@@ -1,17 +1,6 @@
 import { Canvas, Zoom } from '../schema';
 import { secondsFromMs } from './filters';
 
-export const zoomDurationMs = (zoom: Zoom): number =>
-  zoom.rampInMs + zoom.holdMs + zoom.rampOutMs;
-
-// a zoom that never leaves 1x, or that has no time to ramp, would only cost a
-// rescale of every frame
-const changesTheFrame = (zoom: Zoom): boolean =>
-  zoom.scale > 1 && zoomDurationMs(zoom) > 0;
-
-export const clipZooms = (zooms: Zoom[], clipId: string): Zoom[] =>
-  zooms.filter((zoom) => zoom.clipId === clipId && changesTheFrame(zoom));
-
 const gain = (value: number): string => value.toFixed(3);
 
 const unit = (value: number): string => value.toFixed(4);
@@ -82,6 +71,53 @@ const offsetExpression = (
             `${unit(focus[position] ?? 0)}*(${size}-${size}/(1+${each}))`,
         )
         .join('+');
+
+// how a moving overlay reads the same window, on its own clock
+export type ZoomExpressions = { scale: string; cropX: string; cropY: string };
+
+// The crop window's own edge as a share of the frame, which is what the pixel
+// offsets above come to once iw and ih are divided out. An overlay is placed in
+// output pixels rather than input ones, so it needs the share rather than the
+// offset zoompan is given.
+const cropExpression = (gains: string[], focus: number[]): string =>
+  gains
+    .map((each, position) => `${unit(focus[position] ?? 0)}*(1-1/(1+${each}))`)
+    .join('+');
+
+// The same window the picture is cropped to, written against `t` so an overlay
+// can ride the zoomed picture rather than sitting on the frame underneath it.
+// zoompan drives itself off its own frame counter, which an overlay has no
+// access to, and the two are the same clock at the canvas rate.
+export const zoomExpressions = (
+  clip: Zoom[],
+  time = 't',
+): ZoomExpressions | undefined => {
+  if (clip.length === 0) {
+    return undefined;
+  }
+  const gains = clip.map((zoom) => gainExpression(zoom, time));
+  return {
+    scale: scaleExpression(gains),
+    cropX: cropExpression(
+      gains,
+      clip.map((zoom) => zoom.focus.x),
+    ),
+    cropY: cropExpression(
+      gains,
+      clip.map((zoom) => zoom.focus.y),
+    ),
+  };
+};
+
+// Where a point of the source frame is drawn once the zoom has moved the
+// picture under it, in output pixels: the preview's zoomedPoint, as an ffmpeg
+// expression, so the two place an effect at the same address on every frame.
+export const onZoomedFrame = (
+  sourcePx: string,
+  size: number,
+  crop: string,
+  scale: string,
+): string => `((${sourcePx})-(${crop})*${size})*(${scale})`;
 
 export const zoomFilters = (clip: Zoom[], canvas: Canvas): string[] => {
   if (clip.length === 0) {

@@ -11,6 +11,10 @@ import {
   pointerLayers,
   pointerPositionAt,
   pointerVariant,
+  Point,
+  restingZoom,
+  zoomedPoint,
+  ZoomView,
 } from '@asap-hub/demo-timeline';
 import {
   forwardRef,
@@ -131,6 +135,9 @@ export type CursorLayerHandle = {
 
 const noPath: CursorPathPoint[] = [];
 
+// a stage with no zooms at all, and every test that renders the layer on its own
+const atRest = (): ZoomView => restingZoom;
+
 const pointerTransform = (x: number, y: number): string =>
   `translate(${x * 100}%, ${y * 100}%)`;
 
@@ -145,6 +152,10 @@ type Props = {
   readonly tMs?: number;
   readonly offsetMs?: number;
   readonly playing?: boolean;
+  // what the zoom is doing to the picture at a moment. The pointer and the
+  // rings ride the zoomed picture rather than the frame it is drawn on, and the
+  // export moves them through the very same transform.
+  readonly zoomAt?: (tMs: number) => ZoomView;
 };
 
 const CursorLayer = forwardRef<CursorLayerHandle, Props>(
@@ -156,6 +167,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
       tMs = 0,
       offsetMs = 0,
       playing = false,
+      zoomAt = atRest,
     },
     ref,
   ) => {
@@ -165,6 +177,13 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     const shownKeyRef = useRef(shownKey);
     const pointerRef = useRef<HTMLDivElement>(null);
     const latestMsRef = useRef(tMs);
+    // read at the moment a frame is drawn rather than closed over, so a zoom
+    // edited while the playhead is parked moves what is already on screen
+    const zoomAtRef = useRef(zoomAt);
+    zoomAtRef.current = zoomAt;
+    const ringsRef = useRef(new Map<string, HTMLElement>());
+    const effectsRef = useRef(effects);
+    effectsRef.current = effects;
 
     // the same simplified track the render walks, so the two draw one path
     const track = useMemo(
@@ -180,32 +199,47 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     }, [shownKey]);
 
     // the pointer moves every frame, which is exactly what a render sixty times
-    // a second used to cost, so its transform is written straight to the node
-    const placePointer = useCallback(
+    // a second used to cost, so its position is written straight to the node.
+    // A ring moves with it: during a zoom's ramp the picture is still moving,
+    // and a ring left behind would be somewhere the pointer no longer is.
+    const place = useCallback(
       (ms: number) => {
+        const view = zoomAtRef.current(ms);
         const node = pointerRef.current;
-        if (!node) {
-          return;
+        if (node) {
+          const at = pointerPositionAt(track, ms);
+          node.style.display = at ? '' : 'none';
+          if (at) {
+            const drawn = zoomedPoint(at, view);
+            node.style.transform = pointerTransform(drawn.x, drawn.y);
+          }
         }
-        const at = pointerPositionAt(track, ms);
-        node.style.display = at ? '' : 'none';
-        if (at) {
-          node.style.transform = pointerTransform(at.x, at.y);
-        }
+        ringsRef.current.forEach((_unused, id) => {
+          const ring = ringsRef.current.get(id);
+          const effect = effectsRef.current.find((each) => each.id === id);
+          if (!ring || !effect) {
+            return;
+          }
+          const drawn = zoomedPoint(effect.point, view);
+          ring.style.left = `${drawn.x * 100}%`;
+          ring.style.top = `${drawn.y * 100}%`;
+        });
       },
       [track],
     );
 
+    // after every render as well as every frame, so a zoom or an effect the
+    // creator has just moved is drawn where it now belongs
     useEffect(() => {
-      placePointer(latestMsRef.current);
-    }, [placePointer]);
+      place(latestMsRef.current);
+    }, [effects, place, timeMs, zoomAt]);
 
     useImperativeHandle(
       ref,
       () => ({
         setTime: (ms: number) => {
           latestMsRef.current = ms;
-          placePointer(ms);
+          place(ms);
           const key = keyOf(shownAt(effects, ms, offsetMs));
           if (key === shownKeyRef.current) {
             return;
@@ -214,10 +248,21 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           setTimeMs(ms);
         },
       }),
-      [effects, offsetMs, placePointer],
+      [effects, offsetMs, place],
     );
 
     const spotlight = shown.find((effect) => effect.type === 'spotlight');
+    const view = zoomAt(latestMsRef.current);
+
+    const holdRing = (id: string) => (node: HTMLElement | null) => {
+      if (node) {
+        ringsRef.current.set(id, node);
+      } else {
+        ringsRef.current.delete(id);
+      }
+    };
+
+    const drawnAt = (point: Point): Point => zoomedPoint(point, view);
 
     return (
       <div css={layerStyles}>
@@ -242,10 +287,11 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
                 playing ? 'playing' : 'held'
               }`}
               data-testid="cursor-ripple"
+              ref={holdRing(effect.id)}
               css={[rippleStyles, playing && playingRippleStyles]}
               style={{
-                left: `${effect.point.x * 100}%`,
-                top: `${effect.point.y * 100}%`,
+                left: `${drawnAt(effect.point).x * 100}%`,
+                top: `${drawnAt(effect.point).y * 100}%`,
                 borderColor: inkOf(effect),
                 backgroundColor: `${inkOf(effect)}2e`,
                 boxShadow: edgeShadow(inkOf(effect)),
@@ -261,7 +307,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
             style={{
               display: pointer ? undefined : 'none',
               transform: pointer
-                ? pointerTransform(pointer.x, pointer.y)
+                ? pointerTransform(drawnAt(pointer).x, drawnAt(pointer).y)
                 : undefined,
             }}
           >

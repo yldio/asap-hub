@@ -6,10 +6,12 @@ import {
   Canvas,
   Clip,
   CursorLayer,
+  Point,
   SourceClip,
   TitleClip,
   Zoom,
 } from '../schema';
+import { clipZooms, zoomDurationMs } from '../zoom';
 import { assetHasAudio, assetPath } from './assets';
 import { cursorArt } from './cursorArt';
 import {
@@ -42,7 +44,12 @@ import {
 } from './paths';
 import { pointerMotion, pointerSvg } from './pointer';
 import { FfmpegStep, RenderAsset, SvgFile } from './types';
-import { clipZooms, zoomFilters } from './zoom';
+import {
+  onZoomedFrame,
+  zoomExpressions,
+  ZoomExpressions,
+  zoomFilters,
+} from './zoom';
 
 export type ClipStepInput = {
   placement: ClipPlacement;
@@ -159,6 +166,35 @@ const bannerOverlays = (
 // draws the ones a viewer sees first rather than failing to render at all
 export const maxCursorOverlays = 60;
 
+// A zoom at rest adds nothing, so an overlay that is gone before the zoom starts
+// carries none of its arithmetic. That is the same answer the preview gives, and
+// it keeps the filtergraph off a clip whose zooms and clicks never meet.
+const zoomsDuring = (clip: Zoom[], startMs: number, endMs: number): Zoom[] =>
+  clip.filter(
+    (zoom) =>
+      zoom.startMs < endMs && zoom.startMs + zoomDurationMs(zoom) > startMs,
+  );
+
+// The ring is drawn where the capture put it, on an image the size of the whole
+// canvas, so the whole image is shifted by however far the zoom carries that one
+// point. A ring that did not move would sit where the button used to be while
+// the pointer clicking it had already followed the picture.
+export const ringMove = (
+  point: Point,
+  canvas: Canvas,
+  zoom: ZoomExpressions,
+): OverlayMove => {
+  // the ring was drawn at whole pixels, so it is moved from there
+  const shift = (at: number, size: number, crop: string): string => {
+    const drawn = Math.round(at * size);
+    return `(${onZoomedFrame(`${drawn}`, size, crop, zoom.scale)})-${drawn}`;
+  };
+  return {
+    x: shift(point.x, canvas.width, zoom.cropX),
+    y: shift(point.y, canvas.height, zoom.cropY),
+  };
+};
+
 // the effects are timed against the capture, and the layer's offset is what
 // lines that capture up with the clip
 const cursorOverlays = (
@@ -166,6 +202,7 @@ const cursorOverlays = (
   placement: ClipPlacement,
   canvas: Canvas,
   workDir: string,
+  clipZoom: Zoom[],
 ): Overlay[] =>
   cursor
     .filter((layer) => layer.clipId === placement.clip.id)
@@ -178,6 +215,12 @@ const cursorOverlays = (
         const atMs = effect.tMs + layer.offsetMs;
         const startMs = Math.max(0, atMs);
         const endMs = Math.min(placement.durationMs, atMs + art.durationMs);
+        // a spotlight is a scrim over the whole frame, and moving it would
+        // uncover the very edge it is meant to darken, so it stays put
+        const zoom =
+          effect.type === 'ripple'
+            ? zoomExpressions(zoomsDuring(clipZoom, startMs, endMs))
+            : undefined;
         return endMs <= startMs
           ? []
           : [
@@ -189,6 +232,7 @@ const cursorOverlays = (
                   fadeInMs: art.fadeInMs,
                   fadeOutMs: art.fadeOutMs,
                 },
+                ...(zoom ? { move: ringMove(effect.point, canvas, zoom) } : {}),
               },
             ];
       }),
@@ -206,15 +250,24 @@ const pointerOverlays = (
   placement: ClipPlacement,
   canvas: Canvas,
   workDir: string,
+  clipZoom: Zoom[],
 ): Overlay[] =>
   cursor
     .filter((layer) => layer.clipId === placement.clip.id)
     .flatMap((layer) => {
       const art = { canvas, variant: layer.pointer };
+      const track = cursorPointerTrack(layer);
       const motion = pointerMotion(
-        cursorPointerTrack(layer),
+        track,
         art,
         placement.durationMs,
+        zoomExpressions(
+          zoomsDuring(
+            clipZoom,
+            track[0]?.tMs ?? 0,
+            track[track.length - 1]?.tMs ?? 0,
+          ),
+        ),
       );
       return motion
         ? [
@@ -268,14 +321,17 @@ export const buildClipStep = ({
   const audioMap = generatedAudio ? '1:a' : '0:a?';
   const baseInputCount = generatedAudio ? 2 : 1;
 
-  // the zoom moves the picture the effects and the banners sit on, exactly as
-  // the preview scales the video under its own overlay layers
+  // the zoom moves the picture the banners sit on, exactly as the preview
+  // scales the video under its own banner layer; the pointer and the click
+  // rings are carried through the same window instead, so they ride the zoomed
+  // picture rather than the frame it is drawn on
+  const clipZoom = clipZooms(zooms, clip.id);
   const overlays: Overlay[] = [
     ...(clip.kind === 'title'
       ? [titleOverlay(clip, canvas, workDir, index, durationMs)]
       : []),
-    ...cursorOverlays(cursor, placement, canvas, workDir),
-    ...pointerOverlays(cursor, placement, canvas, workDir),
+    ...cursorOverlays(cursor, placement, canvas, workDir, clipZoom),
+    ...pointerOverlays(cursor, placement, canvas, workDir, clipZoom),
     ...bannerOverlays(banners, placement, canvas, workDir),
   ];
 
@@ -284,7 +340,7 @@ export const buildClipStep = ({
       ['0:v'],
       [
         ...videoFilters({ canvas, placement }),
-        ...zoomFilters(clipZooms(zooms, clip.id), canvas),
+        ...zoomFilters(clipZoom, canvas),
       ],
       'v0',
     ),

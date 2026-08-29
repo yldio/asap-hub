@@ -109,3 +109,16 @@ it('reports a bookmark it could not replace', async () => {
   );
   expect(view.result.current.session?.snippetUrl).toBe(session.snippetUrl);
 });
+
+it('does not offer a bookmark stored from before it named the project', async () => {
+  window.localStorage.setItem(
+    'demo-hub.capture.project-1',
+    JSON.stringify({ ...session, snippetUrl: 'http://localhost/v1.js#s1.tok' }),
+  );
+
+  const view = render({ captureStatus: jest.fn().mockResolvedValue(open) });
+  await waitFor(() => expect(view.result.current.status).toEqual(open));
+
+  expect(view.result.current.session?.sessionId).toBe('session-1');
+  expect(view.result.current.session?.snippetUrl).toBeUndefined();
+});

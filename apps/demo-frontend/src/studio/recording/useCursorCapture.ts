@@ -22,10 +22,19 @@ const pollMs = 5000;
 // session meant no status, and no status disabled the button that applies them.
 const sessionKey = (projectId: string) => `demo-hub.capture.${projectId}`;
 
+// a session stored before the bookmark named the project carries a loader for
+// that one take, and saving it again would bring the old trouble back
+const reusableBookmark = (session: RecordingSession): RecordingSession =>
+  session.snippetUrl?.includes('#project.')
+    ? session
+    : { ...session, snippetUrl: undefined };
+
 const storedSession = (projectId: string): RecordingSession | undefined => {
   try {
     const raw = window.localStorage.getItem(sessionKey(projectId));
-    return raw ? (JSON.parse(raw) as RecordingSession) : undefined;
+    return raw
+      ? reusableBookmark(JSON.parse(raw) as RecordingSession)
+      : undefined;
   } catch {
     return undefined;
   }

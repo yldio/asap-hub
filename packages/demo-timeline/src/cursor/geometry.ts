@@ -41,24 +41,36 @@ const tabView = (event: CapturePlacement): SharedView | undefined =>
       }
     : undefined;
 
+// Where the recorded display starts on the virtual desktop that screenX counts
+// from. The browser will not say: availLeft and availTop are the corner of the
+// display's WORK AREA, which a macOS menu bar, a Linux top bar or a Windows
+// taskbar insets by tens of pixels, and the recording holds the whole display
+// rather than the work area. So an axis is read from the desktop origin whenever
+// the pointer already falls on the primary display, which is every single
+// monitor take and every display aligned with the primary one, and from the work
+// area only when the pointer is somewhere no primary display reaches.
+const displayOrigin = (at: number, size: number, workArea: number): number =>
+  at >= 0 && at < size ? 0 : workArea;
+
 // A whole screen share shows one display, so the pointer is placed on that
-// display: screenX counts from the primary display's corner across the virtual
-// desktop, and availLeft is where this display starts on it, so the difference
-// is the pointer's position on the display actually being recorded. Both are
-// recorded per event, so a window dragged to another monitor mid take keeps
-// mapping correctly from the moment it moved.
-const monitorView = (event: CapturePlacement): SharedView | undefined =>
-  positive(event.screenW) && positive(event.screenH)
-    ? {
-        rect: {
-          x: finite(event.screenLeft),
-          y: finite(event.screenTop),
-          width: event.screenW,
-          height: event.screenH,
-        },
-        at: { x: finite(event.screenX), y: finite(event.screenY) },
-      }
-    : undefined;
+// display. Both the display and the pointer are recorded per event, so a window
+// dragged to another monitor mid take keeps mapping correctly from the moment
+// it moved.
+const monitorView = (event: CapturePlacement): SharedView | undefined => {
+  if (!positive(event.screenW) || !positive(event.screenH)) {
+    return undefined;
+  }
+  const at = { x: finite(event.screenX), y: finite(event.screenY) };
+  return {
+    rect: {
+      x: displayOrigin(at.x, event.screenW, finite(event.screenLeft)),
+      y: displayOrigin(at.y, event.screenH, finite(event.screenTop)),
+      width: event.screenW,
+      height: event.screenH,
+    },
+    at,
+  };
+};
 
 // A window share shows the browser window, chrome and all, and the window's own
 // corner on the desktop is what the pointer is measured from. Recorded per

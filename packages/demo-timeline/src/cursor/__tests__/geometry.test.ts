@@ -157,6 +157,26 @@ describe('more than one monitor', () => {
     expect(ratioOf(onTheRight, 'monitor').x).toBe(0.25);
   });
 
+  // availTop is the corner of the WORK AREA, so on a Mac it is a menu bar down
+  // from the corner of the display the recording actually holds
+  it('ignores a work area inset when the pointer is on the primary display', () => {
+    const macBook: CapturePlacement = {
+      x: 400,
+      y: 300,
+      viewportW: 1200,
+      viewportH: 700,
+      screenX: 756,
+      screenY: 491,
+      screenW: 1512,
+      screenH: 982,
+      screenLeft: 0,
+      // the menu bar, which the recording of the whole screen still shows
+      screenTop: 25,
+    };
+
+    expect(ratioOf(macBook, 'monitor')).toEqual({ x: 0.5, y: 0.5 });
+  });
+
   it('pins to the edge rather than off the frame when the origin is unknown', () => {
     const noOrigin = { ...onTheLeft, screenLeft: undefined };
     expect(ratioOf(noOrigin, 'monitor').x).toBe(0);

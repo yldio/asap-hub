@@ -1,4 +1,4 @@
-import { ClipPlacement } from '@asap-hub/demo-timeline';
+import { ClipPlacement, CursorLayer } from '@asap-hub/demo-timeline';
 import { FC, memo } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { TimelineAction } from '../project/timelineReducer';
@@ -13,6 +13,7 @@ import ZoomInspector from './ZoomInspector';
 type Props = {
   readonly selected: ResolvedSelection;
   readonly current?: ClipPlacement;
+  readonly cursorLayer?: CursorLayer;
   readonly assets: Record<string, ProjectAsset>;
   readonly clipCount: number;
   readonly readOnly: boolean;
@@ -26,6 +27,7 @@ type Props = {
 const InspectorPanel: FC<Props> = ({
   selected,
   current,
+  cursorLayer,
   assets,
   clipCount,
   readOnly,
@@ -58,6 +60,15 @@ const InspectorPanel: FC<Props> = ({
       <CursorEffectInspector
         effect={effect}
         readOnly={readOnly}
+        pointer={cursorLayer?.pointer}
+        hasCapture={(cursorLayer?.path.length ?? 0) > 0}
+        onChangePointer={(pointer) =>
+          dispatch({
+            type: 'setCursorPointer',
+            clipId: current.clip.id,
+            pointer,
+          })
+        }
         onChange={(change) =>
           dispatch({
             type: 'updateCursorEffect',

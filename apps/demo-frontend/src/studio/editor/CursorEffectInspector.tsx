@@ -4,6 +4,10 @@ import {
   CursorEffect,
   cursorColors,
   defaultCursorColor,
+  defaultPointerVariant,
+  pointerBox,
+  pointerLayers,
+  pointerVariants,
 } from '@asap-hub/demo-timeline';
 import { FC } from 'react';
 import EditorButton from './EditorButton';
@@ -34,6 +38,21 @@ const swatchStyles = css({
 
 const chosenSwatchStyles = css({ borderColor: editorTheme.text });
 
+const pointerSwatchStyles = css({
+  width: 34,
+  height: 34,
+  borderRadius: 6,
+  padding: 4,
+  cursor: 'pointer',
+  border: `2px solid ${editorTheme.line}`,
+  // the shapes are drawn in white with a dark halo, which is unreadable on a
+  // light panel, so each sits on a slate of its own
+  backgroundColor: '#3c4250',
+  display: 'grid',
+  placeItems: 'center',
+  ':disabled': { cursor: 'not-allowed', opacity: 0.5 },
+});
+
 const originLabels: Record<CursorEffect['origin'], string> = {
   derived: 'From the captured recording',
   'derived-edited': 'Captured, then edited here',
@@ -43,6 +62,11 @@ const originLabels: Record<CursorEffect['origin'], string> = {
 type Props = {
   readonly effect: CursorEffect;
   readonly readOnly: boolean;
+  // the drawn pointer belongs to the whole capture, not to one click, so it is
+  // set here but written to the layer
+  readonly pointer?: string;
+  readonly hasCapture?: boolean;
+  readonly onChangePointer?: (pointer: string) => void;
   readonly onChange: (change: Partial<CursorEffect>) => void;
   readonly onRemove: () => void;
 };
@@ -50,6 +74,9 @@ type Props = {
 const CursorEffectInspector: FC<Props> = ({
   effect,
   readOnly,
+  pointer,
+  hasCapture,
+  onChangePointer,
   onChange,
   onRemove,
 }) => (
@@ -83,6 +110,49 @@ const CursorEffectInspector: FC<Props> = ({
         );
       })}
     </fieldset>
+
+    {hasCapture && onChangePointer ? (
+      <fieldset css={swatchRowStyles} aria-label="Pointer">
+        {pointerVariants.map((variant) => {
+          const box = pointerBox(variant);
+          const chosen = (pointer ?? defaultPointerVariant) === variant.id;
+          return (
+            <button
+              key={variant.id}
+              type="button"
+              css={[pointerSwatchStyles, chosen && chosenSwatchStyles]}
+              aria-label={variant.label}
+              aria-pressed={chosen}
+              disabled={readOnly}
+              onClick={() => onChangePointer(variant.id)}
+            >
+              <svg
+                width={20 * box.aspectRatio}
+                height={20}
+                viewBox={box.viewBox}
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              >
+                {pointerLayers(variant).map((layer, index) => (
+                  <path
+                    key={`${index === 0 ? 'edge' : 'ink'}-${layer.d}`}
+                    d={layer.d}
+                    fillRule={layer.fillRule}
+                    fill={layer.fill}
+                    fillOpacity={layer.fillOpacity}
+                    stroke={layer.stroke}
+                    strokeOpacity={layer.strokeOpacity}
+                    strokeWidth={layer.strokeWidth}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                ))}
+              </svg>
+            </button>
+          );
+        })}
+      </fieldset>
+    ) : null}
 
     <TimecodeField
       label="At, in the clip"

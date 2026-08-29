@@ -85,6 +85,11 @@ export type TimelineAction =
       tMs: number;
     }
   | {
+      type: 'setCursorPointer';
+      clipId: string;
+      pointer: string;
+    }
+  | {
       type: 'applyCapture';
       clipId: string;
       path: CursorLayer['path'];
@@ -469,6 +474,15 @@ export const timelineReducer = (
           effects: layer.effects.filter(
             (effect) => effect.id !== action.effectId,
           ),
+        })),
+      };
+
+    case 'setCursorPointer':
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => ({
+          ...layer,
+          pointer: action.pointer,
         })),
       };
 

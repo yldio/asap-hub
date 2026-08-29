@@ -809,6 +809,8 @@ const ProjectEditor: FC<Props> = ({
                   banners={timeline.banners}
                   zooms={timeline.zooms}
                   cursorEffects={cursorEffects}
+                  cursorPath={cursorLayer?.path}
+                  cursorPointer={cursorLayer?.pointer}
                   cursorOffsetMs={cursorLayer?.offsetMs}
                   playing={playback.playing}
                   volume={volume}
@@ -847,6 +849,7 @@ const ProjectEditor: FC<Props> = ({
             <InspectorPanel
               selected={selected}
               current={current}
+              cursorLayer={cursorLayer}
               assets={assetsById}
               clipCount={placements.length}
               readOnly={readOnly}

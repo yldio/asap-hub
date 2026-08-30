@@ -123,7 +123,7 @@ const shownAt = (windows: ShownWindow[], tMs: number): CursorEffect[] => {
   let high = windows.length;
   const earliest = tMs - spotlightMs;
   while (low < high) {
-    const mid = (low + high) >> 1;
+    const mid = Math.floor((low + high) / 2);
     if ((windows[mid]?.atMs ?? 0) < earliest) {
       low = mid + 1;
     } else {

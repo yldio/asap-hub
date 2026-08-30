@@ -3,12 +3,17 @@ process.env.TABLE_NAME = 'demo-hub-test-data';
 process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
-import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
+import {
+  buildRenderPlan,
+  createEmptyTimeline,
+  Timeline,
+} from '@asap-hub/demo-timeline';
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import {
   AssetRow,
   clipConcurrency,
+  scheduledSteps,
   sectionSpans,
   claimUploadArgs,
   conditionFailed,
@@ -742,6 +747,59 @@ describe('parseRenderEnv', () => {
   it.each(Object.keys(complete))('requires %s', (name) => {
     expect(() => parseRenderEnv({ ...complete, [name]: undefined })).toThrow(
       name,
+    );
+  });
+});
+
+// the assemble step reads the tiles the pool writes and the join reads the
+// assembled clip, so pooling either alongside its inputs fails the render
+describe('scheduledSteps', () => {
+  it('keeps the assemble and the join out of the pool, in plan order', () => {
+    const plan = buildRenderPlan({
+      timeline: {
+        ...createEmptyTimeline(),
+        clips: [
+          {
+            kind: 'source',
+            id: 'clip-long',
+            assetId: 'asset-long',
+            inMs: 0,
+            outMs: 200_000,
+            volume: 1,
+          },
+          {
+            kind: 'source',
+            id: 'clip-next',
+            assetId: 'asset-long',
+            inMs: 0,
+            outMs: 30_000,
+            volume: 1,
+            transitionIn: { type: 'crossfade', durationMs: 1000 },
+          },
+        ],
+      },
+      assets: [
+        {
+          assetId: 'asset-long',
+          path: '/media/long.mp4',
+          durationMs: 200_000,
+          hasAudio: true,
+        },
+      ],
+      workDir: '/work',
+      output: '/work/out.mp4',
+    });
+
+    const { pooled, serial } = scheduledSteps(plan.steps);
+    expect(pooled.every(({ step }) => step.label.startsWith('clip'))).toBe(
+      true,
+    );
+    expect(serial.map(({ step }) => step.label)).toEqual([
+      'assemble clip 0 from 4 tiles',
+      'join 2 clips (xfade)',
+    ]);
+    expect(serial.map(({ index }) => index)).toEqual(
+      [...serial.map(({ index }) => index)].sort((a, b) => a - b),
     );
   });
 });

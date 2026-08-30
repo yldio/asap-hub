@@ -600,54 +600,79 @@ const runStep = async (
 };
 
 // The clips are independent of one another, so they encode in parallel and
-// only the join waits for all of them: the wall clock drops towards the
-// longest clip instead of the sum of them all.
+// the wall clock drops towards the longest clip instead of the sum of them
+// all. A step marked serial reads what the pool writes, so those run after
+// it, one at a time, in plan order: an assemble before the join.
+export const scheduledSteps = (
+  steps: RenderPlan['steps'],
+): {
+  pooled: { step: RenderPlan['steps'][number]; index: number }[];
+  serial: { step: RenderPlan['steps'][number]; index: number }[];
+} => {
+  const indexed = steps.map((step, index) => ({ step, index }));
+  return {
+    pooled: indexed.filter(({ step }) => !step.serial),
+    serial: indexed.filter(({ step }) => step.serial),
+  };
+};
+
 const runPlan = async (
   plan: RenderPlan,
   durations: number[],
   report: Reporter,
 ): Promise<void> => {
-  const joinIndex = plan.steps.length - 1;
-  const clipSteps = plan.steps.slice(0, joinIndex);
-  const totalClipMs =
-    clipSteps.reduce(
-      (total, unused, index) => total + (durations[index] ?? 0),
-      0,
-    ) || 1;
-  const doneFractions = clipSteps.map(() => 0);
-  const reportClips = (label: string) => {
-    const weighted = doneFractions.reduce(
-      (total, fraction, index) => total + fraction * (durations[index] ?? 0),
+  const weightOf = (index: number) =>
+    plan.steps[index]?.weightMs ?? durations[index] ?? plan.durationMs;
+  const { pooled, serial } = scheduledSteps(plan.steps);
+
+  const totalPooledMs =
+    pooled.reduce((total, { index }) => total + weightOf(index), 0) || 1;
+  const doneFractions = new Map<number, number>();
+  const reportPooled = (label: string) => {
+    const weighted = pooled.reduce(
+      (total, { index }) =>
+        total + (doneFractions.get(index) ?? 0) * weightOf(index),
       0,
     );
     report(
       label,
-      Math.round(Math.min(1, weighted / totalClipMs) * stepWeights.clips),
+      Math.round(Math.min(1, weighted / totalPooledMs) * stepWeights.clips),
     );
   };
 
   const pool = clipConcurrency(cpus().length);
-  log(`encoding ${clipSteps.length} clips, ${pool} at a time`);
-  await inPool(
-    pool,
-    clipSteps.map((step, index) => ({ step, index })),
-    async ({ step, index }) => {
-      log(`${index + 1}/${plan.steps.length} ${step.label}`);
-      await runStep(step, durations[index] ?? plan.durationMs, (fraction) => {
-        doneFractions[index] = Math.min(1, fraction);
-        reportClips(step.label);
-      });
-    },
-  );
+  log(`encoding ${pooled.length} clips, ${pool} at a time`);
+  await inPool(pool, pooled, async ({ step, index }) => {
+    log(`${index + 1}/${plan.steps.length} ${step.label}`);
+    await runStep(step, durations[index] ?? plan.durationMs, (fraction) => {
+      doneFractions.set(index, Math.min(1, fraction));
+      reportPooled(step.label);
+    });
+  });
 
-  const join = plan.steps[joinIndex];
-  if (!join) {
-    return;
-  }
-  log(`${plan.steps.length}/${plan.steps.length} ${join.label}`);
-  report(join.label, renderProgress(joinIndex, plan.steps.length, 0));
-  await runStep(join, durations[joinIndex] ?? plan.durationMs, (fraction) =>
-    report(join.label, renderProgress(joinIndex, plan.steps.length, fraction)),
+  const totalSerialMs =
+    serial.reduce((total, { index }) => total + weightOf(index), 0) || 1;
+  let serialDoneMs = 0;
+  await serial.reduce(
+    (previous, { step, index }) =>
+      previous.then(async () => {
+        log(`${index + 1}/${plan.steps.length} ${step.label}`);
+        const at = (fraction: number) =>
+          report(
+            step.label,
+            stepWeights.clips +
+              Math.round(
+                (Math.min(1, serialDoneMs / totalSerialMs) +
+                  Math.min(1, Math.max(0, fraction)) *
+                    (weightOf(index) / totalSerialMs)) *
+                  stepWeights.join,
+              ),
+          );
+        at(0);
+        await runStep(step, durations[index] ?? plan.durationMs, at);
+        serialDoneMs += weightOf(index);
+      }),
+    Promise.resolve(),
   );
 };
 

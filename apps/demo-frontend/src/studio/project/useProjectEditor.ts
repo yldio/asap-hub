@@ -301,12 +301,16 @@ export const useProjectEditor = ({
     pendingRef.current = undefined;
   }, [markSettled]);
 
+  // An interval rather than a one-shot timer: `dirty` can stay true across a
+  // whole save, when the save fails or when edits kept coming while it was in
+  // flight, and a timer keyed on `dirty` alone never rescheduled after that.
+  // One failed save then silently disarmed the autosave for the whole session.
   useEffect(() => {
     if (readOnly || !dirty) {
       return undefined;
     }
-    const handle = setTimeout(flush, autosaveMs);
-    return () => clearTimeout(handle);
+    const handle = setInterval(flush, autosaveMs);
+    return () => clearInterval(handle);
   }, [dirty, flush, readOnly]);
 
   // Leaving inside the debounce window used to drop the last edit silently, and

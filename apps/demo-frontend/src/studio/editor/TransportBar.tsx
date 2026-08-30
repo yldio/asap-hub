@@ -90,6 +90,7 @@ const TransportBar: FC<Props> = ({
             onFpsChange(Number(event.target.value) as 24 | 30 | 60)
           }
         >
+          <option value={24}>24fps</option>
           <option value={30}>30fps</option>
           <option value={60}>60fps</option>
         </select>

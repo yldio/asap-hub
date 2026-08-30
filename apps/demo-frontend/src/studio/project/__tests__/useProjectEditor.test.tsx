@@ -302,6 +302,28 @@ describe('a save that does not land', () => {
     expect(view.result.current.dirty).toBe(true);
   });
 
+  // "retrying on the next edit" is what the header promises after a failure,
+  // and a one-shot timer keyed on dirtiness never actually retried: one failed
+  // save disarmed the autosave for the rest of the session
+  it('keeps trying while the work is unsaved', async () => {
+    const saveTimeline = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockResolvedValue({
+        video: { ...project, version: 4 },
+        timelineVersion: 5,
+      });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+    expect(view.result.current.dirty).toBe(true);
+
+    await settle();
+    expect(saveTimeline.mock.calls.length).toBeGreaterThanOrEqual(2);
+    expect(view.result.current.dirty).toBe(false);
+  });
+
   // the render container bumps the row version every few seconds while it
   // reports progress, so a conflict that leaves the timeline version alone is
   // the common case, not an oddity

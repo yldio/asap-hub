@@ -72,6 +72,10 @@ type Props = {
   readonly offsetMs?: number;
   readonly onChangePointer?: (pointer: string) => void;
   readonly onChangeOffset?: (offsetMs: number) => void;
+  // the effect's time is stored against the footage; the field reads and
+  // writes it in the clip the creator is looking at, so the trim converts
+  readonly inMs?: number;
+  readonly spanMs?: number;
   readonly onChange: (change: Partial<CursorEffect>) => void;
   readonly onRemove: () => void;
 };
@@ -86,6 +90,8 @@ const CursorEffectInspector: FC<Props> = ({
   onChangeOffset,
   onChange,
   onRemove,
+  inMs = 0,
+  spanMs,
 }) => (
   <aside css={panelStyles} aria-label="Cursor effect" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Cursor effect</h2>
@@ -179,9 +185,11 @@ const CursorEffectInspector: FC<Props> = ({
 
     <TimecodeField
       label="At, in the clip"
-      value={effect.tMs}
+      value={effect.tMs - inMs}
       disabled={readOnly}
-      onChange={(tMs) => onChange({ tMs })}
+      minMs={0}
+      {...(spanMs !== undefined ? { maxMs: spanMs } : {})}
+      onChange={(tMs) => onChange({ tMs: tMs + inMs })}
     />
 
     <PointField

@@ -60,6 +60,8 @@ const InspectorPanel: FC<Props> = ({
       <CursorEffectInspector
         effect={effect}
         readOnly={readOnly}
+        inMs={current.clip.kind === 'source' ? current.clip.inMs : 0}
+        spanMs={current.durationMs}
         pointer={cursorLayer?.pointer}
         hasCapture={(cursorLayer?.path.length ?? 0) > 0}
         offsetMs={cursorLayer?.offsetMs ?? 0}
@@ -95,6 +97,7 @@ const InspectorPanel: FC<Props> = ({
       <ZoomInspector
         zoom={zoom}
         readOnly={readOnly}
+        {...(current ? { spanMs: current.durationMs } : {})}
         onChange={(change) =>
           dispatch({ type: 'updateZoom', zoomId: zoom.id, change })
         }

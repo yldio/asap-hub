@@ -64,3 +64,11 @@ describe('rounding up to the next hundredth', () => {
     }
   });
 });
+
+// the comment above the pattern promises a bare number of seconds, and "90"
+// used to be refused because bare seconds were capped at 59
+it('reads a bare number of seconds past a minute', () => {
+  expect(parseMs('90')).toBe(90000);
+  expect(parseMs('90.25')).toBe(90250);
+  expect(parseMs('1:30')).toBe(90000);
+});

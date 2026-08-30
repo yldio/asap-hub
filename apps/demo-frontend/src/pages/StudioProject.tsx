@@ -113,6 +113,8 @@ const noop = () => undefined;
 // creator has to do about each one
 const renderRefusals: Record<string, string> = {
   render_active: 'An export is already running for this demo.',
+  asset_not_ready:
+    'A recording is still being prepared. Give it a moment, then export.',
   empty_timeline: 'Add a clip before exporting.',
   locked: 'Someone else is editing this demo, so it cannot be exported.',
   conflict: 'This demo changed somewhere else. Try the export again.',
@@ -346,6 +348,9 @@ const Editor: FC<EditorProps> = ({
     }: TakeResult) => {
       const clipId = createId('clip');
       const startMs = timelineDurationMs(editor.timeline.clips);
+      // the clip and its voice over arrived together, so one Ctrl+Z takes
+      // both back rather than leaving an orphan narration on the lane
+      editor.beginGesture();
       editor.dispatch({
         type: 'addClip',
         assetId: recorded.assetId,
@@ -366,6 +371,7 @@ const Editor: FC<EditorProps> = ({
           },
         });
       }
+      editor.endGesture();
       onAssetsChanged();
     },
     [editor, onAssetsChanged],
@@ -413,6 +419,8 @@ const Editor: FC<EditorProps> = ({
   // the recorder knows what the picker was pointed at, and the capture in the
   // page being demoed cannot: it is the same take, read from the two ends
   const capture = useCursorCapture(id, take.displaySurface);
+  // the apply button used to do nothing at all on an empty timeline
+  const [applyRefusal, setApplyRefusal] = useState<string>();
 
   // A project that tracks the cursor keeps a session open while the studio is,
   // so the tab being demoed shows up as connected before a recording starts
@@ -545,7 +553,7 @@ const Editor: FC<EditorProps> = ({
         readOnly={readOnly}
         leaseHolder={leaseHolder}
         dirty={editor.dirty}
-        notice={upload.error ?? renderError ?? publishError}
+        notice={renderError ?? publishError ?? upload.error}
         onLeave={() => leaving.request(() => navigate('/'))}
         onRetryLease={retryLease}
         onRename={rename}
@@ -621,10 +629,16 @@ const Editor: FC<EditorProps> = ({
               status={capture.status}
               readOnly={readOnly}
               applying={capture.applying}
-              error={capture.error}
+              error={capture.error ?? applyRefusal}
               onStart={capture.start}
               onNewBookmark={capture.newBookmark}
-              onApply={() => applyCursorCapture(capture.apply)}
+              onApply={() =>
+                setApplyRefusal(
+                  applyCursorCapture(capture.apply)
+                    ? undefined
+                    : 'Add a clip to the timeline first, then add the cursor effects to it.',
+                )
+              }
             />
           </>
         )}

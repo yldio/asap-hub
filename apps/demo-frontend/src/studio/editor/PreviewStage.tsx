@@ -230,11 +230,14 @@ const PreviewStage: FC<Props> = ({
         placement && clip?.kind === 'source'
           ? sourceTimeAt(placement, ms)
           : undefined;
-      // only correct real drift, otherwise every frame fights the element's own
-      // playback and the picture stutters
+      // during playback only real drift is corrected, otherwise every frame
+      // fights the element's own clock and the picture stutters; paused, the
+      // element moves only when we move it, so scrubbing follows the playhead
+      // to the frame rather than trailing it by a quarter second
+      const slackS = playing ? 0.25 : 0.01;
       if (
         sourceMs !== undefined &&
-        Math.abs(element.currentTime - sourceMs / 1000) > 0.25
+        Math.abs(element.currentTime - sourceMs / 1000) > slackS
       ) {
         element.currentTime = sourceMs / 1000;
       }
@@ -404,6 +407,7 @@ const PreviewStage: FC<Props> = ({
         offsetMs={cursorOffsetMs}
         inMs={clip?.kind === 'source' ? clip.inMs : 0}
         playing={playing}
+        zoomAt={viewAt}
       />
       <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
 

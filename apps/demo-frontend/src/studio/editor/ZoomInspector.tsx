@@ -18,11 +18,19 @@ import { zoomDurationMs } from './zoom';
 type Props = {
   readonly zoom: Zoom;
   readonly readOnly: boolean;
+  // how long the zoom's clip runs, so a start past the end cannot be typed
+  readonly spanMs?: number;
   readonly onChange: (change: Partial<Zoom>) => void;
   readonly onRemove: () => void;
 };
 
-const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
+const ZoomInspector: FC<Props> = ({
+  zoom,
+  readOnly,
+  spanMs,
+  onChange,
+  onRemove,
+}) => (
   <aside css={panelStyles} aria-label="Zoom" tabIndex={0}>
     <h2 css={panelHeadingStyles}>Zoom</h2>
 
@@ -47,6 +55,7 @@ const ZoomInspector: FC<Props> = ({ zoom, readOnly, onChange, onRemove }) => (
       label="Starts in the clip"
       value={zoom.startMs}
       disabled={readOnly}
+      {...(spanMs !== undefined ? { maxMs: spanMs } : {})}
       onChange={(startMs) => onChange({ startMs })}
     />
     <TimecodeField

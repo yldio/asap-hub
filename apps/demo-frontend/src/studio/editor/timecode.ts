@@ -2,6 +2,9 @@
 // has to think in milliseconds. Hundredths are optional on the way in, and both
 // m:ss and a bare number of seconds are accepted.
 const pattern = /^(?:(\d+):)?([0-5]?\d)(?:\.(\d{1,3}))?$/;
+// "90" is ninety seconds; the pattern above caps bare seconds at 59 only when
+// minutes were actually written
+const bareSeconds = /^(\d+)(?:\.(\d{1,3}))?$/;
 
 export const formatMs = (ms: number): string => {
   // rounded to hundredths first, so 1999ms carries up to 0:02.00 rather than
@@ -16,15 +19,18 @@ export const formatMs = (ms: number): string => {
 };
 
 export const parseMs = (value: string): number | undefined => {
-  const match = pattern.exec(value.trim());
-  if (!match) {
+  const trimmed = value.trim();
+  const clocked = pattern.exec(trimmed);
+  const bare = clocked ? undefined : bareSeconds.exec(trimmed);
+  if (!clocked && !bare) {
     return undefined;
   }
-  const [, minutes, seconds, fraction = ''] = match;
-  const fractionMs = Number(fraction.padEnd(3, '0') || 0);
+  const minutes = clocked?.[1];
+  const seconds = clocked ? clocked[2] : bare?.[1];
+  const fraction = (clocked ? clocked[3] : bare?.[2]) ?? '';
   return (
     (minutes ? Number(minutes) * 60000 : 0) +
-    Number(seconds) * 1000 +
-    fractionMs
+    Number(seconds ?? 0) * 1000 +
+    Number(fraction.padEnd(3, '0') || 0)
   );
 };

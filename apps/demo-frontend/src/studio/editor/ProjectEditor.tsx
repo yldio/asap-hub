@@ -7,7 +7,7 @@ import {
   resolveChapters,
   layoutClips,
   placementAt,
-  timelineDurationMs,
+  placementsDurationMs,
 } from '@asap-hub/demo-timeline';
 import {
   FC,
@@ -162,7 +162,8 @@ type Props = {
   // media list uses rather than reaching for the reducer itself
   readonly recorder?: (
     addAsset: (asset: ProjectAsset) => void,
-    applyCursorCapture: (apply: CaptureApply) => void,
+    // false when the timeline has no clip to land the capture on
+    applyCursorCapture: (apply: CaptureApply) => boolean,
   ) => ReactNode;
 };
 
@@ -195,9 +196,11 @@ const ProjectEditor: FC<Props> = ({
     () => layoutClips(timeline.clips),
     [timeline.clips],
   );
+  // the placements above already laid the clips out; laying them out again
+  // just to read the end doubled the per-edit cost
   const durationMs = useMemo(
-    () => timelineDurationMs(timeline.clips),
-    [timeline.clips],
+    () => placementsDurationMs(placements),
+    [placements],
   );
   const assetsById = useMemo(
     () => Object.fromEntries(assets.map((asset) => [asset.assetId, asset])),
@@ -431,7 +434,11 @@ const ProjectEditor: FC<Props> = ({
       clipId: current.clip.id,
       effect: {
         id: effectId,
-        tMs: Math.round(clipLocalMs(current, getPlayheadMs())),
+        // stored in footage time, like every capture time: the playhead is in
+        // programme time, so the trim goes back on after the clip conversion
+        tMs:
+          Math.round(clipLocalMs(current, getPlayheadMs())) +
+          (current.clip.kind === 'source' ? current.clip.inMs : 0),
         type: 'ripple',
         point: { x: 0.5, y: 0.5 },
         origin: 'manual',
@@ -444,7 +451,7 @@ const ProjectEditor: FC<Props> = ({
   // given its own slice of the stream; a timeline with no such clip falls back
   // to the clip under the playhead, the same place a hand placed click does
   const applyCursorCapture = useCallback(
-    (apply: CaptureApply) => {
+    (apply: CaptureApply): boolean => {
       // the playhead parked past the last clip left no placement under it, and
       // the button then did nothing at all with no word about why
       const onto = current ?? placements.at(-1);
@@ -454,9 +461,18 @@ const ProjectEditor: FC<Props> = ({
         Date.now(),
         assetDurationOf,
       );
-      if (!request) return;
+      if (!request) {
+        // an empty timeline has nowhere to put the capture; the caller says so
+        return false;
+      }
       void apply(request).then((applied) => {
-        applied?.forEach((layer) => {
+        if (!applied || applied.length === 0) {
+          return;
+        }
+        // however many takes the capture lands on, it was one click of one
+        // button, so one Ctrl+Z takes the whole of it back
+        beginGesture();
+        applied.forEach((layer) => {
           dispatch({
             type: 'applyCapture',
             clipId: layer.clipId,
@@ -465,9 +481,19 @@ const ProjectEditor: FC<Props> = ({
             ...(layer.surface ? { surface: layer.surface } : {}),
           });
         });
+        endGesture();
       });
+      return true;
     },
-    [assetDurationOf, current, dispatch, placements, timeline],
+    [
+      assetDurationOf,
+      beginGesture,
+      current,
+      dispatch,
+      endGesture,
+      placements,
+      timeline,
+    ],
   );
 
   const addChapter = useCallback(() => {

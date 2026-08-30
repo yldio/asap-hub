@@ -816,3 +816,36 @@ describe('dragging a click onto another clip', () => {
     });
   });
 });
+
+// capture times are footage times: a click added to a clip whose front was
+// trimmed used to store the clip time instead, so it drew nowhere at all
+describe('adding a mouse click to a trimmed clip', () => {
+  it('stores the moment in the footage, trim included', async () => {
+    const trimmed: Timeline = {
+      ...withClip(),
+      clips: [
+        {
+          kind: 'source',
+          id: 'clip-a',
+          assetId: 'asset-a',
+          inMs: 5000,
+          outMs: 8000,
+          volume: 1,
+        },
+      ],
+    };
+    const { calls } = renderEditor({ timeline: trimmed });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Mouse click, goes at the playhead' }),
+    );
+
+    const added = calls.find(
+      (call) =>
+        call.name === 'dispatch' && call.action?.type === 'addCursorEffect',
+    );
+    expect(added?.action).toMatchObject({
+      effect: expect.objectContaining({ tMs: 5000 }),
+    });
+  });
+});

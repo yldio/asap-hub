@@ -193,10 +193,19 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     const effectsRef = useRef(effects);
     effectsRef.current = effects;
 
-    // the same simplified track the render walks, so the two draw one path
+    // the same simplified track the render walks, so the two draw one path.
+    // The smoothing and simplification depend on the path alone, so a trim
+    // drag or a nudge slider step only pays for the cheap shift below.
+    const smoothed = useMemo(
+      () => cursorPointerTrack({ path, offsetMs: 0 }),
+      [path],
+    );
     const track = useMemo(
-      () => cursorPointerTrack({ path, offsetMs: shiftMs }),
-      [path, shiftMs],
+      () =>
+        shiftMs === 0
+          ? smoothed
+          : smoothed.map((point) => ({ ...point, tMs: point.tMs + shiftMs })),
+      [shiftMs, smoothed],
     );
     const pointer = pointerPositionAt(track, timeMs);
     const variant = useMemo(() => pointerVariant(pointerId), [pointerId]);

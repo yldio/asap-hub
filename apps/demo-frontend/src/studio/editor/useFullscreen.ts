@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
 export type Fullscreen = {
   supported: boolean;
@@ -26,10 +26,14 @@ export const useFullscreen = (ref: RefObject<Element>): Fullscreen => {
     }
   }, [ref]);
 
-  return {
-    supported:
-      typeof document !== 'undefined' && Boolean(document.fullscreenEnabled),
-    active,
-    toggle,
-  };
+  // a fresh object every render used to defeat the memo on the stage controls
+  return useMemo(
+    () => ({
+      supported:
+        typeof document !== 'undefined' && Boolean(document.fullscreenEnabled),
+      active,
+      toggle,
+    }),
+    [active, toggle],
+  );
 };

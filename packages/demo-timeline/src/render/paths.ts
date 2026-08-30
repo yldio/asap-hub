@@ -16,8 +16,11 @@ export const cursorPngPath = (
   effectIndex: number,
 ): string => inWorkDir(workDir, `cursor-${clipIndex}-${effectIndex}.png`);
 
-export const pointerPngPath = (workDir: string, clipIndex: number): string =>
-  inWorkDir(workDir, `pointer-${clipIndex}.png`);
+export const pointerPngPath = (
+  workDir: string,
+  clipIndex: number,
+  layerIndex: number,
+): string => inWorkDir(workDir, `pointer-${clipIndex}-${layerIndex}.png`);
 
 export const concatListPath = (workDir: string): string =>
   inWorkDir(workDir, 'concat.txt');

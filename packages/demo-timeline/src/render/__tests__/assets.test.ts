@@ -41,7 +41,9 @@ describe('assetHasAudio', () => {
     ).toBe(false);
   });
 
-  it('assumes an unprobed asset has audio', () => {
-    expect(assetHasAudio(assetIndex([asset()]), 'asset-1')).toBe(true);
+  // assuming audio on an unprobed asset let a stream-less clip into the join
+  // and the whole export failed on ':a'
+  it('treats an unprobed asset as silent until the ingest says otherwise', () => {
+    expect(assetHasAudio(assetIndex([asset()]), 'asset-1')).toBe(false);
   });
 });

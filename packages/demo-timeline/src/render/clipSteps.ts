@@ -266,7 +266,7 @@ const pointerOverlays = (
 ): Overlay[] =>
   cursor
     .filter((layer) => layer.clipId === placement.clip.id)
-    .flatMap((layer) => {
+    .flatMap((layer, layerPosition) => {
       const art = { canvas, variant: layer.pointer };
       const track = cursorPointerTrack({
         path: layer.path,
@@ -287,7 +287,9 @@ const pointerOverlays = (
       return motion
         ? [
             {
-              path: pointerPngPath(workDir, placement.index),
+              // per layer as well as per clip: the schema permits two layers
+              // on one clip, and one png cannot hold two pointers
+              path: pointerPngPath(workDir, placement.index, layerPosition),
               svg: pointerSvg(art),
               // the pointer arrives with the capture and leaves with it, the
               // way the preview shows it, so neither end is ramped

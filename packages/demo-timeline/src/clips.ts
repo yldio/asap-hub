@@ -139,8 +139,10 @@ export const trimClip = (
     }
 
     const inMs = Math.max(0, Math.round(change.inMs ?? clip.inMs));
+    // the bound rounds too: a fractional probed duration won whenever the out
+    // point was dragged to the asset end, and one fraction fails every save
     const outMs = Math.min(
-      assetDurationMs ?? limits.maxTimelineMs,
+      Math.round(assetDurationMs ?? limits.maxTimelineMs),
       Math.round(change.outMs ?? clip.outMs),
     );
 

@@ -8,6 +8,7 @@ import {
   videoEncodeArgs,
 } from './encoding';
 import {
+  audioFormatFilter,
   filterSegment,
   graph,
   label,
@@ -81,7 +82,10 @@ const narrationSegments = (
         `atrim=${secondsFromMs(take.inMs)}:${secondsFromMs(take.outMs)}`,
         'asetpts=PTS-STARTPTS',
         `volume=${take.volume}`,
-        `adelay=${take.startMs}|${take.startMs}`,
+        // conditioned like clip audio: a mono 44.1kHz take fed to amix raw
+        // collapsed the whole programme to mono on ffmpeg 6
+        audioFormatFilter,
+        `adelay=${take.startMs}:all=1`,
       ],
       narrationLabel(position),
     ),

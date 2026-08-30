@@ -557,7 +557,7 @@ describe('buildRenderPlan', () => {
 
     it('hands the caller one image to rasterise, however long the path', () => {
       expect(plan.svgs.map(({ path }) => path)).toEqual([
-        '/work/pointer-0.png',
+        '/work/pointer-0-0.png',
       ]);
     });
 
@@ -605,7 +605,7 @@ describe('buildRenderPlan', () => {
         }).steps[0]?.args.join(' ') ?? '';
 
       expect(args.indexOf('/work/cursor-0-0.png')).toBeLessThan(
-        args.indexOf('/work/pointer-0.png'),
+        args.indexOf('/work/pointer-0-0.png'),
       );
     });
   });
@@ -710,8 +710,8 @@ describe('buildRenderPlan', () => {
     // a stream-less clip into the join and the whole export failed on ':a'
     it('gives a genuinely unprobed asset silence rather than a maybe-stream', () => {
       const args =
-        planFor({ clips: [source({ assetId: 'unprobed-1' })] }).steps[0]?.args ??
-        [];
+        planFor({ clips: [source({ assetId: 'unprobed-1' })] }).steps[0]
+          ?.args ?? [];
 
       expect(args.join(' ')).toContain('anullsrc');
       expect(args).toContain('1:a');

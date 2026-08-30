@@ -391,3 +391,26 @@ describe('splitting at a fractional time', () => {
     expect(times.filter((ms) => !Number.isInteger(ms))).toEqual([]);
   });
 });
+
+// the bound used to pass through unrounded, so dragging the out point to the
+// end of an asset with a fractional probed duration made every later save fail
+it('rounds the asset bound as well as the request', () => {
+  const clips = trimClip(
+    [
+      {
+        kind: 'source',
+        id: 'clip-1',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 5000,
+        volume: 1,
+      },
+    ],
+    'clip-1',
+    { outMs: 9999 },
+    8123.456,
+  );
+
+  expect(clips[0]).toMatchObject({ outMs: 8123 });
+  expect(Number.isInteger((clips[0] as { outMs: number }).outMs)).toBe(true);
+});

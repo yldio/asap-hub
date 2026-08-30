@@ -49,7 +49,10 @@ const timeline = (): Timeline => ({
 });
 
 const durations: Record<string, number> = { 'asset-b': 6500 };
-const assetDurationOf = (assetId: string) => durations[assetId];
+const assetDurationOf = (assetId: string) =>
+  durations[assetId] === undefined
+    ? undefined
+    : { durationMs: durations[assetId] };
 
 const request = (document: Timeline, playheadMs: number) =>
   captureTargets(
@@ -215,4 +218,17 @@ describe('a clip whose take was paused', () => {
 
     expect(target).not.toHaveProperty('pauses');
   });
+});
+
+// the footage's own pixel size travels with the target, so the mapping can
+// tell a window the portal really shared from the screen the browser claimed
+it('carries the probed footage size to the target', () => {
+  const [target] =
+    captureTargets(timeline(), undefined, 100000, () => ({
+      durationMs: 6500,
+      width: 1892,
+      height: 982,
+    }))?.targets ?? [];
+
+  expect(target?.source).toEqual({ width: 1892, height: 982 });
 });

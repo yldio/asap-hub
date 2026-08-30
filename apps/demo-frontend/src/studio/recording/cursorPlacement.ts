@@ -20,6 +20,9 @@ export type CaptureClipTarget = {
   // the take wrote no frames through these, so the events they cover belong to
   // no footage and everything after them plays that much earlier
   pauses?: RecordedPause[];
+  // the footage's own pixel size once the ingest has probed it: the ground
+  // truth about what was really shared, whatever the browser believed
+  source?: { width: number; height: number };
 };
 
 export type CaptureRequest = {
@@ -49,6 +52,7 @@ const targetOf = (
     startedAtEpochMs: number;
     durationMs: number;
     pauses?: RecordedPause[];
+    source?: { width: number; height: number };
   },
 ): CaptureClipTarget => {
   const layer = layerOf(timeline, clipId);
@@ -67,11 +71,17 @@ const targetOf = (
 // a target, sliced to its own moment. Only a timeline with no such clip at all
 // falls back to the old single target, the clip under the playhead, because
 // that is all an imported video or an old document can offer.
+export type CaptureAssetInfo = {
+  durationMs?: number;
+  width?: number;
+  height?: number;
+};
+
 export const captureTargets = (
   timeline: Timeline,
   placement: ClipPlacement | undefined,
   stoppedAtEpochMs: number,
-  assetDurationOf: (assetId: string) => number | undefined,
+  assetOf: (assetId: string) => CaptureAssetInfo | undefined,
 ): CaptureRequest | undefined => {
   const frame = {
     width: timeline.canvas.width,
@@ -87,12 +97,13 @@ export const captureTargets = (
     if (!startedAtEpochMs) {
       return [];
     }
+    const asset = assetOf(clip.assetId);
     // the take filmed the whole source, so the window is the footage's own
     // length even when the clip has since been trimmed; the recorder's own
     // measure covers the minute before the ingest has probed the asset
     const durationMs = Math.max(
       layer?.recordedDurationMs ?? 0,
-      assetDurationOf(clip.assetId) ?? 0,
+      asset?.durationMs ?? 0,
       clip.outMs,
     );
     return [
@@ -101,6 +112,9 @@ export const captureTargets = (
         durationMs,
         ...(layer?.recordedPauses?.length
           ? { pauses: layer.recordedPauses }
+          : {}),
+        ...(asset?.width && asset?.height
+          ? { source: { width: asset.width, height: asset.height } }
           : {}),
       }),
     ];

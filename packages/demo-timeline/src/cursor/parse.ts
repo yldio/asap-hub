@@ -45,8 +45,19 @@ const toCaptureEvent = (line: string): CaptureEvent | undefined => {
   }
 
   const record = raw as Record<string, unknown>;
-  const { id, client, type, t, x, y, viewportW, viewportH, target, platform } =
-    record;
+  const {
+    id,
+    client,
+    type,
+    t,
+    x,
+    y,
+    viewportW,
+    viewportH,
+    devicePixelRatio,
+    target,
+    platform,
+  } = record;
   if (typeof id !== 'string' || id.length === 0 || !isCaptureEventType(type)) {
     return undefined;
   }
@@ -63,6 +74,9 @@ const toCaptureEvent = (line: string): CaptureEvent | undefined => {
   return {
     id,
     ...(typeof client === 'string' && client.length > 0 ? { client } : {}),
+    ...(isFiniteNumber(devicePixelRatio) && devicePixelRatio > 0
+      ? { devicePixelRatio }
+      : {}),
     type,
     t,
     x,
@@ -70,6 +84,9 @@ const toCaptureEvent = (line: string): CaptureEvent | undefined => {
     viewportW,
     viewportH,
     ...geometryOf(record),
+    ...(isFiniteNumber(devicePixelRatio) && devicePixelRatio > 0
+      ? { devicePixelRatio }
+      : {}),
     ...(typeof target === 'string' ? { target } : {}),
     ...(typeof platform === 'string' && platform.length > 0
       ? { platform }

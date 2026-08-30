@@ -17,13 +17,14 @@ const move = (overrides: Record<string, unknown> = {}) => ({
 });
 
 describe('parseCaptureEvents', () => {
-  // the screen geometry is what places a whole screen or a window recording, so
-  // it is kept; the pixel ratio divides out of every ratio and is not
+  // the screen geometry places a whole screen or window recording, and the
+  // pixel ratio reads the footage's own size against those boxes
   it('reads one event per line and keeps only the fields the derivation needs', () => {
     expect(parseCaptureEvents(`${line(move())}\n`)).toEqual([
       {
         id: 'e1',
         type: 'move',
+        devicePixelRatio: 2,
         screenX: 100,
         screenY: 200,
         t: 1_000,

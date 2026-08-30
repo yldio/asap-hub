@@ -331,3 +331,56 @@ describe('the letterbox', () => {
     ).toBeUndefined();
   });
 });
+
+// the creator's own take of 2026-08-30: the portal handed back the browser
+// window minus its top 48 rows while the browser said the whole screen was
+// shared, and the old mapping missed the Filters button by tens of pixels
+describe('footage that disagrees with the claimed surface', () => {
+  const filtersClick: CapturePlacement = {
+    x: 1704,
+    y: 404,
+    viewportW: 1896,
+    viewportH: 909,
+    devicePixelRatio: 1,
+    screenX: 1704,
+    screenY: 525,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1896,
+    winH: 1030,
+    platform: 'Linux x86_64',
+  };
+
+  it('reads a window-shaped recording as the window, cut at the top', () => {
+    const point = toFramePoint(
+      filtersClick,
+      { width: 1892, height: 982 },
+      'monitor',
+      { width: 1892, height: 982 },
+    );
+
+    // measured in the frame: the click lands on the button at (1704, 477)
+    expect((point?.x ?? 0) * 1892).toBeCloseTo(1704, 0);
+    expect((point?.y ?? 0) * 982).toBeCloseTo(477, 0);
+  });
+
+  it('leaves a recording alone when the footage matches the claim', () => {
+    const whole = toFramePoint(
+      filtersClick,
+      { width: 1920, height: 1080 },
+      'monitor',
+    );
+    const confirmed = toFramePoint(
+      filtersClick,
+      { width: 1920, height: 1080 },
+      'monitor',
+      { width: 1920, height: 1080 },
+    );
+
+    expect(confirmed).toEqual(whole);
+  });
+});

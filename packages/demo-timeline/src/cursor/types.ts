@@ -53,6 +53,8 @@ export type CaptureEvent = CaptureGeometry & {
   y: number;
   viewportW: number;
   viewportH: number;
+  // CSS px to device px, for reading the footage's own size against the boxes
+  devicePixelRatio?: number;
   target?: string;
   // navigator.platform, which is the only thing separating a Wayland window
   // reporting a fabricated origin from a maximised Windows one
@@ -81,6 +83,10 @@ export type DeriveOptions = {
   // the whole pause
   pauses?: RecordedPause[];
   frame: { width: number; height: number };
+  // the footage's own pixel size, the ground truth about what was shared: the
+  // portal on Wayland picks the surface itself, and what arrives can disagree
+  // with what the browser believes it asked for
+  source?: { width: number; height: number };
   // what the recording shows, which decides which of the capture's coordinates
   // land on the frame; a capture applied before the studio asked the browser is
   // read as a tab, the way it was read then

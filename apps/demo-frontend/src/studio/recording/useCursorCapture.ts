@@ -170,6 +170,7 @@ export const useCursorCapture = (
           ? { startedAtEpochMs: target.startedAtEpochMs }
           : {}),
         ...(target.pauses?.length ? { pauses: target.pauses } : {}),
+        ...(target.source ? { source: target.source } : {}),
       });
       const merged = mergeDerivedEffects(target.existing, derived.effects);
       return {

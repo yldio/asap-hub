@@ -23,8 +23,11 @@ export type CapturePlacement = CaptureGeometry & {
   y: number;
   viewportW: number;
   viewportH: number;
+  devicePixelRatio?: number;
   platform?: string;
 };
+
+export type SourceSize = { width: number; height: number };
 
 const positive = (value: number | undefined): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value > 0;
@@ -209,6 +212,50 @@ export const fitToFrame = (
   };
 };
 
+// The footage's own pixel size is the ground truth about what was shared: on
+// Wayland the portal picks the surface itself, and it can hand back the
+// browser window, minus its decoration rows, while the browser believes the
+// whole screen was asked for and says so. When the claimed box and the footage
+// disagree, and the footage is as wide as the window but shorter, the
+// recording is read as the window's lower part, cut at the top.
+const reconciledView = (
+  event: CapturePlacement,
+  surface: CaptureSurface,
+  source: SourceSize,
+): SharedView | undefined => {
+  const view = sharedView(event, surface);
+  if (!view) {
+    return undefined;
+  }
+  const dpr =
+    event.devicePixelRatio && event.devicePixelRatio > 0
+      ? event.devicePixelRatio
+      : 1;
+  const tolerancePx = 8 * dpr;
+  const claimed =
+    Math.abs(view.rect.width * dpr - source.width) <= tolerancePx &&
+    Math.abs(view.rect.height * dpr - source.height) <= tolerancePx;
+  if (claimed || !positive(event.winW) || !positive(event.winH)) {
+    return view;
+  }
+  const windowMatches =
+    Math.abs(event.winW * dpr - source.width) <= tolerancePx &&
+    source.height < event.winH * dpr;
+  if (!windowMatches) {
+    return view;
+  }
+  const cutTop = event.winH - source.height / dpr;
+  return {
+    rect: {
+      x: finite(event.winX),
+      y: finite(event.winY) + cutTop,
+      width: source.width / dpr,
+      height: source.height / dpr,
+    },
+    at: { x: finite(event.screenX), y: finite(event.screenY) },
+  };
+};
+
 // Where a captured event lands on the rendered frame: read the pointer against
 // whatever the creator actually shared, as a ratio, then fit that ratio into
 // the frame the way the renderer fits the picture.
@@ -216,7 +263,10 @@ export const toFramePoint = (
   event: CapturePlacement,
   frame: Frame,
   surface: CaptureSurface = 'browser',
+  source?: SourceSize,
 ): Point | undefined => {
-  const view = sharedView(event, surface);
+  const view = source
+    ? reconciledView(event, surface, source)
+    : sharedView(event, surface);
   return view ? fitToFrame(viewRatio(view), view.rect, frame) : undefined;
 };

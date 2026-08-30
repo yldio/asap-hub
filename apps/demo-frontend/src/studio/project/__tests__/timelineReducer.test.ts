@@ -780,3 +780,30 @@ describe('setCursorOffset', () => {
     expect(() => parseTimeline(JSON.parse(JSON.stringify(next)))).not.toThrow();
   });
 });
+
+describe('setCursorAlign', () => {
+  it('stores a rounded, bounded trim and drops a zero', () => {
+    const trimmed = timelineReducer(withClips(), {
+      type: 'setCursorAlign',
+      clipId: 'clip-1',
+      alignXPx: 12.4,
+      alignYPx: -900,
+    });
+
+    expect(trimmed.cursor[0]).toMatchObject({
+      clipId: 'clip-1',
+      alignXPx: 12,
+      alignYPx: -500,
+    });
+
+    const cleared = timelineReducer(trimmed, {
+      type: 'setCursorAlign',
+      clipId: 'clip-1',
+      alignXPx: 0,
+      alignYPx: 0,
+    });
+    expect(cleared.cursor[0]).not.toHaveProperty('alignXPx');
+    expect(cleared.cursor[0]).not.toHaveProperty('alignYPx');
+    expect(() => parseTimeline(cleared)).not.toThrow();
+  });
+});

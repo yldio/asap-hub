@@ -1,4 +1,5 @@
 import { ClipPlacement } from '../clips';
+import { alignedPath, alignedPoint } from '../cursor/align';
 import { cursorPointerTrack } from '../cursor/pointer';
 import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
 import {
@@ -229,7 +230,8 @@ const cursorOverlays = (
     .filter((layer) => layer.clipId === placement.clip.id)
     .flatMap((layer) =>
       layer.effects.flatMap((effect) => {
-        const art = cursorArt(effect, canvas);
+        const placedAt = alignedPoint(effect.point, layer, canvas);
+        const art = cursorArt({ ...effect, point: placedAt }, canvas);
         if (!art) {
           return [];
         }
@@ -261,7 +263,7 @@ const cursorOverlays = (
                   fadeInMs: art.fadeInMs,
                   fadeOutMs: art.fadeOutMs,
                 },
-                ...(zoom ? { move: ringMove(effect.point, canvas, zoom) } : {}),
+                ...(zoom ? { move: ringMove(placedAt, canvas, zoom) } : {}),
               },
             ];
       }),
@@ -285,10 +287,14 @@ const pointerOverlays = (
     .filter((layer) => layer.clipId === placement.clip.id)
     .flatMap((layer, layerPosition) => {
       const art = { canvas, variant: layer.pointer };
-      const track = cursorPointerTrack({
-        path: layer.path,
-        offsetMs: captureShiftMs(layer, placement),
-      });
+      const track = alignedPath(
+        cursorPointerTrack({
+          path: layer.path,
+          offsetMs: captureShiftMs(layer, placement),
+        }),
+        layer,
+        canvas,
+      );
       const motion = pointerMotion(
         track,
         art,

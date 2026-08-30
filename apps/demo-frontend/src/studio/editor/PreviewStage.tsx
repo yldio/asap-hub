@@ -165,6 +165,8 @@ type Props = {
   readonly cursorPointer?: string;
   // the layer's own nudge, applied here exactly as the render applies it
   readonly cursorOffsetMs?: number;
+  // the creator's pixel trim, already turned into fractions of the frame
+  readonly cursorAlign?: Point;
   readonly playing: boolean;
   readonly volume: number;
   // the voice over lanes, heard here the way the export mixes them: they used
@@ -196,6 +198,7 @@ const PreviewStage: FC<Props> = ({
   cursorPath,
   cursorPointer,
   cursorOffsetMs,
+  cursorAlign,
   playing,
   volume,
   narration = noNarration,
@@ -539,6 +542,8 @@ const PreviewStage: FC<Props> = ({
         pointer={cursorPointer}
         tMs={localMs}
         offsetMs={cursorOffsetMs}
+        alignX={cursorAlign?.x}
+        alignY={cursorAlign?.y}
         inMs={clip?.kind === 'source' ? clip.inMs : 0}
         playing={playing}
         zoomAt={viewAt}

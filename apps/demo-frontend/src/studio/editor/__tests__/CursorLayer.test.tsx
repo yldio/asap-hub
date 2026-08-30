@@ -342,3 +342,18 @@ describe('riding a zoom', () => {
     expect(pointer?.style.transform).toBe('translate(62.5%, 37.5%)');
   });
 });
+
+// the creator's own pixel trim: every click and the pointer shift together,
+// exactly as the export shifts them
+it('shifts a ring by the layer trim', () => {
+  const { container, unmount } = render(
+    <CursorLayer effects={[ripple]} tMs={1000} alignX={0.1} alignY={-0.05} />,
+  );
+  const ring = container.querySelector(
+    '[data-testid="cursor-ripple"]',
+  ) as HTMLElement;
+
+  expect(ring.style.left).toBe('60%');
+  expect(ring.style.top).toBe('45%');
+  unmount();
+});

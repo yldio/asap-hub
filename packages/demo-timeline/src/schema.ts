@@ -186,6 +186,10 @@ export const cursorLayerSchema = z.object({
   // footage there was, and a capture applied in that window was cut to the trim
   // and lost everything after it.
   recordedDurationMs: z.number().int().positive().optional(),
+  // the creator's own trim in frame pixels, for whatever residue is left after
+  // every mapping correction; applied to every click and the drawn pointer
+  alignXPx: z.number().int().min(-500).max(500).optional(),
+  alignYPx: z.number().int().min(-500).max(500).optional(),
   // The spans that take ran paused for. Capture events are stamped in wall
   // clock, which runs on through a pause the footage never shows, so without
   // these every click after one landed late by the whole pause and the tail

@@ -263,6 +263,22 @@ const ProjectEditor: FC<Props> = ({
     [assetsById, probedDurations],
   );
 
+  // the capture also wants the footage's own pixel size, the ground truth
+  // about what was really shared when the surface label cannot be trusted
+  const captureAssetOf = useCallback(
+    (assetId: string) => {
+      const asset = assetsById[assetId];
+      return {
+        ...(assetDurationOf(assetId) !== undefined
+          ? { durationMs: assetDurationOf(assetId) }
+          : {}),
+        ...(asset?.width ? { width: asset.width } : {}),
+        ...(asset?.height ? { height: asset.height } : {}),
+      };
+    },
+    [assetDurationOf, assetsById],
+  );
+
   const addNarration = useCallback(
     (asset: ProjectAsset) => {
       const id = createId('narration');
@@ -459,7 +475,7 @@ const ProjectEditor: FC<Props> = ({
         timeline,
         onto,
         Date.now(),
-        assetDurationOf,
+        captureAssetOf,
       );
       if (!request) {
         // an empty timeline has nowhere to put the capture; the caller says so
@@ -486,8 +502,8 @@ const ProjectEditor: FC<Props> = ({
       return true;
     },
     [
-      assetDurationOf,
       beginGesture,
+      captureAssetOf,
       current,
       dispatch,
       endGesture,
@@ -582,14 +598,18 @@ const ProjectEditor: FC<Props> = ({
     (clipId: string, change: { inMs?: number; outMs?: number }) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
       if (!clip || clip.kind !== 'source') return;
+      // Only the ingest's own probe may act as a hard bound. The browser's
+      // stopgap reading of a fresh, metadata-less recording can come up
+      // seconds short, and one touch of the handle then clamped the clip to
+      // it: the end of the take was gone and no drag could bring it back.
       dispatch({
         type: 'trimClip',
         clipId,
         ...change,
-        assetDurationMs: assetDurationOf(clip.assetId),
+        assetDurationMs: assetsById[clip.assetId]?.durationMs,
       });
     },
-    [assetDurationOf, dispatch, timeline.clips],
+    [assetsById, dispatch, timeline.clips],
   );
 
   // The timeline speaks programme time for everything it drags. Zooms and
@@ -852,6 +872,18 @@ const ProjectEditor: FC<Props> = ({
                   cursorPath={cursorLayer?.path}
                   cursorPointer={cursorLayer?.pointer}
                   cursorOffsetMs={cursorLayer?.offsetMs}
+                  cursorAlign={
+                    cursorLayer &&
+                    (cursorLayer.alignXPx || cursorLayer.alignYPx)
+                      ? {
+                          x:
+                            (cursorLayer.alignXPx ?? 0) / timeline.canvas.width,
+                          y:
+                            (cursorLayer.alignYPx ?? 0) /
+                            timeline.canvas.height,
+                        }
+                      : undefined
+                  }
                   playing={playback.playing}
                   volume={volume}
                   narration={timeline.narration}

@@ -845,3 +845,23 @@ describe('describePlan', () => {
     ]);
   });
 });
+
+// the creator's pixel trim shifts the burnt-in ring exactly as the preview
+// shifts its own
+it('moves an export ring by the layer trim', () => {
+  const at = (align: Partial<CursorLayer>) => {
+    const args =
+      planFor({
+        clips: [source()],
+        cursor: [cursorLayer(align)],
+      }).steps[0]?.args.join(' ') ?? '';
+    const match = /overlay=(\d+):(\d+):format/.exec(args);
+    return match ? { x: Number(match[1]), y: Number(match[2]) } : undefined;
+  };
+
+  const plain = at({});
+  const trimmed = at({ alignXPx: 100, alignYPx: -40 });
+
+  expect(trimmed?.x).toBe((plain?.x ?? 0) + 100);
+  expect(trimmed?.y).toBe((plain?.y ?? 0) - 40);
+});

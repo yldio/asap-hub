@@ -105,6 +105,14 @@ export type TimelineAction =
       pointer: string;
     }
   | {
+      // the creator's own trim in frame pixels, for the residue no mapping
+      // heuristic can know; shifts every click and the drawn pointer together
+      type: 'setCursorAlign';
+      clipId: string;
+      alignXPx: number;
+      alignYPx: number;
+    }
+  | {
       // slides the whole capture against the footage: the safety valve for the
       // drift the derived origin cannot account for, and the only alignment an
       // imported video has at all
@@ -564,6 +572,24 @@ export const timelineReducer = (
           pointer: action.pointer,
         })),
       };
+
+    case 'setCursorAlign': {
+      const boundPx = (value: number): number =>
+        Math.max(-500, Math.min(500, Math.round(value)));
+      const alignXPx = boundPx(action.alignXPx);
+      const alignYPx = boundPx(action.alignYPx);
+      return {
+        ...timeline,
+        cursor: withCursorLayer(timeline, action.clipId, (layer) => {
+          const { alignXPx: oldX, alignYPx: oldY, ...bare } = layer;
+          return {
+            ...bare,
+            ...(alignXPx !== 0 ? { alignXPx } : {}),
+            ...(alignYPx !== 0 ? { alignYPx } : {}),
+          };
+        }),
+      };
+    }
 
     case 'setCursorOffset':
       return {

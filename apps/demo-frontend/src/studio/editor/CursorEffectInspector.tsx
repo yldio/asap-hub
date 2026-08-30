@@ -13,6 +13,7 @@ import {
 import { FC } from 'react';
 import EditorButton from './EditorButton';
 import {
+  fieldStyles,
   mutedStyles,
   NudgeField,
   PointField,
@@ -25,6 +26,21 @@ import { TrashIcon } from './icons';
 import { editorTheme } from './editorTheme';
 
 const swatchRowStyles = css({ display: 'flex', gap: 6, flexWrap: 'wrap' });
+
+const alignRowStyles = css({ display: 'flex', gap: 8 });
+
+const alignInputStyles = css({
+  height: 30,
+  borderRadius: 6,
+  border: `1px solid ${editorTheme.line}`,
+  backgroundColor: editorTheme.raised,
+  color: editorTheme.text,
+  padding: '0 8px',
+  font: 'inherit',
+  fontSize: 13,
+  width: '100%',
+  boxSizing: 'border-box',
+});
 
 const swatchStyles = css({
   width: 24,
@@ -70,8 +86,12 @@ type Props = {
   readonly hasCapture?: boolean;
   // the capture's nudge against the footage, which is the layer's too
   readonly offsetMs?: number;
+  // the creator's own pixel trim on the whole capture's position
+  readonly alignXPx?: number;
+  readonly alignYPx?: number;
   readonly onChangePointer?: (pointer: string) => void;
   readonly onChangeOffset?: (offsetMs: number) => void;
+  readonly onChangeAlign?: (alignXPx: number, alignYPx: number) => void;
   // the effect's time is stored against the footage; the field reads and
   // writes it in the clip the creator is looking at, so the trim converts
   readonly inMs?: number;
@@ -86,8 +106,11 @@ const CursorEffectInspector: FC<Props> = ({
   pointer,
   hasCapture,
   offsetMs = 0,
+  alignXPx = 0,
+  alignYPx = 0,
   onChangePointer,
   onChangeOffset,
+  onChangeAlign,
   onChange,
   onRemove,
   inMs = 0,
@@ -180,6 +203,48 @@ const CursorEffectInspector: FC<Props> = ({
           Slides every click and the drawn pointer together, for when the
           capture runs ahead of or behind the footage.
         </p>
+        {onChangeAlign ? (
+          <fieldset css={fieldStyles}>
+            <legend>Fine tune the position, in pixels of the frame</legend>
+            <div css={alignRowStyles}>
+              <label css={fieldStyles}>
+                Across
+                <input
+                  css={alignInputStyles}
+                  type="number"
+                  min={-500}
+                  max={500}
+                  step={1}
+                  inputMode="numeric"
+                  disabled={readOnly}
+                  value={alignXPx}
+                  onChange={(event) =>
+                    onChangeAlign(Number(event.target.value) || 0, alignYPx)
+                  }
+                />
+              </label>
+              <label css={fieldStyles}>
+                Down
+                <input
+                  css={alignInputStyles}
+                  type="number"
+                  min={-500}
+                  max={500}
+                  step={1}
+                  inputMode="numeric"
+                  disabled={readOnly}
+                  value={alignYPx}
+                  onChange={(event) =>
+                    onChangeAlign(alignXPx, Number(event.target.value) || 0)
+                  }
+                />
+              </label>
+            </div>
+            <p css={mutedStyles}>
+              Moves every click and the pointer by this much, everywhere.
+            </p>
+          </fieldset>
+        ) : null}
       </>
     ) : null}
 

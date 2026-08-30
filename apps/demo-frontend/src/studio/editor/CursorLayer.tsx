@@ -175,6 +175,10 @@ type Props = {
   // and the stage drives this layer in the clip's own time, so trimming the
   // start of a clip must not slide its clicks late by the trim
   readonly inMs?: number;
+  // the creator's own trim, in fractions of the frame: every click and the
+  // pointer shift together, exactly as the export shifts them
+  readonly alignX?: number;
+  readonly alignY?: number;
   readonly playing?: boolean;
   // what the zoom is doing to the picture at a moment. The pointer and the
   // rings ride the zoomed picture rather than the frame it is drawn on, and the
@@ -191,6 +195,8 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
       tMs = 0,
       offsetMs = 0,
       inMs = 0,
+      alignX = 0,
+      alignY = 0,
       playing = false,
       zoomAt = atRest,
     },
@@ -199,6 +205,16 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     // one shift takes a footage time to this clip's own: the creator's nudge,
     // less however much of the footage the trim cut off the front
     const shiftMs = offsetMs - inMs;
+    const aligned = useCallback(
+      (point: Point): Point =>
+        alignX === 0 && alignY === 0
+          ? point
+          : {
+              x: Math.min(1, Math.max(0, point.x + alignX)),
+              y: Math.min(1, Math.max(0, point.y + alignY)),
+            },
+      [alignX, alignY],
+    );
     const [timeMs, setTimeMs] = useState(tMs);
     const windows = useMemo(
       () => windowsOf(effects, shiftMs),
@@ -226,10 +242,12 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     );
     const track = useMemo(
       () =>
-        shiftMs === 0
-          ? smoothed
-          : smoothed.map((point) => ({ ...point, tMs: point.tMs + shiftMs })),
-      [shiftMs, smoothed],
+        smoothed.map((point) => ({
+          ...point,
+          ...aligned(point),
+          tMs: point.tMs + shiftMs,
+        })),
+      [aligned, shiftMs, smoothed],
     );
     const pointer = pointerPositionAt(track, timeMs);
     const variant = useMemo(() => pointerVariant(pointerId), [pointerId]);
@@ -261,12 +279,12 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           if (!ring || !effect) {
             return;
           }
-          const drawn = zoomedPoint(effect.point, view);
+          const drawn = zoomedPoint(aligned(effect.point), view);
           ring.style.left = `${drawn.x * 100}%`;
           ring.style.top = `${drawn.y * 100}%`;
         });
       },
-      [track],
+      [aligned, track],
     );
 
     // after every render as well as every frame, so a zoom or an effect the
@@ -303,7 +321,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
       }
     };
 
-    const drawnAt = (point: Point): Point => zoomedPoint(point, view);
+    const drawnAt = (point: Point): Point => zoomedPoint(aligned(point), view);
 
     return (
       <div css={layerStyles}>
@@ -312,9 +330,9 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
             css={spotlightStyles}
             style={{
               background: `radial-gradient(circle at ${
-                spotlight.point.x * 100
+                aligned(spotlight.point).x * 100
               }% ${
-                spotlight.point.y * 100
+                aligned(spotlight.point).y * 100
               }%, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0.55) 26%)`,
             }}
           />

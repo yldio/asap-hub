@@ -7,3 +7,4 @@ export * from './derive';
 export * from './merge';
 export * from './pointer';
 export * from './pointerArt';
+export * from './align';

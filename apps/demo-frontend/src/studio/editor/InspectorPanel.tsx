@@ -65,6 +65,8 @@ const InspectorPanel: FC<Props> = ({
         pointer={cursorLayer?.pointer}
         hasCapture={(cursorLayer?.path.length ?? 0) > 0}
         offsetMs={cursorLayer?.offsetMs ?? 0}
+        alignXPx={cursorLayer?.alignXPx ?? 0}
+        alignYPx={cursorLayer?.alignYPx ?? 0}
         onChangePointer={(pointer) =>
           dispatch({
             type: 'setCursorPointer',
@@ -77,6 +79,14 @@ const InspectorPanel: FC<Props> = ({
             type: 'setCursorOffset',
             clipId: current.clip.id,
             offsetMs,
+          })
+        }
+        onChangeAlign={(alignXPx, alignYPx) =>
+          dispatch({
+            type: 'setCursorAlign',
+            clipId: current.clip.id,
+            alignXPx,
+            alignYPx,
           })
         }
         onChange={(change) =>

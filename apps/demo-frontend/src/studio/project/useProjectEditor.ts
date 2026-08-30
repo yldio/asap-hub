@@ -18,7 +18,10 @@ import {
 export const autosaveMs = 1500;
 const maxConflictRetries = 5;
 
-export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+// 'rejected' is terminal: the server said this document can never be saved as
+// it stands, so retrying on a clock would only hammer the API with the same
+// refusal every 1.5 seconds forever
+export type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'rejected';
 
 type EditorState = {
   history: History<Timeline>;
@@ -43,6 +46,7 @@ type EditorEvent =
   | { type: 'saving' }
   | { type: 'saved'; timelineVersion: number; version: number }
   | { type: 'saveFailed' }
+  | { type: 'saveRejected' }
   | { type: 'rebase'; version: number; timelineVersion?: number };
 
 const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
@@ -55,6 +59,9 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
       const continuing = state.gesture && state.gestureRecorded;
       return {
         ...state,
+        // a fresh edit changes the document, so a terminal refusal gets one
+        // more chance with whatever the creator just did about it
+        saveState: state.saveState === 'rejected' ? 'idle' : state.saveState,
         gestureRecorded: state.gesture,
         history: continuing
           ? replace(state.history, next)
@@ -91,6 +98,9 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
         timelineVersion: event.timelineVersion,
         version: event.version,
       };
+
+    case 'saveRejected':
+      return { ...state, saveState: 'rejected' };
 
     case 'saveFailed':
       return { ...state, saveState: 'error' };
@@ -258,7 +268,16 @@ export const useProjectEditor = ({
             }
           }
         }
-        send({ type: 'saveFailed' });
+        // a 413 or a 400 will refuse the identical document every time; only
+        // an edit that changes it can help, so the retry clock stands down
+        if (
+          error instanceof ApiError &&
+          (error.status === 413 || error.status === 400)
+        ) {
+          send({ type: 'saveRejected' });
+        } else {
+          send({ type: 'saveFailed' });
+        }
       } finally {
         savingRef.current = false;
         const queued = pendingRef.current;
@@ -305,13 +324,14 @@ export const useProjectEditor = ({
   // whole save, when the save fails or when edits kept coming while it was in
   // flight, and a timer keyed on `dirty` alone never rescheduled after that.
   // One failed save then silently disarmed the autosave for the whole session.
+  const rejected = state.saveState === 'rejected';
   useEffect(() => {
-    if (readOnly || !dirty) {
+    if (readOnly || !dirty || rejected) {
       return undefined;
     }
     const handle = setInterval(flush, autosaveMs);
     return () => clearInterval(handle);
-  }, [dirty, flush, readOnly]);
+  }, [dirty, flush, readOnly, rejected]);
 
   // Leaving inside the debounce window used to drop the last edit silently, and
   // the lease is handed on regardless, so the next editor would open a document

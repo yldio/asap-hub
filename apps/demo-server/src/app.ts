@@ -16,7 +16,8 @@ import { videosRouter } from './routes/videos';
 export const appFactory = (): Express => {
   const app = express();
 
-  app.use(express.json({ limit: '1mb' }));
+  // the timeline ceiling is 4MB; the body parser must not undercut it
+  app.use(express.json({ limit: '5mb' }));
 
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok' });

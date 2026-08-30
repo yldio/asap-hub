@@ -33,7 +33,10 @@ import {
 
 // a timeline document is small next to the media, but big next to a DynamoDB
 // item, so the item only ever holds a pointer to the revision in S3
-const maxTimelineBytes = 512 * 1024;
+// the document lives in S3, not on the row, so the ceiling only guards the
+// request path; half a megabyte was three orders of magnitude under what the
+// schema allows a few cursor captures to hold
+const maxTimelineBytes = 4 * 1024 * 1024;
 
 type TimelinePointer = {
   key: string;

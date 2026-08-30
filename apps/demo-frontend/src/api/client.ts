@@ -253,7 +253,14 @@ export const createApi = (getToken: GetToken) => ({
     id: string,
     token: string,
     input: { timeline: Timeline; timelineVersion: number; version: number },
-  ): void => {
+  ): boolean => {
+    const body = JSON.stringify(input);
+    // browsers refuse keepalive bodies over 64KiB outright, so a document
+    // carrying a cursor capture cannot be saved this way; the caller keeps
+    // the leave dialog up instead of pretending
+    if (body.length > 60_000) {
+      return false;
+    }
     void fetch(
       `${API_BASE_URL}/api/projects/${encodeURIComponent(id)}/timeline`,
       {
@@ -263,9 +270,10 @@ export const createApi = (getToken: GetToken) => ({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(input),
+        body,
       },
     ).catch(() => undefined);
+    return true;
   },
 
   listAssets: async (id: string): Promise<ProjectAsset[]> =>

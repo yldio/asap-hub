@@ -133,7 +133,9 @@ const saveLabels: Record<SaveState, string> = {
   idle: '',
   saving: 'Saving…',
   saved: 'All changes saved',
-  error: 'Could not save, retrying on the next edit',
+  error: 'Could not save, retrying shortly',
+  rejected:
+    'The server refused this document as it stands. Undo or change something and it will try again.',
 };
 
 // the playhead moves on every animation frame, so anything handed down as a
@@ -414,7 +416,7 @@ const ProjectEditor: FC<Props> = ({
       type: 'addTitleCard',
       clipId,
       index: current ? current.index + 1 : placements.length,
-      text: 'New section',
+      text: 'New chapter',
       durationMs: newTitleCardMs,
     });
     select('clip', clipId);
@@ -579,47 +581,56 @@ const ProjectEditor: FC<Props> = ({
     (clipId: string, blendMs: number) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
       if (!clip) return;
-      // dragging one clip over another asks for a fade between them. Carrying a
-      // slide over from the inspector left the overlap drawn with no fade in it,
-      // which reads as the drag having done nothing
+      // dragging one clip over another sets how long the blend runs; the kind
+      // of blend stays whatever the inspector chose, and only a plain cut is
+      // promoted to a crossfade, or the drag would read as doing nothing
+      const kept =
+        clip.transitionIn && clip.transitionIn.type !== 'cut'
+          ? clip.transitionIn.type
+          : 'crossfade';
       dispatch({
         type: 'setTransition',
         clipId,
         transition:
           blendMs > 0
-            ? { type: 'crossfade', durationMs: Math.round(blendMs) }
+            ? { type: kept, durationMs: Math.round(blendMs) }
             : undefined,
       });
     },
     [dispatch, timeline.clips],
   );
 
+  // The one trim ceiling every surface shares: the TAKE's length, not the
+  // footage's. A screen capture writes no frames while nothing changes, so
+  // footage legitimately ends early while the take, the drawn cursor and the
+  // voice over run on, and the render holds the last frame through the
+  // difference. Only the ingest's probe and the recorder's own measure count;
+  // the browser's stopgap reading of a fresh file can come up seconds short,
+  // and clamping to it cut the end of a take away on the first touch.
+  const trimBoundOf = useCallback(
+    (clipId: string, assetId: string): number | undefined => {
+      const probedMs = assetsById[assetId]?.durationMs;
+      const takeMs = timeline.cursor.find((layer) => layer.clipId === clipId)
+        ?.recordedDurationMs;
+      return probedMs === undefined && takeMs === undefined
+        ? undefined
+        : Math.max(probedMs ?? 0, takeMs ?? 0);
+    },
+    [assetsById, timeline.cursor],
+  );
+
   const trimClip = useCallback(
     (clipId: string, change: { inMs?: number; outMs?: number }) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
       if (!clip || clip.kind !== 'source') return;
-      // The bound is the TAKE's length, not the footage's: a screen capture
-      // writes no frames while nothing changes, so footage legitimately ends
-      // early while the take, the drawn cursor and the voice over run on, and
-      // the render holds the last frame through the difference. Only the
-      // ingest's probe and the recorder's own measure count; the browser's
-      // stopgap reading of a fresh file can come up seconds short and used to
-      // clamp the end of the take away on the first touch of a handle.
-      const probedMs = assetsById[clip.assetId]?.durationMs;
-      const takeMs = timeline.cursor.find((layer) => layer.clipId === clipId)
-        ?.recordedDurationMs;
-      const boundMs =
-        probedMs === undefined && takeMs === undefined
-          ? undefined
-          : Math.max(probedMs ?? 0, takeMs ?? 0);
       dispatch({
         type: 'trimClip',
         clipId,
         ...change,
-        assetDurationMs: boundMs,
+        assetDurationMs: trimBoundOf(clipId, clip.assetId),
       });
     },
-    [assetsById, dispatch, timeline.clips, timeline.cursor],
+    [dispatch, timeline.clips, trimBoundOf],
   );
 
   // The timeline speaks programme time for everything it drags. Zooms and
@@ -937,6 +948,12 @@ const ProjectEditor: FC<Props> = ({
               clipCount={placements.length}
               readOnly={readOnly}
               assetDurationOf={assetDurationOf}
+              trimBoundMs={
+                selectedSource
+                  ? trimBoundOf(selectedSource.id, selectedSource.assetId)
+                  : undefined
+              }
+              programmeMs={durationMs}
               dispatch={dispatch}
               onRemove={removeSelected}
             />

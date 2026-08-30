@@ -319,29 +319,29 @@ const PreviewStage: FC<Props> = ({
     // the takes live in programme time; each element is told where to be the
     // way the clip video is, and plays only while the playhead is inside it
     narration.forEach((take) => {
-      const element = narrationRef.current.get(take.id);
-      if (!element) {
+      const voice = narrationRef.current.get(take.id);
+      if (!voice) {
         return;
       }
       const localMsOfTake = ms - take.startMs;
       const within =
         localMsOfTake >= 0 && localMsOfTake < take.outMs - take.inMs;
-      element.volume = Math.min(1, take.volume * volume);
+      voice.volume = Math.min(1, take.volume * volume);
       if (!within || !playing) {
-        if (!element.paused) {
-          element.pause();
+        if (!voice.paused) {
+          voice.pause();
         }
       }
       if (!within) {
         return;
       }
       const targetS = (take.inMs + Math.max(0, localMsOfTake)) / 1000;
-      const slackS = playing ? 0.25 : 0.01;
-      if (Math.abs(element.currentTime - targetS) > slackS) {
-        element.currentTime = targetS;
+      const voiceSlackS = playing ? 0.25 : 0.01;
+      if (Math.abs(voice.currentTime - targetS) > voiceSlackS) {
+        voice.currentTime = targetS;
       }
-      if (playing && element.paused) {
-        void element.play().catch(() => undefined);
+      if (playing && voice.paused) {
+        void voice.play().catch(() => undefined);
       }
     });
     bannerRef.current?.setTime(ms);
@@ -388,14 +388,14 @@ const PreviewStage: FC<Props> = ({
 
   // the voice over is heard on every branch of the stage, title cards included
   const narrationAudio = narration.map((take) => {
-    const asset = assets[take.assetId];
-    const url = asset ? assetUrl(asset) : undefined;
-    return url ? (
+    const voiceAsset = assets[take.assetId];
+    const voiceUrl = voiceAsset ? assetUrl(voiceAsset) : undefined;
+    return voiceUrl ? (
       <audio
         key={take.id}
         data-testid="narration-audio"
         ref={holdNarration(take.id)}
-        src={url}
+        src={voiceUrl}
         preload="auto"
       />
     ) : null;

@@ -9,8 +9,10 @@ import { textBlockElements } from './textBlock';
 
 // every size is a fraction of the canvas height, so a card looks the same at
 // 1080p and at 4K
+export const titleCardBackground = '#0b0b0f';
+
 const centered = {
-  background: '#0b0b0f',
+  background: titleCardBackground,
   heading: '#ffffff',
   subtitle: '#b9b9c4',
   headingSize: 0.09,

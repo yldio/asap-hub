@@ -507,6 +507,46 @@ describe('POST /api/projects/:id/render with picked clips', () => {
     });
   });
 
+  // 200 banners is legal whole, but splitting each at the pick gap makes 400
+  it('refuses a cut that splitting pushed over the document limits', async () => {
+    const overfull: Timeline = {
+      ...twoClips(),
+      clips: [
+        ...twoClips().clips.map((clip, at) =>
+          at === 1 ? { ...clip, transitionIn: undefined } : clip,
+        ),
+        {
+          kind: 'source',
+          id: 'clip-3',
+          assetId: 'asset-1',
+          inMs: 0,
+          outMs: 2000,
+          volume: 1,
+        },
+      ],
+      banners: Array.from({ length: 200 }, (unused, at) => ({
+        id: `banner-${at}`,
+        startMs: 0,
+        durationMs: 9000,
+        preset: 'lowerThird' as const,
+        text: 'Spans everything',
+        position: 'bottom' as const,
+        animation: 'fade' as const,
+      })),
+    };
+    (storage.getObjectText as jest.Mock)
+      .mockReset()
+      .mockResolvedValue(JSON.stringify(overfull));
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    const response = await start({ version: 3, clipIds: ['clip-1', 'clip-3'] });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'invalid_cut' });
+    expect(run).not.toHaveBeenCalled();
+  });
+
   it('refuses a pick naming a clip the timeline does not have', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());

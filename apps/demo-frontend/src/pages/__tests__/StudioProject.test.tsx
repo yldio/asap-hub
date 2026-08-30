@@ -614,6 +614,13 @@ describe('a picked-clips download', () => {
     const click = jest
       .spyOn(HTMLAnchorElement.prototype, 'click')
       .mockImplementation(() => undefined);
+    // the save asks whether the file still exists before pointing at it
+    const head = jest.fn().mockResolvedValue({ ok: true });
+    Object.defineProperty(globalThis, 'fetch', {
+      configurable: true,
+      writable: true,
+      value: head,
+    });
     const requestAccess = jest.fn().mockResolvedValue({
       streamUrl: '/media/project-1/stream.mp4',
     });
@@ -636,7 +643,44 @@ describe('a picked-clips download', () => {
     );
 
     expect(requestAccess).toHaveBeenCalledWith('project-1');
-    expect(click).toHaveBeenCalled();
+    await waitFor(() => expect(click).toHaveBeenCalled());
+    expect(head).toHaveBeenCalledWith(
+      '/media/project-1/downloads/render-1/stream.mp4',
+      { method: 'HEAD', credentials: 'include' },
+    );
+  });
+
+  it('says the cut expired instead of saving a 404 page', async () => {
+    // spying on the prototype again returns the same mock, calls included
+    const click = jest
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
+    click.mockClear();
+    Object.defineProperty(globalThis, 'fetch', {
+      configurable: true,
+      writable: true,
+      value: jest.fn().mockResolvedValue({ ok: false, status: 404 }),
+    });
+    renderStudio({
+      requestAccess: jest.fn().mockResolvedValue({}),
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'done',
+          timelineVersion: 4,
+          purpose: 'download',
+          downloadPath: 'downloads/render-1',
+        },
+      }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Save the picked clips' }),
+    );
+
+    expect(await screen.findByText(/That cut has expired/)).toBeVisible();
+    expect(click).not.toHaveBeenCalled();
   });
 
   it('names a download failure a download failure', async () => {

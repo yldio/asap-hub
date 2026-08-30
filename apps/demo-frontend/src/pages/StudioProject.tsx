@@ -121,6 +121,8 @@ const renderRefusals: Record<string, string> = {
   not_found: 'This demo is no longer there.',
   render_start_failed: 'The export could not be started. Try again.',
   unknown_clip: 'A picked clip is gone from the timeline. Pick again.',
+  invalid_cut:
+    'This pick would split more banners and takes than a demo can hold. Pick fewer clips.',
 };
 
 const renderRefusal = (cause: unknown): string =>
@@ -386,8 +388,10 @@ const Editor: FC<EditorProps> = ({
 
   const take = useRecordingTake(upload, onTake);
 
-  // the voice over gets the same grace the screen recorder was given
-  const voice = useVoiceRecorder({ countdownMs: take.countdownMs });
+  // the voice over has a grace of its own, because narrating needs a breath
+  // where a screen take needs time to reach the tab being demoed
+  const [voiceCountdownMs, setVoiceCountdownMs] = useState(3000);
+  const voice = useVoiceRecorder({ countdownMs: voiceCountdownMs });
   const [savingVoice, setSavingVoice] = useState(false);
 
   // the finished take becomes an asset first, then the editor drops it on the
@@ -484,8 +488,14 @@ const Editor: FC<EditorProps> = ({
 
   // the picked clips render like any export, into a directory of their own,
   // and the row's render map is what carries the progress back
+  const [downloadStarting, setDownloadStarting] = useState(false);
   const startDownload = useCallback(
     (clipIds: string[]) => {
+      // a double click must not race itself for the row version
+      if (downloadStarting) {
+        return;
+      }
+      setDownloadStarting(true);
       setRenderError(undefined);
       setPublishError(undefined);
       api
@@ -494,9 +504,10 @@ const Editor: FC<EditorProps> = ({
         .catch((cause: unknown) => {
           setRenderError(renderRefusal(cause));
           void api.getVideo(id).then(applyWrite).catch(noop);
-        });
+        })
+        .finally(() => setDownloadStarting(false));
     },
-    [api, applyWrite, editor.version, id],
+    [api, applyWrite, downloadStarting, editor.version, id],
   );
 
   // the access call plants the signed media cookies first, because the file
@@ -506,11 +517,22 @@ const Editor: FC<EditorProps> = ({
     if (!path) {
       return;
     }
+    const url = `/media/${id}/${path}/stream.mp4`;
+    setRenderError(undefined);
     api
       .requestAccess(id)
-      .then(() => {
+      // the cut ages out of storage on its own, so the file is asked about
+      // before the save: a plain anchor would save the 404 page as an .mp4
+      .then(() => fetch(url, { method: 'HEAD', credentials: 'include' }))
+      .then((response) => {
+        if (!response.ok) {
+          setRenderError(
+            'That cut has expired. Pick the clips again to make a fresh one.',
+          );
+          return;
+        }
         const anchor = document.createElement('a');
-        anchor.href = `/media/${id}/${path}/stream.mp4`;
+        anchor.href = url;
         anchor.download = `${video.title || 'clips'}.mp4`;
         document.body.appendChild(anchor);
         anchor.click();
@@ -633,6 +655,7 @@ const Editor: FC<EditorProps> = ({
         onDownloadClips={readOnly ? undefined : startDownload}
         canDownload={!editor.dirty && editor.saveState !== 'saving'}
         downloadBusy={
+          downloadStarting ||
           video.render?.state === 'queued' ||
           video.render?.state === 'rendering'
         }
@@ -667,7 +690,9 @@ const Editor: FC<EditorProps> = ({
             <VoiceOverPanel
               status={voice.status}
               elapsedMs={voice.elapsedMs}
+              countdownMs={voiceCountdownMs}
               countdownMsLeft={voice.countdownMsLeft}
+              onCountdownChange={setVoiceCountdownMs}
               error={voice.error}
               saving={savingVoice}
               readOnly={readOnly}

@@ -212,6 +212,17 @@ export const registerRenderRoutes = (router: Router): void => {
         res.status(400).json({ error: 'empty_timeline' });
         return;
       }
+      // splitting banners and takes at the pick boundaries can push a legal
+      // document over its own limits; the container would only find that out
+      // after a full spin-up, so the cut is refused here instead
+      if (clipIds) {
+        try {
+          parseTimeline(JSON.parse(serialiseTimeline(timeline)));
+        } catch {
+          res.status(400).json({ error: 'invalid_cut' });
+          return;
+        }
+      }
 
       const id = pathParam(req, 'id');
 

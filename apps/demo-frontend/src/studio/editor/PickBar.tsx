@@ -26,6 +26,9 @@ const hintStyles = css({
   marginLeft: 'auto',
 });
 
+// the server refuses a bigger pick, and nothing that long is a "section"
+export const maxPickedClips = 100;
+
 type Props = {
   readonly count: number;
   // the same settled-document gate the export has; the reason feeds the title
@@ -46,22 +49,25 @@ const PickBar: FC<Props> = ({
   onClear,
 }) => (
   <div css={barStyles} role="region" aria-label="Picked clips">
-    <span css={countStyles}>
+    {/* a status region, so a keyboard pick is announced as it lands */}
+    <span css={countStyles} role="status">
       {count === 1 ? '1 clip picked' : `${count} clips picked`}
     </span>
     <EditorButton
       primary
-      disabled={!canDownload || busy}
+      disabled={!canDownload || busy || count > maxPickedClips}
       title={
         busy
           ? 'An export is already running'
-          : !canDownload
-            ? 'Waiting for the last edits to save'
-            : undefined
+          : count > maxPickedClips
+            ? `Pick at most ${maxPickedClips} clips`
+            : !canDownload
+              ? 'Waiting for the last edits to save'
+              : undefined
       }
       onClick={onDownload}
     >
-      {busy ? 'Preparing…' : 'Download these clips'}
+      Download these clips
     </EditorButton>
     <EditorButton onClick={onClear}>Clear</EditorButton>
     <span css={hintStyles}>

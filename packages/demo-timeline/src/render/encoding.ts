@@ -12,8 +12,10 @@ export const videoEncodeArgs = (canvas: Canvas): string[] => [
   String(canvas.fps),
   '-c:v',
   'libx264',
+  // veryfast halves the encode against medium at the same crf; the size cost
+  // lands on intermediates the cut-only join stream copies anyway
   '-preset',
-  'medium',
+  'veryfast',
   '-crf',
   '20',
   '-g',

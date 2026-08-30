@@ -10,6 +10,7 @@ import {
 } from '@asap-hub/demo-timeline';
 import { spawn } from 'child_process';
 import { promises as fs } from 'fs';
+import { cpus } from 'os';
 
 export type RenderEnv = {
   videoId: string;
@@ -574,31 +575,80 @@ const rasterise = (plan: RenderPlan): Promise<void> =>
     ]);
   });
 
+// each clip encode holds two to three cores, so the pool is sized to leave
+// the machine breathing room; a two vCPU task comes out at one, sequential
+export const clipConcurrency = (cores: number): number =>
+  Math.max(1, Math.min(4, Math.floor(cores / 3)));
+
+const runStep = async (
+  step: RenderPlan['steps'][number],
+  durationMs: number,
+  onFraction: (fraction: number) => void,
+): Promise<void> => {
+  // the progress options are global, so they go ahead of the planned args
+  await run(
+    'ffmpeg',
+    ['-progress', 'pipe:1', '-nostats', ...step.args],
+    (chunk) => {
+      const elapsedMs = parseProgressMs(chunk);
+      if (elapsedMs !== undefined) {
+        onFraction(elapsedMs / durationMs);
+      }
+    },
+  );
+  onFraction(1);
+};
+
+// The clips are independent of one another, so they encode in parallel and
+// only the join waits for all of them: the wall clock drops towards the
+// longest clip instead of the sum of them all.
 const runPlan = async (
   plan: RenderPlan,
   durations: number[],
   report: Reporter,
 ): Promise<void> => {
-  for (const [index, step] of plan.steps.entries()) {
-    log(`${index + 1}/${plan.steps.length} ${step.label}`);
-    report(step.label, renderProgress(index, plan.steps.length, 0));
-
-    const durationMs = durations[index] ?? plan.durationMs;
-    // the progress options are global, so they go ahead of the planned args
-    await run(
-      'ffmpeg',
-      ['-progress', 'pipe:1', '-nostats', ...step.args],
-      (chunk) => {
-        const elapsedMs = parseProgressMs(chunk);
-        if (elapsedMs !== undefined) {
-          report(
-            step.label,
-            renderProgress(index, plan.steps.length, elapsedMs / durationMs),
-          );
-        }
-      },
+  const joinIndex = plan.steps.length - 1;
+  const clipSteps = plan.steps.slice(0, joinIndex);
+  const totalClipMs =
+    clipSteps.reduce(
+      (total, unused, index) => total + (durations[index] ?? 0),
+      0,
+    ) || 1;
+  const doneFractions = clipSteps.map(() => 0);
+  const reportClips = (label: string) => {
+    const weighted = doneFractions.reduce(
+      (total, fraction, index) => total + fraction * (durations[index] ?? 0),
+      0,
     );
+    report(
+      label,
+      Math.round(Math.min(1, weighted / totalClipMs) * stepWeights.clips),
+    );
+  };
+
+  const pool = clipConcurrency(cpus().length);
+  log(`encoding ${clipSteps.length} clips, ${pool} at a time`);
+  await inPool(
+    pool,
+    clipSteps.map((step, index) => ({ step, index })),
+    async ({ step, index }) => {
+      log(`${index + 1}/${plan.steps.length} ${step.label}`);
+      await runStep(step, durations[index] ?? plan.durationMs, (fraction) => {
+        doneFractions[index] = Math.min(1, fraction);
+        reportClips(step.label);
+      });
+    },
+  );
+
+  const join = plan.steps[joinIndex];
+  if (!join) {
+    return;
   }
+  log(`${plan.steps.length}/${plan.steps.length} ${join.label}`);
+  report(join.label, renderProgress(joinIndex, plan.steps.length, 0));
+  await runStep(join, durations[joinIndex] ?? plan.durationMs, (fraction) =>
+    report(join.label, renderProgress(joinIndex, plan.steps.length, fraction)),
+  );
 };
 
 // the upload path's finishing stage, ported from finish.sh: the same four
@@ -606,11 +656,25 @@ const runPlan = async (
 // than sourced because a render writes under media/{id}/{mediaPath}/, which
 // finish.sh has no revision directory for, and because the ready flip has to
 // carry render.state and mediaPath in the one conditional write
+// each chapter's stretch of the finished stream, cut for its own download;
+// the spans meet at the chapter starts and the last one runs to the end
+export const sectionSpans = (
+  chapters: { startMs: number }[],
+  durationMs: number,
+): { startMs: number; endMs: number }[] =>
+  chapters
+    .map((chapter, index) => ({
+      startMs: Math.max(0, Math.min(chapter.startMs, durationMs)),
+      endMs: Math.min(chapters[index + 1]?.startMs ?? durationMs, durationMs),
+    }))
+    .filter((span) => span.endMs > span.startMs);
+
 const finishMedia = async (
   env: RenderEnv,
   streamFile: string,
+  chapters: { startMs: number; title: string }[],
   report: Reporter,
-): Promise<number> => {
+): Promise<{ durationMs: number; sectionCount: number }> => {
   const { workDir } = env;
   const spriteFile = `${workDir}/sprite.jpg`;
   const vttFile = `${workDir}/thumbnails.vtt`;
@@ -696,6 +760,44 @@ const finishMedia = async (
   await upload(env, streamFile, `${prefix}/stream.mp4`, 'video/mp4');
   await upload(env, spriteFile, `${prefix}/sprite.jpg`, 'image/jpeg');
   await upload(env, vttFile, `${prefix}/thumbnails.vtt`, 'text/vtt');
+
+  // one file per chapter, cut without re-encoding so a watcher can take just
+  // the section they need; chapter starts land on clip boundaries, which the
+  // join keeps as keyframes, so the copy cuts cleanly there
+  const spans = sectionSpans(chapters, durationMs);
+  let sectionCount = 0;
+  for (const [index, span] of spans.entries()) {
+    const sectionFile = `${workDir}/section-${index}.mp4`;
+    try {
+      await run('ffmpeg', [
+        '-nostdin',
+        '-y',
+        '-ss',
+        (span.startMs / 1000).toFixed(3),
+        '-to',
+        (span.endMs / 1000).toFixed(3),
+        '-i',
+        streamFile,
+        '-c',
+        'copy',
+        '-movflags',
+        '+faststart',
+        sectionFile,
+      ]);
+      await upload(
+        env,
+        sectionFile,
+        `${prefix}/sections/${index}.mp4`,
+        'video/mp4',
+      );
+      written.push(`${prefix}/sections/${index}.mp4`);
+      sectionCount += 1;
+    } catch (error) {
+      // a section is a convenience; losing one must not fail the render
+      log(`WARN could not cut section ${index}: ${truncateError(error)}`);
+      break;
+    }
+  }
   if (poster) {
     await upload(env, thumbFile, `${prefix}/thumb.jpg`, 'image/jpeg').then(
       () => written.push(`${prefix}/thumb.jpg`),
@@ -707,7 +809,7 @@ const finishMedia = async (
 
   await releaseMedia(env, written);
 
-  return durationMs;
+  return { durationMs, sectionCount };
 };
 
 const render = async (env: RenderEnv): Promise<void> => {
@@ -750,7 +852,12 @@ const render = async (env: RenderEnv): Promise<void> => {
   }
 
   await runPlan(plan, stepDurationsMs(timeline, plan), report);
-  const durationMs = await finishMedia(env, output, report);
+  const { durationMs, sectionCount } = await finishMedia(
+    env,
+    output,
+    videoChapters(timeline),
+    report,
+  );
 
   // the chapters travel with the media they describe, so a watcher never sees
   // a chapter list for an export that has not landed
@@ -758,7 +865,8 @@ const render = async (env: RenderEnv): Promise<void> => {
     env,
     [
       'SET durationMs = :durationMs, processingState = :processingState,',
-      'mediaPath = :mediaPath, chapters = :chapters, #render.#state = :state,',
+      'mediaPath = :mediaPath, chapters = :chapters,',
+      'sectionCount = :sectionCount, #render.#state = :state,',
       '#render.#stage = :stage, #render.#progress = :progress,',
       '#render.#finishedAt = :finishedAt',
       'REMOVE processingError, #render.#error',
@@ -774,6 +882,7 @@ const render = async (env: RenderEnv): Promise<void> => {
       ':durationMs': { N: String(durationMs) },
       ':processingState': { S: 'ready' },
       ':mediaPath': { S: env.mediaPath },
+      ':sectionCount': { N: String(sectionCount) },
       ':chapters': {
         L: videoChapters(timeline).map((chapter) => ({
           M: {

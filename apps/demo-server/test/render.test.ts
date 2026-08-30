@@ -8,6 +8,8 @@ import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import {
   AssetRow,
+  clipConcurrency,
+  sectionSpans,
   claimUploadArgs,
   conditionFailed,
   finishProgress,
@@ -1030,5 +1032,40 @@ describe('the media a render uploads', () => {
       '--key',
       'media/video-1/render-1/stream.mp4',
     ]);
+  });
+});
+
+// one file per chapter, cut from the finished stream: the spans meet at the
+// chapter starts and the last runs to the end of the demo
+describe('sectionSpans', () => {
+  it('cuts one span per chapter, meeting at the starts', () => {
+    expect(
+      sectionSpans(
+        [{ startMs: 0 }, { startMs: 20950 }, { startMs: 40000 }],
+        53700,
+      ),
+    ).toEqual([
+      { startMs: 0, endMs: 20950 },
+      { startMs: 20950, endMs: 40000 },
+      { startMs: 40000, endMs: 53700 },
+    ]);
+  });
+
+  it('drops a chapter past the end and clamps the last span', () => {
+    expect(sectionSpans([{ startMs: 0 }, { startMs: 60000 }], 53700)).toEqual([
+      { startMs: 0, endMs: 53700 },
+    ]);
+  });
+
+  it('cuts nothing for a demo without chapters', () => {
+    expect(sectionSpans([], 53700)).toEqual([]);
+  });
+});
+
+describe('clipConcurrency', () => {
+  it('scales with the cores and floors at one', () => {
+    expect(clipConcurrency(2)).toBe(1);
+    expect(clipConcurrency(12)).toBe(4);
+    expect(clipConcurrency(48)).toBe(4);
   });
 });

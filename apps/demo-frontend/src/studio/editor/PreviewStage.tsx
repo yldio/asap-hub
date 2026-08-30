@@ -7,6 +7,7 @@ import {
   CursorEffect,
   CursorPathPoint,
   fadeOpacityAt,
+  NarrationClip,
   Point,
   sourceTimeAt,
   Zoom,
@@ -154,6 +155,9 @@ type Props = {
   readonly cursorOffsetMs?: number;
   readonly playing: boolean;
   readonly volume: number;
+  // the voice over lanes, heard here the way the export mixes them: they used
+  // to be silent until the export, volume slider and all
+  readonly narration?: NarrationClip[];
   readonly assets: Record<string, ProjectAsset>;
   readonly assetUrl: (asset: ProjectAsset) => string | undefined;
   // set while a zoom is selected: the stage holds that zoom so it can be aimed
@@ -165,6 +169,8 @@ type Props = {
   readonly onGestureStart?: () => void;
   readonly onGestureEnd?: () => void;
 };
+
+const noNarration: NarrationClip[] = [];
 
 // one video element, re-pointed as the playhead crosses a clip boundary. The
 // timeline clock owns the time; the element is told where to be, never asked.
@@ -179,6 +185,7 @@ const PreviewStage: FC<Props> = ({
   cursorOffsetMs,
   playing,
   volume,
+  narration = noNarration,
   assets,
   assetUrl,
   focus,
@@ -187,6 +194,7 @@ const PreviewStage: FC<Props> = ({
   onGestureEnd,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const narrationRef = useRef(new Map<string, HTMLAudioElement>());
   const titleTextRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<CursorLayerHandle>(null);
   const bannerRef = useRef<BannerLayerHandle>(null);
@@ -253,6 +261,35 @@ const PreviewStage: FC<Props> = ({
     }
 
     cursorRef.current?.setTime(atMs);
+
+    // the takes live in programme time; each element is told where to be the
+    // way the clip video is, and plays only while the playhead is inside it
+    narration.forEach((take) => {
+      const element = narrationRef.current.get(take.id);
+      if (!element) {
+        return;
+      }
+      const localMsOfTake = ms - take.startMs;
+      const within =
+        localMsOfTake >= 0 && localMsOfTake < take.outMs - take.inMs;
+      element.volume = Math.min(1, take.volume * volume);
+      if (!within || !playing) {
+        if (!element.paused) {
+          element.pause();
+        }
+      }
+      if (!within) {
+        return;
+      }
+      const targetS = (take.inMs + Math.max(0, localMsOfTake)) / 1000;
+      const slackS = playing ? 0.25 : 0.01;
+      if (Math.abs(element.currentTime - targetS) > slackS) {
+        element.currentTime = targetS;
+      }
+      if (playing && element.paused) {
+        void element.play().catch(() => undefined);
+      }
+    });
     bannerRef.current?.setTime(ms);
   });
 
@@ -281,10 +318,34 @@ const PreviewStage: FC<Props> = ({
 
   const size = { width: box.width, height: box.height };
 
+  const holdNarration = (id: string) => (node: HTMLAudioElement | null) => {
+    if (node) {
+      narrationRef.current.set(id, node);
+    } else {
+      narrationRef.current.delete(id);
+    }
+  };
+
+  // the voice over is heard on every branch of the stage, title cards included
+  const narrationAudio = narration.map((take) => {
+    const asset = assets[take.assetId];
+    const url = asset ? assetUrl(asset) : undefined;
+    return url ? (
+      <audio
+        key={take.id}
+        data-testid="narration-audio"
+        ref={holdNarration(take.id)}
+        src={url}
+        preload="auto"
+      />
+    ) : null;
+  });
+
   if (!clip) {
     return (
       <div css={stageStyles} style={size}>
         <p css={emptyStyles}>Add a clip to the timeline to see it here.</p>
+        {narrationAudio}
       </div>
     );
   }
@@ -312,6 +373,7 @@ const PreviewStage: FC<Props> = ({
           </div>
         </div>
         <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
+        {narrationAudio}
       </div>
     );
   }
@@ -410,6 +472,7 @@ const PreviewStage: FC<Props> = ({
         zoomAt={viewAt}
       />
       <BannerLayer ref={bannerRef} banners={banners} tMs={startMs} />
+      {narrationAudio}
 
       {pin ? (
         <span

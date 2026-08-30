@@ -71,3 +71,76 @@ describe('the preview sound', () => {
     expect(renderStage(1.6, 1).volume).toBeCloseTo(1);
   });
 });
+
+// the voice over lanes were silent until the export: no audio element existed
+// anywhere in the studio, so the volume slider adjusted nothing hearable
+describe('narration in the preview', () => {
+  const voice: ProjectAsset = {
+    ...asset,
+    assetId: 'voice-1',
+    kind: 'audio',
+    url: 'blob:voice',
+  };
+
+  const stageWith = (narration: TimelineDoc['narration']) => {
+    const [placement] = layoutClips([clip(1)]);
+    return render(
+      <PreviewStage
+        box={{ width: 320, height: 180 }}
+        placement={placement}
+        banners={[]}
+        zooms={[]}
+        cursorEffects={[]}
+        playing={false}
+        volume={1}
+        narration={narration}
+        assets={{ 'asset-a': asset, 'voice-1': voice }}
+        assetUrl={(item) => item.url}
+      />,
+    );
+  };
+
+  it('renders one audio element per take, pointed at its file', () => {
+    const view = stageWith([
+      {
+        id: 'take-1',
+        assetId: 'voice-1',
+        startMs: 0,
+        inMs: 0,
+        outMs: 4000,
+        volume: 1,
+      },
+      {
+        id: 'take-2',
+        assetId: 'voice-1',
+        startMs: 5000,
+        inMs: 0,
+        outMs: 2000,
+        volume: 0.5,
+      },
+    ]);
+
+    const audio = view.container.querySelectorAll(
+      '[data-testid="narration-audio"]',
+    );
+    expect(audio).toHaveLength(2);
+    expect(audio[0]).toHaveAttribute('src', 'blob:voice');
+  });
+
+  it('renders none for a take whose asset is still uploading', () => {
+    const view = stageWith([
+      {
+        id: 'take-1',
+        assetId: 'missing',
+        startMs: 0,
+        inMs: 0,
+        outMs: 4000,
+        volume: 1,
+      },
+    ]);
+
+    expect(
+      view.container.querySelectorAll('[data-testid="narration-audio"]'),
+    ).toHaveLength(0);
+  });
+});

@@ -853,6 +853,7 @@ const ProjectEditor: FC<Props> = ({
                   cursorOffsetMs={cursorLayer?.offsetMs}
                   playing={playback.playing}
                   volume={volume}
+                  narration={timeline.narration}
                   assets={assetsById}
                   assetUrl={assetUrl}
                   focus={

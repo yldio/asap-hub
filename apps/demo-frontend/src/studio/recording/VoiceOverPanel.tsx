@@ -6,6 +6,7 @@ import { editorTheme } from '../editor/editorTheme';
 import { formatDuration } from '../editor/geometry';
 import { MicrophoneIcon } from '../editor/icons';
 import { useCaptureHolder, useHoldCapture, voiceCapture } from './captureLock';
+import { delayChoices, selectStyles } from './RecorderPanel';
 import { VoiceRecorderStatus } from './useVoiceRecorder';
 
 const rowStyles = css({
@@ -37,7 +38,9 @@ const errorStyles = css({ fontSize: 12, color: editorTheme.record });
 type Props = {
   readonly status: VoiceRecorderStatus;
   readonly elapsedMs: number;
+  readonly countdownMs: number;
   readonly countdownMsLeft: number;
+  readonly onCountdownChange: (ms: number) => void;
   readonly error?: string;
   readonly saving: boolean;
   readonly readOnly: boolean;
@@ -53,7 +56,9 @@ type Props = {
 const VoiceOverPanel: FC<Props> = ({
   status,
   elapsedMs,
+  countdownMs,
   countdownMsLeft,
+  onCountdownChange,
   error,
   saving,
   readOnly,
@@ -92,14 +97,29 @@ const VoiceOverPanel: FC<Props> = ({
           </EditorButton>
         </>
       ) : (
-        <EditorButton
-          icon={<MicrophoneIcon size={14} />}
-          disabled={readOnly || saving || busyElsewhere}
-          title={busyElsewhere ? `${holder} is already running` : undefined}
-          onClick={onStart}
-        >
-          {saving ? 'Saving…' : 'Record a voice over'}
-        </EditorButton>
+        <>
+          <EditorButton
+            icon={<MicrophoneIcon size={14} />}
+            disabled={readOnly || saving || busyElsewhere}
+            title={busyElsewhere ? `${holder} is already running` : undefined}
+            onClick={onStart}
+          >
+            {saving ? 'Saving…' : 'Record a voice over'}
+          </EditorButton>
+          <select
+            css={selectStyles}
+            aria-label="Delay before the voice over"
+            value={countdownMs}
+            disabled={readOnly || saving || busyElsewhere}
+            onChange={(event) => onCountdownChange(Number(event.target.value))}
+          >
+            {delayChoices.map((choice) => (
+              <option key={choice.value} value={choice.value}>
+                {choice.label}
+              </option>
+            ))}
+          </select>
+        </>
       )}
       {error ? <span css={errorStyles}>{error}</span> : null}
     </div>

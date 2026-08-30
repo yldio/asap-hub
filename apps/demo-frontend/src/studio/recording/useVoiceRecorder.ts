@@ -57,6 +57,9 @@ export const useVoiceRecorder = ({
   const tickRef = useRef<ReturnType<typeof setInterval>>();
   const countdownRef = useRef<ReturnType<typeof setInterval>>();
   const beginRef = useRef<() => void>();
+  // a second click while the permission prompt is still up must not open a
+  // second microphone; the first one's tracks would never be given back
+  const startingRef = useRef(false);
 
   const stopTicking = useCallback(() => {
     if (tickRef.current) {
@@ -87,6 +90,10 @@ export const useVoiceRecorder = ({
   );
 
   const start = useCallback(async () => {
+    if (startingRef.current || streamRef.current) {
+      return;
+    }
+    startingRef.current = true;
     setError(undefined);
     const user =
       getUserMedia ??
@@ -101,6 +108,7 @@ export const useVoiceRecorder = ({
 
     const mimeType = pickAudioMimeType(supported);
     if (!user || !mimeType) {
+      startingRef.current = false;
       setError('This browser cannot record audio.');
       return;
     }
@@ -116,6 +124,7 @@ export const useVoiceRecorder = ({
         },
       });
       streamRef.current = stream;
+      startingRef.current = false;
 
       const begin = () => {
         beginRef.current = undefined;
@@ -159,6 +168,7 @@ export const useVoiceRecorder = ({
         begin();
       }
     } catch (cause) {
+      startingRef.current = false;
       setError(
         cause instanceof Error && cause.name === 'NotAllowedError'
           ? 'Microphone access was declined.'

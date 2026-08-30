@@ -60,14 +60,14 @@ const countStyles = css({
   textAlign: 'center',
 });
 
-const delayChoices = [
+export const delayChoices = [
   { value: 0, label: 'No delay' },
   { value: 3000, label: '3s delay' },
   { value: 5000, label: '5s delay' },
   { value: 10000, label: '10s delay' },
 ];
 
-const selectStyles = css({
+export const selectStyles = css({
   height: 26,
   borderRadius: 6,
   border: `1px solid ${editorTheme.line}`,

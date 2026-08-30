@@ -190,6 +190,19 @@ describe('buildRenderPlan', () => {
     it('rasterises nothing', () => {
       expect(plan.svgs).toEqual([]);
     });
+
+    // any -ss, even to zero, silences the first AAC frame and eats 21ms off
+    // the head of the audio, so an untrimmed clip asks for no seek at all
+    it('seeks only when the clip starts inside the take', () => {
+      const trimmed = plan.steps[0]?.args.join(' ') ?? '';
+      expect(trimmed).toContain('-accurate_seek -ss 2.000');
+
+      const untrimmed = planFor({
+        clips: [source({ inMs: 0, outMs: 12000 })],
+      }).steps[0]?.args.join(' ');
+      expect(untrimmed).not.toContain('-ss');
+      expect(untrimmed).toContain('-to 12.000');
+    });
   });
 
   describe('two clips with a crossfade', () => {

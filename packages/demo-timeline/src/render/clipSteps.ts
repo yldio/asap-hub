@@ -1,7 +1,12 @@
 import { ClipPlacement } from '../clips';
 import { alignedPath, alignedPoint } from '../cursor/align';
 import { cursorPointerTrack } from '../cursor/pointer';
-import { bannerBand, bannerSvg, titleCardSvg } from '../presets';
+import {
+  bannerBand,
+  bannerSvg,
+  titleCardBackground,
+  titleCardSvg,
+} from '../presets';
 import {
   Banner,
   Canvas,
@@ -73,13 +78,14 @@ type Overlay = SvgFile & {
   origin?: OverlayOrigin;
 };
 
+// a seek to zero is not free: ffmpeg silences the first AAC frame after any
+// -ss, eating 21ms off the head of every untrimmed clip, so no seek is asked
+// for unless the clip actually starts inside the take
 const sourceInput = (
   clip: SourceClip,
   assets: Map<string, RenderAsset>,
 ): string[] => [
-  '-accurate_seek',
-  '-ss',
-  secondsFromMs(clip.inMs),
+  ...(clip.inMs > 0 ? ['-accurate_seek', '-ss', secondsFromMs(clip.inMs)] : []),
   '-to',
   secondsFromMs(clip.outMs),
   '-i',
@@ -92,7 +98,9 @@ const titleInput = (canvas: Canvas, seconds: string): string[] => [
   '-t',
   seconds,
   '-i',
-  `color=c=black:s=${canvas.width}x${canvas.height}:r=${canvas.fps}`,
+  `color=c=0x${titleCardBackground.slice(1)}:s=${canvas.width}x${
+    canvas.height
+  }:r=${canvas.fps}`,
 ];
 
 // only the text fades: the black card behind it is the clip's own picture, so

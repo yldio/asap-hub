@@ -6,9 +6,6 @@ exports[`buildRenderPlan a banner that slides rises into place from the bottom e
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "10.000",
       "-i",
@@ -102,9 +99,6 @@ exports[`buildRenderPlan a clip with a banner overlays the rasterised banner for
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "10.000",
       "-i",
@@ -197,9 +191,6 @@ exports[`buildRenderPlan a clip with a captured pointer walks one pointer image 
   "args": [
     "-nostdin",
     "-y",
-    "-accurate_seek",
-    "-ss",
-    "0.000",
     "-to",
     "10.000",
     "-i",
@@ -257,9 +248,6 @@ exports[`buildRenderPlan a clip with a zoom and cursor effects zooms the picture
   "args": [
     "-nostdin",
     "-y",
-    "-accurate_seek",
-    "-ss",
-    "0.000",
     "-to",
     "10.000",
     "-i",
@@ -325,9 +313,6 @@ exports[`buildRenderPlan a clip with a zoom ramps the picture in, holds it and r
   "args": [
     "-nostdin",
     "-y",
-    "-accurate_seek",
-    "-ss",
-    "0.000",
     "-to",
     "10.000",
     "-i",
@@ -377,9 +362,6 @@ exports[`buildRenderPlan a clip with cursor effects overlays each effect for its
   "args": [
     "-nostdin",
     "-y",
-    "-accurate_seek",
-    "-ss",
-    "0.000",
     "-to",
     "10.000",
     "-i",
@@ -573,9 +555,6 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "4.000",
       "-i",
@@ -627,7 +606,7 @@ exports[`buildRenderPlan a title card between two clips generates a background a
       "-t",
       "3.000",
       "-i",
-      "color=c=black:s=1920x1080:r=30",
+      "color=c=0x0b0b0f:s=1920x1080:r=30",
       "-f",
       "lavfi",
       "-t",
@@ -684,9 +663,6 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "5.000",
       "-i",
@@ -775,9 +751,6 @@ exports[`buildRenderPlan every clip step carries exactly one audio stream replac
   "args": [
     "-nostdin",
     "-y",
-    "-accurate_seek",
-    "-ss",
-    "0.000",
     "-to",
     "10.000",
     "-i",
@@ -832,9 +805,6 @@ exports[`buildRenderPlan every clip step carries exactly one audio stream replac
 [
   "-nostdin",
   "-y",
-  "-accurate_seek",
-  "-ss",
-  "0.000",
   "-to",
   "10.000",
   "-i",
@@ -931,9 +901,6 @@ exports[`buildRenderPlan two clips with a crossfade joins them with an xfade cha
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "4.000",
       "-i",
@@ -980,9 +947,6 @@ exports[`buildRenderPlan two clips with a crossfade joins them with an xfade cha
     "args": [
       "-nostdin",
       "-y",
-      "-accurate_seek",
-      "-ss",
-      "0.000",
       "-to",
       "6.000",
       "-i",

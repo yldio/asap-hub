@@ -598,18 +598,28 @@ const ProjectEditor: FC<Props> = ({
     (clipId: string, change: { inMs?: number; outMs?: number }) => {
       const clip = timeline.clips.find((candidate) => candidate.id === clipId);
       if (!clip || clip.kind !== 'source') return;
-      // Only the ingest's own probe may act as a hard bound. The browser's
-      // stopgap reading of a fresh, metadata-less recording can come up
-      // seconds short, and one touch of the handle then clamped the clip to
-      // it: the end of the take was gone and no drag could bring it back.
+      // The bound is the TAKE's length, not the footage's: a screen capture
+      // writes no frames while nothing changes, so footage legitimately ends
+      // early while the take, the drawn cursor and the voice over run on, and
+      // the render holds the last frame through the difference. Only the
+      // ingest's probe and the recorder's own measure count; the browser's
+      // stopgap reading of a fresh file can come up seconds short and used to
+      // clamp the end of the take away on the first touch of a handle.
+      const probedMs = assetsById[clip.assetId]?.durationMs;
+      const takeMs = timeline.cursor.find((layer) => layer.clipId === clipId)
+        ?.recordedDurationMs;
+      const boundMs =
+        probedMs === undefined && takeMs === undefined
+          ? undefined
+          : Math.max(probedMs ?? 0, takeMs ?? 0);
       dispatch({
         type: 'trimClip',
         clipId,
         ...change,
-        assetDurationMs: assetsById[clip.assetId]?.durationMs,
+        assetDurationMs: boundMs,
       });
     },
-    [assetsById, dispatch, timeline.clips],
+    [assetsById, dispatch, timeline.clips, timeline.cursor],
   );
 
   // The timeline speaks programme time for everything it drags. Zooms and

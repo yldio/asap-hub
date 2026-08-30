@@ -779,7 +779,7 @@ describe('buildRenderPlan', () => {
         planFor({ clips: [source({ volume: 0 })] }).steps[0]?.args,
       ).toEqual(
         expect.arrayContaining([
-          'volume=0,aresample=async=1:first_pts=0,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo',
+          'volume=0,aresample=async=1:first_pts=0,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,apad=whole_dur=10.000',
         ]),
       );
     });
@@ -864,4 +864,31 @@ it('moves an export ring by the layer trim', () => {
 
   expect(trimmed?.x).toBe((plain?.x ?? 0) + 100);
   expect(trimmed?.y).toBe((plain?.y ?? 0) - 40);
+});
+
+// a screen capture writes no frames while nothing changes, so a take whose
+// last seconds were pointer travel alone ends its footage early: the clip's
+// picture is held to its own end rather than cut, and the audio padded to it
+it('holds the last frame of footage that ends before the clip does', () => {
+  const short: RenderAsset[] = [
+    { assetId: 'asset-1', path: '/a.mp4', durationMs: 7000, hasAudio: true },
+  ];
+  const args =
+    buildRenderPlan({
+      timeline: timelineOf({ clips: [source({ outMs: 10000 })] }),
+      assets: short,
+      workDir: '/work',
+      output: '/work/out.mp4',
+    }).steps[0]?.args.join(' ') ?? '';
+
+  expect(args).toContain('tpad=stop_mode=clone:stop_duration=3.000');
+  expect(args).toContain('apad=whole_dur=10.000');
+});
+
+it('pads nothing when the footage covers the clip', () => {
+  const args =
+    planFor({ clips: [source({ outMs: 10000 })] }).steps[0]?.args.join(' ') ??
+    '';
+
+  expect(args).not.toContain('tpad');
 });

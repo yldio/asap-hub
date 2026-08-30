@@ -854,6 +854,42 @@ describe('adding a mouse click to a trimmed clip', () => {
 // seconds short, and using it as the trim bound clamped the take's end away
 // on the first touch of a handle
 describe('trimming before the ingest has probed the asset', () => {
+  // footage legitimately ends early when nothing on screen changed, so the
+  // take's own length is the bound and the render holds the last frame
+  it('lets a clip extend to the take length past short footage', () => {
+    const taken: Timeline = {
+      ...withClip(),
+      cursor: [
+        {
+          clipId: 'clip-a',
+          offsetMs: 0,
+          path: [],
+          effects: [],
+          recordedAtEpochMs: 1_700_000_000_000,
+          recordedDurationMs: 11_000,
+        },
+      ],
+    };
+    const { calls } = renderEditor({ timeline: taken });
+
+    const handle = screen.getByRole('button', {
+      name: 'Trim the end of Sprint demo',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 200 });
+    fireEvent.pointerMove(handle, {
+      pointerId: 1,
+      clientX: 260,
+      buttons: 1,
+    });
+
+    const trims = calls.filter(
+      (call) => call.name === 'dispatch' && call.action?.type === 'trimClip',
+    );
+    expect(
+      (trims[0]?.action as { assetDurationMs?: number }).assetDurationMs,
+    ).toBe(11_000);
+  });
+
   it('sends no hard bound when only the browser guessed a duration', () => {
     const unprobed = asset();
     delete (unprobed as { durationMs?: number }).durationMs;

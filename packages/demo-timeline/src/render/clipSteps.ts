@@ -394,6 +394,18 @@ export const buildClipStep = ({
   const { clip, index, durationMs } = placement;
   const seconds = secondsFromMs(durationMs);
 
+  // A screen capture only writes a frame when a pixel changes, so a take whose
+  // last seconds were all pointer travel ends its footage early while the take
+  // itself, the drawn cursor and the voice over run on. The last frame is held
+  // to the clip's own end, or ffmpeg would cut the clip short and pull every
+  // later clip and the narration out of step.
+  const footageMs =
+    clip.kind === 'source' ? assets.get(clip.assetId)?.durationMs : undefined;
+  const heldMs =
+    clip.kind === 'source' && footageMs !== undefined
+      ? Math.max(0, clip.outMs - Math.round(footageMs))
+      : 0;
+
   const videoInput =
     clip.kind === 'source'
       ? sourceInput(clip, assets)
@@ -419,7 +431,12 @@ export const buildClipStep = ({
   const segments = [
     filterSegment(
       ['0:v'],
-      pictureFilters(placement, canvas, clipZoom, assets),
+      [
+        ...(heldMs > 0
+          ? [`tpad=stop_mode=clone:stop_duration=${secondsFromMs(heldMs)}`]
+          : []),
+        ...pictureFilters(placement, canvas, clipZoom, assets),
+      ],
       'v0',
     ),
     ...overlays.flatMap((overlay, position) => [
@@ -463,7 +480,12 @@ export const buildClipStep = ({
         '-map',
         audioMap,
         ...videoEncodeArgs(canvas),
-        ...audioEncodeArgs(clipAudioFilters(clip)),
+        // padded to the clip's own length, so audio that ends with the last
+        // encoded frame cannot come up short against the held picture
+        ...audioEncodeArgs([
+          ...clipAudioFilters(clip),
+          `apad=whole_dur=${seconds}`,
+        ]),
         ...containerArgs,
         output,
       ],

@@ -386,7 +386,8 @@ const Editor: FC<EditorProps> = ({
 
   const take = useRecordingTake(upload, onTake);
 
-  const voice = useVoiceRecorder();
+  // the voice over gets the same grace the screen recorder was given
+  const voice = useVoiceRecorder({ countdownMs: take.countdownMs });
   const [savingVoice, setSavingVoice] = useState(false);
 
   // the finished take becomes an asset first, then the editor drops it on the
@@ -666,6 +667,7 @@ const Editor: FC<EditorProps> = ({
             <VoiceOverPanel
               status={voice.status}
               elapsedMs={voice.elapsedMs}
+              countdownMsLeft={voice.countdownMsLeft}
               error={voice.error}
               saving={savingVoice}
               readOnly={readOnly}
@@ -675,6 +677,8 @@ const Editor: FC<EditorProps> = ({
               onStart={() => {
                 voice.start().catch(() => undefined);
               }}
+              onStartNow={voice.startNow}
+              onCancel={voice.cancel}
               onStop={() => {
                 saveVoice(addAsset).catch(() => undefined);
               }}

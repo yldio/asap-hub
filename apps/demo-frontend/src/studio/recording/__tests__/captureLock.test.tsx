@@ -28,9 +28,12 @@ const Both: FC<{ readonly screen: RecorderStatus }> = ({ screen: status }) => (
     <VoiceOverPanel
       status="idle"
       elapsedMs={0}
+      countdownMsLeft={0}
       saving={false}
       readOnly={false}
       onStart={jest.fn()}
+      onStartNow={jest.fn()}
+      onCancel={jest.fn()}
       onStop={jest.fn()}
     />
   </>

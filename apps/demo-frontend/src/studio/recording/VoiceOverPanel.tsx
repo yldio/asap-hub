@@ -37,11 +37,14 @@ const errorStyles = css({ fontSize: 12, color: editorTheme.record });
 type Props = {
   readonly status: VoiceRecorderStatus;
   readonly elapsedMs: number;
+  readonly countdownMsLeft: number;
   readonly error?: string;
   readonly saving: boolean;
   readonly readOnly: boolean;
   readonly unsupportedReason?: string;
   readonly onStart: () => void;
+  readonly onStartNow: () => void;
+  readonly onCancel: () => void;
   readonly onStop: () => void;
 };
 
@@ -50,14 +53,17 @@ type Props = {
 const VoiceOverPanel: FC<Props> = ({
   status,
   elapsedMs,
+  countdownMsLeft,
   error,
   saving,
   readOnly,
   unsupportedReason,
   onStart,
+  onStartNow,
+  onCancel,
   onStop,
 }) => {
-  useHoldCapture(voiceCapture, status === 'recording' || saving);
+  useHoldCapture(voiceCapture, status !== 'idle' || saving);
   const holder = useCaptureHolder();
   const busyElsewhere = holder !== undefined && holder !== voiceCapture;
 
@@ -65,7 +71,17 @@ const VoiceOverPanel: FC<Props> = ({
     <p css={errorStyles}>{unsupportedReason}</p>
   ) : (
     <div css={rowStyles}>
-      {status === 'recording' ? (
+      {status === 'counting' ? (
+        <>
+          <span css={liveStyles} role="timer">
+            Recording in {Math.ceil(countdownMsLeft / 1000)}…
+          </span>
+          <EditorButton primary onClick={onStartNow}>
+            Start now
+          </EditorButton>
+          <EditorButton onClick={onCancel}>Cancel</EditorButton>
+        </>
+      ) : status === 'recording' ? (
         <>
           <span css={liveStyles}>
             <span css={dotStyles} />

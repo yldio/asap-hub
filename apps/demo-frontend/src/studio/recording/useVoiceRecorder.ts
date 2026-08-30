@@ -8,7 +8,7 @@ export type RecordedVoice = {
   durationMs: number;
 };
 
-export type VoiceRecorderStatus = 'idle' | 'recording';
+export type VoiceRecorderStatus = 'idle' | 'counting' | 'recording';
 
 export type VoiceRecorderOptions = {
   getUserMedia?: (constraints: MediaStreamConstraints) => Promise<MediaStream>;
@@ -18,13 +18,19 @@ export type VoiceRecorderOptions = {
   ) => MediaRecorder;
   isTypeSupported?: (mimeType: string) => boolean;
   now?: () => number;
+  // the same grace the screen recorder gives: time to scrub to the section
+  // and take a breath before the microphone goes live
+  countdownMs?: number;
 };
 
 export type VoiceRecorder = {
   status: VoiceRecorderStatus;
   error?: string;
   elapsedMs: number;
+  countdownMsLeft: number;
   start: () => Promise<void>;
+  startNow: () => void;
+  cancel: () => void;
   stop: () => Promise<RecordedVoice | undefined>;
 };
 
@@ -37,16 +43,20 @@ export const useVoiceRecorder = ({
   createRecorder,
   isTypeSupported,
   now = systemNow,
+  countdownMs = 0,
 }: VoiceRecorderOptions = {}): VoiceRecorder => {
   const [status, setStatus] = useState<VoiceRecorderStatus>('idle');
   const [error, setError] = useState<string>();
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [countdownMsLeft, setCountdownMsLeft] = useState(0);
 
   const recorderRef = useRef<MediaRecorder>();
   const streamRef = useRef<MediaStream>();
   const chunksRef = useRef<Blob[]>([]);
   const startedAtRef = useRef(0);
   const tickRef = useRef<ReturnType<typeof setInterval>>();
+  const countdownRef = useRef<ReturnType<typeof setInterval>>();
+  const beginRef = useRef<() => void>();
 
   const stopTicking = useCallback(() => {
     if (tickRef.current) {
@@ -55,10 +65,21 @@ export const useVoiceRecorder = ({
     }
   }, []);
 
+  const stopCounting = useCallback(() => {
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = undefined;
+    }
+    setCountdownMsLeft(0);
+  }, []);
+
   useEffect(
     () => () => {
       if (tickRef.current) {
         clearInterval(tickRef.current);
+      }
+      if (countdownRef.current) {
+        clearInterval(countdownRef.current);
       }
       streamRef.current?.getTracks().forEach((track) => track.stop());
     },
@@ -85,6 +106,8 @@ export const useVoiceRecorder = ({
     }
 
     try {
+      // the permission prompt comes before the count, so the grace is all
+      // grace rather than being eaten by the browser dialog
       const stream = await user({
         audio: {
           echoCancellation: true,
@@ -92,25 +115,49 @@ export const useVoiceRecorder = ({
           autoGainControl: true,
         },
       });
-      const recorder = factory(stream, { mimeType });
-      chunksRef.current = [];
-      recorder.addEventListener('dataavailable', (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
-      });
-
-      recorderRef.current = recorder;
       streamRef.current = stream;
-      startedAtRef.current = now();
-      setElapsedMs(0);
-      recorder.start(5000);
-      setStatus('recording');
-      stopTicking();
-      tickRef.current = setInterval(
-        () => setElapsedMs(now() - startedAtRef.current),
-        500,
-      );
+
+      const begin = () => {
+        beginRef.current = undefined;
+        const recorder = factory(stream, { mimeType });
+        chunksRef.current = [];
+        recorder.addEventListener('dataavailable', (event) => {
+          if (event.data.size > 0) {
+            chunksRef.current.push(event.data);
+          }
+        });
+
+        recorderRef.current = recorder;
+        startedAtRef.current = now();
+        setElapsedMs(0);
+        recorder.start(5000);
+        setStatus('recording');
+        stopTicking();
+        tickRef.current = setInterval(
+          () => setElapsedMs(now() - startedAtRef.current),
+          500,
+        );
+      };
+
+      if (countdownMs > 0) {
+        // the wall clock decides when the count ends, because background
+        // intervals are throttled
+        setStatus('counting');
+        setCountdownMsLeft(countdownMs);
+        beginRef.current = begin;
+        const deadline = now() + countdownMs;
+        countdownRef.current = setInterval(() => {
+          const left = deadline - now();
+          if (left > 0) {
+            setCountdownMsLeft(left);
+            return;
+          }
+          stopCounting();
+          begin();
+        }, 200);
+      } else {
+        begin();
+      }
     } catch (cause) {
       setError(
         cause instanceof Error && cause.name === 'NotAllowedError'
@@ -119,7 +166,15 @@ export const useVoiceRecorder = ({
       );
       setStatus('idle');
     }
-  }, [createRecorder, getUserMedia, isTypeSupported, now, stopTicking]);
+  }, [
+    countdownMs,
+    createRecorder,
+    getUserMedia,
+    isTypeSupported,
+    now,
+    stopCounting,
+    stopTicking,
+  ]);
 
   const stop = useCallback(async (): Promise<RecordedVoice | undefined> => {
     const recorder = recorderRef.current;
@@ -151,5 +206,36 @@ export const useVoiceRecorder = ({
     };
   }, [now, stopTicking]);
 
-  return { status, error, elapsedMs, start, stop };
+  // the count is a promise to record, not a recording: skipping it starts the
+  // take at once, and backing out hands the microphone straight back
+  const startNow = useCallback(() => {
+    const begin = beginRef.current;
+    if (!begin) {
+      return;
+    }
+    stopCounting();
+    begin();
+  }, [stopCounting]);
+
+  const cancel = useCallback(() => {
+    if (!beginRef.current) {
+      return;
+    }
+    beginRef.current = undefined;
+    stopCounting();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = undefined;
+    setStatus('idle');
+  }, [stopCounting]);
+
+  return {
+    status,
+    error,
+    elapsedMs,
+    countdownMsLeft,
+    start,
+    startNow,
+    cancel,
+    stop,
+  };
 };

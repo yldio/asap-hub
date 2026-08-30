@@ -54,6 +54,28 @@ const selectedStyles = css({
 
 const mutedStyles = css({ opacity: 0.65 });
 
+// picked reads differently from selected: a dashed edge and a tick, because a
+// clip can be picked for the download while another one is being edited
+const pickedStyles = css({
+  outline: `2px dashed ${editorTheme.playhead}`,
+  outlineOffset: -2,
+});
+
+const pickBadgeStyles = css({
+  position: 'absolute',
+  top: 3,
+  right: 12,
+  width: 15,
+  height: 15,
+  lineHeight: '15px',
+  textAlign: 'center',
+  fontSize: 10,
+  borderRadius: '50%',
+  backgroundColor: editorTheme.playhead,
+  color: editorTheme.onAccent,
+  pointerEvents: 'none',
+});
+
 const labelStyles = css({
   fontWeight: 600,
   whiteSpace: 'nowrap',
@@ -111,8 +133,11 @@ type Props = {
   readonly left: number;
   readonly width: number;
   readonly selected: boolean;
+  // picked into the cut a download renders; toggled with Ctrl or Cmd
+  readonly picked: boolean;
   readonly readOnly: boolean;
   readonly onSelect: () => void;
+  readonly onTogglePick: () => void;
   readonly onDragStart: (
     kind: DragKind,
     event: ReactPointerEvent<HTMLElement>,
@@ -142,8 +167,10 @@ const ClipBlock: FC<Props> = ({
   left,
   width,
   selected,
+  picked,
   readOnly,
   onSelect,
+  onTogglePick,
   onDragStart,
   onNudge,
   onToggleMute,
@@ -180,17 +207,25 @@ const ClipBlock: FC<Props> = ({
       // and unreachable for assistive tech
       role="group"
       tabIndex={0}
-      aria-label={`${label}, ${span}${muted ? ', muted' : ''}${blend}`}
+      aria-label={`${label}, ${span}${muted ? ', muted' : ''}${blend}${
+        picked ? ', picked for download' : ''
+      }`}
       title={trim}
       aria-current={selected}
       css={[
         blockStyles,
         clip.kind === 'title' && titleBlockStyles,
         selected && selectedStyles,
+        picked && pickedStyles,
         muted && mutedStyles,
       ]}
       style={{ left, width: Math.max(width, 18) }}
       onPointerDown={(event) => {
+        if (event.ctrlKey || event.metaKey) {
+          event.preventDefault();
+          onTogglePick();
+          return;
+        }
         onSelect();
         if (!readOnly) {
           onDragStart('move', event);
@@ -199,6 +234,10 @@ const ClipBlock: FC<Props> = ({
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
+          if (event.ctrlKey || event.metaKey) {
+            onTogglePick();
+            return;
+          }
           onSelect();
           return;
         }
@@ -209,6 +248,11 @@ const ClipBlock: FC<Props> = ({
         onNudge('move', delta);
       }}
     >
+      {picked ? (
+        <span css={pickBadgeStyles} aria-hidden="true">
+          &#10003;
+        </span>
+      ) : null}
       <span css={labelStyles}>{label}</span>
       {/* a 14px crossed speaker was the only sign a clip had been silenced */}
       <span css={rangeStyles}>{muted ? `${span} · muted` : span}</span>

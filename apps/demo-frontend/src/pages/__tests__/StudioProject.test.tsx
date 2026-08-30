@@ -587,6 +587,78 @@ describe('rendering', () => {
   });
 });
 
+describe('a picked-clips download', () => {
+  it('shows the preparing state while it renders', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'rendering',
+          timelineVersion: 4,
+          purpose: 'download',
+          stage: 'clip 0 (source asset-1)',
+          progress: 25,
+        },
+      }),
+    });
+
+    expect(await screen.findByText('Preparing the picked clips')).toBeVisible();
+    expect(
+      screen.getByRole('progressbar', { name: 'Download progress' }),
+    ).toBeVisible();
+  });
+
+  it('offers the finished cut as a file behind the media cookies', async () => {
+    // jsdom cannot navigate, and the save is exactly a navigation
+    const click = jest
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
+    const requestAccess = jest.fn().mockResolvedValue({
+      streamUrl: '/media/project-1/stream.mp4',
+    });
+    renderStudio({
+      requestAccess,
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'done',
+          timelineVersion: 4,
+          purpose: 'download',
+          downloadPath: 'downloads/render-1',
+        },
+      }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Save the picked clips' }),
+    );
+
+    expect(requestAccess).toHaveBeenCalledWith('project-1');
+    expect(click).toHaveBeenCalled();
+  });
+
+  it('names a download failure a download failure', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'failed',
+          timelineVersion: 4,
+          purpose: 'download',
+          error: 'ffmpeg exited 1',
+        },
+      }),
+    });
+
+    expect(
+      await screen.findByText(/Download failed: ffmpeg exited 1/),
+    ).toBeVisible();
+  });
+});
+
 describe('chapters', () => {
   it('explains how chapters work before there are any', async () => {
     renderStudio();

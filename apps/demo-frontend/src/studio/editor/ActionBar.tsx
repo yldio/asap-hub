@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, memo } from 'react';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
-import { redoHint, undoHint } from './shortcuts';
+import { pickHint, redoHint, undoHint } from './shortcuts';
 import {
   DuplicateIcon,
   MinusIcon,
@@ -152,7 +152,8 @@ const ActionBar: FC<Props> = ({
     <span css={hintStyles}>
       Drag anything along its lane to move it, or drag either edge to change how
       long it lasts. S splits, D duplicates, M mutes, Delete removes, {undoHint}{' '}
-      undoes and {redoHint} redoes.
+      undoes and {redoHint} redoes. {pickHint} picks clips to download as one
+      video.
     </span>
 
     <div css={groupStyles}>

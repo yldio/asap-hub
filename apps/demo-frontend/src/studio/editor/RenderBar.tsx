@@ -88,6 +88,8 @@ type Props = {
   readonly onLeave: () => boolean;
   readonly onRender: () => void;
   readonly onCancel: () => void;
+  // fetches the finished picked-clips cut as a file to save
+  readonly onSaveDownload: () => void;
 };
 
 const RenderBar: FC<Props> = ({
@@ -100,21 +102,27 @@ const RenderBar: FC<Props> = ({
   onLeave,
   onRender,
   onCancel,
+  onSaveDownload,
 }) => {
   const busy = render?.state === 'queued' || render?.state === 'rendering';
+  const download = render?.purpose === 'download';
 
   if (busy) {
     const progress = render?.progress ?? 0;
     return (
       <div css={barStyles}>
         <span css={statusStyles}>
-          {render?.stage ? stageLabel(render.stage) : 'Queued'}
+          {download
+            ? 'Preparing the picked clips'
+            : render?.stage
+              ? stageLabel(render.stage)
+              : 'Queued'}
         </span>
         <span
           css={trackStyles}
           role="progressbar"
           aria-valuenow={progress}
-          aria-label="Export progress"
+          aria-label={download ? 'Download progress' : 'Export progress'}
         >
           <span css={fillStyles} style={{ width: `${progress}%` }} />
         </span>
@@ -125,12 +133,20 @@ const RenderBar: FC<Props> = ({
     );
   }
 
+  const failureWord = download ? 'Download' : 'Export';
   return (
     <div css={barStyles}>
       {render?.state === 'failed' ? (
         <span css={errorStyles}>
-          {render.error ? `Export failed: ${render.error}` : 'Export failed'}
+          {render.error
+            ? `${failureWord} failed: ${render.error}`
+            : `${failureWord} failed`}
         </span>
+      ) : null}
+      {download && render?.state === 'done' && render.downloadPath ? (
+        <EditorButton onClick={onSaveDownload}>
+          Save the picked clips
+        </EditorButton>
       ) : null}
       <span css={draftStyles}>{whoCanSeeIt(hasOutput, status)}</span>
       {hasOutput ? (

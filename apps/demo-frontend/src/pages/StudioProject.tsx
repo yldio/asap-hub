@@ -120,6 +120,7 @@ const renderRefusals: Record<string, string> = {
   conflict: 'This demo changed somewhere else. Try the export again.',
   not_found: 'This demo is no longer there.',
   render_start_failed: 'The export could not be started. Try again.',
+  unknown_clip: 'A picked clip is gone from the timeline. Pick again.',
 };
 
 const renderRefusal = (cause: unknown): string =>
@@ -480,6 +481,43 @@ const Editor: FC<EditorProps> = ({
 
   const exported = video.processingState === 'ready';
 
+  // the picked clips render like any export, into a directory of their own,
+  // and the row's render map is what carries the progress back
+  const startDownload = useCallback(
+    (clipIds: string[]) => {
+      setRenderError(undefined);
+      setPublishError(undefined);
+      api
+        .startRender(id, editor.version, clipIds)
+        .then(applyWrite)
+        .catch((cause: unknown) => {
+          setRenderError(renderRefusal(cause));
+          void api.getVideo(id).then(applyWrite).catch(noop);
+        });
+    },
+    [api, applyWrite, editor.version, id],
+  );
+
+  // the access call plants the signed media cookies first, because the file
+  // lives behind the same door the demo itself does
+  const saveDownload = useCallback(() => {
+    const path = video.render?.downloadPath;
+    if (!path) {
+      return;
+    }
+    api
+      .requestAccess(id)
+      .then(() => {
+        const anchor = document.createElement('a');
+        anchor.href = `/media/${id}/${path}/stream.mp4`;
+        anchor.download = `${video.title || 'clips'}.mp4`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      })
+      .catch(() => setRenderError('Could not fetch the clips file.'));
+  }, [api, id, video.render?.downloadPath, video.title]);
+
   // a second export replaces the demo that is already out there, and for a
   // published one that is what people are watching right now
   const requestRender = useCallback(() => {
@@ -586,10 +624,17 @@ const Editor: FC<EditorProps> = ({
           onLeave={() => leaving.request(() => navigate(`/videos/${id}`))}
           onRender={requestRender}
           onCancel={cancelRender}
+          onSaveDownload={saveDownload}
         />
       </ProjectHeader>
       <ProjectEditor
         editor={editor}
+        onDownloadClips={readOnly ? undefined : startDownload}
+        canDownload={!editor.dirty && editor.saveState !== 'saving'}
+        downloadBusy={
+          video.render?.state === 'queued' ||
+          video.render?.state === 'rendering'
+        }
         recorder={(addAsset, applyCursorCapture) => (
           <>
             <RecorderPanel

@@ -89,6 +89,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
   const onSelect = jest.fn();
   const onSpanChange = jest.fn();
   const onToggleMute = jest.fn();
+  const onTogglePick = jest.fn();
   const onGestureStart = jest.fn();
   const onGestureEnd = jest.fn();
   const placements = layoutClips(clips);
@@ -98,6 +99,8 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       placements={placements}
       durationMs={10000}
       pixelsPerSecond={pixelsPerSecond}
+      pickedIds={[]}
+      onTogglePick={onTogglePick}
       readOnly={false}
       banners={[]}
       narration={[]}
@@ -129,6 +132,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
     onSelect,
     onSpanChange,
     onToggleMute,
+    onTogglePick,
     onGestureStart,
     onGestureEnd,
   };
@@ -268,6 +272,30 @@ describe('dragging a clip', () => {
     fireEvent.pointerUp(clipBlock('A'), { pointerId: 1, clientX: 800 });
 
     expect(onMove).not.toHaveBeenCalled();
+  });
+});
+
+describe('picking clips for a download', () => {
+  it('toggles the pick with a modifier click instead of selecting', () => {
+    const { onTogglePick, onSelect, onMove } = renderTimeline();
+
+    fireEvent.pointerDown(clipBlock('A'), {
+      pointerId: 1,
+      clientX: 100,
+      ctrlKey: true,
+    });
+
+    expect(onTogglePick).toHaveBeenCalledWith('clip-a');
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(onMove).not.toHaveBeenCalled();
+  });
+
+  it('says which clips are picked', () => {
+    renderTimeline({ pickedIds: ['clip-a'] });
+
+    expect(
+      screen.getByRole('group', { name: /^A, .*picked for download/ }),
+    ).toBeVisible();
   });
 });
 

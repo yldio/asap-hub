@@ -27,6 +27,7 @@ import {
   SaveState,
 } from '../project/useProjectEditor';
 import ActionBar from './ActionBar';
+import PickBar from './PickBar';
 import AssetPanel from './AssetPanel';
 import {
   assetsOnTimeline,
@@ -167,6 +168,12 @@ type Props = {
     // false when the timeline has no clip to land the capture on
     applyCursorCapture: (apply: CaptureApply) => boolean,
   ) => ReactNode;
+  // starts a download render of just these clips; absent hides the picking bar
+  readonly onDownloadClips?: (clipIds: string[]) => void;
+  // the same settled-document gate the export button has
+  readonly canDownload?: boolean;
+  // an export or download is already running, so the bar waits
+  readonly downloadBusy?: boolean;
 };
 
 const ProjectEditor: FC<Props> = ({
@@ -182,12 +189,26 @@ const ProjectEditor: FC<Props> = ({
   uploading,
   uploadProgress,
   recorder,
+  onDownloadClips,
+  canDownload = false,
+  downloadBusy = false,
 }) => {
   const { timeline, dispatch, beginGesture, endGesture } = editor;
   const gesture = useGestures(beginGesture, endGesture);
   const startDrag = useCallback(() => gesture.begin(dragGesture), [gesture]);
   const endDrag = useCallback(() => gesture.end(dragGesture), [gesture]);
   const [selection, setSelection] = useState<Selection>();
+  const [pickedIds, setPickedIds] = useState<readonly string[]>([]);
+  const togglePick = useCallback(
+    (clipId: string) =>
+      setPickedIds((picked) =>
+        picked.includes(clipId)
+          ? picked.filter((id) => id !== clipId)
+          : [...picked, clipId],
+      ),
+    [],
+  );
+  const clearPicks = useCallback(() => setPickedIds([]), []);
   const [volume, setVolume] = useState(1);
   const select = useCallback(
     (kind: Selection['kind'], id: string) => setSelection({ kind, id }),
@@ -197,6 +218,14 @@ const ProjectEditor: FC<Props> = ({
   const placements = useMemo(
     () => layoutClips(timeline.clips),
     [timeline.clips],
+  );
+
+  // a pick can outlive its clip: a delete or an undo takes the clip away and
+  // the pick must not silently put a ghost into the download
+  const picked = useMemo(
+    () =>
+      pickedIds.filter((id) => timeline.clips.some((clip) => clip.id === id)),
+    [pickedIds, timeline.clips],
   );
   // the placements above already laid the clips out; laying them out again
   // just to read the end doubled the per-edit cost
@@ -980,6 +1009,16 @@ const ProjectEditor: FC<Props> = ({
             onZoomFit={zoom.zoomToFit}
           />
 
+          {onDownloadClips && picked.length > 0 ? (
+            <PickBar
+              count={picked.length}
+              canDownload={canDownload}
+              busy={downloadBusy}
+              onDownload={() => onDownloadClips([...picked])}
+              onClear={clearPicks}
+            />
+          ) : null}
+
           <Timeline
             placements={placements}
             durationMs={durationMs}
@@ -989,9 +1028,11 @@ const ProjectEditor: FC<Props> = ({
             zooms={timeline.zooms}
             cursorLayers={timeline.cursor}
             selection={selection}
+            pickedIds={picked}
             readOnly={readOnly}
             assets={assetsById}
             onSelect={select}
+            onTogglePick={togglePick}
             onSeek={seek}
             onSpanChange={changeSpan}
             onMove={moveClip}

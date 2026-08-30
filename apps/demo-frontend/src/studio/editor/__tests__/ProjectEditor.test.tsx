@@ -53,11 +53,13 @@ const renderEditor = ({
   assets = [asset()],
   readOnly = false,
   recorder,
+  onDownloadClips,
 }: {
   timeline?: Timeline;
   assets?: ProjectAsset[];
   readOnly?: boolean;
   recorder?: () => ReactNode;
+  onDownloadClips?: (clipIds: string[]) => void;
 } = {}) => {
   const calls: Call[] = [];
   const editor: Editor = {
@@ -89,6 +91,8 @@ const renderEditor = ({
       onDeleteAsset={jest.fn()}
       uploading={false}
       recorder={recorder}
+      onDownloadClips={onDownloadClips}
+      canDownload
     />,
   );
 
@@ -915,5 +919,46 @@ describe('trimming before the ingest has probed the asset', () => {
     expect(
       (trims[0]?.action as { assetDurationMs?: number }).assetDurationMs,
     ).toBeUndefined();
+  });
+});
+
+describe('picking clips for a download', () => {
+  const pick = () =>
+    fireEvent.pointerDown(
+      screen.getByRole('group', { name: /^Sprint demo, / }),
+      { pointerId: 1, ctrlKey: true },
+    );
+
+  it('offers the picked cut and hands over the clip ids', () => {
+    const onDownloadClips = jest.fn();
+    renderEditor({ timeline: withClip(), onDownloadClips });
+
+    pick();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Download these clips' }),
+    );
+
+    expect(onDownloadClips).toHaveBeenCalledWith(['clip-a']);
+  });
+
+  it('clears the picks without starting anything', () => {
+    const onDownloadClips = jest.fn();
+    renderEditor({ timeline: withClip(), onDownloadClips });
+
+    pick();
+    fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(onDownloadClips).not.toHaveBeenCalled();
+    expect(screen.queryByRole('region', { name: 'Picked clips' })).toBeNull();
+  });
+
+  it('unpicks a clip clicked a second time', () => {
+    const onDownloadClips = jest.fn();
+    renderEditor({ timeline: withClip(), onDownloadClips });
+
+    pick();
+    pick();
+
+    expect(screen.queryByRole('region', { name: 'Picked clips' })).toBeNull();
   });
 });

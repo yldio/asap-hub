@@ -340,9 +340,11 @@ const ClipTrack = memo<{
   readonly pixelsPerSecond: number;
   readonly durationMs: number;
   readonly selection?: Selection;
+  readonly pickedIds: readonly string[];
   readonly readOnly: boolean;
   readonly dropIndex?: number;
   readonly onSelect: SelectHandler;
+  readonly onTogglePick: (clipId: string) => void;
   readonly onDragStart: StartClipDrag;
   readonly onNudge: NudgeClip;
   readonly onToggleMute: (clipId: string) => void;
@@ -353,9 +355,11 @@ const ClipTrack = memo<{
     pixelsPerSecond,
     durationMs,
     selection,
+    pickedIds,
     readOnly,
     dropIndex,
     onSelect,
+    onTogglePick,
     onDragStart,
     onNudge,
     onToggleMute,
@@ -378,8 +382,10 @@ const ClipTrack = memo<{
             left={msToPx(placement.startMs, pixelsPerSecond)}
             width={msToPx(placement.durationMs, pixelsPerSecond)}
             selected={isSelected(selection, 'clip', placement.clip.id)}
+            picked={pickedIds.includes(placement.clip.id)}
             readOnly={readOnly}
             onSelect={() => onSelect('clip', placement.clip.id)}
+            onTogglePick={() => onTogglePick(placement.clip.id)}
             onDragStart={(kind, event) => onDragStart(placement, kind, event)}
             onNudge={(kind, deltaMs) => onNudge(placement, kind, deltaMs)}
             onToggleMute={() => onToggleMute(placement.clip.id)}
@@ -700,9 +706,12 @@ type Props = {
   readonly zooms: Zoom[];
   readonly cursorLayers: CursorLayer[];
   readonly selection?: Selection;
+  // the clips picked into the cut a download renders
+  readonly pickedIds: readonly string[];
   readonly readOnly: boolean;
   readonly assets: Record<string, ProjectAsset>;
   readonly onSelect: SelectHandler;
+  readonly onTogglePick: (clipId: string) => void;
   readonly onSeek: (ms: number) => void;
   // always in programme time; the editor converts for the clip-anchored tracks.
   // The drag kind travels with it because moving a block and resizing it mean
@@ -732,6 +741,8 @@ const Timeline: FC<Props> = ({
   placements,
   durationMs,
   pixelsPerSecond,
+  pickedIds,
+  onTogglePick,
   banners,
   narration,
   zooms,
@@ -1092,9 +1103,11 @@ const Timeline: FC<Props> = ({
             pixelsPerSecond={pixelsPerSecond}
             durationMs={durationMs}
             selection={selection}
+            pickedIds={pickedIds}
             readOnly={readOnly}
             dropIndex={dropIndex}
             onSelect={onSelect}
+            onTogglePick={onTogglePick}
             onDragStart={startClipDrag}
             onNudge={nudgeClip}
             onToggleMute={onToggleMute}

@@ -6,3 +6,4 @@ const onApple = (): boolean =>
 
 export const undoHint = onApple() ? 'Cmd+Z' : 'Ctrl+Z';
 export const redoHint = onApple() ? 'Cmd+Shift+Z' : 'Ctrl+Shift+Z';
+export const pickHint = onApple() ? 'Cmd+click' : 'Ctrl+click';

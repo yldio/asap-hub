@@ -4,6 +4,7 @@ import { limits } from '@asap-hub/demo-timeline';
 import { FC, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { useCaptureHolder } from '../recording/captureLock';
+import { Modal } from '../../ui/components';
 import EditorButton from './EditorButton';
 import { editorTheme } from './editorTheme';
 import { scrollingStyles } from './fields';
@@ -176,6 +177,14 @@ type Props = {
   readonly onDelete: (asset: ProjectAsset) => void;
 };
 
+const confirmStyles = css({ margin: '0 0 14px', lineHeight: 1.5 });
+
+const confirmRowStyles = css({
+  display: 'flex',
+  gap: 8,
+  justifyContent: 'flex-end',
+});
+
 const AssetPanel: FC<Props> = ({
   assets,
   used,
@@ -193,6 +202,8 @@ const AssetPanel: FC<Props> = ({
 }) => {
   const videoRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLInputElement>(null);
+  // the source asked about before its file is actually deleted
+  const [doomed, setDoomed] = useState<ProjectAsset>();
   // picking a file mid take steals the screen being shared, and the upload
   // competes with the recording for the same connection
   const recording = useCaptureHolder();
@@ -293,13 +304,39 @@ const AssetPanel: FC<Props> = ({
                   aria-label={`Remove ${asset.label}`}
                   icon={<TrashIcon size={15} />}
                   disabled={readOnly}
-                  onClick={() => onDelete(asset)}
+                  onClick={() => setDoomed(asset)}
                 />
               </div>
             </li>
           ))}
         </ul>
       )}
+
+      {doomed ? (
+        <Modal onClose={() => setDoomed(undefined)} label="Remove this source">
+          <p css={confirmStyles}>
+            Remove “{doomed.label}”? The file goes with it, and a recording
+            cannot be taken again.
+            {used.has(doomed.assetId)
+              ? ' Clips on the timeline still use this source, so the studio will refuse until they are removed.'
+              : ''}
+          </p>
+          <div css={confirmRowStyles}>
+            <EditorButton onClick={() => setDoomed(undefined)}>
+              Keep it
+            </EditorButton>
+            <EditorButton
+              danger
+              onClick={() => {
+                onDelete(doomed);
+                setDoomed(undefined);
+              }}
+            >
+              Remove it
+            </EditorButton>
+          </div>
+        </Modal>
+      ) : null}
     </aside>
   );
 };

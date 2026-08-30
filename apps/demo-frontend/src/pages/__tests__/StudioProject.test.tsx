@@ -704,6 +704,12 @@ describe('when a source cannot be changed', () => {
     });
 
     await userEvent.click(await screen.findByLabelText('Remove Intro take'));
+    // the removal now asks first, because the file goes with the source
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Remove this source' }),
+      ).getByRole('button', { name: 'Remove it' }),
+    );
 
     expect(deleteAsset).toHaveBeenCalled();
     expect(await screen.findByRole('alert')).toHaveTextContent(

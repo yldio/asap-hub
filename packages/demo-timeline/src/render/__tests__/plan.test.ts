@@ -21,8 +21,15 @@ const assets: RenderAsset[] = [
     width: 1920,
     height: 1080,
     fps: 30,
+    hasAudio: true,
   },
-  { assetId: 'asset-2', path: '/media/asset-2.mp4', durationMs: 60000 },
+  {
+    assetId: 'asset-2',
+    path: '/media/asset-2.mp4',
+    durationMs: 60000,
+    hasAudio: true,
+  },
+  { assetId: 'unprobed-1', path: '/media/unprobed-1.webm', durationMs: 60000 },
   {
     assetId: 'silent-1',
     path: '/media/silent-1.mp4',
@@ -697,6 +704,18 @@ describe('buildRenderPlan', () => {
       expect(
         planFor({ clips: [source({ assetId: 'silent-1' })] }).steps[0]?.args,
       ).toMatchSnapshot();
+    });
+
+    // hasAudio missing means the ingest has not looked yet; assuming audio put
+    // a stream-less clip into the join and the whole export failed on ':a'
+    it('gives a genuinely unprobed asset silence rather than a maybe-stream', () => {
+      const args =
+        planFor({ clips: [source({ assetId: 'unprobed-1' })] }).steps[0]?.args ??
+        [];
+
+      expect(args.join(' ')).toContain('anullsrc');
+      expect(args).toContain('1:a');
+      expect(args).not.toContain('0:a?');
     });
 
     it('keeps the volume filter on a muted clip', () => {

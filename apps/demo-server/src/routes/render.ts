@@ -5,7 +5,7 @@ import { Response, Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { getTableName } from '../config';
 import { getDocumentClient } from '../data/client';
-import { videoEntity } from '../data/entities';
+import { assetEntity, videoEntity } from '../data/entities';
 import { getJobRunner } from '../jobs/runner';
 import { cancelRenderSchema, startRenderSchema } from '../schemas';
 import {
@@ -194,6 +194,29 @@ export const registerRenderRoutes = (router: Router): void => {
       }
 
       const id = pathParam(req, 'id');
+
+      // an asset the ingest has not finished with has no probed duration or
+      // audio flag, and a render started against one came out with the wrong
+      // trims or no audio track at all
+      const { data: ownedAssets } = await assetEntity.query
+        .byVideo({ videoId: id })
+        .go({ pages: 'all' });
+      const ready = new Set(
+        ownedAssets
+          .filter((asset) => asset.state === 'ready')
+          .map((asset) => asset.assetId),
+      );
+      const used = [
+        ...timeline.clips.flatMap((clip) =>
+          clip.kind === 'source' ? [clip.assetId] : [],
+        ),
+        ...timeline.narration.map((take) => take.assetId),
+      ];
+      if (used.some((assetId) => !ready.has(assetId))) {
+        res.status(409).json({ error: 'asset_not_ready' });
+        return;
+      }
+
       const { version } = req.body as { version: number };
       const { sub } = currentUser(req);
       const renderId = uuid();

@@ -23,7 +23,7 @@ import {
   videoUpdateArgs,
 } from '../encoder/render';
 import { appFactory } from '../src/app';
-import { userEntity, videoEntity } from '../src/data/entities';
+import { assetEntity, userEntity, videoEntity } from '../src/data/entities';
 import { setJobRunner } from '../src/jobs/runner';
 import { isRenderActive, maxRenderAgeMs } from '../src/routes/render';
 import * as storage from '../src/storage';
@@ -144,6 +144,17 @@ const timelineWithClip = (): Timeline => ({
 const run = jest.fn();
 const stop = jest.fn();
 
+// the start gate refuses assets the ingest has not finished with, so the
+// default harness owns one ready asset matching timelineWithClip
+const mockOwnedAssets = (
+  ...assetsOwned: { assetId: string; state: string }[]
+) => {
+  jest.spyOn(assetEntity.query, 'byVideo').mockReturnValue({
+    go: async () => ({ data: assetsOwned }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
 const setValue = (call: number, name: string): unknown =>
   mockSend.mock.calls[call]?.[0].input.ExpressionAttributeValues[`:${name}`];
 
@@ -157,6 +168,7 @@ beforeEach(() => {
   run.mockReset().mockResolvedValue({ jobId: 'task-arn-1' });
   stop.mockReset().mockResolvedValue(undefined);
   setJobRunner({ run, stop });
+  mockOwnedAssets({ assetId: 'asset-1', state: 'ready' });
 });
 
 afterAll(() => {
@@ -342,6 +354,18 @@ describe('POST /api/projects/:id/render', () => {
 
     expect(response.status).toBe(200);
     expect(run).toHaveBeenCalled();
+  });
+
+  it('refuses to export while a clip is still being prepared', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockOwnedAssets({ assetId: 'asset-1', state: 'preparing' });
+
+    const response = await start();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'asset_not_ready' });
+    expect(run).not.toHaveBeenCalled();
   });
 
   it('refuses a timeline with no clips', async () => {

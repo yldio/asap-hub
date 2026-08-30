@@ -128,3 +128,33 @@ describe('a capture that has already been used', () => {
     ).not.toBeInTheDocument();
   });
 });
+
+// a reloaded demo tab, a replaced bookmark or a full quota all just freeze the
+// event count, and a frozen number reads as fine unless something says so
+it('says when an open capture has gone quiet', () => {
+  panel({
+    session,
+    status: {
+      state: 'open',
+      eventCount: 143,
+      clientCount: 1,
+      lastEventAt: new Date(Date.now() - 120_000).toISOString(),
+    },
+  });
+
+  expect(screen.getByText(/nothing has arrived for 2 min/i)).toBeVisible();
+});
+
+it('stays quiet about staleness while events are fresh', () => {
+  panel({
+    session,
+    status: {
+      state: 'open',
+      eventCount: 143,
+      clientCount: 1,
+      lastEventAt: new Date(Date.now() - 5_000).toISOString(),
+    },
+  });
+
+  expect(screen.queryByText(/nothing has arrived/i)).not.toBeInTheDocument();
+});

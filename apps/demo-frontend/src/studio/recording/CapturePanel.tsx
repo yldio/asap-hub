@@ -90,6 +90,8 @@ type Props = {
 
 const errorStyles = css({ fontSize: 12, color: editorTheme.record, margin: 0 });
 
+const quietAfterMs = 60_000;
+
 const CapturePanel: FC<Props> = ({
   session,
   status,
@@ -124,6 +126,10 @@ const CapturePanel: FC<Props> = ({
 
   const text = session.snippetUrl ? loader(session.snippetUrl)[method] : '';
   const finished = Boolean(status) && status?.state !== 'open';
+  const quietForMs =
+    status?.state === 'open' && status.eventCount > 0 && status.lastEventAt
+      ? Math.max(0, Date.now() - Date.parse(status.lastEventAt))
+      : undefined;
 
   return (
     <div css={panelStyles}>
@@ -201,6 +207,17 @@ const CapturePanel: FC<Props> = ({
           you are demoing.
         </span>
       )}
+
+      {/* every silent death of the reporter, a reloaded demo tab, a replaced
+          bookmark, a full quota, shows up as this number freezing; a frozen
+          number reads as fine unless something says how stale it is */}
+      {quietForMs !== undefined && quietForMs > quietAfterMs ? (
+        <span css={waitingStyles}>
+          {`Nothing has arrived for ${Math.round(
+            quietForMs / 60000,
+          )} min. Click your capture bookmark on the tab you are demoing.`}
+        </span>
+      ) : null}
 
       <EditorButton
         primary

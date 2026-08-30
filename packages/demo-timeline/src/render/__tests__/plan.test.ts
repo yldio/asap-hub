@@ -350,15 +350,35 @@ describe('buildRenderPlan', () => {
       expect(plan.steps[0]).toMatchSnapshot();
     });
 
-    it('pins the clip to the canvas rate, because zoompan writes its own timestamps', () => {
+    // the capture is already the canvas size, so the zoom's own scale is the
+    // canvas fit and there is nothing left for a separate fit to do
+    it('crops a capture at least as large as the canvas at its own resolution', () => {
       expect(plan.steps[0]?.args.join(' ')).toContain(
-        'setsar=1,setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709,fps=30,zoompan=',
+        "-filter_complex [0:v]fps=30,scale=w='2*floor(1920*(1+1.000*if(",
+      );
+      expect(plan.steps[0]?.args.join(' ')).not.toContain(
+        'force_original_aspect_ratio',
+      );
+    });
+
+    // a smaller capture is letterboxed onto the canvas, and the preview scales
+    // those bars along with the picture, so the fit has to come first
+    it('fits a capture smaller than the canvas before it zooms', () => {
+      const args =
+        planFor({
+          clips: [source({ assetId: 'asset-2' })],
+          zooms: [zoom()],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain('force_original_aspect_ratio=decrease');
+      expect(args.indexOf('pad=1920:1080')).toBeLessThan(
+        args.indexOf('eval=frame'),
       );
     });
 
     it('crops around the focus point the preview scales around', () => {
       expect(plan.steps[0]?.args.join(' ')).toContain(
-        "x='0.5000*(iw-iw/zoom)':y='0.5000*(ih-ih/zoom)'",
+        "crop=1920:1080:x='(clip(0.5000*(1-1/(1+1.000*if(",
       );
     });
 
@@ -369,14 +389,14 @@ describe('buildRenderPlan', () => {
           zooms: [zoom({ rampInMs: 0, holdMs: 1000, rampOutMs: 0 })],
         }).steps[0]?.args.join(' ') ?? '';
 
-      expect(args).toContain('between(on/30,1.000,2.000)');
+      expect(args).toContain('between(t,1.000,2.000)');
     });
 
     it('leaves a clip the zoom does not belong to alone', () => {
       expect(
         planFor({ clips: crossfaded, zooms: [zoom({ clipId: 'b' })] })
           .steps.slice(0, 2)
-          .map((step) => step.args.join(' ').includes('zoompan')),
+          .map((step) => step.args.join(' ').includes('eval=frame')),
       ).toEqual([false, true]);
     });
 
@@ -388,7 +408,7 @@ describe('buildRenderPlan', () => {
         planFor({ clips: [source()], zooms: [unused] }).steps[0]?.args.join(
           ' ',
         ),
-      ).not.toContain('zoompan');
+      ).not.toContain('eval=frame');
     });
 
     it('adds up two zooms that overlap on one clip', () => {
@@ -398,8 +418,8 @@ describe('buildRenderPlan', () => {
           zooms: [zoom(), zoom({ id: 'zoom-2', focus: { x: 0.2, y: 0.8 } })],
         }).steps[0]?.args.join(' ') ?? '';
 
-      expect(args).toContain("x='0.5000*(iw-iw/(1+1.000*if(");
-      expect(args).toContain('+0.2000*(iw-iw/(1+1.000*if(');
+      expect(args).toContain("x='(clip(0.5000*(1-1/(1+1.000*if(");
+      expect(args).toContain('+0.2000*(1-1/(1+1.000*if(');
     });
   });
 

@@ -5,10 +5,6 @@ const gain = (value: number): string => value.toFixed(3);
 
 const unit = (value: number): string => value.toFixed(4);
 
-// zoompan writes its own constant rate timestamps, so the clip is pinned to the
-// canvas rate first and the output frame count is the clock
-const timeExpression = (canvas: Canvas): string => `on/${canvas.fps}`;
-
 // the preview's easeInOut, with (-2u+2)^2/2 written as 2(1-u)^2
 const easeExpression = (zoom: Zoom, ramp: string): string =>
   zoom.easing === 'linear'
@@ -53,33 +49,12 @@ const gainExpression = (zoom: Zoom, time: string): string =>
 
 const scaleExpression = (gains: string[]): string => `1+${gains.join('+')}`;
 
-// The browser scales the picture about the focus point, which leaves the source
-// point at focus*(1-1/scale) of the frame at the top left of what stays
-// visible: the same window zoompan crops, in input pixels. Two zooms at once
-// each contribute their own offset, which is what the single zoom case reduces
-// to, because a zoom at rest contributes nothing.
-const offsetExpression = (
-  gains: string[],
-  focus: number[],
-  size: 'iw' | 'ih',
-): string =>
-  gains.length === 1
-    ? `${unit(focus[0] ?? 0)}*(${size}-${size}/zoom)`
-    : gains
-        .map(
-          (each, position) =>
-            `${unit(focus[position] ?? 0)}*(${size}-${size}/(1+${each}))`,
-        )
-        .join('+');
-
-// how a moving overlay reads the same window, on its own clock
+// the window the picture is cropped to, which the overlays read as well
 export type ZoomExpressions = { scale: string; cropX: string; cropY: string };
 
-// The crop window's own edge as a share of the frame, which is what the pixel
-// offsets above come to once iw and ih are divided out. An overlay is placed in
-// output pixels rather than input ones, so it needs the share rather than the
-// offset zoompan is given. Clipped into the frame the same way zoompan clips
-// its own crop, or overlapping zooms detach the rings from the picture.
+// The crop window's own edge as a share of the frame. Held inside the frame the
+// same way the preview's zoomViewAt holds it, or two overlapping zooms aimed off
+// centre push the window past the edge and the rings detach from the picture.
 const cropExpression = (
   gains: string[],
   focus: number[],
@@ -89,10 +64,8 @@ const cropExpression = (
     .map((each, position) => `${unit(focus[position] ?? 0)}*(1-1/(1+${each}))`)
     .join('+')},0,1-1/(${scale}))`;
 
-// The same window the picture is cropped to, written against `t` so an overlay
-// can ride the zoomed picture rather than sitting on the frame underneath it.
-// zoompan drives itself off its own frame counter, which an overlay has no
-// access to, and the two are the same clock at the canvas rate.
+// The same window the picture is cropped to, written against `t`, so the crop
+// and every overlay riding it are read off one clock.
 export const zoomExpressions = (
   clip: Zoom[],
   time = 't',
@@ -127,27 +100,30 @@ export const onZoomedFrame = (
   scale: string,
 ): string => `((${sourcePx})-(${crop})*${size})*(${scale})`;
 
+// the intermediate the zoom magnifies to, kept even because the chain runs in
+// yuv420p; the crop is placed against this rather than crop's own in_w, which
+// goes stale as soon as the scale in front of it starts resizing per frame
+const magnified = (size: number, scale: string): string =>
+  `2*floor(${size}*(${scale})/2)`;
+
+// The zoom is a window of the picture magnified back up to the canvas. zoompan
+// did that by cropping whole input pixels out of the canvas sized frame and
+// rescaling them with its own hardwired bicubic, which on a 2560x1440 capture
+// zoomed 2x measured 38.6dB against cropping that source directly. A per-frame
+// lanczos scale to `scale` times the canvas, cropped back to the canvas, gives
+// 62.4dB and moves the window a whole output pixel at a time rather than a whole
+// source pixel.
 export const zoomFilters = (clip: Zoom[], canvas: Canvas): string[] => {
-  if (clip.length === 0) {
+  const written = zoomExpressions(clip);
+  if (!written) {
     return [];
   }
-
-  const time = timeExpression(canvas);
-  const gains = clip.map((zoom) => gainExpression(zoom, time));
-  const scale = scaleExpression(gains);
-  const x = offsetExpression(
-    gains,
-    clip.map((zoom) => zoom.focus.x),
-    'iw',
-  );
-  const y = offsetExpression(
-    gains,
-    clip.map((zoom) => zoom.focus.y),
-    'ih',
-  );
+  const width = magnified(canvas.width, written.scale);
+  const height = magnified(canvas.height, written.scale);
 
   return [
     `fps=${canvas.fps}`,
-    `zoompan=z='${scale}':x='${x}':y='${y}':d=1:s=${canvas.width}x${canvas.height}:fps=${canvas.fps}`,
+    `scale=w='${width}':h='${height}':eval=frame:flags=lanczos:out_color_matrix=bt709`,
+    `crop=${canvas.width}:${canvas.height}:x='(${written.cropX})*(${width})':y='(${written.cropY})*(${height})'`,
   ];
 };

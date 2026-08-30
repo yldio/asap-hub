@@ -24,6 +24,7 @@ import {
 } from './encoding';
 import {
   clipAudioFilters,
+  colourTagFilter,
   filterSegment,
   graph,
   label,
@@ -305,6 +306,46 @@ const pointerOverlays = (
         : [];
     });
 
+// The zoom magnifies whatever it is handed, so a capture at least as large as
+// the canvas is cropped at its own resolution and scaled down once, rather than
+// being fitted to the canvas and then magnified back out of it. The aspect has
+// to match exactly: otherwise the canvas fit letterboxes the picture, and the
+// preview scales those bars along with it.
+const zoomCropsTheSource = (
+  clip: Clip,
+  canvas: Canvas,
+  assets: Map<string, RenderAsset>,
+): boolean => {
+  if (clip.kind !== 'source') {
+    return false;
+  }
+  const { width, height } = assets.get(clip.assetId) ?? {};
+  return (
+    width !== undefined &&
+    height !== undefined &&
+    width >= canvas.width &&
+    height >= canvas.height &&
+    width * canvas.height === height * canvas.width
+  );
+};
+
+// the zoom's own scale is the canvas fit when it stands at rest, so a source it
+// can crop needs no separate fit at all
+const pictureFilters = (
+  placement: ClipPlacement,
+  canvas: Canvas,
+  clipZoom: Zoom[],
+  assets: Map<string, RenderAsset>,
+): string[] => {
+  const zoom = zoomFilters(clipZoom, canvas);
+  if (zoom.length === 0) {
+    return videoFilters({ canvas, placement });
+  }
+  return zoomCropsTheSource(placement.clip, canvas, assets)
+    ? [...zoom, 'setsar=1', colourTagFilter]
+    : [...videoFilters({ canvas, placement }), ...zoom];
+};
+
 const describeClip = (clip: Clip): string =>
   clip.kind === 'source' ? `source ${clip.assetId}` : `title "${clip.text}"`;
 
@@ -355,10 +396,7 @@ export const buildClipStep = ({
   const segments = [
     filterSegment(
       ['0:v'],
-      [
-        ...videoFilters({ canvas, placement }),
-        ...zoomFilters(clipZoom, canvas),
-      ],
+      pictureFilters(placement, canvas, clipZoom, assets),
       'v0',
     ),
     ...overlays.flatMap((overlay, position) => [

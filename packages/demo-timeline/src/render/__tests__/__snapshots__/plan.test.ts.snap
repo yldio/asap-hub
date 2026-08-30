@@ -57,6 +57,7 @@ exports[`buildRenderPlan a banner that slides rises into place from the bottom e
     ],
     "label": "clip 0 (source asset-1)",
     "output": "/work/clip-0.mp4",
+    "weightMs": 10000,
   },
   {
     "args": [
@@ -89,6 +90,8 @@ exports[`buildRenderPlan a banner that slides rises into place from the bottom e
     ],
     "label": "join 1 clip (concat)",
     "output": "/work/out.mp4",
+    "serial": true,
+    "weightMs": 10000,
   },
 ]
 `;
@@ -150,6 +153,7 @@ exports[`buildRenderPlan a clip with a banner overlays the rasterised banner for
     ],
     "label": "clip 0 (source asset-1)",
     "output": "/work/clip-0.mp4",
+    "weightMs": 10000,
   },
   {
     "args": [
@@ -182,6 +186,8 @@ exports[`buildRenderPlan a clip with a banner overlays the rasterised banner for
     ],
     "label": "join 1 clip (concat)",
     "output": "/work/out.mp4",
+    "serial": true,
+    "weightMs": 10000,
   },
 ]
 `;
@@ -242,6 +248,7 @@ exports[`buildRenderPlan a clip with a captured pointer walks one pointer image 
   ],
   "label": "clip 0 (source asset-1)",
   "output": "/work/clip-0.mp4",
+  "weightMs": 10000,
 }
 `;
 
@@ -309,6 +316,7 @@ exports[`buildRenderPlan a clip with a zoom and cursor effects zooms the picture
   ],
   "label": "clip 0 (source asset-1)",
   "output": "/work/clip-0.mp4",
+  "weightMs": 10000,
 }
 `;
 
@@ -360,6 +368,7 @@ exports[`buildRenderPlan a clip with a zoom ramps the picture in, holds it and r
   ],
   "label": "clip 0 (source asset-1)",
   "output": "/work/clip-0.mp4",
+  "weightMs": 10000,
 }
 `;
 
@@ -427,6 +436,7 @@ exports[`buildRenderPlan a clip with cursor effects overlays each effect for its
   ],
   "label": "clip 0 (source asset-1)",
   "output": "/work/clip-0.mp4",
+  "weightMs": 10000,
 }
 `;
 
@@ -464,6 +474,8 @@ exports[`buildRenderPlan a narration take mixes the take into the join in progra
   ],
   "label": "join 1 clip (concat)",
   "output": "/work/out.mp4",
+  "serial": true,
+  "weightMs": 10000,
 }
 `;
 
@@ -516,6 +528,7 @@ exports[`buildRenderPlan a single source clip encodes the clip and then joins wi
     ],
     "label": "clip 0 (source asset-1)",
     "output": "/work/clip-0.mp4",
+    "weightMs": 10000,
   },
   {
     "args": [
@@ -548,6 +561,8 @@ exports[`buildRenderPlan a single source clip encodes the clip and then joins wi
     ],
     "label": "join 1 clip (concat)",
     "output": "/work/out.mp4",
+    "serial": true,
+    "weightMs": 10000,
   },
 ]
 `;
@@ -601,6 +616,7 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     ],
     "label": "clip 0 (source asset-1)",
     "output": "/work/clip-0.mp4",
+    "weightMs": 4000,
   },
   {
     "args": [
@@ -662,6 +678,7 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     ],
     "label": "clip 1 (title "Attendance")",
     "output": "/work/clip-1.mp4",
+    "weightMs": 3000,
   },
   {
     "args": [
@@ -710,6 +727,7 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     ],
     "label": "clip 2 (source asset-2)",
     "output": "/work/clip-2.mp4",
+    "weightMs": 5000,
   },
   {
     "args": [
@@ -746,6 +764,8 @@ exports[`buildRenderPlan a title card between two clips generates a background a
     ],
     "label": "join 3 clips (concat)",
     "output": "/work/out.mp4",
+    "serial": true,
+    "weightMs": 12000,
   },
 ]
 `;
@@ -804,6 +824,7 @@ exports[`buildRenderPlan every clip step carries exactly one audio stream replac
   ],
   "label": "clip 0 (source asset-1)",
   "output": "/work/clip-0.mp4",
+  "weightMs": 10000,
 }
 `;
 
@@ -953,6 +974,7 @@ exports[`buildRenderPlan two clips with a crossfade joins them with an xfade cha
     ],
     "label": "clip 0 (source asset-1)",
     "output": "/work/clip-0.mp4",
+    "weightMs": 4000,
   },
   {
     "args": [
@@ -1001,6 +1023,7 @@ exports[`buildRenderPlan two clips with a crossfade joins them with an xfade cha
     ],
     "label": "clip 1 (source asset-2)",
     "output": "/work/clip-1.mp4",
+    "weightMs": 6000,
   },
   {
     "args": [
@@ -1044,6 +1067,8 @@ exports[`buildRenderPlan two clips with a crossfade joins them with an xfade cha
     ],
     "label": "join 2 clips (xfade)",
     "output": "/work/out.mp4",
+    "serial": true,
+    "weightMs": 9000,
   },
 ]
 `;

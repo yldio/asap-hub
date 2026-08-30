@@ -24,3 +24,6 @@ export const pointerPngPath = (
 
 export const concatListPath = (workDir: string): string =>
   inWorkDir(workDir, 'concat.txt');
+
+export const tileListPath = (workDir: string, clipIndex: number): string =>
+  inWorkDir(workDir, `tiles-${clipIndex}.txt`);

@@ -847,8 +847,10 @@ const render = async (env: RenderEnv): Promise<void> => {
   describePlan(plan).forEach(log);
 
   await rasterise(plan);
-  if (plan.listFile) {
-    await fs.writeFile(plan.listFile.path, plan.listFile.content, 'utf8');
+  for (const list of [plan.listFile, ...(plan.listFiles ?? [])]) {
+    if (list) {
+      await fs.writeFile(list.path, list.content, 'utf8');
+    }
   }
 
   await runPlan(plan, stepDurationsMs(timeline, plan), report);

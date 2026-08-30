@@ -7,7 +7,14 @@ import { Timeline } from '../schema';
 import { assetIndex } from './assets';
 import { buildClipStep } from './clipSteps';
 import { buildJoinStep } from './joinStep';
-import { RenderAsset, RenderPlan, SvgFile } from './types';
+import { buildAssembleStep, shiftZoomsForTile, tilePlacements } from './tiles';
+import {
+  ConcatListFile,
+  FfmpegStep,
+  RenderAsset,
+  RenderPlan,
+  SvgFile,
+} from './types';
 
 export const renderDurationMs = (timeline: Timeline): number =>
   timelineDurationMs(timeline.clips);
@@ -40,17 +47,46 @@ export const buildRenderPlan = ({
     return { canvas, durationMs, steps: [], output, svgs: [] };
   }
 
-  const clips = placements.map((placement) =>
-    buildClipStep({
-      placement,
-      canvas,
-      banners,
-      cursor,
-      zooms,
-      assets: index,
-      workDir,
-    }),
-  );
+  // a long clip encodes as tiles so the pool can chew it in parallel; tile
+  // indices continue past the real clips so no output or art path collides
+  let nextTileIndex = placements.length;
+  const takeIndex = () => {
+    const at = nextTileIndex;
+    nextTileIndex += 1;
+    return at;
+  };
+
+  const encodeSteps: FfmpegStep[] = [];
+  const assembleSteps: FfmpegStep[] = [];
+  const listFiles: ConcatListFile[] = [];
+  const svgs: SvgFile[] = [];
+
+  placements.forEach((placement) => {
+    const tiles = tilePlacements(placement, index, takeIndex);
+    const whole = tiles.length === 1;
+    tiles.forEach((tile) => {
+      const built = buildClipStep({
+        placement: whole ? placement : tile.placement,
+        canvas,
+        banners,
+        cursor,
+        zooms: shiftZoomsForTile(zooms, placement.clip.id, tile.shiftMs),
+        assets: index,
+        workDir,
+      });
+      encodeSteps.push({
+        ...built.step,
+        weightMs: whole ? placement.durationMs : tile.placement.durationMs,
+      });
+      svgs.push(...built.svgs);
+    });
+    if (!whole) {
+      const assembled = buildAssembleStep(placement.index, tiles, workDir);
+      assembleSteps.push(assembled.step);
+      listFiles.push(assembled.listFile);
+    }
+  });
+
   const join = buildJoinStep({
     placements,
     canvas,
@@ -64,10 +100,15 @@ export const buildRenderPlan = ({
   return {
     canvas,
     durationMs,
-    steps: [...clips.map(({ step }) => step), join.step],
+    steps: [
+      ...encodeSteps,
+      ...assembleSteps,
+      { ...join.step, serial: true, weightMs: durationMs },
+    ],
     output,
-    svgs: uniqueByPath(clips.flatMap(({ svgs }) => svgs)),
+    svgs: uniqueByPath(svgs),
     ...(join.listFile ? { listFile: join.listFile } : {}),
+    ...(listFiles.length > 0 ? { listFiles } : {}),
   };
 };
 

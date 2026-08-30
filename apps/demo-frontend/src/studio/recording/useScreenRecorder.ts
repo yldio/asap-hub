@@ -1,4 +1,8 @@
-import { CaptureSurface, captureSurfaces } from '@asap-hub/demo-timeline';
+import {
+  CaptureSurface,
+  captureSurfaces,
+  RecordedPause,
+} from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   extensionForMimeType,
@@ -12,6 +16,9 @@ export type RecordedTake = {
   extension: string;
   durationMs: number;
   startedAtEpochMs: number;
+  // the wall clock spans the take stood paused for, which the file holds none
+  // of: a capture applied later has to skip them the same way the footage does
+  pauses?: RecordedPause[];
   // browser, window or monitor: what the picker was pointed at
   surface?: CaptureSurface;
   microphone?: { blob: Blob; mimeType: string; extension: string };
@@ -182,6 +189,7 @@ export const useScreenRecorder = ({
   // on the timeline with the paused span frozen into it.
   const pausedMsRef = useRef(0);
   const pausedAtRef = useRef<number>();
+  const pausesRef = useRef<RecordedPause[]>([]);
   const tickRef = useRef<ReturnType<typeof setInterval>>();
   const countdownRef = useRef<ReturnType<typeof setInterval>>();
   const beginRef = useRef<() => void>();
@@ -206,6 +214,22 @@ export const useScreenRecorder = ({
       (pausedAtRef.current === undefined ? 0 : now() - pausedAtRef.current),
     [now],
   );
+
+  // one span of wall clock the recorder wrote no frames for, which is what a
+  // capture applied later has to take out of its own times
+  const closePause = useCallback(() => {
+    const pausedAt = pausedAtRef.current;
+    if (pausedAt === undefined) {
+      return;
+    }
+    const endedAt = now();
+    pausedMsRef.current += endedAt - pausedAt;
+    pausedAtRef.current = undefined;
+    pausesRef.current = [
+      ...pausesRef.current,
+      { startMs: Math.round(pausedAt), endMs: Math.round(endedAt) },
+    ];
+  }, [now]);
 
   const stopTicking = useCallback(() => {
     if (tickRef.current) {
@@ -332,6 +356,7 @@ export const useScreenRecorder = ({
           startedAtRef.current = now();
           pausedMsRef.current = 0;
           pausedAtRef.current = undefined;
+          pausesRef.current = [];
           setElapsedMs(0);
           micRef.current?.recorder.start(5000);
           recorder.start(5000);
@@ -426,13 +451,10 @@ export const useScreenRecorder = ({
   const resume = useCallback(() => {
     screenRef.current?.recorder.resume();
     micRef.current?.recorder.resume();
-    if (pausedAtRef.current !== undefined) {
-      pausedMsRef.current += now() - pausedAtRef.current;
-      pausedAtRef.current = undefined;
-    }
+    closePause();
     startTicking();
     setStatus('recording');
-  }, [now, startTicking]);
+  }, [closePause, startTicking]);
 
   const stop = useCallback(async (): Promise<RecordedTake | undefined> => {
     const screen = screenRef.current;
@@ -447,6 +469,9 @@ export const useScreenRecorder = ({
     stopCounting();
     setStatus('finishing');
     stopTicking();
+    // stopping while paused still ends that span, so the events captured
+    // through it are recognised as belonging to no footage
+    closePause();
     // read before the awaits: how long the finishing itself takes is not part
     // of the take
     const durationMs = began ? Math.max(0, recordedMs()) : 0;
@@ -474,6 +499,7 @@ export const useScreenRecorder = ({
       extension: extensionForMimeType(screen.mimeType),
       durationMs,
       startedAtEpochMs: startedAtRef.current,
+      ...(pausesRef.current.length ? { pauses: pausesRef.current } : {}),
       ...(surfaceRef.current ? { surface: surfaceRef.current } : {}),
       ...(mic && mic.chunks.length > 0
         ? {
@@ -485,7 +511,7 @@ export const useScreenRecorder = ({
           }
         : {}),
     };
-  }, [recordedMs, stopCounting, stopTicking]);
+  }, [closePause, recordedMs, stopCounting, stopTicking]);
 
   stopRef.current = stop;
 

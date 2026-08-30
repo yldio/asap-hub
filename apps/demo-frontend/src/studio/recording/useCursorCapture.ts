@@ -169,6 +169,7 @@ export const useCursorCapture = (
         ...(target.startedAtEpochMs
           ? { startedAtEpochMs: target.startedAtEpochMs }
           : {}),
+        ...(target.pauses?.length ? { pauses: target.pauses } : {}),
       });
       const merged = mergeDerivedEffects(target.existing, derived.effects);
       return {
@@ -236,6 +237,7 @@ export const useCursorCapture = (
                   clipId: target.clipId,
                   recordedAtEpochMs: target.startedAtEpochMs,
                   durationMs: target.durationMs,
+                  ...(target.pauses?.length ? { pauses: target.pauses } : {}),
                 },
               ]
             : [],

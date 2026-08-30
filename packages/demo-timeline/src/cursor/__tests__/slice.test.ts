@@ -78,3 +78,46 @@ describe('sliceCaptureEvents', () => {
     expect(sliced.get('clip-2')).toEqual([]);
   });
 });
+
+// 30 seconds of footage, 20 seconds paused, 30 more: the file holds a minute,
+// and the wall clock the capture stamps ran for eighty seconds
+describe('a take that was paused mid recording', () => {
+  const pauses = [
+    { startMs: takeOneStart + 30_000, endMs: takeOneStart + 50_000 },
+  ];
+  const pausedWindow = [
+    {
+      clipId: 'clip-1',
+      recordedAtEpochMs: takeOneStart,
+      durationMs: 60_000,
+      pauses,
+    },
+  ];
+
+  it('keeps a click the take filmed after the pause, past its own length', () => {
+    const sliced = sliceCaptureEvents(
+      [event('last-click', takeOneStart + 79_000)],
+      pausedWindow,
+    );
+
+    expect(sliced.get('clip-1')?.map(({ id }) => id)).toEqual(['last-click']);
+  });
+
+  it('drops a click nothing was filming', () => {
+    const sliced = sliceCaptureEvents(
+      [event('during-pause', takeOneStart + 40_000)],
+      pausedWindow,
+    );
+
+    expect(sliced.get('clip-1')).toEqual([]);
+  });
+
+  it('still ends the window once the footage has run out', () => {
+    const sliced = sliceCaptureEvents(
+      [event('after-the-take', takeOneStart + 80_001)],
+      pausedWindow,
+    );
+
+    expect(sliced.get('clip-1')).toEqual([]);
+  });
+});

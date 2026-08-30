@@ -1,3 +1,4 @@
+import { RecordedPause } from '@asap-hub/demo-timeline';
 import { useCallback, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { AssetUpload } from '../editor/useAssetUpload';
@@ -9,6 +10,8 @@ export type TakeResult = {
   // when the take started, in wall clock: the instant the footage shows at t=0,
   // and so the origin a cursor capture applied to it has to be read against
   startedAtEpochMs: number;
+  // the wall clock spans the take stood paused for, which the footage skipped
+  pauses?: RecordedPause[];
   narration?: ProjectAsset;
 };
 
@@ -74,6 +77,7 @@ export const useRecordingTake = (
           video,
           durationMs: take.durationMs,
           startedAtEpochMs: take.startedAtEpochMs,
+          ...(take.pauses?.length ? { pauses: take.pauses } : {}),
           narration,
         });
       } finally {

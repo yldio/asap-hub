@@ -2,6 +2,7 @@ import { CursorEffect, CursorPathPoint, limits, Point } from '../schema';
 import { toFramePoint } from './geometry';
 import { dedupeCaptureEvents } from './parse';
 import { resamplePath } from './path';
+import { sourceTimeMs } from './slice';
 import {
   CaptureEvent,
   CaptureEventType,
@@ -55,9 +56,15 @@ const place = (
   const origin = captureOriginMs(events, options.startedAtEpochMs);
   return events
     .flatMap((event) => {
-      // wall clock to clip-local: anything before the take started, or past the
-      // longest timeline the document allows, cannot be represented
-      const tMs = Math.round(event.t - origin + offsetMs);
+      // wall clock to clip-local, with every pause the footage skipped taken
+      // out: anything captured during a pause was never filmed, and anything
+      // before the take started, or past the longest timeline the document
+      // allows, cannot be represented
+      const source = sourceTimeMs(event.t, origin, options.pauses);
+      if (source === undefined) {
+        return [];
+      }
+      const tMs = Math.round(source + offsetMs);
       if (tMs < 0 || tMs > limits.maxTimelineMs) {
         return [];
       }

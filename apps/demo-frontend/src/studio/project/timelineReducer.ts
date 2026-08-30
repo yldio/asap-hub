@@ -10,6 +10,7 @@ import {
   insertClipAt,
   moveClip,
   placementAt,
+  RecordedPause,
   removeClip,
   SourceClip,
   splitAt,
@@ -34,6 +35,10 @@ export type TimelineAction =
       // no duration until the ingest probes it, and a clip trimmed before then
       // would otherwise cut the capture window to the trim
       recordedDurationMs?: number;
+      // the wall clock spans that take stood paused for, which wrote no frames:
+      // without them a capture applied later reads everything past a pause late
+      // by the whole pause, and loses the tail past the footage's own length
+      recordedPauses?: RecordedPause[];
     }
   | { type: 'removeClip'; clipId: string }
   | { type: 'moveClip'; clipId: string; toIndex: number }
@@ -236,7 +241,7 @@ export const timelineReducer = (
           action.index ?? timeline.clips.length,
         ),
       );
-      const { recordedAtEpochMs, recordedDurationMs } = action;
+      const { recordedAtEpochMs, recordedDurationMs, recordedPauses } = action;
       if (recordedAtEpochMs === undefined || recordedAtEpochMs <= 0) {
         return added;
       }
@@ -247,6 +252,14 @@ export const timelineReducer = (
           recordedAtEpochMs: Math.round(recordedAtEpochMs),
           ...(recordedDurationMs && recordedDurationMs > 0
             ? { recordedDurationMs: Math.round(recordedDurationMs) }
+            : {}),
+          ...(recordedPauses?.length
+            ? {
+                recordedPauses: recordedPauses.map(({ startMs, endMs }) => ({
+                  startMs: Math.round(startMs),
+                  endMs: Math.round(endMs),
+                })),
+              }
             : {}),
         })),
       };

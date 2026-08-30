@@ -1,4 +1,9 @@
-import { CaptureSurface, CursorEffect, CursorPathPoint } from '../schema';
+import {
+  CaptureSurface,
+  CursorEffect,
+  CursorPathPoint,
+  RecordedPause,
+} from '../schema';
 
 export const captureEventTypes = [
   'move',
@@ -71,6 +76,10 @@ export type DeriveOptions = {
   // shifts every derived time, for a take whose capture and whose clip did not
   // start together; anything pushed before the clip start is dropped
   offsetMs?: number;
+  // the wall clock spans the recorder stood paused for, which the footage never
+  // shows: an event inside one is dropped and everything after it moves up by
+  // the whole pause
+  pauses?: RecordedPause[];
   frame: { width: number; height: number };
   // what the recording shows, which decides which of the capture's coordinates
   // land on the frame; a capture applied before the studio asked the browser is

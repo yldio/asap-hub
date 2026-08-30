@@ -3,6 +3,7 @@ import {
   ClipPlacement,
   CursorEffect,
   CursorLayer,
+  RecordedPause,
   Timeline,
 } from '@asap-hub/demo-timeline';
 
@@ -16,6 +17,9 @@ export type CaptureClipTarget = {
   surface?: CaptureSurface;
   startedAtEpochMs?: number;
   durationMs?: number;
+  // the take wrote no frames through these, so the events they cover belong to
+  // no footage and everything after them plays that much earlier
+  pauses?: RecordedPause[];
 };
 
 export type CaptureRequest = {
@@ -41,7 +45,11 @@ const layerOf = (timeline: Timeline, clipId: string): CursorLayer | undefined =>
 const targetOf = (
   timeline: Timeline,
   clipId: string,
-  window?: { startedAtEpochMs: number; durationMs: number },
+  window?: {
+    startedAtEpochMs: number;
+    durationMs: number;
+    pauses?: RecordedPause[];
+  },
 ): CaptureClipTarget => {
   const layer = layerOf(timeline, clipId);
   return {
@@ -87,7 +95,15 @@ export const captureTargets = (
       assetDurationOf(clip.assetId) ?? 0,
       clip.outMs,
     );
-    return [targetOf(timeline, clip.id, { startedAtEpochMs, durationMs })];
+    return [
+      targetOf(timeline, clip.id, {
+        startedAtEpochMs,
+        durationMs,
+        ...(layer?.recordedPauses?.length
+          ? { pauses: layer.recordedPauses }
+          : {}),
+      }),
+    ];
   });
 
   if (recorded.length > 0) {

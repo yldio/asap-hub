@@ -210,6 +210,72 @@ describe('a take that was paused', () => {
     expect(take).toMatchObject({ durationMs: 27000 });
   });
 
+  // the capture stamps wall clock, which runs on through a pause the footage
+  // never shows, so the take has to say where those spans were
+  it('hands back the wall clock spans it stood paused for', async () => {
+    const now = clock();
+    const { view } = setup({ now });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    now.advance(30000);
+    act(() => view.result.current.pause());
+    now.advance(20000);
+    act(() => view.result.current.resume());
+    now.advance(30000);
+
+    let take;
+    await act(async () => {
+      take = await view.result.current.stop();
+    });
+
+    expect(take).toMatchObject({
+      durationMs: 60000,
+      startedAtEpochMs: 1000,
+      pauses: [{ startMs: 31000, endMs: 51000 }],
+    });
+  });
+
+  it('leaves a take that never paused without any spans', async () => {
+    const now = clock();
+    const { view } = setup({ now });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    now.advance(30000);
+
+    let take;
+    await act(async () => {
+      take = await view.result.current.stop();
+    });
+
+    expect(take).not.toHaveProperty('pauses');
+  });
+
+  it('closes the span it was still paused in when it stops', async () => {
+    const now = clock();
+    const { view } = setup({ now });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    now.advance(5000);
+    act(() => view.result.current.pause());
+    now.advance(20000);
+
+    let take;
+    await act(async () => {
+      take = await view.result.current.stop();
+    });
+
+    expect(take).toMatchObject({
+      durationMs: 5000,
+      pauses: [{ startMs: 6000, endMs: 26000 }],
+    });
+  });
+
   it('reports the same length when it is stopped while still paused', async () => {
     const now = clock();
     const { view } = setup({ now });

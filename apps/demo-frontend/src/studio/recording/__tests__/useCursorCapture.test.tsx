@@ -278,6 +278,84 @@ describe('lining a capture up with the take', () => {
   });
 });
 
+// 30 seconds filmed, 20 paused, 30 more: the file holds a minute of footage and
+// the capture stamped eighty seconds of wall clock over it
+describe('a take that was paused mid recording', () => {
+  const takeStart = 1_700_000_000_000;
+  const pauses = [{ startMs: takeStart + 30_000, endMs: takeStart + 50_000 }];
+
+  const ndjson = [
+    { id: 'first-half', type: 'click', t: takeStart + 10_000 },
+    { id: 'during-pause', type: 'click', t: takeStart + 40_000 },
+    { id: 'second-half', type: 'click', t: takeStart + 60_000 },
+    { id: 'last', type: 'click', t: takeStart + 79_000 },
+  ]
+    .map((line) =>
+      JSON.stringify({
+        ...line,
+        x: 640,
+        y: 360,
+        viewportW: 1280,
+        viewportH: 720,
+      }),
+    )
+    .join('\n');
+
+  const applied = async (withPauses: boolean) => {
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents: jest.fn().mockResolvedValue(ndjson),
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    const results = await act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: takeStart + 80_000,
+        frame: { width: 1280, height: 720 },
+        targets: [
+          {
+            clipId: 'clip-1',
+            existing: [],
+            startedAtEpochMs: takeStart,
+            durationMs: 60_000,
+            ...(withPauses ? { pauses } : {}),
+          },
+        ],
+      }),
+    );
+    return results?.[0];
+  };
+
+  it('drops what the pause covered and pulls the rest back by it', async () => {
+    const result = await applied(true);
+
+    expect(
+      result?.effects.map(({ sourceEventId, tMs }) => [sourceEventId, tMs]),
+    ).toEqual([
+      ['first-half', 10_000],
+      ['second-half', 40_000],
+      ['last', 59_000],
+    ]);
+  });
+
+  // what the bug looked like: everything after the pause twenty seconds late,
+  // and the last twenty seconds of the take cut off by the window
+  it('drew them late and lost the tail before the pauses were known', async () => {
+    const result = await applied(false);
+
+    expect(
+      result?.effects.map(({ sourceEventId, tMs }) => [sourceEventId, tMs]),
+    ).toEqual([
+      ['first-half', 10_000],
+      ['during-pause', 40_000],
+      ['second-half', 60_000],
+    ]);
+  });
+});
+
 // One session collects everything from the first take to the apply: take one,
 // the fiddling in the studio between takes, take two. Each take's clip carries
 // its own start and length, so each gets its own slice of the stream.

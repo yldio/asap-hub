@@ -11,6 +11,7 @@ export const limits = {
   cursorLayers: 200,
   cursorEffects: 500,
   cursorPathPoints: 20000,
+  recordedPauses: 200,
   chapters: 500,
   textLength: 200,
   transitionMs: 3000,
@@ -154,6 +155,14 @@ export const captureSurfaces = ['browser', 'window', 'monitor'] as const;
 
 export type CaptureSurface = (typeof captureSurfaces)[number];
 
+// One span the recorder was paused for, in wall clock: a pause writes no frames,
+// so the footage skips it whole. Named startMs and endMs to sit beside the other
+// times on the layer, but read as epochs, the same clock the capture stamps.
+export const recordedPauseSchema = z.object({
+  startMs: z.number().int().positive(),
+  endMs: z.number().int().positive(),
+});
+
 export const cursorLayerSchema = z.object({
   clipId: idSchema,
   offsetMs: z.number().int().min(-limits.offsetMs).max(limits.offsetMs),
@@ -177,6 +186,14 @@ export const cursorLayerSchema = z.object({
   // footage there was, and a capture applied in that window was cut to the trim
   // and lost everything after it.
   recordedDurationMs: z.number().int().positive().optional(),
+  // The spans that take ran paused for. Capture events are stamped in wall
+  // clock, which runs on through a pause the footage never shows, so without
+  // these every click after one landed late by the whole pause and the tail
+  // past the take's own length was cut off entirely.
+  recordedPauses: z
+    .array(recordedPauseSchema)
+    .max(limits.recordedPauses)
+    .optional(),
 });
 
 export const canvasSchema = z.object({
@@ -278,6 +295,7 @@ export type Zoom = z.infer<typeof zoomSchema>;
 export type ChapterMarker = z.infer<typeof chapterMarkerSchema>;
 export type CursorEffect = z.infer<typeof cursorEffectSchema>;
 export type CursorPathPoint = z.infer<typeof cursorPathPointSchema>;
+export type RecordedPause = z.infer<typeof recordedPauseSchema>;
 export type CursorLayer = z.infer<typeof cursorLayerSchema>;
 export type Canvas = z.infer<typeof canvasSchema>;
 export type Timeline = z.infer<typeof timelineShape>;

@@ -181,3 +181,38 @@ it('keeps the whole take window from the recorder before the asset is probed', (
     durationMs: 90000,
   });
 });
+
+// the layer is the only thing that still knows the take was paused by the time
+// a capture is applied, often in a later session from the saved document
+describe('a clip whose take was paused', () => {
+  const paused = (): Timeline => {
+    const document = timeline();
+    return {
+      ...document,
+      cursor: document.cursor.map((layer) => ({
+        ...layer,
+        recordedPauses: [
+          { startMs: takeOneStart + 30_000, endMs: takeOneStart + 50_000 },
+        ],
+      })),
+    };
+  };
+
+  it('carries the pause spans onto the target the capture is cut to', () => {
+    const target = request(paused(), 0)?.targets.find(
+      ({ clipId }) => clipId === 'clip-b',
+    );
+
+    expect(target?.pauses).toEqual([
+      { startMs: takeOneStart + 30_000, endMs: takeOneStart + 50_000 },
+    ]);
+  });
+
+  it('leaves a take that never paused without any spans', () => {
+    const target = request(timeline(), 0)?.targets.find(
+      ({ clipId }) => clipId === 'clip-b',
+    );
+
+    expect(target).not.toHaveProperty('pauses');
+  });
+});

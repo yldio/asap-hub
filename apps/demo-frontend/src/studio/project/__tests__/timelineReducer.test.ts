@@ -96,6 +96,66 @@ describe('addClip', () => {
     expect(() => parseTimeline(timeline)).not.toThrow();
   });
 
+  // wall clock runs on through a pause the footage never shows, so the spans
+  // have to reach the document a capture is read against months later
+  it('writes the spans the take stood paused for on the clip', () => {
+    const timeline = timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 60_000,
+      clipId: 'clip-1',
+      recordedAtEpochMs: 1_700_000_000_000,
+      recordedDurationMs: 60_000,
+      recordedPauses: [
+        { startMs: 1_700_000_030_000, endMs: 1_700_000_050_000 },
+      ],
+    });
+
+    expect(timeline.cursor[0]).toEqual({
+      clipId: 'clip-1',
+      offsetMs: 0,
+      path: [],
+      effects: [],
+      recordedAtEpochMs: 1_700_000_000_000,
+      recordedDurationMs: 60_000,
+      recordedPauses: [
+        { startMs: 1_700_000_030_000, endMs: 1_700_000_050_000 },
+      ],
+    });
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
+  it('rounds a pause span to the whole milliseconds the document allows', () => {
+    const timeline = timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 60_000,
+      clipId: 'clip-1',
+      recordedAtEpochMs: 1_700_000_000_000,
+      recordedPauses: [
+        { startMs: 1_700_000_030_000.4, endMs: 1_700_000_050_000.6 },
+      ],
+    });
+
+    expect(timeline.cursor[0]?.recordedPauses).toEqual([
+      { startMs: 1_700_000_030_000, endMs: 1_700_000_050_001 },
+    ]);
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
+  it('leaves a take that never paused without any spans', () => {
+    expect(
+      timelineReducer(createEmptyTimeline(), {
+        type: 'addClip',
+        assetId: 'asset-1',
+        durationMs: 5000,
+        clipId: 'clip-1',
+        recordedAtEpochMs: 1_700_000_000_000,
+        recordedPauses: [],
+      }).cursor[0],
+    ).not.toHaveProperty('recordedPauses');
+  });
+
   it('leaves an imported clip with no take start at all', () => {
     expect(
       timelineReducer(createEmptyTimeline(), {

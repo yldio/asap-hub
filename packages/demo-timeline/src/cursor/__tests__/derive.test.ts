@@ -500,3 +500,61 @@ describe('effects named after the tab that reported the click', () => {
     expect(merged.added).toBe(1);
   });
 });
+
+// 30 seconds recorded, 20 paused, 30 more recorded: a minute of footage over
+// eighty seconds of the wall clock the capture stamps its events in
+describe('a capture read against a take that was paused', () => {
+  const pauses = [
+    { startMs: startedAtEpochMs + 30_000, endMs: startedAtEpochMs + 50_000 },
+  ];
+  const paused = (overrides: Partial<DeriveOptions> = {}) =>
+    options({ pauses, ...overrides });
+
+  it('puts a click ten seconds into the second half at forty seconds', () => {
+    const { effects } = deriveCursorEffects(
+      [at(60_000, { id: 'e1', type: 'click' })],
+      paused(),
+    );
+
+    expect(effects[0]?.tMs).toBe(40_000);
+  });
+
+  it('derives nothing at all from a click made during the pause', () => {
+    const { path, effects } = deriveCursorEffects(
+      [at(40_000, { id: 'e1', type: 'click' })],
+      paused(),
+    );
+
+    expect(effects).toEqual([]);
+    expect(path).toEqual([]);
+  });
+
+  it('keeps the last click of the take inside the footage', () => {
+    const { effects } = deriveCursorEffects(
+      [at(79_000, { id: 'e1', type: 'click' })],
+      paused(),
+    );
+
+    expect(effects[0]?.tMs).toBe(59_000);
+  });
+
+  it('leaves the first half exactly where it was', () => {
+    const { effects } = deriveCursorEffects(
+      [at(10_000, { id: 'e1', type: 'click' })],
+      paused(),
+    );
+
+    expect(effects[0]?.tMs).toBe(10_000);
+  });
+
+  // what the bug looked like: every click after the pause drawn twenty seconds
+  // late, and the tail past the footage's own length cut off entirely
+  it('drew the same click twenty seconds late before the pauses were known', () => {
+    const { effects } = deriveCursorEffects(
+      [at(60_000, { id: 'e1', type: 'click' })],
+      options(),
+    );
+
+    expect(effects[0]?.tMs).toBe(60_000);
+  });
+});

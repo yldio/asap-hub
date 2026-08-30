@@ -1,6 +1,7 @@
 export * from './schema';
 export * from './document';
 export * from './clips';
+export * from './selection';
 export * from './fade';
 export * from './zoom';
 export * from './chapters';

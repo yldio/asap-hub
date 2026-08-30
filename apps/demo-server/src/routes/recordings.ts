@@ -56,7 +56,11 @@ export const sessionTtlMs = 4 * 60 * 60 * 1000;
 
 export const captureQuota = {
   events: 200000,
-  parts: 500,
+  // one part per five second flush per tab: 500 ended a capture silently at
+  // about forty minutes while the event quota was nowhere near spent. A part
+  // id is ~20 bytes, so 4000 of them is ~80KB on the row, well under the item
+  // limit, and covers the four hour session at two tabs with room to spare
+  parts: 4000,
   batchEvents: maxCaptureBatchEvents,
 };
 

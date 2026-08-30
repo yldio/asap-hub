@@ -12,6 +12,7 @@ import {
   userEntity,
   videoEntity,
 } from '../src/data/entities';
+import { captureQuota } from '../src/routes/recordings';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -488,7 +489,7 @@ describe('POST /api/capture', () => {
     expect(ConditionExpression).toContain('eventCount <= :maxEventCount');
     expect(ConditionExpression).toContain('#state = :open');
     expect(ConditionExpression).toContain('expiresAt > :now');
-    expect(ExpressionAttributeValues[':maxParts']).toBe(500);
+    expect(ExpressionAttributeValues[':maxParts']).toBe(captureQuota.parts);
     expect(ExpressionAttributeValues[':maxEventCount']).toBe(200_000 - 2);
   });
 
@@ -563,7 +564,7 @@ describe('POST /api/capture', () => {
     ],
     [
       'a session over its batch quota',
-      sessionItem({ parts: new Array(500).fill('tab-a:1') }),
+      sessionItem({ parts: new Array(captureQuota.parts).fill('tab-a:1') }),
       batch(),
     ],
   ])('answers 204 and stores nothing for %s', async (_label, session, body) => {
@@ -743,7 +744,9 @@ describe('POST /api/capture from the reusable bookmark', () => {
 
   it('holds the batch quota on the routed session', async () => {
     mockVideoGet(bookmarkedProject());
-    mockSessionGet(sessionItem({ parts: new Array(500).fill('tab-a:1') }));
+    mockSessionGet(
+      sessionItem({ parts: new Array(captureQuota.parts).fill('tab-a:1') }),
+    );
 
     const response = await postCapture(projectBatch());
 
@@ -867,7 +870,12 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
   it('refuses to finalise a session twice', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
-    mockSessionGet(sessionItem({ state: 'closed' }));
+    mockSessionGet(
+      sessionItem({
+        state: 'closed',
+        eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      }),
+    );
 
     const response = await finalise({
       startedAtEpochMs: 1_700_000_000_000,
@@ -877,6 +885,136 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
     expect(response.status).toBe(409);
     expect(response.body).toEqual({ error: 'already_finalised' });
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  // the close lands, the merge does not, and the take used to be unreachable
+  // for good: the retry lost the close and the events route had no key
+  it('finishes a session closed by a finalise whose merge never landed', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1","t":1}');
+    (storage.putObject as jest.Mock).mockRejectedValueOnce(
+      new Error('s3 is having a day'),
+    );
+
+    const failed = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+    expect(failed.status).toBe(500);
+
+    // the row the retry reads: closed by the first attempt, with no eventsKey
+    mockSessionGet(
+      sessionItem({
+        state: 'closed',
+        parts: ['tab-a:1'],
+        startedAtEpochMs: 1_700_000_000_000,
+        stoppedAtEpochMs: 1_700_000_060_000,
+      }),
+    );
+    const patch = mockSessionPatch();
+
+    const retry = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(retry.status).toBe(200);
+    expect(retry.body).toEqual({
+      state: 'closed',
+      eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      eventCount: 1,
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+    expect(patch.set).toHaveBeenCalledWith(
+      expect.objectContaining({
+        eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      }),
+    );
+  });
+
+  it('serves the events of a session the retry finished', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ state: 'closed', parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1","t":1}');
+
+    const retry = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+    expect(retry.status).toBe(200);
+
+    mockSessionGet(
+      sessionItem({
+        state: 'closed',
+        parts: [],
+        eventsKey: retry.body.eventsKey,
+      }),
+    );
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      '{"id":"e1","t":1}\n',
+    );
+
+    const events = await api
+      .get('/api/projects/project-1/recordings/session-1/events')
+      .set('Authorization', creatorToken);
+
+    expect(events.status).toBe(200);
+    expect(events.text).toBe('{"id":"e1","t":1}\n');
+  });
+
+  // the parts are the only copy of the stream until the row points at the
+  // merged one, so a merge that never landed must leave them alone
+  it('keeps the parts until the eventsKey is on the row', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1","t":1}');
+    (storage.putObject as jest.Mock).mockRejectedValue(
+      new Error('s3 is having a day'),
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(500);
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
+
+  it('drops the parts only once the row points at the merged stream', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    const order: string[] = [];
+    jest.spyOn(recordingSessionEntity, 'patch').mockReturnValue({
+      set: () => ({
+        go: async () => {
+          order.push('eventsKey');
+          return { data: {} };
+        },
+      }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1","t":1}');
+    (storage.deletePrefix as jest.Mock).mockImplementation(async () => {
+      order.push('deleteParts');
+    });
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(order).toEqual(['eventsKey', 'deleteParts']);
   });
 
   it('rejects a window that stops before it started', async () => {

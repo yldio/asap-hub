@@ -189,6 +189,62 @@ const closeSession = async (
   }
 };
 
+// Everything after the close, in the one order that leaves nothing stranded:
+// the merged stream is written, the row is told where it landed, and only then
+// are the parts it was built from dropped. A failure anywhere here leaves a
+// closed session with no eventsKey and every part still in place, which is
+// exactly what a retry needs to finish it.
+const mergeSessionParts = async (
+  videoId: string,
+  sessionId: string,
+  parts: string[],
+): Promise<{ eventsKey: string; eventCount: number }> => {
+  // several tabs can share a session when the whole screen is recorded, so
+  // each tab's parts are read in its own order and the streams are then merged
+  // on the timestamps they all took from the same clock
+  const byClient = partsByClient(parts);
+  const streams = await Promise.all(
+    [...byClient.values()].map((partIds) =>
+      Promise.all(
+        partIds.map((partId) =>
+          // a batch that never landed must not sink the whole recording
+          getObjectText(capturePartKey(videoId, sessionId, partId)).catch(
+            () => '',
+          ),
+        ),
+      ),
+    ),
+  );
+  const lines = mergeByTimestamp(streams);
+
+  const key = captureEventsKey(videoId, sessionId);
+  await putObject(
+    key,
+    lines.length ? `${lines.join('\n')}\n` : '',
+    ndjsonContentType,
+    captureLifecycleTag,
+  );
+
+  // the session is already closed; this only records where the merged stream
+  // landed and drops the part ids it was built from
+  await recordingSessionEntity
+    .patch({ sessionId })
+    .set({
+      eventsKey: key,
+      parts: [],
+      updatedAt: new Date().toISOString(),
+    })
+    .go();
+
+  // the parts are the only copy of the stream until the row points at the
+  // merged one, so tidying them away is the last thing and costs nothing
+  await deletePrefix(capturePartsPrefix(videoId, sessionId)).catch(
+    () => undefined,
+  );
+
+  return { eventsKey: key, eventCount: lines.length };
+};
+
 const reportedState = (session: RecordingSessionItem): string =>
   session.state === 'open' && session.expiresAt <= Date.now()
     ? 'expired'
@@ -352,17 +408,35 @@ export const recordingsRouter = (): Router => {
       if (!session) {
         return;
       }
-      if (session.state !== 'open') {
-        res.status(409).json({ error: 'already_finalised' });
-        return;
-      }
-
       const { startedAtEpochMs, stoppedAtEpochMs } = req.body as {
         startedAtEpochMs: number;
         stoppedAtEpochMs: number;
       };
       const id = pathParam(req, 'id');
       const currentSessionId = pathParam(req, 'sessionId');
+
+      // A finalise that closed the session and then failed on the merge left a
+      // take nothing could ever reach: the retry lost the close and the events
+      // route had no key to serve. The parts are still there, so the retry
+      // finishes the job it left rather than refusing it.
+      if (session.state !== 'open') {
+        if (session.eventsKey) {
+          res.status(409).json({ error: 'already_finalised' });
+          return;
+        }
+        const merged = await mergeSessionParts(
+          id,
+          currentSessionId,
+          session.parts,
+        );
+        res.json({
+          state: 'closed',
+          ...merged,
+          startedAtEpochMs: session.startedAtEpochMs ?? startedAtEpochMs,
+          stoppedAtEpochMs: session.stoppedAtEpochMs ?? stoppedAtEpochMs,
+        });
+        return;
+      }
 
       const closed = await closeSession(
         currentSessionId,
@@ -374,48 +448,15 @@ export const recordingsRouter = (): Router => {
         return;
       }
 
-      // several tabs can share a session when the whole screen is recorded, so
-      // each tab's parts are read in its own order and the streams are then
-      // merged on the timestamps they all took from the same clock
-      const byClient = partsByClient(closed.parts ?? session.parts);
-      const streams = await Promise.all(
-        [...byClient.values()].map((partIds) =>
-          Promise.all(
-            partIds.map((partId) =>
-              // a batch that never landed must not sink the whole recording
-              getObjectText(capturePartKey(id, currentSessionId, partId)).catch(
-                () => '',
-              ),
-            ),
-          ),
-        ),
+      const merged = await mergeSessionParts(
+        id,
+        currentSessionId,
+        closed.parts ?? session.parts,
       );
-      const lines = mergeByTimestamp(streams);
-
-      const key = captureEventsKey(id, currentSessionId);
-      await putObject(
-        key,
-        lines.length ? `${lines.join('\n')}\n` : '',
-        ndjsonContentType,
-        captureLifecycleTag,
-      );
-      await deletePrefix(capturePartsPrefix(id, currentSessionId));
-
-      // the session is already closed; this only records where the merged
-      // stream landed and drops the part ids it was built from
-      await recordingSessionEntity
-        .patch({ sessionId: currentSessionId })
-        .set({
-          eventsKey: key,
-          parts: [],
-          updatedAt: new Date().toISOString(),
-        })
-        .go();
 
       res.json({
         state: 'closed',
-        eventsKey: key,
-        eventCount: lines.length,
+        ...merged,
         startedAtEpochMs,
         stoppedAtEpochMs,
       });

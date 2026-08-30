@@ -188,6 +188,12 @@
 
   function record(type, nativeEvent, extra) {
     if (total >= MAX_EVENTS) {
+      // what is already queued still has to land before the reporter goes
+      try {
+        flush(false);
+      } catch (error) {
+        // a failed farewell flush must not break the host page
+      }
       stop();
       return;
     }
@@ -229,6 +235,9 @@
       winY: where.winY,
       winW: where.winW,
       winH: where.winH,
+      // a Wayland desktop fabricates the window position and a Windows one
+      // does not, and only the platform can say which kind this stream is
+      platform: navigator.platform || '',
     };
 
     if (extra) {
@@ -327,6 +336,17 @@
     if (timer) {
       clearInterval(timer);
     }
+    // a handed over copy must go completely quiet, not keep listening for the
+    // life of the page
+    window.removeEventListener('pointermove', onMove, true);
+    window.removeEventListener('pointerdown', onDown, true);
+    window.removeEventListener('click', onClick, true);
+    window.removeEventListener('pointerover', onOver, true);
+    window.removeEventListener('scroll', onScroll, true);
+    window.removeEventListener('resize', onResize, true);
+    document.removeEventListener('visibilitychange', onVisibility, true);
+    window.removeEventListener('pagehide', onPageHide, true);
+    window.removeEventListener('blur', onBlur, true);
   }
 
   // a replacement bookmark stops this copy through here, so what it already
@@ -435,6 +455,12 @@
     flush(true);
   });
 
+  // switching to the studio in another window never hides this tab, so the
+  // tail of the take flushes on losing focus as well
+  var onBlur = guard(function () {
+    flush(false);
+  });
+
   var timer = setInterval(function () {
     try {
       flush(false);
@@ -459,4 +485,5 @@
   window.addEventListener('resize', onResize, true);
   document.addEventListener('visibilitychange', onVisibility, true);
   window.addEventListener('pagehide', onPageHide, true);
+  window.addEventListener('blur', onBlur, true);
 })();

@@ -45,6 +45,9 @@ export type CaptureEvent = CaptureGeometry & {
   viewportW: number;
   viewportH: number;
   target?: string;
+  // navigator.platform, which is the only thing separating a Wayland window
+  // reporting a fabricated origin from a maximised Windows one
+  platform?: string;
 };
 
 export type AutoZoomOptions = {

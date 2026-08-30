@@ -243,6 +243,44 @@ describe('more than one monitor', () => {
   });
 });
 
+describe('a maximised window with a taskbar is not a Wayland window', () => {
+  // Windows reports exactly what Wayland fabricates: the window at the desktop
+  // corner, the screen's own origin at 0, and 40 pixels spare, which here is a
+  // taskbar along the bottom rather than a bar the window sits under
+  const maximised: CapturePlacement = {
+    x: 960,
+    y: 500,
+    viewportW: 1920,
+    viewportH: 947,
+    screenX: 960,
+    screenY: 500,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1920,
+    winH: 1040,
+  };
+
+  it('leaves a Win32 capture where the pointer said it was', () => {
+    expect(
+      ratioOf({ ...maximised, platform: 'Win32' }, 'monitor').y,
+    ).toBeCloseTo(500 / 1080, 6);
+  });
+
+  it('still deals the spare back on Linux', () => {
+    expect(
+      ratioOf({ ...maximised, platform: 'Linux x86_64' }, 'monitor').y,
+    ).toBe(0.5);
+  });
+
+  it('still deals the spare back when the platform was never recorded', () => {
+    expect(ratioOf(maximised, 'monitor').y).toBe(0.5);
+  });
+});
+
 describe('a stream captured before the snippet reported the screen', () => {
   const old: CapturePlacement = {
     x: 500,

@@ -159,4 +159,14 @@ describe('the screen geometry', () => {
     expect(event).not.toHaveProperty('screenW');
     expect(event?.screenX).toBe(100);
   });
+
+  it('keeps the platform, which is what a fabricated origin is told by', () => {
+    const [event] = parseCaptureEvents(line(move({ platform: 'Win32' })));
+
+    expect(event?.platform).toBe('Win32');
+  });
+
+  it('leaves out a platform the snippet never sent', () => {
+    expect(parseCaptureEvents(line(move()))[0]).not.toHaveProperty('platform');
+  });
 });

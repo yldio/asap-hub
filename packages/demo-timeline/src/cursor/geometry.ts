@@ -23,6 +23,7 @@ export type CapturePlacement = CaptureGeometry & {
   y: number;
   viewportW: number;
   viewportH: number;
+  platform?: string;
 };
 
 const positive = (value: number | undefined): value is number =>
@@ -73,8 +74,20 @@ const displayOrigin = (at: number, size: number, workArea: number): number => {
 // and an axis like that is left alone rather than guessed at.
 const fabricatedLeeway = 0.1;
 
+// The shape Wayland fabricates, a window at the desktop corner on a screen whose
+// own origin is 0, is exactly the shape a maximised Windows or X11 window with a
+// 40px taskbar reports, and no geometry tells the two apart: dealing the spare
+// back there pushed every event down by the taskbar's height. So the platform
+// decides. Absent, it is read as Linux, because every stream captured before the
+// snippet reported the platform came from the creator's own Linux box.
+const fabricatesPlacement = (platform: string | undefined): boolean =>
+  platform === undefined ||
+  platform.includes('Linux') ||
+  platform.includes('X11');
+
 const fabricatedShift = (event: CapturePlacement): Point => {
   if (
+    !fabricatesPlacement(event.platform) ||
     event.winX !== 0 ||
     event.winY !== 0 ||
     finite(event.screenLeft) !== 0 ||

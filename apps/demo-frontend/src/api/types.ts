@@ -88,6 +88,10 @@ export type RenderJob = {
   renderId: string;
   state: RenderState;
   timelineVersion: number;
+  // a download renders a picked cut into its own directory and never becomes
+  // the demo; absent means the render is the demo itself
+  purpose?: 'download';
+  downloadPath?: string;
   stage?: string;
   progress?: number;
   error?: string;

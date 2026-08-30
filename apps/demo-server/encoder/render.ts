@@ -17,6 +17,9 @@ export type RenderEnv = {
   renderId: string;
   timelineKey: string;
   mediaPath: string;
+  // a download renders a picked cut into its own directory: just the stream,
+  // no preview artefacts, and the row's published media is never touched
+  purpose: 'demo' | 'download';
   bucket: string;
   table: string;
   s3Endpoint?: string;
@@ -37,6 +40,7 @@ export const parseRenderEnv = (env: NodeJS.ProcessEnv): RenderEnv => ({
   renderId: requiredEnv(env, 'RENDER_ID'),
   timelineKey: requiredEnv(env, 'TIMELINE_KEY'),
   mediaPath: requiredEnv(env, 'MEDIA_PATH'),
+  purpose: env.PURPOSE === 'download' ? 'download' : 'demo',
   bucket: requiredEnv(env, 'BUCKET_NAME'),
   table: requiredEnv(env, 'TABLE_NAME'),
   s3Endpoint: env.S3_ENDPOINT || undefined,
@@ -837,6 +841,51 @@ const finishMedia = async (
   return { durationMs, sectionCount };
 };
 
+// a download is just the stream: no sprite, no sections, no ready flip, and
+// the lifecycle tag stays on so a cut nobody saves ages out on its own
+const finishDownload = async (
+  env: RenderEnv,
+  streamFile: string,
+  report: Reporter,
+): Promise<void> => {
+  const durationMs = await probeDurationMs(streamFile);
+  if (durationMs <= 0) {
+    throw new Error('the rendered output reports no duration');
+  }
+  await claimUpload(env);
+  report('upload', finishProgress(0.6));
+  await upload(
+    env,
+    streamFile,
+    `media/${env.videoId}/${env.mediaPath}/stream.mp4`,
+    'video/mp4',
+  );
+  await updateVideo(
+    env,
+    [
+      'SET #render.#state = :state, #render.#stage = :stage,',
+      '#render.#progress = :progress, #render.#finishedAt = :finishedAt,',
+      '#render.#downloadPath = :downloadPath',
+      'REMOVE #render.#error',
+    ].join(' '),
+    {
+      '#state': 'state',
+      '#stage': 'stage',
+      '#progress': 'progress',
+      '#finishedAt': 'finishedAt',
+      '#downloadPath': 'downloadPath',
+      '#error': 'error',
+    },
+    {
+      ':state': { S: 'done' },
+      ':stage': { S: 'done' },
+      ':progress': { N: '100' },
+      ':finishedAt': { S: new Date().toISOString() },
+      ':downloadPath': { S: env.mediaPath },
+    },
+  );
+};
+
 const render = async (env: RenderEnv): Promise<void> => {
   const { workDir } = env;
   const report = createReporter(env);
@@ -879,6 +928,11 @@ const render = async (env: RenderEnv): Promise<void> => {
   }
 
   await runPlan(plan, stepDurationsMs(timeline, plan), report);
+  if (env.purpose === 'download') {
+    await finishDownload(env, output, report);
+    log(`done videoId=${env.videoId} download=${env.mediaPath}`);
+    return;
+  }
   const { durationMs, sectionCount } = await finishMedia(
     env,
     output,

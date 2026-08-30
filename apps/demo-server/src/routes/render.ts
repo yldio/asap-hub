@@ -1,4 +1,8 @@
-import { parseTimeline, serialiseTimeline } from '@asap-hub/demo-timeline';
+import {
+  keepClips,
+  parseTimeline,
+  serialiseTimeline,
+} from '@asap-hub/demo-timeline';
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { Response, Router } from 'express';
@@ -185,10 +189,26 @@ export const registerRenderRoutes = (router: Router): void => {
       }
 
       const pointer = timelinePointerOf(project);
-      const timeline = pointer
+      const whole = pointer
         ? parseTimeline(JSON.parse(await getObjectText(pointer.key)))
         : undefined;
-      if (!timeline || !pointer || timeline.clips.length === 0) {
+      if (!whole || !pointer || whole.clips.length === 0) {
+        res.status(400).json({ error: 'empty_timeline' });
+        return;
+      }
+
+      // a download renders the picked cut of the document rather than all of
+      // it, and everything the picked clips carry travels with them
+      const { clipIds } = req.body as { clipIds?: string[] };
+      if (clipIds) {
+        const known = new Set(whole.clips.map((clip) => clip.id));
+        if (clipIds.some((clipId) => !known.has(clipId))) {
+          res.status(400).json({ error: 'unknown_clip' });
+          return;
+        }
+      }
+      const timeline = clipIds ? keepClips(whole, clipIds) : whole;
+      if (timeline.clips.length === 0) {
         res.status(400).json({ error: 'empty_timeline' });
         return;
       }
@@ -238,6 +258,7 @@ export const registerRenderRoutes = (router: Router): void => {
         timelineVersion: pointer.timelineVersion,
         progress: 0,
         requestedAt,
+        ...(clipIds ? { purpose: 'download' as const } : {}),
       };
 
       const queued = await applyGuardedUpdate(res, {
@@ -262,7 +283,10 @@ export const registerRenderRoutes = (router: Router): void => {
           VIDEO_ID: id,
           RENDER_ID: renderId,
           TIMELINE_KEY: timelineKey,
-          MEDIA_PATH: renderId,
+          // a download must never overwrite the published media, so it gets a
+          // directory of its own and the container skips the ready flip
+          MEDIA_PATH: clipIds ? `downloads/${renderId}` : renderId,
+          ...(clipIds ? { PURPOSE: 'download' } : {}),
         }));
       } catch (error) {
         // a render nobody started must not sit queued, blocking every later one

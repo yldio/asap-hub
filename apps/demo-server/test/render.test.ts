@@ -439,6 +439,86 @@ describe('POST /api/projects/:id/render', () => {
   });
 });
 
+// a download renders the picked cut into its own directory and must never
+// touch the published media, so the container is told what it is making
+describe('POST /api/projects/:id/render with picked clips', () => {
+  const twoClips = (): Timeline => ({
+    ...createEmptyTimeline(),
+    clips: [
+      {
+        kind: 'source',
+        id: 'clip-1',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 5000,
+        volume: 1,
+      },
+      {
+        kind: 'source',
+        id: 'clip-2',
+        assetId: 'asset-1',
+        inMs: 1000,
+        outMs: 4000,
+        volume: 1,
+        transitionIn: { type: 'crossfade', durationMs: 500 },
+      },
+    ],
+  });
+
+  const start = (body: Record<string, unknown>) =>
+    api
+      .post('/api/projects/project-1/render')
+      .set('Authorization', creatorToken)
+      .send(body);
+
+  beforeEach(() => {
+    (storage.getObjectText as jest.Mock)
+      .mockReset()
+      .mockResolvedValue(JSON.stringify(twoClips()));
+  });
+
+  it('snapshots only the picked cut and marks the render a download', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    const response = await start({ version: 3, clipIds: ['clip-2'] });
+
+    expect(response.status).toBe(200);
+    const snapshot = JSON.parse(
+      (storage.putObject as jest.Mock).mock.calls[0]![1] as string,
+    ) as Timeline;
+    expect(snapshot.clips).toHaveLength(1);
+    expect(snapshot.clips[0]).toMatchObject({ id: 'clip-2' });
+    // a blend with a clip that is not in the cut has nothing to blend with
+    expect(snapshot.clips[0]).not.toHaveProperty('transitionIn');
+    expect(setValue(0, 'render')).toMatchObject({
+      renderId: 'generated-render-id',
+      state: 'queued',
+      purpose: 'download',
+    });
+    expect(run).toHaveBeenCalledWith('render', {
+      JOB: 'render',
+      VIDEO_ID: 'project-1',
+      RENDER_ID: 'generated-render-id',
+      TIMELINE_KEY:
+        'projects/project-1/renders/generated-render-id/timeline.json',
+      MEDIA_PATH: 'downloads/generated-render-id',
+      PURPOSE: 'download',
+    });
+  });
+
+  it('refuses a pick naming a clip the timeline does not have', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+
+    const response = await start({ version: 3, clipIds: ['clip-gone'] });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'unknown_clip' });
+    expect(run).not.toHaveBeenCalled();
+  });
+});
+
 describe('DELETE /api/projects/:id/render', () => {
   const cancel = () =>
     api
@@ -649,6 +729,7 @@ describe('the writes the container makes', () => {
     renderId: 'render-1',
     timelineKey: 'projects/project-1/renders/render-1/timeline.json',
     mediaPath: 'r1',
+    purpose: 'demo' as const,
     bucket: 'bucket',
     table: 'table',
     s3Endpoint: undefined,
@@ -721,12 +802,19 @@ describe('parseRenderEnv', () => {
       renderId: 'render-1',
       timelineKey: 'projects/project-1/renders/render-1/timeline.json',
       mediaPath: 'r1',
+      purpose: 'demo',
       bucket: 'bucket',
       table: 'table',
       s3Endpoint: undefined,
       dynamodbEndpoint: undefined,
       workDir: '/scratch',
     });
+  });
+
+  it('reads a download purpose off the environment', () => {
+    expect(parseRenderEnv({ ...complete, PURPOSE: 'download' }).purpose).toBe(
+      'download',
+    );
   });
 
   it('takes the local endpoint overrides', () => {

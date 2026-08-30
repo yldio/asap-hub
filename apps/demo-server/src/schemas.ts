@@ -106,6 +106,9 @@ export const saveTimelineSchema = z.object({
 // is what guards the write against a takeover or a concurrent edit
 export const startRenderSchema = z.object({
   version: z.number().int().nonnegative(),
+  // present only for a download: the cut keeps just these clips, and the
+  // output lands beside the project rather than becoming the demo
+  clipIds: z.array(z.string().min(1).max(64)).min(1).max(100).optional(),
 });
 
 export const cancelRenderSchema = z.object({

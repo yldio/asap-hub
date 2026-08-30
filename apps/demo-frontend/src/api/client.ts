@@ -404,12 +404,19 @@ export const createApi = (getToken: GetToken) => ({
       { as: 'text' },
     ),
 
-  startRender: async (id: string, version: number): Promise<Video> =>
+  startRender: async (
+    id: string,
+    version: number,
+    clipIds?: string[],
+  ): Promise<Video> =>
     (
       await request<{ video: Video }>(
         `/projects/${encodeURIComponent(id)}/render`,
         await getToken(),
-        { method: 'POST', body: { version } },
+        {
+          method: 'POST',
+          body: { version, ...(clipIds ? { clipIds } : {}) },
+        },
       )
     ).video,
 

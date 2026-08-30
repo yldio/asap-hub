@@ -24,6 +24,10 @@ export type RenderState = {
   renderId: string;
   state: 'queued' | 'rendering' | 'done' | 'failed' | 'cancelled';
   timelineVersion: number;
+  // a download renders a picked cut into its own directory and leaves the
+  // published demo untouched; absent means the render is the demo itself
+  purpose?: 'download';
+  downloadPath?: string;
   stage?: string;
   progress?: number;
   taskArn?: string;

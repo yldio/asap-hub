@@ -185,6 +185,9 @@ export const useScreenRecorder = ({
   const tickRef = useRef<ReturnType<typeof setInterval>>();
   const countdownRef = useRef<ReturnType<typeof setInterval>>();
   const beginRef = useRef<() => void>();
+  const cancelRef = useRef<() => void>();
+  const startingRef = useRef(false);
+  const finishingRef = useRef(false);
 
   const stopCounting = useCallback(() => {
     if (countdownRef.current) {
@@ -253,9 +256,14 @@ export const useScreenRecorder = ({
       return;
     }
 
-    if (screenRef.current) {
+    if (screenRef.current || startingRef.current) {
       return;
     }
+    // a second click while the picker is still up must not open two shares
+    startingRef.current = true;
+    // a fresh attempt: the previous take's clock must not leak into a stop
+    // that lands before this one begins
+    startedAtRef.current = 0;
 
     let stream: MediaStream;
     try {
@@ -267,6 +275,7 @@ export const useScreenRecorder = ({
           : 'Could not start the recording.',
       );
       setStatus('idle');
+      startingRef.current = false;
       return;
     }
 
@@ -280,6 +289,13 @@ export const useScreenRecorder = ({
       // to finish the recording rather than only relabel it
       stream.getVideoTracks().forEach((track) => {
         track.addEventListener('ended', () => {
+          // ended mid count means nothing was recorded: cleaning up quietly
+          // left the creator thinking a take was running
+          if (beginRef.current) {
+            cancelRef.current?.();
+            setError('The screen share ended before recording began.');
+            return;
+          }
           setStatus('finishing');
           void stopRef.current?.().then((take) => {
             if (take && take.blob.size > 0) {
@@ -331,6 +347,7 @@ export const useScreenRecorder = ({
         }
       };
 
+      startingRef.current = false;
       if (countdownMs > 0) {
         // the wall clock, not the interval, decides when the count ends: the
         // studio tab sits in the background while the creator gets to the tab
@@ -352,6 +369,7 @@ export const useScreenRecorder = ({
         begin();
       }
     } catch {
+      startingRef.current = false;
       stopTracks(stream);
       stopTracks(micRef.current?.stream);
       screenRef.current = undefined;
@@ -391,8 +409,11 @@ export const useScreenRecorder = ({
     stopTracks(micRef.current?.stream);
     screenRef.current = undefined;
     micRef.current = undefined;
+    startedAtRef.current = 0;
     setStatus('idle');
   }, [stopCounting]);
+
+  cancelRef.current = cancel;
 
   const pause = useCallback(() => {
     screenRef.current?.recorder.pause();
@@ -415,17 +436,20 @@ export const useScreenRecorder = ({
 
   const stop = useCallback(async (): Promise<RecordedTake | undefined> => {
     const screen = screenRef.current;
-    if (!screen) {
+    if (!screen || finishingRef.current) {
       return undefined;
     }
-    // the browser's own Stop sharing can land mid count; the take it ends
-    // holds nothing, and the empty blob it hands back says so
+    // two stops can race, the creator's click against the browser's own Stop
+    // sharing, and both resolving would put the same take on the timeline twice
+    finishingRef.current = true;
+    // a take the count never started holds nothing worth handing back
+    const began = startedAtRef.current > 0;
     stopCounting();
     setStatus('finishing');
     stopTicking();
     // read before the awaits: how long the finishing itself takes is not part
     // of the take
-    const durationMs = Math.max(0, recordedMs());
+    const durationMs = began ? Math.max(0, recordedMs()) : 0;
 
     await screen.finish();
     const mic = micRef.current;
@@ -437,7 +461,12 @@ export const useScreenRecorder = ({
     stopTracks(mic?.stream);
     screenRef.current = undefined;
     micRef.current = undefined;
+    finishingRef.current = false;
     setStatus('idle');
+
+    if (!began) {
+      return undefined;
+    }
 
     return {
       blob: new Blob(screen.chunks, { type: screen.mimeType }),

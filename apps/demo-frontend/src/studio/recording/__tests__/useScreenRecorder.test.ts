@@ -460,3 +460,50 @@ describe('a countdown before the take', () => {
     expect(take?.startedAtEpochMs).toBe(4000);
   });
 });
+
+describe('endings that used to be silent or doubled', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
+  it('says so when the share ends before the count finishes', async () => {
+    const { view, stream, recorders } = setup({ countdownMs: 3000 });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => stream.track.end());
+
+    expect(view.result.current.status).toBe('idle');
+    expect(view.result.current.error).toBe(
+      'The screen share ended before recording began.',
+    );
+    expect(recorders[0]?.started).toBeUndefined();
+  });
+
+  it('hands back no take for a stop that lands mid count', async () => {
+    const { view } = setup({ countdownMs: 3000 });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    const take = await act(async () => view.result.current.stop());
+
+    expect(take).toBeUndefined();
+    expect(view.result.current.status).toBe('idle');
+  });
+
+  it('resolves only one of two racing stops with the take', async () => {
+    const { view, recorders } = setup();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    act(() => recorders[0]?.emit(32));
+
+    const [first, second] = await act(async () =>
+      Promise.all([view.result.current.stop(), view.result.current.stop()]),
+    );
+
+    expect([first, second].filter(Boolean)).toHaveLength(1);
+  });
+});

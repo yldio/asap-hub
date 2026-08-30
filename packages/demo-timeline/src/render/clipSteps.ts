@@ -58,6 +58,7 @@ import {
   ZoomExpressions,
   zoomFilters,
 } from './zoom';
+import { StillWindow, stillFilters } from './zoomSegments';
 
 export type ClipStepInput = {
   placement: ClipPlacement;
@@ -67,6 +68,8 @@ export type ClipStepInput = {
   zooms: Zoom[];
   assets: Map<string, RenderAsset>;
   workDir: string;
+  // set when every zoom over this placement holds one constant window
+  stillWindow?: StillWindow;
 };
 
 export type ClipStepResult = { step: FfmpegStep; svgs: SvgFile[] };
@@ -376,7 +379,23 @@ const pictureFilters = (
   canvas: Canvas,
   clipZoom: Zoom[],
   assets: Map<string, RenderAsset>,
+  stillWindow?: StillWindow,
 ): string[] => {
+  // a tile whose zooms all hold one window cuts it out of the source first
+  // and scales up only what is shown; the zooms themselves stay with the
+  // overlays, whose arithmetic still rides the (constant) window
+  if (stillWindow) {
+    const base = zoomCropsTheSource(placement.clip, canvas, assets)
+      ? []
+      : videoFilters({ canvas, placement });
+    return [
+      ...base,
+      `fps=${canvas.fps}`,
+      ...stillFilters(stillWindow, canvas),
+      'setsar=1',
+      colourTagFilter,
+    ];
+  }
   const zoom = zoomFilters(clipZoom, canvas);
   if (zoom.length === 0) {
     return videoFilters({ canvas, placement });
@@ -407,6 +426,7 @@ export const buildClipStep = ({
   zooms,
   assets,
   workDir,
+  stillWindow,
 }: ClipStepInput): ClipStepResult => {
   const { clip, index, durationMs } = placement;
   const seconds = secondsFromMs(durationMs);
@@ -452,7 +472,7 @@ export const buildClipStep = ({
         ...(heldMs > 0
           ? [`tpad=stop_mode=clone:stop_duration=${secondsFromMs(heldMs)}`]
           : []),
-        ...pictureFilters(placement, canvas, clipZoom, assets),
+        ...pictureFilters(placement, canvas, clipZoom, assets, stillWindow),
       ],
       'v0',
     ),

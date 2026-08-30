@@ -77,12 +77,16 @@ export const buildRenderPlan = ({
         banners,
         cursor,
         // a quiet tile carries no zoom at all, and with it goes the whole
-        // per frame rescale chain
-        zooms: tile.zoomed
-          ? shiftZoomsForTile(zooms, placement.clip.id, tile.shiftMs)
-          : zooms.filter((zoom) => zoom.clipId !== placement.clip.id),
+        // per frame rescale chain; a held tile keeps its zooms for the
+        // overlays riding the window, but the picture cuts the window out
+        // of the source directly
+        zooms:
+          tile.zoomed || tile.window
+            ? shiftZoomsForTile(zooms, placement.clip.id, tile.shiftMs)
+            : zooms.filter((zoom) => zoom.clipId !== placement.clip.id),
         assets: index,
         workDir,
+        ...(tile.window ? { stillWindow: tile.window } : {}),
       });
       encodeSteps.push({
         ...built.step,

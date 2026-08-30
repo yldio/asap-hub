@@ -1,11 +1,12 @@
 import { ClipPlacement } from '../clips';
 import { SourceClip, Zoom } from '../schema';
-import { clipZooms, zoomDurationMs } from '../zoom';
+import { clipZooms } from '../zoom';
 import { audioCodecArgs, containerArgs, startArgs } from './encoding';
 import { filterSegment, graph, label } from './filters';
 import { concatListContent } from './joinStep';
 import { clipOutputPath, tileListPath } from './paths';
 import { ConcatListFile, FfmpegStep, RenderAsset } from './types';
+import { StillWindow, ZoomSpan, zoomSpans } from './zoomSegments';
 
 // One clip is one ffmpeg process, so a single long take used to hold the whole
 // pool hostage: fifty minutes of demo encoded one core-group at a time. Past
@@ -17,43 +18,141 @@ export const tileTargetMs = 60_000;
 // a stub shorter than this rides with the tile before it instead
 export const tileTailMs = 20_000;
 
-// A clip with any zoom pays the per frame rescale for its whole length, even
-// the stretches where nothing is zooming. Boundaries are therefore also cut
-// where the zooms start and stop, padded a little, so a quiet tile carries no
-// zoom at all and renders several times faster. A quiet stretch has to be
-// worth its own tile to earn a cut.
-export const zoomMarginMs = 500;
-export const minTileMs = 15_000;
+// A clip with any zoom used to pay the per frame rescale for its whole
+// length. Boundaries are therefore also cut where the zoom state changes:
+// a quiet stretch carries no zoom chain at all, a held one cuts its fixed
+// window straight out of the source, and only the ramps re-derive the
+// window per frame. A stretch has to be worth a process of its own to earn
+// a cut; the ramps buy their way in by eating into their neighbours, but a
+// hold is the whole point of the cutting, so it is never eaten below the
+// least a cheap tile is worth.
+export const minZoomTileMs = 4000;
+export const minStillTileMs = 2500;
 
-type Window = { startMs: number; endMs: number };
+const worthMs = (span: ZoomSpan): number =>
+  span.kind === 'still' ? minStillTileMs : minZoomTileMs;
 
-const mergedWindows = (windows: Window[]): Window[] =>
-  [...windows]
-    .sort((a, b) => a.startMs - b.startMs)
-    .reduce<Window[]>((merged, window) => {
-      const last = merged[merged.length - 1];
-      if (last && window.startMs <= last.endMs) {
-        last.endMs = Math.max(last.endMs, window.endMs);
-        return merged;
-      }
-      return [...merged, { ...window }];
-    }, []);
+const lengthMs = (span: ZoomSpan): number => span.endMs - span.startMs;
 
-export const zoomWindows = (
+// quiet donates time before still: a frame rendered by the wrong-but-exact
+// moving chain costs more where the cheap chain would have been cheapest
+const donorRank = (span?: ZoomSpan): number =>
+  span === undefined || span.kind === 'moving'
+    ? 2
+    : span.kind === 'still'
+      ? 1
+      : 0;
+
+// a ramp is far shorter than a tile is worth, so each moving span grows to
+// tile size by taking time off its neighbours; the moving chain is exact at
+// every instant, so the taken stretch is merely rendered the slower way
+const grownMoving = (spans: ZoomSpan[]): ZoomSpan[] => {
+  const out = spans.map((span) => ({ ...span }));
+  for (let at = 0; at < out.length; at += 1) {
+    const span = out[at];
+    if (span && span.kind === 'moving') {
+      let need = minZoomTileMs - lengthMs(span);
+      [at - 1, at + 1]
+        .sort((a, b) => donorRank(out[a]) - donorRank(out[b]))
+        .forEach((side) => {
+          const donor = out[side];
+          if (!donor || need <= 0 || donor.kind === 'moving') {
+            return;
+          }
+          const surplus =
+            donor.kind === 'still'
+              ? Math.max(0, lengthMs(donor) - minStillTileMs)
+              : lengthMs(donor);
+          const gift = Math.min(need, surplus);
+          if (side < at) {
+            donor.endMs -= gift;
+            span.startMs -= gift;
+          } else {
+            donor.startMs += gift;
+            span.endMs += gift;
+          }
+          need -= gift;
+        });
+    }
+  }
+  return out.filter((span) => lengthMs(span) > 0);
+};
+
+const sameWindow = (a?: StillWindow, b?: StillWindow): boolean =>
+  a !== undefined &&
+  b !== undefined &&
+  a.scale === b.scale &&
+  a.cropX === b.cropX &&
+  a.cropY === b.cropY;
+
+const mergedSpan = (a: ZoomSpan, b: ZoomSpan): ZoomSpan => {
+  const alike =
+    a.kind === b.kind && (a.kind !== 'still' || sameWindow(a.window, b.window));
+  return {
+    startMs: Math.min(a.startMs, b.startMs),
+    endMs: Math.max(a.endMs, b.endMs),
+    kind: alike ? a.kind : 'moving',
+    ...(alike && a.kind === 'still' && a.window ? { window: a.window } : {}),
+  };
+};
+
+// whatever stayed too short after the growing joins a neighbour; mixed kinds
+// come out moving, because that chain alone is right everywhere
+const absorbed = (spans: ZoomSpan[]): ZoomSpan[] => {
+  const out = spans.map((span) => ({ ...span }));
+  for (;;) {
+    if (out.length < 2) {
+      return out;
+    }
+    const at = out.findIndex((span) => lengthMs(span) < worthMs(span));
+    if (at < 0) {
+      return out;
+    }
+    const left = at > 0 ? at - 1 : undefined;
+    const right = at < out.length - 1 ? at + 1 : undefined;
+    const partnerAt =
+      left === undefined
+        ? right ?? at
+        : right === undefined
+          ? left
+          : donorRank(out[left]) >= donorRank(out[right])
+            ? left
+            : right;
+    const from = Math.min(at, partnerAt);
+    const first = out[from];
+    const second = out[from + 1];
+    if (!first || !second) {
+      return out;
+    }
+    out.splice(from, 2, mergedSpan(first, second));
+  }
+};
+
+// growing and absorbing can leave two alike stretches touching; they are
+// one tile, not two
+const joined = (spans: ZoomSpan[]): ZoomSpan[] =>
+  spans.reduce<ZoomSpan[]>((out, span) => {
+    const last = out[out.length - 1];
+    if (
+      last &&
+      last.kind === span.kind &&
+      (span.kind !== 'still' || sameWindow(last.window, span.window))
+    ) {
+      last.endMs = span.endMs;
+      return out;
+    }
+    return [...out, { ...span }];
+  }, []);
+
+// the run of quiet, still and moving stretches a clip's zooms make of it,
+// each long enough to stand as a tile
+export const zoomTileSpans = (
   zooms: Zoom[],
   clipId: string,
   durationMs: number,
-): Window[] =>
-  mergedWindows(
-    clipZooms(zooms, clipId)
-      .map((zoom) => ({
-        startMs: Math.max(0, zoom.startMs - zoomMarginMs),
-        endMs: Math.min(
-          durationMs,
-          zoom.startMs + zoomDurationMs(zoom) + zoomMarginMs,
-        ),
-      }))
-      .filter((window) => window.endMs > window.startMs),
+): ZoomSpan[] =>
+  joined(
+    absorbed(grownMoving(zoomSpans(clipZooms(zooms, clipId), durationMs))),
   );
 
 export type TileSpan = { startMs: number; endMs: number };
@@ -72,49 +171,17 @@ const gridded = (from: number, to: number): TileSpan[] => {
   return spans;
 };
 
-export const tileSpans = (
-  durationMs: number,
-  zoomed: Window[] = [],
-): TileSpan[] => {
-  // the zoom edges are boundaries in their own right, so a quiet stretch can
-  // become a tile with no zoom chain at all; each stretch is then gridded
-  const edges = [
-    0,
-    ...zoomed.flatMap((window) => [window.startMs, window.endMs]),
-    durationMs,
-  ]
-    .map((edge) => Math.max(0, Math.min(durationMs, edge)))
-    .sort((a, b) => a - b)
-    .filter((edge, at, all) => at === 0 || edge > (all[at - 1] ?? 0));
-
-  const stretches: TileSpan[] = [];
-  for (let at = 0; at < edges.length - 1; at += 1) {
-    stretches.push(...gridded(edges[at] ?? 0, edges[at + 1] ?? 0));
-  }
-
-  // a sliver is not worth a process of its own; it rides with its neighbour
-  return stretches.reduce<TileSpan[]>((kept, span) => {
-    const last = kept[kept.length - 1];
-    if (last && span.endMs - span.startMs < minTileMs) {
-      last.endMs = span.endMs;
-      return kept;
-    }
-    if (last && last.endMs - last.startMs < minTileMs) {
-      last.endMs = span.endMs;
-      return kept;
-    }
-    return [...kept, { ...span }];
-  }, []);
-};
-
 export type ClipTile = {
   placement: ClipPlacement;
   // how far into the clip's own time this tile starts: what a zoom's clip
   // local start has to come down by to speak the tile's time
   shiftMs: number;
-  // whether any zoom window touches this tile; a quiet tile skips the whole
-  // per frame rescale chain
+  // whether a zoom is in flight anywhere in this tile; a quiet tile skips
+  // the whole per frame rescale chain
   zoomed: boolean;
+  // the one constant window every zoom over this tile holds, when the tile
+  // is a held stretch: the picture cuts it out of the source directly
+  window?: StillWindow;
 };
 
 // The tile is a source clip in its own right: banners clip to its programme
@@ -128,40 +195,42 @@ export const tilePlacements = (
   zooms: Zoom[] = [],
 ): ClipTile[] => {
   const { clip } = placement;
-  const windows =
-    clip.kind === 'source'
-      ? zoomWindows(zooms, clip.id, placement.durationMs)
-      : [];
-  const whole: ClipTile[] = [
-    { placement, shiftMs: 0, zoomed: windows.length > 0 },
-  ];
-  const quietMs =
-    placement.durationMs -
-    windows.reduce((total, window) => total + window.endMs - window.startMs, 0);
-  // long clips tile for the pool; a shorter one tiles only when the zoom
-  // edges free at least a tile's worth of quiet running time
-  const worthIt =
-    placement.durationMs > tileThresholdMs ||
-    (windows.length > 0 &&
-      quietMs >= minTileMs &&
-      placement.durationMs >= 2 * minTileMs);
-  if (clip.kind !== 'source' || !worthIt) {
-    return whole;
-  }
-  const footageMs = assets.get(clip.assetId)?.durationMs;
-  if (footageMs === undefined) {
-    return whole;
-  }
+  const footageMs =
+    clip.kind === 'source' ? assets.get(clip.assetId)?.durationMs : undefined;
 
   // a tile that starts past the end of the footage would be an empty input,
   // so the boundaries stop at the footage and the last tile holds the rest
-  const footageLocalMs = Math.max(1, Math.round(footageMs) - clip.inMs);
-  const boundMs = Math.min(placement.durationMs, footageLocalMs);
-  const spans = tileSpans(
-    boundMs,
-    windows.map((window) => ({
-      startMs: Math.min(window.startMs, boundMs),
-      endMs: Math.min(window.endMs, boundMs),
+  const boundMs =
+    clip.kind === 'source' && footageMs !== undefined
+      ? Math.min(
+          placement.durationMs,
+          Math.max(1, Math.round(footageMs) - clip.inMs),
+        )
+      : placement.durationMs;
+  const states =
+    clip.kind === 'source' ? zoomTileSpans(zooms, clip.id, boundMs) : [];
+
+  const only = states.length === 1 ? states[0] : undefined;
+  const whole: ClipTile[] = [
+    {
+      placement,
+      shiftMs: 0,
+      zoomed: states.some((state) => state.kind !== 'quiet'),
+      ...(only?.kind === 'still' && only.window ? { window: only.window } : {}),
+    },
+  ];
+  // a long clip tiles for the pool; a shorter one tiles as soon as the zoom
+  // states cut it into stretches each worth a process of its own
+  const worthIt = placement.durationMs > tileThresholdMs || states.length > 1;
+  if (clip.kind !== 'source' || !worthIt || footageMs === undefined) {
+    return whole;
+  }
+
+  const spans = states.flatMap((state) =>
+    gridded(state.startMs, state.endMs).map((span) => ({
+      ...span,
+      kind: state.kind,
+      ...(state.window ? { window: state.window } : {}),
     })),
   );
   const lastSpan = spans[spans.length - 1];
@@ -188,9 +257,8 @@ export const tilePlacements = (
         overlapMs: 0,
       },
       shiftMs: span.startMs,
-      zoomed: windows.some(
-        (window) => window.startMs < span.endMs && window.endMs > span.startMs,
-      ),
+      zoomed: span.kind === 'moving',
+      ...(span.kind === 'still' && span.window ? { window: span.window } : {}),
     };
   });
 };

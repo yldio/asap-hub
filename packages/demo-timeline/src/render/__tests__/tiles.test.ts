@@ -5,8 +5,8 @@ import { buildRenderPlan } from '../plan';
 import {
   shiftZoomsForTile,
   tilePlacements,
-  tileSpans,
   tileTargetMs,
+  zoomTileSpans,
 } from '../tiles';
 import { RenderAsset } from '../types';
 
@@ -40,33 +40,58 @@ const planFor = (outMs: number, overrides: Partial<Timeline> = {}) =>
     output: '/work/out.mp4',
   });
 
-describe('tileSpans', () => {
-  it('cuts a boundary at each zoom edge, so quiet stretches stand alone', () => {
-    expect(tileSpans(120_000, [{ startMs: 30_000, endMs: 50_000 }])).toEqual([
-      { startMs: 0, endMs: 30_000 },
-      { startMs: 30_000, endMs: 50_000 },
-      { startMs: 50_000, endMs: 120_000 },
+const zoomOn = (startMs: number, holdMs: number): ReturnType<typeof Object> =>
+  ({
+    id: `z-${startMs}`,
+    clipId: 'clip-long',
+    startMs,
+    rampInMs: 400,
+    holdMs,
+    rampOutMs: 400,
+    focus: { x: 0.5, y: 0.5 },
+    scale: 2,
+    easing: 'easeInOut' as const,
+  }) as const;
+
+describe('zoomTileSpans', () => {
+  it('cuts quiet, ramp and hold stretches each worth a process', () => {
+    const spans = zoomTileSpans([zoomOn(20_000, 10_000)], 'clip-long', 50_000);
+
+    expect(spans).toEqual([
+      { startMs: 0, endMs: 16_400, kind: 'quiet' },
+      { startMs: 16_400, endMs: 20_400, kind: 'moving' },
+      {
+        startMs: 20_400,
+        endMs: 30_400,
+        kind: 'still',
+        window: { scale: 2, cropX: 0.25, cropY: 0.25 },
+      },
+      { startMs: 30_400, endMs: 34_400, kind: 'moving' },
+      { startMs: 34_400, endMs: 50_000, kind: 'quiet' },
     ]);
   });
 
-  it('folds a sliver into its neighbour rather than spawning a process for it', () => {
-    expect(tileSpans(70_000, [{ startMs: 60_000, endMs: 70_000 }])).toEqual([
-      { startMs: 0, endMs: 70_000 },
+  // the ramps take the tile they need from the quiet side first, so the
+  // held stretch keeps its own cheap chain
+  it('grows a ramp out of the quiet beside it, not out of the hold', () => {
+    const spans = zoomTileSpans([zoomOn(20_000, 10_000)], 'clip-long', 50_000);
+    expect(spans.find((span) => span.kind === 'still')).toMatchObject({
+      startMs: 20_400,
+      endMs: 30_400,
+    });
+  });
+
+  // a short clip has nothing worth cutting: everything collapses onto the
+  // moving chain, which is exact everywhere, and the clip stays whole
+  it('collapses a short clip onto the one moving chain', () => {
+    expect(zoomTileSpans([zoomOn(2000, 5000)], 'clip-long', 10_000)).toEqual([
+      { startMs: 0, endMs: 10_000, kind: 'moving' },
     ]);
   });
 
-  it('cuts even tiles and folds a short stub into the one before', () => {
-    expect(tileSpans(130_000)).toEqual([
-      { startMs: 0, endMs: 60_000 },
-      { startMs: 60_000, endMs: 130_000 },
-    ]);
-  });
-
-  it('keeps a tail long enough to stand on its own', () => {
-    expect(tileSpans(145_000)).toEqual([
-      { startMs: 0, endMs: 60_000 },
-      { startMs: 60_000, endMs: 120_000 },
-      { startMs: 120_000, endMs: 145_000 },
+  it('reads a clip with no zooms as one quiet stretch', () => {
+    expect(zoomTileSpans([], 'clip-long', 130_000)).toEqual([
+      { startMs: 0, endMs: 130_000, kind: 'quiet' },
     ]);
   });
 });
@@ -219,8 +244,9 @@ describe('a tiled plan', () => {
   });
 
   // a zoom on one minute of a long take used to cost the rescale on all of
-  // it; now only the tile the zoom touches carries the chain
-  it('keeps the rescale chain off the quiet tiles', () => {
+  // it; now only the two ramps carry the chain, and the hold cuts its fixed
+  // window straight out of the source
+  it('leaves the per frame rescale to the ramps alone', () => {
     const zoomed = planFor(200_000, {
       zooms: [
         {
@@ -239,11 +265,16 @@ describe('a tiled plan', () => {
     const clipSteps = zoomed.steps.filter(({ label }) =>
       label.startsWith('clip'),
     );
-    const carries = clipSteps.map((step) =>
+    const moving = clipSteps.filter((step) =>
       step.args.join(' ').includes(',crop=1920:1080:'),
     );
-    expect(clipSteps.length).toBeGreaterThan(2);
-    expect(carries.filter(Boolean)).toHaveLength(1);
+    const still = clipSteps.filter((step) =>
+      step.args.join(' ').includes("crop=w='2*floor(in_w*0.500000/2)'"),
+    );
+    expect(clipSteps.length).toBeGreaterThan(4);
+    expect(moving).toHaveLength(2);
+    expect(still).toHaveLength(1);
+    expect(still[0]?.args.join(' ')).not.toContain('eval=frame');
   });
 
   it('lands a banner only on the tile it plays over', () => {

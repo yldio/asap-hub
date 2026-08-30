@@ -89,6 +89,41 @@ describe('zoomTileSpans', () => {
     ]);
   });
 
+  // a tile is cut with -ss/-to and re-timed by its own fps filter, so a seam
+  // inside a frame rounds two ways and costs or repeats that frame
+  it('lands every seam on a whole frame of the canvas', () => {
+    const spans = zoomTileSpans(
+      [
+        {
+          ...zoomOn(13_077, 5233),
+          rampInMs: 367,
+          rampOutMs: 367,
+        },
+      ],
+      'clip-long',
+      30_000,
+      60,
+    );
+
+    // a frame is 16.667ms and every document time is a whole millisecond, so
+    // a seam lands on the closest millisecond to its frame, never mid frame
+    const offFrameMs = (ms: number): number => {
+      const frames = (ms * 60) / 1000;
+      return Math.abs(frames - Math.round(frames)) * (1000 / 60);
+    };
+    expect(spans.length).toBeGreaterThan(1);
+    spans.forEach(({ startMs, endMs }) => {
+      expect(offFrameMs(startMs)).toBeLessThanOrEqual(0.5);
+      expect(endMs === 30_000 || offFrameMs(endMs) <= 0.5).toBe(true);
+    });
+    // the seams still meet, and the run still covers the whole clip
+    expect(spans[0]?.startMs).toBe(0);
+    expect(spans[spans.length - 1]?.endMs).toBe(30_000);
+    expect(spans.slice(1).map(({ startMs }) => startMs)).toEqual(
+      spans.slice(0, -1).map(({ endMs }) => endMs),
+    );
+  });
+
   it('reads a clip with no zooms as one quiet stretch', () => {
     expect(zoomTileSpans([], 'clip-long', 130_000)).toEqual([
       { startMs: 0, endMs: 130_000, kind: 'quiet' },

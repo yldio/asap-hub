@@ -68,7 +68,13 @@ export const buildRenderPlan = ({
   const joinPieces: typeof placements = [];
 
   placements.forEach((placement) => {
-    const tiles = tilePlacements(placement, index, takeIndex, zooms);
+    const tiles = tilePlacements(
+      placement,
+      index,
+      takeIndex,
+      zooms,
+      canvas.fps,
+    );
     const whole = tiles.length === 1;
     tiles.forEach((tile) => {
       const built = buildClipStep({

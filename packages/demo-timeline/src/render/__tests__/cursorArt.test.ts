@@ -33,26 +33,26 @@ describe('rippleSvg', () => {
         point: { x: 0.5, y: 0.5 },
         canvas: { width: 3840, height: 2160 },
       }),
-    ).toContain('r="173"');
+    ).toContain('r="381"');
   });
 });
 
 describe('rippleBox', () => {
-  // 188x188 of a 1920x1080 frame, which is 1.7% of the pixels the ring used to
-  // be composited over on every frame it is visible for
-  it('is the ring and its edge, aimed at the click point', () => {
+  // the box holds the animation's largest ring, still a fraction of the frame
+  // the full canvas composite used to cost on every visible frame
+  it('is the grown ring and its edge, aimed at the click point', () => {
     expect(rippleBox({ point: { x: 0.25, y: 0.75 }, canvas })).toEqual({
-      x: 386,
-      y: 716,
-      width: 188,
-      height: 188,
+      x: 273,
+      y: 603,
+      width: 414,
+      height: 414,
     });
   });
 
   it('lets the box run off the frame rather than pulling the ring in', () => {
     expect(rippleBox({ point: { x: 0, y: 0 }, canvas })).toMatchObject({
-      x: -94,
-      y: -94,
+      x: -207,
+      y: -207,
     });
   });
 });
@@ -76,10 +76,10 @@ describe('spotlightSvg', () => {
 describe('cursorArt', () => {
   it('carries the ripple box the overlay composites at', () => {
     expect(cursorArt(effect(), canvas)).toMatchObject({
-      x: 386,
-      y: 716,
-      width: 188,
-      height: 188,
+      x: 273,
+      y: 603,
+      width: 414,
+      height: 414,
     });
   });
 

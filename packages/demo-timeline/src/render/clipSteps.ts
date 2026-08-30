@@ -262,6 +262,15 @@ const cursorOverlays = (
                   spanEndMs: atMs + art.durationMs,
                   fadeInMs: art.fadeInMs,
                   fadeOutMs: art.fadeOutMs,
+                  ...(art.grow
+                    ? {
+                        grow: {
+                          ...art.grow,
+                          width: art.width,
+                          height: art.height,
+                        },
+                      }
+                    : {}),
                 },
                 ...(zoom ? { move: ringMove(placedAt, canvas, zoom) } : {}),
               },

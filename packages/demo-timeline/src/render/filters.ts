@@ -75,6 +75,15 @@ export type OverlayWindow = Fade & {
   endMs: number;
   spanStartMs?: number;
   spanEndMs?: number;
+  // the ring expands as it fades, exactly as the preview plays it: the art is
+  // drawn crisp at its largest and scaled down per frame, so every size is a
+  // downscale rather than a blow up
+  grow?: {
+    durationMs: number;
+    fromScale: number;
+    width: number;
+    height: number;
+  };
 };
 
 // a signed distance in pixels: the offset the overlay travels from and back to
@@ -132,6 +141,32 @@ const fadeRampsOf = (visible: OverlayWindow): FadeRamp[] => {
 export const overlayPreRollMs = (visible: OverlayWindow): number =>
   Math.max(0, ...fadeRampsOf(visible).map((ramp) => -ramp.fromMs));
 
+const growExpression = (visible: OverlayWindow): string | undefined => {
+  const { grow } = visible;
+  if (!grow) {
+    return undefined;
+  }
+  const fromMs =
+    (visible.spanStartMs ?? visible.startMs) + overlayPreRollMs(visible);
+  const progress = `clip(${sinceExpression(fromMs)}/${secondsFromMs(
+    grow.durationMs,
+  )},0,1)`;
+  // the preview's css ease-out, near enough: fast out of the click, easing in
+  // to full size
+  return `${grow.fromScale.toFixed(4)}+${(1 - grow.fromScale).toFixed(
+    4,
+  )}*(1-pow(1-${progress},2))`;
+};
+
+export const overlayGrowFilters = (visible: OverlayWindow): string[] => {
+  const factor = growExpression(visible);
+  return factor
+    ? [
+        `scale=w='ceil(iw*(${factor}))':h='ceil(ih*(${factor}))':eval=frame:flags=lanczos`,
+      ]
+    : [];
+};
+
 const overlayFadeFilters = (visible: OverlayWindow): string[] => {
   const ramps = fadeRampsOf(visible);
   const preRollMs = overlayPreRollMs(visible);
@@ -152,14 +187,21 @@ const overlayFadeFilters = (visible: OverlayWindow): string[] => {
 // happens here, once, with the matrix said out loud: left to the overlay's
 // auto scaler it used bt601 and shifted every drawn colour, and it subsampled
 // the art's chroma to 2x2 blocks on the way.
+// eval=frame so the pass-through size follows a growing overlay per frame:
+// left at init it froze every later frame to the first frame's dimensions
 const overlayColourFilters = [
-  'scale=flags=accurate_rnd:out_color_matrix=bt709',
+  'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
   'format=yuva444p',
 ];
 
 export const overlayInputFilters = (visible?: OverlayWindow): string[] =>
   visible
-    ? ['format=rgba', ...overlayFadeFilters(visible), ...overlayColourFilters]
+    ? [
+        'format=rgba',
+        ...overlayGrowFilters(visible),
+        ...overlayFadeFilters(visible),
+        ...overlayColourFilters,
+      ]
     : ['format=rgba', ...overlayColourFilters];
 
 // the preset draws itself at the right place on a canvas sized PNG, so the
@@ -188,8 +230,17 @@ const overlayPosition = (
   move: OverlayMove | undefined,
   { x, y }: OverlayOrigin,
 ): string => {
+  // a growing overlay stays centred on the click while its frame changes size
+  const { grow } = visible;
+  const atX = grow ? `${x}+(${grow.width}-w)/2` : undefined;
+  const atY = grow ? `${y}+(${grow.height}-h)/2` : undefined;
   if (move) {
-    return `x='${shifted(x, move.x)}':y='${shifted(y, move.y)}'`;
+    return atX && atY
+      ? `x='${atX}+(${move.x})':y='${atY}+(${move.y})'`
+      : `x='${shifted(x, move.x)}':y='${shifted(y, move.y)}'`;
+  }
+  if (atX && atY) {
+    return `x='${atX}':y='${atY}'`;
   }
   const ramps = overlayFadeRamps(visible);
   return slide && ramps.inMs > 0 && ramps.outMs > 0

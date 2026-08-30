@@ -115,7 +115,7 @@ describe('overlay filters', () => {
       'format=rgba',
       'fade=t=in:st=2.000:d=0.300:alpha=1',
       'fade=t=out:st=6.700:d=0.300:alpha=1',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -125,7 +125,7 @@ describe('overlay filters', () => {
       'format=rgba',
       'fade=t=in:st=0.000:d=0.200:alpha=1',
       'fade=t=out:st=0.200:d=0.200:alpha=1',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -133,7 +133,7 @@ describe('overlay filters', () => {
   it('does not fade an overlay with no visible window at all', () => {
     expect(overlayInputFilters({ startMs: 5000, endMs: 5000 })).toEqual([
       'format=rgba',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -141,7 +141,7 @@ describe('overlay filters', () => {
   it('does not fade an untimed overlay such as a title card', () => {
     expect(overlayInputFilters()).toEqual([
       'format=rgba',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -159,7 +159,7 @@ describe('overlay filters', () => {
     ).toEqual([
       'format=rgba',
       'fade=t=in:st=2.000:d=0.300:alpha=1',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -175,7 +175,7 @@ describe('overlay filters', () => {
     ).toEqual([
       'format=rgba',
       'fade=t=out:st=1.700:d=0.300:alpha=1',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -195,7 +195,7 @@ describe('overlay filters', () => {
     ).toEqual([
       'format=rgba',
       'fade=t=out:st=1.800:d=0.600:alpha=1',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -217,7 +217,7 @@ describe('overlay filters', () => {
       'fade=t=out:st=0.000:d=0.600:alpha=1',
       'trim=start=0.200',
       'setpts=PTS-STARTPTS',
-      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709:eval=frame',
       'format=yuva444p',
     ]);
   });
@@ -330,6 +330,38 @@ describe('xfadeTransition', () => {
   it('maps a slide to slideleft', () => {
     expect(xfadeTransition({ type: 'slide', durationMs: 500 })).toBe(
       'slideleft',
+    );
+  });
+});
+
+// the exported ring used to sit still and fade while the preview's expanded:
+// the art is drawn crisp at its largest and scaled down per frame, so every
+// size of the animation is a downscale
+describe('a growing overlay', () => {
+  const growing = {
+    startMs: 800,
+    endMs: 1400,
+    spanStartMs: 800,
+    spanEndMs: 1400,
+    fadeInMs: 0,
+    fadeOutMs: 600,
+    grow: { durationMs: 600, fromScale: 0.1818, width: 414, height: 414 },
+  };
+
+  it('scales the art per frame from the click outward', () => {
+    const filters = overlayInputFilters(growing).join(',');
+
+    expect(filters).toContain(
+      "scale=w='ceil(iw*(0.1818+0.8182*(1-pow(1-clip((t-0.800)/0.600,0,1),2))))'",
+    );
+    expect(filters).toContain('eval=frame:flags=lanczos');
+  });
+
+  it('stays centred on the click while its frame changes size', () => {
+    expect(
+      overlayFilter(growing, undefined, undefined, { x: 273, y: 603 }),
+    ).toBe(
+      "overlay=x='273+(414-w)/2':y='603+(414-h)/2':format=yuv444:enable='between(t,0.800,1.400)'",
     );
   });
 });

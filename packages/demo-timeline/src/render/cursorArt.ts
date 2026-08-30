@@ -10,6 +10,11 @@ export const spotlightDurationMs = 1200;
 // burnt into the picture, so the render ramps it
 export const spotlightFadeMs = 200;
 
+// the ring expands from a spot to over twice its size as it fades, the same
+// travel the preview's css animation makes
+export const rippleFromScale = 0.4;
+export const rippleToScale = 2.2;
+
 export type CursorArtInput = {
   point: Point;
   canvas: PresetCanvas;
@@ -47,7 +52,11 @@ const rippleStroke = (canvas: PresetCanvas): number =>
 // 49.0s of ffmpeg. This is the box it actually covers, one stroke out for the
 // dark edge and half of one again because a stroke straddles its own path.
 export const rippleBox = ({ point, canvas }: CursorArtInput): ArtBox => {
-  const reach = rippleRadius(canvas) + rippleStroke(canvas) * 2;
+  // drawn crisp at the animation's largest size and scaled DOWN per frame, so
+  // every size of the ring is a downscale rather than a blow up
+  const reach = Math.ceil(
+    (rippleRadius(canvas) + rippleStroke(canvas) * 2) * rippleToScale,
+  );
   return {
     x: Math.round(point.x * canvas.width) - reach,
     y: Math.round(point.y * canvas.height) - reach,
@@ -57,8 +66,11 @@ export const rippleBox = ({ point, canvas }: CursorArtInput): ArtBox => {
 };
 
 export const rippleSvg = ({ point, canvas, color }: CursorArtInput): string => {
-  const radius = rippleRadius(canvas);
-  const strokeWidth = rippleStroke(canvas);
+  const radius = Math.round(rippleRadius(canvas) * rippleToScale);
+  const strokeWidth = Math.max(
+    1,
+    Math.round(rippleStroke(canvas) * rippleToScale),
+  );
   const ink = resolveCursorColor(color);
   const box = rippleBox({ point, canvas });
   const centre = box.width / 2;
@@ -105,6 +117,7 @@ export type CursorArt = ArtBox & {
   durationMs: number;
   fadeInMs: number;
   fadeOutMs: number;
+  grow?: { durationMs: number; fromScale: number };
 };
 
 // the zoom effect is a marker the editor materialises into a Zoom of its own,
@@ -115,14 +128,17 @@ export const cursorArt = (
 ): CursorArt | undefined => {
   const input = { point: effect.point, canvas, color: effect.color };
   if (effect.type === 'ripple') {
-    // the preview's ring expands as it fades; the render holds the ring still
-    // and decays it over the same window
+    // the ring expands as it fades, the very animation the preview plays
     return {
       svg: rippleSvg(input),
       ...rippleBox(input),
       durationMs: rippleDurationMs,
       fadeInMs: 0,
       fadeOutMs: rippleDurationMs,
+      grow: {
+        durationMs: rippleDurationMs,
+        fromScale: rippleFromScale / rippleToScale,
+      },
     };
   }
   return effect.type === 'spotlight'

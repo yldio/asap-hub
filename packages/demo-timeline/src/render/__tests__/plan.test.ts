@@ -457,9 +457,11 @@ describe('buildRenderPlan', () => {
     // each one on a canvas sized image took 49.0s, and drawing it at its own
     // 188x188 box takes 6.3s. The click still lands at 480,810 on the canvas.
     it('draws the ripple at its own box, aimed at the click point', () => {
-      expect(plan.svgs[0]).toMatchObject({ width: 188, height: 188 });
-      expect(plan.svgs[0]?.svg).toContain('<circle cx="94" cy="94"');
-      expect(plan.steps[0]?.args.join(' ')).toContain('overlay=386:716');
+      expect(plan.svgs[0]).toMatchObject({ width: 414, height: 414 });
+      expect(plan.svgs[0]?.svg).toContain('<circle cx="207" cy="207"');
+      expect(plan.steps[0]?.args.join(' ')).toContain(
+        "overlay=x='273+(414-w)/2':y='603+(414-h)/2'",
+      );
     });
 
     it('holds a spotlight longer than a ripple', () => {
@@ -688,12 +690,16 @@ describe('buildRenderPlan', () => {
     // the pointer clicking it had already followed the picture
     it('carries the click ring through the same window as the picture', () => {
       // the ring's own box moves with it, from the corner it was drawn at
-      expect(args).toContain("overlay=x='386+((((480)-(");
+      expect(args).toContain("overlay=x='273+(414-w)/2+((((480)-(");
       expect(args).toContain(')*1920)*(1+1.000*if(between(t,');
     });
 
     it('carries the pointer through it too, on the same clock', () => {
-      expect(args.match(/overlay=x='[0-9+]*\(\(/g)).toHaveLength(2);
+      // the walked pointer's x opens with its own ramp sum, carried through
+      // the same zoom window expression the ring rides
+      expect(
+        args.match(/-\(clip\(0\.2500\*\(1-1\//g)?.length,
+      ).toBeGreaterThanOrEqual(2);
     });
 
     it('leaves the ring where it was drawn when nothing is zooming', () => {
@@ -702,7 +708,7 @@ describe('buildRenderPlan', () => {
           clips: [source()],
           cursor: [cursorLayer()],
         }).steps[0]?.args.join(' '),
-      ).toContain('overlay=386:716');
+      ).toContain("overlay=x='273+(414-w)/2':y='603+(414-h)/2'");
     });
 
     // moving a full frame scrim would uncover the very edge it is darkening
@@ -855,7 +861,8 @@ it('moves an export ring by the layer trim', () => {
         clips: [source()],
         cursor: [cursorLayer(align)],
       }).steps[0]?.args.join(' ') ?? '';
-    const match = /overlay=(\d+):(\d+):format/.exec(args);
+    const match =
+      /overlay=x='(-?\d+)\+\(414-w\)\/2':y='(-?\d+)\+\(414-h\)\/2'/.exec(args);
     return match ? { x: Number(match[1]), y: Number(match[2]) } : undefined;
   };
 

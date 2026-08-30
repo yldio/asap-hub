@@ -83,6 +83,13 @@ const windowAt = (zooms: Zoom[], tMs: number): StillWindow => {
   };
 };
 
+export const sameWindow = (a?: StillWindow, b?: StillWindow): boolean =>
+  a !== undefined &&
+  b !== undefined &&
+  a.scale === b.scale &&
+  a.cropX === b.cropX &&
+  a.cropY === b.cropY;
+
 const phaseIn = (zoom: Zoom, fromMs: number, toMs: number): ZoomSpanKind => {
   const holdStartMs = zoom.startMs + zoom.rampInMs;
   const holdEndMs = holdStartMs + zoom.holdMs;
@@ -125,25 +132,33 @@ export const zoomSpans = (zooms: Zoom[], durationMs: number): ZoomSpan[] => {
         : phases.includes('still')
           ? 'still'
           : 'quiet';
-    classified.push({ startMs, endMs, kind });
+    // the window is read here, while the stretch still speaks for one set of
+    // holds: a zoom with no ramp at all begins and ends mid stretch, so two
+    // held stretches can touch with different windows either side
+    classified.push({
+      startMs,
+      endMs,
+      kind,
+      ...(kind === 'still'
+        ? { window: windowAt(zooms, (startMs + endMs) / 2) }
+        : {}),
+    });
   }
 
-  // neighbours of one kind read as one stretch; a still pair can only touch
-  // through an edge both sides hold through, where the window is the same
-  const merged = classified.reduce<ZoomSpan[]>((spans, span) => {
+  // neighbours of one kind read as one stretch, and two held ones only when
+  // they hold the very same window
+  return classified.reduce<ZoomSpan[]>((spans, span) => {
     const last = spans[spans.length - 1];
-    if (last && last.kind === span.kind) {
+    if (
+      last &&
+      last.kind === span.kind &&
+      (span.kind !== 'still' || sameWindow(last.window, span.window))
+    ) {
       last.endMs = span.endMs;
       return spans;
     }
     return [...spans, { ...span }];
   }, []);
-
-  return merged.map((span) =>
-    span.kind === 'still'
-      ? { ...span, window: windowAt(zooms, (span.startMs + span.endMs) / 2) }
-      : span,
-  );
 };
 
 const frac = (value: number): string => value.toFixed(6);

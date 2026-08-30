@@ -6,13 +6,15 @@ import { filterSegment, graph, label } from './filters';
 import { concatListContent } from './joinStep';
 import { clipOutputPath, tileListPath } from './paths';
 import { ConcatListFile, FfmpegStep, RenderAsset } from './types';
-import { StillWindow, ZoomSpan, zoomSpans } from './zoomSegments';
+import { sameWindow, StillWindow, ZoomSpan, zoomSpans } from './zoomSegments';
 
 // One clip is one ffmpeg process, so a single long take used to hold the whole
 // pool hostage: fifty minutes of demo encoded one core-group at a time. Past
 // this length a clip is cut into tiles, each encoded in the pool like a clip of
 // its own, and stitched back with the same sample accurate join the programme
-// itself uses. The seams land on whole seconds, which every canvas rate divides.
+// itself uses. Every seam lands on a whole frame of the canvas: a tile is cut
+// with -ss/-to and re-timed by its own fps filter, so a boundary inside a
+// frame would round two ways and cost or repeat that frame at the seam.
 export const tileThresholdMs = 90_000;
 export const tileTargetMs = 60_000;
 // a stub shorter than this rides with the tile before it instead
@@ -78,13 +80,6 @@ const grownMoving = (spans: ZoomSpan[]): ZoomSpan[] => {
   return out.filter((span) => lengthMs(span) > 0);
 };
 
-const sameWindow = (a?: StillWindow, b?: StillWindow): boolean =>
-  a !== undefined &&
-  b !== undefined &&
-  a.scale === b.scale &&
-  a.cropX === b.cropX &&
-  a.cropY === b.cropY;
-
 const mergedSpan = (a: ZoomSpan, b: ZoomSpan): ZoomSpan => {
   const alike =
     a.kind === b.kind && (a.kind !== 'still' || sameWindow(a.window, b.window));
@@ -144,15 +139,47 @@ const joined = (spans: ZoomSpan[]): ZoomSpan[] =>
     return [...out, { ...span }];
   }, []);
 
+// a boundary inside a frame is a boundary two ffmpeg runs round differently;
+// every seam is pulled back to the frame that contains it, and a stretch left
+// with no frames at all disappears into its neighbour
+const onFrames = (
+  spans: ZoomSpan[],
+  durationMs: number,
+  fps?: number,
+): ZoomSpan[] => {
+  if (!fps) {
+    return spans;
+  }
+  const frameMs = 1000 / fps;
+  const snap = (ms: number): number =>
+    Math.min(durationMs, Math.round(Math.round(ms / frameMs) * frameMs));
+  return spans
+    .map((span) => ({
+      ...span,
+      startMs: span.startMs === 0 ? 0 : snap(span.startMs),
+      endMs: span.endMs >= durationMs ? durationMs : snap(span.endMs),
+    }))
+    .filter((span) => span.endMs > span.startMs)
+    .map((span, at, all) => {
+      const before = all[at - 1];
+      return before ? { ...span, startMs: before.endMs } : span;
+    });
+};
+
 // the run of quiet, still and moving stretches a clip's zooms make of it,
 // each long enough to stand as a tile
 export const zoomTileSpans = (
   zooms: Zoom[],
   clipId: string,
   durationMs: number,
+  fps?: number,
 ): ZoomSpan[] =>
-  joined(
-    absorbed(grownMoving(zoomSpans(clipZooms(zooms, clipId), durationMs))),
+  onFrames(
+    joined(
+      absorbed(grownMoving(zoomSpans(clipZooms(zooms, clipId), durationMs))),
+    ),
+    durationMs,
+    fps,
   );
 
 export type TileSpan = { startMs: number; endMs: number };
@@ -193,6 +220,7 @@ export const tilePlacements = (
   assets: Map<string, RenderAsset>,
   indexOf: () => number,
   zooms: Zoom[] = [],
+  fps?: number,
 ): ClipTile[] => {
   const { clip } = placement;
   const footageMs =
@@ -208,7 +236,7 @@ export const tilePlacements = (
         )
       : placement.durationMs;
   const states =
-    clip.kind === 'source' ? zoomTileSpans(zooms, clip.id, boundMs) : [];
+    clip.kind === 'source' ? zoomTileSpans(zooms, clip.id, boundMs, fps) : [];
 
   const only = states.length === 1 ? states[0] : undefined;
   const whole: ClipTile[] = [

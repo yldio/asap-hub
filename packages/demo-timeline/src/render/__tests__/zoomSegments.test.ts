@@ -68,6 +68,46 @@ describe('zoomSpans', () => {
     ).toBe('moving');
   });
 
+  // a zoom with no ramps begins and ends mid stretch, so two held stretches
+  // can touch with different windows; merging them by kind alone rendered
+  // one of them through the other's window
+  it('never merges two holds that hold different windows', () => {
+    const spans = zoomSpans(
+      [
+        zoom({
+          rampInMs: 0,
+          rampOutMs: 0,
+          startMs: 0,
+          holdMs: 10_000,
+          scale: 1.5,
+          focus: { x: 0.2, y: 0.2 },
+        }),
+        zoom({
+          id: 'z2',
+          rampInMs: 0,
+          rampOutMs: 0,
+          startMs: 3000,
+          holdMs: 3000,
+          scale: 2,
+          focus: { x: 0.8, y: 0.8 },
+        }),
+      ],
+      10_000,
+    );
+
+    expect(
+      spans.map(({ startMs, endMs, kind }) => [startMs, endMs, kind]),
+    ).toEqual([
+      [0, 3000, 'still'],
+      [3000, 6000, 'still'],
+      [6000, 10_000, 'still'],
+    ]);
+    expect(spans[0]?.window?.scale).toBe(1.5);
+    expect(spans[1]?.window?.scale).toBe(2.5);
+    expect(spans[2]?.window?.scale).toBe(1.5);
+    expect(spans[0]?.window).toEqual(spans[2]?.window);
+  });
+
   it('speaks whole-clip stillness when the ramps are zero', () => {
     const spans = zoomSpans(
       [zoom({ startMs: 0, rampInMs: 0, rampOutMs: 0, holdMs: 12_000 })],

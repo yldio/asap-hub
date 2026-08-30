@@ -30,6 +30,10 @@ export type TimelineAction =
       // itself; it seeds the clip's cursor layer so a capture applied later,
       // even in another session, is read against the right moment
       recordedAtEpochMs?: number;
+      // how long that take ran, measured by the recorder: the asset itself has
+      // no duration until the ingest probes it, and a clip trimmed before then
+      // would otherwise cut the capture window to the trim
+      recordedDurationMs?: number;
     }
   | { type: 'removeClip'; clipId: string }
   | { type: 'moveClip'; clipId: string; toIndex: number }
@@ -232,7 +236,7 @@ export const timelineReducer = (
           action.index ?? timeline.clips.length,
         ),
       );
-      const { recordedAtEpochMs } = action;
+      const { recordedAtEpochMs, recordedDurationMs } = action;
       if (recordedAtEpochMs === undefined || recordedAtEpochMs <= 0) {
         return added;
       }
@@ -241,6 +245,9 @@ export const timelineReducer = (
         cursor: withCursorLayer(added, action.clipId, (layer) => ({
           ...layer,
           recordedAtEpochMs: Math.round(recordedAtEpochMs),
+          ...(recordedDurationMs && recordedDurationMs > 0
+            ? { recordedDurationMs: Math.round(recordedDurationMs) }
+            : {}),
         })),
       };
     }

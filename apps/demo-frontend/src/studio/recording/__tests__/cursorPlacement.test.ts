@@ -153,3 +153,31 @@ describe('captureTargets', () => {
     expect(request(timeline(), 1000)?.stoppedAtEpochMs).toBe(100000);
   });
 });
+
+// a fresh webm reports no duration for about a minute, so a clip trimmed
+// before the ingest landed used to cut the capture window to the trim and
+// lose every event after it
+it('keeps the whole take window from the recorder before the asset is probed', () => {
+  const document = timeline();
+  const trimmed = {
+    ...document,
+    clips: document.clips.map((clip) =>
+      clip.id === 'clip-b' && clip.kind === 'source'
+        ? { ...clip, outMs: 4000 }
+        : clip,
+    ),
+    cursor: document.cursor.map((layer) => ({
+      ...layer,
+      recordedDurationMs: 90000,
+    })),
+  };
+
+  const [target] = captureTargets(trimmed, undefined, 100000, () => undefined)
+    ?.targets ?? [];
+
+  expect(target).toMatchObject({
+    clipId: 'clip-b',
+    startedAtEpochMs: takeOneStart,
+    durationMs: 90000,
+  });
+});

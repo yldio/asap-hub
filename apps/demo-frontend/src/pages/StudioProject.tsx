@@ -357,6 +357,7 @@ const Editor: FC<EditorProps> = ({
         durationMs: recorded.durationMs ?? durationMs,
         clipId,
         recordedAtEpochMs: startedAtEpochMs,
+        recordedDurationMs: durationMs,
       });
       if (narration) {
         editor.dispatch({

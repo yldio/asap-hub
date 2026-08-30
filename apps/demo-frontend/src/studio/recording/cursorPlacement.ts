@@ -74,13 +74,19 @@ export const captureTargets = (
     if (clip.kind !== 'source') {
       return [];
     }
-    const startedAtEpochMs = layerOf(timeline, clip.id)?.recordedAtEpochMs;
+    const layer = layerOf(timeline, clip.id);
+    const startedAtEpochMs = layer?.recordedAtEpochMs;
     if (!startedAtEpochMs) {
       return [];
     }
     // the take filmed the whole source, so the window is the footage's own
-    // length even when the clip has since been trimmed
-    const durationMs = Math.max(assetDurationOf(clip.assetId) ?? 0, clip.outMs);
+    // length even when the clip has since been trimmed; the recorder's own
+    // measure covers the minute before the ingest has probed the asset
+    const durationMs = Math.max(
+      layer?.recordedDurationMs ?? 0,
+      assetDurationOf(clip.assetId) ?? 0,
+      clip.outMs,
+    );
     return [targetOf(timeline, clip.id, { startedAtEpochMs, durationMs })];
   });
 

@@ -171,6 +171,12 @@ export const cursorLayerSchema = z.object({
   // exactly that delay. Absent on an imported clip and on anything recorded
   // before this was kept, and then the first event is the origin again.
   recordedAtEpochMs: z.number().int().positive().optional(),
+  // How long the take in this clip ran, which the recorder knows the moment it
+  // stops. A fresh webm has no duration the browser will report for about a
+  // minute, so a clip trimmed down before then had nothing left saying how much
+  // footage there was, and a capture applied in that window was cut to the trim
+  // and lost everything after it.
+  recordedDurationMs: z.number().int().positive().optional(),
 });
 
 export const canvasSchema = z.object({

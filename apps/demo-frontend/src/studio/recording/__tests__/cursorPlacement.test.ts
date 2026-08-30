@@ -172,8 +172,8 @@ it('keeps the whole take window from the recorder before the asset is probed', (
     })),
   };
 
-  const [target] = captureTargets(trimmed, undefined, 100000, () => undefined)
-    ?.targets ?? [];
+  const [target] =
+    captureTargets(trimmed, undefined, 100000, () => undefined)?.targets ?? [];
 
   expect(target).toMatchObject({
     clipId: 'clip-b',

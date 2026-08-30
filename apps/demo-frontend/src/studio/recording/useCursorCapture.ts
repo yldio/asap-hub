@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useState } from 'react';
 import { useApi } from '../../api/ApiProvider';
+import { ApiError } from '../../api/client';
 import { RecordingSession, RecordingSessionStatus } from '../../api/types';
 import {
   CaptureApplied,
@@ -114,10 +115,16 @@ export const useCursorCapture = (
     if (!session) {
       return undefined;
     }
+    // a poll for the old session can land after the session changed, and its
+    // stale closed state on a fresh session set off another needless reopen
+    let cancelled = false;
     const poll = () => {
       api
         .captureStatus(projectId, session.sessionId)
         .then((next) => {
+          if (cancelled) {
+            return;
+          }
           setStatus(next);
           // a restored session the server has since let go would leave a dead
           // panel, so it is dropped and the creator can start another
@@ -126,6 +133,9 @@ export const useCursorCapture = (
           }
         })
         .catch(() => {
+          if (cancelled) {
+            return;
+          }
           rememberSession(projectId, undefined);
           setSession(undefined);
           setStatus(undefined);
@@ -133,7 +143,10 @@ export const useCursorCapture = (
     };
     poll();
     const handle = setInterval(poll, pollMs);
-    return () => clearInterval(handle);
+    return () => {
+      cancelled = true;
+      clearInterval(handle);
+    };
   }, [api, projectId, session]);
 
   // one session collects every take made before the creator applies, so the
@@ -179,14 +192,27 @@ export const useCursorCapture = (
         const takeStarts = request.targets.flatMap((target) =>
           target.startedAtEpochMs ? [target.startedAtEpochMs] : [],
         );
-        await api
-          .finaliseCapture(projectId, session.sessionId, {
+        try {
+          await api.finaliseCapture(projectId, session.sessionId, {
             ...(takeStarts.length
               ? { startedAtEpochMs: Math.min(...takeStarts) }
               : {}),
             stoppedAtEpochMs: request.stoppedAtEpochMs,
-          })
-          .catch(() => undefined);
+          });
+        } catch (cause) {
+          // an earlier apply already closed it, which is fine; anything else
+          // leaves the session open on the server with every event intact, so
+          // it must NOT be marked closed here: that would let the auto reopen
+          // replace it and strand the whole take
+          const closedBefore =
+            cause instanceof ApiError && cause.code === 'already_finalised';
+          if (!closedBefore) {
+            setError(
+              'Could not close the capture. Nothing is lost, try Add cursor effects again.',
+            );
+            return undefined;
+          }
+        }
         // finalising closed the session, whether just now or on an earlier
         // apply; saying so at once is what lets the next recording open a
         // fresh one without waiting on the poll

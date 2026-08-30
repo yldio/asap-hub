@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 import { CaptureSurface, CursorEffect } from '@asap-hub/demo-timeline';
 import { TestApiProvider } from '../../../api/ApiProvider';
+import { ApiError } from '../../../api/client';
 import type { Api } from '../../../api/client';
 import { AuthContext, AuthState } from '../../../auth/AuthProvider';
 import { authenticatedState } from '../../../test-utils';
@@ -480,5 +481,58 @@ describe('the session after an apply', () => {
     await act(async () => rendered.result.current.ensureOpen());
 
     expect(startCapture).not.toHaveBeenCalled();
+  });
+});
+
+// the finalise used to be swallowed and the session declared closed anyway,
+// which let the auto reopen replace the still-open server session and strand
+// every captured event behind an id nothing pointed at any more
+describe('a finalise that does not land', () => {
+  it('keeps the session and says to try again', async () => {
+    const captureEvents = jest.fn();
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockRejectedValue(new Error('offline')),
+      captureEvents,
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    const results = await act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: 2000,
+        frame: { width: 1920, height: 1080 },
+        targets: [{ clipId: 'clip-1', existing: [] }],
+      }),
+    );
+
+    expect(results).toBeUndefined();
+    expect(captureEvents).not.toHaveBeenCalled();
+    expect(view.result.current.status?.state).toBe('open');
+    expect(view.result.current.error).toMatch(/nothing is lost/i);
+  });
+
+  it('treats an already closed session as closed, not as a failure', async () => {
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest
+        .fn()
+        .mockRejectedValue(new ApiError(409, 'closed', 'already_finalised')),
+      captureEvents: jest.fn().mockResolvedValue(''),
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    await act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: 2000,
+        frame: { width: 1920, height: 1080 },
+        targets: [{ clipId: 'clip-1', existing: [] }],
+      }),
+    );
+
+    expect(view.result.current.status?.state).toBe('closed');
   });
 });

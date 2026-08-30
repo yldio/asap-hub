@@ -322,6 +322,9 @@ const aws = (
 const s3 = (env: RenderEnv, args: string[]): Promise<string> =>
   aws(env.s3Endpoint, ['s3', ...args]);
 
+const s3api = (env: RenderEnv, args: string[]): Promise<string> =>
+  aws(env.s3Endpoint, ['s3api', ...args]);
+
 const dynamodb = (env: RenderEnv, args: string[]): Promise<string> =>
   aws(env.dynamodbEndpoint, ['dynamodb', ...args]);
 
@@ -331,13 +334,55 @@ const objectUri = (env: RenderEnv, key: string): string =>
 const download = (env: RenderEnv, key: string, path: string): Promise<string> =>
   s3(env, ['cp', objectUri(env, key), path]);
 
-const upload = (
+// the same lifecycle the timeline snapshot is written under, so the bucket's
+// own rule clears anything a cancelled render managed to write
+export const renderTagging = 'TagSet=[{Key=lifecycle,Value=render}]';
+
+export const tagObjectArgs = (env: RenderEnv, key: string): string[] => [
+  'put-object-tagging',
+  '--bucket',
+  env.bucket,
+  '--key',
+  key,
+  '--tagging',
+  renderTagging,
+];
+
+export const untagObjectArgs = (env: RenderEnv, key: string): string[] => [
+  'delete-object-tagging',
+  '--bucket',
+  env.bucket,
+  '--key',
+  key,
+];
+
+// `aws s3 cp` carries no tagging option, so the tag follows the object rather
+// than travelling with it; the gap is one request wide
+const upload = async (
   env: RenderEnv,
   path: string,
   key: string,
   contentType: string,
-): Promise<string> =>
-  s3(env, ['cp', path, objectUri(env, key), '--content-type', contentType]);
+): Promise<void> => {
+  await s3(env, [
+    'cp',
+    path,
+    objectUri(env, key),
+    '--content-type',
+    contentType,
+  ]);
+  await s3api(env, tagObjectArgs(env, key));
+};
+
+// The published media must not keep that tag: the rule filters on the tag alone,
+// with no prefix, so a demo still carrying it would be deleted thirty days
+// later. It is stripped before the row accepts the render, which leaves a
+// failure here on the safe side, with the media still set to age out.
+const releaseMedia = async (env: RenderEnv, keys: string[]): Promise<void> => {
+  for (const key of keys) {
+    await s3api(env, untagObjectArgs(env, key));
+  }
+};
 
 const videoKeyJson = (env: RenderEnv): string =>
   JSON.stringify({ PK: { S: `VIDEO#${env.videoId}` }, SK: { S: 'META' } });
@@ -389,6 +434,33 @@ const updateVideo = (
   values: Record<string, AttributeValue>,
 ): Promise<string> =>
   dynamodb(env, videoUpdateArgs(env, expression, names, values));
+
+export const conditionFailed = (error: unknown): boolean =>
+  truncateError(error).includes('ConditionalCheckFailedException');
+
+// The media set runs to tens of megabytes and used to be written before anything
+// asked the row about it, so a cancelled task left permanent orphans in the
+// bucket. This is a marker write on the same condition every other write makes:
+// it only passes while the row still names this render and is still waiting on
+// it, so nothing is uploaded for a run nobody wants.
+export const claimUploadArgs = (env: RenderEnv): string[] =>
+  videoUpdateArgs(
+    env,
+    'SET #render.#stage = :stage',
+    { '#stage': 'stage' },
+    { ':stage': { S: 'upload' } },
+  );
+
+const claimUpload = async (env: RenderEnv): Promise<void> => {
+  try {
+    await dynamodb(env, claimUploadArgs(env));
+  } catch (error) {
+    if (!conditionFailed(error)) {
+      throw error;
+    }
+    throw new Error('the render was cancelled or superseded before its upload');
+  }
+};
 
 const queryAssetRows = async (env: RenderEnv): Promise<AssetRow[]> => {
   const response = await dynamodb(env, [
@@ -613,17 +685,27 @@ const finishMedia = async (
   );
 
   const prefix = `media/${env.videoId}/${env.mediaPath}`;
+  await claimUpload(env);
   report('upload', finishProgress(0.6));
+
+  const written = [
+    `${prefix}/stream.mp4`,
+    `${prefix}/sprite.jpg`,
+    `${prefix}/thumbnails.vtt`,
+  ];
   await upload(env, streamFile, `${prefix}/stream.mp4`, 'video/mp4');
   await upload(env, spriteFile, `${prefix}/sprite.jpg`, 'image/jpeg');
   await upload(env, vttFile, `${prefix}/thumbnails.vtt`, 'text/vtt');
   if (poster) {
-    await upload(env, thumbFile, `${prefix}/thumb.jpg`, 'image/jpeg').catch(
+    await upload(env, thumbFile, `${prefix}/thumb.jpg`, 'image/jpeg').then(
+      () => written.push(`${prefix}/thumb.jpg`),
       (error: unknown) => {
         log(`WARN could not upload thumb.jpg: ${truncateError(error)}`);
       },
     );
   }
+
+  await releaseMedia(env, written);
 
   return durationMs;
 };

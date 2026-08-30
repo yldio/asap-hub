@@ -8,6 +8,8 @@ import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import {
   AssetRow,
+  claimUploadArgs,
+  conditionFailed,
   finishProgress,
   formatTimestamp,
   inPool,
@@ -15,6 +17,9 @@ import {
   parseProgressMs,
   parseRenderEnv,
   renderProgress,
+  renderTagging,
+  tagObjectArgs,
+  untagObjectArgs,
   spriteGrid,
   svgSourcePath,
   thumbnailsVtt,
@@ -961,5 +966,69 @@ describe('the rasteriser pool', () => {
         }
       }),
     ).rejects.toThrow('no such file');
+  });
+});
+
+/* a cancelled render leaving nothing behind */
+
+describe('the media a render uploads', () => {
+  const env = parseRenderEnv({
+    VIDEO_ID: 'video-1',
+    RENDER_ID: 'render-1',
+    TIMELINE_KEY: 'projects/video-1/renders/render-1/timeline.json',
+    MEDIA_PATH: 'render-1',
+    BUCKET_NAME: 'demo-hub-storage',
+    TABLE_NAME: 'demo-hub-data',
+  });
+
+  // the media set runs to tens of megabytes, and it used to be written before
+  // anything asked the row whether the render was still wanted
+  it('claims the row on the same condition every other write makes', () => {
+    const args = claimUploadArgs(env);
+
+    expect(args.join(' ')).toContain(
+      '#render.#renderId = :renderId AND #render.#state IN (:queued, :rendering)',
+    );
+    expect(args.join(' ')).toContain('SET #render.#stage = :stage');
+    expect(args.join(' ')).toContain('"#stage":"stage"');
+    expect(args.join(' ')).toContain('":renderId":{"S":"render-1"}');
+  });
+
+  it('reads a lost condition apart from a write that simply failed', () => {
+    expect(
+      conditionFailed(
+        new Error(
+          'aws exited 254: An error occurred (ConditionalCheckFailedException) when calling the UpdateItem operation',
+        ),
+      ),
+    ).toBe(true);
+    expect(conditionFailed(new Error('aws exited 1: Connection refused'))).toBe(
+      false,
+    );
+  });
+
+  it('tags each object with the lifecycle the timeline snapshot carries', () => {
+    expect(tagObjectArgs(env, 'media/video-1/render-1/stream.mp4')).toEqual([
+      'put-object-tagging',
+      '--bucket',
+      'demo-hub-storage',
+      '--key',
+      'media/video-1/render-1/stream.mp4',
+      '--tagging',
+      renderTagging,
+    ]);
+    expect(renderTagging).toContain('Key=lifecycle,Value=render');
+  });
+
+  // the bucket rule filters on that tag with no prefix at all, so media left
+  // carrying it would be deleted thirty days after it was published
+  it('strips the tag again once the media is the one being published', () => {
+    expect(untagObjectArgs(env, 'media/video-1/render-1/stream.mp4')).toEqual([
+      'delete-object-tagging',
+      '--bucket',
+      'demo-hub-storage',
+      '--key',
+      'media/video-1/render-1/stream.mp4',
+    ]);
   });
 });

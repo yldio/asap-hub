@@ -6,6 +6,7 @@ import { ProjectAsset } from '../../api/types';
 import { DragKind } from './dragging';
 import { editorTheme } from './editorTheme';
 import { formatTimecode } from './geometry';
+import { isPickModifier } from './shortcuts';
 import { MuteIcon, SoundIcon } from './icons';
 
 const blockStyles = css({
@@ -135,6 +136,8 @@ type Props = {
   readonly selected: boolean;
   // picked into the cut a download renders; toggled with Ctrl or Cmd
   readonly picked: boolean;
+  // false when nothing could act on a pick, so the toggle is inert
+  readonly canPick: boolean;
   readonly readOnly: boolean;
   readonly onSelect: () => void;
   readonly onTogglePick: () => void;
@@ -168,6 +171,7 @@ const ClipBlock: FC<Props> = ({
   width,
   selected,
   picked,
+  canPick,
   readOnly,
   onSelect,
   onTogglePick,
@@ -221,9 +225,11 @@ const ClipBlock: FC<Props> = ({
       ]}
       style={{ left, width: Math.max(width, 18) }}
       onPointerDown={(event) => {
-        if (event.ctrlKey || event.metaKey) {
+        if (isPickModifier(event)) {
           event.preventDefault();
-          onTogglePick();
+          if (canPick) {
+            onTogglePick();
+          }
           return;
         }
         onSelect();
@@ -234,8 +240,10 @@ const ClipBlock: FC<Props> = ({
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
-          if (event.ctrlKey || event.metaKey) {
-            onTogglePick();
+          if (isPickModifier(event)) {
+            if (canPick) {
+              onTogglePick();
+            }
             return;
           }
           onSelect();

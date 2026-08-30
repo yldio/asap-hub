@@ -341,6 +341,7 @@ const ClipTrack = memo<{
   readonly durationMs: number;
   readonly selection?: Selection;
   readonly pickedIds: readonly string[];
+  readonly canPick: boolean;
   readonly readOnly: boolean;
   readonly dropIndex?: number;
   readonly onSelect: SelectHandler;
@@ -356,6 +357,7 @@ const ClipTrack = memo<{
     durationMs,
     selection,
     pickedIds,
+    canPick,
     readOnly,
     dropIndex,
     onSelect,
@@ -383,6 +385,7 @@ const ClipTrack = memo<{
             width={msToPx(placement.durationMs, pixelsPerSecond)}
             selected={isSelected(selection, 'clip', placement.clip.id)}
             picked={pickedIds.includes(placement.clip.id)}
+            canPick={canPick}
             readOnly={readOnly}
             onSelect={() => onSelect('clip', placement.clip.id)}
             onTogglePick={() => onTogglePick(placement.clip.id)}
@@ -708,6 +711,8 @@ type Props = {
   readonly selection?: Selection;
   // the clips picked into the cut a download renders
   readonly pickedIds: readonly string[];
+  // whether picking means anything here; false leaves the toggle inert
+  readonly canPick: boolean;
   readonly readOnly: boolean;
   readonly assets: Record<string, ProjectAsset>;
   readonly onSelect: SelectHandler;
@@ -742,6 +747,7 @@ const Timeline: FC<Props> = ({
   durationMs,
   pixelsPerSecond,
   pickedIds,
+  canPick,
   onTogglePick,
   banners,
   narration,
@@ -1104,6 +1110,7 @@ const Timeline: FC<Props> = ({
             durationMs={durationMs}
             selection={selection}
             pickedIds={pickedIds}
+            canPick={canPick}
             readOnly={readOnly}
             dropIndex={dropIndex}
             onSelect={onSelect}

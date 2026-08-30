@@ -100,6 +100,7 @@ const renderTimeline = (overrides: Record<string, unknown> = {}) => {
       durationMs={10000}
       pixelsPerSecond={pixelsPerSecond}
       pickedIds={[]}
+      canPick
       onTogglePick={onTogglePick}
       readOnly={false}
       banners={[]}

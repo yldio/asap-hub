@@ -115,6 +115,22 @@ const mockSessionGet = (data: Record<string, unknown> | null) => {
   } as any);
 };
 
+// the release path reads the row again, and it reads a row the claim has since
+// changed, so the two reads answer differently
+const mockSessionGetSequence = (
+  ...items: (Record<string, unknown> | null)[]
+) => {
+  let index = 0;
+  jest.spyOn(recordingSessionEntity, 'get').mockReturnValue({
+    go: async () => {
+      const data = items[Math.min(index, items.length - 1)];
+      index += 1;
+      return { data };
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
 const mockSessionCreate = () =>
   jest
     .spyOn(recordingSessionEntity, 'create')
@@ -540,6 +556,42 @@ describe('POST /api/capture', () => {
     await postCapture(batch());
 
     expect(order).toEqual(['counter', 'object']);
+  });
+
+  // the counter is bumped before the object is written, so a put that fails
+  // once used to drop the batch while the count still carried its events
+  it('writes the batch again when the first attempt fails', async () => {
+    mockSessionGet(sessionItem({ parts: [] }));
+    (storage.putObject as jest.Mock)
+      .mockRejectedValueOnce(new Error('s3 is having a day'))
+      .mockResolvedValueOnce(undefined);
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledTimes(2);
+    // the claim, and nothing given back
+    expect(captureWrites()).toHaveLength(1);
+  });
+
+  it('gives the claimed slot back when the batch cannot be written at all', async () => {
+    mockSessionGetSequence(
+      sessionItem({ parts: [], eventCount: 0 }),
+      sessionItem({ parts: ['tab-a:3'], eventCount: 2 }),
+    );
+    (storage.putObject as jest.Mock).mockRejectedValue(
+      new Error('s3 is having a day'),
+    );
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledTimes(2);
+
+    const [, release] = captureWrites();
+    expect(release.ExpressionAttributeValues[':parts']).toEqual([]);
+    expect(release.ExpressionAttributeValues[':events']).toBe(-2);
+    expect(release.ConditionExpression).toContain('contains(#parts, :partId)');
   });
 
   it('never writes anything under raw/', async () => {

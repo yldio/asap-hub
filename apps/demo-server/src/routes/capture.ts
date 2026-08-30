@@ -157,6 +157,62 @@ const appendPart = async (
   }
 };
 
+// S3 refusing one write is not a reason to lose a batch the counter has already
+// been told about, so the object gets one more go before anything is given up
+const writePart = async (key: string, body: string): Promise<boolean> => {
+  const write = () =>
+    putObject(key, body, ndjsonContentType, captureLifecycleTag);
+  try {
+    await write();
+    return true;
+  } catch {
+    try {
+      await write();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+};
+
+// The slot was claimed before the object was written, so a write that never
+// lands leaves the count carrying events no stream holds. Handing the slot back
+// keeps the quota a bound on what is really there; a batch that landed in the
+// meantime changes the list, and then this simply loses its condition rather
+// than erasing it.
+const releasePart = async (
+  sessionId: string,
+  partId: string,
+  events: number,
+): Promise<void> => {
+  try {
+    const { data } = await recordingSessionEntity.get({ sessionId }).go();
+    const current = data as RecordingSessionItem | null;
+    if (!current?.parts?.includes(partId)) {
+      return;
+    }
+    await getDocumentClient().send(
+      new UpdateCommand({
+        TableName: getTableName(),
+        Key: recordingSessionKey(sessionId),
+        UpdateExpression: 'SET #parts = :parts ADD eventCount :events',
+        ConditionExpression:
+          'size(#parts) = :size AND contains(#parts, :partId)',
+        ExpressionAttributeNames: { '#parts': 'parts' },
+        ExpressionAttributeValues: {
+          ':parts': current.parts.filter((id) => id !== partId),
+          ':partId': partId,
+          ':size': current.parts.length,
+          ':events': -events,
+        },
+      }),
+    );
+  } catch {
+    // the counters are an indicator, not the recording: a release that cannot
+    // land must not turn into a failed request the snippet never reads anyway
+  }
+};
+
 export const captureRouter = (): Router => {
   const router = asyncRouter();
 
@@ -195,12 +251,13 @@ export const captureRouter = (): Router => {
     }
 
     const lines = batch.events.map((event) => JSON.stringify(event));
-    await putObject(
+    const written = await writePart(
       capturePartKey(session.videoId, session.sessionId, partId),
       `${lines.join('\n')}\n`,
-      ndjsonContentType,
-      captureLifecycleTag,
     );
+    if (!written) {
+      await releasePart(session.sessionId, partId, batch.events.length);
+    }
 
     res.status(204).end();
   });

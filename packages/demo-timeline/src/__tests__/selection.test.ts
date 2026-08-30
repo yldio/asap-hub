@@ -131,14 +131,13 @@ describe('a voice over cut to the picked spans', () => {
     expect(() => parseTimeline(cut)).not.toThrow();
   });
 
-  // picking a and c drops b's six exclusive seconds [3000, 9000), blend
-  // window included: the voice that played over them is skipped, not
-  // replayed over c
+  // picking a and c drops b, and with it the crossfade: a plays its whole
+  // four seconds, so only b's own stretch [4000, 9000) of voice is skipped
   it('skips the audio that played over a dropped clip', () => {
     const cut = keepClips({ ...three(), narration: [take] }, ['a', 'c']);
 
     expect(cut.narration).toEqual([
-      { ...take, id: 'take-1-1', startMs: 2000, inMs: 0, outMs: 1000 },
+      { ...take, id: 'take-1-1', startMs: 2000, inMs: 0, outMs: 2000 },
       { ...take, id: 'take-1-2', startMs: 4000, inMs: 7000, outMs: 10000 },
     ]);
     expect(() => parseTimeline(cut)).not.toThrow();
@@ -163,13 +162,14 @@ describe('a banner cut to the picked spans', () => {
     animation: 'fade' as const,
   };
 
-  // the banner starts at 3500, inside the blend window that belongs to b, so
-  // dropping b drops that piece too and only the c stretch survives
-  it('lands the surviving stretch in the new time', () => {
+  // the banner starts at 3500, inside what was the blend window; with b
+  // dropped that moment belongs to a's own tail, so the piece survives there
+  it('lands the surviving stretches in the new time', () => {
     const cut = keepClips({ ...three(), banners: [banner] }, ['a', 'c']);
 
     expect(cut.banners).toEqual([
-      { ...banner, startMs: 4000, durationMs: 1500 },
+      { ...banner, id: 'banner-1-1', startMs: 3500, durationMs: 500 },
+      { ...banner, id: 'banner-1-2', startMs: 4000, durationMs: 1500 },
     ]);
   });
 
@@ -178,7 +178,7 @@ describe('a banner cut to the picked spans', () => {
     const cut = keepClips({ ...three(), banners: [early] }, ['a', 'c']);
 
     expect(cut.banners).toEqual([
-      { ...early, id: 'banner-1-1', startMs: 2500, durationMs: 500 },
+      { ...early, id: 'banner-1-1', startMs: 2500, durationMs: 1500 },
       { ...early, id: 'banner-1-2', startMs: 4000, durationMs: 1500 },
     ]);
   });
@@ -210,4 +210,79 @@ it('maps the crossfade window to the incoming clip alone, never twice', () => {
   expect(cut.narration).toEqual([inTheBlend]);
   // picking everything reproduces the original layout exactly
   expect(layoutClips(cut.clips)).toEqual(layoutClips(three().clips));
+});
+
+// a dropped neighbour's crossfade no longer exists in the cut: the kept clip
+// plays its whole length, so its tail keeps the banners and voice over that
+// sat over the blend window
+describe('the tail a dropped crossfade used to claim', () => {
+  const doc = (): Timeline => ({
+    ...three(),
+    banners: [
+      {
+        id: 'tail',
+        startMs: 3200,
+        durationMs: 600,
+        preset: 'lowerThird',
+        text: 'Over the blend',
+        position: 'bottom',
+        animation: 'fade',
+      },
+    ],
+    narration: [
+      {
+        id: 'nar',
+        assetId: 'asset-nar',
+        startMs: 2500,
+        inMs: 0,
+        outMs: 1500,
+        volume: 1,
+      },
+    ],
+  });
+
+  it("keeps a banner over the kept clip's whole length", () => {
+    const cut = keepClips(doc(), ['a']);
+
+    expect(cut.banners).toEqual([
+      expect.objectContaining({ id: 'tail', startMs: 3200, durationMs: 600 }),
+    ]);
+  });
+
+  it('keeps the voice over to the end of the take', () => {
+    const cut = keepClips(doc(), ['a']);
+
+    expect(cut.narration).toEqual([
+      expect.objectContaining({
+        id: 'nar',
+        startMs: 2500,
+        inMs: 0,
+        outMs: 1500,
+      }),
+    ]);
+  });
+});
+
+describe('piece ids that would collide', () => {
+  it('renames a minted duplicate instead of poisoning the cut', () => {
+    const stem = 'y'.repeat(60);
+    const banner = (id: string) => ({
+      id,
+      startMs: 0,
+      durationMs: 14000,
+      preset: 'lowerThird' as const,
+      text: 'Spans everything',
+      position: 'bottom' as const,
+      animation: 'fade' as const,
+    });
+    const cut = keepClips(
+      { ...three(), banners: [banner(`${stem}AAAA`), banner(`${stem}BBBB`)] },
+      ['a', 'c'],
+    );
+
+    const ids = cut.banners.map(({ id }) => id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.every((id) => id.length <= 64)).toBe(true);
+    expect(() => parseTimeline(JSON.parse(JSON.stringify(cut)))).not.toThrow();
+  });
 });

@@ -16,7 +16,12 @@ const exclusiveSpans = (
     if (!kept.has(placement.clip.id)) {
       return [];
     }
-    const nextStartMs = placements[index + 1]?.startMs ?? placement.endMs;
+    // the next clip only claims the overlap when it is in the cut too: a
+    // dropped neighbour's crossfade no longer exists, and in the cut this
+    // clip plays its whole length, tail included
+    const next = placements[index + 1];
+    const nextStartMs =
+      next && kept.has(next.clip.id) ? next.startMs : placement.endMs;
     const at = picked.find((each) => each.clip.id === placement.clip.id);
     if (!at) {
       return [];
@@ -76,6 +81,23 @@ const segmentsOf = (
 const pieceId = (id: string, piece: number, pieces: number): string =>
   pieces === 1 ? id : `${id.slice(0, 60)}-${piece + 1}`;
 
+// truncating to sixty characters can make two different ids mint the same
+// piece id, and one duplicate makes the whole cut unparseable; a colliding id
+// is renamed until it stands alone
+const withUniqueIds = <T extends { id: string }>(
+  items: T[],
+  taken: Set<string>,
+): T[] =>
+  items.map((item) => {
+    let { id } = item;
+    for (let attempt = 2; taken.has(id); attempt += 1) {
+      const suffix = `~${attempt}`;
+      id = `${item.id.slice(0, 64 - suffix.length)}${suffix}`;
+    }
+    taken.add(id);
+    return id === item.id ? item : { ...item, id };
+  });
+
 const pickedBanners = (banners: Banner[], spans: SpanMap[]): Banner[] =>
   banners.flatMap((banner) => {
     const segments = segmentsOf(banner.startMs, banner.durationMs, spans);
@@ -132,13 +154,19 @@ export const keepClips = (timeline: Timeline, clipIds: string[]): Timeline => {
   const onKeptClip = <T extends { clipId: string }>(items: T[]): T[] =>
     items.filter((item) => kept.has(item.clipId));
 
+  const zooms = onKeptClip(timeline.zooms);
+  const taken = new Set([
+    ...clips.map((clip) => clip.id),
+    ...zooms.map((zoom) => zoom.id),
+  ]);
+
   return {
     ...timeline,
     clips,
-    zooms: onKeptClip(timeline.zooms),
+    zooms,
     cursor: onKeptClip(timeline.cursor),
     chapters: onKeptClip(timeline.chapters),
-    banners: pickedBanners(timeline.banners, spans),
-    narration: pickedNarration(timeline.narration, spans),
+    banners: withUniqueIds(pickedBanners(timeline.banners, spans), taken),
+    narration: withUniqueIds(pickedNarration(timeline.narration, spans), taken),
   };
 };

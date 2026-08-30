@@ -849,3 +849,35 @@ describe('adding a mouse click to a trimmed clip', () => {
     });
   });
 });
+
+// the browser's stopgap duration reading of a fresh recording can come up
+// seconds short, and using it as the trim bound clamped the take's end away
+// on the first touch of a handle
+describe('trimming before the ingest has probed the asset', () => {
+  it('sends no hard bound when only the browser guessed a duration', () => {
+    const unprobed = asset();
+    delete (unprobed as { durationMs?: number }).durationMs;
+    const { calls } = renderEditor({
+      timeline: withClip(),
+      assets: [unprobed],
+    });
+
+    const handle = screen.getByRole('button', {
+      name: 'Trim the end of Sprint demo',
+    });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 200 });
+    fireEvent.pointerMove(handle, {
+      pointerId: 1,
+      clientX: 150,
+      buttons: 1,
+    });
+
+    const trims = calls.filter(
+      (call) => call.name === 'dispatch' && call.action?.type === 'trimClip',
+    );
+    expect(trims.length).toBeGreaterThan(0);
+    expect(
+      (trims[0]?.action as { assetDurationMs?: number }).assetDurationMs,
+    ).toBeUndefined();
+  });
+});

@@ -214,6 +214,9 @@
     var where = placement();
     var event = {
       id: 'e' + eventId,
+      // every copy of the reporter numbers from e1, so the tab is what tells
+      // one page's e5 from another's
+      client: clientId,
       type: type,
       t: Date.now(),
       x: x,

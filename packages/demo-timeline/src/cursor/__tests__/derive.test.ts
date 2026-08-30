@@ -1,5 +1,6 @@
 import { limits } from '../../schema';
 import { captureOriginMs, deriveCursorEffects } from '../derive';
+import { mergeDerivedEffects } from '../merge';
 import { parseCaptureEvents } from '../parse';
 import { CaptureEvent, DeriveOptions } from '../types';
 
@@ -430,5 +431,72 @@ describe('the time origin', () => {
   it('takes the earliest event as the fallback origin', () => {
     expect(captureOriginMs(events)).toBe(startedAtEpochMs + bookmarkDelayMs);
     expect(captureOriginMs(events, startedAtEpochMs)).toBe(startedAtEpochMs);
+  });
+});
+
+// Two tabs share one session when the whole screen is recorded, and one page
+// reloaded mid take starts numbering again, so e5 is not one click.
+describe('effects named after the tab that reported the click', () => {
+  const twoTabs = [
+    at(1000, { id: 'e5', type: 'click', client: 'tab-a' }),
+    at(1500, { id: 'e5', type: 'click', client: 'tab-b', x: 320, y: 180 }),
+  ];
+
+  it('derives the ids it always has from a stream that names no tab', () => {
+    const { effects } = deriveCursorEffects(
+      [at(1100, { id: 'e4', type: 'click' })],
+      options(),
+    );
+
+    expect(effects).toEqual([
+      {
+        id: 'ripple-e4',
+        tMs: 1100,
+        type: 'ripple',
+        point: { x: 0.5, y: 0.5 },
+        origin: 'derived',
+        sourceEventId: 'e4',
+      },
+    ]);
+  });
+
+  it('gives two tabs sharing an event id a ripple each', () => {
+    const { effects } = deriveCursorEffects(twoTabs, options());
+
+    expect(effects.map(({ id }) => id)).toEqual([
+      'ripple-tab-a-e5',
+      'ripple-tab-b-e5',
+    ]);
+    expect(effects.map(({ sourceEventId }) => sourceEventId)).toEqual([
+      'tab-a-e5',
+      'tab-b-e5',
+    ]);
+  });
+
+  // editing one flips its origin, and a shared key used to let the merge read
+  // the other tab's ripple as that same edited click and swallow it
+  it('keeps both when one is edited and the capture is applied again', () => {
+    const derived = deriveCursorEffects(twoTabs, options()).effects;
+    const edited = derived.map((effect) =>
+      effect.id === 'ripple-tab-a-e5'
+        ? {
+            ...effect,
+            origin: 'derived-edited' as const,
+            point: { x: 0.1, y: 0.2 },
+          }
+        : effect,
+    );
+
+    const merged = mergeDerivedEffects(
+      edited,
+      deriveCursorEffects(twoTabs, options()).effects,
+    );
+
+    expect(merged.effects.map(({ id }) => id)).toEqual([
+      'ripple-tab-a-e5',
+      'ripple-tab-b-e5',
+    ]);
+    expect(merged.effects[0]?.point).toEqual({ x: 0.1, y: 0.2 });
+    expect(merged.added).toBe(1);
   });
 });

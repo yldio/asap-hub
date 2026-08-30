@@ -21,6 +21,13 @@ type PlacedEvent = {
 // carries the last known position and would flatten the path
 const pathEventTypes: readonly CaptureEventType[] = ['move', 'down', 'click'];
 
+// What names the click an effect came from. Two tabs, or one page reloaded
+// mid session, both number their events from e1, so the tab that reported it is
+// part of the name; a stream written before the snippet sent one keeps exactly
+// the names it has always had, and a re-apply still recognises its own effects.
+const sourceEventKey = (event: CaptureEvent): string =>
+  (event.client ? `${event.client}-${event.id}` : event.id).slice(0, 64);
+
 // the document caps an id at 64 characters
 const effectId = (type: CursorEffect['type'], eventId: string): string =>
   `${type}-${eventId}`.slice(0, 64);
@@ -88,14 +95,17 @@ const toEffect = (
   type: CursorEffect['type'],
   placed: PlacedEvent,
   tMs: number = placed.tMs,
-): CursorEffect => ({
-  id: effectId(type, placed.event.id),
-  tMs,
-  type,
-  point: placed.point,
-  origin: 'derived',
-  sourceEventId: placed.event.id,
-});
+): CursorEffect => {
+  const key = sourceEventKey(placed.event);
+  return {
+    id: effectId(type, key),
+    tMs,
+    type,
+    point: placed.point,
+    origin: 'derived',
+    sourceEventId: key,
+  };
+};
 
 const autoZoomEffects = (
   clicks: PlacedEvent[],

@@ -38,6 +38,10 @@ export type CaptureGeometry = {
 // only reads the ones it needs
 export type CaptureEvent = CaptureGeometry & {
   id: string;
+  // which tab reported it: every copy of the snippet numbers its events from
+  // e1, so the id alone is only unique inside one page. Absent on a stream
+  // written before the snippet sent it, and then the id stands on its own.
+  client?: string;
   type: CaptureEventType;
   t: number;
   x: number;

@@ -169,4 +169,14 @@ describe('the screen geometry', () => {
   it('leaves out a platform the snippet never sent', () => {
     expect(parseCaptureEvents(line(move()))[0]).not.toHaveProperty('platform');
   });
+
+  it('keeps the tab an event was reported by', () => {
+    const [event] = parseCaptureEvents(line(move({ client: 'tab-a' })));
+
+    expect(event?.client).toBe('tab-a');
+  });
+
+  it('leaves out a tab a stream written before it was sent never named', () => {
+    expect(parseCaptureEvents(line(move()))[0]).not.toHaveProperty('client');
+  });
 });

@@ -845,6 +845,7 @@ const ProjectEditor: FC<Props> = ({
                   onGestureEnd={endDrag}
                   box={stage.box}
                   placement={current}
+                  next={current ? placements[current.index + 1] : undefined}
                   banners={timeline.banners}
                   zooms={timeline.zooms}
                   cursorEffects={cursorEffects}

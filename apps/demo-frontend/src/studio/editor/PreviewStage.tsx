@@ -58,6 +58,14 @@ const videoStyles = css({
   objectFit: 'contain',
 });
 
+// the incoming half of a crossfade sits over the outgoing picture and ramps
+// its own opacity per frame; it must never catch a pointer meant for the stage
+const incomingStyles = css(videoStyles, {
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+});
+
 const emptyStyles = css({
   color: editorTheme.onStage,
   textAlign: 'center',
@@ -145,6 +153,10 @@ export type StageFocus = {
 type Props = {
   readonly box: { width: number; height: number };
   readonly placement?: ClipPlacement;
+  // the placement after this one: when it opens with a crossfade, the stage
+  // blends it in over the overlap the way the export's xfade does, instead of
+  // holding the outgoing clip solid and hard cutting
+  readonly next?: ClipPlacement;
   readonly banners: Banner[];
   readonly zooms: Zoom[];
   readonly cursorEffects: CursorEffect[];
@@ -177,6 +189,7 @@ const noNarration: NarrationClip[] = [];
 const PreviewStage: FC<Props> = ({
   box,
   placement,
+  next,
   banners,
   zooms,
   cursorEffects,
@@ -194,6 +207,7 @@ const PreviewStage: FC<Props> = ({
   onGestureEnd,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const incomingRef = useRef<HTMLVideoElement>(null);
   const narrationRef = useRef(new Map<string, HTMLAudioElement>());
   const titleTextRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<CursorLayerHandle>(null);
@@ -248,6 +262,46 @@ const PreviewStage: FC<Props> = ({
         Math.abs(element.currentTime - sourceMs / 1000) > slackS
       ) {
         element.currentTime = sourceMs / 1000;
+      }
+    }
+
+    // the incoming clip of a crossfade ramps in over the overlap while the
+    // outgoing one ramps down, picture and sound both, like the export's
+    // xfade and acrossfade
+    const incoming = incomingRef.current;
+    if (incoming && next && next.clip.kind === 'source' && element) {
+      const blendMs = ms - next.startMs;
+      const progress =
+        next.overlapMs > 0
+          ? Math.min(1, Math.max(0, blendMs / next.overlapMs))
+          : 0;
+      incoming.style.opacity = blendMs >= 0 ? String(progress) : '0';
+
+      const src = sourceTimeAt(next, ms);
+      // seeked a moment ahead of its entrance so the first blended frame is
+      // already decoded
+      if (src !== undefined && blendMs > -1500) {
+        const targetS = Math.max(0, src) / 1000;
+        const slackS = playing ? 0.25 : 0.01;
+        if (Math.abs(incoming.currentTime - targetS) > slackS) {
+          incoming.currentTime = targetS;
+        }
+      }
+
+      const base = Math.min(1, Math.max(0, volume * next.clip.volume));
+      incoming.volume = base * progress;
+      const mainBase =
+        clip?.kind === 'source'
+          ? Math.min(1, Math.max(0, volume * clip.volume))
+          : 0;
+      element.volume = mainBase * (1 - progress);
+
+      const audible = playing && blendMs >= 0;
+      if (audible && incoming.paused) {
+        void incoming.play().catch(() => undefined);
+      }
+      if (!audible && !incoming.paused) {
+        incoming.pause();
       }
     }
 
@@ -315,6 +369,12 @@ const PreviewStage: FC<Props> = ({
       element.volume = Math.min(1, Math.max(0, volume * clipVolume));
     }
   }, [clipVolume, volume]);
+
+  const incomingAsset =
+    next?.clip.kind === 'source' && next.overlapMs > 0
+      ? assets[next.clip.assetId]
+      : undefined;
+  const incomingUrl = incomingAsset ? assetUrl(incomingAsset) : undefined;
 
   const size = { width: box.width, height: box.height };
 
@@ -460,6 +520,18 @@ const PreviewStage: FC<Props> = ({
             : 'This clip has no playable source yet.'}
         </p>
       )}
+      {incomingUrl && next ? (
+        <video
+          key={next.clip.id}
+          ref={incomingRef}
+          data-testid="incoming-video"
+          css={incomingStyles}
+          style={{ opacity: 0 }}
+          src={incomingUrl}
+          preload="auto"
+          playsInline
+        />
+      ) : null}
       <CursorLayer
         ref={cursorRef}
         effects={cursorEffects}

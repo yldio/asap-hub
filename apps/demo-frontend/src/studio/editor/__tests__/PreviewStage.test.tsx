@@ -144,3 +144,77 @@ describe('narration in the preview', () => {
     ).toHaveLength(0);
   });
 });
+
+// the preview held the outgoing clip solid through a crossfade and hard cut at
+// its end, while the export blended: the two disagreed about every transition
+describe('a crossfade on the stage', () => {
+  const two = () =>
+    layoutClips([
+      clip(1),
+      {
+        kind: 'source',
+        id: 'clip-b',
+        assetId: 'asset-a',
+        inMs: 0,
+        outMs: 6000,
+        volume: 1,
+        transitionIn: { type: 'crossfade', durationMs: 1000 },
+      },
+    ]);
+
+  it('mounts the incoming clip so it can blend in', () => {
+    const [a, b] = two();
+    const view = render(
+      <PreviewStage
+        box={{ width: 320, height: 180 }}
+        placement={a}
+        next={b}
+        banners={[]}
+        zooms={[]}
+        cursorEffects={[]}
+        playing={false}
+        volume={1}
+        assets={{ 'asset-a': asset }}
+        assetUrl={(item) => item.url}
+      />,
+    );
+
+    const incoming = view.container.querySelector(
+      '[data-testid="incoming-video"]',
+    );
+    expect(incoming).toBeInTheDocument();
+    expect(incoming).toHaveAttribute('src', 'blob:a');
+  });
+
+  it('mounts nothing extra for a plain cut', () => {
+    const [a, b] = layoutClips([
+      clip(1),
+      {
+        kind: 'source',
+        id: 'clip-b',
+        assetId: 'asset-a',
+        inMs: 0,
+        outMs: 6000,
+        volume: 1,
+      },
+    ]);
+    const view = render(
+      <PreviewStage
+        box={{ width: 320, height: 180 }}
+        placement={a}
+        next={b}
+        banners={[]}
+        zooms={[]}
+        cursorEffects={[]}
+        playing={false}
+        volume={1}
+        assets={{ 'asset-a': asset }}
+        assetUrl={(item) => item.url}
+      />,
+    );
+
+    expect(
+      view.container.querySelector('[data-testid="incoming-video"]'),
+    ).not.toBeInTheDocument();
+  });
+});

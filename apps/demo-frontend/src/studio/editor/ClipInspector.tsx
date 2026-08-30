@@ -20,6 +20,7 @@ import {
 } from './fields';
 import { formatTimecode } from './geometry';
 import { TrashIcon } from './icons';
+import { maxOverlapMs } from './overlap';
 
 const nameStyles = css({ fontSize: 14, fontWeight: 600 });
 
@@ -38,6 +39,8 @@ type Props = {
   readonly onMove: (toIndex: number) => void;
   readonly onRemove: () => void;
   readonly onTransition: (transition?: Transition) => void;
+  // the clip this one blends out of, which bounds how long the blend can be
+  readonly previousPlacement?: ClipPlacement;
 };
 
 const transitionOptions = [
@@ -47,6 +50,7 @@ const transitionOptions = [
 ];
 
 const defaultTransitionMs = 500;
+const minTransitionMs = 100;
 
 const clipName = (clip: Clip, asset?: ProjectAsset): string =>
   clip.kind === 'title' ? clip.text || 'Title card' : asset?.label ?? 'Clip';
@@ -63,6 +67,7 @@ const ClipInspector: FC<Props> = ({
   onMove,
   onRemove,
   onTransition,
+  previousPlacement,
 }) => {
   if (!placement) {
     return (
@@ -136,15 +141,19 @@ const ClipInspector: FC<Props> = ({
         />
       ) : null}
 
-      {index > 0 && clip.transitionIn && clip.transitionIn.type !== 'cut' ? (
+      {index > 0 &&
+      clip.transitionIn &&
+      clip.transitionIn.type !== 'cut' &&
+      previousPlacement &&
+      maxOverlapMs(previousPlacement, placement) >= minTransitionMs ? (
         <TimecodeField
           label="Transition length"
           value={clip.transitionIn.durationMs}
           disabled={readOnly}
-          minMs={100}
-          // the blend plays over both neighbours, so the lane clamps it to
-          // half the shorter one; this bound is just the half this clip knows
-          maxMs={Math.floor(placement.durationMs / 2)}
+          minMs={minTransitionMs}
+          // the same ceiling the lane applies: half the shorter neighbour,
+          // and never past what the document itself accepts
+          maxMs={maxOverlapMs(previousPlacement, placement)}
           onChange={(durationMs) =>
             clip.transitionIn
               ? onTransition({ ...clip.transitionIn, durationMs })

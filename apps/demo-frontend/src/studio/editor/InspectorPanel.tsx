@@ -16,6 +16,8 @@ type Props = {
   readonly cursorLayer?: CursorLayer;
   readonly assets: Record<string, ProjectAsset>;
   readonly clipCount: number;
+  // the placement before the selected clip, which bounds its transition
+  readonly previousPlacement?: ClipPlacement;
   readonly readOnly: boolean;
   readonly assetDurationOf: (assetId: string) => number | undefined;
   // the one trim ceiling every surface shares: the ingest's probe or the
@@ -35,6 +37,7 @@ const InspectorPanel: FC<Props> = ({
   cursorLayer,
   assets,
   clipCount,
+  previousPlacement,
   readOnly,
   assetDurationOf,
   trimBoundMs,
@@ -159,6 +162,7 @@ const InspectorPanel: FC<Props> = ({
       placement={clip}
       asset={source ? assets[source.assetId] : undefined}
       trimBoundMs={trimBoundMs}
+      previousPlacement={previousPlacement}
       readOnly={readOnly}
       index={clip?.index ?? 0}
       clipCount={clipCount}

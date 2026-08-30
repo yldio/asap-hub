@@ -975,6 +975,11 @@ const ProjectEditor: FC<Props> = ({
               cursorLayer={cursorLayer}
               assets={assetsById}
               clipCount={placements.length}
+              previousPlacement={
+                selected.clip && selected.clip.index > 0
+                  ? placements[selected.clip.index - 1]
+                  : undefined
+              }
               readOnly={readOnly}
               assetDurationOf={assetDurationOf}
               trimBoundMs={
@@ -1029,6 +1034,7 @@ const ProjectEditor: FC<Props> = ({
             cursorLayers={timeline.cursor}
             selection={selection}
             pickedIds={picked}
+            canPick={Boolean(onDownloadClips) && !readOnly}
             readOnly={readOnly}
             assets={assetsById}
             onSelect={select}

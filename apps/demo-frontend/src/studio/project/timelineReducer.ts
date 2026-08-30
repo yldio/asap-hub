@@ -427,15 +427,28 @@ export const timelineReducer = (
         volume: action.volume,
       }));
 
-    case 'setTransition':
+    case 'setTransition': {
+      // the schema caps a transition, and a typed value must not produce a
+      // document the server then refuses whole
+      const transition = action.transition && {
+        ...action.transition,
+        durationMs: Math.max(
+          0,
+          Math.min(
+            limits.transitionMs,
+            Math.round(action.transition.durationMs),
+          ),
+        ),
+      };
       return withClips(
         timeline,
         timeline.clips.map((clip, index) =>
           clip.id === action.clipId && index > 0
-            ? { ...clip, transitionIn: action.transition }
+            ? { ...clip, transitionIn: transition }
             : clip,
         ),
       );
+    }
 
     case 'addTitleCard':
       return withClips(

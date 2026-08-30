@@ -72,10 +72,9 @@ const renderStudio = (overrides = {}) =>
   });
 
 // the clip block on the timeline announces itself as "<label>, <length>"
-const timelineClip = () =>
-  screen.getByRole('button', { name: /^Intro take, / });
+const timelineClip = () => screen.getByRole('group', { name: /^Intro take, / });
 const timelineClips = () =>
-  screen.queryAllByRole('button', { name: /^Intro take, / });
+  screen.queryAllByRole('group', { name: /^Intro take, / });
 
 // The autosave effect schedules its debounce after the commit, so a single jump
 // of the clock can land before the timer exists and fire nothing. Pumping with a

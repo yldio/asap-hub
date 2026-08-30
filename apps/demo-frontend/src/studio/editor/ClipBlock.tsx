@@ -175,11 +175,14 @@ const ClipBlock: FC<Props> = ({
 
   return (
     <div
-      role="button"
+      // a group, not a button: the trim handles and the mute are real buttons
+      // inside it, and interactive descendants inside role button are invalid
+      // and unreachable for assistive tech
+      role="group"
       tabIndex={0}
       aria-label={`${label}, ${span}${muted ? ', muted' : ''}${blend}`}
       title={trim}
-      aria-pressed={selected}
+      aria-current={selected}
       css={[
         blockStyles,
         clip.kind === 'title' && titleBlockStyles,

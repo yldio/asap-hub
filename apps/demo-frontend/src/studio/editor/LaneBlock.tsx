@@ -110,10 +110,13 @@ const LaneBlock: FC<Props> = ({
   onNudge,
 }) => (
   <div
-    role="button"
+    // a group, not a button: real buttons live inside it (the trim handles,
+    // the mute), and interactive descendants inside role button are invalid
+    // and unreachable for assistive tech
+    role="group"
     tabIndex={0}
     aria-label={name}
-    aria-pressed={selected}
+    aria-current={selected}
     css={[blockStyles, tones[tone], selected && selectedStyles]}
     style={{ left, width: Math.max(width, minBlockPx) }}
     onPointerDown={(event) => {

@@ -711,7 +711,7 @@ describe('dropping a clip over its neighbour', () => {
   // the lane draws at 24 pixels a second until the shell has been measured, so
   // 24 pixels of travel is a second of programme time
   const dragFirstClip = (fromX: number, toX: number) => {
-    const block = screen.getAllByRole('button', {
+    const block = screen.getAllByRole('group', {
       name: /^Sprint demo, 0:00\.00/,
     })[0] as HTMLElement;
     fireEvent.pointerDown(block, { pointerId: 1, clientX: fromX });
@@ -749,7 +749,7 @@ describe('dropping a clip over its neighbour', () => {
     dragFirstClip(50, 74);
 
     expect(
-      screen.getByRole('button', {
+      screen.getByRole('group', {
         name: /crossfade from the clip before$/,
       }),
     ).toBeInTheDocument();

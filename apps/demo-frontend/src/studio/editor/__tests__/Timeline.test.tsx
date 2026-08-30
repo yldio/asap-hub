@@ -234,7 +234,7 @@ afterEach(() => {
 });
 
 const clipBlock = (name: string) =>
-  screen.getByRole('button', { name: new RegExp(`^${name}, `) });
+  screen.getByRole('group', { name: new RegExp(`^${name}, `) });
 
 describe('dragging a clip', () => {
   it('reorders it when it is dropped past the next clip', () => {
@@ -419,7 +419,7 @@ describe('the overlay lanes', () => {
   it('moves a banner along its lane', () => {
     const { onSpanChange } = renderTimeline({ banners: [banner] });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 450 });
 
@@ -486,7 +486,7 @@ describe('the overlay lanes', () => {
   it('moves a voice over take', () => {
     const { onSpanChange } = renderTimeline({ narration: [narration] });
 
-    const block = screen.getByRole('button', { name: 'Voice over A' });
+    const block = screen.getByRole('group', { name: 'Voice over A' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 150 });
     pointerMove(block, { pointerId: 1, clientX: 550 });
 
@@ -501,13 +501,10 @@ describe('the overlay lanes', () => {
   it('selects a voice over take so it can be removed', () => {
     const { onSelect } = renderTimeline({ narration: [narration] });
 
-    fireEvent.pointerDown(
-      screen.getByRole('button', { name: 'Voice over A' }),
-      {
-        pointerId: 1,
-        clientX: 150,
-      },
-    );
+    fireEvent.pointerDown(screen.getByRole('group', { name: 'Voice over A' }), {
+      pointerId: 1,
+      clientX: 150,
+    });
 
     expect(onSelect).toHaveBeenCalledWith('narration', 'take-a');
   });
@@ -555,7 +552,7 @@ describe('a clip block', () => {
       ]),
     });
 
-    expect(screen.getByRole('button', { name: /^A, / })).toHaveTextContent(
+    expect(screen.getByRole('group', { name: /^A, / })).toHaveTextContent(
       '0:00.00–0:03.50',
     );
   });
@@ -567,7 +564,7 @@ describe('a clip block', () => {
       ]),
     });
 
-    expect(screen.getByRole('button', { name: /^A, / })).toHaveTextContent(
+    expect(screen.getByRole('group', { name: /^A, / })).toHaveTextContent(
       '0:00.00–0:00.40',
     );
   });
@@ -581,7 +578,7 @@ describe('a clip block', () => {
     });
 
     expect(
-      screen.getByRole('button', { name: /^A, .*muted$/ }),
+      screen.getByRole('group', { name: /^A, .*muted$/ }),
     ).toHaveTextContent('muted');
   });
 
@@ -592,7 +589,7 @@ describe('a clip block', () => {
       ]),
     });
 
-    expect(screen.getByRole('button', { name: /^A, / })).toHaveAttribute(
+    expect(screen.getByRole('group', { name: /^A, / })).toHaveAttribute(
       'title',
       'Uses 0:02.50 to 0:06.00 of A',
     );
@@ -877,7 +874,7 @@ describe('dropping a clip over its neighbour', () => {
     renderTimeline({ placements: layoutClips(blended) });
 
     expect(
-      screen.getByRole('button', {
+      screen.getByRole('group', {
         name: 'B, 0:03.00–0:09.00, crossfade from the clip before',
       }),
     ).toBeInTheDocument();
@@ -896,7 +893,7 @@ describe('the drag shadow', () => {
   it('follows a banner along its lane and says where it will land', () => {
     renderTimeline({ banners: [banner] });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 450 });
 
@@ -925,7 +922,7 @@ describe('the drag shadow', () => {
   it('follows a voice over take and a cursor effect too', () => {
     renderTimeline({ narration: [narration], cursorLayers: [cursorLayer] });
 
-    const take = screen.getByRole('button', { name: 'Voice over A' });
+    const take = screen.getByRole('group', { name: 'Voice over A' });
     fireEvent.pointerDown(take, { pointerId: 1, clientX: 150 });
     pointerMove(take, { pointerId: 1, clientX: 550 });
     expect(ghost()).toHaveTextContent('Voice over A · 0:05.00');
@@ -942,7 +939,7 @@ describe('the drag shadow', () => {
   it('is taken away when the pointer is let go', () => {
     renderTimeline({ banners: [banner] });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 450 });
     fireEvent.pointerUp(block, { pointerId: 1, clientX: 450 });
@@ -968,7 +965,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     renderTimeline({ banners: [banner] });
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 990 });
 
@@ -983,7 +980,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
     lanes().scrollLeft = 800;
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 10 });
 
@@ -997,7 +994,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     renderTimeline({ banners: [banner] });
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 500 });
 
@@ -1011,7 +1008,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     renderTimeline({ banners: [banner] });
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 1000 });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 990 });
 
@@ -1025,7 +1022,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     const { onSpanChange } = renderTimeline({ banners: [banner] });
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 990 });
     const beforeScrolling = onSpanChange.mock.calls.length;
@@ -1040,7 +1037,7 @@ describe('scrolling the lane from the edge of a drag', () => {
     renderTimeline({ banners: [banner] });
     stubScroller(lanes(), { clientWidth: 1000, scrollWidth: 3000 });
 
-    const block = screen.getByRole('button', { name: 'Banner Hello' });
+    const block = screen.getByRole('group', { name: 'Banner Hello' });
     fireEvent.pointerDown(block, { pointerId: 1, clientX: 250 });
     pointerMove(block, { pointerId: 1, clientX: 990 });
     fireEvent.pointerUp(block, { pointerId: 1, clientX: 990 });

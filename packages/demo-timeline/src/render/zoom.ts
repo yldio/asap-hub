@@ -78,11 +78,16 @@ export type ZoomExpressions = { scale: string; cropX: string; cropY: string };
 // The crop window's own edge as a share of the frame, which is what the pixel
 // offsets above come to once iw and ih are divided out. An overlay is placed in
 // output pixels rather than input ones, so it needs the share rather than the
-// offset zoompan is given.
-const cropExpression = (gains: string[], focus: number[]): string =>
-  gains
+// offset zoompan is given. Clipped into the frame the same way zoompan clips
+// its own crop, or overlapping zooms detach the rings from the picture.
+const cropExpression = (
+  gains: string[],
+  focus: number[],
+  scale: string,
+): string =>
+  `clip(${gains
     .map((each, position) => `${unit(focus[position] ?? 0)}*(1-1/(1+${each}))`)
-    .join('+');
+    .join('+')},0,1-1/(${scale}))`;
 
 // The same window the picture is cropped to, written against `t` so an overlay
 // can ride the zoomed picture rather than sitting on the frame underneath it.
@@ -96,15 +101,18 @@ export const zoomExpressions = (
     return undefined;
   }
   const gains = clip.map((zoom) => gainExpression(zoom, time));
+  const scale = scaleExpression(gains);
   return {
-    scale: scaleExpression(gains),
+    scale,
     cropX: cropExpression(
       gains,
       clip.map((zoom) => zoom.focus.x),
+      scale,
     ),
     cropY: cropExpression(
       gains,
       clip.map((zoom) => zoom.focus.y),
+      scale,
     ),
   };
 };

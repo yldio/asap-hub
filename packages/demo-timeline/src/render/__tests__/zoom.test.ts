@@ -102,7 +102,7 @@ describe('zoomExpressions', () => {
   it('writes the crop as a share of the frame, not in input pixels', () => {
     expect(
       zoomExpressions([zoom({ focus: { x: 0.2, y: 0.9 } })])?.cropX,
-    ).toMatch(/^0\.2000\*\(1-1\/\(1\+/);
+    ).toMatch(/^clip\(0\.2000\*\(1-1\/\(1\+/);
   });
 
   it('adds the windows of two overlapping zooms, as the picture does', () => {

@@ -148,3 +148,33 @@ describe('where an effect is drawn once the picture has moved', () => {
     });
   });
 });
+
+// two zooms aimed at the same off centre point used to push the window past
+// the frame edge: the picture clamps in ffmpeg, so the preview clamps too or
+// it shows stage background where the export shows the frame edge
+describe('overlapping zooms held inside the frame', () => {
+  const pair = (scale: number, focus: number): Zoom[] => [
+    zoom({ id: 'z1', scale, focus: { x: focus, y: focus } }),
+    zoom({ id: 'z2', scale, focus: { x: focus, y: focus } }),
+  ];
+  // both zooms fully held at this moment
+  const heldMs = 1800;
+
+  it('clamps the summed window to the frame edge', () => {
+    const view = zoomViewAt(pair(2, 1), 'clip-1', heldMs);
+
+    expect(view.scale).toBe(3);
+    // focus 1 keeps the window flush with the right edge: [2/3, 1]
+    expect(view.focus.x).toBeCloseTo(1, 10);
+    const window = view.focus.x * (1 - 1 / view.scale);
+    expect(window + 1 / view.scale).toBeLessThanOrEqual(1.0000001);
+  });
+
+  it('clamps a milder off centre pair the same way', () => {
+    const view = zoomViewAt(pair(1.5, 0.8), 'clip-1', heldMs);
+
+    expect(view.scale).toBe(2);
+    const crop = view.focus.x * (1 - 1 / view.scale);
+    expect(crop).toBeCloseTo(0.5, 10);
+  });
+});

@@ -49,11 +49,15 @@ const axisFocus = (
   axis: 'x' | 'y',
 ): number => {
   // the left or top edge of the window that stays visible, as a share of the
-  // frame, exactly as the render's zoompan is told to crop it
-  const crop = zooms.reduce((total, zoom, index) => {
+  // frame, exactly as the render's zoompan is told to crop it. Two overlapping
+  // zooms aimed off centre can push the sum past the frame edge; zoompan clips
+  // its crop into range, so the window is held inside the frame here too or
+  // the preview shows stage background where the picture shows the edge.
+  const summed = zooms.reduce((total, zoom, index) => {
     const gain = gains[index] ?? 0;
     return total + zoom.focus[axis] * (1 - 1 / (1 + gain));
   }, 0);
+  const crop = Math.min(Math.max(summed, 0), 1 - 1 / scale);
   // a source point u shows at (u - crop) * scale, and the fixed point of that
   // is where a single zoom's own focus sits
   return (crop * scale) / (scale - 1);

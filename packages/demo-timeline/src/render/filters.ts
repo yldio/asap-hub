@@ -21,10 +21,18 @@ export const filterSegment = (
   output: string,
 ): string => `${inputs.map(label).join('')}${chain(filters)}${label(output)}`;
 
+// stamped on every frame so the encoder writes it into the stream: the CLI
+// colour flags are silently ignored by some ffmpeg builds, and an untagged
+// file is read as bt601 by one tool and bt709 by the next
+export const colourTagFilter =
+  'setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709';
+
 export const fitToCanvasFilters = (canvas: Canvas): string[] => [
-  `scale=${canvas.width}:${canvas.height}:force_original_aspect_ratio=decrease:flags=lanczos`,
+  // bt709 named on the way in and stamped on the way out
+  `scale=${canvas.width}:${canvas.height}:force_original_aspect_ratio=decrease:flags=lanczos:out_color_matrix=bt709`,
   `pad=${canvas.width}:${canvas.height}:(ow-iw)/2:(oh-ih)/2:color=black`,
   'setsar=1',
+  colourTagFilter,
 ];
 
 export type VideoFilterContext = { canvas: Canvas; placement: ClipPlacement };
@@ -35,7 +43,9 @@ export const videoFilters = ({
   canvas,
   placement,
 }: VideoFilterContext): string[] =>
-  placement.clip.kind === 'source' ? fitToCanvasFilters(canvas) : ['setsar=1'];
+  placement.clip.kind === 'source'
+    ? fitToCanvasFilters(canvas)
+    : ['setsar=1', colourTagFilter];
 
 // screen recordings are variable frame rate, and concat or xfade over VFR
 // desyncs the audio, so every stage one clip is resampled to a constant rate
@@ -134,8 +144,19 @@ const overlayFadeFilters = (visible: OverlayWindow): string[] => {
   ];
 };
 
+// The fades run in rgba where the alpha lives; the conversion to video colour
+// happens here, once, with the matrix said out loud: left to the overlay's
+// auto scaler it used bt601 and shifted every drawn colour, and it subsampled
+// the art's chroma to 2x2 blocks on the way.
+const overlayColourFilters = [
+  'scale=flags=accurate_rnd:out_color_matrix=bt709',
+  'format=yuva444p',
+];
+
 export const overlayInputFilters = (visible?: OverlayWindow): string[] =>
-  visible ? ['format=rgba', ...overlayFadeFilters(visible)] : ['format=rgba'];
+  visible
+    ? ['format=rgba', ...overlayFadeFilters(visible), ...overlayColourFilters]
+    : ['format=rgba', ...overlayColourFilters];
 
 // the preset draws itself at the right place on a canvas sized PNG, so the
 // overlay always composites at the origin
@@ -178,10 +199,10 @@ export const overlayFilter = (
         visible,
         slide,
         move,
-      )}:enable='between(t,${secondsFromMs(visible.startMs)},${secondsFromMs(
-        visible.endMs,
-      )})'`
-    : `overlay=${overlayOrigin}`;
+      )}:format=yuv444:enable='between(t,${secondsFromMs(
+        visible.startMs,
+      )},${secondsFromMs(visible.endMs)})'`
+    : `overlay=${overlayOrigin}:format=yuv444`;
 
 const xfadeNames: Record<Exclude<Transition['type'], 'cut'>, string> = {
   crossfade: 'fade',

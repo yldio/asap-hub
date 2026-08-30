@@ -336,7 +336,9 @@ describe('buildRenderPlan', () => {
           banners: [banner()],
         }).steps[0]?.args.join(' ') ?? '';
 
-      expect(args).toContain("overlay=0:0:enable='between(t,2.000,7.000)'");
+      expect(args).toContain(
+        "overlay=0:0:format=yuv444:enable='between(t,2.000,7.000)'",
+      );
       expect(args).not.toContain("y='");
     });
   });
@@ -350,7 +352,7 @@ describe('buildRenderPlan', () => {
 
     it('pins the clip to the canvas rate, because zoompan writes its own timestamps', () => {
       expect(plan.steps[0]?.args.join(' ')).toContain(
-        'setsar=1,fps=30,zoompan=',
+        'setsar=1,setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709,fps=30,zoompan=',
       );
     });
 

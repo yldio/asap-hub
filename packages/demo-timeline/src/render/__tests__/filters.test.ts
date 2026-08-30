@@ -65,9 +65,10 @@ describe('filterSegment', () => {
 describe('fitToCanvasFilters', () => {
   it('letterboxes the source into the canvas without stretching it', () => {
     expect(fitToCanvasFilters(canvas)).toEqual([
-      'scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos',
+      'scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos:out_color_matrix=bt709',
       'pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black',
       'setsar=1',
+      'setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709',
     ]);
   });
 });
@@ -86,6 +87,7 @@ describe('videoFilters', () => {
 
     expect(placement && videoFilters({ canvas, placement })).toEqual([
       'setsar=1',
+      'setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709',
     ]);
   });
 });
@@ -113,6 +115,8 @@ describe('overlay filters', () => {
       'format=rgba',
       'fade=t=in:st=2.000:d=0.300:alpha=1',
       'fade=t=out:st=6.700:d=0.300:alpha=1',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
     ]);
   });
 
@@ -121,17 +125,25 @@ describe('overlay filters', () => {
       'format=rgba',
       'fade=t=in:st=0.000:d=0.200:alpha=1',
       'fade=t=out:st=0.200:d=0.200:alpha=1',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
     ]);
   });
 
   it('does not fade an overlay with no visible window at all', () => {
     expect(overlayInputFilters({ startMs: 5000, endMs: 5000 })).toEqual([
       'format=rgba',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
     ]);
   });
 
   it('does not fade an untimed overlay such as a title card', () => {
-    expect(overlayInputFilters()).toEqual(['format=rgba']);
+    expect(overlayInputFilters()).toEqual([
+      'format=rgba',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
+    ]);
   });
 
   // a banner cut in half by a clip boundary used to ramp at the cut, dipping out
@@ -144,7 +156,12 @@ describe('overlay filters', () => {
         spanStartMs: 2000,
         spanEndMs: 6000,
       }),
-    ).toEqual(['format=rgba', 'fade=t=in:st=2.000:d=0.300:alpha=1']);
+    ).toEqual([
+      'format=rgba',
+      'fade=t=in:st=2.000:d=0.300:alpha=1',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
+    ]);
   });
 
   it('ramps only at the real end of an overlay the clip cuts into', () => {
@@ -155,7 +172,12 @@ describe('overlay filters', () => {
         spanStartMs: -2000,
         spanEndMs: 2000,
       }),
-    ).toEqual(['format=rgba', 'fade=t=out:st=1.700:d=0.300:alpha=1']);
+    ).toEqual([
+      'format=rgba',
+      'fade=t=out:st=1.700:d=0.300:alpha=1',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
+    ]);
   });
 
   // the ring decays at its own rate and is simply cut off, rather than having
@@ -170,7 +192,12 @@ describe('overlay filters', () => {
         fadeInMs: 0,
         fadeOutMs: 600,
       }),
-    ).toEqual(['format=rgba', 'fade=t=out:st=1.800:d=0.600:alpha=1']);
+    ).toEqual([
+      'format=rgba',
+      'fade=t=out:st=1.800:d=0.600:alpha=1',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
+    ]);
   });
 
   // ffmpeg refuses a negative st, so the ramp is written on a rolled forward
@@ -190,17 +217,19 @@ describe('overlay filters', () => {
       'fade=t=out:st=0.000:d=0.600:alpha=1',
       'trim=start=0.200',
       'setpts=PTS-STARTPTS',
+      'scale=flags=accurate_rnd:out_color_matrix=bt709',
+      'format=yuva444p',
     ]);
   });
 
   it('gates a timed overlay in clip local time', () => {
     expect(overlayFilter({ startMs: 2000, endMs: 7000 })).toBe(
-      "overlay=0:0:enable='between(t,2.000,7.000)'",
+      "overlay=0:0:format=yuv444:enable='between(t,2.000,7.000)'",
     );
   });
 
   it('composites an untimed overlay at the origin', () => {
-    expect(overlayFilter()).toBe('overlay=0:0');
+    expect(overlayFilter()).toBe('overlay=0:0:format=yuv444');
   });
 });
 
@@ -266,7 +295,7 @@ describe('a sliding overlay', () => {
     expect(
       overlayFilter({ startMs: 2000, endMs: 7000 }, { distancePx: 281 }),
     ).toBe(
-      "overlay=x=0:y='281*(1-min(1,max(0,(t-2.000)/0.300))+min(1,max(0,(t-6.700)/0.300)))':enable='between(t,2.000,7.000)'",
+      "overlay=x=0:y='281*(1-min(1,max(0,(t-2.000)/0.300))+min(1,max(0,(t-6.700)/0.300)))':format=yuv444:enable='between(t,2.000,7.000)'",
     );
   });
 
@@ -274,7 +303,7 @@ describe('a sliding overlay', () => {
     expect(
       overlayFilter({ startMs: 0, endMs: 4000 }, { distancePx: -281 }),
     ).toBe(
-      "overlay=x=0:y='-281*(1-min(1,max(0,(t-0.000)/0.300))+min(1,max(0,(t-3.700)/0.300)))':enable='between(t,0.000,4.000)'",
+      "overlay=x=0:y='-281*(1-min(1,max(0,(t-0.000)/0.300))+min(1,max(0,(t-3.700)/0.300)))':format=yuv444:enable='between(t,0.000,4.000)'",
     );
   });
 
@@ -287,7 +316,7 @@ describe('a sliding overlay', () => {
   it('does not slide when there is no room to ramp', () => {
     expect(
       overlayFilter({ startMs: 1000, endMs: 1000 }, { distancePx: 281 }),
-    ).toBe("overlay=0:0:enable='between(t,1.000,1.000)'");
+    ).toBe("overlay=0:0:format=yuv444:enable='between(t,1.000,1.000)'");
   });
 });
 

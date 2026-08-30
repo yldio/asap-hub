@@ -385,7 +385,9 @@ export const buildClipStep = ({
         ...startArgs,
         ...videoInput,
         ...(generatedAudio ? silentAudioInput(seconds) : []),
-        ...overlays.flatMap((overlay) => imageInput(seconds, overlay.path)),
+        ...overlays.flatMap((overlay) =>
+          imageInput(seconds, overlay.path, canvas.fps),
+        ),
         '-filter_complex',
         graph(segments),
         '-map',

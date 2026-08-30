@@ -45,7 +45,15 @@ export const silentAudioInput = (seconds: string): string[] => [
   'anullsrc=channel_layout=stereo:sample_rate=48000',
 ];
 
-export const imageInput = (seconds: string, path: string): string[] => [
+// the overlay's own rate matters: left at the image default of 25fps its
+// fades stepped unevenly against a 30 or 60fps canvas
+export const imageInput = (
+  seconds: string,
+  path: string,
+  fps: number,
+): string[] => [
+  '-framerate',
+  String(fps),
   '-loop',
   '1',
   '-t',

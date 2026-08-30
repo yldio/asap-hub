@@ -220,6 +220,27 @@ describe('more than one monitor', () => {
     const noOrigin = { ...onTheLeft, screenLeft: undefined };
     expect(ratioOf(noOrigin, 'monitor').x).toBe(0);
   });
+
+  // an external display wider than its own corner leaves a band, here every
+  // pointer between 1512 and 1920, that also falls inside the primary display's
+  // width; reading that as the primary put each of those 1512 pixels out
+  it('reads an external display wider than its own origin against itself', () => {
+    const external: CapturePlacement = {
+      x: 100,
+      y: 400,
+      viewportW: 1800,
+      viewportH: 900,
+      screenX: 1612,
+      screenY: 400,
+      screenW: 1920,
+      screenH: 1080,
+      // the MacBook's own 1512 wide display is the primary one
+      screenLeft: 1512,
+      screenTop: 0,
+    };
+
+    expect(ratioOf(external, 'monitor').x).toBeCloseTo((1612 - 1512) / 1920, 6);
+  });
 });
 
 describe('a stream captured before the snippet reported the screen', () => {

@@ -45,12 +45,22 @@ const tabView = (event: CapturePlacement): SharedView | undefined =>
 // from. The browser will not say: availLeft and availTop are the corner of the
 // display's WORK AREA, which a macOS menu bar, a Linux top bar or a Windows
 // taskbar insets by tens of pixels, and the recording holds the whole display
-// rather than the work area. So an axis is read from the desktop origin whenever
-// the pointer already falls on the primary display, which is every single
-// monitor take and every display aligned with the primary one, and from the work
-// area only when the pointer is somewhere no primary display reaches.
-const displayOrigin = (at: number, size: number, workArea: number): number =>
-  at >= 0 && at < size ? 0 : workArea;
+// rather than the work area.
+//
+// A bar's inset is tens of pixels; a second display's corner is hundreds or
+// thousands. Reading the big one as an inset put every pointer in the band
+// between a wide external display's origin and its own width back on the
+// primary, a 1512px error on a MacBook driving a 1920 wide screen. So a large
+// offset is the display's origin outright, and only a small one falls back to
+// the rule that a pointer already on the primary display starts at 0.
+const workAreaInsetPx = 100;
+
+const displayOrigin = (at: number, size: number, workArea: number): number => {
+  if (Math.abs(workArea) >= workAreaInsetPx) {
+    return workArea;
+  }
+  return at >= 0 && at < size ? 0 : workArea;
+};
 
 // Wayland never tells the browser where its window sits: the window reports
 // the desktop corner and every screen coordinate is fabricated from the page

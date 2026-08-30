@@ -462,23 +462,45 @@ const probeDurationMs = async (path: string): Promise<number> => {
   return Number.isFinite(ms) ? ms : 0;
 };
 
-const rasterise = async (plan: RenderPlan): Promise<void> => {
+// a clip may ask for sixty click rings at once, and starting sixty rsvg-convert
+// processes on a two core task put them all into swap for no throughput
+export const maxRasterisers = 4;
+
+// runs the work a few at a time, keeping the first failure
+export const inPool = async <T>(
+  size: number,
+  items: T[],
+  work: (item: T) => Promise<void>,
+): Promise<void> => {
+  let next = 0;
+  const take = async (): Promise<void> => {
+    for (let index = next; index < items.length; index = next) {
+      next = index + 1;
+      const item = items[index];
+      if (item !== undefined) {
+        await work(item);
+      }
+    }
+  };
   await Promise.all(
-    plan.svgs.map(async ({ path, svg }) => {
-      const source = svgSourcePath(path);
-      await fs.writeFile(source, svg, 'utf8');
-      await run('rsvg-convert', [
-        '-w',
-        String(plan.canvas.width),
-        '-h',
-        String(plan.canvas.height),
-        '-o',
-        path,
-        source,
-      ]);
-    }),
+    Array.from({ length: Math.min(size, items.length) }, () => take()),
   );
 };
+
+const rasterise = (plan: RenderPlan): Promise<void> =>
+  inPool(maxRasterisers, plan.svgs, async ({ path, svg, width, height }) => {
+    const source = svgSourcePath(path);
+    await fs.writeFile(source, svg, 'utf8');
+    await run('rsvg-convert', [
+      '-w',
+      String(width),
+      '-h',
+      String(height),
+      '-o',
+      path,
+      source,
+    ]);
+  });
 
 const runPlan = async (
   plan: RenderPlan,

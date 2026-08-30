@@ -2,6 +2,7 @@ import { cursorEdge, defaultCursorColor } from '../../cursorColors';
 import { CursorEffect } from '../../schema';
 import {
   cursorArt,
+  rippleBox,
   rippleDurationMs,
   rippleSvg,
   spotlightDurationMs,
@@ -36,6 +37,26 @@ describe('rippleSvg', () => {
   });
 });
 
+describe('rippleBox', () => {
+  // 188x188 of a 1920x1080 frame, which is 1.7% of the pixels the ring used to
+  // be composited over on every frame it is visible for
+  it('is the ring and its edge, aimed at the click point', () => {
+    expect(rippleBox({ point: { x: 0.25, y: 0.75 }, canvas })).toEqual({
+      x: 386,
+      y: 716,
+      width: 188,
+      height: 188,
+    });
+  });
+
+  it('lets the box run off the frame rather than pulling the ring in', () => {
+    expect(rippleBox({ point: { x: 0, y: 0 }, canvas })).toMatchObject({
+      x: -94,
+      y: -94,
+    });
+  });
+});
+
 describe('spotlightSvg', () => {
   it('darkens the frame around the point', () => {
     expect(
@@ -53,6 +74,25 @@ describe('spotlightSvg', () => {
 });
 
 describe('cursorArt', () => {
+  it('carries the ripple box the overlay composites at', () => {
+    expect(cursorArt(effect(), canvas)).toMatchObject({
+      x: 386,
+      y: 716,
+      width: 188,
+      height: 188,
+    });
+  });
+
+  // the scrim darkens everything outside the click, so it is the whole frame
+  it('carries the whole frame for a spotlight', () => {
+    expect(cursorArt(effect({ type: 'spotlight' }), canvas)).toMatchObject({
+      x: 0,
+      y: 0,
+      width: 1920,
+      height: 1080,
+    });
+  });
+
   it('decays a ripple over its whole window', () => {
     expect(cursorArt(effect(), canvas)).toEqual(
       expect.objectContaining({

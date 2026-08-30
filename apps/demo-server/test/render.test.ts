@@ -10,6 +10,8 @@ import {
   AssetRow,
   finishProgress,
   formatTimestamp,
+  inPool,
+  maxRasterisers,
   parseProgressMs,
   parseRenderEnv,
   renderProgress,
@@ -913,5 +915,51 @@ describe('the assets a plan needs', () => {
 
   it('writes each overlay svg next to the png it rasterises to', () => {
     expect(svgSourcePath('/scratch/title-0.png')).toBe('/scratch/title-0.svg');
+  });
+});
+
+// a clip may ask for sixty click rings at once, and one rsvg-convert per ring
+// at once put a two core task into swap
+describe('the rasteriser pool', () => {
+  const settle = () => new Promise((resolve) => setImmediate(resolve));
+
+  it('never runs more than the cap at once', async () => {
+    let running = 0;
+    let most = 0;
+    await inPool(maxRasterisers, [...Array(20).keys()], async () => {
+      running += 1;
+      most = Math.max(most, running);
+      await settle();
+      running -= 1;
+    });
+
+    expect(most).toBe(maxRasterisers);
+  });
+
+  it('runs every item exactly once', async () => {
+    const seen: number[] = [];
+    await inPool(3, [...Array(10).keys()], async (item) => {
+      await settle();
+      seen.push(item);
+    });
+
+    expect([...seen].sort((a, b) => a - b)).toEqual([...Array(10).keys()]);
+  });
+
+  it('opens no workers for an empty list', async () => {
+    const work = jest.fn();
+    await inPool(4, [], work);
+
+    expect(work).not.toHaveBeenCalled();
+  });
+
+  it('reports the first failure', async () => {
+    await expect(
+      inPool(2, [1, 2, 3], async (item) => {
+        if (item === 2) {
+          throw new Error('no such file');
+        }
+      }),
+    ).rejects.toThrow('no such file');
   });
 });

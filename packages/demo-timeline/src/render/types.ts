@@ -13,7 +13,14 @@ export type RenderAsset = {
 
 export type FfmpegStep = { label: string; args: string[]; output: string };
 
-export type SvgFile = { path: string; svg: string };
+// the art's own size, because a click ring is rasterised at its bounding box
+// rather than over the whole canvas
+export type SvgFile = {
+  path: string;
+  svg: string;
+  width: number;
+  height: number;
+};
 
 export type ConcatListFile = { path: string; content: string };
 

@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rippleSvg draws a ring on the click point 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
-  <circle cx="480" cy="810" r="90" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="4"/>
-  <circle cx="480" cy="810" r="86" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.9" stroke-width="4"/>
+"<svg xmlns="http://www.w3.org/2000/svg" width="188" height="188" viewBox="0 0 188 188">
+  <circle cx="94" cy="94" r="90" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="4"/>
+  <circle cx="94" cy="94" r="86" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.9" stroke-width="4"/>
 </svg>"
 `;
 

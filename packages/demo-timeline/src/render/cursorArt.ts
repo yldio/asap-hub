@@ -16,6 +16,10 @@ export type CursorArtInput = {
   color?: string;
 };
 
+// where the art sits on the canvas and how big it is, so the overlay composites
+// only the pixels it draws on
+export type ArtBox = { x: number; y: number; width: number; height: number };
+
 // every size is a fraction of the canvas, so a click looks the same at 1080p
 // and at 4K
 const rippleStyle = {
@@ -32,27 +36,44 @@ const spotlightStyle = {
   scrimStop: 0.26,
 } as const;
 
+const rippleRadius = (canvas: PresetCanvas): number =>
+  Math.round((canvas.width * rippleStyle.diameter) / 2);
+
+const rippleStroke = (canvas: PresetCanvas): number =>
+  Math.max(1, Math.round(canvas.height * rippleStyle.strokeWidth));
+
+// The ring is about a tenth of the frame across, so drawing it on a canvas sized
+// image cost a full frame composite per click: 60 of them on a 3s clip measured
+// 49.0s of ffmpeg. This is the box it actually covers, one stroke out for the
+// dark edge and half of one again because a stroke straddles its own path.
+export const rippleBox = ({ point, canvas }: CursorArtInput): ArtBox => {
+  const reach = rippleRadius(canvas) + rippleStroke(canvas) * 2;
+  return {
+    x: Math.round(point.x * canvas.width) - reach,
+    y: Math.round(point.y * canvas.height) - reach,
+    width: reach * 2,
+    height: reach * 2,
+  };
+};
+
 export const rippleSvg = ({ point, canvas, color }: CursorArtInput): string => {
-  const radius = Math.round((canvas.width * rippleStyle.diameter) / 2);
-  const strokeWidth = Math.max(
-    1,
-    Math.round(canvas.height * rippleStyle.strokeWidth),
-  );
+  const radius = rippleRadius(canvas);
+  const strokeWidth = rippleStroke(canvas);
   const ink = resolveCursorColor(color);
-  const cx = Math.round(point.x * canvas.width);
-  const cy = Math.round(point.y * canvas.height);
+  const box = rippleBox({ point, canvas });
+  const centre = box.width / 2;
 
   // the dark edge sits just outside the ring, so a white click stays readable on
   // a white page and a coloured one stays readable on its own colour
   const edge = edgeFor(ink);
 
-  return svgDocument(canvas, [
-    `<circle cx="${cx}" cy="${cy}" r="${
+  return svgDocument(box, [
+    `<circle cx="${centre}" cy="${centre}" r="${
       radius + strokeWidth
     }" fill="none" stroke="${edge.color}" stroke-opacity="${
       edge.opacity
     }" stroke-width="${strokeWidth}"/>`,
-    `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${ink}" fill-opacity="${rippleStyle.fillOpacity}" stroke="${ink}" stroke-opacity="${rippleStyle.strokeOpacity}" stroke-width="${strokeWidth}"/>`,
+    `<circle cx="${centre}" cy="${centre}" r="${radius}" fill="${ink}" fill-opacity="${rippleStyle.fillOpacity}" stroke="${ink}" stroke-opacity="${rippleStyle.strokeOpacity}" stroke-width="${strokeWidth}"/>`,
   ]);
 };
 
@@ -79,7 +100,7 @@ export const spotlightSvg = ({ point, canvas }: CursorArtInput): string => {
   ]);
 };
 
-export type CursorArt = {
+export type CursorArt = ArtBox & {
   svg: string;
   durationMs: number;
   fadeInMs: number;
@@ -98,6 +119,7 @@ export const cursorArt = (
     // and decays it over the same window
     return {
       svg: rippleSvg(input),
+      ...rippleBox(input),
       durationMs: rippleDurationMs,
       fadeInMs: 0,
       fadeOutMs: rippleDurationMs,
@@ -105,7 +127,13 @@ export const cursorArt = (
   }
   return effect.type === 'spotlight'
     ? {
+        // the scrim darkens everything the click is not on, so its box is the
+        // whole frame however small the clear centre is
         svg: spotlightSvg(input),
+        x: 0,
+        y: 0,
+        width: canvas.width,
+        height: canvas.height,
         durationMs: spotlightDurationMs,
         fadeInMs: spotlightFadeMs,
         fadeOutMs: spotlightFadeMs,

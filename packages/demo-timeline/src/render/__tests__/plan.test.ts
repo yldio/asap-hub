@@ -10,6 +10,7 @@ import {
   TitleClip,
   Zoom,
 } from '../../schema';
+import { maxBannerOverlays, maxCursorOverlays } from '../clipSteps';
 import { buildRenderPlan, describePlan, renderDurationMs } from '../plan';
 import { RenderAsset } from '../types';
 
@@ -452,8 +453,13 @@ describe('buildRenderPlan', () => {
       ]);
     });
 
-    it('draws the ripple on the click point', () => {
-      expect(plan.svgs[0]?.svg).toContain('<circle cx="480" cy="810"');
+    // Measured on ffmpeg 9.0.1 with 60 rings on a 3s 1920x1080 clip: drawing
+    // each one on a canvas sized image took 49.0s, and drawing it at its own
+    // 188x188 box takes 6.3s. The click still lands at 480,810 on the canvas.
+    it('draws the ripple at its own box, aimed at the click point', () => {
+      expect(plan.svgs[0]).toMatchObject({ width: 188, height: 188 });
+      expect(plan.svgs[0]?.svg).toContain('<circle cx="94" cy="94"');
+      expect(plan.steps[0]?.args.join(' ')).toContain('overlay=386:716');
     });
 
     it('holds a spotlight longer than a ripple', () => {
@@ -561,6 +567,33 @@ describe('buildRenderPlan', () => {
     });
   });
 
+  // every overlay costs an ffmpeg input and a composite per frame, so a clip
+  // draws what a viewer sees rather than failing to render at all
+  describe('the overlays one clip will carry', () => {
+    it('caps the click effects', () => {
+      const many = Array.from({ length: maxCursorOverlays + 10 }, (_u, index) =>
+        effect({ id: `effect-${index}`, tMs: index * 100 }),
+      );
+
+      expect(
+        planFor({
+          clips: [source()],
+          cursor: [cursorLayer({ effects: many })],
+        }).svgs,
+      ).toHaveLength(maxCursorOverlays);
+    });
+
+    it('caps the banners the same way', () => {
+      const many = Array.from({ length: maxBannerOverlays + 5 }, (_u, index) =>
+        banner({ id: `banner-${index}`, startMs: index * 100 }),
+      );
+
+      expect(planFor({ clips: [source()], banners: many }).svgs).toHaveLength(
+        maxBannerOverlays,
+      );
+    });
+  });
+
   describe('a clip with a captured pointer', () => {
     const captured = [
       { tMs: 0, x: 0.2, y: 0.2 },
@@ -654,12 +687,13 @@ describe('buildRenderPlan', () => {
     // the ring used to sit at the address the button had before the zoom, while
     // the pointer clicking it had already followed the picture
     it('carries the click ring through the same window as the picture', () => {
-      expect(args).toContain("overlay=x='(((480)-(");
+      // the ring's own box moves with it, from the corner it was drawn at
+      expect(args).toContain("overlay=x='386+((((480)-(");
       expect(args).toContain(')*1920)*(1+1.000*if(between(t,');
     });
 
     it('carries the pointer through it too, on the same clock', () => {
-      expect(args.match(/overlay=x='\(\(/g)).toHaveLength(2);
+      expect(args.match(/overlay=x='[0-9+]*\(\(/g)).toHaveLength(2);
     });
 
     it('leaves the ring where it was drawn when nothing is zooming', () => {
@@ -668,7 +702,7 @@ describe('buildRenderPlan', () => {
           clips: [source()],
           cursor: [cursorLayer()],
         }).steps[0]?.args.join(' '),
-      ).toContain('overlay=0:0');
+      ).toContain('overlay=386:716');
     });
 
     // moving a full frame scrim would uncover the very edge it is darkening

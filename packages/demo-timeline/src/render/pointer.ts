@@ -1,6 +1,7 @@
 import { CursorPointerTrack } from '../cursor/pointer';
 import {
   PointerLayer,
+  pointerBox,
   pointerLayers,
   pointerPad,
   PointerVariant,
@@ -22,10 +23,8 @@ export const pointerScale = (
   canvas: PresetCanvas,
 ): number => (canvas.height * variant.heightRatio) / variant.height;
 
-// The rasteriser sizes every image to the canvas, so the shape is drawn into a
-// canvas sized frame and the overlay moves that whole frame. This is the point
-// inside the image the overlay has to aim: the part of the shape that does the
-// pointing, one halo in from the corner so nothing is clipped.
+// The point inside the sprite the overlay has to aim: the part of the shape that
+// does the pointing, one halo in from the corner so nothing is clipped.
 export const pointerHotspotPx = ({
   canvas,
   variant,
@@ -54,6 +53,21 @@ const pathElement = (layer: PointerLayer): string =>
     layer.strokeWidth,
   )} stroke-linejoin="round" stroke-linecap="round"/>`;
 
+// the sprite is a few percent of the frame, so it is drawn at its own size and
+// walked around the canvas rather than being a canvas sized image that moves
+export const pointerSizePx = ({
+  canvas,
+  variant,
+}: PointerArtInput): { width: number; height: number } => {
+  const chosen = pointerVariant(variant);
+  const scale = pointerScale(chosen, canvas);
+  const box = pointerBox(chosen);
+  return {
+    width: Math.ceil(box.width * scale),
+    height: Math.ceil(box.height * scale),
+  };
+};
+
 export const pointerSvg = ({
   canvas,
   variant,
@@ -63,7 +77,7 @@ export const pointerSvg = ({
   const scale = pointerScale(chosen, canvas);
   const origin = Math.round(pointerPad(chosen) * scale);
 
-  return svgDocument(canvas, [
+  return svgDocument(pointerSizePx({ canvas, variant }), [
     `<g transform="translate(${origin},${origin}) scale(${scale.toFixed(5)})">`,
     ...pointerLayers(chosen, color).map(pathElement),
     '</g>',

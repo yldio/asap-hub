@@ -29,6 +29,7 @@ import {
   graph,
   label,
   OverlayMove,
+  OverlayOrigin,
   OverlaySlide,
   OverlayWindow,
   overlayFilter,
@@ -43,7 +44,7 @@ import {
   pointerPngPath,
   titlePngPath,
 } from './paths';
-import { pointerMotion, pointerSvg } from './pointer';
+import { pointerMotion, pointerSizePx, pointerSvg } from './pointer';
 import { FfmpegStep, RenderAsset, SvgFile } from './types';
 import {
   onZoomedFrame,
@@ -68,6 +69,7 @@ type Overlay = SvgFile & {
   visible?: OverlayWindow;
   slide?: OverlaySlide;
   move?: OverlayMove;
+  origin?: OverlayOrigin;
 };
 
 const sourceInput = (
@@ -102,6 +104,8 @@ const titleOverlay = (
   durationMs: number,
 ): Overlay => ({
   path: titlePngPath(workDir, index),
+  width: canvas.width,
+  height: canvas.height,
   svg: titleCardSvg({
     preset: clip.preset,
     text: clip.text,
@@ -129,6 +133,11 @@ const bannerSlide = (
   return { distancePx: banner.position === 'bottom' ? height : -height };
 };
 
+// banners are authored one at a time rather than captured, so a clip never
+// legitimately carries many; the cap is there for the same reason the click one
+// is, that each overlay costs an input and a composite per frame
+export const maxBannerOverlays = 20;
+
 // a banner lives in programme time, so it is clipped to this placement and then
 // rebased, because the overlay is enabled in clip local time. Its own span is
 // carried across too, so a banner cut by a boundary does not ramp at the cut.
@@ -138,37 +147,41 @@ const bannerOverlays = (
   canvas: Canvas,
   workDir: string,
 ): Overlay[] =>
-  banners.flatMap((banner, index) => {
-    const spanEndMs = banner.startMs + banner.durationMs;
-    const startMs = Math.max(banner.startMs, placement.startMs);
-    const endMs = Math.min(spanEndMs, placement.endMs);
-    return endMs <= startMs
-      ? []
-      : [
-          {
-            path: bannerPngPath(workDir, index),
-            svg: bannerSvg({
-              preset: banner.preset,
-              text: banner.text,
-              subtitle: banner.subtitle,
-              position: banner.position,
-              canvas,
-            }),
-            visible: {
-              startMs: startMs - placement.startMs,
-              endMs: endMs - placement.startMs,
-              spanStartMs: banner.startMs - placement.startMs,
-              spanEndMs: spanEndMs - placement.startMs,
-              fadeInMs: banner.fadeInMs,
-              fadeOutMs: banner.fadeOutMs,
+  banners
+    .flatMap((banner, index) => {
+      const spanEndMs = banner.startMs + banner.durationMs;
+      const startMs = Math.max(banner.startMs, placement.startMs);
+      const endMs = Math.min(spanEndMs, placement.endMs);
+      return endMs <= startMs
+        ? []
+        : [
+            {
+              path: bannerPngPath(workDir, index),
+              width: canvas.width,
+              height: canvas.height,
+              svg: bannerSvg({
+                preset: banner.preset,
+                text: banner.text,
+                subtitle: banner.subtitle,
+                position: banner.position,
+                canvas,
+              }),
+              visible: {
+                startMs: startMs - placement.startMs,
+                endMs: endMs - placement.startMs,
+                spanStartMs: banner.startMs - placement.startMs,
+                spanEndMs: spanEndMs - placement.startMs,
+                fadeInMs: banner.fadeInMs,
+                fadeOutMs: banner.fadeOutMs,
+              },
+              slide: bannerSlide(banner, canvas),
             },
-            slide: bannerSlide(banner, canvas),
-          },
-        ];
-  });
+          ];
+    })
+    .slice(0, maxBannerOverlays);
 
-// every effect costs an ffmpeg input and a full frame composite, so a clip
-// draws the ones a viewer sees first rather than failing to render at all
+// every effect costs an ffmpeg input and a composite per frame, so a clip draws
+// the ones a viewer sees first rather than failing to render at all
 export const maxCursorOverlays = 60;
 
 // A zoom at rest adds nothing, so an overlay that is gone before the zoom starts
@@ -234,6 +247,9 @@ const cursorOverlays = (
           : [
               {
                 svg: art.svg,
+                width: art.width,
+                height: art.height,
+                origin: { x: art.x, y: art.y },
                 // the effect's own span rides along, so a ring cut by a clip
                 // edge keeps its true decay rate and is merely cut off, and
                 // one that began before frame 0 arrives already part faded
@@ -291,6 +307,7 @@ const pointerOverlays = (
               // per layer as well as per clip: the schema permits two layers
               // on one clip, and one png cannot hold two pointers
               path: pointerPngPath(workDir, placement.index, layerPosition),
+              ...pointerSizePx(art),
               svg: pointerSvg(art),
               // the pointer arrives with the capture and leaves with it, the
               // way the preview shows it, so neither end is ramped
@@ -407,7 +424,14 @@ export const buildClipStep = ({
       ),
       filterSegment(
         [`v${position}`, `o${position}`],
-        [overlayFilter(overlay.visible, overlay.slide, overlay.move)],
+        [
+          overlayFilter(
+            overlay.visible,
+            overlay.slide,
+            overlay.move,
+            overlay.origin,
+          ),
+        ],
         `v${position + 1}`,
       ),
     ]),
@@ -438,6 +462,11 @@ export const buildClipStep = ({
         output,
       ],
     },
-    svgs: overlays.map(({ path, svg }) => ({ path, svg })),
+    svgs: overlays.map(({ path, svg, width, height }) => ({
+      path,
+      svg,
+      width,
+      height,
+    })),
   };
 };

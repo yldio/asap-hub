@@ -16,7 +16,10 @@ const barStyles = css({
 
 const statusStyles = css({ fontSize: 13, color: editorTheme.muted });
 
+// both spans are inline by default, and an inline box ignores width: the
+// fill's percentage never drew at all, so a working render read as stuck
 const trackStyles = css({
+  display: 'inline-block',
   width: 120,
   height: 6,
   borderRadius: 3,
@@ -25,6 +28,7 @@ const trackStyles = css({
 });
 
 const fillStyles = css({
+  display: 'block',
   height: '100%',
   backgroundColor: editorTheme.playhead,
   transition: 'width 400ms linear',

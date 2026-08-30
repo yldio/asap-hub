@@ -69,7 +69,11 @@
    * is stopped and replaced, so a new bookmark takes over from an old one.
    */
   var REGISTRY = '__asapDemoCaptureV1';
-  var registryKey = projectId ? 'project.' + projectId : 'session.' + sessionId;
+  // the token is part of the key: a rotated bookmark carries a new token and
+  // must replace the old reporter, which keeps posting a revoked one into
+  // silent 204s otherwise
+  var registryKey =
+    (projectId ? 'project.' + projectId : 'session.' + sessionId) + '.' + token;
   var previous = window[REGISTRY];
   if (previous) {
     try {

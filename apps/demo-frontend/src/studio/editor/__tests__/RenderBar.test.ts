@@ -1,4 +1,4 @@
-import { stageLabel } from '../RenderBar';
+import { renderTookLabel, stageLabel } from '../RenderBar';
 
 describe('stageLabel', () => {
   // the container reports these verbatim, so a label the encoder never sends
@@ -17,5 +17,34 @@ describe('stageLabel', () => {
 
   it('falls back for anything it does not know', () => {
     expect(stageLabel('something new')).toBe('Rendering');
+  });
+});
+
+describe('renderTookLabel', () => {
+  const done = {
+    renderId: 'r1',
+    state: 'done' as const,
+    timelineVersion: 1,
+    requestedAt: '2026-08-30T19:24:24.677Z',
+    finishedAt: '2026-08-30T19:29:38.342Z',
+  };
+
+  it('reads the wall time off the row timestamps', () => {
+    expect(renderTookLabel(done)).toBe('Exported in 5:14.');
+  });
+
+  it('speaks of the cut when the render was a download', () => {
+    expect(renderTookLabel({ ...done, purpose: 'download' })).toBe(
+      'Cut ready in 5:14.',
+    );
+  });
+
+  it('shows nothing without both timestamps or before the render is done', () => {
+    expect(renderTookLabel(undefined)).toBeUndefined();
+    expect(renderTookLabel({ ...done, finishedAt: undefined })).toBeUndefined();
+    expect(renderTookLabel({ ...done, state: 'failed' })).toBeUndefined();
+    expect(
+      renderTookLabel({ ...done, finishedAt: 'not a date' }),
+    ).toBeUndefined();
   });
 });

@@ -94,6 +94,8 @@ export type RenderJob = {
   downloadPath?: string;
   stage?: string;
   progress?: number;
+  requestedAt?: string;
+  finishedAt?: string;
   error?: string;
 };
 

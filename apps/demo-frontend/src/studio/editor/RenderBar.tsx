@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { Link } from 'react-router';
 import { RenderJob, VideoStatus } from '../../api/types';
 import EditorButton from './EditorButton';
+import { formatDuration } from './geometry';
 import { editorTheme } from './editorTheme';
 
 const barStyles = css({
@@ -62,6 +63,20 @@ export const stageLabel = (stage: string): string => {
 };
 
 const draftStyles = css({ fontSize: 13, color: editorTheme.muted });
+
+// how long the last render ran, from the row's own timestamps; absent when
+// either end is missing or unreadable, so the bar never shows nonsense
+export const renderTookLabel = (render?: RenderJob): string | undefined => {
+  if (render?.state !== 'done' || !render.requestedAt || !render.finishedAt) {
+    return undefined;
+  }
+  const tookMs = Date.parse(render.finishedAt) - Date.parse(render.requestedAt);
+  if (!Number.isFinite(tookMs) || tookMs <= 0) {
+    return undefined;
+  }
+  const noun = render.purpose === 'download' ? 'Cut ready' : 'Exported';
+  return `${noun} in ${formatDuration(tookMs)}.`;
+};
 
 // exporting and publishing are two different things and the buttons alone read
 // as one, so the bar says who can see the demo as it stands
@@ -142,6 +157,9 @@ const RenderBar: FC<Props> = ({
             ? `${failureWord} failed: ${render.error}`
             : `${failureWord} failed`}
         </span>
+      ) : null}
+      {renderTookLabel(render) ? (
+        <span css={statusStyles}>{renderTookLabel(render)}</span>
       ) : null}
       {download && render?.state === 'done' && render.downloadPath ? (
         <EditorButton onClick={onSaveDownload}>

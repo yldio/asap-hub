@@ -136,6 +136,23 @@ const ClipInspector: FC<Props> = ({
         />
       ) : null}
 
+      {index > 0 && clip.transitionIn && clip.transitionIn.type !== 'cut' ? (
+        <TimecodeField
+          label="Transition length"
+          value={clip.transitionIn.durationMs}
+          disabled={readOnly}
+          minMs={100}
+          // the blend plays over both neighbours, so the lane clamps it to
+          // half the shorter one; this bound is just the half this clip knows
+          maxMs={Math.floor(placement.durationMs / 2)}
+          onChange={(durationMs) =>
+            clip.transitionIn
+              ? onTransition({ ...clip.transitionIn, durationMs })
+              : undefined
+          }
+        />
+      ) : null}
+
       <div css={rowButtonsStyles}>
         <EditorButton
           disabled={readOnly || index === 0}

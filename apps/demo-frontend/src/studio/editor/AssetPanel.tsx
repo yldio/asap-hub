@@ -315,11 +315,9 @@ const AssetPanel: FC<Props> = ({
       {doomed ? (
         <Modal onClose={() => setDoomed(undefined)} label="Remove this source">
           <p css={confirmStyles}>
-            Remove “{doomed.label}”? The file goes with it, and a recording
-            cannot be taken again.
             {used.has(doomed.assetId)
-              ? ' Clips on the timeline still use this source, so the studio will refuse until they are removed.'
-              : ''}
+              ? `Clips on the timeline still use “${doomed.label}”. Remove those clips first, then this source can go.`
+              : `Remove “${doomed.label}”? The file goes with it, and a recording cannot be taken again.`}
           </p>
           <div css={confirmRowStyles}>
             <EditorButton onClick={() => setDoomed(undefined)}>
@@ -327,6 +325,7 @@ const AssetPanel: FC<Props> = ({
             </EditorButton>
             <EditorButton
               danger
+              disabled={used.has(doomed.assetId)}
               onClick={() => {
                 onDelete(doomed);
                 setDoomed(undefined);

@@ -151,6 +151,16 @@ const WatchPlayer: FC<{
           currentSeconds={currentTime}
           onSelect={onSelectChapter}
           onHover={(chapter) => setHoveredChapter(chapter?.startMs ?? null)}
+          {...(video.sectionCount &&
+          access.sectionsBaseUrl &&
+          video.sectionCount >= video.chapters.length
+            ? {
+                sectionUrlOf: (index: number) =>
+                  `${access.sectionsBaseUrl}/${index}.mp4`,
+                sectionFileNameOf: (chapter: Chapter) =>
+                  downloadFileName(`${video.title} - ${chapter.title}`),
+              }
+            : {})}
         />
       </div>
     </div>

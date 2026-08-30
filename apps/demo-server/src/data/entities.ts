@@ -26,6 +26,7 @@ export const videoEntity = new Entity(
       folderId: { type: 'string', required: true, default: 'ROOT' },
       recordedAt: { type: 'string', required: true },
       durationMs: { type: 'number', default: 0 },
+      sectionCount: { type: 'number' },
       chapters: {
         type: 'list',
         items: {

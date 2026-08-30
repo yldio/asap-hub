@@ -457,6 +457,7 @@ export const videosRouter = (): Router => {
       streamUrl: `${base}/stream.mp4`,
       spriteUrl: `${base}/sprite.jpg`,
       thumbnailsVttUrl: `${base}/thumbnails.vtt`,
+      sectionsBaseUrl: `${base}/sections`,
     });
   });
 

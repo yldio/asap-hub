@@ -42,7 +42,8 @@ const listStyles = css({
 });
 
 const itemButtonStyles = css({
-  width: '100%',
+  flex: 1,
+  minWidth: 0,
   display: 'grid',
   gridTemplateColumns: `${rem(56)} 1fr`,
   gap: rem(12),
@@ -78,12 +79,41 @@ const emptyStyles = css({
   fontSize: rem(14),
 });
 
+const rowStyles = css({
+  display: 'flex',
+  alignItems: 'stretch',
+  gap: rem(4),
+});
+
+// a sibling of the chapter button, never a child: an interactive element
+// inside another is unreachable for assistive tech
+const downloadStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  padding: `0 ${rem(10)}`,
+  fontSize: rem(12),
+  color: lead.rgb,
+  textDecoration: 'none',
+  borderRadius: rem(4),
+  ':hover, :focus-visible': { backgroundColor: mint.rgb, color: pine.rgb },
+});
+
 const ChapterList: FC<{
   readonly chapters: Chapter[];
   readonly currentSeconds: number;
   readonly onSelect: (chapter: Chapter) => void;
   readonly onHover?: (chapter: Chapter | null) => void;
-}> = ({ chapters, currentSeconds, onSelect, onHover }) => {
+  // where a chapter's own file can be fetched, when the render published them
+  readonly sectionUrlOf?: (index: number) => string;
+  readonly sectionFileNameOf?: (chapter: Chapter) => string;
+}> = ({
+  chapters,
+  currentSeconds,
+  onSelect,
+  onHover,
+  sectionUrlOf,
+  sectionFileNameOf,
+}) => {
   const active = activeChapterIndex(chapters, currentSeconds);
 
   return (
@@ -94,7 +124,7 @@ const ChapterList: FC<{
       ) : (
         <ul css={listStyles}>
           {chapters.map((chapter, index) => (
-            <li key={`${chapter.startMs}-${chapter.title}`}>
+            <li key={`${chapter.startMs}-${chapter.title}`} css={rowStyles}>
               <button
                 type="button"
                 css={[itemButtonStyles, index === active && activeItemStyles]}
@@ -108,6 +138,17 @@ const ChapterList: FC<{
                 <span css={timeStyles}>{formatDuration(chapter.startMs)}</span>
                 <span>{chapter.title}</span>
               </button>
+              {sectionUrlOf ? (
+                <a
+                  css={downloadStyles}
+                  href={sectionUrlOf(index)}
+                  download={sectionFileNameOf?.(chapter)}
+                  aria-label={`Download ${chapter.title}`}
+                  title={`Download ${chapter.title}`}
+                >
+                  Download
+                </a>
+              ) : null}
             </li>
           ))}
         </ul>

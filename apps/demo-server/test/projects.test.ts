@@ -534,6 +534,7 @@ describe('POST /api/videos/:id/access for a studio render', () => {
       streamUrl: '/media/project-1/r2/stream.mp4',
       spriteUrl: '/media/project-1/r2/sprite.jpg',
       thumbnailsVttUrl: '/media/project-1/r2/thumbnails.vtt',
+      sectionsBaseUrl: '/media/project-1/r2/sections',
     });
   });
 

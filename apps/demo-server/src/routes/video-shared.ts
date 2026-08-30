@@ -61,6 +61,9 @@ export const serialiseVideo = (item: VideoItem) => ({
   recordedAt: item.recordedAt,
   durationMs: item.durationMs ?? 0,
   chapters: item.chapters ?? [],
+  ...(typeof item.sectionCount === 'number' && item.sectionCount > 0
+    ? { sectionCount: item.sectionCount }
+    : {}),
   processingState: item.processingState,
   ...(item.processingError ? { processingError: item.processingError } : {}),
   createdBy: item.createdBy,

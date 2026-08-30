@@ -101,6 +101,8 @@ export type Video = {
   recordedAt: string;
   durationMs: number;
   chapters: Chapter[];
+  // how many per-chapter section files the render published for download
+  sectionCount?: number;
   processingState: ProcessingState;
   processingError?: string;
   createdBy: { sub: string; name: string };
@@ -118,6 +120,7 @@ export type VideoAccess = {
   streamUrl: string;
   spriteUrl: string;
   thumbnailsVttUrl: string;
+  sectionsBaseUrl?: string;
 };
 
 export type Invite = {

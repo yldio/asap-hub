@@ -7,7 +7,6 @@ import {
   tilePlacements,
   tileSpans,
   tileTargetMs,
-  tileThresholdMs,
 } from '../tiles';
 import { RenderAsset } from '../types';
 
@@ -42,9 +41,17 @@ const planFor = (outMs: number, overrides: Partial<Timeline> = {}) =>
   });
 
 describe('tileSpans', () => {
-  it('leaves a clip under the threshold whole', () => {
-    expect(tileSpans(tileThresholdMs)).toEqual([
-      { startMs: 0, endMs: tileThresholdMs },
+  it('cuts a boundary at each zoom edge, so quiet stretches stand alone', () => {
+    expect(tileSpans(120_000, [{ startMs: 30_000, endMs: 50_000 }])).toEqual([
+      { startMs: 0, endMs: 30_000 },
+      { startMs: 30_000, endMs: 50_000 },
+      { startMs: 50_000, endMs: 120_000 },
+    ]);
+  });
+
+  it('folds a sliver into its neighbour rather than spawning a process for it', () => {
+    expect(tileSpans(70_000, [{ startMs: 60_000, endMs: 70_000 }])).toEqual([
+      { startMs: 0, endMs: 70_000 },
     ]);
   });
 
@@ -151,42 +158,92 @@ describe('shiftZoomsForTile', () => {
 describe('a tiled plan', () => {
   const plan = planFor(200_000);
 
-  it('encodes the tiles in the pool and assembles them for the join', () => {
+  it('feeds the tiles straight into the join when the timeline is all cuts', () => {
     const labels = plan.steps.map(({ label }) => label);
     expect(labels).toEqual([
       'clip 1 (source asset-long)',
       'clip 2 (source asset-long)',
       'clip 3 (source asset-long)',
       'clip 4 (source asset-long)',
-      'assemble clip 0 from 4 tiles',
-      'join 1 clip (concat)',
+      'join 4 clips (concat)',
     ]);
-    expect(plan.steps.map((step) => Boolean(step.serial))).toEqual([
-      false,
-      false,
-      false,
-      false,
-      true,
-      true,
-    ]);
+    expect(plan.listFile?.content).toBe(
+      [
+        "file '/work/clip-1.mp4'\n",
+        "file '/work/clip-2.mp4'\n",
+        "file '/work/clip-3.mp4'\n",
+        "file '/work/clip-4.mp4'\n",
+      ].join(''),
+    );
+    expect(plan.listFiles).toBeUndefined();
   });
 
-  it('hands the join the clip file the assemble writes', () => {
-    const assemble = plan.steps[4];
+  // a crossfade join blends whole clips, so the tiles come back together as
+  // the clip file the xfade chain expects
+  it('assembles the tiles per clip when a transition needs whole clips', () => {
+    const faded = buildRenderPlan({
+      timeline: {
+        ...createEmptyTimeline(),
+        clips: [
+          longClip(200_000),
+          {
+            kind: 'source',
+            id: 'clip-next',
+            assetId: 'asset-long',
+            inMs: 0,
+            outMs: 30_000,
+            volume: 1,
+            transitionIn: { type: 'crossfade', durationMs: 1000 },
+          },
+        ],
+      },
+      assets: longAsset(200_000),
+      workDir: '/work',
+      output: '/work/out.mp4',
+    });
+
+    const assemble = faded.steps.find(({ label }) =>
+      label.startsWith('assemble'),
+    );
     expect(assemble?.output).toBe('/work/clip-0.mp4');
-    expect(plan.listFiles?.[0]?.content).toContain("file '/work/clip-1.mp4'");
-    expect(plan.listFile?.content).toBe("file '/work/clip-0.mp4'\n");
-  });
-
-  it('rebuilds the audio through the concat filter, not the demuxer', () => {
-    const args = plan.steps[4]?.args.join(' ') ?? '';
+    expect(assemble?.serial).toBe(true);
+    const args = assemble?.args.join(' ') ?? '';
     expect(args).toContain('concat=n=4:v=0:a=1');
     expect(args).toContain('-copyts');
     expect(args).toContain('-c:v copy');
+    expect(faded.listFiles?.[0]?.content).toContain("file '/work/clip-2.mp4'");
   });
 
   it('weighs every step for the progress bar', () => {
     expect(plan.steps.every((step) => (step.weightMs ?? 0) > 0)).toBe(true);
+  });
+
+  // a zoom on one minute of a long take used to cost the rescale on all of
+  // it; now only the tile the zoom touches carries the chain
+  it('keeps the rescale chain off the quiet tiles', () => {
+    const zoomed = planFor(200_000, {
+      zooms: [
+        {
+          id: 'z1',
+          clipId: 'clip-long',
+          startMs: 70_000,
+          rampInMs: 400,
+          holdMs: 20_000,
+          rampOutMs: 400,
+          focus: { x: 0.5, y: 0.5 },
+          scale: 2,
+          easing: 'easeInOut',
+        },
+      ],
+    });
+    const clipSteps = zoomed.steps.filter(({ label }) =>
+      label.startsWith('clip'),
+    );
+    const carries = clipSteps.map((step) =>
+      step.args.join(' ').includes(',crop=1920:1080:'),
+    );
+    expect(clipSteps.length).toBeGreaterThan(2);
+    expect(carries.filter(Boolean)).toHaveLength(1);
   });
 
   it('lands a banner only on the tile it plays over', () => {

@@ -56,13 +56,19 @@ export const buildRenderPlan = ({
     return at;
   };
 
+  // with nothing but cuts, the join can read the tiles straight off the list
+  // and the per clip reassembly disappears: one less pass over the whole
+  // programme and one less generation of its audio
+  const cutOnly = placements.every((placement) => placement.overlapMs === 0);
+
   const encodeSteps: FfmpegStep[] = [];
   const assembleSteps: FfmpegStep[] = [];
   const listFiles: ConcatListFile[] = [];
   const svgs: SvgFile[] = [];
+  const joinPieces: typeof placements = [];
 
   placements.forEach((placement) => {
-    const tiles = tilePlacements(placement, index, takeIndex);
+    const tiles = tilePlacements(placement, index, takeIndex, zooms);
     const whole = tiles.length === 1;
     tiles.forEach((tile) => {
       const built = buildClipStep({
@@ -70,7 +76,11 @@ export const buildRenderPlan = ({
         canvas,
         banners,
         cursor,
-        zooms: shiftZoomsForTile(zooms, placement.clip.id, tile.shiftMs),
+        // a quiet tile carries no zoom at all, and with it goes the whole
+        // per frame rescale chain
+        zooms: tile.zoomed
+          ? shiftZoomsForTile(zooms, placement.clip.id, tile.shiftMs)
+          : zooms.filter((zoom) => zoom.clipId !== placement.clip.id),
         assets: index,
         workDir,
       });
@@ -79,8 +89,9 @@ export const buildRenderPlan = ({
         weightMs: whole ? placement.durationMs : tile.placement.durationMs,
       });
       svgs.push(...built.svgs);
+      joinPieces.push(whole ? placement : tile.placement);
     });
-    if (!whole) {
+    if (!whole && !cutOnly) {
       const assembled = buildAssembleStep(placement.index, tiles, workDir);
       assembleSteps.push(assembled.step);
       listFiles.push(assembled.listFile);
@@ -88,7 +99,7 @@ export const buildRenderPlan = ({
   });
 
   const join = buildJoinStep({
-    placements,
+    placements: cutOnly ? joinPieces : placements,
     canvas,
     narration,
     assets: index,

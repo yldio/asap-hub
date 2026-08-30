@@ -129,7 +129,8 @@ const bannerSlide = (
 };
 
 // a banner lives in programme time, so it is clipped to this placement and then
-// rebased, because the overlay is enabled in clip local time
+// rebased, because the overlay is enabled in clip local time. Its own span is
+// carried across too, so a banner cut by a boundary does not ramp at the cut.
 const bannerOverlays = (
   banners: Banner[],
   placement: ClipPlacement,
@@ -137,8 +138,9 @@ const bannerOverlays = (
   workDir: string,
 ): Overlay[] =>
   banners.flatMap((banner, index) => {
+    const spanEndMs = banner.startMs + banner.durationMs;
     const startMs = Math.max(banner.startMs, placement.startMs);
-    const endMs = Math.min(banner.startMs + banner.durationMs, placement.endMs);
+    const endMs = Math.min(spanEndMs, placement.endMs);
     return endMs <= startMs
       ? []
       : [
@@ -154,6 +156,8 @@ const bannerOverlays = (
             visible: {
               startMs: startMs - placement.startMs,
               endMs: endMs - placement.startMs,
+              spanStartMs: banner.startMs - placement.startMs,
+              spanEndMs: spanEndMs - placement.startMs,
               fadeInMs: banner.fadeInMs,
               fadeOutMs: banner.fadeOutMs,
             },
@@ -229,9 +233,14 @@ const cursorOverlays = (
           : [
               {
                 svg: art.svg,
+                // the effect's own span rides along, so a ring cut by a clip
+                // edge keeps its true decay rate and is merely cut off, and
+                // one that began before frame 0 arrives already part faded
                 visible: {
                   startMs,
                   endMs,
+                  spanStartMs: atMs,
+                  spanEndMs: atMs + art.durationMs,
                   fadeInMs: art.fadeInMs,
                   fadeOutMs: art.fadeOutMs,
                 },

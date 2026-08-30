@@ -242,6 +242,24 @@ describe('buildRenderPlan', () => {
     ).toEqual([true, true]);
   });
 
+  // the banner was clipped per clip and its ramps resolved against the clipped
+  // window, so it faded out before the cut and back in after it: a 600ms dip in
+  // the middle of a banner that should read as solid
+  it('ramps a banner spanning a cut only at its own ends', () => {
+    const [first, second] = planFor({
+      clips: [
+        source({ id: 'a', outMs: 4000 }),
+        source({ id: 'b', assetId: 'asset-2', outMs: 4000 }),
+      ],
+      banners: [banner({ startMs: 2000, durationMs: 4000 })],
+    }).steps.map((step) => step.args.join(' '));
+
+    expect(first).toContain('fade=t=in:st=2.000:d=0.300:alpha=1');
+    expect(first).not.toContain('fade=t=out');
+    expect(second).toContain('fade=t=out:st=1.700:d=0.300:alpha=1');
+    expect(second).not.toContain('fade=t=in');
+  });
+
   describe('a title card between two clips', () => {
     const plan = planFor({
       clips: [
@@ -424,6 +442,32 @@ describe('buildRenderPlan', () => {
         }).steps[0]?.args.join(' ') ?? '';
 
       expect(args).toContain("enable='between(t,2.500,3.100)'");
+    });
+
+    // the ring's decay used to be rescaled to whatever window was left, so a
+    // click near the clip end flashed out at triple speed
+    it('keeps a clipped ring decaying at its own rate', () => {
+      const args =
+        planFor({
+          clips: [source({ outMs: 2000 })],
+          cursor: [cursorLayer({ effects: [effect({ tMs: 1800 })] })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain('fade=t=out:st=1.800:d=0.600');
+      expect(args).toContain("enable='between(t,1.800,2.000)'");
+    });
+
+    it('starts a ring the trim cut into already part faded', () => {
+      const args =
+        planFor({
+          clips: [source({ inMs: 2200 })],
+          cursor: [cursorLayer({ effects: [effect({ tMs: 2000 })] })],
+        }).steps[0]?.args.join(' ') ?? '';
+
+      // the ring began 200ms before frame 0: the fade runs on a clock rolled
+      // 200ms forward and the head is trimmed back off
+      expect(args).toContain('fade=t=out:st=0.000:d=0.600');
+      expect(args).toContain('trim=start=0.200');
     });
 
     // capture times are moments in the footage: trimming the start of a clip

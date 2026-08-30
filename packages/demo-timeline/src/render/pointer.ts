@@ -8,7 +8,7 @@ import {
 } from '../cursor/pointerArt';
 import { PresetCanvas, svgDocument } from '../presets';
 import { CursorPathPoint } from '../schema';
-import { secondsFromMs } from './filters';
+import { secondsFromMs, sinceExpression } from './filters';
 import { onZoomedFrame, ZoomExpressions } from './zoom';
 
 export type PointerArtInput = {
@@ -70,11 +70,6 @@ export const pointerSvg = ({
   ]);
 };
 
-// `t-1.500` is what ffmpeg's parser wants, and `t--1.500` is not, so a sample
-// that a negative nudge pushed before the clip start adds instead
-const since = (tMs: number): string =>
-  tMs < 0 ? `(t+${secondsFromMs(-tMs)})` : `(t-${secondsFromMs(tMs)})`;
-
 // The track as a sum of ramps, each clamped to its own segment. It is flat rather
 // than nested, so a long capture does not build an expression ffmpeg has to
 // recurse through per frame, and it reproduces the track exactly, which is the
@@ -103,7 +98,7 @@ const axisExpression = (
     return spanMs <= 0 || step === 0
       ? []
       : [
-          `${step > 0 ? '+' : '-'}${Math.abs(step)}*clip(${since(
+          `${step > 0 ? '+' : '-'}${Math.abs(step)}*clip(${sinceExpression(
             previous.tMs,
           )}/${secondsFromMs(spanMs)},0,1)`,
         ];

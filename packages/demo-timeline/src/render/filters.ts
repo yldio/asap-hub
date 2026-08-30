@@ -4,6 +4,11 @@ import { Canvas, Clip, Transition } from '../schema';
 
 export const secondsFromMs = (ms: number): string => (ms / 1000).toFixed(3);
 
+// `t-1.500` is what ffmpeg's parser wants and `t--1.500` is not, so a moment
+// before the clip start adds instead
+export const sinceExpression = (tMs: number): string =>
+  tMs < 0 ? `(t+${secondsFromMs(-tMs)})` : `(t-${secondsFromMs(tMs)})`;
+
 export const chain = (filters: string[]): string => filters.join(',');
 
 export const label = (name: string): string => `[${name}]`;
@@ -52,7 +57,15 @@ export const clipAudioFilters = (clip: Clip): string[] =>
     ? [`volume=${clip.volume}`, resampleFilter, audioFormatFilter]
     : [resampleFilter, audioFormatFilter];
 
-export type OverlayWindow = Fade & { startMs: number; endMs: number };
+// The window the overlay is enabled for, and the effect's own unclipped span
+// when a clip shows only a piece of it. The ramps belong to the span: a banner
+// cut in half by a boundary keeps one solid edge on each side of it.
+export type OverlayWindow = Fade & {
+  startMs: number;
+  endMs: number;
+  spanStartMs?: number;
+  spanEndMs?: number;
+};
 
 // a signed distance in pixels: the offset the overlay travels from and back to
 export type OverlaySlide = { distancePx: number };
@@ -61,25 +74,62 @@ export type OverlaySlide = { distancePx: number };
 // frame, rather than parked where its own image drew it
 export type OverlayMove = { x: string; y: string };
 
-export const overlayFadeRamps = (visible: OverlayWindow): FadeRamps =>
-  resolveFade(visible, visible.endMs - visible.startMs);
+type FadeSpan = { startMs: number; endMs: number };
 
-const overlayFadeFilters = (visible: OverlayWindow): string[] => {
+const fadeSpan = (visible: OverlayWindow): FadeSpan => ({
+  startMs: visible.spanStartMs ?? visible.startMs,
+  endMs: visible.spanEndMs ?? visible.endMs,
+});
+
+export const overlayFadeRamps = (visible: OverlayWindow): FadeRamps => {
+  const span = fadeSpan(visible);
+  return resolveFade(visible, span.endMs - span.startMs);
+};
+
+type FadeRamp = { type: 'in' | 'out'; fromMs: number; durationMs: number };
+
+// each ramp sits at the effect's own end, and a ramp the clip never reaches is
+// dropped rather than dragged inside it
+const fadeRampsOf = (visible: OverlayWindow): FadeRamp[] => {
+  const span = fadeSpan(visible);
   const { inMs, outMs } = overlayFadeRamps(visible);
   return [
     ...(inMs > 0
-      ? [
-          `fade=t=in:st=${secondsFromMs(visible.startMs)}:d=${secondsFromMs(
-            inMs,
-          )}:alpha=1`,
-        ]
+      ? [{ type: 'in' as const, fromMs: span.startMs, durationMs: inMs }]
       : []),
     ...(outMs > 0
       ? [
-          `fade=t=out:st=${secondsFromMs(
-            visible.endMs - outMs,
-          )}:d=${secondsFromMs(outMs)}:alpha=1`,
+          {
+            type: 'out' as const,
+            fromMs: span.endMs - outMs,
+            durationMs: outMs,
+          },
         ]
+      : []),
+  ].filter(
+    (ramp) =>
+      ramp.fromMs + ramp.durationMs > visible.startMs &&
+      ramp.fromMs < visible.endMs,
+  );
+};
+
+// ffmpeg refuses a negative fade st, so a ramp that began before frame 0 is
+// written on a clock rolled forward far enough to hold it and trimmed back off
+export const overlayPreRollMs = (visible: OverlayWindow): number =>
+  Math.max(0, ...fadeRampsOf(visible).map((ramp) => -ramp.fromMs));
+
+const overlayFadeFilters = (visible: OverlayWindow): string[] => {
+  const ramps = fadeRampsOf(visible);
+  const preRollMs = overlayPreRollMs(visible);
+  return [
+    ...ramps.map(
+      (ramp) =>
+        `fade=t=${ramp.type}:st=${secondsFromMs(
+          ramp.fromMs + preRollMs,
+        )}:d=${secondsFromMs(ramp.durationMs)}:alpha=1`,
+    ),
+    ...(preRollMs > 0
+      ? [`trim=start=${secondsFromMs(preRollMs)}`, 'setpts=PTS-STARTPTS']
       : []),
   ];
 };
@@ -95,14 +145,14 @@ export const overlayOrigin = '0:0';
 // place, then ramps back out; min and max clamp each ramp to its own window
 const slideExpression = (
   distancePx: number,
-  visible: OverlayWindow,
+  span: FadeSpan,
   { inMs, outMs }: FadeRamps,
 ): string =>
-  `${distancePx}*(1-min(1,max(0,(t-${secondsFromMs(
-    visible.startMs,
-  )})/${secondsFromMs(inMs)}))+min(1,max(0,(t-${secondsFromMs(
-    visible.endMs - outMs,
-  )})/${secondsFromMs(outMs)})))`;
+  `${distancePx}*(1-min(1,max(0,${sinceExpression(
+    span.startMs,
+  )}/${secondsFromMs(inMs)}))+min(1,max(0,${sinceExpression(
+    span.endMs - outMs,
+  )}/${secondsFromMs(outMs)})))`;
 
 const overlayPosition = (
   visible: OverlayWindow,
@@ -114,7 +164,7 @@ const overlayPosition = (
   }
   const ramps = overlayFadeRamps(visible);
   return slide && ramps.inMs > 0 && ramps.outMs > 0
-    ? `x=0:y='${slideExpression(slide.distancePx, visible, ramps)}'`
+    ? `x=0:y='${slideExpression(slide.distancePx, fadeSpan(visible), ramps)}'`
     : overlayOrigin;
 };
 

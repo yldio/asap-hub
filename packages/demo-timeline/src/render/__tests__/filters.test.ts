@@ -134,6 +134,65 @@ describe('overlay filters', () => {
     expect(overlayInputFilters()).toEqual(['format=rgba']);
   });
 
+  // a banner cut in half by a clip boundary used to ramp at the cut, dipping out
+  // and back in over 600ms in the middle of a banner that should read as solid
+  it('ramps only at the real ends of an overlay the clip cuts short', () => {
+    expect(
+      overlayInputFilters({
+        startMs: 2000,
+        endMs: 4000,
+        spanStartMs: 2000,
+        spanEndMs: 6000,
+      }),
+    ).toEqual(['format=rgba', 'fade=t=in:st=2.000:d=0.300:alpha=1']);
+  });
+
+  it('ramps only at the real end of an overlay the clip cuts into', () => {
+    expect(
+      overlayInputFilters({
+        startMs: 0,
+        endMs: 2000,
+        spanStartMs: -2000,
+        spanEndMs: 2000,
+      }),
+    ).toEqual(['format=rgba', 'fade=t=out:st=1.700:d=0.300:alpha=1']);
+  });
+
+  // the ring decays at its own rate and is simply cut off, rather than having
+  // the whole decay squeezed into whatever is left of the clip
+  it('keeps the real fade duration when the window ends first', () => {
+    expect(
+      overlayInputFilters({
+        startMs: 1800,
+        endMs: 2000,
+        spanStartMs: 1800,
+        spanEndMs: 2400,
+        fadeInMs: 0,
+        fadeOutMs: 600,
+      }),
+    ).toEqual(['format=rgba', 'fade=t=out:st=1.800:d=0.600:alpha=1']);
+  });
+
+  // ffmpeg refuses a negative st, so the ramp is written on a rolled forward
+  // clock and the roll trimmed back off: at frame 0 the overlay is a third gone
+  it('starts an overlay part faded when its ramp began before frame 0', () => {
+    expect(
+      overlayInputFilters({
+        startMs: 0,
+        endMs: 400,
+        spanStartMs: -200,
+        spanEndMs: 400,
+        fadeInMs: 0,
+        fadeOutMs: 600,
+      }),
+    ).toEqual([
+      'format=rgba',
+      'fade=t=out:st=0.000:d=0.600:alpha=1',
+      'trim=start=0.200',
+      'setpts=PTS-STARTPTS',
+    ]);
+  });
+
   it('gates a timed overlay in clip local time', () => {
     expect(overlayFilter({ startMs: 2000, endMs: 7000 })).toBe(
       "overlay=0:0:enable='between(t,2.000,7.000)'",
@@ -175,6 +234,19 @@ describe('overlayFadeRamps', () => {
         fadeOutMs: 300,
       }),
     ).toEqual({ inMs: 450, outMs: 150 });
+  });
+
+  it('measures the ramps against the real span, not the visible piece', () => {
+    expect(
+      overlayFadeRamps({
+        startMs: 1800,
+        endMs: 2000,
+        spanStartMs: 1800,
+        spanEndMs: 2400,
+        fadeInMs: 0,
+        fadeOutMs: 600,
+      }),
+    ).toEqual({ inMs: 0, outMs: 600 });
   });
 
   it('honours a ramp asked to be nothing at all', () => {

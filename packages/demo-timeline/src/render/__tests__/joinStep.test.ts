@@ -1,6 +1,7 @@
 import { layoutClips } from '../../clips';
-import { Clip, SourceClip } from '../../schema';
+import { Canvas, Clip, NarrationClip, SourceClip } from '../../schema';
 import {
+  buildJoinStep,
   concatListContent,
   hasVisualTransition,
   joinBoundaries,
@@ -123,5 +124,79 @@ describe('concatListContent', () => {
     expect(concatListContent(["/work/o'brien.mp4"])).toBe(
       "file '/work/o'\\''brien.mp4'\n",
     );
+  });
+});
+
+describe('buildJoinStep, cut only', () => {
+  const canvas: Canvas = { width: 1920, height: 1080, fps: 30 };
+
+  const joinOf = (clips: Clip[], narration: NarrationClip[] = []) =>
+    buildJoinStep({
+      placements: layoutClips(clips),
+      canvas,
+      narration,
+      assets: new Map([
+        [
+          'voice-1',
+          { assetId: 'voice-1', path: '/media/voice-1.m4a', durationMs: 4000 },
+        ],
+      ]),
+      durationMs: 12000,
+      workDir: '/work',
+      output: '/work/out.mp4',
+    });
+
+  const cuts: Clip[] = [
+    source({ id: 'a', outMs: 4000 }),
+    source({ id: 'b', outMs: 4000 }),
+    source({ id: 'c', outMs: 4000 }),
+  ];
+
+  // Measured on ffmpeg 9.0.1 with three 4.000s clips, each carrying a 1kHz beep
+  // in its first 100ms. `-f concat -c copy` gave video start_time 0.021354 with
+  // audio duration 12.021333, the beeps drifting to 4.021354 and 8.021354, and a
+  // Non-monotonic DTS clamp at each cut. Rebuilding the audio through the concat
+  // filter gives video 0.000000/12.000000, audio 0.000000/12.000000, beeps at
+  // 4.000021 and 8.000021 and no clamp: the same numbers the xfade path gives.
+  it('rebuilds the audio through the concat filter rather than copying it', () => {
+    const args = joinOf(cuts).step.args.join(' ');
+
+    expect(args).toContain('[1:a][2:a][3:a]concat=n=3:v=0:a=1[pa]');
+    expect(args).toContain('-map 0:v -map [pa]');
+    expect(args).toContain('-c:v copy -c:a aac');
+    expect(args).not.toContain('-c:a copy');
+  });
+
+  // the demuxer reports the first clip's audio priming as a negative start, and
+  // without -copyts ffmpeg rebases the whole input and the copied picture lands
+  // 21.35ms late even when no audio is mapped from it
+  it('reads the demuxer with -copyts so the copied video keeps its own clock', () => {
+    expect(joinOf(cuts).step.args.join(' ')).toContain(
+      '-nostdin -y -copyts -f concat -safe 0 -i /work/concat.txt',
+    );
+  });
+
+  it('opens every clip again for its audio, after the demuxer', () => {
+    expect(joinOf(cuts).step.args.join(' ')).toContain(
+      '-i /work/concat.txt -i /work/clip-0.mp4 -i /work/clip-1.mp4 -i /work/clip-2.mp4',
+    );
+  });
+
+  it('mixes narration over the filter built programme audio', () => {
+    const args = joinOf(cuts, [
+      {
+        id: 'take-1',
+        assetId: 'voice-1',
+        startMs: 1500,
+        inMs: 0,
+        outMs: 4000,
+        volume: 1,
+      },
+    ]).step.args.join(' ');
+
+    expect(args).toContain('-i /work/clip-2.mp4 -i /media/voice-1.m4a');
+    expect(args).toContain('[4:a]atrim=0.000:4.000');
+    expect(args).toContain('[pa][n0]amix=inputs=2');
+    expect(args).toContain('-map 0:v -map [a]');
   });
 });

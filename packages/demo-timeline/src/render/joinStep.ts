@@ -103,6 +103,13 @@ const mixSegment = (inputs: string[], durationMs: number): string =>
     'a',
   );
 
+// The concat demuxer copies each clip's AAC packets untouched, so every clip
+// after the first re-inserts its own encoder priming: the programme measured
+// 21.35ms of audio ahead of picture and a non-monotonic DTS clamp at each cut.
+// The audio is therefore rebuilt from the clip files through the concat filter,
+// which decodes each one and drops its priming, while the video is still copied
+// off the demuxer. -copyts keeps the demuxer's negative audio start off the
+// video: without it ffmpeg rebases the whole input and the picture lands late.
 const concatJoin = ({
   placements,
   narration,
@@ -112,16 +119,32 @@ const concatJoin = ({
   output,
 }: JoinStepInput): JoinStepResult => {
   const listPath = concatListPath(workDir);
+  // input 0 is the demuxer the video is copied from, so the per-clip audio
+  // inputs start at 1 and the narration follows them
+  const audioInputs = placements.map(
+    (_unused, position) => `${position + 1}:a`,
+  );
+  const programAudio = filterSegment(
+    audioInputs,
+    [`concat=n=${audioInputs.length}:v=0:a=1`],
+    'pa',
+  );
   const mixed = narration.length > 0;
-  const segments = mixed
-    ? [
-        ...narrationSegments(narration, 1),
-        mixSegment(
-          ['0:a', ...narration.map((_, position) => narrationLabel(position))],
-          durationMs,
-        ),
-      ]
-    : [];
+  const segments = [
+    programAudio,
+    ...(mixed
+      ? [
+          ...narrationSegments(narration, placements.length + 1),
+          mixSegment(
+            [
+              'pa',
+              ...narration.map((_unused, position) => narrationLabel(position)),
+            ],
+            durationMs,
+          ),
+        ]
+      : []),
+  ];
 
   return {
     listFile: {
@@ -135,26 +158,27 @@ const concatJoin = ({
       output,
       args: [
         ...startArgs,
+        '-copyts',
         '-f',
         'concat',
         '-safe',
         '0',
         '-i',
         listPath,
+        ...placements.flatMap((placement) => [
+          '-i',
+          clipOutputPath(workDir, placement.index),
+        ]),
         ...narrationInputArgs(narration, assets),
-        ...(mixed
-          ? [
-              '-filter_complex',
-              graph(segments),
-              '-map',
-              '0:v',
-              '-map',
-              label('a'),
-            ]
-          : []),
+        '-filter_complex',
+        graph(segments),
+        '-map',
+        '0:v',
+        '-map',
+        label(mixed ? 'a' : 'pa'),
         '-c:v',
         'copy',
-        ...(mixed ? audioCodecArgs : ['-c:a', 'copy']),
+        ...audioCodecArgs,
         ...containerArgs,
         output,
       ],

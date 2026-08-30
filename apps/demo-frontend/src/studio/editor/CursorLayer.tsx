@@ -97,31 +97,51 @@ const pointerArtStyles = css({
 export const rippleMs = 600;
 export const spotlightMs = 1200;
 
-// the layer's nudge is what lines a capture up with the footage, and the render
-// applies it when it places every effect, so the preview has to as well
-const visible = (
-  effect: CursorEffect,
-  tMs: number,
-  windowMs: number,
-  offsetMs: number,
-): boolean => {
-  const atMs = effect.tMs + offsetMs;
-  return tMs >= atMs && tMs <= atMs + windowMs;
-};
+// the layer's nudge is what lines a capture up with the footage, and the
+// render applies it when it places every effect, so the preview has to as well.
+// A derived capture routinely carries hundreds of effects and this runs every
+// frame, so the effects are laid out once, sorted, and each frame only looks
+// at the slice that can possibly be on screen.
+type ShownWindow = { effect: CursorEffect; atMs: number; endMs: number };
 
-const shownAt = (
-  effects: CursorEffect[],
-  tMs: number,
-  offsetMs: number,
-): CursorEffect[] =>
-  effects.filter((effect) =>
-    visible(
-      effect,
-      tMs,
-      effect.type === 'spotlight' ? spotlightMs : rippleMs,
-      offsetMs,
-    ),
-  );
+const windowsOf = (effects: CursorEffect[], shiftMs: number): ShownWindow[] =>
+  effects
+    .map((effect) => {
+      const atMs = effect.tMs + shiftMs;
+      return {
+        effect,
+        atMs,
+        endMs: atMs + (effect.type === 'spotlight' ? spotlightMs : rippleMs),
+      };
+    })
+    .sort((a, b) => a.atMs - b.atMs);
+
+const shownAt = (windows: ShownWindow[], tMs: number): CursorEffect[] => {
+  // the first window that could still be running: none starts earlier than
+  // the longest window before tMs
+  let low = 0;
+  let high = windows.length;
+  const earliest = tMs - spotlightMs;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if ((windows[mid]?.atMs ?? 0) < earliest) {
+      low = mid + 1;
+    } else {
+      high = mid;
+    }
+  }
+  const shown: CursorEffect[] = [];
+  for (let at = low; at < windows.length; at += 1) {
+    const candidate = windows[at];
+    if (!candidate || candidate.atMs > tMs) {
+      break;
+    }
+    if (candidate.endMs >= tMs) {
+      shown.push(candidate.effect);
+    }
+  }
+  return shown;
+};
 
 // nothing on this layer changes while an effect is on screen: a ripple is a CSS
 // animation and a spotlight stands still, so the only moments worth a render
@@ -180,7 +200,11 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
     // less however much of the footage the trim cut off the front
     const shiftMs = offsetMs - inMs;
     const [timeMs, setTimeMs] = useState(tMs);
-    const shown = shownAt(effects, timeMs, shiftMs);
+    const windows = useMemo(
+      () => windowsOf(effects, shiftMs),
+      [effects, shiftMs],
+    );
+    const shown = shownAt(windows, timeMs);
     const shownKey = keyOf(shown);
     const shownKeyRef = useRef(shownKey);
     const pointerRef = useRef<HTMLDivElement>(null);
@@ -257,7 +281,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
         setTime: (ms: number) => {
           latestMsRef.current = ms;
           place(ms);
-          const key = keyOf(shownAt(effects, ms, shiftMs));
+          const key = keyOf(shownAt(windows, ms));
           if (key === shownKeyRef.current) {
             return;
           }
@@ -265,7 +289,7 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
           setTimeMs(ms);
         },
       }),
-      [effects, place, shiftMs],
+      [place, windows],
     );
 
     const spotlight = shown.find((effect) => effect.type === 'spotlight');

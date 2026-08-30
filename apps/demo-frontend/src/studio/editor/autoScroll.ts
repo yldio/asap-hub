@@ -61,17 +61,18 @@ export const useEdgeAutoScroll = (
   const pointerX = useRef(0);
   // negative until the first frame of a run: a timestamp of zero is a real one
   const lastTime = useRef(-1);
+  // The scroller's own box on screen does not move during a drag, so it is
+  // measured once when the drag starts rather than re-read every frame: the
+  // old per-frame getBoundingClientRect forced a layout sixty times a second
+  // for the whole length of every drag, edge or no edge.
+  const bounds = useRef<EdgeBounds>();
   const scrolled = useRef(onScrolled);
 
   useEffect(() => {
     scrolled.current = onScrolled;
   }, [onScrolled]);
 
-  const track = useCallback((clientX: number) => {
-    pointerX.current = clientX;
-  }, []);
-
-  const stop = useCallback(() => {
+  const park = useCallback(() => {
     if (frame.current !== undefined) {
       cancelAnimationFrame(frame.current);
       frame.current = undefined;
@@ -79,27 +80,25 @@ export const useEdgeAutoScroll = (
     lastTime.current = -1;
   }, []);
 
-  const start = useCallback(() => {
-    if (frame.current !== undefined) {
-      return;
-    }
-    lastTime.current = -1;
-
-    const run = (now: number): void => {
-      frame.current = requestAnimationFrame(run);
+  const run = useCallback(
+    (now: number): void => {
       const lane = scroller.current;
-      if (!lane) {
+      const box = bounds.current;
+      const velocity =
+        lane && box ? edgeScrollVelocity(pointerX.current, box) : 0;
+      // the loop only lives while the pointer is in an edge zone; anywhere
+      // else it parks itself and the next track() wakes it
+      if (!lane || velocity === 0) {
+        frame.current = undefined;
+        lastTime.current = -1;
         return;
       }
+      frame.current = requestAnimationFrame(run);
 
       const elapsed =
         lastTime.current < 0 ? 0 : (now - lastTime.current) / 1000;
       lastTime.current = now;
-      const velocity = edgeScrollVelocity(
-        pointerX.current,
-        lane.getBoundingClientRect(),
-      );
-      if (velocity === 0 || elapsed <= 0) {
+      if (elapsed <= 0) {
         return;
       }
 
@@ -113,10 +112,40 @@ export const useEdgeAutoScroll = (
       }
       lane.scrollLeft = next;
       scrolled.current();
-    };
+    },
+    [scroller],
+  );
 
+  const arm = useCallback(() => {
+    const box = bounds.current;
+    if (
+      frame.current !== undefined ||
+      !box ||
+      edgeScrollVelocity(pointerX.current, box) === 0
+    ) {
+      return;
+    }
     frame.current = requestAnimationFrame(run);
-  }, [scroller]);
+  }, [run]);
+
+  const track = useCallback(
+    (clientX: number) => {
+      pointerX.current = clientX;
+      arm();
+    },
+    [arm],
+  );
+
+  const stop = useCallback(() => {
+    park();
+    bounds.current = undefined;
+  }, [park]);
+
+  const start = useCallback(() => {
+    const lane = scroller.current;
+    bounds.current = lane ? lane.getBoundingClientRect() : undefined;
+    arm();
+  }, [arm, scroller]);
 
   useEffect(() => stop, [stop]);
 

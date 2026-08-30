@@ -532,11 +532,15 @@ const EffectTrack = memo<{
     onDragStart,
     onNudge,
   }) => {
+    // one pass instead of a find per zoom and per cursor layer on every render
+    const byClipId = new Map(
+      placements.map((each) => [each.clip.id, each] as const),
+    );
     const startOf = (clipId: string): number | undefined =>
-      placements.find(({ clip }) => clip.id === clipId)?.startMs;
+      byClipId.get(clipId)?.startMs;
 
     const trimOf = (clipId: string): number => {
-      const clip = placements.find((each) => each.clip.id === clipId)?.clip;
+      const clip = byClipId.get(clipId)?.clip;
       return clip?.kind === 'source' ? clip.inMs : 0;
     };
 
@@ -577,9 +581,7 @@ const EffectTrack = memo<{
         })}
 
         {cursorLayers.flatMap((layer) => {
-          const placement = placements.find(
-            ({ clip }) => clip.id === layer.clipId,
-          );
+          const placement = byClipId.get(layer.clipId);
           if (!placement) {
             return [];
           }
@@ -755,14 +757,23 @@ const Timeline: FC<Props> = ({
   const [dropIndex, setDropIndex] = useState<number>();
   const ghost = useDragGhost();
 
+  // The lane's origin in viewport space is fixed for the length of a drag
+  // apart from its own scrolling, so it is measured once when the drag takes
+  // the pointer: reading getBoundingClientRect on every pointer sample forced
+  // a synchronous layout right after React committed the previous sample's
+  // styles, which is the most expensive possible moment to ask.
+  const laneOriginRef = useRef<number>();
+
   const msAt = useCallback(
     (clientX: number): number => {
       const lane = laneRef.current;
       if (!lane) return 0;
-      return pxToMs(
-        clientX - lane.getBoundingClientRect().left,
-        pixelsPerSecond,
-      );
+      const scroll = scrollRef.current;
+      const origin =
+        laneOriginRef.current !== undefined && scroll
+          ? laneOriginRef.current - scroll.scrollLeft
+          : lane.getBoundingClientRect().left;
+      return pxToMs(clientX - origin, pixelsPerSecond);
     },
     [pixelsPerSecond],
   );
@@ -897,6 +908,10 @@ const Timeline: FC<Props> = ({
       if (!lane) return false;
       lane.setPointerCapture(event.pointerId);
       pointerXRef.current = event.clientX;
+      // one measurement for the whole drag; scrolling is added back per sample
+      laneOriginRef.current =
+        lane.getBoundingClientRect().left +
+        (scrollRef.current?.scrollLeft ?? 0);
       autoScroll.track(event.clientX);
       autoScroll.start();
       return true;

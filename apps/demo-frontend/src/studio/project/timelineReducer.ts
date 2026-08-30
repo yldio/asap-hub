@@ -2,6 +2,8 @@ import {
   Banner,
   Canvas,
   Clip,
+  clipLocalMs,
+  ClipPlacement,
   CursorEffect,
   CursorLayer,
   layoutClips,
@@ -148,10 +150,56 @@ export type TimelineAction =
   | { type: 'removeChapter'; chapterId: string }
   | { type: 'setCanvas'; canvas: Canvas };
 
+// A banner or a voice over lives in programme time, but what the creator hung
+// it on is the content underneath. Every programme time is read against the
+// old layout and spoken again in the new one, so an inserted title card pushes
+// what follows, a removal pulls it up, and a reorder carries the items along
+// with the content they sat over. During a crossfade two placements share
+// programme time; the instant belongs to the later clip, the one it blends in.
+const remapProgrammeMs = (
+  before: ClipPlacement[],
+  after: ClipPlacement[],
+): ((tMs: number) => number) => {
+  const now = new Map(after.map((placement) => [placement.clip.id, placement]));
+  const beforeEndMs = before[before.length - 1]?.endMs ?? 0;
+  const afterEndMs = after[after.length - 1]?.endMs ?? 0;
+
+  return (tMs: number): number => {
+    const at = before.findIndex((holder, index) => {
+      const nextStartMs = before[index + 1]?.startMs ?? holder.endMs;
+      return (
+        tMs < Math.max(holder.startMs, Math.min(holder.endMs, nextStartMs))
+      );
+    });
+    const holder = at >= 0 ? before[at] : undefined;
+    if (!holder) {
+      return tMs + (afterEndMs - beforeEndMs);
+    }
+    const landed = now.get(holder.clip.id);
+    if (landed) {
+      return landed.startMs + (tMs - holder.startMs);
+    }
+    // the clip underneath is gone: park at the seam its successor now makes
+    const successor = before
+      .slice(at + 1)
+      .map((later) => now.get(later.clip.id))
+      .find((placement) => placement !== undefined);
+    return successor ? successor.startMs : afterEndMs;
+  };
+};
+
+const boundProgrammeMs = (tMs: number): number =>
+  Math.max(0, Math.min(limits.maxTimelineMs, Math.round(tMs)));
+
 const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
   const clipIds = new Set(clips.map((clip) => clip.id));
   const survives = <T extends { clipId: string }>(item: T) =>
     clipIds.has(item.clipId);
+
+  const remap = remapProgrammeMs(
+    layoutClips(timeline.clips),
+    layoutClips(clips),
+  );
 
   // clip-anchored tracks cannot outlive their clip, so removing one takes its
   // zooms, cursor data and chapter markers with it
@@ -161,6 +209,14 @@ const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
     zooms: timeline.zooms.filter(survives),
     cursor: timeline.cursor.filter(survives),
     chapters: timeline.chapters.filter(survives),
+    banners: timeline.banners.map((banner) => ({
+      ...banner,
+      startMs: boundProgrammeMs(remap(banner.startMs)),
+    })),
+    narration: timeline.narration.map((take) => ({
+      ...take,
+      startMs: boundProgrammeMs(remap(take.startMs)),
+    })),
   };
 };
 
@@ -294,18 +350,37 @@ export const timelineReducer = (
       );
 
     case 'splitAt': {
-      const parent = placementAt(layoutClips(timeline.clips), action.tMs)?.clip
-        .id;
-      const split = parent
-        ? {
-            ...timeline,
-            cursor: copyCursorLayer(timeline, parent, action.clipId),
-          }
-        : timeline;
-      return withClips(
-        split,
-        splitAt(timeline.clips, action.tMs, action.clipId),
-      );
+      const parent = placementAt(layoutClips(timeline.clips), action.tMs);
+      const clips = splitAt(timeline.clips, action.tMs, action.clipId);
+      if (!parent || clips.length === timeline.clips.length) {
+        return withClips(timeline, clips);
+      }
+      // everything the parent carried is dealt to the piece whose moment it
+      // is: cursor times are footage times so both pieces share the layer,
+      // while zooms and chapters are clip-local and are rebased to the right
+      // piece when they belong past the cut
+      const cutMs = Math.round(clipLocalMs(parent, action.tMs));
+      const rightOf = (clipId: string, atMs: number): boolean =>
+        clipId === parent.clip.id && atMs >= cutMs;
+      const carried = {
+        ...timeline,
+        cursor: copyCursorLayer(timeline, parent.clip.id, action.clipId),
+        zooms: timeline.zooms.map((zoom) =>
+          rightOf(zoom.clipId, zoom.startMs)
+            ? { ...zoom, clipId: action.clipId, startMs: zoom.startMs - cutMs }
+            : zoom,
+        ),
+        chapters: timeline.chapters.map((chapter) =>
+          rightOf(chapter.clipId, chapter.offsetMs)
+            ? {
+                ...chapter,
+                clipId: action.clipId,
+                offsetMs: chapter.offsetMs - cutMs,
+              }
+            : chapter,
+        ),
+      };
+      return withClips(carried, clips);
     }
 
     case 'duplicateClip': {

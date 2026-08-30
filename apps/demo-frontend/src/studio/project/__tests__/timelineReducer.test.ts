@@ -314,6 +314,67 @@ describe('splitAt', () => {
   });
 });
 
+describe('splitAt dealing the tracks', () => {
+  const withZooms = (): Timeline => ({
+    ...withClips(),
+    zooms: [
+      {
+        id: 'zoom-early',
+        clipId: 'clip-1',
+        startMs: 500,
+        rampInMs: 100,
+        holdMs: 400,
+        rampOutMs: 100,
+        focus: { x: 0.5, y: 0.5 },
+        scale: 2,
+        easing: 'easeInOut',
+      },
+      {
+        id: 'zoom-late',
+        clipId: 'clip-1',
+        startMs: 3000,
+        rampInMs: 100,
+        holdMs: 400,
+        rampOutMs: 100,
+        focus: { x: 0.5, y: 0.5 },
+        scale: 2,
+        easing: 'easeInOut',
+      },
+    ],
+    chapters: [
+      { id: 'ch-late', clipId: 'clip-1', offsetMs: 4000, title: 'Late' },
+    ],
+  });
+
+  // a zoom past the cut stayed on the left piece, anchored beyond its end: it
+  // never played again and sat still on the lane while the content moved
+  it('moves what belongs past the cut onto the right piece, rebased', () => {
+    const split = timelineReducer(withZooms(), {
+      type: 'splitAt',
+      tMs: 2000,
+      clipId: 'clip-new',
+    });
+
+    expect(split.zooms).toEqual([
+      expect.objectContaining({
+        id: 'zoom-early',
+        clipId: 'clip-1',
+        startMs: 500,
+      }),
+      expect.objectContaining({
+        id: 'zoom-late',
+        clipId: 'clip-new',
+        startMs: 1000,
+      }),
+    ]);
+    expect(split.chapters[0]).toMatchObject({
+      clipId: 'clip-new',
+      offsetMs: 2000,
+    });
+    expect(() => parseTimeline(split)).not.toThrow();
+  });
+});
+
 describe('duplicateClip', () => {
   it('carries the cursor layer to the copy', () => {
     const captured = timelineReducer(withClips(), {
@@ -490,12 +551,31 @@ describe('banners', () => {
     ).toEqual([]);
   });
 
-  it('leaves banners alone when a clip is removed, because they are program timed', () => {
+  // programme timed, but hung on the content underneath: what pushed or
+  // pulled the clips carries the banner with what it was sitting over
+  it('pulls a banner up when the clip before it is removed', () => {
     const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+    const shifted = timelineReducer(added, {
+      type: 'removeClip',
+      clipId: 'clip-1',
+    });
 
-    expect(
-      timelineReducer(added, { type: 'removeClip', clipId: 'clip-1' }).banners,
-    ).toEqual([banner]);
+    expect(shifted.banners[0]?.startMs).toBe(
+      Math.max(0, banner.startMs - 5000),
+    );
+  });
+
+  it('pushes a banner along when a title card lands before it', () => {
+    const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+    const pushed = timelineReducer(added, {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 0,
+      text: 'Section',
+      durationMs: 3000,
+    });
+
+    expect(pushed.banners[0]?.startMs).toBe(banner.startMs + 3000);
   });
 });
 
@@ -578,11 +658,16 @@ describe('voice over', () => {
     ).toEqual([]);
   });
 
-  it('keeps a take when a clip goes, because it is program timed', () => {
-    expect(
-      timelineReducer(withTake(), { type: 'removeClip', clipId: 'clip-1' })
-        .narration,
-    ).toEqual([take]);
+  it('carries a take with the content it was spoken over', () => {
+    const pulled = timelineReducer(withTake(), {
+      type: 'removeClip',
+      clipId: 'clip-1',
+    });
+
+    expect(pulled.narration[0]).toEqual({
+      ...take,
+      startMs: Math.max(0, take.startMs - 5000),
+    });
   });
 });
 

@@ -55,7 +55,14 @@ const ZoomInspector: FC<Props> = ({
       label="Starts in the clip"
       value={zoom.startMs}
       disabled={readOnly}
-      {...(spanMs !== undefined ? { maxMs: spanMs } : {})}
+      {...(spanMs !== undefined
+        ? {
+            maxMs: Math.max(
+              0,
+              spanMs - (zoom.rampInMs + zoom.holdMs + zoom.rampOutMs),
+            ),
+          }
+        : {})}
       onChange={(startMs) => onChange({ startMs })}
     />
     <TimecodeField

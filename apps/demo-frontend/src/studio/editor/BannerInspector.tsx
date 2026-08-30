@@ -14,6 +14,8 @@ import { TrashIcon } from './icons';
 
 type Props = {
   readonly banner: Banner;
+  // how long the programme runs, so a banner cannot be typed off the end
+  readonly programmeMs?: number;
   readonly readOnly: boolean;
   readonly onChange: (change: Partial<Banner>) => void;
   readonly onRemove: () => void;
@@ -21,6 +23,7 @@ type Props = {
 
 const BannerInspector: FC<Props> = ({
   banner,
+  programmeMs,
   readOnly,
   onChange,
   onRemove,
@@ -39,13 +42,14 @@ const BannerInspector: FC<Props> = ({
       label="Subtitle"
       value={banner.subtitle ?? ''}
       disabled={readOnly}
-      placeholder="Under feature flag ASAP_NEW_EVENT_PAGE"
+      placeholder="A short line of supporting text"
       onChange={(subtitle) => onChange({ subtitle })}
     />
     <TimecodeField
       label="Starts at"
       value={banner.startMs}
       disabled={readOnly}
+      {...(programmeMs !== undefined ? { maxMs: programmeMs } : {})}
       onChange={(startMs) => onChange({ startMs })}
     />
     <TimecodeField

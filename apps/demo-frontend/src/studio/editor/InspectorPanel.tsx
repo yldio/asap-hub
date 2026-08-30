@@ -18,6 +18,11 @@ type Props = {
   readonly clipCount: number;
   readonly readOnly: boolean;
   readonly assetDurationOf: (assetId: string) => number | undefined;
+  // the one trim ceiling every surface shares: the ingest's probe or the
+  // recorder's own take length, never the browser's stopgap reading
+  readonly trimBoundMs?: number;
+  // how long the whole programme runs, for the fields that speak its time
+  readonly programmeMs?: number;
   readonly dispatch: (action: TimelineAction) => void;
   readonly onRemove: () => void;
 };
@@ -32,6 +37,8 @@ const InspectorPanel: FC<Props> = ({
   clipCount,
   readOnly,
   assetDurationOf,
+  trimBoundMs,
+  programmeMs,
   dispatch,
   onRemove,
 }) => {
@@ -120,6 +127,7 @@ const InspectorPanel: FC<Props> = ({
     return (
       <BannerInspector
         banner={banner}
+        programmeMs={programmeMs}
         readOnly={readOnly}
         onChange={(change) =>
           dispatch({ type: 'updateBanner', bannerId: banner.id, change })
@@ -150,6 +158,7 @@ const InspectorPanel: FC<Props> = ({
     <ClipInspector
       placement={clip}
       asset={source ? assets[source.assetId] : undefined}
+      trimBoundMs={trimBoundMs}
       readOnly={readOnly}
       index={clip?.index ?? 0}
       clipCount={clipCount}
@@ -159,7 +168,7 @@ const InspectorPanel: FC<Props> = ({
           type: 'trimClip',
           clipId: source.id,
           ...change,
-          assetDurationMs: assetDurationOf(source.assetId),
+          assetDurationMs: trimBoundMs,
         });
       }}
       onVolume={(volume) => {

@@ -10,7 +10,7 @@ import {
   pointerLayers,
   pointerVariants,
 } from '@asap-hub/demo-timeline';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import EditorButton from './EditorButton';
 import {
   fieldStyles,
@@ -24,10 +24,61 @@ import {
 } from './fields';
 import { TrashIcon } from './icons';
 import { editorTheme } from './editorTheme';
+import { fieldGesture, useGesture } from './gesture';
 
 const swatchRowStyles = css({ display: 'flex', gap: 6, flexWrap: 'wrap' });
 
 const alignRowStyles = css({ display: 'flex', gap: 8 });
+
+// A draft is held while it is being typed, so a minus sign on its way to a
+// number is not coerced to zero under the creator's fingers, and the whole
+// adjustment lands as one undo step rather than one per keystroke.
+const AlignField: FC<{
+  readonly label: string;
+  readonly value: number;
+  readonly disabled?: boolean;
+  readonly onChange: (px: number) => void;
+}> = ({ label, value, disabled, onChange }) => {
+  const gesture = useGesture();
+  const [draft, setDraft] = useState(String(value));
+  const [editing, setEditing] = useState(false);
+  useEffect(() => {
+    if (!editing) {
+      setDraft(String(value));
+    }
+  }, [editing, value]);
+
+  return (
+    <label css={fieldStyles}>
+      {label}
+      <input
+        css={alignInputStyles}
+        type="number"
+        min={-500}
+        max={500}
+        step={1}
+        inputMode="numeric"
+        disabled={disabled}
+        value={draft}
+        onFocus={() => {
+          setEditing(true);
+          gesture.begin(fieldGesture);
+        }}
+        onBlur={() => {
+          setEditing(false);
+          gesture.end(fieldGesture);
+        }}
+        onChange={(event) => {
+          setDraft(event.target.value);
+          const px = Number(event.target.value);
+          if (event.target.value !== '' && Number.isFinite(px)) {
+            onChange(Math.max(-500, Math.min(500, Math.round(px))));
+          }
+        }}
+      />
+    </label>
+  );
+};
 
 const alignInputStyles = css({
   height: 30,
@@ -207,38 +258,18 @@ const CursorEffectInspector: FC<Props> = ({
           <fieldset css={fieldStyles}>
             <legend>Fine tune the position, in pixels of the frame</legend>
             <div css={alignRowStyles}>
-              <label css={fieldStyles}>
-                Across
-                <input
-                  css={alignInputStyles}
-                  type="number"
-                  min={-500}
-                  max={500}
-                  step={1}
-                  inputMode="numeric"
-                  disabled={readOnly}
-                  value={alignXPx}
-                  onChange={(event) =>
-                    onChangeAlign(Number(event.target.value) || 0, alignYPx)
-                  }
-                />
-              </label>
-              <label css={fieldStyles}>
-                Down
-                <input
-                  css={alignInputStyles}
-                  type="number"
-                  min={-500}
-                  max={500}
-                  step={1}
-                  inputMode="numeric"
-                  disabled={readOnly}
-                  value={alignYPx}
-                  onChange={(event) =>
-                    onChangeAlign(alignXPx, Number(event.target.value) || 0)
-                  }
-                />
-              </label>
+              <AlignField
+                label="Across"
+                value={alignXPx}
+                disabled={readOnly}
+                onChange={(px) => onChangeAlign(px, alignYPx)}
+              />
+              <AlignField
+                label="Down"
+                value={alignYPx}
+                disabled={readOnly}
+                onChange={(px) => onChangeAlign(alignXPx, px)}
+              />
             </div>
             <p css={mutedStyles}>
               Moves every click and the pointer by this much, everywhere.

@@ -251,6 +251,15 @@ const PreviewStage: FC<Props> = ({
         frame.focus.y * 100
       }%`;
 
+      // written every frame: the blend below fades this element down, and a
+      // fade left standing muted every clip after the crossfade until the
+      // volume effect happened to run again
+      const mainVolume =
+        clip?.kind === 'source'
+          ? Math.min(1, Math.max(0, volume * clip.volume))
+          : 0;
+      element.volume = mainVolume;
+
       const sourceMs =
         placement && clip?.kind === 'source'
           ? sourceTimeAt(placement, ms)
@@ -293,11 +302,11 @@ const PreviewStage: FC<Props> = ({
 
       const base = Math.min(1, Math.max(0, volume * next.clip.volume));
       incoming.volume = base * progress;
-      const mainBase =
+      const outgoing =
         clip?.kind === 'source'
           ? Math.min(1, Math.max(0, volume * clip.volume))
           : 0;
-      element.volume = mainBase * (1 - progress);
+      element.volume = outgoing * (1 - progress);
 
       const audible = playing && blendMs >= 0;
       if (audible && incoming.paused) {

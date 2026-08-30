@@ -201,11 +201,19 @@ const withClips = (timeline: Timeline, clips: Clip[]): Timeline => {
     layoutClips(clips),
   );
 
+  // a clip promoted to the front has nothing to blend with, and a transition
+  // left on it silently reappeared if another clip was later moved before it
+  const settled = clips.map((clip, at) =>
+    at === 0 && clip.transitionIn !== undefined
+      ? { ...clip, transitionIn: undefined }
+      : clip,
+  );
+
   // clip-anchored tracks cannot outlive their clip, so removing one takes its
   // zooms, cursor data and chapter markers with it
   return {
     ...timeline,
-    clips,
+    clips: settled,
     zooms: timeline.zooms.filter(survives),
     cursor: timeline.cursor.filter(survives),
     chapters: timeline.chapters.filter(survives),

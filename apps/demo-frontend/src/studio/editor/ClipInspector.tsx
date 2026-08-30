@@ -28,6 +28,8 @@ const rowButtonsStyles = css({ display: 'flex', gap: 6 });
 type Props = {
   readonly placement?: ClipPlacement;
   readonly asset?: ProjectAsset;
+  // the one trim ceiling every surface shares; see ProjectEditor.trimBoundOf
+  readonly trimBoundMs?: number;
   readonly readOnly: boolean;
   readonly index: number;
   readonly clipCount: number;
@@ -52,6 +54,7 @@ const clipName = (clip: Clip, asset?: ProjectAsset): string =>
 const ClipInspector: FC<Props> = ({
   placement,
   asset,
+  trimBoundMs,
   readOnly,
   index,
   clipCount,
@@ -101,7 +104,7 @@ const ClipInspector: FC<Props> = ({
             value={source.outMs}
             disabled={readOnly}
             minMs={source.inMs + limits.minClipMs}
-            maxMs={asset?.durationMs}
+            maxMs={trimBoundMs ?? asset?.durationMs}
             onChange={(outMs) => onTrim({ outMs })}
           />
           <VolumeField

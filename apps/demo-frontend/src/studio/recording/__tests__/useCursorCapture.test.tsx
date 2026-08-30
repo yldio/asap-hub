@@ -54,12 +54,32 @@ it('lets go of a session the server no longer has', async () => {
     'demo-hub.capture.project-1',
     JSON.stringify(session),
   );
-  const captureStatus = jest.fn().mockRejectedValue(new Error('gone'));
+  const captureStatus = jest
+    .fn()
+    .mockRejectedValue(new ApiError(404, 'not found'));
 
   const view = render({ captureStatus });
 
   await waitFor(() => expect(view.result.current.session).toBeUndefined());
   expect(window.localStorage.getItem('demo-hub.capture.project-1')).toBeNull();
+});
+
+// wifi hiccups are not the death of a capture: a blip on the poll used to
+// throw a live session away and offer the creator a fresh, empty one
+it('keeps the session through a network blip on the poll', async () => {
+  window.localStorage.setItem(
+    'demo-hub.capture.project-1',
+    JSON.stringify(session),
+  );
+  const captureStatus = jest.fn().mockRejectedValue(new Error('offline'));
+
+  const view = render({ captureStatus });
+
+  await waitFor(() => expect(captureStatus).toHaveBeenCalled());
+  expect(view.result.current.session?.sessionId).toBe('session-1');
+  expect(
+    window.localStorage.getItem('demo-hub.capture.project-1'),
+  ).not.toBeNull();
 });
 
 // the bookmark is handed out the once it is minted, so a creator who lost

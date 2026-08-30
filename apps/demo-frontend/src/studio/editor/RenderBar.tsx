@@ -70,11 +70,11 @@ export const whoCanSeeIt = (
   status: VideoStatus,
 ): string => {
   if (!hasOutput) {
-    return 'Draft. Exporting makes a video only you can see.';
+    return 'Draft. Exporting makes a video other creators can watch, but not members.';
   }
   return status === 'published'
     ? 'Published. Anyone signed in can watch it.'
-    : 'Exported. Only you can see it until you publish.';
+    : 'Exported. Creators can watch it. Publish it for everyone else.';
 };
 
 type Props = {
@@ -110,7 +110,12 @@ const RenderBar: FC<Props> = ({
         <span css={statusStyles}>
           {render?.stage ? stageLabel(render.stage) : 'Queued'}
         </span>
-        <span css={trackStyles} role="progressbar" aria-valuenow={progress}>
+        <span
+          css={trackStyles}
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-label="Export progress"
+        >
           <span css={fillStyles} style={{ width: `${progress}%` }} />
         </span>
         <EditorButton disabled={readOnly} onClick={onCancel}>
@@ -144,6 +149,11 @@ const RenderBar: FC<Props> = ({
       <EditorButton
         primary
         disabled={readOnly || !canRender}
+        title={
+          !readOnly && !canRender
+            ? 'Waiting for the last edits to save'
+            : undefined
+        }
         onClick={onRender}
       >
         {hasOutput ? 'Export again' : 'Export to a demo'}

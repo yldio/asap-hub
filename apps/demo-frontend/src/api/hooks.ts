@@ -173,10 +173,13 @@ export const useDeleteVideo = (id: string) => {
 
 export const useVideoAccess = (
   id: string,
+  mediaPath?: string,
 ): UseQueryResult<VideoAccess, unknown> => {
   const api = useApi();
   return useQuery({
-    queryKey: ['video-access', id],
+    // keyed on the revision as well, so a re-export is picked up the moment
+    // the row names it rather than after the ten minute stale window
+    queryKey: ['video-access', id, mediaPath ?? ''],
     queryFn: () => api.requestAccess(id),
     enabled: id !== '',
     retry: false,

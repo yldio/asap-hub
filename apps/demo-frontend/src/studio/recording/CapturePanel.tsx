@@ -215,7 +215,7 @@ const CapturePanel: FC<Props> = ({
         <span css={waitingStyles}>
           {`Nothing has arrived for ${Math.round(
             quietForMs / 60000,
-          )} min. Click your capture bookmark on the tab you are demoing.`}
+          )} min. Click your capture bookmark again on the tab you are demoing; if it was clicked and this stays quiet, the capture is full, so add the cursor effects and record on.`}
         </span>
       ) : null}
 
@@ -233,8 +233,8 @@ const CapturePanel: FC<Props> = ({
       {finished ? (
         <>
           <p css={hintStyles}>
-            This capture has been used. Recording again starts a fresh one by
-            itself; only start one here to track the cursor without recording.
+            This capture has been used. A fresh one starts by itself while this
+            page is open.
           </p>
           <EditorButton
             icon={<PlusIcon size={15} />}

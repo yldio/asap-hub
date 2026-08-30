@@ -256,7 +256,7 @@ const AssetPanel: FC<Props> = ({
       <h2 css={headingStyles}>Chapters</h2>
       {chapters}
 
-      <h2 css={headingStyles}>Clips</h2>
+      <h2 css={headingStyles}>Sources</h2>
       {assets.length === 0 ? (
         <p css={emptyStyles}>
           Nothing here yet. Import a video, then add it to the timeline to start

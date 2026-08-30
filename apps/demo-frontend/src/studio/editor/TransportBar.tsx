@@ -83,6 +83,7 @@ const TransportBar: FC<Props> = ({
       <label>
         <span css={{ marginRight: 4 }}>at</span>
         <select
+          disabled={readOnly}
           css={selectStyles}
           aria-label="Frames per second"
           value={canvasFps}

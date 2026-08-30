@@ -48,14 +48,14 @@ const NarrationInspector: FC<Props> = ({
       onChange={(startMs) => onChange({ startMs })}
     />
     <TimecodeField
-      label="Skip from the beginning of the audio"
+      label="Trim start"
       value={narration.inMs}
       disabled={readOnly}
       maxMs={narration.outMs - 1}
       onChange={(inMs) => onChange({ inMs })}
     />
     <TimecodeField
-      label="Play up to, in the audio"
+      label="Trim end"
       value={narration.outMs}
       disabled={readOnly}
       minMs={narration.inMs + 1}

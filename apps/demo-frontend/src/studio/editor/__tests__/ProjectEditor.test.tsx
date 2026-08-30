@@ -388,7 +388,7 @@ describe('retiming a cursor effect on the lane', () => {
   });
 
   const marker = (label: string) =>
-    screen.getByRole('button', { name: `ripple effect at ${label}` });
+    screen.getByRole('button', { name: `Click highlight at ${label}` });
 
   const moves = (calls: Call[]) =>
     calls.flatMap((call) =>
@@ -563,7 +563,7 @@ describe('the colour of a click', () => {
     const { calls } = renderEditor({ timeline: withEffect() });
 
     await userEvent.click(
-      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+      screen.getByRole('button', { name: 'Click highlight at 0:01.00' }),
     );
     await userEvent.click(await screen.findByRole('button', { name: 'Red' }));
 
@@ -601,7 +601,7 @@ describe('lining a whole capture up by hand', () => {
   const openInspector = async (offsetMs: number) => {
     const view = renderEditor({ timeline: withCapture(offsetMs) });
     await userEvent.click(
-      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+      screen.getByRole('button', { name: 'Click highlight at 0:01.00' }),
     );
     return view;
   };
@@ -662,7 +662,7 @@ describe('lining a whole capture up by hand', () => {
       },
     });
     await userEvent.click(
-      screen.getByRole('button', { name: 'ripple effect at 0:01.00' }),
+      screen.getByRole('button', { name: 'Click highlight at 0:01.00' }),
     );
 
     expect(
@@ -801,7 +801,7 @@ describe('dragging a click onto another clip', () => {
     const { calls } = renderEditor({ timeline: twoClips() });
 
     fireEvent.keyDown(
-      screen.getByRole('button', { name: 'ripple effect at 0:01.90' }),
+      screen.getByRole('button', { name: 'Click highlight at 0:01.90' }),
       { key: 'ArrowRight', shiftKey: true },
     );
 

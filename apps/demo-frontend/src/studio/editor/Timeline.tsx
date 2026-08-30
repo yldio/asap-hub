@@ -482,7 +482,9 @@ const EffectMarker: FC<{
 }) => (
   <button
     type="button"
-    aria-label={`${effect.type} effect at ${formatTimecode(atMs)}`}
+    aria-label={`${
+      effect.type === 'ripple' ? 'Click highlight' : 'Spotlight'
+    } at ${formatTimecode(atMs)}`}
     aria-pressed={selected}
     css={[effectMarkerStyles, selected && selectedMarkerStyles]}
     style={{ left: msToPx(atMs, pixelsPerSecond) }}

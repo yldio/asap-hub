@@ -151,8 +151,8 @@ const ActionBar: FC<Props> = ({
 
     <span css={hintStyles}>
       Drag anything along its lane to move it, or drag either edge to change how
-      long it lasts. S splits, D duplicates, M mutes, {undoHint} undoes and{' '}
-      {redoHint} redoes.
+      long it lasts. S splits, D duplicates, M mutes, Delete removes, {undoHint}{' '}
+      undoes and {redoHint} redoes.
     </span>
 
     <div css={groupStyles}>

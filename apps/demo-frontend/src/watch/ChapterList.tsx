@@ -79,6 +79,13 @@ const emptyStyles = css({
   fontSize: rem(14),
 });
 
+const captionStyles = css({
+  margin: 0,
+  padding: `0 ${rem(16)} ${rem(8)}`,
+  color: lead.rgb,
+  fontSize: rem(12),
+});
+
 const rowStyles = css({
   display: 'flex',
   alignItems: 'stretch',
@@ -119,6 +126,9 @@ const ChapterList: FC<{
   return (
     <nav css={panelStyles} aria-label="Chapters">
       <h2 css={headingStyles}>Chapters</h2>
+      {sectionUrlOf ? (
+        <p css={captionStyles}>Each chapter can be downloaded on its own.</p>
+      ) : null}
       {chapters.length === 0 ? (
         <p css={emptyStyles}>This demo has no chapters yet.</p>
       ) : (

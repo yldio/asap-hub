@@ -47,6 +47,10 @@ const checkboxStyles = css({
 
 const errorStyles = css({ fontSize: 12, color: editorTheme.record });
 
+// the mic fallback is information, not a failure: the take carries on
+const playingDown = (message: string): boolean =>
+  message === 'The microphone was not available, recording without it.';
+
 const countStyles = css({
   fontSize: 26,
   fontWeight: 700,
@@ -219,7 +223,14 @@ const RecorderPanel: FC<Props> = ({
           </EditorButton>
         </>
       )}
-      {error ? <span css={errorStyles}>{error}</span> : null}
+      {error ? (
+        <span
+          css={playingDown(error) ? statusStyles : errorStyles}
+          role={playingDown(error) ? undefined : 'alert'}
+        >
+          {error}
+        </span>
+      ) : null}
     </div>
   );
 };

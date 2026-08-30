@@ -115,6 +115,7 @@ const StageControls: FC<Props> = ({
   onVolume,
 }) => {
   const seekRef = useRef<HTMLDivElement>(null);
+  const mutedFromRef = useRef(1);
   const fillRef = useRef<HTMLSpanElement>(null);
   const railRef = useRef<HTMLSpanElement>(null);
   const timeRef = useRef<HTMLSpanElement>(null);
@@ -184,6 +185,7 @@ const StageControls: FC<Props> = ({
         aria-valuemin={0}
         aria-valuemax={Math.round(durationMs)}
         aria-valuenow={Math.round(playback.getPlayheadMs())}
+        aria-valuetext={formatTimecode(playback.getPlayheadMs())}
         onPointerDown={(event) => {
           event.currentTarget.setPointerCapture(event.pointerId);
           seekTo(event.clientX);
@@ -230,7 +232,15 @@ const StageControls: FC<Props> = ({
       <EditorButton
         aria-label={volume === 0 ? 'Unmute the preview' : 'Mute the preview'}
         icon={volume === 0 ? <MuteIcon size={15} /> : <SoundIcon size={15} />}
-        onClick={() => onVolume(volume === 0 ? 1 : 0)}
+        onClick={() => {
+          if (volume === 0) {
+            onVolume(mutedFromRef.current || 1);
+            return;
+          }
+          // remembered so unmuting comes back at the level it left, not 100%
+          mutedFromRef.current = volume;
+          onVolume(0);
+        }}
       />
       <input
         css={volumeStyles}

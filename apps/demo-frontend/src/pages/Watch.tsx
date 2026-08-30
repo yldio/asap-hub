@@ -170,7 +170,7 @@ const WatchPlayer: FC<{
 const Watch: FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const video = useVideo(id);
-  const access = useVideoAccess(id);
+  const access = useVideoAccess(id, video.data?.mediaPath);
 
   if (video.isLoading) return <Spinner label="Loading demo" />;
 

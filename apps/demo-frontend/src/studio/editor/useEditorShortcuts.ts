@@ -21,7 +21,11 @@ export const claimsKeyboard = (target: EventTarget | null): boolean =>
     target.tagName === 'TEXTAREA' ||
     target.tagName === 'SELECT' ||
     target.isContentEditable ||
-    Boolean(target.closest('button, a[href], select, [role="slider"]')));
+    Boolean(
+      target.closest(
+        'button, a[href], select, [role="slider"], [role="group"]',
+      ),
+    ));
 
 // The handlers change on every frame of playback, so the listener reads the
 // latest ones through a ref rather than resubscribing sixty times a second.

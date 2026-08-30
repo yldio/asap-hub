@@ -600,7 +600,7 @@ describe('a clip block', () => {
 // 5000ms on the lane, which is 500px across
 describe('a cursor effect marker', () => {
   const marker = () =>
-    screen.getByRole('button', { name: 'ripple effect at 0:05.00' });
+    screen.getByRole('button', { name: 'Click highlight at 0:05.00' });
 
   // the dot said only what kind of effect it was, so a lane of them all read
   // the same and none of them said when it fired
@@ -707,7 +707,7 @@ describe('a cursor effect marker', () => {
 
 describe('retiming a cursor effect from the keyboard', () => {
   const marker = () =>
-    screen.getByRole('button', { name: 'ripple effect at 0:05.00' });
+    screen.getByRole('button', { name: 'Click highlight at 0:05.00' });
 
   it('takes a step later with the right arrow', () => {
     const { onSpanChange } = renderTimeline({ cursorLayers: [cursorLayer] });
@@ -929,11 +929,11 @@ describe('the drag shadow', () => {
     fireEvent.pointerUp(take, { pointerId: 1, clientX: 550 });
 
     const marker = screen.getByRole('button', {
-      name: 'ripple effect at 0:05.00',
+      name: 'Click highlight at 0:05.00',
     });
     fireEvent.pointerDown(marker, { pointerId: 1, clientX: 500 });
     pointerMove(marker, { pointerId: 1, clientX: 700 });
-    expect(ghost()).toHaveTextContent('ripple effect at 0:05.00 · 0:07.00');
+    expect(ghost()).toHaveTextContent('Click highlight at 0:05.00 · 0:07.00');
   });
 
   it('is taken away when the pointer is let go', () => {

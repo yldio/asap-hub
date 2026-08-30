@@ -68,6 +68,8 @@ const spacerStyles = css({ marginLeft: 'auto' });
 type Props = {
   readonly video: Video;
   readonly readOnly: boolean;
+  // still asking for the lock: not the same thing as someone else holding it
+  readonly leasePending?: boolean;
   readonly leaseHolder?: string;
   // edits the server has not taken yet
   readonly dirty: boolean;
@@ -87,6 +89,7 @@ type Props = {
 const ProjectHeader: FC<Props> = ({
   video,
   readOnly,
+  leasePending,
   leaseHolder,
   dirty,
   notice,
@@ -140,9 +143,12 @@ const ProjectHeader: FC<Props> = ({
       />
       <span css={badgeStyles}>{published ? 'Published' : 'Draft'}</span>
 
-      {readOnly ? (
+      {readOnly && leasePending ? (
+        <p css={noticeStyles}>Opening the editor…</p>
+      ) : null}
+      {readOnly && !leasePending ? (
         <>
-          <p css={noticeStyles}>
+          <p css={noticeStyles} role="alert">
             {leaseHolder
               ? `${leaseHolder} is editing this demo, so it is read only for now.`
               : 'Someone else holds the editing lock, so this demo is read only for now.'}
@@ -154,7 +160,11 @@ const ProjectHeader: FC<Props> = ({
         </>
       ) : null}
       {!readOnly && dirty ? <p css={dirtyStyles}>Unsaved changes</p> : null}
-      {notice ? <p css={errorStyles}>{notice}</p> : null}
+      {notice ? (
+        <p css={errorStyles} role="alert">
+          {notice}
+        </p>
+      ) : null}
 
       <span css={spacerStyles} />
       {children}

@@ -132,8 +132,16 @@ export const useCursorCapture = (
             rememberSession(projectId, undefined);
           }
         })
-        .catch(() => {
+        .catch((cause) => {
           if (cancelled) {
+            return;
+          }
+          // only a session the server no longer knows is really gone; a
+          // network blip or a 500 must not throw away a live capture
+          const gone =
+            cause instanceof ApiError &&
+            (cause.status === 404 || cause.status === 410);
+          if (!gone) {
             return;
           }
           rememberSession(projectId, undefined);

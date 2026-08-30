@@ -264,6 +264,7 @@ const StudioProject: FC = () => {
       timelineVersion={timelineQuery.data.timelineVersion}
       assets={assetsQuery.data ?? []}
       readOnly={readOnly}
+      leasePending={lease.status === 'pending'}
       leaseHolder={
         lease.status === 'denied' || lease.status === 'lost'
           ? lease.holderName
@@ -291,6 +292,7 @@ type EditorProps = {
   readonly timelineVersion: number;
   readonly assets: ProjectAsset[];
   readonly readOnly: boolean;
+  readonly leasePending?: boolean;
   readonly leaseHolder?: string;
   readonly markLost: (holderName?: string) => void;
   readonly retryLease: () => void;
@@ -314,6 +316,7 @@ const Editor: FC<EditorProps> = ({
   timelineVersion,
   assets,
   readOnly,
+  leasePending,
   leaseHolder,
   markLost,
   retryLease,
@@ -444,6 +447,8 @@ const Editor: FC<EditorProps> = ({
 
   const [renderError, setRenderError] = useState<string>();
   const [confirmingExport, setConfirmingExport] = useState(false);
+  // the one click that changes who can see the demo gets a beat of thought
+  const [confirmingPublish, setConfirmingPublish] = useState(false);
 
   // the export writes to the same row the autosave does, so it takes the
   // version the editor holds and hands the one it gets back straight to it
@@ -461,6 +466,7 @@ const Editor: FC<EditorProps> = ({
   const startRender = useCallback(() => {
     setConfirmingExport(false);
     setRenderError(undefined);
+    setPublishError(undefined);
     // no flush here: the button is only live once the document is settled, and
     // a save from this point would move the version the render is about to send
     api
@@ -554,13 +560,14 @@ const Editor: FC<EditorProps> = ({
       <ProjectHeader
         video={video}
         readOnly={readOnly}
+        leasePending={leasePending}
         leaseHolder={leaseHolder}
         dirty={editor.dirty}
         notice={renderError ?? publishError ?? upload.error}
         onLeave={() => leaving.request(() => navigate('/'))}
         onRetryLease={retryLease}
         onRename={rename}
-        onPublish={publish}
+        onPublish={() => setConfirmingPublish(true)}
         onUnpublish={unpublish}
       >
         <RenderBar
@@ -694,6 +701,33 @@ const Editor: FC<EditorProps> = ({
         </Modal>
       )}
 
+      {confirmingPublish && (
+        <Modal
+          onClose={() => setConfirmingPublish(false)}
+          label="Publish this demo"
+        >
+          <h2 css={dialogTitleStyles}>Publish this demo?</h2>
+          <p css={dialogBodyStyles}>
+            Anyone signed in will be able to watch it, download it whole, and
+            download each chapter on its own.
+          </p>
+          <div css={dialogActionsStyles}>
+            <Button small onClick={() => setConfirmingPublish(false)}>
+              Not yet
+            </Button>
+            <Button
+              small
+              primary
+              onClick={() => {
+                setConfirmingPublish(false);
+                publish();
+              }}
+            >
+              Publish
+            </Button>
+          </div>
+        </Modal>
+      )}
       {confirmingExport && (
         <Modal
           onClose={() => setConfirmingExport(false)}

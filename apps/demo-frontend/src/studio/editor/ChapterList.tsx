@@ -42,6 +42,12 @@ const timeButtonStyles = css({
 
 const invalidTimeStyles = css({ borderColor: editorTheme.record });
 
+const blankHintStyles = css({
+  fontSize: 12,
+  color: editorTheme.record,
+  flexBasis: '100%',
+});
+
 const inputStyles = css({
   flex: 1,
   minWidth: 0,
@@ -213,6 +219,11 @@ const ChapterList: FC<Props> = ({
                       disabled={readOnly}
                       onClick={() => onRemove(chapter.id)}
                     />
+                    {chapter.title.trim() === '' ? (
+                      <span css={blankHintStyles} role="alert">
+                        Chapters need a name to appear in the exported demo.
+                      </span>
+                    ) : null}
                   </>
                 ) : (
                   <>

@@ -462,11 +462,15 @@ describe('rendering', () => {
     renderStudio();
 
     expect(
-      await screen.findByText(/Exporting makes a video only you can see/),
+      await screen.findByText(
+        /Exporting makes a video other creators can watch, but not members/,
+      ),
     ).toBeVisible();
   });
 
-  it('says an exported demo is private until it is published', async () => {
+  // "only you can see it" was false: every creator on the hub can watch and
+  // download an unpublished export
+  it('says an exported demo reaches creators until it is published', async () => {
     renderStudio({
       getVideo: jest
         .fn()
@@ -475,7 +479,7 @@ describe('rendering', () => {
 
     expect(
       await screen.findByText(
-        'Exported. Only you can see it until you publish.',
+        'Exported. Creators can watch it. Publish it for everyone else.',
       ),
     ).toBeVisible();
   });

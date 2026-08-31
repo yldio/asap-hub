@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useState } from 'react';
 import { useApi } from '../../api/ApiProvider';
+import { CaptureStreamError } from '../../api/captureStream';
 import { ApiError } from '../../api/client';
 import { RecordingSession, RecordingSessionStatus } from '../../api/types';
 import {
@@ -83,6 +84,47 @@ const rememberRead = (projectId: string, sessionId: string): void => {
   } catch {
     // a browser refusing storage is not a reason to refuse the capture
   }
+};
+
+const megabytes = (bytes: number | undefined): string =>
+  bytes === undefined ? 'too large' : `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+
+const closeFailure = (cause: unknown): string =>
+  cause instanceof ApiError
+    ? `Could not close the capture (${cause.status}). Nothing is lost, try Add cursor effects again.`
+    : 'Could not close the capture. Nothing is lost, try Add cursor effects again.';
+
+// Asking for the stream and downloading it are two requests that fail for quite
+// different reasons, and they used to end in one message that sent the creator
+// back to a button which could never work. Each half names itself and carries
+// its status, because through the CDN an object that was never written and a
+// cookie that was refused both answer 403.
+const readFailure = (cause: unknown): string => {
+  if (cause instanceof ApiError) {
+    if (cause.code === 'not_finalised') {
+      return 'That capture is still being saved. Wait a few seconds and press Add cursor effects again.';
+    }
+    if (cause.code === 'stream_missing') {
+      return 'That capture closed without writing its events, so there is nothing to add. Record the take again.';
+    }
+    return `Could not ask for the captured events (${cause.status}). Nothing is lost, try Add cursor effects again.`;
+  }
+  if (cause instanceof CaptureStreamError) {
+    if (cause.reason === 'too_large') {
+      return `That capture is ${megabytes(
+        cause.bytes,
+      )} of events, more than the studio can download here. It is safe on the server, but pressing again will not reach it: ask an engineer for the stream.`;
+    }
+    if (cause.reason === 'missing') {
+      return 'That capture closed without writing its events, so there is nothing to add. Record the take again.';
+    }
+    return `Could not download the captured events (storage ${
+      cause.cdnStatus ?? 'unreachable'
+    }, api ${
+      cause.inlineStatus ?? 'unreachable'
+    }). Nothing is lost, try Add cursor effects again.`;
+  }
+  return 'Could not read the captured events. Nothing is lost, try Add cursor effects again.';
 };
 
 // `recorded` is what the browser said the last take was a recording of. The
@@ -249,33 +291,46 @@ export const useCursorCapture = (
           const closedBefore =
             cause instanceof ApiError && cause.code === 'already_finalised';
           if (!closedBefore) {
-            setError(
-              'Could not close the capture. Nothing is lost, try Add cursor effects again.',
-            );
+            setError(closeFailure(cause));
             return undefined;
           }
         }
+        // saying the session is spent is what lets the next recording open a
+        // fresh one without waiting on the poll
+        const spend = () => {
+          rememberRead(projectId, session.sessionId);
+          setReadSessionId(session.sessionId);
+          setStatus((current) =>
+            current
+              ? { ...current, state: 'closed' }
+              : { state: 'closed', eventCount: 0, clientCount: 0 },
+          );
+        };
+
         let ndjson: string;
         try {
           ndjson = await api.captureEvents(projectId, session.sessionId);
-        } catch {
-          // the finalise landed, so every event is safe on the server and the
-          // retry is taken as already finalised: the take is one press away
-          setError(
-            'Could not read the captured events. Nothing is lost, try Add cursor effects again.',
-          );
+        } catch (cause) {
+          // the finalise landed, so every event is safe on the server; what the
+          // creator can do about it depends on which half gave way, and the
+          // client logs the statuses on its way out of here
+          //
+          // the guard that holds an unread session back is there because the
+          // take is safe on the server, and a stream the server itself says was
+          // never written is the one case where that is untrue: holding on to
+          // it would wedge the studio for a session with nothing behind it
+          if (
+            (cause instanceof ApiError && cause.code === 'stream_missing') ||
+            (cause instanceof CaptureStreamError && cause.reason === 'missing')
+          ) {
+            spend();
+          }
+          setError(readFailure(cause));
           return undefined;
         }
-        // the events are in hand, which is what spends the session: saying so
-        // at once is what lets the next recording open a fresh one without
-        // waiting on the poll, and a session read is a session safe to replace
-        rememberRead(projectId, session.sessionId);
-        setReadSessionId(session.sessionId);
-        setStatus((current) =>
-          current
-            ? { ...current, state: 'closed' }
-            : { state: 'closed', eventCount: 0, clientCount: 0 },
-        );
+        // the events are in hand, which is what spends the session, and a
+        // session read is a session safe to replace
+        spend();
 
         const events = parseCaptureEvents(ndjson);
         if (events.length === 0) {

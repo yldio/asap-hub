@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../config';
+import { CaptureStreamError } from '../captureStream';
 import {
   ApiError,
   createApi,
@@ -500,14 +501,42 @@ describe('the captured event stream', () => {
   const ndjson =
     '{"id":"e1","type":"click","t":1}\n{"id":"e2","type":"move","t":2}\n';
 
+  // the client says which half failed on its way out, which is the only place a
+  // developer can see the status at all
+  let warn: jest.SpyInstance;
+  let error: jest.SpyInstance;
+  beforeEach(() => {
+    warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+    error = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  });
+  afterEach(() => {
+    warn.mockRestore();
+    error.mockRestore();
+  });
+
   const respondWithStream = (url = '/projects/p1/capture/s1/events.ndjson') => {
-    respond({ url });
+    respond({ url, bytes: 64 });
     fetchMock.mockResolvedValueOnce({
       ok: true,
       status: 200,
       text: () => Promise.resolve(ndjson),
     });
   };
+
+  const refuseStream = (status = 403) => {
+    respond({ url: '/projects/p1/capture/s1/events.ndjson', bytes: 64 });
+    fetchMock.mockResolvedValueOnce({ ok: false, status });
+  };
+
+  const captureStreamError = (
+    promise: Promise<unknown>,
+  ): Promise<CaptureStreamError> =>
+    promise.then(
+      () => {
+        throw new Error('expected the read to reject');
+      },
+      (cause: unknown) => cause as CaptureStreamError,
+    );
 
   // a long take merges to more than a lambda response may carry, so the api
   // names the object and the stream itself is read straight from storage
@@ -538,11 +567,89 @@ describe('the captured event stream', () => {
     expect((init as RequestInit).credentials).toBe('same-origin');
   });
 
-  it('raises the storage failure rather than returning a partial take', async () => {
-    respond({ url: '/projects/p1/capture/s1/events.ndjson' });
-    fetchMock.mockResolvedValueOnce({ ok: false, status: 403 });
+  // storage answering 403 is not the end of the road: the whole feature may not
+  // rest on a CDN property no test here can prove
+  it('asks the api for the bytes when storage will not serve them', async () => {
+    refuseStream();
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      text: () => Promise.resolve(ndjson),
+    });
 
-    const error = await captureApiError(api.captureEvents('p1', 's1'));
-    expect(error.status).toBe(403);
+    await expect(api.captureEvents('p1', 's1')).resolves.toBe(ndjson);
+
+    const [, , inline] = fetchMock.mock.calls;
+    expect(inline![0]).toBe(
+      `${API_BASE_URL}/api/projects/p1/recordings/s1/events?inline=1`,
+    );
+    expect((inline![1] as RequestInit).headers).toMatchObject({
+      Authorization: 'Bearer a-token',
+    });
+  });
+
+  it('says a stream too large for the api is too large, not to try again', async () => {
+    refuseStream();
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 413,
+      json: () => Promise.resolve({ error: 'too_large', bytes: 9_000_000 }),
+    });
+
+    const failure = await captureStreamError(api.captureEvents('p1', 's1'));
+
+    expect(failure).toBeInstanceOf(CaptureStreamError);
+    expect(failure.reason).toBe('too_large');
+    expect(failure.bytes).toBe(9_000_000);
+  });
+
+  it('names both statuses when neither half would give the stream up', async () => {
+    refuseStream(403);
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({ error: 'internal' }),
+    });
+
+    const failure = await captureStreamError(api.captureEvents('p1', 's1'));
+
+    expect(failure.reason).toBe('unreachable');
+    expect(failure.cdnStatus).toBe(403);
+    expect(failure.inlineStatus).toBe(500);
+  });
+
+  it('survives a fetch that never returns a response at all', async () => {
+    respond({ url: '/projects/p1/capture/s1/events.ndjson', bytes: 64 });
+    fetchMock.mockRejectedValueOnce(new Error('offline'));
+    fetchMock.mockRejectedValueOnce(new Error('offline'));
+
+    const failure = await captureStreamError(api.captureEvents('p1', 's1'));
+
+    expect(failure.reason).toBe('unreachable');
+    expect(failure.cdnStatus).toBeUndefined();
+    expect(failure.inlineStatus).toBeUndefined();
+  });
+
+  it('logs the status the api refused the read with', async () => {
+    respond({ error: 'not_finalised' }, 409);
+
+    const failure = await captureApiError(api.captureEvents('p1', 's1'));
+
+    expect(failure.status).toBe(409);
+    expect(failure.code).toBe('not_finalised');
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('409'));
+  });
+
+  it('logs the status storage refused the stream with', async () => {
+    refuseStream(403);
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      text: () => Promise.resolve(ndjson),
+    });
+
+    await api.captureEvents('p1', 's1');
+
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('403'));
   });
 });

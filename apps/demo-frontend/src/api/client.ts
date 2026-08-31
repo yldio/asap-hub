@@ -1,5 +1,6 @@
 import type { Timeline } from '@asap-hub/demo-timeline';
 import { API_BASE_URL } from '../config';
+import { CaptureStreamError } from './captureStream';
 import type {
   BulkDeleteResult,
   BulkMoveResult,
@@ -384,26 +385,99 @@ export const createApi = (getToken: GetToken) => ({
       { method: 'POST', body: window },
     ),
 
-  // the api authorises the read and names the object; the stream itself comes
+  // The api authorises the read and names the object; the stream itself comes
   // from storage on the same origin, which is what keeps a long take from
-  // outgrowing the response the api may return
+  // outgrowing the response the api may return. Storage refusing it is not the
+  // end of the road: a stream small enough for that response is asked of the
+  // api directly, so the feature never rests on the CDN alone.
   captureEvents: async (id: string, sessionId: string): Promise<string> => {
-    const { url } = await request<{ url: string }>(
-      `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(
-        sessionId,
-      )}/events`,
-      await getToken(),
-    );
+    const path = `/projects/${encodeURIComponent(
+      id,
+    )}/recordings/${encodeURIComponent(sessionId)}/events`;
+    const token = await getToken();
+    const { url, bytes } = await request<{ url: string; bytes?: number }>(
+      path,
+      token,
+    ).catch((cause: unknown) => {
+      // the status of the half that failed is otherwise swallowed whole
+      // eslint-disable-next-line no-console
+      console.error(
+        `the api refused to authorise the captured events: ${
+          cause instanceof ApiError
+            ? `${cause.status} ${cause.code ?? ''}`.trim()
+            : String(cause)
+        }`,
+      );
+      throw cause;
+    });
+
     // storage takes the cookie the call above set, and refuses a request
     // carrying a bearer header beside it
-    const response = await fetch(url, { credentials: 'same-origin' });
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `Request to ${url} failed with status ${response.status}`,
+    const streamed = await fetch(url, { credentials: 'same-origin' }).catch(
+      () => undefined,
+    );
+    if (streamed?.ok) {
+      return streamed.text();
+    }
+
+    const cdnStatus = streamed?.status;
+    // the only place the status of the failing half is ever visible: through
+    // the CDN a missing object and a rejected cookie are both a 403
+    // eslint-disable-next-line no-console
+    console.warn(
+      `the captured events at ${url} (${bytes ?? 'unknown'} bytes) came back ${
+        cdnStatus ?? 'unreachable'
+      }; asking the api for them`,
+    );
+
+    const inline = await fetch(`${API_BASE_URL}/api${path}?inline=1`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).catch(() => undefined);
+    if (inline?.ok) {
+      return inline.text();
+    }
+
+    const inlineStatus = inline?.status;
+    const refused =
+      inlineStatus === undefined
+        ? undefined
+        : ((await inline?.json().catch(() => undefined)) as
+            | { error?: string; bytes?: number }
+            | undefined);
+    const size = refused?.bytes ?? bytes;
+    const detail = {
+      ...(cdnStatus === undefined ? {} : { cdnStatus }),
+      ...(inlineStatus === undefined ? {} : { inlineStatus }),
+      ...(size === undefined ? {} : { bytes: size }),
+    };
+    // eslint-disable-next-line no-console
+    console.error(
+      `the api could not carry the captured events either: ${
+        inlineStatus ?? 'unreachable'
+      } ${refused?.error ?? ''}`.trim(),
+    );
+
+    if (refused?.error === 'too_large') {
+      throw new CaptureStreamError(
+        'too_large',
+        `The captured events are ${size} bytes, more than the api may carry`,
+        detail,
       );
     }
-    return response.text();
+    if (refused?.error === 'stream_missing') {
+      throw new CaptureStreamError(
+        'missing',
+        `No captured event stream was written for session ${sessionId}`,
+        detail,
+      );
+    }
+    throw new CaptureStreamError(
+      'unreachable',
+      `The captured events could not be read: storage answered ${
+        cdnStatus ?? 'nothing'
+      } and the api answered ${inlineStatus ?? 'nothing'}`,
+      detail,
+    );
   },
 
   startRender: async (

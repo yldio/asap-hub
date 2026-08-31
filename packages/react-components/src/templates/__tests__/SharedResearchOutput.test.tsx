@@ -1590,8 +1590,44 @@ describe('duplicate link', () => {
     );
   });
 
-  it('does not link when a project output is missing routing data', () => {
+  it('links a team-based project output to its project duplicate route', () => {
     const { getByTitle } = renderWithRouter(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          publishingEntity="Team"
+          workingGroups={undefined}
+          project={undefined}
+          teams={[
+            {
+              id: 'team-1',
+              displayName: 'Team 1',
+              teamType: 'Discovery Team',
+              project: {
+                id: 'project-1',
+                title: 'Discovery Project',
+                projectType: 'Discovery Project',
+                projectId: 'DP1',
+              },
+            },
+          ]}
+        />
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(getByTitle('Duplicate').closest('a')).toHaveAttribute(
+      'href',
+      `/projects/discovery/project-1/duplicate/${props.id}`,
+    );
+  });
+
+  it('hides the duplicate button when a project output is missing routing data', () => {
+    const { queryByTitle } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canDuplicateResearchOutput: true,
@@ -1608,13 +1644,11 @@ describe('duplicate link', () => {
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-    expect(
-      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
-    ).toBeFalsy();
+    expect(queryByTitle('Duplicate')).toBeNull();
   });
 
-  it('does not link for team outputs', () => {
-    const { getByTitle } = renderWithRouter(
+  it('hides the duplicate button for team outputs without a linked project', () => {
+    const { queryByTitle } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canDuplicateResearchOutput: true,
@@ -1633,13 +1667,11 @@ describe('duplicate link', () => {
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-    expect(
-      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
-    ).toBeFalsy();
+    expect(queryByTitle('Duplicate')).toBeNull();
   });
 
-  it('does not link for an unknown publishing entity', () => {
-    const { getByTitle } = renderWithRouter(
+  it('hides the duplicate button for an unknown publishing entity', () => {
+    const { queryByTitle } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canDuplicateResearchOutput: true,
@@ -1656,9 +1688,7 @@ describe('duplicate link', () => {
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-    expect(
-      getByTitle('Duplicate').closest('a')?.getAttribute('href'),
-    ).toBeFalsy();
+    expect(queryByTitle('Duplicate')).toBeNull();
   });
 
   it('renders output versions when versions are provided', () => {

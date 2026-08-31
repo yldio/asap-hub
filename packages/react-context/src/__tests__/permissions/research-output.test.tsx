@@ -54,6 +54,7 @@ describe('getVisibleResearchOutputActions', () => {
     hasRelatedManuscript: false,
     isWorkingGroupOutput: false,
     isGrantDocument: false,
+    hasDuplicateDestination: true,
   };
 
   it('sets all actions to false if output is a grant document', () => {
@@ -194,6 +195,25 @@ describe('getVisibleResearchOutputActions', () => {
             ...state,
             isWorkingGroupOutput: false,
             hasRelatedManuscript: false,
+          },
+        ),
+      ).toEqual(
+        expect.objectContaining({
+          showDuplicate: false,
+        }),
+      );
+    });
+
+    it('sets showDuplicate to false if the output has no duplicate destination', () => {
+      expect(
+        getVisibleResearchOutputActions(
+          {
+            ...permissions,
+            canDuplicateResearchOutput: true,
+          },
+          {
+            ...state,
+            hasDuplicateDestination: false,
           },
         ),
       ).toEqual(

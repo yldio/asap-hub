@@ -208,7 +208,7 @@ describe('downloadEventSpeakers', () => {
     jest.clearAllMocks();
   });
 
-  test('Should keep the R5 column order, which drives the CSV header row', () => {
+  test('Should keep the declared column order, which drives the CSV header row', () => {
     expect(Object.keys(eventSpeakersFields)).toEqual([
       'eventTitle',
       'description',

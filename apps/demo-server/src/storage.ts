@@ -5,8 +5,10 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   ListMultipartUploadsCommand,
   ListObjectsV2Command,
+  NotFound,
   PutObjectCommand,
   S3Client,
   S3ClientConfig,
@@ -191,6 +193,26 @@ export const getObject = async (
     contentRange: response.ContentRange,
     contentType: response.ContentType,
   };
+};
+
+// A caller deciding whether it may carry an object's bytes needs its size and
+// nothing else, and a HEAD costs no transfer. An object that was never written
+// answers undefined rather than throwing: through the CDN that case is a 403
+// like any other refusal, so the size is the only place it can be told apart.
+export const objectSize = async (key: string): Promise<number | undefined> => {
+  try {
+    const { ContentLength } = await getS3Client().send(
+      new HeadObjectCommand({ Bucket: getBucketName(), Key: key }),
+    );
+    return ContentLength;
+  } catch (error) {
+    const status = (error as { $metadata?: { httpStatusCode?: number } })
+      ?.$metadata?.httpStatusCode;
+    if (error instanceof NotFound || status === 404) {
+      return undefined;
+    }
+    throw error;
+  }
 };
 
 // callers that want a whole small object (the timeline document) rather than a

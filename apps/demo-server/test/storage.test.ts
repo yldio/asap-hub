@@ -25,6 +25,7 @@ import {
   deletePrefix,
   getObject,
   getS3Client,
+  objectSize,
   putObject,
   setS3Client,
   signUploadParts,
@@ -249,6 +250,46 @@ describe('getObject', () => {
     await getObject('media/video-1/index.m3u8');
 
     expect(lastInput()).not.toHaveProperty('Range');
+  });
+});
+
+describe('objectSize', () => {
+  it('heads the object and answers its length', async () => {
+    send.mockResolvedValue({ ContentLength: 4096 });
+
+    await expect(
+      objectSize('projects/p1/capture/s1/events.ndjson'),
+    ).resolves.toBe(4096);
+    expect(lastInput()).toEqual({
+      Bucket: bucket,
+      Key: 'projects/p1/capture/s1/events.ndjson',
+    });
+  });
+
+  // "never written" is a real answer here: through the CDN it is a 403 like any
+  // other refusal, and the size is the only place the two come apart
+  it('answers undefined for an object that is not there', async () => {
+    send.mockRejectedValue(
+      Object.assign(new Error('Not Found'), {
+        $metadata: { httpStatusCode: 404 },
+      }),
+    );
+
+    await expect(
+      objectSize('projects/p1/nothing.ndjson'),
+    ).resolves.toBeUndefined();
+  });
+
+  it('raises anything that is not a missing object', async () => {
+    send.mockRejectedValue(
+      Object.assign(new Error('Access Denied'), {
+        $metadata: { httpStatusCode: 403 },
+      }),
+    );
+
+    await expect(objectSize('projects/p1/nothing.ndjson')).rejects.toThrow(
+      'Access Denied',
+    );
   });
 });
 

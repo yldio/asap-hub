@@ -12,6 +12,7 @@ import {
   captureLifecycleTag,
   deletePrefix,
   getObjectText,
+  objectSize,
   projectPrefix,
   putObject,
 } from '../storage';
@@ -51,6 +52,12 @@ export const captureEventsKey = (videoId: string, sessionId: string): string =>
   `${captureSessionPrefix(videoId, sessionId)}events.ndjson`;
 
 export const ndjsonContentType = 'application/x-ndjson';
+
+// What the handler may carry itself when the CDN will not give the stream up.
+// The gateway caps a lambda response at 6MB and the body is JSON escaped on the
+// way out, which measured at about 1.162x, so the true ceiling is nearer
+// 5.16MB. 4MB inflates to about 4.65MB and leaves the headers room to spare.
+export const inlineEventsMaxBytes = 4 * 1024 * 1024;
 
 // a take is a demo, not a day: a token that leaks is worthless soon after
 export const sessionTtlMs = 4 * 60 * 60 * 1000;
@@ -390,8 +397,12 @@ export const recordingsRouter = (): Router => {
   // a long take merges to tens of megabytes: proxying that through the handler
   // failed the whole apply at the gateway, which caps a lambda response at 6MB.
   // The stream already lives under projects/{id}/, which the same origin serves
-  // from storage, so this route authorises the read and names the object rather
-  // than carrying its bytes.
+  // from storage, so this route authorises the read and names the object.
+  //
+  // ?inline=1 carries the bytes instead, for a stream small enough that the cap
+  // allows it. Nothing about the CDN half can be proved from here, and a whole
+  // feature may not rest on a property only a deploy can test, so the studio
+  // has a second way through whenever the first one refuses it.
   router.get(
     '/:id/recordings/:sessionId/events',
     videoId,
@@ -407,6 +418,27 @@ export const recordingsRouter = (): Router => {
       }
 
       const id = pathParam(req, 'id');
+      // through the CDN a missing object is a 403, indistinguishable from a
+      // refused one, so the size is what says whether the stream is even there
+      const bytes = await objectSize(session.eventsKey);
+      if (bytes === undefined) {
+        res.status(404).json({ error: 'stream_missing' });
+        return;
+      }
+
+      if (req.query.inline === '1') {
+        if (bytes > inlineEventsMaxBytes) {
+          res
+            .status(413)
+            .json({ error: 'too_large', bytes, limit: inlineEventsMaxBytes });
+          return;
+        }
+        res
+          .type(ndjsonContentType)
+          .send(await getObjectText(session.eventsKey));
+        return;
+      }
+
       // deployed, projects/ sits behind a CloudFront key group; locally the
       // vite proxy reads the same path straight from MinIO
       if (!isLocal()) {
@@ -421,7 +453,7 @@ export const recordingsRouter = (): Router => {
         });
       }
 
-      res.json({ url: `/${session.eventsKey}` });
+      res.json({ url: `/${session.eventsKey}`, bytes });
     },
   );
 

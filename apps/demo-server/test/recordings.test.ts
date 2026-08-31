@@ -13,7 +13,7 @@ import {
   userEntity,
   videoEntity,
 } from '../src/data/entities';
-import { captureQuota } from '../src/routes/recordings';
+import { captureQuota, inlineEventsMaxBytes } from '../src/routes/recordings';
 import { buildSignedCookies } from '../src/signed-cookies';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
@@ -22,6 +22,7 @@ jest.mock('../src/storage', () => ({
   ...jest.requireActual('../src/storage'),
   putObject: jest.fn(),
   getObjectText: jest.fn(),
+  objectSize: jest.fn(),
   deletePrefix: jest.fn(),
 }));
 
@@ -243,6 +244,8 @@ beforeEach(() => {
   mockSend.mockReset().mockResolvedValue({});
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
+  // the merged stream is there unless a test says otherwise
+  (storage.objectSize as jest.Mock).mockReset().mockResolvedValue(2048);
   (storage.deletePrefix as jest.Mock).mockReset().mockResolvedValue(undefined);
   // restoreAllMocks leaves the module factory mocks alone
   mockIsLocal.mockReset().mockReturnValue(true);
@@ -499,9 +502,9 @@ describe('GET /api/projects/:id/recordings/:sessionId/events', () => {
       ...overrides,
     });
 
-  const getEvents = (authorization = creatorToken) =>
+  const getEvents = (authorization = creatorToken, query = '') =>
     api
-      .get('/api/projects/project-1/recordings/session-1/events')
+      .get(`/api/projects/project-1/recordings/session-1/events${query}`)
       .set('Authorization', authorization);
 
   const cookiesOf = (response: { headers: Record<string, unknown> }) =>
@@ -513,14 +516,124 @@ describe('GET /api/projects/:id/recordings/:sessionId/events', () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem());
     mockSessionGet(finalisedSession());
+    (storage.objectSize as jest.Mock).mockResolvedValue(4096);
 
     const response = await getEvents();
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       url: '/projects/project-1/capture/session-1/events.ndjson',
+      bytes: 4096,
     });
     expect(storage.getObjectText).not.toHaveBeenCalled();
+  });
+
+  // through the CDN an object that was never written answers 403, exactly like
+  // a cookie that was refused, so the size is the only thing that tells them
+  // apart and it has to be told before the browser is sent there
+  it('says the stream is missing rather than naming a path nothing serves', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+    (storage.objectSize as jest.Mock).mockResolvedValue(undefined);
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'stream_missing' });
+  });
+
+  // nothing about the CDN half can be proved without a deploy, so a stream
+  // small enough for the response the gateway allows has a second way through
+  it('carries the bytes itself when the caller asks for them inline', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+    (storage.objectSize as jest.Mock).mockResolvedValue(64);
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      '{"id":"e1","t":1}\n',
+    );
+
+    const response = await getEvents(creatorToken, '?inline=1');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('application/x-ndjson');
+    expect(response.text).toBe('{"id":"e1","t":1}\n');
+    expect(storage.getObjectText).toHaveBeenCalledWith(
+      'projects/project-1/capture/session-1/events.ndjson',
+    );
+  });
+
+  it('refuses to carry a stream larger than the response may hold', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+    (storage.objectSize as jest.Mock).mockResolvedValue(
+      inlineEventsMaxBytes + 1,
+    );
+
+    const response = await getEvents(creatorToken, '?inline=1');
+
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({
+      error: 'too_large',
+      bytes: inlineEventsMaxBytes + 1,
+      limit: inlineEventsMaxBytes,
+    });
+    expect(storage.getObjectText).not.toHaveBeenCalled();
+  });
+
+  it('carries a stream sitting exactly on the cap', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+    (storage.objectSize as jest.Mock).mockResolvedValue(inlineEventsMaxBytes);
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1"}\n');
+
+    const response = await getEvents(creatorToken, '?inline=1');
+
+    expect(response.status).toBe(200);
+  });
+
+  // the inline path is the same route, so it may not be a way around the check
+  // the CDN path answers to
+  it('refuses an inline read from a caller who may not read the project', async () => {
+    mockUser('member', 'auth0|member');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+
+    const response = await getEvents(memberToken, '?inline=1');
+
+    expect(response.status).toBe(403);
+    expect(storage.getObjectText).not.toHaveBeenCalled();
+  });
+
+  it('refuses an inline read of a session nothing has finalised yet', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession({ eventsKey: undefined }));
+
+    const response = await getEvents(creatorToken, '?inline=1');
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'not_finalised' });
+  });
+
+  // the studio asks for the stream in the request after the one that merged it,
+  // and an eventually consistent read can still answer with the row as it was
+  it('reads the session consistently, so a fresh merge is never missed', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const get = jest
+      .spyOn(recordingSessionEntity, 'get')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockReturnValue({ go: jest.fn(async () => ({ data: null })) } as any);
+
+    await getEvents();
+
+    expect(get.mock.results[0]?.value.go).toHaveBeenCalledWith({
+      consistent: true,
+    });
   });
 
   it('still refuses a session nothing has finalised yet', async () => {
@@ -1143,7 +1256,10 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
       .set('Authorization', creatorToken);
 
     expect(events.status).toBe(200);
-    expect(events.body).toEqual({ url: `/${retry.body.eventsKey}` });
+    expect(events.body).toEqual({
+      url: `/${retry.body.eventsKey}`,
+      bytes: 2048,
+    });
   });
 
   // the parts are the only copy of the stream until the row points at the

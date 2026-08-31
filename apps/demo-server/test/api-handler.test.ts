@@ -3,7 +3,9 @@ import {
   APIGatewayProxyStructuredResultV2,
   Context,
 } from 'aws-lambda';
+import express, { Express } from 'express';
 import { Readable } from 'stream';
+import { gunzipSync, gzipSync } from 'zlib';
 import { apiHandler } from '../src/handlers/api-handler';
 import { getObject } from '../src/storage';
 
@@ -53,6 +55,33 @@ const invoke = async (
     event(path, headers),
     {} as Context,
   )) as APIGatewayProxyStructuredResultV2;
+
+// nothing mounted today answers with a content-encoding, so the only way to see
+// the handler meet a compressed response is to build it over a stand-in app
+const handlerOver = (appFactory: () => Express): typeof apiHandler => {
+  let handler: typeof apiHandler | undefined;
+  jest.isolateModules(() => {
+    jest.doMock('../src/app', () => ({ appFactory }));
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    handler = require('../src/handlers/api-handler').apiHandler;
+  });
+  jest.dontMock('../src/app');
+  return handler as typeof apiHandler;
+};
+
+const respondWith =
+  (body: Buffer, headers: Record<string, string>): (() => Express) =>
+  () => {
+    const app = express();
+    app.get(/.*/, (_req, res) => {
+      Object.entries(headers).forEach(([name, value]) =>
+        res.setHeader(name, value),
+      );
+      res.setHeader('Content-Length', String(body.length));
+      res.end(body);
+    });
+    return app;
+  };
 
 beforeEach(() => {
   mockGetObject.mockReset();
@@ -130,5 +159,75 @@ describe('apiHandler', () => {
     expect(result.statusCode).toBe(404);
     expect(result.isBase64Encoded).toBe(false);
     expect(JSON.parse(result.body as string)).toEqual({ error: 'Not Found' });
+  });
+
+  it('leaves an ndjson media object as plain text', async () => {
+    const lines = '{"t":0}\n{"t":1}\n';
+    mockGetObject.mockResolvedValue({
+      body: Readable.from([lines]),
+      contentLength: lines.length,
+      contentType: 'application/x-ndjson',
+    });
+
+    const result = await invoke('/media/video-1/events.ndjson');
+
+    expect(result.statusCode).toBe(200);
+    expect(result.isBase64Encoded).toBe(false);
+    expect(result.body).toBe(lines);
+  });
+
+  it('returns media bytes S3 gave no content type for unchanged', async () => {
+    const bytes = Buffer.from([0x00, 0xff, 0xfe, 0x80, 0x7f, 0xc0]);
+    mockGetObject.mockResolvedValue({
+      body: Readable.from([bytes]),
+      contentLength: bytes.length,
+    });
+
+    const result = await invoke('/media/video-1/unlabelled');
+
+    expect(result.statusCode).toBe(200);
+    expect(result.isBase64Encoded).toBe(true);
+    expect(Buffer.from(result.body as string, 'base64')).toEqual(bytes);
+  });
+
+  it('returns a gzipped json response unchanged', async () => {
+    const payload = Buffer.from(JSON.stringify({ status: 'ok' }));
+    const gzipped = gzipSync(payload);
+    const handler = handlerOver(
+      respondWith(gzipped, {
+        'Content-Type': 'application/json',
+        'Content-Encoding': 'gzip',
+      }),
+    );
+
+    const result = (await handler(
+      event('/api/health'),
+      {} as Context,
+    )) as APIGatewayProxyStructuredResultV2;
+
+    expect(result.statusCode).toBe(200);
+    expect(result.isBase64Encoded).toBe(true);
+    expect(gunzipSync(Buffer.from(result.body as string, 'base64'))).toEqual(
+      payload,
+    );
+  });
+
+  it('leaves an uncompressed json response as plain text', async () => {
+    const payload = Buffer.from(JSON.stringify({ status: 'ok' }));
+    const handler = handlerOver(
+      respondWith(payload, {
+        'Content-Type': 'application/json',
+        'Content-Encoding': 'identity',
+      }),
+    );
+
+    const result = (await handler(
+      event('/api/health'),
+      {} as Context,
+    )) as APIGatewayProxyStructuredResultV2;
+
+    expect(result.statusCode).toBe(200);
+    expect(result.isBase64Encoded).toBe(false);
+    expect(result.body).toBe(payload.toString());
   });
 });

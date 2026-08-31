@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useNavigate } from 'react-router';
 
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 
@@ -40,7 +41,12 @@ type Session = {
   client: Auth0Client;
   isAuthenticated: boolean;
   user?: User;
+  returnTo?: string;
 };
+
+// returnTo round trips through Auth0, so only same origin paths are honoured.
+const toSafePath = (value: unknown): string =>
+  typeof value === 'string' && /^\/(?![/\\])/.test(value) ? value : '/';
 
 const initSession = async (): Promise<Session> => {
   const auth0 = await createAuth0Client({
@@ -52,11 +58,12 @@ const initSession = async (): Promise<Session> => {
     useRefreshTokens: true,
   });
 
+  let returnTo: string | undefined;
   if (window.location.search.includes('code=')) {
     const { appState } = await auth0.handleRedirectCallback();
-    const target =
-      (appState as { returnTo?: string } | undefined)?.returnTo ?? '/';
-    window.history.replaceState({}, document.title, target);
+    returnTo = toSafePath(
+      (appState as { returnTo?: string } | undefined)?.returnTo,
+    );
   }
 
   const authenticated = await auth0.isAuthenticated();
@@ -64,6 +71,7 @@ const initSession = async (): Promise<Session> => {
     client: auth0,
     isAuthenticated: authenticated,
     user: authenticated ? await auth0.getUser<User>() : undefined,
+    returnTo,
   };
 };
 
@@ -74,6 +82,12 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User>();
 
   const session = useRef<Promise<Session>>();
+
+  const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
+  useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,6 +102,8 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setAuthenticated(settled.isAuthenticated);
         setUser(settled.user);
         setLoading(false);
+        if (settled.returnTo)
+          void navigateRef.current(settled.returnTo, { replace: true });
       })
       .catch(() => {
         if (!cancelled) setLoading(false);

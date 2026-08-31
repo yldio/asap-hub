@@ -10,7 +10,8 @@ RUN apk add --no-cache \
   nodejs \
   rsvg-convert \
   fontconfig \
-  font-dejavu
+  font-dejavu \
+  font-roboto
 
 # a missing binary should fail the build, not the first render that needs it
 RUN for tool in bash ffmpeg ffprobe aws node rsvg-convert; do \

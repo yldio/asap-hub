@@ -132,8 +132,8 @@ const titleOverlay = (
   },
 });
 
-// the banner travels the height of its own band, so it comes from the frame
-// edge it sits against: a bottom banner rises, a top banner drops
+// the banner travels the same three tenths of its band the preview does,
+// from the frame edge it sits against: a bottom banner rises, a top one drops
 const bannerSlide = (
   banner: Banner,
   canvas: Canvas,
@@ -142,7 +142,8 @@ const bannerSlide = (
     return undefined;
   }
   const { height } = bannerBand(banner.preset, banner.position, canvas);
-  return { distancePx: banner.position === 'bottom' ? height : -height };
+  const distance = Math.round(height * 0.3);
+  return { distancePx: banner.position === 'bottom' ? distance : -distance };
 };
 
 // banners are authored one at a time rather than captured, so a clip never
@@ -273,6 +274,7 @@ const cursorOverlays = (
                   spanEndMs: atMs + art.durationMs,
                   fadeInMs: art.fadeInMs,
                   fadeOutMs: art.fadeOutMs,
+                  ...(art.easedFadeOut ? { easedFadeOut: true } : {}),
                   ...(art.grow
                     ? {
                         grow: {

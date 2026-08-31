@@ -340,7 +340,7 @@ describe('buildRenderPlan', () => {
           banners: [banner({ animation: 'slide', position: 'top' })],
         }).steps[0]?.args.join(' ') ?? '';
 
-      expect(args).toContain("y='-281*(1-min(1,max(0,(t-2.000)/0.300))");
+      expect(args).toContain("y='-78*(1-min(1,max(0,(t-2.000)/0.300))");
     });
 
     it('leaves a fading banner composited at the origin', () => {

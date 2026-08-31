@@ -1,21 +1,36 @@
 import { BannerPreset } from '../schema';
-import { PresetCanvas, sansFontFamily, svgDocument } from './text';
+import { blockHeight } from './layout';
+import {
+  charactersPerLine,
+  PresetCanvas,
+  sansFontFamily,
+  svgDocument,
+  wrapText,
+} from './text';
 import { textBlockElements } from './textBlock';
 
-// every size is a fraction of the canvas, so a banner looks the same at 1080p
-// and at 4K
+// The very scrim the preview draws: a gradient rising from the frame edge,
+// solid under the words and gone by the top of the band, never a flat slab.
+// Every size is a fraction of the canvas so a banner looks the same at 1080p
+// and at 4K; the paddings follow the width, as the preview's percentage
+// paddings do.
 const lowerThird = {
   scrim: '#000000',
-  scrimOpacity: 0.55,
+  // the preview's gradient: 0.78 at the frame edge, 0.45 at 60% of the band,
+  // nothing at its top
+  scrimEdge: 0.78,
+  scrimMid: 0.45,
+  scrimMidStop: 0.6,
   heading: '#ffffff',
-  subtitle: '#d5d5de',
-  bandHeight: 0.26,
-  padding: 0.06,
-  headingSize: 0.055,
-  headingWeight: 600,
+  // white at the preview's 0.92, said as a colour so every renderer agrees
+  subtitle: '#ebebeb',
+  paddingX: 0.06,
+  paddingY: 0.04,
+  headingSize: 0.048,
+  headingWeight: 700,
   subtitleSize: 0.028,
-  subtitleWeight: 400,
-  gap: 0.018,
+  subtitleWeight: 500,
+  gap: 0.008,
   headingLines: 2,
   subtitleLines: 1,
 } as const;
@@ -31,12 +46,34 @@ export type BannerBand = {
   height: number;
 };
 
+const bandHeightPx = (
+  preset: BannerPreset,
+  canvas: PresetCanvas,
+  headingLineCount: number,
+  subtitleLineCount: number,
+): number => {
+  const style = presets[preset];
+  const paddingY = Math.round(canvas.width * style.paddingY);
+  const headingPx = Math.round(canvas.height * style.headingSize);
+  const subtitlePx = Math.round(canvas.height * style.subtitleSize);
+  return Math.round(
+    paddingY * 2 +
+      blockHeight(headingLineCount, headingPx) +
+      (subtitleLineCount > 0
+        ? Math.round(canvas.height * style.gap) +
+          blockHeight(subtitleLineCount, subtitlePx)
+        : 0),
+  );
+};
+
+// the nominal band, one line of each face: what the slide travels against and
+// what the editor lanes size themselves by
 export const bannerBand = (
   preset: BannerPreset,
   position: BannerPosition,
   canvas: PresetCanvas,
 ): BannerBand => {
-  const height = Math.round(canvas.height * presets[preset].bandHeight);
+  const height = bandHeightPx(preset, canvas, 1, 1);
   return {
     x: 0,
     y: position === 'bottom' ? canvas.height - height : 0,
@@ -61,16 +98,38 @@ export const bannerSvg = ({
   canvas,
 }: BannerInput): string => {
   const style = presets[preset];
-  const band = bannerBand(preset, position, canvas);
-  const padding = Math.round(canvas.width * style.padding);
+  const paddingX = Math.round(canvas.width * style.paddingX);
+  const widthPx = canvas.width - paddingX * 2;
+  const headingPx = Math.round(canvas.height * style.headingSize);
+  const subtitlePx = Math.round(canvas.height * style.subtitleSize);
+
+  // the band hugs its own words, as the preview's content-sized box does, so
+  // a one line banner never drops a third of the frame into shadow
+  const headingLineCount = wrapText(
+    text,
+    charactersPerLine(widthPx, headingPx, 'sans'),
+    style.headingLines,
+  ).length;
+  const height = bandHeightPx(
+    preset,
+    canvas,
+    headingLineCount,
+    subtitle ? 1 : 0,
+  );
+  const y = position === 'bottom' ? canvas.height - height : 0;
+
+  // the gradient runs from the frame edge the band sits against
+  const [fromY, toY] =
+    position === 'bottom' ? [y + height, y] : [y, y + height];
 
   return svgDocument(canvas, [
-    `<rect x="${band.x}" y="${band.y}" width="${band.width}" height="${band.height}" fill="${style.scrim}" fill-opacity="${style.scrimOpacity}"/>`,
+    `<defs><linearGradient id="scrim" gradientUnits="userSpaceOnUse" x1="0" y1="${fromY}" x2="0" y2="${toY}"><stop offset="0" stop-color="${style.scrim}" stop-opacity="${style.scrimEdge}"/><stop offset="${style.scrimMidStop}" stop-color="${style.scrim}" stop-opacity="${style.scrimMid}"/><stop offset="1" stop-color="${style.scrim}" stop-opacity="0"/></linearGradient></defs>`,
+    `<rect x="0" y="${y}" width="${canvas.width}" height="${height}" fill="url(#scrim)"/>`,
     ...textBlockElements({
       heading: {
         text,
         fontFamily: sansFontFamily,
-        fontSize: Math.round(canvas.height * style.headingSize),
+        fontSize: headingPx,
         fontWeight: style.headingWeight,
         fill: style.heading,
         glyph: 'sans',
@@ -80,17 +139,17 @@ export const bannerSvg = ({
         ? {
             text: subtitle,
             fontFamily: sansFontFamily,
-            fontSize: Math.round(canvas.height * style.subtitleSize),
+            fontSize: subtitlePx,
             fontWeight: style.subtitleWeight,
             fill: style.subtitle,
             glyph: 'sans',
             maxLines: style.subtitleLines,
           }
         : undefined,
-      box: { y: band.y, height: band.height },
-      widthPx: canvas.width - padding * 2,
+      box: { y, height },
+      widthPx,
       gapPx: Math.round(canvas.height * style.gap),
-      x: padding,
+      x: paddingX,
       anchor: 'start',
     }),
   ]);

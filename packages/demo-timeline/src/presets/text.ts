@@ -1,7 +1,10 @@
 export type PresetCanvas = { width: number; height: number };
 
 // exported so the container can install the same faces the browser preview uses
-export const sansFontFamily = "Inter, 'Helvetica Neue', Arial, sans-serif";
+// Roboto leads because it is the face the app itself loads; the render
+// container installs it, so the export sets the very glyphs the preview shows
+export const sansFontFamily =
+  "Roboto, Inter, 'Helvetica Neue', Arial, sans-serif";
 export const serifFontFamily =
   "'Source Serif Pro', Georgia, 'Times New Roman', serif";
 

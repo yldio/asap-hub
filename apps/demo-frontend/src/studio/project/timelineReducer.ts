@@ -286,6 +286,35 @@ const withNarrationBounds = (
   return outMs <= inMs ? take : { ...next, inMs, outMs };
 };
 
+// Zooms and chapters are clip-local, so a trim that slides the clip's window
+// slides them with it, and whatever the trim cut away goes the way removing a
+// clip takes its tracks: clamping a chapter would name footage that is gone.
+const rebaseClipAnchors = (
+  timeline: Timeline,
+  clipId: string,
+  deltaMs: number,
+  lengthMs: number,
+): Timeline => {
+  const inside = (atMs: number): boolean => atMs >= 0 && atMs < lengthMs;
+  return {
+    ...timeline,
+    zooms: timeline.zooms.flatMap((zoom) => {
+      if (zoom.clipId !== clipId) {
+        return [zoom];
+      }
+      const startMs = zoom.startMs - deltaMs;
+      return inside(startMs) ? [{ ...zoom, startMs }] : [];
+    }),
+    chapters: timeline.chapters.flatMap((chapter) => {
+      if (chapter.clipId !== clipId) {
+        return [chapter];
+      }
+      const offsetMs = chapter.offsetMs - deltaMs;
+      return inside(offsetMs) ? [{ ...chapter, offsetMs }] : [];
+    }),
+  };
+};
+
 const mapClip = (
   timeline: Timeline,
   clipId: string,
@@ -353,16 +382,34 @@ export const timelineReducer = (
         moveClip(timeline.clips, action.clipId, action.toIndex),
       );
 
-    case 'trimClip':
-      return withClips(
-        timeline,
-        trimClip(
-          timeline.clips,
-          action.clipId,
-          { inMs: action.inMs, outMs: action.outMs },
-          action.assetDurationMs,
-        ),
+    case 'trimClip': {
+      const before = timeline.clips.find((clip) => clip.id === action.clipId);
+      const clips = trimClip(
+        timeline.clips,
+        action.clipId,
+        { inMs: action.inMs, outMs: action.outMs },
+        action.assetDurationMs,
       );
+      const after = clips.find((clip) => clip.id === action.clipId);
+      // trimClip refuses a trim that would leave too little to render, so the
+      // shift is read off what came back rather than off what was asked for
+      if (
+        before?.kind !== 'source' ||
+        after?.kind !== 'source' ||
+        (before.inMs === after.inMs && before.outMs === after.outMs)
+      ) {
+        return withClips(timeline, clips);
+      }
+      return withClips(
+        rebaseClipAnchors(
+          timeline,
+          action.clipId,
+          after.inMs - before.inMs,
+          after.outMs - after.inMs,
+        ),
+        clips,
+      );
+    }
 
     case 'splitAt': {
       const parent = placementAt(layoutClips(timeline.clips), action.tMs);

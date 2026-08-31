@@ -254,6 +254,141 @@ describe('trimClip', () => {
   });
 });
 
+describe('trimClip carrying the clip-local tracks', () => {
+  const zoomAt = (id: string, clipId: string, startMs: number) => ({
+    id,
+    clipId,
+    startMs,
+    rampInMs: 100,
+    holdMs: 400,
+    rampOutMs: 100,
+    focus: { x: 0.5, y: 0.5 },
+    scale: 2,
+    easing: 'easeInOut' as const,
+  });
+
+  const withAnchors = (): Timeline => ({
+    ...withClips(),
+    zooms: [
+      zoomAt('zoom-early', 'clip-1', 500),
+      zoomAt('zoom-late', 'clip-1', 4000),
+      zoomAt('zoom-other', 'clip-2', 500),
+    ],
+    chapters: [
+      { id: 'ch-early', clipId: 'clip-1', offsetMs: 800, title: 'Login' },
+      { id: 'ch-late', clipId: 'clip-1', offsetMs: 4500, title: 'Done' },
+      { id: 'ch-other', clipId: 'clip-2', offsetMs: 800, title: 'Elsewhere' },
+    ],
+  });
+
+  const valid = (timeline: Timeline): boolean =>
+    timelineSchema.safeParse(timeline).success;
+
+  it('slides zooms and chapters back when the in point moves forward', () => {
+    const timeline = timelineReducer(withAnchors(), {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      inMs: 300,
+      assetDurationMs: 5000,
+    });
+
+    expect(timeline.zooms).toEqual([
+      expect.objectContaining({ id: 'zoom-early', startMs: 200 }),
+      expect.objectContaining({ id: 'zoom-late', startMs: 3700 }),
+      expect.objectContaining({ id: 'zoom-other', startMs: 500 }),
+    ]);
+    expect(timeline.chapters).toEqual([
+      expect.objectContaining({ id: 'ch-early', offsetMs: 500 }),
+      expect.objectContaining({ id: 'ch-late', offsetMs: 4200 }),
+      expect.objectContaining({ id: 'ch-other', offsetMs: 800 }),
+    ]);
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('slides them forward again when the in point is given back', () => {
+    const trimmed = timelineReducer(withAnchors(), {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      inMs: 300,
+      assetDurationMs: 5000,
+    });
+    const timeline = timelineReducer(trimmed, {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      inMs: 0,
+      assetDurationMs: 5000,
+    });
+
+    expect(timeline.zooms).toEqual([
+      expect.objectContaining({ id: 'zoom-early', startMs: 500 }),
+      expect.objectContaining({ id: 'zoom-late', startMs: 4000 }),
+      expect.objectContaining({ id: 'zoom-other', startMs: 500 }),
+    ]);
+    expect(timeline.chapters[0]).toMatchObject({
+      id: 'ch-early',
+      offsetMs: 800,
+    });
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('drops what the out point trimmed away and leaves the rest alone', () => {
+    const timeline = timelineReducer(withAnchors(), {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      outMs: 2000,
+      assetDurationMs: 5000,
+    });
+
+    expect(timeline.zooms.map((zoom) => zoom.id)).toEqual([
+      'zoom-early',
+      'zoom-other',
+    ]);
+    expect(timeline.zooms[0]).toMatchObject({ startMs: 500 });
+    expect(timeline.chapters.map((chapter) => chapter.id)).toEqual([
+      'ch-early',
+      'ch-other',
+    ]);
+    expect(timeline.chapters[0]).toMatchObject({ offsetMs: 800 });
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('drops what an in point trim pushed off the front of the clip', () => {
+    const timeline = timelineReducer(withAnchors(), {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      inMs: 1000,
+      assetDurationMs: 5000,
+    });
+
+    expect(timeline.zooms.map((zoom) => zoom.id)).toEqual([
+      'zoom-late',
+      'zoom-other',
+    ]);
+    expect(timeline.zooms[0]).toMatchObject({ startMs: 3000 });
+    expect(timeline.chapters.map((chapter) => chapter.id)).toEqual([
+      'ch-late',
+      'ch-other',
+    ]);
+    expect(timeline.chapters[0]).toMatchObject({ offsetMs: 3500 });
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('leaves every anchor where it was when the trim is refused', () => {
+    const before = withAnchors();
+    const timeline = timelineReducer(before, {
+      type: 'trimClip',
+      clipId: 'clip-1',
+      inMs: 4950,
+      assetDurationMs: 5000,
+    });
+
+    expect(timeline.clips[0]).toMatchObject({ inMs: 0, outMs: 5000 });
+    expect(timeline.zooms).toEqual(before.zooms);
+    expect(timeline.chapters).toEqual(before.chapters);
+    expect(valid(timeline)).toBe(true);
+  });
+});
+
 describe('splitAt', () => {
   it('splits the clip under the playhead', () => {
     const timeline = timelineReducer(withClips(), {

@@ -34,6 +34,10 @@ type EditorState = {
   // every frame after the first replaces the last rather than stacking up
   gesture: boolean;
   gestureRecorded: boolean;
+  // what the timeline looked like when the gesture opened: a drag restates the
+  // whole edit on every pointer move, so each frame is read against this rather
+  // than against the frame before it
+  gestureOrigin?: Timeline;
 };
 
 type EditorEvent =
@@ -52,7 +56,11 @@ type EditorEvent =
 const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
   switch (event.type) {
     case 'edit': {
-      const next = timelineReducer(state.history.present, event.action);
+      const next = timelineReducer(
+        state.history.present,
+        event.action,
+        state.gestureOrigin,
+      );
       if (next === state.history.present) {
         return state;
       }
@@ -73,10 +81,20 @@ const editorReducer = (state: EditorState, event: EditorEvent): EditorState => {
       return { ...state, settled: event.timeline };
 
     case 'beginGesture':
-      return { ...state, gesture: true, gestureRecorded: false };
+      return {
+        ...state,
+        gesture: true,
+        gestureRecorded: false,
+        gestureOrigin: state.history.present,
+      };
 
     case 'endGesture':
-      return { ...state, gesture: false, gestureRecorded: false };
+      return {
+        ...state,
+        gesture: false,
+        gestureRecorded: false,
+        gestureOrigin: undefined,
+      };
 
     case 'undo':
       return canUndo(state.history)

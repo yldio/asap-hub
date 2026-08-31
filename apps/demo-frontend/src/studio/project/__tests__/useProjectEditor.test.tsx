@@ -465,3 +465,118 @@ describe('a drag', () => {
     expect(view.result.current.timeline).toBe(before);
   });
 });
+
+describe('a trim drag over a zoom or a chapter', () => {
+  const anchored = () => {
+    const { view } = renderEditor({ saveTimeline: jest.fn() });
+    act(() => {
+      view.result.current.dispatch(addClip('asset-1', 'clip-1'));
+      view.result.current.dispatch({
+        type: 'addZoom',
+        zoom: {
+          id: 'zoom-1',
+          clipId: 'clip-1',
+          startMs: 4000,
+          rampInMs: 100,
+          holdMs: 400,
+          rampOutMs: 100,
+          focus: { x: 0.5, y: 0.5 },
+          scale: 2,
+          easing: 'easeInOut',
+        },
+      });
+      view.result.current.dispatch({
+        type: 'addChapter',
+        id: 'ch-1',
+        clipId: 'clip-1',
+        offsetMs: 800,
+        title: 'Login',
+      });
+    });
+    return view;
+  };
+
+  const trim = (
+    view: ReturnType<typeof anchored>,
+    change: { inMs?: number; outMs?: number },
+  ) =>
+    act(() =>
+      view.result.current.dispatch({
+        type: 'trimClip',
+        clipId: 'clip-1',
+        ...change,
+        assetDurationMs: 5000,
+      }),
+    );
+
+  // the handle passing an anchor used to delete it on that pointer sample, and
+  // dragging back had nothing left to bring with it
+  it('gives back a zoom the out handle crossed and came off again', () => {
+    const view = anchored();
+
+    act(() => view.result.current.beginGesture());
+    [4500, 3500, 3000, 4000, 5000].forEach((outMs) => trim(view, { outMs }));
+    act(() => view.result.current.endGesture());
+
+    expect(view.result.current.timeline.clips[0]).toMatchObject({
+      inMs: 0,
+      outMs: 5000,
+    });
+    expect(view.result.current.timeline.zooms).toEqual([
+      expect.objectContaining({ id: 'zoom-1', startMs: 4000 }),
+    ]);
+  });
+
+  it('gives back a chapter the in handle crossed and came off again', () => {
+    const view = anchored();
+
+    act(() => view.result.current.beginGesture());
+    [200, 500, 900, 1200, 600, 0].forEach((inMs) => trim(view, { inMs }));
+    act(() => view.result.current.endGesture());
+
+    expect(view.result.current.timeline.clips[0]).toMatchObject({
+      inMs: 0,
+      outMs: 5000,
+    });
+    expect(view.result.current.timeline.chapters).toEqual([
+      expect.objectContaining({ id: 'ch-1', offsetMs: 800 }),
+    ]);
+  });
+
+  // the second drag is a fresh statement of where the handle is, so it has to be
+  // read against what the first one left behind and not against what it opened on
+  it('reads the next drag from where the last one ended', () => {
+    const view = anchored();
+
+    act(() => view.result.current.beginGesture());
+    [200, 900].forEach((inMs) => trim(view, { inMs }));
+    act(() => view.result.current.endGesture());
+    expect(view.result.current.timeline.chapters).toEqual([]);
+
+    act(() => view.result.current.beginGesture());
+    trim(view, { inMs: 0 });
+    act(() => view.result.current.endGesture());
+
+    expect(view.result.current.timeline.chapters).toEqual([]);
+    expect(view.result.current.timeline.zooms).toEqual([
+      expect.objectContaining({ id: 'zoom-1', startMs: 4000 }),
+    ]);
+  });
+
+  // each arrow key press commits on its own, with no gesture around it, so the
+  // trim that cut the chapter away is an edit of its own to take back
+  it('leaves a keyboard nudge past a chapter and back to undo', () => {
+    const view = anchored();
+
+    trim(view, { inMs: 900 });
+    trim(view, { inMs: 0 });
+    expect(view.result.current.timeline.chapters).toEqual([]);
+
+    act(() => view.result.current.undo());
+    act(() => view.result.current.undo());
+
+    expect(view.result.current.timeline.chapters).toEqual([
+      expect.objectContaining({ id: 'ch-1', offsetMs: 800 }),
+    ]);
+  });
+});

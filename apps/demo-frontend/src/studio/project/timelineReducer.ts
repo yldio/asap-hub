@@ -290,11 +290,39 @@ const withNarrationBounds = (
   return outMs <= inMs ? take : { ...next, inMs, outMs };
 };
 
+// the clip's own anchors are read from `origin` and everything else is kept as
+// it stands now, so a track the gesture never touched follows the timeline
+const carryAnchors = <T extends { id: string; clipId: string }>(
+  current: T[],
+  origin: T[],
+  clipId: string,
+  rebase: (item: T) => T[],
+): T[] => {
+  const now = new Map(current.map((item) => [item.id, item]));
+  const known = new Set(origin.map((item) => item.id));
+  return [
+    ...origin.flatMap((item) => {
+      if (item.clipId === clipId) {
+        return rebase(item);
+      }
+      const held = now.get(item.id);
+      return held ? [held] : [];
+    }),
+    ...current.filter((item) => !known.has(item.id)),
+  ];
+};
+
 // Zooms and chapters are clip-local, so a trim that slides the clip's window
 // slides them with it, and whatever the trim cut away goes the way removing a
 // clip takes its tracks: clamping a chapter would name footage that is gone.
+//
+// Which is why the anchors are rebased from `origin`, the timeline the gesture
+// opened on, rather than from the frame before: a drag reports every pointer
+// move as its own trim, so a handle passing an anchor deleted it halfway
+// through the gesture and dragging back had nothing left to bring with it.
 const rebaseClipAnchors = (
   timeline: Timeline,
+  origin: Timeline,
   clipId: string,
   deltaMs: number,
   lengthMs: number,
@@ -302,20 +330,19 @@ const rebaseClipAnchors = (
   const inside = (atMs: number): boolean => atMs >= 0 && atMs < lengthMs;
   return {
     ...timeline,
-    zooms: timeline.zooms.flatMap((zoom) => {
-      if (zoom.clipId !== clipId) {
-        return [zoom];
-      }
+    zooms: carryAnchors(timeline.zooms, origin.zooms, clipId, (zoom) => {
       const startMs = zoom.startMs - deltaMs;
       return inside(startMs) ? [{ ...zoom, startMs }] : [];
     }),
-    chapters: timeline.chapters.flatMap((chapter) => {
-      if (chapter.clipId !== clipId) {
-        return [chapter];
-      }
-      const offsetMs = chapter.offsetMs - deltaMs;
-      return inside(offsetMs) ? [{ ...chapter, offsetMs }] : [];
-    }),
+    chapters: carryAnchors(
+      timeline.chapters,
+      origin.chapters,
+      clipId,
+      (chapter) => {
+        const offsetMs = chapter.offsetMs - deltaMs;
+        return inside(offsetMs) ? [{ ...chapter, offsetMs }] : [];
+      },
+    ),
   };
 };
 
@@ -334,6 +361,10 @@ const mapClip = (
 export const timelineReducer = (
   timeline: Timeline,
   action: TimelineAction,
+  // the timeline the open gesture started on, for the actions a drag restates
+  // from scratch on every pointer move; with no gesture open an edit is
+  // committed on its own and reads the timeline it is given
+  origin: Timeline = timeline,
 ): Timeline => {
   switch (action.type) {
     case 'addClip': {
@@ -406,11 +437,15 @@ export const timelineReducer = (
       ) {
         return withClips(timeline, clips);
       }
+      // a clip the gesture did not open with has no earlier anchors to read
+      const started = origin.clips.find((clip) => clip.id === action.clipId);
+      const opened = started?.kind === 'source' ? started : before;
       return withClips(
         rebaseClipAnchors(
           timeline,
+          started?.kind === 'source' ? origin : timeline,
           action.clipId,
-          after.inMs - before.inMs,
+          after.inMs - opened.inMs,
           after.outMs - after.inMs,
         ),
         clips,

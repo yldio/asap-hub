@@ -424,6 +424,117 @@ describe('trimClip carrying the clip-local tracks', () => {
   });
 });
 
+describe('trimClip through the frames of one drag', () => {
+  const oneClip = (): Timeline =>
+    timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 5000,
+      clipId: 'clip-1',
+    });
+
+  const withZoom = (): Timeline => ({
+    ...oneClip(),
+    zooms: [
+      {
+        id: 'zoom-1',
+        clipId: 'clip-1',
+        startMs: 4000,
+        rampInMs: 100,
+        holdMs: 400,
+        rampOutMs: 100,
+        focus: { x: 0.5, y: 0.5 },
+        scale: 2,
+        easing: 'easeInOut',
+      },
+    ],
+  });
+
+  const withChapter = (): Timeline => ({
+    ...oneClip(),
+    chapters: [{ id: 'ch-1', clipId: 'clip-1', offsetMs: 800, title: 'Login' }],
+  });
+
+  const frame = (handle: 'in' | 'out', atMs: number): TimelineAction => ({
+    type: 'trimClip',
+    clipId: 'clip-1',
+    ...(handle === 'in' ? { inMs: atMs } : { outMs: atMs }),
+    assetDurationMs: 5000,
+  });
+
+  // a drag hands the reducer one absolute trim per pointer move, every one of
+  // them measured from the timeline the gesture opened on
+  const drag = (
+    origin: Timeline,
+    handle: 'in' | 'out',
+    frames: number[],
+  ): Timeline =>
+    frames.reduce(
+      (timeline, atMs) =>
+        timelineReducer(timeline, frame(handle, atMs), origin),
+      origin,
+    );
+
+  const valid = (timeline: Timeline): boolean =>
+    timelineSchema.safeParse(timeline).success;
+
+  it('gives back a zoom the out handle passed over on the way', () => {
+    const timeline = drag(withZoom(), 'out', [4500, 3500, 3000, 4000, 5000]);
+
+    expect(timeline.clips[0]).toMatchObject({ inMs: 0, outMs: 5000 });
+    expect(timeline.zooms).toEqual([
+      expect.objectContaining({ id: 'zoom-1', startMs: 4000 }),
+    ]);
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('gives back a chapter the in handle passed over on the way', () => {
+    const timeline = drag(withChapter(), 'in', [200, 500, 900, 1200, 600, 0]);
+
+    expect(timeline.clips[0]).toMatchObject({ inMs: 0, outMs: 5000 });
+    expect(timeline.chapters).toEqual([
+      expect.objectContaining({ id: 'ch-1', offsetMs: 800 }),
+    ]);
+    expect(valid(timeline)).toBe(true);
+  });
+
+  it('slides an anchor the drag has not reached yet with the trim', () => {
+    const timeline = drag(withChapter(), 'in', [200, 500]);
+
+    expect(timeline.chapters).toEqual([
+      expect.objectContaining({ id: 'ch-1', offsetMs: 300 }),
+    ]);
+    expect(valid(timeline)).toBe(true);
+  });
+
+  // nothing out of range is parked in the document: an autosave can fire in the
+  // middle of a drag, and a marker outside its clip would be saved, resolved
+  // into programme time and handed to the watch page as a chapter
+  it('holds no anchor outside the clip while the drag is over it', () => {
+    const mid = drag(withZoom(), 'out', [4500, 3000]);
+
+    expect(mid.zooms).toEqual([]);
+    expect(valid(mid)).toBe(true);
+  });
+
+  it('drops what the drag left cut away when it ends there', () => {
+    const timeline = drag(withChapter(), 'in', [200, 900]);
+
+    expect(timeline.clips[0]).toMatchObject({ inMs: 900 });
+    expect(timeline.chapters).toEqual([]);
+  });
+
+  // each arrow key press is its own committed edit with no gesture around it,
+  // so it reads the timeline it is given, exactly as a released drag does
+  it('keeps a nudge past an anchor and back as two committed trims', () => {
+    const past = timelineReducer(withChapter(), frame('in', 900));
+    const back = timelineReducer(past, frame('in', 0));
+
+    expect(past.chapters).toEqual([]);
+    expect(back.chapters).toEqual([]);
+  });
+});
+
 describe('splitAt', () => {
   it('splits the clip under the playhead', () => {
     const timeline = timelineReducer(withClips(), {

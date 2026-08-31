@@ -351,6 +351,7 @@ const Editor: FC<EditorProps> = ({
       durationMs,
       startedAtEpochMs,
       pauses,
+      surface,
       narration,
     }: TakeResult) => {
       const clipId = createId('clip');
@@ -366,6 +367,7 @@ const Editor: FC<EditorProps> = ({
         recordedAtEpochMs: startedAtEpochMs,
         recordedDurationMs: durationMs,
         recordedPauses: pauses,
+        surface,
       });
       if (narration) {
         editor.dispatch({

@@ -170,7 +170,10 @@ export const useCursorCapture = (
       if (events.length === 0) {
         return undefined;
       }
-      const surface = recorded ?? target.surface;
+      // the clip's own take is what its events were filming, and one session
+      // spans several takes, so `recorded` only answers for a clip that kept no
+      // surface of its own
+      const surface = target.surface ?? recorded;
       const derived = deriveCursorEffects(events, {
         frame,
         surface,

@@ -158,6 +158,41 @@ describe('addClip', () => {
     ).not.toHaveProperty('recordedPauses');
   });
 
+  // one capture session spans every take before the apply, so the surface has
+  // to be kept per take: the newest take's is the wrong one for all the others
+  it('writes what the take was a recording of on the clip', () => {
+    const timeline = timelineReducer(createEmptyTimeline(), {
+      type: 'addClip',
+      assetId: 'asset-1',
+      durationMs: 5000,
+      clipId: 'clip-1',
+      recordedAtEpochMs: 1_700_000_000_000,
+      surface: 'monitor',
+    });
+
+    expect(timeline.cursor[0]).toEqual({
+      clipId: 'clip-1',
+      offsetMs: 0,
+      path: [],
+      effects: [],
+      recordedAtEpochMs: 1_700_000_000_000,
+      surface: 'monitor',
+    });
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+
+  it('leaves a take the browser never named a surface for without one', () => {
+    expect(
+      timelineReducer(createEmptyTimeline(), {
+        type: 'addClip',
+        assetId: 'asset-1',
+        durationMs: 5000,
+        clipId: 'clip-1',
+        recordedAtEpochMs: 1_700_000_000_000,
+      }).cursor[0],
+    ).not.toHaveProperty('surface');
+  });
+
   it('leaves an imported clip with no take start at all', () => {
     expect(
       timelineReducer(createEmptyTimeline(), {

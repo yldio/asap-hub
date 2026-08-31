@@ -214,17 +214,19 @@ describe('mapping a capture onto what was recorded', () => {
     expect(result?.effects[0]?.point.x).toBeGreaterThan(0.8);
   });
 
-  it('falls back to what the layer was mapped through before', async () => {
+  it('falls back to the recorder for a clip that kept no surface', async () => {
     const result = await applied(undefined, 'monitor');
 
     expect(result?.surface).toBe('monitor');
     expect(result?.effects[0]?.point.x).toBeCloseTo(1129.4 / 1920, 3);
   });
 
-  it('lets the live recorder overrule a stale one on the layer', async () => {
+  // the recorder only knows the newest take; the clip knows its own
+  it('lets the clip overrule the recorder about its own take', async () => {
     const result = await applied('monitor', 'browser');
 
-    expect(result?.surface).toBe('monitor');
+    expect(result?.surface).toBe('browser');
+    expect(result?.effects[0]?.point.x).toBeGreaterThan(0.8);
   });
 });
 
@@ -504,6 +506,107 @@ describe('two takes captured in one session', () => {
     expect(rendered.result.current.error).toBe(
       'That capture has no events during any recorded take.',
     );
+  });
+});
+
+// A creator shares a whole monitor for one take and a tab for the next, then
+// applies once. Reading both through the recorder's newest surface drew the
+// first take's pointer hundreds of pixels from where it really was.
+describe('two takes recorded on different surfaces', () => {
+  const takeOneStart = 1_700_000_000_000;
+  const takeTwoStart = takeOneStart + 40_000;
+
+  const placement = {
+    x: 1129.4,
+    y: 593.1,
+    viewportW: 1134,
+    viewportH: 943,
+    screenX: 1129.4,
+    screenY: 680.1,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1134,
+    winH: 1030,
+  };
+
+  const ndjson = [
+    { id: 'c1', type: 'click', t: takeOneStart + 2_000 },
+    { id: 'c2', type: 'click', t: takeTwoStart + 3_000 },
+  ]
+    .map((line) => JSON.stringify({ ...line, ...placement }))
+    .join('\n');
+
+  // the same pointer read against the monitor and against the tab, so a test
+  // that mixed the two would show it
+  const onMonitor = 1129.4 / 1920;
+  const onTab = 0.8355;
+
+  const applied = async (
+    takeOneSurface: CaptureSurface | undefined,
+    recorded: CaptureSurface,
+  ) => {
+    const view = render(
+      {
+        startCapture: jest.fn().mockResolvedValue(session),
+        captureStatus: jest.fn().mockResolvedValue(open),
+        finaliseCapture: jest.fn().mockResolvedValue(undefined),
+        captureEvents: jest.fn().mockResolvedValue(ndjson),
+      },
+      recorded,
+    );
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    return act(async () =>
+      view.result.current.apply({
+        stoppedAtEpochMs: takeTwoStart + 8_000,
+        frame: { width: 1920, height: 1080 },
+        targets: [
+          {
+            clipId: 'clip-take-1',
+            existing: [],
+            startedAtEpochMs: takeOneStart,
+            durationMs: 10_000,
+            ...(takeOneSurface ? { surface: takeOneSurface } : {}),
+          },
+          {
+            clipId: 'clip-take-2',
+            existing: [],
+            startedAtEpochMs: takeTwoStart,
+            durationMs: 8_000,
+            surface: 'browser' as const,
+          },
+        ],
+      }),
+    );
+  };
+
+  it('reads each take through the surface that take was recorded on', async () => {
+    const results = await applied('monitor', 'browser');
+
+    expect(results?.map(({ surface }) => surface)).toEqual([
+      'monitor',
+      'browser',
+    ]);
+    expect(results?.[0]?.effects[0]?.point.x).toBeCloseTo(onMonitor, 3);
+    expect(results?.[1]?.effects[0]?.point.x).toBeCloseTo(onTab, 3);
+    // the two mappings really do disagree, or the test above proves nothing
+    expect(onMonitor).not.toBeCloseTo(onTab, 3);
+  });
+
+  // a document written before the take's surface was kept has nothing on the
+  // clip, and the recorder is all there is to go on
+  it('still falls back to the recorder for a take that kept none', async () => {
+    const results = await applied(undefined, 'monitor');
+
+    expect(results?.[0]?.surface).toBe('monitor');
+    expect(results?.[0]?.effects[0]?.point.x).toBeCloseTo(onMonitor, 3);
+    expect(results?.[1]?.surface).toBe('browser');
+    expect(results?.[1]?.effects[0]?.point.x).toBeCloseTo(onTab, 3);
   });
 });
 

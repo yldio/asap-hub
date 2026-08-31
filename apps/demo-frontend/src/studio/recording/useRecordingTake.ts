@@ -1,4 +1,4 @@
-import { RecordedPause } from '@asap-hub/demo-timeline';
+import { CaptureSurface, RecordedPause } from '@asap-hub/demo-timeline';
 import { useCallback, useRef, useState } from 'react';
 import { ProjectAsset } from '../../api/types';
 import { AssetUpload } from '../editor/useAssetUpload';
@@ -12,6 +12,9 @@ export type TakeResult = {
   startedAtEpochMs: number;
   // the wall clock spans the take stood paused for, which the footage skipped
   pauses?: RecordedPause[];
+  // what this take was a recording of: one session collects several takes, and
+  // each can have been pointed at a different tab, window or screen
+  surface?: CaptureSurface;
   narration?: ProjectAsset;
 };
 
@@ -78,6 +81,7 @@ export const useRecordingTake = (
           durationMs: take.durationMs,
           startedAtEpochMs: take.startedAtEpochMs,
           ...(take.pauses?.length ? { pauses: take.pauses } : {}),
+          ...(take.surface ? { surface: take.surface } : {}),
           narration,
         });
       } finally {

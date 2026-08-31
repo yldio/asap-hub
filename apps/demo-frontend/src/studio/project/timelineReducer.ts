@@ -1,6 +1,7 @@
 import {
   Banner,
   Canvas,
+  CaptureSurface,
   Clip,
   clipLocalMs,
   ClipPlacement,
@@ -41,6 +42,9 @@ export type TimelineAction =
       // without them a capture applied later reads everything past a pause late
       // by the whole pause, and loses the tail past the footage's own length
       recordedPauses?: RecordedPause[];
+      // what that take was a recording of: one capture session spans several
+      // takes, so the newest take's surface is the wrong one for all the others
+      surface?: CaptureSurface;
     }
   | { type: 'removeClip'; clipId: string }
   | { type: 'moveClip'; clipId: string; toIndex: number }
@@ -349,7 +353,8 @@ export const timelineReducer = (
           action.index ?? timeline.clips.length,
         ),
       );
-      const { recordedAtEpochMs, recordedDurationMs, recordedPauses } = action;
+      const { recordedAtEpochMs, recordedDurationMs, recordedPauses, surface } =
+        action;
       if (recordedAtEpochMs === undefined || recordedAtEpochMs <= 0) {
         return added;
       }
@@ -358,6 +363,7 @@ export const timelineReducer = (
         cursor: withCursorLayer(added, action.clipId, (layer) => ({
           ...layer,
           recordedAtEpochMs: Math.round(recordedAtEpochMs),
+          ...(surface ? { surface } : {}),
           ...(recordedDurationMs && recordedDurationMs > 0
             ? { recordedDurationMs: Math.round(recordedDurationMs) }
             : {}),

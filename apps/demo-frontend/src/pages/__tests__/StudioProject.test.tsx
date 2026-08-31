@@ -1,5 +1,13 @@
+/* eslint-disable max-classes-per-file -- a fake pointer event and a fake
+   recorder are two fakes this page genuinely needs */
 import { createEmptyTimeline } from '@asap-hub/demo-timeline';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ApiError } from '../../api/client';
@@ -99,6 +107,17 @@ beforeAll(() => {
   HTMLMediaElement.prototype.play = jest.fn(() => Promise.resolve());
   HTMLMediaElement.prototype.pause = jest.fn();
   Element.prototype.setPointerCapture = jest.fn();
+  // jsdom has no PointerEvent, and without one fireEvent drops the modifier
+  // keys the clip-picking gesture is made of
+  class TestPointerEvent extends MouseEvent {
+    pointerId: number;
+
+    constructor(type: string, props: PointerEventInit = {}) {
+      super(type, props);
+      this.pointerId = props.pointerId ?? 1;
+    }
+  }
+  window.PointerEvent = TestPointerEvent as unknown as typeof PointerEvent;
   Element.prototype.releasePointerCapture = jest.fn();
   Element.prototype.hasPointerCapture = jest.fn(() => false);
 });
@@ -817,5 +836,598 @@ describe('a source the asset list has not caught up with', () => {
         screen.queryByText(/no playable source yet/),
       ).not.toBeInTheDocument(),
     );
+  });
+});
+
+// the edges codecov flagged: error branches, guards and dialog handlers
+const clipTimeline = () => ({
+  timeline: {
+    ...createEmptyTimeline(),
+    clips: [
+      {
+        kind: 'source' as const,
+        id: 'clip-1',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 5000,
+        volume: 1,
+      },
+    ],
+  },
+  timelineVersion: 4,
+});
+
+const quietNavigationWarning = () =>
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+describe('the sources panel talking to the server', () => {
+  it('shows the upload error when an import cannot start', async () => {
+    renderStudio({
+      createAsset: jest
+        .fn()
+        .mockRejectedValue(new Error('the tube is blocked')),
+    });
+
+    fireEvent.change(await screen.findByLabelText('Import a video'), {
+      target: { files: [new File(['x'], 'take.mp4', { type: 'video/mp4' })] },
+    });
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'the tube is blocked',
+    );
+  });
+
+  it('imports audio through the same door', async () => {
+    renderStudio({
+      createAsset: jest.fn().mockRejectedValue(new Error('no room for audio')),
+    });
+
+    fireEvent.change(await screen.findByLabelText('Import an audio file'), {
+      target: { files: [new File(['x'], 'voice.m4a', { type: 'audio/mp4' })] },
+    });
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'no room for audio',
+    );
+  });
+
+  it('names the lock holder when a rename is refused', async () => {
+    renderStudio({
+      renameAsset: jest
+        .fn()
+        .mockRejectedValue(new ApiError(409, 'conflict', 'locked')),
+    });
+
+    const field = await screen.findByLabelText('Name of Intro take');
+    fireEvent.change(field, { target: { value: 'Better name' } });
+    fireEvent.blur(field);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /sources cannot be renamed/,
+    );
+  });
+
+  it('falls back to plain words when the rename just failed', async () => {
+    renderStudio({
+      renameAsset: jest.fn().mockRejectedValue(new Error('boom')),
+    });
+
+    const field = await screen.findByLabelText('Name of Intro take');
+    fireEvent.change(field, { target: { value: 'Better name' } });
+    fireEvent.blur(field);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not rename that source.',
+    );
+  });
+
+  it('falls back to plain words when the removal just failed', async () => {
+    renderStudio({
+      deleteAsset: jest.fn().mockRejectedValue(new Error('boom')),
+      listAssets: jest.fn().mockResolvedValue([asset()]),
+    });
+
+    await userEvent.click(await screen.findByLabelText('Remove Intro take'));
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Remove this source' }),
+      ).getByRole('button', { name: 'Remove it' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not remove that source.',
+    );
+  });
+});
+
+describe('who may stand in the studio', () => {
+  it('sends a member back to the demos', async () => {
+    quietNavigationWarning();
+    renderApp(<StudioProject />, {
+      api: api(),
+      me: { ...creatorMe, role: 'member' },
+      route: '/studio/projects/project-1',
+      routePath: '/studio/projects/:id',
+    });
+
+    await waitFor(() =>
+      expect(screen.queryByLabelText('Demo title')).toBeNull(),
+    );
+  });
+
+  it('says so when the demo cannot be loaded', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockRejectedValue(new ApiError(404, 'gone')),
+    });
+
+    expect(
+      await screen.findByText('This demo could not be loaded.'),
+    ).toBeVisible();
+  });
+
+  it('sends an uploaded video to its own page', async () => {
+    quietNavigationWarning();
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({ ...project, kind: 'upload' }),
+    });
+
+    await waitFor(() =>
+      expect(screen.queryByLabelText('Demo title')).toBeNull(),
+    );
+  });
+});
+
+describe('a download that the server refuses', () => {
+  const pickTheClip = async () => {
+    fireEvent.pointerDown(
+      await screen.findByRole('group', { name: /^Intro take, / }),
+      { pointerId: 1, ctrlKey: true },
+    );
+    await screen.findByRole('group', { name: /picked for download/ });
+  };
+
+  it('says an export is already running', async () => {
+    const startRender = jest
+      .fn()
+      .mockRejectedValue(new ApiError(409, 'conflict', 'render_active'));
+    renderStudio({
+      startRender,
+      getTimeline: jest.fn().mockResolvedValue(clipTimeline()),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await pickTheClip();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Download these clips' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'An export is already running for this demo.',
+    );
+  });
+
+  it('sends one request however fast the clicks come', async () => {
+    const startRender = jest.fn().mockReturnValue(
+      new Promise(() => {
+        // never settles: the first request must still be in flight
+      }),
+    );
+    renderStudio({
+      startRender,
+      getTimeline: jest.fn().mockResolvedValue(clipTimeline()),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await pickTheClip();
+    const download = screen.getByRole('button', {
+      name: 'Download these clips',
+    });
+    fireEvent.click(download);
+    fireEvent.click(download);
+
+    expect(startRender).toHaveBeenCalledTimes(1);
+  });
+
+  it('says when the finished cut cannot be fetched at all', async () => {
+    Object.defineProperty(globalThis, 'fetch', {
+      configurable: true,
+      writable: true,
+      value: jest.fn().mockRejectedValue(new Error('offline')),
+    });
+    renderStudio({
+      requestAccess: jest.fn().mockResolvedValue({}),
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        render: {
+          renderId: 'render-1',
+          state: 'done',
+          timelineVersion: 4,
+          purpose: 'download',
+          downloadPath: 'downloads/render-1',
+        },
+      }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Save the picked clips' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not fetch the clips file.',
+    );
+  });
+});
+
+describe('cancelling an export', () => {
+  const rendering = {
+    renderId: 'render-1',
+    state: 'rendering' as const,
+    timelineVersion: 4,
+    progress: 40,
+  };
+
+  it('knows an export that already finished', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({ ...project, render: rendering }),
+      cancelRender: jest
+        .fn()
+        .mockRejectedValue(new ApiError(409, 'conflict', 'render_inactive')),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Cancel' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'That export has already finished.',
+    );
+  });
+
+  it('admits a cancel that simply failed', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({ ...project, render: rendering }),
+      cancelRender: jest.fn().mockRejectedValue(new Error('boom')),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Cancel' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not cancel the export.',
+    );
+  });
+});
+
+describe('the writes behind the header', () => {
+  it('says when the demo could not be renamed', async () => {
+    renderStudio({
+      updateVideo: jest.fn().mockRejectedValue(new Error('boom')),
+    });
+
+    const title = await screen.findByLabelText('Demo title');
+    await waitFor(() => expect(title).toBeEnabled());
+    fireEvent.change(title, { target: { value: 'A better name' } });
+    fireEvent.blur(title);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not rename this demo.',
+    );
+  });
+
+  it('says when the publish was refused', async () => {
+    renderStudio({
+      publishVideo: jest.fn().mockRejectedValue(new Error('boom')),
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Publish' }),
+    );
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Publish this demo' }),
+      ).getByRole('button', { name: 'Publish' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not publish this demo.',
+    );
+  });
+
+  it('keeps the demo unpublished quietly when asked', async () => {
+    const publishVideo = jest.fn();
+    renderStudio({
+      publishVideo,
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Publish' }),
+    );
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Publish this demo' }),
+      ).getByRole('button', { name: 'Not yet' }),
+    );
+
+    expect(publishVideo).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('says when the unpublish was refused', async () => {
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue({
+        ...project,
+        status: 'published',
+        processingState: 'ready',
+      }),
+      unpublishVideo: jest.fn().mockRejectedValue(new Error('boom')),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Unpublish' }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not unpublish this demo.',
+    );
+  });
+
+  it('keeps the current export when the creator backs out', async () => {
+    const startRender = jest.fn();
+    renderStudio({
+      startRender,
+      getVideo: jest
+        .fn()
+        .mockResolvedValue({ ...project, processingState: 'ready' }),
+      getTimeline: jest.fn().mockResolvedValue(clipTimeline()),
+    });
+
+    const exportAgain = await screen.findByRole('button', {
+      name: 'Export again',
+    });
+    await waitFor(() => expect(exportAgain).toBeEnabled());
+    await userEvent.click(exportAgain);
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Export this demo again' }),
+      ).getByRole('button', { name: 'Keep the current one' }),
+    );
+
+    expect(startRender).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});
+
+describe('leaving with unsaved edits', () => {
+  const makeDirty = async () => {
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    await waitFor(() => expect(timelineClips()).toHaveLength(1));
+  };
+
+  it('stays put when asked to stay', async () => {
+    renderStudio();
+    await makeDirty();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Unsaved changes' }),
+      ).getByRole('button', { name: 'Stay here' }),
+    );
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(timelineClips()).toHaveLength(1);
+  });
+
+  it('discards and leaves when told to', async () => {
+    quietNavigationWarning();
+    renderStudio();
+    await makeDirty();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Unsaved changes' }),
+      ).getByRole('button', { name: 'Discard and leave' }),
+    );
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('saves on the way out when told to', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 4 },
+      timelineVersion: 5,
+    });
+    quietNavigationWarning();
+    renderStudio({ saveTimeline });
+    await makeDirty();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Unsaved changes' }),
+      ).getByRole('button', { name: 'Save and leave' }),
+    );
+
+    await waitFor(() => expect(saveTimeline).toHaveBeenCalled());
+  });
+});
+
+describe('the stage without a served url', () => {
+  it('falls back to the asset route for the footage', async () => {
+    const bare = asset();
+    delete (bare as { url?: string }).url;
+    const { container } = renderStudio({
+      listAssets: jest.fn().mockResolvedValue([bare]),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+
+    await waitFor(() => {
+      const video = container.querySelector('video');
+      expect(video?.src).toContain(
+        '/projects/project-1/assets/asset-1/original.mp4',
+      );
+    });
+  });
+});
+
+// the take and voice-over flows, on a faked capture stack: a stream, a
+// recorder and the three-step upload the real browser would make
+describe('recording into the timeline', () => {
+  class FakeMediaRecorder {
+    static isTypeSupported = () => true;
+
+    stream: MediaStream;
+
+    mimeType: string;
+
+    state = 'inactive';
+
+    private listeners: Record<string, ((event: unknown) => void)[]> = {};
+
+    constructor(stream: MediaStream, options?: { mimeType?: string }) {
+      this.stream = stream;
+      this.mimeType = options?.mimeType ?? 'video/webm';
+    }
+
+    addEventListener(type: string, listener: (event: unknown) => void) {
+      this.listeners[type] = [...(this.listeners[type] ?? []), listener];
+    }
+
+    start() {
+      this.state = 'recording';
+    }
+
+    pause() {
+      this.state = 'paused';
+    }
+
+    resume() {
+      this.state = 'recording';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    requestData() {}
+
+    stop() {
+      this.state = 'inactive';
+      this.listeners.dataavailable?.forEach((listener) =>
+        listener({ data: new Blob(['frames']) }),
+      );
+      this.listeners.stop?.forEach((listener) => listener({}));
+    }
+  }
+
+  const fakeStream = () => {
+    const track = {
+      stop: jest.fn(),
+      getSettings: () => ({ displaySurface: 'monitor' }),
+      addEventListener: jest.fn(),
+    };
+    return {
+      getTracks: () => [track],
+      getVideoTracks: () => [track],
+      getAudioTracks: () => [track],
+    } as unknown as MediaStream;
+  };
+
+  const uploadApi = () => ({
+    createAsset: jest.fn().mockResolvedValue({
+      assetId: 'rec-1',
+      uploadId: 'upload-1',
+      partSize: 5 * 1024 * 1024,
+    }),
+    createAssetPartUrls: jest
+      .fn()
+      .mockResolvedValue([{ partNumber: 1, url: 'https://parts/1' }]),
+    completeAsset: jest
+      .fn()
+      .mockResolvedValue(asset({ assetId: 'rec-1', label: 'Screen 10:00' })),
+  });
+
+  beforeEach(() => {
+    Object.defineProperty(globalThis, 'MediaRecorder', {
+      configurable: true,
+      writable: true,
+      value: FakeMediaRecorder,
+    });
+    Object.defineProperty(navigator, 'mediaDevices', {
+      configurable: true,
+      value: {
+        getDisplayMedia: jest.fn().mockImplementation(async () => fakeStream()),
+        getUserMedia: jest.fn().mockImplementation(async () => fakeStream()),
+      },
+    });
+    Object.defineProperty(globalThis, 'fetch', {
+      configurable: true,
+      writable: true,
+      value: jest.fn().mockResolvedValue({
+        ok: true,
+        headers: { get: () => '"etag-1"' },
+      }),
+    });
+  });
+
+  it('drops a finished take and its voice on the timeline together', async () => {
+    const api2 = uploadApi();
+    renderStudio(api2);
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Record screen' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Start now' }),
+    );
+    await userEvent.click(await screen.findByRole('button', { name: 'Stop' }));
+
+    // one upload for the picture and one for the microphone track
+    await waitFor(() => expect(api2.completeAsset).toHaveBeenCalledTimes(2));
+    // the sources list has not refetched the new asset yet, so the clip
+    // stands under the fallback name
+    expect(await screen.findByRole('group', { name: /^Clip, / })).toBeVisible();
+  });
+
+  it('lands a voice over on the narration lane', async () => {
+    const api2 = uploadApi();
+    renderStudio(api2);
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Record a voice over' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Start now' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Stop the voice over' }),
+    );
+
+    await waitFor(() => expect(api2.completeAsset).toHaveBeenCalledTimes(1));
   });
 });

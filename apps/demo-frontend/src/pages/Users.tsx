@@ -3,10 +3,11 @@ import { css } from '@emotion/react';
 import { FC, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
+import { ApiError } from '../api/client';
 import { useDeleteUser, useUpdateUser, useUsers } from '../api/hooks';
 import type { ManagedUser, Role } from '../api/types';
 import { useIsAdmin, useMeContext } from '../auth/MeContext';
-import { PageHeading } from '../layout/PageHeading';
+import { PageHeading, SectionHeading } from '../layout/PageHeading';
 import { Badge, Button, Card, Modal, Spinner } from '../ui/components';
 import { TableFilters } from '../ui/TableFilters';
 import {
@@ -59,7 +60,7 @@ const selectStyles = css({
 
 const actionsStyles = css({ display: 'flex', gap: rem(8) });
 
-const deniedStyles = css({
+const panelStyles = css({
   padding: rem(40),
   display: 'grid',
   gap: rem(8),
@@ -155,6 +156,12 @@ const Users: FC = () => {
   const debouncedQuery = useDebounced(query);
 
   const items = users.data;
+  // a refetch after a failure never re-enters isLoading, so the spinner has to
+  // cover the retry as well or the stale error just sits there
+  const isLoadingList = users.isLoading || (users.isError && users.isFetching);
+  const hasListError = users.isError && !users.isFetching;
+  const isForbidden =
+    users.error instanceof ApiError && users.error.status === 403;
   const visible = useMemo(() => {
     const needle = debouncedQuery.trim().toLowerCase();
     return (items ?? []).filter((user) => {
@@ -175,7 +182,7 @@ const Users: FC = () => {
   // says the same thing the invites page says
   if (!isAdmin) {
     return (
-      <Card overrideStyles={deniedStyles}>
+      <Card overrideStyles={panelStyles}>
         <PageHeading size={3}>Only admins can manage users</PageHeading>
         <p css={{ color: lead.rgb, margin: 0 }}>
           Ask an admin to change someone&rsquo;s role or remove their account.
@@ -216,13 +223,41 @@ const Users: FC = () => {
       <div css={{ height: rem(16) }} />
 
       <Card>
-        {users.isLoading && <Spinner label="Loading users" />}
+        {isLoadingList && <Spinner label="Loading users" />}
         {(updateUser.isError || deleteUser.isError) && (
           <p css={errorStyles}>
             We could not save that change. Try again in a moment.
           </p>
         )}
-        {!users.isLoading && (
+        {hasListError &&
+          (isForbidden ? (
+            <div css={panelStyles}>
+              <SectionHeading>You can no longer manage users</SectionHeading>
+              <p css={{ color: lead.rgb, margin: 0 }}>
+                Your role changed since this page opened. Reload the page to
+                pick up your new role.
+              </p>
+              <Link to="/" css={{ color: pine.rgb }}>
+                Back to demos
+              </Link>
+            </div>
+          ) : (
+            <div css={panelStyles}>
+              <SectionHeading>We could not load the users</SectionHeading>
+              <p css={{ color: lead.rgb, margin: 0 }}>
+                The list did not load, so this does not mean nobody has signed
+                in. Try again in a moment.
+              </p>
+              <Button
+                onClick={() => {
+                  void users.refetch();
+                }}
+              >
+                Retry
+              </Button>
+            </div>
+          ))}
+        {!isLoadingList && !hasListError && (
           <>
             <TableFilters
               searchLabel="Search users"

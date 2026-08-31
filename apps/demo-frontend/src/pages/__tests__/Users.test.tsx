@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ApiError } from '../../api/client';
 import type { ManagedUser } from '../../api/types';
 import { adminMe, memberMe, renderApp } from '../../test-utils';
 import Users from '../Users';
@@ -199,6 +200,94 @@ it('says nobody has signed in when the list is empty', async () => {
   });
 
   expect(await screen.findByText('Nobody has signed in yet.')).toBeVisible();
+});
+
+it('says the users failed to load rather than that nobody has signed in', async () => {
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.reject(new Error('boom')) },
+  });
+
+  expect(
+    await screen.findByRole(
+      'heading',
+      { name: 'We could not load the users', level: 2 },
+      { timeout: 6000 },
+    ),
+  ).toBeVisible();
+  expect(screen.getByText(/does not mean nobody has signed in/)).toBeVisible();
+  expect(screen.queryByText('Nobody has signed in yet.')).toBeNull();
+}, 15000);
+
+it('hides the filters and the table while the users are unavailable', async () => {
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.reject(new ApiError(429, 'slow down')) },
+  });
+
+  await screen.findByRole('heading', { name: 'We could not load the users' });
+  expect(screen.queryByLabelText('Search users')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Filter by role' })).toBeNull();
+  expect(screen.queryByRole('table')).toBeNull();
+});
+
+it('reloads the users on retry and clears the failure', async () => {
+  let attempt = 0;
+  const listUsers = jest.fn(() => {
+    attempt += 1;
+    return attempt === 1
+      ? Promise.reject(new ApiError(429, 'slow down'))
+      : Promise.resolve(items);
+  });
+  renderApp(<Users />, { me: adminMe, api: { listUsers } });
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByText('jane@example.com')).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'We could not load the users' }),
+  ).toBeNull();
+  expect(screen.getByLabelText('Search users')).toBeVisible();
+});
+
+it('replaces the failure with the spinner while a retry is in flight', async () => {
+  let attempt = 0;
+  const listUsers = jest.fn(() => {
+    attempt += 1;
+    return attempt === 1
+      ? Promise.reject(new ApiError(429, 'slow down'))
+      : new Promise<ManagedUser[]>(() => {});
+  });
+  renderApp(<Users />, { me: adminMe, api: { listUsers } });
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByText('Loading users')).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'We could not load the users' }),
+  ).toBeNull();
+});
+
+it('reads a refused user list as a role change and offers no retry', async () => {
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.reject(new ApiError(403, 'forbidden')) },
+  });
+
+  expect(
+    await screen.findByRole('heading', {
+      name: 'You can no longer manage users',
+      level: 2,
+    }),
+  ).toBeVisible();
+  expect(
+    screen.getByText(/Your role changed since this page opened/),
+  ).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Retry' })).toBeNull();
+  expect(screen.getByRole('link', { name: 'Back to demos' })).toHaveAttribute(
+    'href',
+    '/',
+  );
 });
 
 it('surfaces a failed save', async () => {

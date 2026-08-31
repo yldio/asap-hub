@@ -265,19 +265,94 @@ it('says nobody has been invited when the list is empty', async () => {
   expect(await screen.findByText('Nobody has been invited yet.')).toBeVisible();
 });
 
-it('shows the empty state when the invites fail to load', async () => {
+it('says the invites failed to load rather than that nobody has been invited', async () => {
   renderApp(<Invites />, {
     me: creatorMe,
     api: { listInvites: () => Promise.reject(new Error('boom')) },
   });
 
   expect(
-    await screen.findByText(
-      'Nobody has been invited yet.',
-      {},
-      { timeout: 4000 },
+    await screen.findByRole(
+      'heading',
+      { name: 'We could not load the invites', level: 2 },
+      { timeout: 6000 },
     ),
   ).toBeVisible();
+  expect(
+    screen.getByText(/does not mean nobody has been invited/),
+  ).toBeVisible();
+  expect(screen.queryByText('Nobody has been invited yet.')).toBeNull();
+}, 15000);
+
+it('hides the filters and the table while the invites are unavailable', async () => {
+  renderApp(<Invites />, {
+    me: adminMe,
+    api: { listInvites: () => Promise.reject(new ApiError(429, 'slow down')) },
+  });
+
+  await screen.findByRole('heading', { name: 'We could not load the invites' });
+  expect(screen.queryByLabelText('Search invites')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Filter by role' })).toBeNull();
+  expect(screen.queryByRole('table')).toBeNull();
+});
+
+it('reloads the invites on retry and clears the failure', async () => {
+  let attempt = 0;
+  const listInvites = jest.fn(() => {
+    attempt += 1;
+    return attempt === 1
+      ? Promise.reject(new ApiError(429, 'slow down'))
+      : Promise.resolve(items);
+  });
+  renderApp(<Invites />, { me: creatorMe, api: { listInvites } });
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByText('jane@example.com')).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'We could not load the invites' }),
+  ).toBeNull();
+  expect(screen.getByLabelText('Search invites')).toBeVisible();
+});
+
+it('replaces the failure with the spinner while a retry is in flight', async () => {
+  let attempt = 0;
+  const listInvites = jest.fn(() => {
+    attempt += 1;
+    return attempt === 1
+      ? Promise.reject(new ApiError(429, 'slow down'))
+      : new Promise<Invite[]>(() => {});
+  });
+  renderApp(<Invites />, { me: creatorMe, api: { listInvites } });
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByText('Loading invites')).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'We could not load the invites' }),
+  ).toBeNull();
+});
+
+it('reads a refused invite list as a role change and offers no retry', async () => {
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: { listInvites: () => Promise.reject(new ApiError(403, 'forbidden')) },
+  });
+
+  expect(
+    await screen.findByRole('heading', {
+      name: 'You can no longer manage invites',
+      level: 2,
+    }),
+  ).toBeVisible();
+  expect(
+    screen.getByText(/Your role changed since this page opened/),
+  ).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Retry' })).toBeNull();
+  expect(screen.getByRole('link', { name: 'Back to demos' })).toHaveAttribute(
+    'href',
+    '/',
+  );
 });
 
 it('cancels a pending invite after confirming', async () => {

@@ -7,7 +7,7 @@ import { ApiError } from '../api/client';
 import { useCancelInvite, useCreateInvite, useInvites } from '../api/hooks';
 import type { Invite, Role } from '../api/types';
 import { useIsAdmin, useIsCreator } from '../auth/MeContext';
-import { PageHeading } from '../layout/PageHeading';
+import { PageHeading, SectionHeading } from '../layout/PageHeading';
 import { Badge, Button, Card, Modal, Spinner } from '../ui/components';
 import { TableFilters } from '../ui/TableFilters';
 import {
@@ -82,7 +82,7 @@ const errorStyles = css({ color: ember.rgb, fontSize: rem(14), margin: 0 });
 
 const successStyles = css({ color: fern.rgb, fontSize: rem(14), margin: 0 });
 
-const deniedStyles = css({
+const panelStyles = css({
   padding: rem(40),
   display: 'grid',
   gap: rem(8),
@@ -155,6 +155,13 @@ const Invites: FC = () => {
   const debouncedQuery = useDebounced(query);
 
   const items = invites.data;
+  // a refetch after a failure never re-enters isLoading, so the spinner has to
+  // cover the retry as well or the stale error just sits there
+  const isLoadingList =
+    invites.isLoading || (invites.isError && invites.isFetching);
+  const hasListError = invites.isError && !invites.isFetching;
+  const isForbidden =
+    invites.error instanceof ApiError && invites.error.status === 403;
   // the one you just sent is the one you came to look at, so it goes on top
   const visible = useMemo(() => {
     const needle = debouncedQuery.trim().toLowerCase();
@@ -176,7 +183,7 @@ const Invites: FC = () => {
 
   if (!isCreator) {
     return (
-      <Card overrideStyles={deniedStyles}>
+      <Card overrideStyles={panelStyles}>
         <PageHeading size={3}>Only creators can manage invites</PageHeading>
         <p css={{ color: lead.rgb, margin: 0 }}>
           Ask a creator to invite somebody for you.
@@ -277,8 +284,36 @@ const Invites: FC = () => {
       <div css={{ height: rem(24) }} />
 
       <Card>
-        {invites.isLoading && <Spinner label="Loading invites" />}
-        {!invites.isLoading && (
+        {isLoadingList && <Spinner label="Loading invites" />}
+        {hasListError &&
+          (isForbidden ? (
+            <div css={panelStyles}>
+              <SectionHeading>You can no longer manage invites</SectionHeading>
+              <p css={{ color: lead.rgb, margin: 0 }}>
+                Your role changed since this page opened. Reload the page to
+                pick up your new role.
+              </p>
+              <Link to="/" css={{ color: pine.rgb }}>
+                Back to demos
+              </Link>
+            </div>
+          ) : (
+            <div css={panelStyles}>
+              <SectionHeading>We could not load the invites</SectionHeading>
+              <p css={{ color: lead.rgb, margin: 0 }}>
+                The list did not load, so this does not mean nobody has been
+                invited. Try again in a moment.
+              </p>
+              <Button
+                onClick={() => {
+                  void invites.refetch();
+                }}
+              >
+                Retry
+              </Button>
+            </div>
+          ))}
+        {!isLoadingList && !hasListError && (
           <>
             <TableFilters
               searchLabel="Search invites"

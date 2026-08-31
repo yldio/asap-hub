@@ -46,14 +46,19 @@ export type SignedCookie = { name: string; value: string };
 // each is signed for its own prefix and the cookie is scoped to that path
 export type SignedPrefix = 'media' | 'projects';
 
+// a video prefix holds more than the published cut: a download render sits in a
+// directory of its own beside it, so a caller that may only reach one revision
+// names it here and the policy stops at that directory
 export const buildSignedCookies = async (
   videoId: string,
   prefix: SignedPrefix = 'media',
   now: number = Date.now(),
+  subPath = '',
 ): Promise<SignedCookie[]> => {
   const privateKey = await loadPrivateKey();
   const expires = now + signedCookieTtlMs;
-  const resource = `https://${getDemoHostname()}/${prefix}/${videoId}/*`;
+  const scope = subPath ? `${subPath}/` : '';
+  const resource = `https://${getDemoHostname()}/${prefix}/${videoId}/${scope}*`;
   const cookies = getSignedCookies({
     url: resource,
     keyPairId: getCloudFrontKeyPairId(),

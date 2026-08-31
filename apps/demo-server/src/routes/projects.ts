@@ -101,7 +101,7 @@ export const projectsRouter = (): Router => {
       .go({ response: 'all_new' });
 
     res.status(201).json({
-      video: serialiseVideo(data as VideoItem),
+      video: serialiseVideo(data as VideoItem, true),
       timeline,
       timelineVersion: pointer.timelineVersion,
     });
@@ -196,7 +196,7 @@ export const projectsRouter = (): Router => {
       const { data } = await videoEntity.get({ id: pathParam(req, 'id') }).go();
 
       res.json({
-        video: serialiseVideo(data as VideoItem),
+        video: serialiseVideo(data as VideoItem, true),
         timelineVersion: pointer.timelineVersion,
       });
     },

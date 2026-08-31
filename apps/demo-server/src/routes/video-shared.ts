@@ -57,7 +57,10 @@ export const isRenderActive = (
 export const renderOf = (item: VideoItem): RenderState | undefined =>
   item.render as RenderState | undefined;
 
-export const serialiseVideo = (item: VideoItem) => ({
+// render and timeline describe how a demo is made rather than how it is
+// watched: the download path, the task arn, the ffmpeg error and the timeline
+// key are the creator's business, so only a caller who can see drafts gets them
+export const serialiseVideo = (item: VideoItem, forCreator = false) => ({
   id: item.id,
   title: item.title,
   status: item.status,
@@ -79,8 +82,8 @@ export const serialiseVideo = (item: VideoItem) => ({
   version: item.version,
   kind: item.kind ?? 'upload',
   ...(item.mediaPath ? { mediaPath: item.mediaPath } : {}),
-  ...(item.timeline ? { timeline: item.timeline } : {}),
-  ...(item.render ? { render: item.render } : {}),
+  ...(forCreator && item.timeline ? { timeline: item.timeline } : {}),
+  ...(forCreator && item.render ? { render: item.render } : {}),
 });
 
 export const failedItem = (error: unknown): VideoItem | undefined =>

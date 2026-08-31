@@ -170,7 +170,7 @@ export const registerRenderRoutes = (router: Router): void => {
 
   const respondWithVideo = async (res: Response, id: string): Promise<void> => {
     const { data } = await videoEntity.get({ id }).go();
-    res.json({ video: serialiseVideo(data as VideoItem) });
+    res.json({ video: serialiseVideo(data as VideoItem, true) });
   };
 
   router.post(

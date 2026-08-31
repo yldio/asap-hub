@@ -63,13 +63,14 @@ export const videosRouter = (): Router => {
       res.status(400).json({ error: 'invalid_folder_id' });
       return;
     }
-    const data = await videosInFolder(folderId, canViewDrafts(req.user?.role));
+    const isCreator = canViewDrafts(req.user?.role);
+    const data = await videosInFolder(folderId, isCreator);
 
     res.json({
       items: (data as VideoItem[])
         .slice()
         .sort(byRecordedAtDescending)
-        .map(serialiseVideo),
+        .map((item) => serialiseVideo(item, isCreator)),
     });
   });
 
@@ -87,7 +88,7 @@ export const videosRouter = (): Router => {
     res.json({
       items: (lists.flat() as VideoItem[])
         .sort(byRecordedAtDescending)
-        .map(serialiseVideo),
+        .map((item) => serialiseVideo(item, isCreator)),
     });
   });
 
@@ -203,9 +204,15 @@ export const videosRouter = (): Router => {
     return data;
   };
 
-  const respondWithVideo = async (res: Response, id: string): Promise<void> => {
+  const respondWithVideo = async (
+    req: Request,
+    res: Response,
+    id: string,
+  ): Promise<void> => {
     const { data } = await videoEntity.get({ id }).go();
-    res.json({ video: serialiseVideo(data as VideoItem) });
+    res.json({
+      video: serialiseVideo(data as VideoItem, canViewDrafts(req.user?.role)),
+    });
   };
 
   router.get('/:id', videoId, async (req: Request, res: Response) => {
@@ -214,11 +221,12 @@ export const videosRouter = (): Router => {
       res.status(404).json({ error: 'not_found' });
       return;
     }
-    if (!canViewDrafts(req.user?.role) && data.status !== 'published') {
+    const isCreator = canViewDrafts(req.user?.role);
+    if (!isCreator && data.status !== 'published') {
       res.status(404).json({ error: 'not_found' });
       return;
     }
-    res.json(serialiseVideo(data as VideoItem));
+    res.json(serialiseVideo(data as VideoItem, isCreator));
   });
 
   router.patch(
@@ -273,7 +281,7 @@ export const videosRouter = (): Router => {
         return;
       }
 
-      await respondWithVideo(res, id);
+      await respondWithVideo(req, res, id);
     },
   );
 
@@ -307,7 +315,7 @@ export const videosRouter = (): Router => {
         return;
       }
 
-      await respondWithVideo(res, id);
+      await respondWithVideo(req, res, id);
     };
 
   router.post(
@@ -429,29 +437,36 @@ export const videosRouter = (): Router => {
       res.status(404).json({ error: 'not_found' });
       return;
     }
-    if (!canViewDrafts(req.user?.role) && data.status !== 'published') {
+    const isCreator = canViewDrafts(req.user?.role);
+    if (!isCreator && data.status !== 'published') {
       res.status(403).json({ error: 'forbidden' });
       return;
     }
 
+    // a studio render writes into media/{id}/r{n}/ so a re-render is not hidden
+    // behind the day long CloudFront TTL on the previous output
+    const mediaPath =
+      typeof data.mediaPath === 'string' && data.mediaPath
+        ? data.mediaPath
+        : '';
+    const base = mediaPath ? `/media/${id}/${mediaPath}` : `/media/${id}`;
+
     if (!isLocal()) {
-      const cookies = await buildSignedCookies(id);
+      // an export cut lives under media/{id}/downloads/, which the studio may
+      // fetch and a viewer may not, so a viewer is signed for the published
+      // revision alone
+      const scope = isCreator ? '' : mediaPath;
+      const cookies = await buildSignedCookies(id, 'media', Date.now(), scope);
+      const path = scope ? `/media/${id}/${scope}/` : `/media/${id}/`;
       cookies.forEach(({ name, value }) => {
         res.cookie(name, value, {
-          path: `/media/${id}/`,
+          path,
           secure: true,
           httpOnly: true,
           sameSite: 'lax',
         });
       });
     }
-
-    // a studio render writes into media/{id}/r{n}/ so a re-render is not hidden
-    // behind the day long CloudFront TTL on the previous output
-    const base =
-      typeof data.mediaPath === 'string' && data.mediaPath
-        ? `/media/${id}/${data.mediaPath}`
-        : `/media/${id}`;
 
     res.json({
       streamUrl: `${base}/stream.mp4`,

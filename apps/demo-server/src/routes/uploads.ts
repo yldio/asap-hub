@@ -122,7 +122,9 @@ export const uploadsRouter = (): Router => {
         startLocalEncode(videoId);
       }
 
-      res.json({ video: serialiseVideo(data as Record<string, unknown>) });
+      res.json({
+        video: serialiseVideo(data as Record<string, unknown>, true),
+      });
     },
   );
 

@@ -29,9 +29,21 @@ describe('insertAt', () => {
     expect(rows.find((row) => row.key === key)?.startMs).toEqual(90000);
   });
 
-  it('replaces a chapter that already starts at the same millisecond', () => {
-    const { rows } = insertAt(rowsOf(0, 120000), 120000);
-    expect(rows).toHaveLength(2);
+  it('refuses a start a chapter already has and keeps that chapter', () => {
+    const existing = rowsOf(0, 120000);
+    const { rows, key, taken } = insertAt(existing, 120000);
+    expect(taken).toBe(true);
+    expect(rows).toEqual(existing);
+    expect(rows.find((row) => row.key === key)?.title).toEqual('at 120000');
+  });
+
+  it('refuses the start the rounded playhead lands on', () => {
+    const { rows, taken } = insertAt(rowsOf(0, 120000), 119999.7);
+    expect(taken).toBe(true);
+    expect(toChapters(rows)).toEqual([
+      { startMs: 0, title: 'at 0' },
+      { startMs: 120000, title: 'at 120000' },
+    ]);
   });
 
   it('rounds and clamps the playhead position', () => {

@@ -718,6 +718,101 @@ it('inserts chapters midway before and after a row', async () => {
   expect(screen.getByLabelText('Start time of chapter 3')).toHaveValue('1:00');
 });
 
+// the first chapter is pinned to the start of the video, so the midway point
+// before it is the start it already holds
+it('refuses to insert before the first chapter and keeps its title', async () => {
+  const updateVideo = jest.fn(() => Promise.resolve({ ...video, version: 4 }));
+  renderEditor({
+    updateVideo,
+    getVideo: () =>
+      Promise.resolve({
+        ...video,
+        chapters: [
+          { startMs: 0, title: 'Intro' },
+          { startMs: 60000, title: 'Second' },
+        ],
+      }),
+  });
+
+  await screen.findByLabelText('Start time of chapter 1');
+  await userEvent.click(screen.getByLabelText('Add chapter before chapter 1'));
+
+  expect(screen.getByLabelText('Title of chapter 1')).toHaveValue('Intro');
+  expect(screen.getByLabelText('Title of chapter 2')).toHaveValue('Second');
+  expect(screen.queryByLabelText('Title of chapter 3')).not.toBeInTheDocument();
+
+  const notice = await screen.findByText(
+    'The first chapter starts at the beginning of the video, so there is no room before it.',
+  );
+  expect(notice).toHaveAttribute('role', 'status');
+  expect(updateVideo).not.toHaveBeenCalled();
+});
+
+// clicking a row seeks to exactly its start, so the next M lands on it
+it('keeps the chapter already on the marked frame and offers its title', async () => {
+  const updateVideo = jest.fn(() => Promise.resolve({ ...video, version: 4 }));
+  renderEditor({
+    updateVideo,
+    getVideo: () =>
+      Promise.resolve({
+        ...video,
+        chapters: [
+          { startMs: 0, title: 'Intro' },
+          { startMs: 60000, title: 'Second' },
+        ],
+      }),
+  });
+
+  await screen.findByTestId('studio-video');
+  const { state } = stubPlayer();
+
+  fireEvent.click(screen.getByText('9:00'));
+  expect(state.currentTime).toBe(60);
+
+  await userEvent.keyboard('m');
+
+  expect(screen.getByLabelText('Title of chapter 2')).toHaveValue('Second');
+  expect(screen.queryByLabelText('Title of chapter 3')).not.toBeInTheDocument();
+
+  const notice = await screen.findByText(
+    'A chapter already starts at 1:00. Its title is ready to edit.',
+  );
+  expect(notice).toHaveAttribute('role', 'status');
+  await waitFor(() =>
+    expect(screen.getByLabelText('Title of chapter 2')).toHaveFocus(),
+  );
+  expect(updateVideo).not.toHaveBeenCalled();
+});
+
+// the midway point between two chapters a millisecond apart rounds onto one
+it('refuses to insert between chapters with no room between them', async () => {
+  const updateVideo = jest.fn(() => Promise.resolve({ ...video, version: 4 }));
+  renderEditor({
+    updateVideo,
+    getVideo: () =>
+      Promise.resolve({
+        ...video,
+        chapters: [
+          { startMs: 0, title: 'Intro' },
+          { startMs: 1, title: 'Second' },
+        ],
+      }),
+  });
+
+  await screen.findByLabelText('Start time of chapter 2');
+  await userEvent.click(screen.getByLabelText('Add chapter before chapter 2'));
+
+  expect(screen.getByLabelText('Title of chapter 1')).toHaveValue('Intro');
+  expect(screen.getByLabelText('Title of chapter 2')).toHaveValue('Second');
+  expect(screen.queryByLabelText('Title of chapter 3')).not.toBeInTheDocument();
+
+  const notice = await screen.findByText(
+    'The chapters either side are too close together to fit one between them.',
+  );
+  expect(notice).toHaveAttribute('role', 'status');
+  expect(updateVideo).not.toHaveBeenCalled();
+});
+
 it('deletes a chapter row', async () => {
   renderEditor({
     getVideo: () =>

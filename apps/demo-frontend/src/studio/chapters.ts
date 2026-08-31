@@ -51,19 +51,22 @@ export const snapFirstToZero = (rows: ChapterRow[]): ChapterRow[] => {
   return [{ ...first, startMs: 0 }, ...rest];
 };
 
+// a start already taken is refused rather than deduped, like the timecode
+// field: dropping the chapter sitting there would take its title with it. `key`
+// is then the row that already holds the start, so the caller can point at it.
 export const insertAt = (
   rows: ChapterRow[],
   startMs: number,
   title = '',
-): { rows: ChapterRow[]; key: string } => {
+): { rows: ChapterRow[]; key: string; taken: boolean } => {
   const rounded = Math.max(0, Math.round(startMs));
+  const existing = rows.find((row) => row.startMs === rounded);
+  if (existing) return { rows, key: existing.key, taken: true };
   const row = makeRow({ startMs: rounded, title });
-  const withoutDuplicate = rows.filter(
-    (existing) => existing.startMs !== rounded,
-  );
   return {
-    rows: snapFirstToZero([...withoutDuplicate, row]),
+    rows: snapFirstToZero([...rows, row]),
     key: row.key,
+    taken: false,
   };
 };
 

@@ -99,6 +99,12 @@ const hintStripStyles = css({
   borderRadius: rem(4),
 });
 
+const insertNoticeStyles = css({
+  fontSize: rem(13),
+  color: ember.rgb,
+  padding: `0 ${rem(12)}`,
+});
+
 const keyStyles = css({
   fontFamily: 'monospace',
   fontWeight: 'bold',
@@ -233,6 +239,9 @@ const Editor: FC<{
   const [invalid, setInvalid] = useState<InvalidFields>({});
   const [endDrafts, setEndDrafts] = useState<Record<string, string>>({});
   const [endInvalid, setEndInvalid] = useState<InvalidFields>({});
+  // why an insert did nothing: M and the row buttons have no field to hang an
+  // inline error on, so the refusal is announced instead
+  const [insertNotice, setInsertNotice] = useState<string>();
   const [focusedKey, setFocusedKey] = useState<string>();
   const [pendingFocusKey, setPendingFocusKey] = useState<string>();
   const [currentTime, setCurrentTime] = useState(0);
@@ -374,9 +383,19 @@ const Editor: FC<{
   const markChapter = useCallback(() => {
     if (readOnly) return;
     const startMs = (videoRef.current?.currentTime ?? currentTime) * 1000;
-    const { rows: next, key } = insertAt(rows, startMs);
-    setRows(next);
+    const { rows: next, key, taken } = insertAt(rows, startMs);
+    // the frame already carries a chapter, so marking it again asks for nothing
+    // new: keep the one that is there and hand over its title instead
+    setInsertNotice(
+      taken
+        ? `A chapter already starts at ${formatDuration(
+            Math.max(0, Math.round(startMs)),
+          )}. Its title is ready to edit.`
+        : undefined,
+    );
     setPendingFocusKey(key);
+    if (taken) return;
+    setRows(next);
     scheduleSave(next, { title, folderId });
   }, [currentTime, folderId, readOnly, rows, scheduleSave, title]);
 
@@ -541,7 +560,16 @@ const Editor: FC<{
         : Math.round(
             (row.startMs + (sorted[index + 1]?.startMs ?? durationMs)) / 2,
           );
-    const { rows: next, key: newKey } = insertAt(rows, startMs);
+    const { rows: next, key: newKey, taken } = insertAt(rows, startMs);
+    if (taken) {
+      setInsertNotice(
+        where === 'before' && index === 0
+          ? 'The first chapter starts at the beginning of the video, so there is no room before it.'
+          : 'The chapters either side are too close together to fit one between them.',
+      );
+      return;
+    }
+    setInsertNotice(undefined);
     setRows(next);
     setPendingFocusKey(newKey);
     scheduleSave(snapFirstToZero(next), { title, folderId });
@@ -665,6 +693,11 @@ const Editor: FC<{
             </Button>
           </span>
         )}
+      </div>
+
+      {/* always in the tree so a screen reader has the region to announce into */}
+      <div role="status" css={insertNotice ? insertNoticeStyles : undefined}>
+        {insertNotice}
       </div>
 
       <Card>

@@ -6,7 +6,7 @@ import {
   isLocal,
 } from './config';
 
-const subject = 'You have been invited to ASAP Demos';
+const subject = 'You have been invited to the ASAP <> YLD Demos platform';
 
 let client: SESClient | undefined;
 
@@ -24,13 +24,14 @@ export const setSesClient = (next: SESClient | undefined): void => {
 export const sendInviteEmail = async (email: string): Promise<void> => {
   const appUrl = `https://${getDemoHostname()}`;
   const text = [
-    'You have been invited to review sprint demo recordings on ASAP Demos.',
+    'You have been invited to the ASAP <> YLD Demos platform, where sprint',
+    'demo recordings are shared and reviewed.',
     '',
     `Create your account at ${appUrl} using this exact email address (${email}).`,
     'You can sign in with Google or with an email and password.',
   ].join('\n');
   const html = [
-    '<p>You have been invited to review sprint demo recordings on ASAP Demos.</p>',
+    '<p>You have been invited to the ASAP &lt;&gt; YLD Demos platform, where sprint demo recordings are shared and reviewed.</p>',
     `<p>Create your account at <a href="${appUrl}">${appUrl}</a> using this exact email address (${email}).</p>`,
     '<p>You can sign in with Google or with an email and password.</p>',
   ].join('');

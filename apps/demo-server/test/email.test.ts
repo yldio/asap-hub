@@ -47,7 +47,9 @@ describe('sendInviteEmail when deployed', () => {
     await sendInviteEmail('bob@example.com');
 
     const subject = sentCommand().input.Message!.Subject!;
-    expect(subject.Data).toBe('You have been invited to ASAP Demos');
+    expect(subject.Data).toBe(
+      'You have been invited to the ASAP <> YLD Demos platform',
+    );
     expect(subject.Data).toMatch(/invited/i);
     expect(subject.Charset).toBe('UTF-8');
   });
@@ -91,6 +93,8 @@ describe('sendInviteEmail when local', () => {
     expect(log).toHaveBeenCalledTimes(1);
     const message = log.mock.calls[0]![0] as string;
     expect(message).toContain('[local] invite email to bob@example.com');
-    expect(message).toContain('You have been invited to ASAP Demos');
+    expect(message).toContain(
+      'You have been invited to the ASAP <> YLD Demos platform',
+    );
   });
 });

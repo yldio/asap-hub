@@ -7,6 +7,11 @@ export type SourceFormat = {
   width?: number;
   height?: number;
   fps?: number;
+  // A take the studio recorded rather than a file the creator brought. The
+  // recorder deliberately films above the canvas so a zoom crops real pixels
+  // instead of magnifying a fit, and following that oversample would hand the
+  // zoom back the very upscale the extra pixels were captured to avoid.
+  recorded?: boolean;
 };
 
 const evenly = (value: number): number => Math.round(value / 2) * 2;
@@ -19,11 +24,13 @@ const chooseFps = (sources: SourceFormat[]): Canvas['fps'] =>
     : 30;
 
 // never below 1080p, even from a small source, and never above the largest
-// source, because upscaling past it only invents pixels
+// source brought to it, because upscaling past that only invents pixels. A
+// recorded take is not one of those: its height is headroom for the zoom, not
+// a format anybody asked to deliver, so a demo made only of takes stays 1080p.
 const chooseHeight = (sources: SourceFormat[]): number => {
   const tallest = Math.max(
     minCanvasHeight,
-    ...sources.map((source) => source.height ?? 0),
+    ...sources.map((source) => (source.recorded ? 0 : source.height ?? 0)),
   );
   return evenly(Math.min(tallest, maxCanvasHeight));
 };

@@ -341,7 +341,7 @@ const ProjectEditor: FC<Props> = ({
     (extra?: ProjectAsset) => {
       if (pickedCanvas.current) return;
       const wanted = canvasForAssets([
-        ...assetsOnTimeline(timeline.clips, assetsById),
+        ...assetsOnTimeline(timeline.clips, assetsById, timeline),
         ...(extra ? [extra] : []),
       ]);
       if (!wanted) return;

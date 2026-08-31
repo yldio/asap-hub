@@ -1,25 +1,53 @@
-import { Canvas, chooseCanvas, Clip } from '@asap-hub/demo-timeline';
+import {
+  Canvas,
+  chooseCanvas,
+  Clip,
+  SourceFormat,
+  Timeline,
+} from '@asap-hub/demo-timeline';
 import { ProjectAsset } from '../../api/types';
+
+export type TimelineSource = ProjectAsset & { recorded?: boolean };
 
 // A source the ingest is still preparing carries no format at all, and handing
 // one to the chooser answered 1080p30 for footage that turned out to be 4K60.
-const probed = (assets: (ProjectAsset | undefined)[]): ProjectAsset[] =>
-  assets.filter((asset): asset is ProjectAsset => Boolean(asset?.height));
+const probed = (assets: (TimelineSource | undefined)[]): TimelineSource[] =>
+  assets.filter((asset): asset is TimelineSource => Boolean(asset?.height));
 
 export const canvasForAssets = (
-  assets: (ProjectAsset | undefined)[],
+  assets: (TimelineSource | undefined)[],
 ): Canvas | undefined => {
-  const known = probed(assets);
+  const known: SourceFormat[] = probed(assets);
   return known.length === 0 ? undefined : chooseCanvas(known);
 };
+
+// A clip the studio recorded carries the moment its take began; an imported one
+// never does. That is what tells an oversampled capture from footage a creator
+// brought at the size they want it delivered at.
+const recordedClipIds = (timeline: Timeline): Set<string> =>
+  new Set(
+    timeline.cursor.flatMap((layer) =>
+      layer.recordedAtEpochMs ? [layer.clipId] : [],
+    ),
+  );
 
 export const assetsOnTimeline = (
   clips: Clip[],
   assets: Record<string, ProjectAsset>,
-): (ProjectAsset | undefined)[] =>
-  clips.flatMap((clip) =>
-    clip.kind === 'source' ? [assets[clip.assetId]] : [],
-  );
+  timeline?: Timeline,
+): (TimelineSource | undefined)[] => {
+  const recorded = timeline ? recordedClipIds(timeline) : undefined;
+  return clips.flatMap((clip) => {
+    if (clip.kind !== 'source') {
+      return [];
+    }
+    const asset = assets[clip.assetId];
+    if (!asset) {
+      return [undefined];
+    }
+    return [recorded?.has(clip.id) ? { ...asset, recorded: true } : asset];
+  });
+};
 
 export const sameCanvas = (one: Canvas, other: Canvas): boolean =>
   one.width === other.width &&

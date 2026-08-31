@@ -53,4 +53,41 @@ describe('chooseCanvas', () => {
     expect(width % 2).toBe(0);
     expect(height % 2).toBe(0);
   });
+
+  describe('a take filmed above the canvas', () => {
+    // the recorder films at twice the canvas so a zoom crops real pixels;
+    // delivering at that height hands the zoom back the upscale it avoided
+    it('delivers at 1080p rather than following the oversample', () => {
+      expect(
+        chooseCanvas([{ width: 3840, height: 2160, fps: 30, recorded: true }]),
+      ).toEqual({ width: 1920, height: 1080, fps: 30 });
+    });
+
+    it('stays 1080p for a 16:10 panel, whose capture is not 16:9 either', () => {
+      expect(
+        chooseCanvas([{ width: 3024, height: 1964, fps: 30, recorded: true }]),
+      ).toEqual({ width: 1920, height: 1080, fps: 30 });
+    });
+
+    it('still follows a file the creator brought at that size', () => {
+      expect(
+        chooseCanvas([{ width: 3840, height: 2160, fps: 30 }]),
+      ).toMatchObject({ width: 3840, height: 2160 });
+    });
+
+    it('follows an imported source beside a take', () => {
+      expect(
+        chooseCanvas([
+          { width: 3840, height: 2160, fps: 30, recorded: true },
+          { width: 2560, height: 1440, fps: 30 },
+        ]),
+      ).toMatchObject({ width: 2560, height: 1440 });
+    });
+
+    it('reads the frame rate of a take even though it ignores its height', () => {
+      expect(
+        chooseCanvas([{ width: 3840, height: 2160, fps: 60, recorded: true }]),
+      ).toEqual({ width: 1920, height: 1080, fps: 60 });
+    });
+  });
 });

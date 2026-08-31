@@ -96,4 +96,61 @@ describe('assetsOnTimeline', () => {
 
     expect(assetsOnTimeline(clips, { 'asset-a': asset() })).toEqual([asset()]);
   });
+
+  // The recorder films above the canvas to give a zoom real pixels to crop, so
+  // a take's own height is headroom rather than a format to deliver at. The
+  // cursor layer's take origin is what tells the two apart.
+  describe('a clip the studio recorded', () => {
+    const clips: TimelineDoc['clips'] = [
+      {
+        kind: 'source',
+        id: 'c1',
+        assetId: 'asset-a',
+        inMs: 0,
+        outMs: 1000,
+        volume: 1,
+      },
+    ];
+
+    const timelineWith = (cursor: TimelineDoc['cursor']): TimelineDoc =>
+      ({ clips, cursor }) as unknown as TimelineDoc;
+
+    it('is marked from the take origin on its cursor layer', () => {
+      const marked = assetsOnTimeline(
+        clips,
+        { 'asset-a': asset() },
+        timelineWith([
+          {
+            clipId: 'c1',
+            path: [],
+            effects: [],
+            recordedAtEpochMs: 1756000000000,
+          },
+        ] as unknown as TimelineDoc['cursor']),
+      );
+
+      expect(marked).toEqual([{ ...asset(), recorded: true }]);
+      expect(canvasForAssets(marked)).toEqual({
+        width: 1920,
+        height: 1080,
+        fps: 60,
+      });
+    });
+
+    it('is left alone when the layer carries no take origin', () => {
+      const marked = assetsOnTimeline(
+        clips,
+        { 'asset-a': asset() },
+        timelineWith([
+          { clipId: 'c1', path: [], effects: [] },
+        ] as unknown as TimelineDoc['cursor']),
+      );
+
+      expect(marked).toEqual([asset()]);
+      expect(canvasForAssets(marked)).toMatchObject({
+        width: 3840,
+        height: 2160,
+      });
+    });
+  });
 });

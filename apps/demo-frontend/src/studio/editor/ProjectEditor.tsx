@@ -341,7 +341,7 @@ const ProjectEditor: FC<Props> = ({
     (extra?: ProjectAsset) => {
       if (pickedCanvas.current) return;
       const wanted = canvasForAssets([
-        ...assetsOnTimeline(timeline.clips, assetsById, timeline),
+        ...assetsOnTimeline(timeline.clips, assetsById, timeline.cursor),
         ...(extra ? [extra] : []),
       ]);
       if (!wanted) return;
@@ -349,7 +349,7 @@ const ProjectEditor: FC<Props> = ({
       if (sameCanvas(canvas, timeline.canvas)) return;
       dispatch({ type: 'setCanvas', canvas });
     },
-    [assetsById, dispatch, timeline.canvas, timeline.clips],
+    [assetsById, dispatch, timeline.canvas, timeline.clips, timeline.cursor],
   );
 
   // the ingest probes the file in a container, so the real format arrives long

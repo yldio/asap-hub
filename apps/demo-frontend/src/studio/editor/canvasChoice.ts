@@ -2,8 +2,8 @@ import {
   Canvas,
   chooseCanvas,
   Clip,
+  CursorLayer,
   SourceFormat,
-  Timeline,
 } from '@asap-hub/demo-timeline';
 import { ProjectAsset } from '../../api/types';
 
@@ -24,19 +24,19 @@ export const canvasForAssets = (
 // A clip the studio recorded carries the moment its take began; an imported one
 // never does. That is what tells an oversampled capture from footage a creator
 // brought at the size they want it delivered at.
-const recordedClipIds = (timeline: Timeline): Set<string> =>
+const recordedClipIds = (cursor: CursorLayer[]): Set<string> =>
   new Set(
-    timeline.cursor.flatMap((layer) =>
-      layer.recordedAtEpochMs ? [layer.clipId] : [],
-    ),
+    cursor.flatMap((layer) => (layer.recordedAtEpochMs ? [layer.clipId] : [])),
   );
 
+// the cursor layers rather than the whole timeline, so a caller memoising on
+// what this reads cannot go stale on a take whose layer lands after its clip
 export const assetsOnTimeline = (
   clips: Clip[],
   assets: Record<string, ProjectAsset>,
-  timeline?: Timeline,
+  cursor?: CursorLayer[],
 ): (TimelineSource | undefined)[] => {
-  const recorded = timeline ? recordedClipIds(timeline) : undefined;
+  const recorded = cursor ? recordedClipIds(cursor) : undefined;
   return clips.flatMap((clip) => {
     if (clip.kind !== 'source') {
       return [];

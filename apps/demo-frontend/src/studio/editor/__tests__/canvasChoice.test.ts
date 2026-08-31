@@ -112,22 +112,15 @@ describe('assetsOnTimeline', () => {
       },
     ];
 
-    const timelineWith = (cursor: TimelineDoc['cursor']): TimelineDoc =>
-      ({ clips, cursor }) as unknown as TimelineDoc;
-
     it('is marked from the take origin on its cursor layer', () => {
-      const marked = assetsOnTimeline(
-        clips,
-        { 'asset-a': asset() },
-        timelineWith([
-          {
-            clipId: 'c1',
-            path: [],
-            effects: [],
-            recordedAtEpochMs: 1756000000000,
-          },
-        ] as unknown as TimelineDoc['cursor']),
-      );
+      const marked = assetsOnTimeline(clips, { 'asset-a': asset() }, [
+        {
+          clipId: 'c1',
+          path: [],
+          effects: [],
+          recordedAtEpochMs: 1756000000000,
+        },
+      ] as unknown as TimelineDoc['cursor']);
 
       expect(marked).toEqual([{ ...asset(), recorded: true }]);
       expect(canvasForAssets(marked)).toEqual({
@@ -138,19 +131,34 @@ describe('assetsOnTimeline', () => {
     });
 
     it('is left alone when the layer carries no take origin', () => {
-      const marked = assetsOnTimeline(
-        clips,
-        { 'asset-a': asset() },
-        timelineWith([
-          { clipId: 'c1', path: [], effects: [] },
-        ] as unknown as TimelineDoc['cursor']),
-      );
+      const marked = assetsOnTimeline(clips, { 'asset-a': asset() }, [
+        { clipId: 'c1', path: [], effects: [] },
+      ] as unknown as TimelineDoc['cursor']);
 
       expect(marked).toEqual([asset()]);
       expect(canvasForAssets(marked)).toMatchObject({
         width: 3840,
         height: 2160,
       });
+    });
+
+    // the layer is merged in when the capture finishes, which is after the
+    // clip landed: a caller memoising on the clips alone would still be
+    // holding the take-less cursor and pin the project to the oversample
+    it('reads the layers it is handed, not the ones the clips arrived with', () => {
+      const withTake = assetsOnTimeline(clips, { 'asset-a': asset() }, [
+        {
+          clipId: 'c1',
+          path: [],
+          effects: [],
+          recordedAtEpochMs: 1756000000000,
+        },
+      ] as unknown as TimelineDoc['cursor']);
+
+      const withoutIt = assetsOnTimeline(clips, { 'asset-a': asset() }, []);
+
+      expect(canvasForAssets(withTake)).toMatchObject({ height: 1080 });
+      expect(canvasForAssets(withoutIt)).toMatchObject({ height: 2160 });
     });
   });
 });

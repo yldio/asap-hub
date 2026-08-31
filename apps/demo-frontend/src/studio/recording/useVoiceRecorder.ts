@@ -192,15 +192,23 @@ export const useVoiceRecorder = ({
       return undefined;
     }
     stopTicking();
-    await new Promise<void>((resolve) => {
-      recorder.addEventListener('stop', () => resolve(), { once: true });
-      recorder.stop();
-    });
-
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    recorderRef.current = undefined;
-    streamRef.current = undefined;
-    setStatus('idle');
+    try {
+      await new Promise<void>((resolve) => {
+        // the microphone going away stops the recorder for us, and calling
+        // stop() on an inactive one throws
+        if (recorder.state === 'inactive') {
+          resolve();
+          return;
+        }
+        recorder.addEventListener('stop', () => resolve(), { once: true });
+        recorder.stop();
+      });
+    } finally {
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      recorderRef.current = undefined;
+      streamRef.current = undefined;
+      setStatus('idle');
+    }
 
     const chunks = chunksRef.current;
     chunksRef.current = [];

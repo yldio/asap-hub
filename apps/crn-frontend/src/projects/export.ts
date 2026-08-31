@@ -1,3 +1,4 @@
+import { sanitizeFileNamePart } from '@asap-hub/frontend-utils';
 import {
   FetchProjectMilestonesExportOptions,
   ProjectAimExportRow,
@@ -212,10 +213,7 @@ export const buildMilestonesWorkbook = async (
 };
 
 export const sanitizeProjectName = (projectName: string): string =>
-  projectName
-    .trim()
-    .replace(/[^A-Za-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '') || 'project';
+  sanitizeFileNamePart(projectName, 'project');
 
 export const buildExportFileName = (projectName: string): string =>
   `aims_and_milestones_${sanitizeProjectName(projectName)}_${format(

@@ -149,16 +149,19 @@ const postCapture = (contentType: string, body: unknown) =>
     .set('Content-Type', contentType)
     .send(JSON.stringify(body));
 
-const saveTimeline = (body: unknown) =>
+const putTimeline = (body: string) =>
   api
     .put('/api/projects/project-1/timeline')
     .set('Content-Type', 'application/json')
     .set('Authorization', creatorToken)
-    .send(JSON.stringify(body));
+    .send(body);
+
+const saveTimeline = (body: unknown) => putTimeline(JSON.stringify(body));
 
 beforeEach(() => {
   jest.restoreAllMocks();
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   mockSend.mockReset().mockResolvedValue({});
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
@@ -177,7 +180,8 @@ describe('POST /api/capture body cap', () => {
 
     // the caller must not be able to lift the cap by naming a content type the
     // route never chose
-    expect(response.status).not.toBe(204);
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ error: 'payload_too_large' });
     expect(storage.putObject).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
   });
@@ -190,9 +194,34 @@ describe('POST /api/capture body cap', () => {
       batch(eventsOverCaptureCap()),
     );
 
-    expect(response.status).not.toBe(204);
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ error: 'payload_too_large' });
     expect(storage.putObject).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  // the batch is over the route's own 1MB cap and nowhere near the api
+  // router's 5MB one, so a 413 is only possible if the capture cap is the one
+  // being applied
+  it('refuses it on the capture cap rather than the api one', async () => {
+    mockSessionGet();
+    const body = JSON.stringify(batch(eventsOverCaptureCap()));
+    expect(Buffer.byteLength(body)).toBeGreaterThan(maxCaptureBodyBytes);
+    expect(Buffer.byteLength(body)).toBeLessThan(5 * 1024 * 1024);
+
+    const response = await api
+      .post('/api/capture')
+      .set('Content-Type', 'text/plain;charset=UTF-8')
+      .send(body);
+
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ error: 'payload_too_large' });
+    // the snippet posts no-cors and never reads this, so the one line the
+    // refusal leaves is all anyone has; it must not be an error
+    expect(console.error).not.toHaveBeenCalled();
+    expect(console.warn).toHaveBeenCalledWith(
+      'POST /api/capture refused: payload_too_large',
+    );
   });
 
   it('still accepts a batch under the cap sent as application/json', async () => {
@@ -266,7 +295,67 @@ describe('the authenticated api body parser', () => {
       version: 3,
     });
 
-    expect(response.body.error).not.toBe('invalid_timeline');
+    // the editor stands its retry clock down on a 413: reported as a 500 it
+    // would keep offering the same oversized document back to the server
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ error: 'payload_too_large' });
+    expect(console.error).not.toHaveBeenCalled();
     expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('refuses a malformed json body with a 400', async () => {
+    mockUser();
+    mockVideoGet();
+
+    const response = await putTimeline('{"timeline": ');
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'invalid_json' });
+    expect(console.error).not.toHaveBeenCalled();
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('refuses a charset it cannot decode with a 415', async () => {
+    mockUser();
+    mockVideoGet();
+
+    const response = await api
+      .put('/api/projects/project-1/timeline')
+      .set('Content-Type', 'application/json; charset=utf-32')
+      .set('Authorization', creatorToken)
+      .send('{}');
+
+    expect(response.status).toBe(415);
+    expect(response.body).toEqual({ error: 'unsupported_media_type' });
+    expect(console.error).not.toHaveBeenCalled();
+  });
+});
+
+describe('the error handler', () => {
+  it('answers a genuine server fault with a 500 and logs it', async () => {
+    mockUser();
+    jest.spyOn(videoEntity, 'get').mockReturnValue({
+      go: async () => {
+        throw new Error('dynamo is having a day');
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await saveTimeline({
+      timeline: { version: 1 },
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'internal' });
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('still answers an unknown path with the 404 handler', async () => {
+    const response = await api.get('/nothing-here');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'Not Found' });
   });
 });

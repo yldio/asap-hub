@@ -13,6 +13,41 @@ import { uploadsRouter } from './routes/uploads';
 import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
 
+const bodyErrorCodes: Record<string, string> = {
+  'entity.parse.failed': 'invalid_json',
+  'entity.too.large': 'payload_too_large',
+  'parameters.too.many': 'payload_too_large',
+  'charset.unsupported': 'unsupported_media_type',
+  'encoding.unsupported': 'unsupported_media_type',
+  'request.aborted': 'request_aborted',
+};
+
+// a body the parser refuses arrives as an http-errors object carrying both a
+// 4xx status and a `type`. Nothing else that reaches the handler carries that
+// pair: an aws sdk fault has neither, only $fault and $metadata, so a
+// ConditionalCheckFailedException cannot be reflected back as the caller's
+// mistake
+const clientError = (
+  error: Error,
+): { status: number; code: string } | undefined => {
+  const { status, statusCode, type } = error as Error & {
+    status?: unknown;
+    statusCode?: unknown;
+    type?: unknown;
+  };
+  const value = typeof status === 'number' ? status : statusCode;
+  if (typeof value !== 'number' || value < 400 || value >= 500) {
+    return undefined;
+  }
+  if (typeof type !== 'string') {
+    return undefined;
+  }
+  return {
+    status: value,
+    code: bodyErrorCodes[type] ?? 'invalid_request_body',
+  };
+};
+
 export const appFactory = (): Express => {
   const app = express();
 
@@ -61,7 +96,18 @@ export const appFactory = (): Express => {
     res.status(404).json({ error: 'Not Found' });
   });
 
-  app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((error: Error, req: Request, res: Response, _next: NextFunction) => {
+    const refusal = clientError(error);
+    if (refusal) {
+      // one line, and never the parser's own message, which quotes the body
+      // back. It is kept at warn so a caller's mistake cannot bury, or page
+      // anyone about, a real fault: the snippet posts no-cors and never sees
+      // this answer, so the log is the only trace an over-cap batch leaves
+      // eslint-disable-next-line no-console
+      console.warn(`${req.method} ${req.path} refused: ${refusal.code}`);
+      res.status(refusal.status).json({ error: refusal.code });
+      return;
+    }
     // eslint-disable-next-line no-console
     console.error(error);
     res.status(500).json({ error: 'internal' });

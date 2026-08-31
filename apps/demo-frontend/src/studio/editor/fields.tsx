@@ -342,7 +342,9 @@ export const TimecodeField: FC<{
       return;
     }
 
-    const bounded = Math.min(maxMs, Math.max(minMs, parsed));
+    // the floor is the field's own and the ceiling is only what surrounds it,
+    // so where the surroundings leave less room than the floor, the floor wins
+    const bounded = Math.max(minMs, Math.min(maxMs, parsed));
     if (bounded < parsed) {
       setNotice(`The latest this can be is ${formatMs(bounded)}.`);
     } else if (bounded > parsed) {

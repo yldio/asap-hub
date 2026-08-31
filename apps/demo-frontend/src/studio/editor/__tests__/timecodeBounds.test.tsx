@@ -318,3 +318,75 @@ describe('a time typed past what the surrounding data allows', () => {
     );
   });
 });
+
+const lengthsSeenBy = (onBanner: jest.Mock): number[] =>
+  onBanner.mock.calls.map(([banner]: [Banner]) => banner.durationMs);
+
+// A banner ends inside the programme, but it is also never shorter than the
+// length below which it draws nothing and its block cannot be grabbed. The two
+// bounds meet at the end of the programme, and it used to be the length that
+// lost, all the way down to a banner of no length at all.
+describe('a banner start and length held against the programme together', () => {
+  it('keeps a banner long enough to see when its start spends the programme', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:12.00');
+    await type(/Length/, '0:03.00');
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'The latest this can be is 0:00.20.',
+    );
+    const banner = onBanner.mock.calls.at(-1)?.[0] as Banner;
+    expect(banner.durationMs).toBe(200);
+  });
+
+  it('never writes a banner with no length at all', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:12.00');
+    await type(/Length/, '0:00.00');
+
+    expect(lengthsSeenBy(onBanner)).not.toContain(0);
+    expect(Math.min(...lengthsSeenBy(onBanner))).toBeGreaterThanOrEqual(200);
+  });
+
+  it('shortens a length the moved start no longer has room for', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:11.00');
+
+    expect(onBanner).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startMs: 11000, durationMs: 1000 }),
+    );
+    const banner = onBanner.mock.calls.at(-1)?.[0] as Banner;
+    expect(banner.startMs + banner.durationMs).toBe(12000);
+  });
+
+  it('leaves a length the moved start still has room for', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:03.00');
+
+    expect(onBanner).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startMs: 3000, durationMs: 4000 }),
+    );
+  });
+
+  it('leaves a banner the document still accepts once its start has spent the programme', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:12.00');
+
+    const banner = onBanner.mock.calls.at(-1)?.[0] as Banner;
+    expect(banner.durationMs).toBe(200);
+    expect(
+      timelineSchema.safeParse({ ...createEmptyTimeline(), banners: [banner] })
+        .success,
+    ).toBe(true);
+  });
+});

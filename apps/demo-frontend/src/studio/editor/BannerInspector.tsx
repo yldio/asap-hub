@@ -21,6 +21,21 @@ type Props = {
   readonly onRemove: () => void;
 };
 
+// below this a banner draws nothing and its block on the timeline is too thin
+// to get hold of, so it is the one bound that never gives way
+const minBannerMs = 200;
+
+// A banner ends inside the programme, and it is the length that gives way to
+// keep that, never the start: the start is the value the creator just typed and
+// the length is not.
+const lengthLeftAfter = (
+  programmeMs: number | undefined,
+  startMs: number,
+): number | undefined =>
+  programmeMs === undefined
+    ? undefined
+    : Math.max(minBannerMs, programmeMs - startMs);
+
 const BannerInspector: FC<Props> = ({
   banner,
   programmeMs,
@@ -50,15 +65,23 @@ const BannerInspector: FC<Props> = ({
       value={banner.startMs}
       disabled={readOnly}
       {...(programmeMs !== undefined ? { maxMs: programmeMs } : {})}
-      onChange={(startMs) => onChange({ startMs })}
+      onChange={(startMs) => {
+        const left = lengthLeftAfter(programmeMs, startMs);
+        onChange({
+          startMs,
+          ...(left !== undefined && banner.durationMs > left
+            ? { durationMs: left }
+            : {}),
+        });
+      }}
     />
     <TimecodeField
       label="Length"
       value={banner.durationMs}
       disabled={readOnly}
-      minMs={200}
-      // the banner has to end inside the programme, so what is left to it is
-      // whatever the start it was given has not already spent
+      minMs={minBannerMs}
+      // what is left once the start has taken its share, which the field itself
+      // raises back to the floor above when the start has taken all of it
       {...(programmeMs !== undefined
         ? { maxMs: Math.max(0, programmeMs - banner.startMs) }
         : {})}

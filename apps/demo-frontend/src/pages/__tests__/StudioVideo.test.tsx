@@ -602,6 +602,93 @@ it('clears an invalid start time on blur without saving', async () => {
   expect(updateVideo).not.toHaveBeenCalled();
 });
 
+// two chapters on the same millisecond leave the first with nothing to play and
+// nothing to download, and deduping instead would take the other row's title
+describe('a start another chapter already has', () => {
+  it('is refused, and both chapters stay', async () => {
+    const updateVideo = jest.fn(() =>
+      Promise.resolve({ ...video, version: 4 }),
+    );
+    renderEditor({
+      updateVideo,
+      getVideo: () => Promise.resolve({ ...video, chapters: threeChapters }),
+    });
+
+    const third = await screen.findByLabelText('Start time of chapter 3');
+    await userEvent.clear(third);
+    await userEvent.type(third, '1:00');
+
+    expect(screen.getByText('Another chapter starts here')).toBeVisible();
+    expect(screen.getByLabelText('Title of chapter 2')).toHaveValue('Second');
+    expect(screen.getByLabelText('Title of chapter 3')).toHaveValue('Third');
+
+    await userEvent.tab();
+
+    expect(
+      screen.queryByText('Another chapter starts here'),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Start time of chapter 3')).toHaveValue(
+      '2:00',
+    );
+    expect(updateVideo).not.toHaveBeenCalled();
+  }, 15000);
+
+  // 10:00 is typed through 1:00, which is where the second chapter starts
+  it('is taken once the typing moves past it', async () => {
+    const updateVideo = jest.fn().mockResolvedValue({ ...video, version: 4 });
+    renderEditor({
+      updateVideo,
+      getVideo: () =>
+        Promise.resolve({
+          ...video,
+          durationMs: 1800000,
+          chapters: threeChapters,
+        }),
+    });
+
+    const third = await screen.findByLabelText('Start time of chapter 3');
+    await userEvent.clear(third);
+    await userEvent.type(third, '10:00');
+
+    expect(
+      screen.queryByText('Another chapter starts here'),
+    ).not.toBeInTheDocument();
+
+    await userEvent.tab();
+
+    await waitFor(() => expect(updateVideo).toHaveBeenCalledTimes(1), {
+      timeout: 5000,
+    });
+    expect(updateVideo.mock.calls[0]?.[1]).toMatchObject({
+      chapters: [
+        { startMs: 0, title: 'Intro' },
+        { startMs: 60000, title: 'Second' },
+        { startMs: 600000, title: 'Third' },
+      ],
+    });
+  }, 15000);
+});
+
+// the end is the next chapter's start, so it cannot reach the one after it
+it('flags an end time that would land on the chapter after next', async () => {
+  const updateVideo = jest.fn(() => Promise.resolve({ ...video, version: 4 }));
+  renderEditor({
+    updateVideo,
+    getVideo: () => Promise.resolve({ ...video, chapters: threeChapters }),
+  });
+
+  const end = await screen.findByLabelText('End time of chapter 1');
+  await userEvent.clear(end);
+  await userEvent.type(end, '2:00');
+
+  expect(screen.getByText('Must be before the next chapter')).toBeVisible();
+  expect(screen.getByLabelText('Start time of chapter 2')).toHaveValue('1:00');
+
+  await userEvent.tab();
+
+  expect(updateVideo).not.toHaveBeenCalled();
+}, 15000);
+
 it('inserts chapters midway before and after a row', async () => {
   renderEditor({
     getVideo: () =>

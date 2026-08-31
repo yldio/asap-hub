@@ -25,6 +25,25 @@ export const chapterSchema = z.object({
   title: z.string().min(1).max(300),
 });
 
+// a chapter runs to the next chapter's start, so two on the same millisecond
+// leave one of them with nothing to play and nothing to download, and a list out
+// of order gives every chapter but the last a negative length
+export const chaptersField = z
+  .array(chapterSchema)
+  .max(maxChapters)
+  .superRefine((chapters, ctx) => {
+    chapters.forEach((chapter, index) => {
+      const previous = chapters[index - 1];
+      if (previous && chapter.startMs <= previous.startMs) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [index, 'startMs'],
+          message: 'chapters must start after the chapter before them',
+        });
+      }
+    });
+  });
+
 export const createFolderSchema = z.object({
   name: z.string().min(1).max(120),
   parentId: parentIdField.optional(),
@@ -55,7 +74,7 @@ export const bulkDeleteSchema = z.object({
 export const updateVideoSchema = z.object({
   title: z.string().min(1).max(300).optional(),
   folderId: folderIdField.optional(),
-  chapters: z.array(chapterSchema).max(maxChapters).optional(),
+  chapters: chaptersField.optional(),
   recordedAt: z.string().min(1).optional(),
   version: z.number().int().nonnegative(),
 });

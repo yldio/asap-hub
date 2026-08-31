@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC, useCallback, useRef, useState } from 'react';
+import { chapterSectionIndexes } from '@asap-hub/demo-timeline';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 
 import { useVideo, useVideoAccess } from '../api/hooks';
@@ -102,6 +103,19 @@ const WatchPlayer: FC<{
     [],
   );
 
+  // the render cut one file per chapter that had a stretch of its own, numbered
+  // by their order among those, so a chapter is matched to its file by replaying
+  // that count rather than by trusting its own position to line up
+  const sectionIndexes = useMemo(
+    () =>
+      chapterSectionIndexes(
+        video.chapters,
+        video.durationMs,
+        video.sectionCount ?? 0,
+      ),
+    [video.chapters, video.durationMs, video.sectionCount],
+  );
+
   return (
     <div css={layoutStyles}>
       <div>
@@ -151,12 +165,14 @@ const WatchPlayer: FC<{
           currentSeconds={currentTime}
           onSelect={onSelectChapter}
           onHover={(chapter) => setHoveredChapter(chapter?.startMs ?? null)}
-          {...(video.sectionCount &&
-          access.sectionsBaseUrl &&
-          video.sectionCount >= video.chapters.length
+          {...(access.sectionsBaseUrl
             ? {
-                sectionUrlOf: (index: number) =>
-                  `${access.sectionsBaseUrl}/${index}.mp4`,
+                sectionUrlOf: (index: number) => {
+                  const at = sectionIndexes[index];
+                  return at === undefined
+                    ? undefined
+                    : `${access.sectionsBaseUrl}/${at}.mp4`;
+                },
                 sectionFileNameOf: (chapter: Chapter) =>
                   downloadFileName(`${video.title} - ${chapter.title}`),
               }

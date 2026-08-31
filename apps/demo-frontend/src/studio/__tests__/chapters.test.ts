@@ -1,4 +1,5 @@
 import {
+  collidesWith,
   endMsOf,
   insertAt,
   snapFirstToZero,
@@ -83,6 +84,41 @@ describe('toSavableChapters', () => {
       { startMs: 0, title: 'at 0' },
       { startMs: 90000, title: 'at 90000' },
     ]);
+  });
+
+  // the rows only reorder once the timecode being typed loses focus
+  it('sends them in ascending order however the rows sit', () => {
+    expect(toSavableChapters(rowsOf(90000, 0, 30000))).toEqual([
+      { startMs: 0, title: 'at 0' },
+      { startMs: 30000, title: 'at 30000' },
+      { startMs: 90000, title: 'at 90000' },
+    ]);
+  });
+
+  // a list saved before the fields refused collisions can still hold one, and
+  // the API takes one chapter per start
+  it('keeps the first of two chapters on the same start', () => {
+    const rows = toRows([
+      { startMs: 0, title: 'Intro' },
+      { startMs: 90000, title: 'Middle' },
+      { startMs: 90000, title: 'Twin' },
+    ]);
+    expect(toSavableChapters(rows)).toEqual([
+      { startMs: 0, title: 'Intro' },
+      { startMs: 90000, title: 'Middle' },
+    ]);
+  });
+});
+
+describe('collidesWith', () => {
+  it('finds a start another row already has', () => {
+    const rows = rowsOf(0, 90000);
+    expect(collidesWith(rows, rows[0]!.key, 90000)).toBe(true);
+  });
+
+  it('lets a row keep its own start', () => {
+    const rows = rowsOf(0, 90000);
+    expect(collidesWith(rows, rows[1]!.key, 90000)).toBe(false);
   });
 });
 

@@ -217,6 +217,102 @@ it('dresses the edit link as a button beside Download', async () => {
   expect(within(group).getByRole('link', { name: 'Download' })).toBeVisible();
 });
 
+describe('per chapter downloads', () => {
+  // the render publishes its section files under the access grant, and the row
+  // carries the chapters they were cut from and how many of them landed
+  const watching = (chapters: Video['chapters'], sectionCount?: number) =>
+    renderApp(<Watch />, {
+      api: {
+        ...api,
+        getVideo: () =>
+          Promise.resolve({
+            ...video,
+            durationMs: 900000,
+            chapters,
+            ...(sectionCount === undefined ? {} : { sectionCount }),
+          }),
+        requestAccess: () =>
+          Promise.resolve({
+            ...access,
+            sectionsBaseUrl: '/media/video-1/r1/sections',
+          }),
+      },
+      me: memberMe,
+      route: '/videos/video-1',
+      routePath: '/videos/:id',
+    });
+
+  it('points every chapter at its own file', async () => {
+    watching(
+      [
+        { startMs: 0, title: 'Intro' },
+        { startMs: 300000, title: 'Middle' },
+        { startMs: 600000, title: 'End' },
+      ],
+      3,
+    );
+
+    expect(
+      await screen.findByRole('link', { name: 'Download Intro' }),
+    ).toHaveAttribute('href', '/media/video-1/r1/sections/0.mp4');
+    expect(
+      screen.getByRole('link', { name: 'Download Middle' }),
+    ).toHaveAttribute('href', '/media/video-1/r1/sections/1.mp4');
+    expect(screen.getByRole('link', { name: 'Download End' })).toHaveAttribute(
+      'href',
+      '/media/video-1/r1/sections/2.mp4',
+    );
+  });
+
+  // the render cut no file for the chapter with nothing between it and the next
+  // start, so every chapter after it sits one file lower than its own position
+  it('keeps the other chapters on their own files when one was never cut', async () => {
+    watching(
+      [
+        { startMs: 0, title: 'Intro' },
+        { startMs: 300000, title: 'Twin' },
+        { startMs: 300000, title: 'Middle' },
+        { startMs: 600000, title: 'End' },
+      ],
+      3,
+    );
+
+    expect(
+      await screen.findByRole('link', { name: 'Download Intro' }),
+    ).toHaveAttribute('href', '/media/video-1/r1/sections/0.mp4');
+    expect(
+      screen.getByRole('link', { name: 'Download Middle' }),
+    ).toHaveAttribute('href', '/media/video-1/r1/sections/1.mp4');
+    expect(screen.getByRole('link', { name: 'Download End' })).toHaveAttribute(
+      'href',
+      '/media/video-1/r1/sections/2.mp4',
+    );
+    expect(screen.queryByRole('link', { name: 'Download Twin' })).toBeNull();
+  });
+
+  it('offers no chapter download when a chapter starts past the end', async () => {
+    watching(
+      [
+        { startMs: 0, title: 'Intro' },
+        { startMs: 1200000, title: 'Beyond' },
+      ],
+      1,
+    );
+
+    expect(
+      await screen.findByRole('link', { name: 'Download Intro' }),
+    ).toHaveAttribute('href', '/media/video-1/r1/sections/0.mp4');
+    expect(screen.queryByRole('link', { name: 'Download Beyond' })).toBeNull();
+  });
+
+  it('offers none at all when the render published no sections', async () => {
+    watching(video.chapters);
+
+    await screen.findByRole('link', { name: 'Download' });
+    expect(screen.queryByRole('link', { name: /^Download .+/ })).toBeNull();
+  });
+});
+
 it('offers no edit link to a member', async () => {
   renderApp(<Watch />, {
     api,

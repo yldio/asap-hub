@@ -1,4 +1,9 @@
-import { resolveChapters, videoChapters } from '../chapters';
+import {
+  chapterSectionIndexes,
+  resolveChapters,
+  sectionSpans,
+  videoChapters,
+} from '../chapters';
 import { createEmptyTimeline } from '../document';
 import { Timeline } from '../schema';
 
@@ -176,5 +181,83 @@ describe('two markers on the same frame', () => {
         (chapter) => chapter.title,
       ),
     ).toEqual(['First', 'Second']);
+  });
+});
+
+describe('sectionSpans', () => {
+  it('cuts one span per chapter, meeting at the starts', () => {
+    expect(
+      sectionSpans(
+        [{ startMs: 0 }, { startMs: 20950 }, { startMs: 40000 }],
+        53700,
+      ),
+    ).toEqual([
+      { startMs: 0, endMs: 20950 },
+      { startMs: 20950, endMs: 40000 },
+      { startMs: 40000, endMs: 53700 },
+    ]);
+  });
+
+  // the earlier of the two has nothing between it and the next start
+  it('cuts nothing for a chapter sharing its start with the next', () => {
+    expect(
+      sectionSpans(
+        [{ startMs: 0 }, { startMs: 20950 }, { startMs: 20950 }],
+        53700,
+      ),
+    ).toEqual([
+      { startMs: 0, endMs: 20950 },
+      { startMs: 20950, endMs: 53700 },
+    ]);
+  });
+
+  it('cuts nothing for a chapter starting at or past the end', () => {
+    expect(sectionSpans([{ startMs: 0 }, { startMs: 60000 }], 53700)).toEqual([
+      { startMs: 0, endMs: 53700 },
+    ]);
+    expect(sectionSpans([{ startMs: 0 }, { startMs: 53700 }], 53700)).toEqual([
+      { startMs: 0, endMs: 53700 },
+    ]);
+  });
+});
+
+describe('chapterSectionIndexes', () => {
+  it('numbers each chapter the file its own span was cut into', () => {
+    expect(
+      chapterSectionIndexes(
+        [{ startMs: 0 }, { startMs: 20950 }, { startMs: 40000 }],
+        53700,
+        3,
+      ),
+    ).toEqual([0, 1, 2]);
+  });
+
+  // the cut skipped the duplicate, so the chapter after it is file 1, not file 2
+  it('shifts the files down past a chapter that was never cut', () => {
+    expect(
+      chapterSectionIndexes(
+        [{ startMs: 0 }, { startMs: 20950 }, { startMs: 20950 }],
+        53700,
+        2,
+      ),
+    ).toEqual([0, undefined, 1]);
+
+    expect(
+      chapterSectionIndexes(
+        [{ startMs: 0 }, { startMs: 60000 }, { startMs: 70000 }],
+        53700,
+        1,
+      ),
+    ).toEqual([0, undefined, undefined]);
+  });
+
+  // a render that gave up partway through published a prefix of the spans
+  it('gives no file to a span the render never uploaded', () => {
+    expect(
+      chapterSectionIndexes([{ startMs: 0 }, { startMs: 20950 }], 53700, 1),
+    ).toEqual([0, undefined]);
+    expect(
+      chapterSectionIndexes([{ startMs: 0 }, { startMs: 20950 }], 53700, 0),
+    ).toEqual([undefined, undefined]);
   });
 });

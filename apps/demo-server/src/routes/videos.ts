@@ -273,6 +273,9 @@ export const videosRouter = (): Router => {
         expectedVersion: version,
         set: {
           ...next,
+          // the section files were cut from the chapters the render saw, so a
+          // new chapter list leaves none of them describing a chapter any more
+          ...(changes.chapters ? { sectionCount: 0 } : {}),
           updatedAt: new Date().toISOString(),
           ...gsi1KeysOf({ ...existing, ...next }),
         },

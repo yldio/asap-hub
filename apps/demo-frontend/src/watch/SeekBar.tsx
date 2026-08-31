@@ -188,7 +188,8 @@ const SeekBar: FC<{
         const span = segment.end - segment.start;
         return (
           <div
-            key={segment.start}
+            // two chapters on the same start share a start, not a place in the bar
+            key={`${index}-${segment.start}`}
             css={[segmentStyles, hovered === index && activeSegmentStyles]}
             style={{ flexGrow: span <= 0 ? 0.001 : span }}
           >

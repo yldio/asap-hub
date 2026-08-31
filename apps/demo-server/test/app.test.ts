@@ -426,6 +426,98 @@ describe('PATCH /api/videos/:id', () => {
     expect(response.status).toBe(400);
     expect(response.body.error).toBe('validation');
   });
+
+  // a chapter runs to the next one's start, so two on the same millisecond leave
+  // the first with nothing to play and no file to download
+  it('rejects two chapters starting at the same millisecond', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({
+        version: 1,
+        chapters: [
+          { startMs: 0, title: 'Intro' },
+          { startMs: 60000, title: 'Second' },
+          { startMs: 60000, title: 'Twin' },
+        ],
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('validation');
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('rejects chapters that are out of order', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({
+        version: 1,
+        chapters: [
+          { startMs: 60000, title: 'Second' },
+          { startMs: 0, title: 'Intro' },
+        ],
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('validation');
+  });
+
+  // the sections were cut from the chapters the render saw, so a new list leaves
+  // none of the files describing a chapter
+  it('forgets the cut sections when the chapters are rewritten', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|creator',
+        lockedByName: 'Ana',
+        lockExpiresAt: Date.now() + 60000,
+        sectionCount: 3,
+      }),
+    );
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({
+        version: 1,
+        chapters: [{ startMs: 0, title: 'Intro' }],
+      });
+
+    expect(response.status).toBe(200);
+    expect(
+      mockSend.mock.calls[0][0].input.ExpressionAttributeValues[
+        ':sectionCount'
+      ],
+    ).toBe(0);
+  });
+
+  it('leaves the cut sections alone when only the title moves', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(
+      videoItem({
+        lockedBy: 'auth0|creator',
+        lockedByName: 'Ana',
+        lockExpiresAt: Date.now() + 60000,
+        sectionCount: 3,
+      }),
+    );
+    mockSend.mockResolvedValue({});
+
+    await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ version: 1, title: 'Renamed' });
+
+    expect(
+      mockSend.mock.calls[0][0].input.ExpressionAttributeValues,
+    ).not.toHaveProperty(':sectionCount');
+  });
 });
 
 const heldLease = (overrides: Record<string, unknown> = {}) =>

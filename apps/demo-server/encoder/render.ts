@@ -5,6 +5,7 @@ import {
   parseTimeline,
   RenderAsset,
   RenderPlan,
+  sectionSpans,
   Timeline,
   videoChapters,
 } from '@asap-hub/demo-timeline';
@@ -680,24 +681,15 @@ const runPlan = async (
   );
 };
 
+// the spans are cut here and mapped back to chapters on the watch page, so the
+// one definition lives in the package both sides read
+export { sectionSpans };
+
 // the upload path's finishing stage, ported from finish.sh: the same four
 // artefacts under the same names, and the same ready flip. It is ported rather
 // than sourced because a render writes under media/{id}/{mediaPath}/, which
 // finish.sh has no revision directory for, and because the ready flip has to
 // carry render.state and mediaPath in the one conditional write
-// each chapter's stretch of the finished stream, cut for its own download;
-// the spans meet at the chapter starts and the last one runs to the end
-export const sectionSpans = (
-  chapters: { startMs: number }[],
-  durationMs: number,
-): { startMs: number; endMs: number }[] =>
-  chapters
-    .map((chapter, index) => ({
-      startMs: Math.max(0, Math.min(chapter.startMs, durationMs)),
-      endMs: Math.min(chapters[index + 1]?.startMs ?? durationMs, durationMs),
-    }))
-    .filter((span) => span.endMs > span.startMs);
-
 const finishMedia = async (
   env: RenderEnv,
   streamFile: string,
@@ -792,7 +784,10 @@ const finishMedia = async (
 
   // one file per chapter, cut without re-encoding so a watcher can take just
   // the section they need; chapter starts land on clip boundaries, which the
-  // join keeps as keyframes, so the copy cuts cleanly there
+  // join keeps as keyframes, so the copy cuts cleanly there.
+  // The watch page maps a chapter back to its file by counting spans, so the
+  // files have to stay the first sectionCount spans in order: a failed cut ends
+  // the run rather than leaving a hole for every later chapter to fall into.
   const spans = sectionSpans(chapters, durationMs);
   let sectionCount = 0;
   for (const [index, span] of spans.entries()) {

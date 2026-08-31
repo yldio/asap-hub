@@ -2,6 +2,10 @@ import type { Chapter } from '../api/types';
 
 export type ChapterRow = Chapter & { key: string };
 
+// why a row's field cannot be taken, keyed by the row: the message is the state,
+// so a field that refuses a value has to say which reason it refused it for
+export type InvalidFields = Record<string, string | undefined>;
+
 let nextKey = 0;
 
 export const makeRow = (chapter: Chapter): ChapterRow => {
@@ -15,13 +19,28 @@ export const toRows = (chapters: Chapter[]): ChapterRow[] =>
 export const toChapters = (rows: ChapterRow[]): Chapter[] =>
   rows.map(({ startMs, title }) => ({ startMs, title }));
 
-// a freshly marked chapter has no title yet, and the API rejects a blank one,
-// so it stays local until the user names it
-export const toSavableChapters = (rows: ChapterRow[]): Chapter[] =>
-  toChapters(rows).filter((chapter) => chapter.title.trim() !== '');
-
 export const sortRows = (rows: ChapterRow[]): ChapterRow[] =>
   [...rows].sort((a, b) => a.startMs - b.startMs);
+
+// a freshly marked chapter has no title yet, and the API rejects a blank one,
+// so it stays local until the user names it. The API also takes the list in
+// ascending order with one chapter per start: rows can sit out of order while a
+// timecode is being typed, and a list saved before the fields refused a
+// collision can still arrive holding one.
+export const toSavableChapters = (rows: ChapterRow[]): Chapter[] =>
+  toChapters(sortRows(rows))
+    .filter((chapter) => chapter.title.trim() !== '')
+    .filter(
+      (chapter, index, kept) => chapter.startMs !== kept[index - 1]?.startMs,
+    );
+
+// two chapters on the same millisecond leave one of them nothing to play, so a
+// field refuses the value rather than quietly taking the other chapter's row
+export const collidesWith = (
+  rows: ChapterRow[],
+  key: string,
+  startMs: number,
+): boolean => rows.some((row) => row.key !== key && row.startMs === startMs);
 
 // The first chapter always covers the start of the video, otherwise playback
 // before it would sit outside every chapter.

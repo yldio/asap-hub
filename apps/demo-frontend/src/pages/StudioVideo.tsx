@@ -19,7 +19,9 @@ import ChapterTable from '../studio/ChapterTable';
 import ChapterProgress from '../watch/ChapterProgress';
 import {
   ChapterRow,
+  collidesWith,
   insertAt,
+  InvalidFields,
   snapFirstToZero,
   sortRows,
   toChapters,
@@ -227,9 +229,10 @@ const Editor: FC<{
   const [title, setTitle] = useState(video.title);
   const folderId = video.folderId || ROOT_FOLDER;
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [invalid, setInvalid] = useState<Record<string, boolean>>({});
+  // what is wrong with the field, which is also what the row shows
+  const [invalid, setInvalid] = useState<InvalidFields>({});
   const [endDrafts, setEndDrafts] = useState<Record<string, string>>({});
-  const [endInvalid, setEndInvalid] = useState<Record<string, boolean>>({});
+  const [endInvalid, setEndInvalid] = useState<InvalidFields>({});
   const [focusedKey, setFocusedKey] = useState<string>();
   const [pendingFocusKey, setPendingFocusKey] = useState<string>();
   const [currentTime, setCurrentTime] = useState(0);
@@ -422,11 +425,20 @@ const Editor: FC<{
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [markChapter, nudge]);
 
+  // a start already taken is refused rather than deduped: typing 10:00 passes
+  // through 1:00, and dropping whichever chapter sits there would take its title
+  // with it halfway through a keystroke
   const onTimecodeChange = (key: string, value: string) => {
     setDrafts((current) => ({ ...current, [key]: value }));
     const parsed = parseTimecode(value);
-    setInvalid((current) => ({ ...current, [key]: parsed === undefined }));
-    if (parsed === undefined) return;
+    const taken = parsed !== undefined && collidesWith(rows, key, parsed);
+    const message = taken
+      ? 'Another chapter starts here'
+      : parsed === undefined
+        ? 'Use mm:ss or hh:mm:ss'
+        : undefined;
+    setInvalid((current) => ({ ...current, [key]: message }));
+    if (parsed === undefined || message) return;
     const next = rows.map((row) =>
       row.key === key ? { ...row, startMs: parsed } : row,
     );
@@ -442,7 +454,7 @@ const Editor: FC<{
       return next;
     });
     if (invalid[key]) {
-      setInvalid((current) => ({ ...current, [key]: false }));
+      setInvalid((current) => ({ ...current, [key]: undefined }));
       return;
     }
     const next = snapFirstToZero(rows);
@@ -457,13 +469,28 @@ const Editor: FC<{
     const index = rows.findIndex((row) => row.key === key);
     const row = rows[index];
     const nextRow = rows[index + 1];
+    // this end is the next chapter's start, so it has to stay short of the
+    // chapter after it or the two would share a start
+    const afterNext = rows[index + 2];
+    const overruns =
+      parsed !== undefined &&
+      afterNext !== undefined &&
+      parsed >= afterNext.startMs;
     const valid =
       parsed !== undefined &&
       row !== undefined &&
       nextRow !== undefined &&
       parsed > row.startMs &&
-      parsed <= durationMs;
-    setEndInvalid((current) => ({ ...current, [key]: !valid }));
+      parsed <= durationMs &&
+      !overruns;
+    setEndInvalid((current) => ({
+      ...current,
+      [key]: valid
+        ? undefined
+        : overruns
+          ? 'Must be before the next chapter'
+          : 'Must be after the start',
+    }));
     if (!valid || parsed === undefined || nextRow === undefined) return;
     const next = rows.map((r) =>
       r.key === nextRow.key ? { ...r, startMs: parsed } : r,
@@ -482,7 +509,7 @@ const Editor: FC<{
       return next;
     });
     if (endInvalid[key]) {
-      setEndInvalid((current) => ({ ...current, [key]: false }));
+      setEndInvalid((current) => ({ ...current, [key]: undefined }));
       return;
     }
     const next = snapFirstToZero(rows);

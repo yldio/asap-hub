@@ -14,7 +14,7 @@ import {
   steel,
 } from '../ui/theme';
 import { formatDuration } from '../utils/time';
-import { ChapterRow, endMsOf } from './chapters';
+import { ChapterRow, endMsOf, InvalidFields } from './chapters';
 
 const tableStyles = css({
   width: '100%',
@@ -84,7 +84,7 @@ const actionsCellStyles = css({
 const ChapterTable: FC<{
   readonly rows: ChapterRow[];
   readonly drafts: Record<string, string>;
-  readonly invalid: Record<string, boolean>;
+  readonly invalid: InvalidFields;
   readonly durationMs: number;
   readonly activeKey?: string;
   readonly readOnly: boolean;
@@ -92,7 +92,7 @@ const ChapterTable: FC<{
     key: string,
   ) => (element: HTMLInputElement | null) => void;
   readonly endDrafts: Record<string, string>;
-  readonly endInvalid: Record<string, boolean>;
+  readonly endInvalid: InvalidFields;
   readonly onSeek: (startMs: number) => void;
   readonly onTimecodeChange: (key: string, value: string) => void;
   readonly onTimecodeFocus: (key: string) => void;
@@ -139,8 +139,10 @@ const ChapterTable: FC<{
     <tbody>
       {rows.map((row, index) => {
         const endMs = endMsOf(rows, index, durationMs);
-        const isInvalid = Boolean(invalid[row.key]);
-        const isEndInvalid = Boolean(endInvalid[row.key]);
+        const invalidReason = invalid[row.key];
+        const endInvalidReason = endInvalid[row.key];
+        const isInvalid = Boolean(invalidReason);
+        const isEndInvalid = Boolean(endInvalidReason);
         const isLast = index === rows.length - 1;
         return (
           <tr
@@ -173,7 +175,7 @@ const ChapterTable: FC<{
               />
               {isInvalid && (
                 <div css={inlineErrorStyles} role="alert">
-                  Use mm:ss or hh:mm:ss
+                  {invalidReason}
                 </div>
               )}
             </td>
@@ -214,7 +216,7 @@ const ChapterTable: FC<{
                   />
                   {isEndInvalid && (
                     <div css={inlineErrorStyles} role="alert">
-                      Must be after the start
+                      {endInvalidReason}
                     </div>
                   )}
                 </>

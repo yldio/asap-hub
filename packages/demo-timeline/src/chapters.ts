@@ -81,3 +81,50 @@ export type VideoChapter = { startMs: number; title: string };
 // its own business, and the row's schema does not declare them
 export const videoChapters = (timeline: Timeline): VideoChapter[] =>
   resolveChapters(timeline).map(({ startMs, title }) => ({ startMs, title }));
+
+export type SectionSpan = { startMs: number; endMs: number };
+
+// one chapter's stretch of the finished stream, cut for its own download; the
+// spans meet at the chapter starts and the last one runs to the end. A chapter
+// that shares its start with the next one, or that starts at or after the end,
+// has no stretch left and so gets no span and no file.
+export const chapterSpan = (
+  chapters: { startMs: number }[],
+  index: number,
+  durationMs: number,
+): SectionSpan | undefined => {
+  const chapter = chapters[index];
+  if (!chapter) return undefined;
+  const startMs = Math.max(0, Math.min(chapter.startMs, durationMs));
+  const endMs = Math.min(
+    chapters[index + 1]?.startMs ?? durationMs,
+    durationMs,
+  );
+  return endMs > startMs ? { startMs, endMs } : undefined;
+};
+
+export const sectionSpans = (
+  chapters: { startMs: number }[],
+  durationMs: number,
+): SectionSpan[] =>
+  chapters.flatMap(
+    (_chapter, index) => chapterSpan(chapters, index, durationMs) ?? [],
+  );
+
+// which section file each chapter was cut into, or undefined for a chapter that
+// has none. The render names the files by their position among the spans it cut,
+// so a chapter without a span leaves every later chapter's file one index lower,
+// and sectionCount is how many of those cuts landed before the render gave up.
+export const chapterSectionIndexes = (
+  chapters: { startMs: number }[],
+  durationMs: number,
+  sectionCount: number,
+): (number | undefined)[] => {
+  let cut = 0;
+  return chapters.map((_chapter, index) => {
+    if (!chapterSpan(chapters, index, durationMs)) return undefined;
+    const at = cut;
+    cut += 1;
+    return at < sectionCount ? at : undefined;
+  });
+};

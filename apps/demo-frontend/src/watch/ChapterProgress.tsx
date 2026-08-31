@@ -101,7 +101,7 @@ const ChapterProgress: FC<{
             : Math.min(1, Math.max(0, (currentSeconds - segment.start) / span));
         return (
           <div
-            key={segment.start}
+            key={`${index}-${segment.start}`}
             css={segmentStyles}
             style={{ flexGrow: span }}
           >

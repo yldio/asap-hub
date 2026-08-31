@@ -110,8 +110,9 @@ const ChapterList: FC<{
   readonly currentSeconds: number;
   readonly onSelect: (chapter: Chapter) => void;
   readonly onHover?: (chapter: Chapter | null) => void;
-  // where a chapter's own file can be fetched, when the render published them
-  readonly sectionUrlOf?: (index: number) => string;
+  // where a chapter's own file can be fetched, when the render published them;
+  // a chapter the render cut no file for gets no url and no link
+  readonly sectionUrlOf?: (index: number) => string | undefined;
   readonly sectionFileNameOf?: (chapter: Chapter) => string;
 }> = ({
   chapters,
@@ -122,11 +123,12 @@ const ChapterList: FC<{
   sectionFileNameOf,
 }) => {
   const active = activeChapterIndex(chapters, currentSeconds);
+  const sectionUrls = chapters.map((_chapter, index) => sectionUrlOf?.(index));
 
   return (
     <nav css={panelStyles} aria-label="Chapters">
       <h2 css={headingStyles}>Chapters</h2>
-      {sectionUrlOf ? (
+      {sectionUrls.some(Boolean) ? (
         <p css={captionStyles}>Each chapter can be downloaded on its own.</p>
       ) : null}
       {chapters.length === 0 ? (
@@ -148,10 +150,10 @@ const ChapterList: FC<{
                 <span css={timeStyles}>{formatDuration(chapter.startMs)}</span>
                 <span>{chapter.title}</span>
               </button>
-              {sectionUrlOf ? (
+              {sectionUrls[index] ? (
                 <a
                   css={downloadStyles}
-                  href={sectionUrlOf(index)}
+                  href={sectionUrls[index]}
                   download={sectionFileNameOf?.(chapter)}
                   aria-label={`Download ${chapter.title}`}
                   title={`Download ${chapter.title}`}

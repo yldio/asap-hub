@@ -161,22 +161,117 @@ export const zoomSpans = (zooms: Zoom[], durationMs: number): ZoomSpan[] => {
   }, []);
 };
 
-const frac = (value: number): string => value.toFixed(6);
+const evenDown = (value: number): number => 2 * Math.floor(value / 2);
+const evenUp = (value: number): number => 2 * Math.ceil(value / 2);
+const evenNear = (value: number): number => 2 * Math.round(value / 2);
 
-// the even floor the moving chain applies to its magnified frame, so the two
-// paths show exactly the same share of the source either side of a seam
-const shownShare = (size: number, scale: number): number =>
-  size / (2 * Math.floor((size * scale) / 2));
+// the frame the moving chain magnifies to, kept even because the chain runs
+// in yuv420p
+const magnifiedSize = (size: number, scale: number): number =>
+  evenDown(size * scale);
 
-// the held window cut straight out of the source and scaled up once: the
-// same share of the frame the moving chain would show, without magnifying
-// the whole frame first. Fractions of in_w keep one expression right whether
-// the input is the canvas or a larger capture the zoom crops directly.
-export const stillFilters = (window: StillWindow, canvas: Canvas): string[] => [
-  `crop=w='2*floor(in_w*${frac(
-    shownShare(canvas.width, window.scale),
-  )}/2)':h='2*floor(in_h*${frac(
-    shownShare(canvas.height, window.scale),
-  )}/2)':x='in_w*${frac(window.cropX)}':y='in_h*${frac(window.cropY)}'`,
-  `scale=${canvas.width}:${canvas.height}:flags=lanczos:out_color_matrix=bt709`,
-];
+// where the moving chain's crop really lands: ffmpeg rounds the expression to
+// a whole pixel of that frame, holds the window inside it, then floors it to
+// an even one
+const movingCropAt = (share: number, frame: number, shown: number): number =>
+  evenDown(Math.min(Math.max(Math.round(share * frame), 0), frame - shown));
+
+type StillAxis = {
+  crop: number;
+  cropAt: number;
+  scaled: number;
+  showAt: number;
+};
+
+// how far the source crop may be pulled back, and how much wider it may be
+// cut, hunting for the alignment; the pixels this adds are the only extra work
+const gridSteps = 32;
+
+// beating the candidate before it by less than this is float noise, and a
+// wider crop bought with nothing is just more work
+const closer = 1e-6;
+
+// The moving chain rounds against its magnified frame and the still chain has
+// to round against the source, so the still crop is pulled back to the even
+// source pixel that lands nearest that frame's grid and widened until the
+// magnification comes out exact. What the pull back and the widening overhang
+// is taken off again by a second crop, which costs nothing.
+const stillAxis = (
+  canvasSize: number,
+  inputSize: number,
+  scale: number,
+  share: number,
+): StillAxis => {
+  const frame = magnifiedSize(canvasSize, scale);
+  const gain = frame / inputSize;
+  const movingAt = movingCropAt(share, frame, canvasSize);
+  const from = movingAt / gain;
+  const to = (movingAt + canvasSize) / gain;
+
+  let cropAt = evenDown(from);
+  let showAt = evenNear(movingAt - cropAt * gain);
+  let offBy = Math.abs(showAt - (movingAt - cropAt * gain));
+  for (let back = 2; offBy > closer && back <= 2 * gridSteps; back += 2) {
+    const pulled = evenDown(from) - back;
+    if (pulled < 0) {
+      break;
+    }
+    const wanted = movingAt - pulled * gain;
+    const near = evenNear(wanted);
+    if (Math.abs(near - wanted) < offBy - closer) {
+      cropAt = pulled;
+      showAt = near;
+      offBy = Math.abs(near - wanted);
+    }
+  }
+
+  const covers = Math.min(evenUp(to - cropAt), evenDown(inputSize - cropAt));
+  let crop = covers;
+  let scaled = Math.max(evenNear(covers * gain), showAt + canvasSize);
+  let wrongBy = Infinity;
+  for (let wider = 0; wider <= 2 * gridSteps; wider += 2) {
+    const wide = covers + wider;
+    const size = evenNear(wide * gain);
+    if (cropAt + wide > inputSize) {
+      break;
+    }
+    if (size >= showAt + canvasSize) {
+      const off = Math.abs(size - wide * gain) / (wide * gain);
+      if (off < wrongBy - closer) {
+        crop = wide;
+        scaled = size;
+        wrongBy = off;
+        if (off <= closer) {
+          break;
+        }
+      }
+    }
+  }
+
+  return { crop, cropAt, scaled, showAt };
+};
+
+// the held window cut straight out of the source and scaled up once, rather
+// than magnifying the whole frame first: the same rectangle of the source, at
+// the same magnification, the moving chain shows either side of the seam
+export const stillFilters = (
+  window: StillWindow,
+  canvas: Canvas,
+  input: { width: number; height: number },
+): string[] => {
+  const x = stillAxis(canvas.width, input.width, window.scale, window.cropX);
+  const y = stillAxis(canvas.height, input.height, window.scale, window.cropY);
+  const overhangs =
+    x.showAt > 0 ||
+    y.showAt > 0 ||
+    x.scaled !== canvas.width ||
+    y.scaled !== canvas.height;
+
+  return [
+    `crop=${x.crop}:${y.crop}:${x.cropAt}:${y.cropAt}`,
+    `scale=${x.scaled}:${y.scaled}:flags=lanczos:out_color_matrix=bt709`,
+    ...(overhangs
+      ? [`crop=${canvas.width}:${canvas.height}:${x.showAt}:${y.showAt}`]
+      : []),
+  ];
+};

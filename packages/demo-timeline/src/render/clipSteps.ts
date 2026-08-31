@@ -356,22 +356,22 @@ const pointerOverlays = (
 // being fitted to the canvas and then magnified back out of it. The aspect has
 // to match exactly: otherwise the canvas fit letterboxes the picture, and the
 // preview scales those bars along with it.
-const zoomCropsTheSource = (
+const sourceTheZoomCrops = (
   clip: Clip,
   canvas: Canvas,
   assets: Map<string, RenderAsset>,
-): boolean => {
+): { width: number; height: number } | undefined => {
   if (clip.kind !== 'source') {
-    return false;
+    return undefined;
   }
   const { width, height } = assets.get(clip.assetId) ?? {};
-  return (
-    width !== undefined &&
+  return width !== undefined &&
     height !== undefined &&
     width >= canvas.width &&
     height >= canvas.height &&
     width * canvas.height === height * canvas.width
-  );
+    ? { width, height }
+    : undefined;
 };
 
 // the zoom's own scale is the canvas fit when it stands at rest, so a source it
@@ -383,17 +383,15 @@ const pictureFilters = (
   assets: Map<string, RenderAsset>,
   stillWindow?: StillWindow,
 ): string[] => {
+  const source = sourceTheZoomCrops(placement.clip, canvas, assets);
   // a tile whose zooms all hold one window cuts it out of the source first
   // and scales up only what is shown; the zooms themselves stay with the
   // overlays, whose arithmetic still rides the (constant) window
   if (stillWindow) {
-    const base = zoomCropsTheSource(placement.clip, canvas, assets)
-      ? []
-      : videoFilters({ canvas, placement });
     return [
-      ...base,
+      ...(source ? [] : videoFilters({ canvas, placement })),
       `fps=${canvas.fps}`,
-      ...stillFilters(stillWindow, canvas),
+      ...stillFilters(stillWindow, canvas, source ?? canvas),
       'setsar=1',
       colourTagFilter,
     ];
@@ -402,7 +400,7 @@ const pictureFilters = (
   if (zoom.length === 0) {
     return videoFilters({ canvas, placement });
   }
-  return zoomCropsTheSource(placement.clip, canvas, assets)
+  return source
     ? [...zoom, 'setsar=1', colourTagFilter]
     : [...videoFilters({ canvas, placement }), ...zoom];
 };

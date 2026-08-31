@@ -304,7 +304,7 @@ describe('a tiled plan', () => {
       step.args.join(' ').includes(',crop=1920:1080:'),
     );
     const still = clipSteps.filter((step) =>
-      step.args.join(' ').includes("crop=w='2*floor(in_w*0.500000/2)'"),
+      step.args.join(' ').includes(',crop=960:540:480:270,'),
     );
     expect(clipSteps.length).toBeGreaterThan(4);
     expect(moving).toHaveLength(2);

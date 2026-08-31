@@ -17,9 +17,9 @@ import {
   RecordingSessionItem,
 } from './recordings';
 
-// the snippet posts a simple request so the host page never pays for a CORS
-// preflight, which means the body arrives as text/plain and express.json,
-// mounted globally, leaves it alone
+// the caller names the content type, so this is the only parser mounted on the
+// route and it takes every type: nothing upstream may read the body first and
+// leave this cap unenforced
 export const maxCaptureBodyBytes = 1024 * 1024;
 
 type CaptureBatch = {
@@ -41,8 +41,6 @@ const fromJson = (body: string): unknown => {
   }
 };
 
-// the snippet sends text; a caller that sends application/json has already been
-// parsed by the global body parser, and either is read the same way
 const parseBatch = (body: unknown): CaptureBatch | undefined => {
   const result = captureBatchSchema.safeParse(
     typeof body === 'string' ? fromJson(body) : body,

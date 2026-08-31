@@ -16,9 +16,6 @@ import { videosRouter } from './routes/videos';
 export const appFactory = (): Express => {
   const app = express();
 
-  // the timeline ceiling is 4MB; the body parser must not undercut it
-  app.use(express.json({ limit: '5mb' }));
-
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
@@ -32,6 +29,10 @@ export const appFactory = (): Express => {
   }
 
   const api = express.Router();
+  // the timeline ceiling is 4MB; the body parser must not undercut it. It is
+  // mounted here rather than on the app so it can never consume a capture body
+  // ahead of that router's own, much smaller, cap
+  api.use(express.json({ limit: '5mb' }));
   // per-user payloads and Set-Cookie must never be stored by CloudFront or a
   // shared proxy, whatever the distribution TTLs happen to be
   api.use((_req, res, next) => {

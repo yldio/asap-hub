@@ -51,7 +51,13 @@ export const stageLabel = (stage: string): string => {
   if (stage.startsWith('clip ')) {
     return 'Rendering the clips';
   }
-  if (stage.startsWith('join ')) {
+  // stitching a tiled clip back together, and cutting and blending the pieces
+  // the join copies, are all billed to the join and read as it
+  if (
+    ['join ', 'assemble ', 'cut clip ', 'blend clip '].some((prefix) =>
+      stage.startsWith(prefix),
+    )
+  ) {
     return 'Joining the timeline';
   }
   return (

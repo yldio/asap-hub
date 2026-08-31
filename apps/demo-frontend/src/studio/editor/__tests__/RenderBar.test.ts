@@ -15,6 +15,17 @@ describe('stageLabel', () => {
     expect(stageLabel('join 1 clip (xfade)')).toBe('Joining the timeline');
   });
 
+  // a segmented join spends most of its time in the steps that write the
+  // pieces, and those used to leave the bar reading the bare fallback
+  it('reads the pieces a segmented join is assembled from as the join', () => {
+    expect(stageLabel('assemble clip 0 from 4 tiles')).toBe(
+      'Joining the timeline',
+    );
+    expect(stageLabel('cut clip 1 for the join')).toBe('Joining the timeline');
+    expect(stageLabel('blend clip 0 into clip 1')).toBe('Joining the timeline');
+    expect(stageLabel('join 2 clips (segments)')).toBe('Joining the timeline');
+  });
+
   it('falls back for anything it does not know', () => {
     expect(stageLabel('something new')).toBe('Rendering');
   });

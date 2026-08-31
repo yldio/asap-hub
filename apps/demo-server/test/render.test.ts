@@ -879,8 +879,9 @@ describe('parseRenderEnv', () => {
   });
 });
 
-// the assemble step reads the tiles the pool writes and the join reads the
-// assembled clip, so pooling either alongside its inputs fails the render
+// the assemble step reads the tiles the pool writes, the cuts and blends read
+// the assembled clip and the join reads them, so pooling any of them alongside
+// its inputs fails the render
 describe('scheduledSteps', () => {
   it('keeps the assemble and the join out of the pool, in plan order', () => {
     const plan = buildRenderPlan({
@@ -924,7 +925,10 @@ describe('scheduledSteps', () => {
     );
     expect(serial.map(({ step }) => step.label)).toEqual([
       'assemble clip 0 from 4 tiles',
-      'join 2 clips (xfade)',
+      'cut clip 0 for the join',
+      'blend clip 0 into clip 1',
+      'cut clip 1 for the join',
+      'join 2 clips (segments)',
     ]);
     expect(serial.map(({ index }) => index)).toEqual(
       [...serial.map(({ index }) => index)].sort((a, b) => a - b),

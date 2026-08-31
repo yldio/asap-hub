@@ -9,13 +9,6 @@ import ComplianceTableRow, {
   apcCoverableStatuses,
 } from '../ComplianceTableRow';
 
-const mockIsEnabled = jest.fn();
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
-
 describe('ComplianceTableRow', () => {
   const data: PartialManuscriptResponse = {
     id: 'manuscript-id-1',
@@ -30,7 +23,6 @@ describe('ComplianceTableRow', () => {
 
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
-    displayProjectColumn: false,
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     handleAssignUsersClick: jest.fn(),
@@ -61,7 +53,6 @@ describe('ComplianceTableRow', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockIsEnabled.mockReturnValue(false);
   });
 
   it('renders all manuscript information correctly', () => {
@@ -96,20 +87,16 @@ describe('ComplianceTableRow', () => {
     expect(statusButton).toBeDisabled();
   });
 
-  it('renders team name as a link', () => {
+  it('renders team name as a link to the team about page', () => {
     renderComponent();
 
     const teamLink = screen.getByText('Test Team');
     expect(teamLink.tagName).toBe('A');
-    expect(teamLink).toHaveAttribute(
-      'href',
-      expect.stringContaining('team-id'),
-    );
+    expect(teamLink).toHaveAttribute('href', '/network/teams/team-id/about');
   });
 
   it('renders an em dash for user-based projects', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -138,7 +125,6 @@ describe('ComplianceTableRow', () => {
     'renders $projectType project link and icon',
     ({ projectType, expectedHref, iconTitle }) => {
       renderComponent({
-        displayProjectColumn: true,
         data: {
           ...data,
           project: {
@@ -158,9 +144,6 @@ describe('ComplianceTableRow', () => {
   );
 
   it('links the manuscript id to the project workspace when there is no team', () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_WORKSPACE',
-    );
     renderComponent({
       data: {
         ...data,
@@ -182,10 +165,7 @@ describe('ComplianceTableRow', () => {
     );
   });
 
-  it('prefers the project workspace over the team workspace when the flag is enabled', () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_WORKSPACE',
-    );
+  it('links the manuscript id to the project workspace', () => {
     renderComponent({
       data: {
         ...data,
@@ -206,27 +186,6 @@ describe('ComplianceTableRow', () => {
     );
   });
 
-  it('links the manuscript id to the team workspace when the flag is disabled', () => {
-    renderComponent({
-      data: {
-        ...data,
-        project: {
-          id: 'project-id',
-          title: 'Project Alpha',
-          projectType: 'Resource Project',
-          isTeamBased: true,
-        },
-      },
-    });
-
-    expect(
-      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
-    ).toHaveAttribute(
-      'href',
-      '/network/teams/team-id/workspace#manuscript-id-1',
-    );
-  });
-
   it('renders a plain manuscript id when the team link is unavailable', () => {
     renderComponent({
       data: {
@@ -243,7 +202,6 @@ describe('ComplianceTableRow', () => {
 
   it('renders a plain project title when the project route is unavailable', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -261,7 +219,7 @@ describe('ComplianceTableRow', () => {
   });
 
   it('renders an em dash in the project column when no project exists', () => {
-    renderComponent({ displayProjectColumn: true });
+    renderComponent();
 
     expect(screen.getAllByRole('cell')[1]).toHaveTextContent('—');
   });

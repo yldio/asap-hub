@@ -1,6 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 
 import { Card, Caption, StateTag } from '../atoms';
@@ -77,14 +76,11 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   impact,
   categories,
 }) => {
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
-  const associationPill = isProjectOutputsEnabled
-    ? getResearchOutputAssociationPill(
-        { publishingEntity, teams, workingGroups },
-        true,
-      )
-    : publishingEntity;
+  const associationPill = getResearchOutputAssociationPill({
+    publishingEntity,
+    teams,
+    workingGroups,
+  });
 
   return (
     <Card accent={published ? 'default' : 'neutral200'}>

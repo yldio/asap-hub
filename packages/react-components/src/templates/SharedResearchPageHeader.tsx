@@ -1,11 +1,9 @@
 import { css } from '@emotion/react';
-import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph } from '../atoms';
 import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
 import { noop } from '../utils';
 import ResearchOutputsSearch from './ResearchOutputsSearch';
-import { SharedOutputDropdown } from '../organisms';
 import PageInfoContainer from './PageInfoContainer';
 import PageConstraints from './PageConstraints';
 
@@ -15,14 +13,6 @@ const textStyles = css({
   rowGap: rem(9),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: `minmax(auto, ${smallDesktopScreen.width}px) auto`,
-  },
-});
-
-const buttonStyles = css({
-  alignContent: 'center',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'block',
-    justifySelf: 'flex-end',
   },
 });
 
@@ -38,39 +28,29 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   searchQuery,
   filters,
   onChangeFilter = noop,
-}) => {
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+}) => (
+  <header>
+    <PageInfoContainer>
+      <Display styleAsHeading={2}>Shared Research</Display>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          This page contains all shared research outputs. As grantees begin to
+          share more items, this library will grow. Grantees should be mindful
+          to respect intellectual boundaries and not share private outputs
+          outside of the Network.
+        </Paragraph>
+      </div>
+    </PageInfoContainer>
 
-  return (
-    <header>
-      <PageInfoContainer>
-        <Display styleAsHeading={2}>Shared Research</Display>
-        <div css={textStyles}>
-          <Paragraph accent="lead">
-            This page contains all shared research outputs. As grantees begin to
-            share more items, this library will grow. Grantees should be mindful
-            to respect intellectual boundaries and not share private outputs
-            outside of the Network.
-          </Paragraph>
-          {!isProjectOutputsEnabled && (
-            <div css={buttonStyles}>
-              <SharedOutputDropdown />
-            </div>
-          )}
-        </div>
-      </PageInfoContainer>
-
-      <PageConstraints noPaddingBottom>
-        <ResearchOutputsSearch
-          onChangeSearch={onChangeSearch}
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filters={filters}
-        />
-      </PageConstraints>
-    </header>
-  );
-};
+    <PageConstraints noPaddingBottom>
+      <ResearchOutputsSearch
+        onChangeSearch={onChangeSearch}
+        searchQuery={searchQuery}
+        onChangeFilter={onChangeFilter}
+        filters={filters}
+      />
+    </PageConstraints>
+  </header>
+);
 
 export default SharedResearchPageHeader;

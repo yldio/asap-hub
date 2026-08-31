@@ -142,7 +142,6 @@ describe('/compliance-reports/ route', () => {
         {
           status: createComplianceReportRequest.status,
           notificationList: '',
-          useProjectBasedEmail: undefined,
         },
         user.id,
       );
@@ -151,61 +150,6 @@ describe('/compliance-reports/ route', () => {
         complianceReport: mockComplianceReport,
         status: 'Review Compliance Report',
       });
-    });
-
-    test('Should pass useProjectBasedEmail through to the manuscript status update', async () => {
-      const user = {
-        ...createUserResponse(),
-        role: 'Staff',
-      } as UserResponse;
-
-      userMockFactory.mockReturnValueOnce(user);
-
-      complianceReportControllerMock.create.mockResolvedValueOnce(
-        getComplianceReportDataObject(),
-      );
-
-      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
-        id: 'manuscript-1',
-        title: 'Manuscript 1',
-        teamId: 'team-1',
-        versions: [],
-        count: 1,
-        assignedUsers: [],
-        status: 'Manuscript Resubmitted',
-        discussions: [],
-      });
-
-      manuscriptControllerMock.update.mockResolvedValueOnce({
-        id: 'manuscript-1',
-        title: 'Manuscript 1',
-        teamId: 'team-1',
-        versions: [],
-        count: 1,
-        assignedUsers: [],
-        status: 'Review Compliance Report',
-        discussions: [],
-      });
-
-      await supertest(app)
-        .post('/compliance-reports')
-        .send({
-          ...createComplianceReportRequest,
-          status: 'Review Compliance Report',
-          notificationList: '',
-          useProjectBasedEmail: true,
-        })
-        .set('Accept', 'application/json');
-
-      expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
-        'manuscript-1',
-        {
-          status: createComplianceReportRequest.status,
-          notificationList: '',
-          useProjectBasedEmail: true,
-        },
-        user.id,
-      );
     });
 
     test('Should not update manuscript status when status is unchanged', async () => {

@@ -1,25 +1,10 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { dashboard, network } from '@asap-hub/routing';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within } from '@testing-library/react';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
-
-const mockIsEnabled = jest.fn();
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-  useCurrentUserCRN: jest.fn(),
-}));
-
-beforeEach(() => {
-  mockIsEnabled.mockReturnValue(false);
-});
-afterAll(() => {
-  mockIsEnabled.mockClear();
-});
 
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   id: '42',
@@ -180,7 +165,7 @@ it('renders tabs', () => {
     within(screen.getByRole('navigation', { name: 'tabs' }))
       .getAllByRole('link')
       .map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Outputs (0)', 'Upcoming Events (0)', 'Past Events (0)']);
+  ).toEqual(['About', 'Upcoming Events (0)', 'Past Events (0)']);
 });
 
 it('does not render upcoming events tab when team is inactive', () => {
@@ -195,27 +180,7 @@ it('does not render upcoming events tab when team is inactive', () => {
     within(screen.getByRole('navigation', { name: 'tabs' }))
       .getAllByRole('link')
       .map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Outputs (0)', 'Past Events (0)']);
-});
-
-it('renders workspace tabs when tools provided', () => {
-  render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      tools={[{ name: '', description: '', url: '' }]}
-    />,
-  );
-  expect(
-    within(screen.getByRole('navigation', { name: 'tabs' }))
-      .getAllByRole('link')
-      .map(({ textContent }) => textContent),
-  ).toEqual([
-    'About',
-    'Team Workspace',
-    'Outputs (0)',
-    'Upcoming Events (0)',
-    'Past Events (0)',
-  ]);
+  ).toEqual(['About', 'Past Events (0)']);
 });
 
 it('renders compliance tabs when is ASAP team and is staff', () => {
@@ -233,61 +198,10 @@ it('renders compliance tabs when is ASAP team and is staff', () => {
       .map(({ textContent }) => textContent),
   ).toEqual([
     'About',
-    'Team Workspace',
     'Compliance (0)',
-    'Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);
-});
-
-describe('Share an output button dropdown', () => {
-  const renderWithPermissionsContext = (
-    canShareResearchOutput: boolean = true,
-  ) =>
-    render(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canShareResearchOutput,
-          canEditResearchOutput: true,
-          canPublishResearchOutput: true,
-        }}
-      >
-        <TeamProfileHeader {...boilerplateProps} />,
-      </ResearchOutputPermissionsContext.Provider>,
-    );
-
-  it('renders share an output button when user can share research output and flag PROJECT_OUTPUTS is not enabled', () => {
-    mockIsEnabled.mockReturnValue(false);
-    renderWithPermissionsContext();
-
-    expect(
-      screen.queryByText(/article/i, { selector: 'span' }),
-    ).not.toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: /Share an output/i }));
-    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    expect(
-      screen.getByText(/article/i, { selector: 'span' }).closest('a'),
-    ).toHaveAttribute('href', '/network/teams/42/create-output/article');
-  });
-
-  it('does not render share an output button when flag PROJECT_OUTPUTS is enabled', () => {
-    mockIsEnabled.mockImplementation(
-      (flag: string) => flag === 'PROJECT_OUTPUTS',
-    );
-    renderWithPermissionsContext();
-    expect(
-      screen.queryByRole('button', { name: /Share an output/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('does not render share an output button dropdown when user cannot share research output', () => {
-    renderWithPermissionsContext(false);
-
-    expect(
-      screen.queryByRole('button', { name: /Share an output/i }),
-    ).not.toBeInTheDocument();
-  });
 });
 
 it('displays upcoming event count when team is active', () => {
@@ -307,29 +221,6 @@ it('displays past event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
 
   expect(screen.getByText('Past Events (11)')).toBeVisible();
-});
-
-it('displays shared output count', () => {
-  render(<TeamProfileHeader {...boilerplateProps} teamOutputsCount={11} />);
-
-  expect(screen.getByText('Outputs (11)')).toBeVisible();
-});
-
-it('displays the draft shared output count', () => {
-  render(<TeamProfileHeader {...boilerplateProps} teamDraftOutputsCount={5} />);
-  expect(screen.getByText('Draft Outputs (5)')).toBeVisible();
-  render(<TeamProfileHeader {...boilerplateProps} teamDraftOutputsCount={0} />);
-  expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
-});
-
-it('does not display the draft shared output count', () => {
-  render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      teamDraftOutputsCount={undefined}
-    />,
-  );
-  expect(screen.queryByText('Draft Outputs')).toBeNull();
 });
 
 describe('copy button', () => {

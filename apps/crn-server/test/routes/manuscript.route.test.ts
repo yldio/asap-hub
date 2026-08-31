@@ -409,20 +409,6 @@ describe('/manuscripts/ route', () => {
         'abc123',
         expect.objectContaining({ id: 'user-id-0' }),
         'discussions',
-        false,
-      );
-    });
-
-    test('Should call the controller with projectWorkspaceEnabled set to true when requested', async () => {
-      await supertest(app).get(
-        '/manuscripts/abc123/workspace-url?tab=discussions&projectWorkspaceEnabled=true',
-      );
-
-      expect(manuscriptControllerMock.fetchWorkspaceUrl).toHaveBeenCalledWith(
-        'abc123',
-        expect.objectContaining({ id: 'user-id-0' }),
-        'discussions',
-        true,
       );
     });
   });

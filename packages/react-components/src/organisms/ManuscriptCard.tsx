@@ -35,7 +35,6 @@ type ManuscriptCardProps = Pick<
 > & {
   manuscript: WorkspaceManuscript;
   user: User | null;
-  teamId: string;
   isComplianceReviewer: boolean;
   isActiveTeam: boolean;
   onUpdateManuscript: (
@@ -111,7 +110,6 @@ const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   manuscript,
-  teamId,
   isComplianceReviewer,
   isActiveTeam,
   onUpdateManuscript,
@@ -265,7 +263,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           >
             <ManuscriptCardDetail
               id={id}
-              teamId={teamId}
               user={user}
               isComplianceReviewer={isComplianceReviewer}
               isActiveManuscript={isActiveManuscript}

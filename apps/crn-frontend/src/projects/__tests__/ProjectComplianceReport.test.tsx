@@ -15,8 +15,9 @@ import { projects } from '@asap-hub/routing';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
-import { createComplianceReport, getManuscript } from '../../network/teams/api';
+import { getManuscript } from '../../network/teams/api';
 import { manuscriptQueryKeys } from '../../network/teams/state';
+import { createComplianceReport } from '../api';
 import ProjectComplianceReport from '../ProjectComplianceReport';
 import { projectQueryKeys } from '../state';
 
@@ -47,10 +48,14 @@ const LocationCapture = () => {
 };
 
 jest.mock('../../network/teams/api', () => ({
+  getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
+}));
+
+jest.mock('../api', () => ({
+  ...jest.requireActual('../api'),
   createComplianceReport: jest
     .fn()
     .mockResolvedValue({ id: 'compliance-report-1' }),
-  getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
 }));
 
 beforeEach(() => {

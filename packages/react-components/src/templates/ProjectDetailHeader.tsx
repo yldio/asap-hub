@@ -3,7 +3,6 @@ import {
   ProjectDetail,
   ProjectMember,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
@@ -183,8 +182,6 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     draftOutputsCount,
     canShareOutput = false,
   } = project;
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const route = projectRouteByType[project.projectType](project.id);
 
@@ -208,16 +205,16 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
             <TabNav>
               <TabLink href={aboutHref}>About</TabLink>
               <TabLink href={milestonesHref}>Milestones</TabLink>
-              {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
+              {workspaceHref ? (
                 <TabLink href={workspaceHref}>Workspace</TabLink>
               ) : null}
-              {isProjectOutputsEnabled && outputsHref ? (
+              {outputsHref ? (
                 <TabLink href={outputsHref}>
                   Outputs
                   {outputsCount !== undefined && ` (${outputsCount})`}
                 </TabLink>
               ) : null}
-              {isProjectOutputsEnabled && draftOutputsHref ? (
+              {draftOutputsHref ? (
                 <TabLink href={draftOutputsHref}>
                   Draft Outputs
                   {draftOutputsCount !== undefined && ` (${draftOutputsCount})`}
@@ -271,7 +268,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
                 </div>
               )}
 
-              {isProjectOutputsEnabled && canShareOutput && (
+              {canShareOutput && (
                 <div css={css({ marginLeft: 'auto' })}>
                   <DropdownButton
                     noMargin

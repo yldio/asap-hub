@@ -2,7 +2,6 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   getVisibleResearchOutputActions,
   ResearchOutputPermissionsContext,
-  useFlags,
 } from '@asap-hub/react-context';
 import { network, projectRouteByType, sharedResearch } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -82,11 +81,10 @@ const getDuplicateLink = ({
   id,
   publishingEntity,
   workingGroups,
-  teams,
   project,
 }: Pick<
   ResearchOutputResponse,
-  'id' | 'publishingEntity' | 'workingGroups' | 'teams' | 'project'
+  'id' | 'publishingEntity' | 'workingGroups' | 'project'
 >) => {
   switch (getResearchOutputEntityType({ publishingEntity })) {
     case 'working-group': {
@@ -102,12 +100,6 @@ const getDuplicateLink = ({
       const projectRoute = project && projectRouteByType[project.projectType];
       return project?.id && projectRoute
         ? projectRoute(project.id).duplicateOutput({ id }).$
-        : undefined;
-    }
-    case 'team': {
-      const teamId = teams[0]?.id;
-      return teamId
-        ? network({}).teams({}).team({ teamId }).duplicateOutput({ id }).$
         : undefined;
     }
     default:
@@ -167,16 +159,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasDescription = description || descriptionMD;
   const displayDescription = hasDescription && !isGrantDocument;
   const hasUsageNotes = usageNotes || usageNotesMD;
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
-  const association = getResearchOutputAssociation(
-    props,
-    isProjectOutputsEnabled,
-  );
-  const associationName = getResearchOutputAssociationName(
-    props,
-    isProjectOutputsEnabled,
-  );
+  const association = getResearchOutputAssociation(props);
+  const associationName = getResearchOutputAssociationName(props);
   const isProjectOutput = association === 'project';
   const isTeamBasedProjectOutput =
     isProjectOutput && props.publishingEntity !== 'Project';

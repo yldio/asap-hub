@@ -70,10 +70,8 @@ const useManuscriptById = jest.fn().mockImplementation(() => {
 
 const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> & {
-  teamId: string;
   useManuscriptById: jest.Mock;
 } = {
-  teamId: 'team-1',
   useManuscriptById,
   manuscript: workspaceManuscript,
   user: {
@@ -362,7 +360,7 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
   ).toBeVisible();
 });
 
-it('redirects to compliance report form when user clicks on share compliance report button', async () => {
+it('does not navigate when sharing a compliance report without a project or href', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
     <MemoryRouter>
@@ -385,12 +383,10 @@ it('redirects to compliance report form when user clicks on share compliance rep
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   );
 
-  expect(currentLocation?.pathname).toBe(
-    `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.manuscript.id}`,
-  );
+  expect(currentLocation?.pathname).toBe('/');
 });
 
-it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', async () => {
+it('does not navigate when resubmitting a manuscript without a project or href', async () => {
   const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
@@ -432,9 +428,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
   );
 
-  expect(currentLocation?.pathname).toBe(
-    `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.manuscript.id}`,
-  );
+  expect(currentLocation?.pathname).toBe('/');
 });
 
 it('uses override getCreateComplianceReportHref for the share compliance report button', async () => {
@@ -651,7 +645,7 @@ it('project route takes precedence over injected getEditManuscriptHref when manu
               <ManuscriptCard
                 {...props}
                 getEditManuscriptHref={() =>
-                  `/network/teams/${props.teamId}/workspace/edit-manuscript/${props.manuscript.id}`
+                  `/network/teams/team-1/workspace/edit-manuscript/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [{ ...mockVersion, firstAuthors: [user] }],
@@ -686,7 +680,7 @@ it('project route takes precedence over injected getCreateComplianceReportHref w
                 {...props}
                 isComplianceReviewer
                 getCreateComplianceReportHref={() =>
-                  `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.manuscript.id}`
+                  `/network/teams/team-1/workspace/create-compliance-report/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [],
@@ -722,7 +716,7 @@ it('project route takes precedence over injected getResubmitManuscriptHref when 
               <ManuscriptCard
                 {...props}
                 getResubmitManuscriptHref={() =>
-                  `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.manuscript.id}`
+                  `/network/teams/team-1/workspace/resubmit-manuscript/${props.manuscript.id}`
                 }
                 useManuscriptById={mockUseManuscriptById({
                   versions: [

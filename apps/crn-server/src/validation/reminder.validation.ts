@@ -3,14 +3,12 @@ import { JSONSchemaType } from 'ajv';
 
 type ReminderParameters = {
   timezone: string;
-  includeProjectReminders?: boolean;
 };
 
 const reminderParametersValidationSchema: JSONSchemaType<ReminderParameters> = {
   type: 'object',
   properties: {
     timezone: { type: 'string' },
-    includeProjectReminders: { type: 'boolean', nullable: true },
   },
   required: ['timezone'],
   additionalProperties: false,

@@ -121,11 +121,10 @@ const buildWorkspacePathForTeam = (
   manuscript: ManuscriptWorkspaceContext,
   teamId: string,
   options: WorkspacePathOptions,
-  useProjectWorkspace: boolean,
 ): string => {
   const projectLinkedToTeam = manuscript.projectsByTeamId[teamId];
 
-  if (useProjectWorkspace && projectLinkedToTeam) {
+  if (projectLinkedToTeam) {
     return buildProjectWorkspacePath(
       projectLinkedToTeam,
       manuscript.manuscriptId,
@@ -160,26 +159,19 @@ const resolveCollaboratorPath = (
   manuscript: ManuscriptWorkspaceContext,
   user: ManuscriptWorkspaceUserContext,
   options: WorkspacePathOptions,
-  useProjectWorkspace: boolean,
 ): string | null => {
   const collaborationTeamId = getUserCollaboratingTeamId(manuscript, user);
   if (!collaborationTeamId) {
     return null;
   }
 
-  return buildWorkspacePathForTeam(
-    manuscript,
-    collaborationTeamId,
-    options,
-    useProjectWorkspace,
-  );
+  return buildWorkspacePathForTeam(manuscript, collaborationTeamId, options);
 };
 
 const resolveTeamBasedManuscriptPath = (
   manuscript: ManuscriptWorkspaceContext,
   user: ManuscriptWorkspaceUserContext,
   options: WorkspacePathOptions,
-  useProjectWorkspace: boolean,
 ): string | null => {
   if (
     manuscript.submittingTeamId &&
@@ -189,24 +181,17 @@ const resolveTeamBasedManuscriptPath = (
       manuscript,
       manuscript.submittingTeamId,
       options,
-      useProjectWorkspace,
     );
   }
 
-  return resolveCollaboratorPath(
-    manuscript,
-    user,
-    options,
-    useProjectWorkspace,
-  );
+  return resolveCollaboratorPath(manuscript, user, options);
 };
 
 const resolveOpenScienceMemberPath = (
   manuscript: ManuscriptWorkspaceContext,
   options: WorkspacePathOptions,
-  useProjectWorkspace: boolean,
 ): string | null => {
-  if (useProjectWorkspace && isUserBasedManuscript(manuscript)) {
+  if (isUserBasedManuscript(manuscript)) {
     return buildProjectWorkspacePath(
       manuscript.project,
       manuscript.manuscriptId,
@@ -222,30 +207,24 @@ const resolveOpenScienceMemberPath = (
     manuscript,
     manuscript.submittingTeamId,
     options,
-    useProjectWorkspace,
   );
 };
 
 export const resolveManuscriptWorkspacePath = (
   manuscript: ManuscriptWorkspaceContext,
   user: ManuscriptWorkspaceUserContext,
-  options?: { tab?: ManuscriptWorkspaceTab; projectWorkspaceEnabled?: boolean },
+  options?: { tab?: ManuscriptWorkspaceTab },
 ): string | null => {
   const pathOptions: WorkspacePathOptions = {
     tab: options?.tab,
   };
-  const useProjectWorkspace = options?.projectWorkspaceEnabled ?? false;
 
   if (user.openScienceTeamMember) {
-    return resolveOpenScienceMemberPath(
-      manuscript,
-      pathOptions,
-      useProjectWorkspace,
-    );
+    return resolveOpenScienceMemberPath(manuscript, pathOptions);
   }
 
   if (isUserBasedManuscript(manuscript)) {
-    if (useProjectWorkspace && isUserPartOfProject(user, manuscript.project)) {
+    if (isUserPartOfProject(user, manuscript.project)) {
       return buildProjectWorkspacePath(
         manuscript.project,
         manuscript.manuscriptId,
@@ -253,18 +232,8 @@ export const resolveManuscriptWorkspacePath = (
       );
     }
 
-    return resolveCollaboratorPath(
-      manuscript,
-      user,
-      pathOptions,
-      useProjectWorkspace,
-    );
+    return resolveCollaboratorPath(manuscript, user, pathOptions);
   }
 
-  return resolveTeamBasedManuscriptPath(
-    manuscript,
-    user,
-    pathOptions,
-    useProjectWorkspace,
-  );
+  return resolveTeamBasedManuscriptPath(manuscript, user, pathOptions);
 };

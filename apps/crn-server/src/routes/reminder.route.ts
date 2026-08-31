@@ -20,8 +20,7 @@ export const reminderRouteFactory = (
       }
 
       const parameters = req.query;
-      const { timezone, includeProjectReminders } =
-        validateReminderParameters(parameters);
+      const { timezone } = validateReminderParameters(parameters);
 
       if (!DateTime.local().setZone(timezone).isValid) {
         throw Boom.badRequest('Validation error', {
@@ -32,7 +31,6 @@ export const reminderRouteFactory = (
       const result = await reminderController.fetch({
         userId: req.loggedInUser.id,
         timezone,
-        includeProjectReminders: includeProjectReminders ?? undefined,
       });
 
       res.json(result);

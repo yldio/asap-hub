@@ -101,8 +101,8 @@ export const Normal = () => {
     'Active Tab',
     {
       About: route.about({}).$,
-      Outputs: route.outputs({}).$,
-      Workspace: route.workspace({}).$,
+      'Upcoming Events': route.upcoming({}).$,
+      'Past Events': route.past({}).$,
     },
     route.about({}).$,
   );

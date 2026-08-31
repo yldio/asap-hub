@@ -532,7 +532,6 @@ export class ManuscriptContentfulDataProvider
       projectId,
       userId,
       notificationList = '',
-      useProjectBasedEmail,
       versions: [version],
       ...plainFields
     } = input;
@@ -575,8 +574,6 @@ export class ManuscriptContentfulDataProvider
       'manuscript_submitted',
       manuscriptEntry.sys.id,
       notificationList,
-      undefined,
-      useProjectBasedEmail,
     );
 
     return manuscriptEntry.sys.id;
@@ -589,7 +586,6 @@ export class ManuscriptContentfulDataProvider
     const {
       userId,
       notificationList = '',
-      useProjectBasedEmail,
       versions: [version],
       url,
       title,
@@ -636,8 +632,6 @@ export class ManuscriptContentfulDataProvider
       'manuscript_resubmitted',
       id,
       notificationList,
-      undefined,
-      useProjectBasedEmail,
     );
   }
 
@@ -675,8 +669,6 @@ export class ManuscriptContentfulDataProvider
           statusUpdateAction,
           id,
           notificationList,
-          undefined,
-          manuscriptData.useProjectBasedEmail,
         );
       }
     }

@@ -65,7 +65,7 @@ describe('getReminders', () => {
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/reminders')
-      .query({ timezone: 'UTC', includeProjectReminders: 'true' })
+      .query({ timezone: 'UTC' })
       .reply(200, reminderResponse);
 
     const result = await getReminders('Bearer x');
@@ -75,7 +75,7 @@ describe('getReminders', () => {
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/reminders')
-      .query({ timezone: 'UTC', includeProjectReminders: 'true' })
+      .query({ timezone: 'UTC' })
       .reply(500);
 
     await expect(

@@ -4,7 +4,6 @@ import {
   ManuscriptVersion,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -34,7 +33,6 @@ import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
-  teamId: string;
   manuscriptId: string;
   isActiveVersion?: boolean;
   isManuscriptContributor?: boolean;
@@ -42,7 +40,7 @@ type ManuscriptVersionCardProps = {
   impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
   showTeamName?: boolean;
-  getEditManuscriptHref?: (manuscriptId: string) => string;
+  getEditManuscriptHref?: (manuscriptId: string) => string | undefined;
 };
 
 const toastStyles = css({
@@ -186,7 +184,6 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
-  teamId,
   manuscriptId,
   isActiveVersion = false,
   isManuscriptContributor = false,
@@ -226,13 +223,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const updatedByData = getUpdatedByData();
 
-  const editManuscriptRoute = getEditManuscriptHref
-    ? getEditManuscriptHref(manuscriptId)
-    : network({})
-        .teams({})
-        .team({ teamId })
-        .workspace({})
-        .editManuscript({ manuscriptId }).$;
+  const editManuscriptRoute = getEditManuscriptHref?.(manuscriptId);
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {

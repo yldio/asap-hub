@@ -197,7 +197,7 @@ describe('Manuscript controller', () => {
       });
     });
 
-    test('Should return the project workspace URL when projectWorkspaceEnabled is true', async () => {
+    test('Should return the project workspace URL when the team has a linked project', async () => {
       const user = {
         ...getUserResponse(),
         teams: [{ ...getUserResponse().teams[0]!, id: 'team-1' }],
@@ -224,8 +224,6 @@ describe('Manuscript controller', () => {
       const result = await manuscriptController.fetchWorkspaceUrl(
         'manuscript-id-1',
         user,
-        undefined,
-        true,
       );
 
       expect(result).toEqual({

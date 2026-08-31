@@ -115,7 +115,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   }
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
-    const { timezone, userId, includeProjectReminders = false } = options;
+    const { timezone, userId } = options;
     const eventFilter = getEventFilter(timezone);
     const researchOutputFilter = getResearchOutputFilter(timezone);
     const manuscriptFilter = getManuscriptFilter(timezone);
@@ -182,7 +182,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputVersionCollectionItems,
         user,
         timezone,
-        includeProjectReminders,
       );
 
     const publishedResearchOutputReminders =
@@ -190,7 +189,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
-        includeProjectReminders,
       );
 
     const draftResearchOutputReminders =
@@ -198,14 +196,12 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
-        includeProjectReminders,
       );
 
     const inReviewResearchOutputReminders =
       getInReviewResearchOutputRemindersFromQuery(
         researchOutputsCollectionItems,
         user,
-        includeProjectReminders,
       );
 
     const switchToDraftResearchOutputReminders =
@@ -213,7 +209,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         researchOutputsCollectionItems,
         user,
         timezone,
-        includeProjectReminders,
       );
 
     const eventHappeningNowOrTodayReminders =
@@ -257,7 +252,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       user,
       userId,
       timezone,
-      includeProjectReminders,
     );
 
     const discussionReminders = getDiscussionRemindersFromQuery(
@@ -265,14 +259,12 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       user,
       userId,
       timezone,
-      includeProjectReminders,
     );
 
     const repliesReminders = getReplyRemindersFromQuery(
       messagesCollectionItems,
       user,
       userId,
-      includeProjectReminders,
     );
 
     const reminders = [
@@ -695,7 +687,6 @@ const getPublishedResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
-  includeProjectReminders: boolean,
 ): ResearchOutputPublishedReminder[] => {
   if (
     !user ||
@@ -722,10 +713,8 @@ const getPublishedResearchOutputRemindersFromQuery = (
     )
       return researchOutputReminders;
 
-    const { associationName, associationType } = getAssociationNameAndType(
-      researchOutput,
-      includeProjectReminders,
-    );
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
     const userName = getUserName(researchOutput);
 
     const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
@@ -777,7 +766,6 @@ const getDraftResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
-  includeProjectReminders: boolean,
 ): ResearchOutputDraftReminder[] => {
   if (
     !user ||
@@ -808,10 +796,8 @@ const getDraftResearchOutputRemindersFromQuery = (
       )
         return researchOutputReminders;
 
-      const { associationName, associationType } = getAssociationNameAndType(
-        researchOutput,
-        includeProjectReminders,
-      );
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
 
       const researchOutputTeamIds = (
         researchOutput?.teamsCollection?.items || []
@@ -862,7 +848,6 @@ const getDraftResearchOutputRemindersFromQuery = (
 const getInReviewResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
-  includeProjectReminders: boolean,
 ): ResearchOutputInReviewReminder[] => {
   if (
     !user ||
@@ -891,10 +876,8 @@ const getInReviewResearchOutputRemindersFromQuery = (
     )
       return researchOutputReminders;
 
-    const { associationName, associationType } = getAssociationNameAndType(
-      researchOutput,
-      includeProjectReminders,
-    );
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
 
     const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
       .filter((teamItem) => teamItem?.sys.id !== undefined)
@@ -943,7 +926,6 @@ const getSwitchToDraftResearchOutputRemindersFromQuery = (
   researchOutputsCollectionItems: ResearchOutputItem[],
   user: User,
   zone: string,
-  includeProjectReminders: boolean,
 ): ResearchOutputSwitchToDraftReminder[] => {
   if (
     !user ||
@@ -1002,9 +984,7 @@ const getSwitchToDraftResearchOutputRemindersFromQuery = (
     ) {
       const { firstName, lastName } = researchOutput.statusChangedBy;
       const isProjectOutput =
-        includeProjectReminders &&
-        associationType === 'team' &&
-        isProjectLinkedOutput(researchOutput);
+        associationType === 'team' && isProjectLinkedOutput(researchOutput);
 
       researchOutputReminders.push({
         id: `research-output-switch-to-draft-${researchOutput.sys.id}`,
@@ -1030,7 +1010,6 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
   items: ResearchOutputVersionItem[],
   user: User,
   zone: string,
-  includeProjectReminders: boolean,
 ): ResearchOutputVersionPublishedReminder[] => {
   if (!user || !user.teamsCollection?.items || !items.length) {
     return [];
@@ -1067,10 +1046,8 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
         return reminders;
       }
 
-      const { associationName, associationType } = getAssociationNameAndType(
-        researchOutput,
-        includeProjectReminders,
-      );
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
 
       const researchOutputTeamIds = (
         researchOutput.teamsCollection?.items || []
@@ -1196,7 +1173,6 @@ const getManuscriptRemindersFromQuery = (
   user: User,
   userId: string,
   timezone: string,
-  includeProjectReminders: boolean,
 ): ManuscriptReminder[] => {
   if (!user || !manuscriptsCollectionItems.length) return [];
 
@@ -1205,8 +1181,6 @@ const getManuscriptRemindersFromQuery = (
 
   return manuscriptsCollectionItems.reduce<ManuscriptReminder[]>(
     (reminders, manuscript) => {
-      if (!isTeamBasedManuscript(manuscript) && !includeProjectReminders)
-        return reminders;
       if (!isValidManuscriptItem(manuscript)) return reminders;
       const manuscriptItem = {
         ...manuscript,
@@ -1235,12 +1209,7 @@ const getManuscriptRemindersFromQuery = (
           ) &&
           isAssignedUser
         ) {
-          reminders.push(
-            createManuscriptResubmittedReminder(
-              manuscriptItem,
-              includeProjectReminders,
-            ),
-          );
+          reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
         } else if (
           inLast7Days(manuscriptItem.sys.firstPublishedAt, timezone) &&
           isReminderForDifferentUser(
@@ -1248,12 +1217,7 @@ const getManuscriptRemindersFromQuery = (
             userId,
           )
         ) {
-          reminders.push(
-            createManuscriptCreatedReminder(
-              manuscriptItem,
-              includeProjectReminders,
-            ),
-          );
+          reminders.push(createManuscriptCreatedReminder(manuscriptItem));
         }
 
         return reminders;
@@ -1274,12 +1238,7 @@ const getManuscriptRemindersFromQuery = (
           userId,
         )
       ) {
-        reminders.push(
-          createManuscriptResubmittedReminder(
-            manuscriptItem,
-            includeProjectReminders,
-          ),
-        );
+        reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
       } else if (
         inLast7Days(manuscript.sys.firstPublishedAt, timezone) &&
         isReminderForDifferentUser(
@@ -1294,12 +1253,7 @@ const getManuscriptRemindersFromQuery = (
           (isTeamBasedManuscript(manuscriptItem) &&
             isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
-        reminders.push(
-          createManuscriptCreatedReminder(
-            manuscriptItem,
-            includeProjectReminders,
-          ),
-        );
+        reminders.push(createManuscriptCreatedReminder(manuscriptItem));
       }
 
       if (
@@ -1313,12 +1267,7 @@ const getManuscriptRemindersFromQuery = (
           (isTeamBasedManuscript(manuscriptItem) &&
             isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId)))
       ) {
-        reminders.push(
-          createManuscriptStatusUpdatedReminder(
-            manuscriptItem,
-            includeProjectReminders,
-          ),
-        );
+        reminders.push(createManuscriptStatusUpdatedReminder(manuscriptItem));
       }
 
       return reminders;
@@ -1332,7 +1281,6 @@ const getDiscussionRemindersFromQuery = (
   user: User,
   userId: string,
   timezone: string,
-  includeProjectReminders: boolean,
 ): DiscussionReminder[] => {
   if (!user || !discussionItems.length) return [];
 
@@ -1347,7 +1295,6 @@ const getDiscussionRemindersFromQuery = (
       const manuscriptVersion = manuscript?.versionsCollection
         ?.items[0] as ManuscriptVersion;
       const isTeamBased = isTeamBasedManuscriptVersion(manuscriptVersion);
-      if (!isTeamBased && !includeProjectReminders) return reminders;
 
       const isManuscriptContributor =
         isManuscriptProjectManagerOrLeadPI(
@@ -1370,22 +1317,14 @@ const getDiscussionRemindersFromQuery = (
           isManuscriptContributor
         ) {
           reminders.push(
-            createDiscussionCreatedReminder(
-              discussion,
-              'Open Science Member',
-              includeProjectReminders,
-            ),
+            createDiscussionCreatedReminder(discussion, 'Open Science Member'),
           );
         } else if (
           !isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
           (isManuscriptContributor || isAssignedUser)
         ) {
           reminders.push(
-            createDiscussionCreatedReminder(
-              discussion,
-              'Grantee',
-              includeProjectReminders,
-            ),
+            createDiscussionCreatedReminder(discussion, 'Grantee'),
           );
         }
       }
@@ -1400,7 +1339,6 @@ const getReplyRemindersFromQuery = (
   messageItems: MessageItem[],
   user: User,
   userId: string,
-  includeProjectReminders: boolean,
 ): DiscussionReminder[] => {
   if (!user || !messageItems.length) return [];
 
@@ -1423,7 +1361,6 @@ const getReplyRemindersFromQuery = (
       const manuscriptVersion = manuscript?.versionsCollection
         ?.items[0] as ManuscriptVersion;
       const isTeamBased = isTeamBasedManuscriptVersion(manuscriptVersion);
-      if (!isTeamBased && !includeProjectReminders) return reminders;
 
       const isAssignedUser = manuscript?.assignedUsersCollection?.items.some(
         (assignedUser) => assignedUser?.sys.id === userId,
@@ -1443,23 +1380,13 @@ const getReplyRemindersFromQuery = (
         isManuscriptContributor
       ) {
         reminders.push(
-          createDiscussionRepliedToReminder(
-            message,
-            'Open Science Member',
-            includeProjectReminders,
-          ),
+          createDiscussionRepliedToReminder(message, 'Open Science Member'),
         );
       } else if (
         !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
         (isManuscriptContributor || isAssignedUser)
       ) {
-        reminders.push(
-          createDiscussionRepliedToReminder(
-            message,
-            'Grantee',
-            includeProjectReminders,
-          ),
-        );
+        reminders.push(createDiscussionRepliedToReminder(message, 'Grantee'));
       }
     }
     return reminders;
@@ -1516,18 +1443,13 @@ const getTeamLinkedProjectTitle = (
 
 const getManuscriptAssociationName = (
   manuscript: ValidManuscriptItem,
-  includeProjectReminders: boolean,
 ): string => {
   if (!isTeamBasedManuscript(manuscript)) {
     return manuscript.project?.title || '';
   }
 
-  const projectTitle = includeProjectReminders
-    ? getTeamLinkedProjectTitle(manuscript.teamsCollection)
-    : undefined;
-
   return (
-    projectTitle ||
+    getTeamLinkedProjectTitle(manuscript.teamsCollection) ||
     getTeamNames(
       manuscript.teamsCollection?.items.map((team) => team?.displayName),
     )
@@ -1537,18 +1459,13 @@ const getManuscriptAssociationName = (
 const getDiscussionManuscriptAssociationName = (
   manuscript: Maybe<{ project?: Maybe<{ title?: Maybe<string> }> }> | undefined,
   manuscriptVersion: ManuscriptVersion | undefined,
-  includeProjectReminders: boolean,
 ): string => {
   if (!isTeamBasedManuscriptVersion(manuscriptVersion)) {
     return manuscript?.project?.title || '';
   }
 
-  const projectTitle = includeProjectReminders
-    ? getTeamLinkedProjectTitle(manuscriptVersion?.teamsCollection)
-    : undefined;
-
   return (
-    projectTitle ||
+    getTeamLinkedProjectTitle(manuscriptVersion?.teamsCollection) ||
     getTeamNames(
       manuscriptVersion?.teamsCollection?.items.map(
         (teams) => teams?.displayName,
@@ -1559,7 +1476,6 @@ const getDiscussionManuscriptAssociationName = (
 
 const createManuscriptCreatedReminder = (
   manuscript: ValidManuscriptItem,
-  includeProjectReminders: boolean,
 ): ManuscriptCreatedReminder => ({
   id: `manuscript-created-${manuscript.sys.id}`,
   entity: 'Manuscript',
@@ -1567,7 +1483,7 @@ const createManuscriptCreatedReminder = (
   data: {
     manuscriptId: manuscript.sys.id,
     title: manuscript.title || '',
-    teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
+    teams: getManuscriptAssociationName(manuscript),
     createdBy: `${manuscript.versionsCollection.items[0]?.createdBy?.firstName} ${manuscript.versionsCollection.items[0]?.createdBy?.lastName}`,
     publishedAt: manuscript.sys.firstPublishedAt,
   },
@@ -1575,7 +1491,6 @@ const createManuscriptCreatedReminder = (
 
 const createManuscriptResubmittedReminder = (
   manuscript: ValidManuscriptItem,
-  includeProjectReminders: boolean,
 ): ManuscriptResubmittedReminder => {
   const manuscriptVersions = manuscript.versionsCollection.items || [];
 
@@ -1588,7 +1503,7 @@ const createManuscriptResubmittedReminder = (
     data: {
       manuscriptId: manuscript.sys.id,
       title: manuscript.title || '',
-      teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
+      teams: getManuscriptAssociationName(manuscript),
       resubmittedBy: `${lastVersion?.createdBy?.firstName} ${lastVersion?.createdBy?.lastName}`,
       resubmittedAt: manuscript.sys.publishedAt,
     },
@@ -1598,7 +1513,6 @@ const createManuscriptResubmittedReminder = (
 const createDiscussionCreatedReminder = (
   discussion: ValidDiscussionItem,
   actor: 'Grantee' | 'Open Science Member',
-  includeProjectReminders: boolean,
 ): DiscussionCreatedReminder => {
   const manuscript = discussion.linkedFrom?.manuscriptsCollection?.items[0];
   const manuscriptVersion = manuscript?.versionsCollection?.items[0];
@@ -1608,7 +1522,6 @@ const createDiscussionCreatedReminder = (
   const manuscriptTeams = getDiscussionManuscriptAssociationName(
     manuscript,
     manuscriptVersion as ManuscriptVersion,
-    includeProjectReminders,
   );
 
   return {
@@ -1632,7 +1545,6 @@ const createDiscussionCreatedReminder = (
 const createDiscussionRepliedToReminder = (
   message: ValidMessageItem,
   actor: 'Grantee' | 'Open Science Member',
-  includeProjectReminders: boolean,
 ): DiscussionRepliedToReminder => {
   const discussion = message.linkedFrom.discussionsCollection.items[0];
 
@@ -1642,7 +1554,6 @@ const createDiscussionRepliedToReminder = (
   const manuscriptTeams = getDiscussionManuscriptAssociationName(
     manuscript,
     manuscriptVersion as ManuscriptVersion,
-    includeProjectReminders,
   );
   const userTeams = message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
@@ -1668,7 +1579,6 @@ const createDiscussionRepliedToReminder = (
 
 const createManuscriptStatusUpdatedReminder = (
   manuscript: ValidManuscriptItem,
-  includeProjectReminders: boolean,
 ): ManuscriptStatusUpdatedReminder => ({
   id: `manuscript-status-updated-${manuscript.sys.id}`,
   entity: 'Manuscript',
@@ -1678,7 +1588,7 @@ const createManuscriptStatusUpdatedReminder = (
     title: manuscript.title || '',
     status: manuscript.status as ManuscriptStatus,
     previousStatus: manuscript.previousStatus as ManuscriptStatus,
-    teams: getManuscriptAssociationName(manuscript, includeProjectReminders),
+    teams: getManuscriptAssociationName(manuscript),
     updatedBy: `${manuscript.statusUpdatedBy?.firstName} ${manuscript.statusUpdatedBy?.lastName}`,
     updatedAt: manuscript.statusUpdatedAt,
   },
@@ -1821,7 +1731,7 @@ const getAssociationNameAndType = (
     ResearchOutputItem,
     'workingGroup' | 'teamsCollection' | 'project'
   >,
-  includeProjectReminders: boolean,
+  includeProjectAssociation = true,
 ): {
   associationType: 'team' | 'working group' | 'project' | null;
   associationName: string | null;
@@ -1837,7 +1747,7 @@ const getAssociationNameAndType = (
     researchOutput.teamsCollection &&
     researchOutput.teamsCollection.items[0]?.displayName
   ) {
-    const projectTitle = includeProjectReminders
+    const projectTitle = includeProjectAssociation
       ? researchOutput.project?.title ||
         getTeamLinkedProjectTitle(researchOutput.teamsCollection)
       : undefined;

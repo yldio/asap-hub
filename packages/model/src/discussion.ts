@@ -37,7 +37,6 @@ export type DiscussionUpdateDataObject = {
   reply?: Reply;
   manuscriptId?: string;
   notificationList?: string;
-  useProjectBasedEmail?: boolean;
 };
 
 export type DiscussionRequest = {
@@ -45,7 +44,6 @@ export type DiscussionRequest = {
   files?: ManuscriptFileResponse[];
   manuscriptId: string;
   notificationList?: string;
-  useProjectBasedEmail?: boolean;
 };
 
 export type DiscussionEndRequest = {
@@ -58,7 +56,6 @@ export type DiscussionCreateRequest = {
   text: string;
   files?: ManuscriptFileResponse[];
   notificationList?: string;
-  useProjectBasedEmail?: boolean;
 };
 
 export type DiscussionCreateDataObject = DiscussionCreateRequest & {

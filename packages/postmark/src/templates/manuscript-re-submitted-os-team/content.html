@@ -2,16 +2,14 @@
   <p>Dear {{ assignedOSMembers }},</p>
   <p>
     This message is to inform you that a grantee has submitted a new version of
-    a manuscript for {{ manuscript.type }} {{#useProjectBasedEmail}}<a
-      href="{{{ ../manuscript.link }}}"
-      >{{ ../manuscript.title }}</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}{{ ../manuscript.title
-    }}{{/useProjectBasedEmail}} ({{ manuscript.id }}). Please check the
-    {{#useProjectBasedEmail}}<a href="{{{ ../project.workspace }}}"
-      >Project {{ ../project.name }} workspace</a
-    >{{/useProjectBasedEmail}}{{^useProjectBasedEmail}}<a
-      href="{{{ ../team.workspace }}}"
-      >Team {{ ../team.name }} workspace</a
-    >{{/useProjectBasedEmail}} on the Hub to initiate a new compliance review.
+    a manuscript for {{ manuscript.type }}
+    <a href="{{{ manuscript.link }}}">{{ manuscript.title }}</a> ({{
+    manuscript.id }}). Please check the {{#project.workspace}}<a
+      href="{{{ project.workspace }}}"
+      >Project {{ project.name }} workspace</a
+    >{{/project.workspace}}{{^project.workspace}}<a
+      href="{{{ manuscript.link }}}"
+      >manuscript's compliance page</a
+    >{{/project.workspace}} on the Hub to initiate a new compliance review.
   </p>
 </div>

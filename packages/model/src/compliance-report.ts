@@ -52,7 +52,6 @@ export type ComplianceReportPostRequest = Omit<
     status: ManuscriptStatus;
     manuscriptId: string;
     notificationList?: string;
-    useProjectBasedEmail?: boolean;
   },
   'userId'
 >;

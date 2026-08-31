@@ -582,7 +582,7 @@ describe('Reminders data provider', () => {
 
     describe('User-based project manuscripts', () => {
       const projectName = 'Genetic Determinants of Progression';
-      const fetchOptions = { timezone, includeProjectReminders: true };
+      const fetchOptions = { timezone };
 
       const getExpectedCreatedReminder = (): ManuscriptCreatedReminder => {
         const reminder = getManuscriptCreatedReminder();
@@ -600,18 +600,6 @@ describe('Reminders data provider', () => {
           ...fetchOptions,
         });
         expect(result.items).toEqual([getExpectedCreatedReminder()]);
-      });
-
-      test('does not return any reminders when includeProjectReminders is not enabled', async () => {
-        mockContentfulGraphqlResponse(
-          getContentfulReminderProjectManuscriptCollectionItem(),
-        );
-
-        const result = await remindersDataProvider.fetch({
-          userId: 'first-author-user',
-          timezone,
-        });
-        expect(result.items).toEqual([]);
       });
 
       test('the person who created the manuscript should not see manuscript created reminders', async () => {
@@ -849,29 +837,17 @@ describe('Reminders data provider', () => {
         return manuscript;
       };
 
-      test('shows the linked project name when includeProjectReminders is enabled', async () => {
+      test('shows the linked project name', async () => {
         mockContentfulGraphqlResponse(getTeamManuscriptWithLinkedProject());
 
         const result = await remindersDataProvider.fetch({
           userId: 'first-author-user',
           timezone,
-          includeProjectReminders: true,
         });
 
         const expectedReminder = getManuscriptCreatedReminder();
         expectedReminder.data.teams = 'Team Linked Project';
         expect(result.items).toEqual([expectedReminder]);
-      });
-
-      test('shows team names when includeProjectReminders is not enabled', async () => {
-        mockContentfulGraphqlResponse(getTeamManuscriptWithLinkedProject());
-
-        const result = await remindersDataProvider.fetch({
-          userId: 'first-author-user',
-          timezone,
-        });
-
-        expect(result.items).toEqual([getManuscriptCreatedReminder()]);
       });
 
       test('falls back to team names when the team has no linked project', async () => {
@@ -882,7 +858,6 @@ describe('Reminders data provider', () => {
         const result = await remindersDataProvider.fetch({
           userId: 'first-author-user',
           timezone,
-          includeProjectReminders: true,
         });
 
         expect(result.items).toEqual([getManuscriptCreatedReminder()]);

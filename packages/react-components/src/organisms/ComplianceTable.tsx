@@ -6,7 +6,6 @@ import {
   PartialManuscriptResponse,
   SortCompliance,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { Card, Pill } from '../atoms';
@@ -110,8 +109,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   data,
   getAssignedUsersSuggestions,
 }) => {
-  const { isEnabled } = useFlags();
-  const displayProjectColumn = isEnabled('PROJECT_WORKSPACE');
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const [displayAssignUsersModal, setDisplayAssignUsersModal] = useState(false);
@@ -240,9 +237,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
               <th css={[titleStyles, idColumnStyles]} className={'sticky'}>
                 ID
               </th>
-              {displayProjectColumn && (
-                <th css={[titleStyles, projectColumnStyles]}>Project</th>
-              )}
+              <th css={[titleStyles, projectColumnStyles]}>Project</th>
               <th css={[titleStyles, teamColumnStyles]}>Team</th>
               <th css={[titleStyles, lastUpdatedColumnStyles]}>Last Updated</th>
               <th css={[titleStyles, statusColumnStyles]}>Status</th>
@@ -258,7 +253,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                 key={`${row.id}-${row.status}`}
                 data={row}
                 isComplianceReviewer={isComplianceReviewer}
-                displayProjectColumn={displayProjectColumn}
                 getAssignedUsersSuggestions={getAssignedUsersSuggestions}
                 handleAssignUsersClick={handleAssignUsersClick}
                 handleUpdateAPCDetailsClick={handleUpdateAPCDetailsClick}

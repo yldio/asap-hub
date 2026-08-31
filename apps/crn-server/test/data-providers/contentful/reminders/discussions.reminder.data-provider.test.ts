@@ -547,7 +547,7 @@ describe('Reminders data provider', () => {
         },
         title: projectName,
       };
-      const fetchOptions = { timezone, includeProjectReminders: true };
+      const fetchOptions = { timezone };
 
       const getProjectDiscussion = () => {
         const discussion = getContentfulReminderDiscussionCollectionItem();
@@ -598,16 +598,6 @@ describe('Reminders data provider', () => {
         expect(result.items).toEqual([expectedReminder]);
       });
 
-      test('does not return discussion started reminders when includeProjectReminders is not enabled', async () => {
-        mockContentfulGraphqlResponse(getProjectDiscussion(), null);
-
-        const result = await remindersDataProvider.fetch({
-          userId: 'first-author-user',
-          timezone,
-        });
-        expect(result.items).toEqual([]);
-      });
-
       test('PI of the manuscript lab should not see discussion started reminders', async () => {
         const discussion = getProjectDiscussion();
         discussion!.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.labsCollection =
@@ -642,16 +632,6 @@ describe('Reminders data provider', () => {
           ...fetchOptions,
         });
         expect(result.items).toEqual([expectedReminder]);
-      });
-
-      test('does not return discussion replied to reminders when includeProjectReminders is not enabled', async () => {
-        mockContentfulGraphqlResponse(null, getProjectMessage());
-
-        const result = await remindersDataProvider.fetch({
-          userId: 'first-author-user',
-          timezone,
-        });
-        expect(result.items).toEqual([]);
       });
 
       test('os member assigned to the manuscript should see discussion replied to reminders', async () => {
@@ -725,24 +705,11 @@ describe('Reminders data provider', () => {
         });
       };
 
-      test('shows the linked project name when includeProjectReminders is enabled', async () => {
+      test('shows the linked project name', async () => {
         mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
 
         const expectedReminder = getDiscussionStartedByGranteeReminder();
         expectedReminder.data.manuscriptTeams = 'Team Linked Project';
-
-        const result = await remindersDataProvider.fetch({
-          userId: 'first-author-user',
-          timezone,
-          includeProjectReminders: true,
-        });
-        expect(result.items).toEqual([expectedReminder]);
-      });
-
-      test('shows team names when includeProjectReminders is not enabled', async () => {
-        mockContentfulGraphqlResponse(getTeamDiscussionWithLinkedProject()!);
-
-        const expectedReminder = getDiscussionStartedByGranteeReminder();
 
         const result = await remindersDataProvider.fetch({
           userId: 'first-author-user',

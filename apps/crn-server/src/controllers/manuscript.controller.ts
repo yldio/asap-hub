@@ -60,7 +60,6 @@ export default class ManuscriptController {
     manuscriptId: string,
     user: UserResponse,
     tab?: ManuscriptWorkspaceTab,
-    projectWorkspaceEnabled?: boolean,
   ): Promise<ManuscriptWorkspaceUrlResponse> {
     const manuscript = await this.manuscriptDataProvider.fetchById(
       manuscriptId,
@@ -86,7 +85,6 @@ export default class ManuscriptController {
 
     const url = resolveManuscriptWorkspacePath(workspaceContext, user, {
       tab,
-      projectWorkspaceEnabled,
     });
 
     if (!url) {

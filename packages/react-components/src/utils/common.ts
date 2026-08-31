@@ -95,26 +95,21 @@ export const splitListBy = <T>(
 
 // A team-based project output is shared through a team (publishingEntity is
 // 'Team') but originates from a project workspace, so it carries the project
-// link on its team rather than at the top level. This is only surfaced when the
-// PROJECT_OUTPUTS feature flag is enabled.
+// link on its team rather than at the top level.
 const isTeamBasedProjectOutput = (
   researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
-  isProjectOutputsEnabled: boolean,
 ): boolean =>
-  isProjectOutputsEnabled &&
-  !researchOutputData.workingGroups &&
-  !!researchOutputData.teams[0]?.project;
+  !researchOutputData.workingGroups && !!researchOutputData.teams[0]?.project;
 
 export const getResearchOutputAssociation = (
   researchOutputData: Pick<
     ResearchOutputResponse,
     'workingGroups' | 'teams' | 'publishingEntity'
   >,
-  isProjectOutputsEnabled = false,
 ): ResearchOutputAssociations => {
   if (
     researchOutputData.publishingEntity === 'Project' ||
-    isTeamBasedProjectOutput(researchOutputData, isProjectOutputsEnabled)
+    isTeamBasedProjectOutput(researchOutputData)
   ) {
     return 'project';
   }
@@ -129,7 +124,6 @@ export const getResearchOutputAssociationName = (
     ResearchOutputResponse,
     'workingGroups' | 'teams' | 'project' | 'publishingEntity'
   >,
-  isProjectOutputsEnabled = false,
 ): string => {
   if (researchOutputData.publishingEntity === 'Project') {
     return researchOutputData.project?.title || '';
@@ -139,7 +133,7 @@ export const getResearchOutputAssociationName = (
     return researchOutputData.workingGroups[0].title;
   }
 
-  if (isTeamBasedProjectOutput(researchOutputData, isProjectOutputsEnabled)) {
+  if (isTeamBasedProjectOutput(researchOutputData)) {
     return researchOutputData.teams[0]?.project?.title || '';
   }
 
@@ -152,11 +146,8 @@ export const getResearchOutputAssociationPill = (
     ResearchOutputResponse,
     'workingGroups' | 'teams' | 'publishingEntity'
   >,
-  isProjectOutputsEnabled = false,
 ): 'Working Group' | 'Project' | 'Team' => {
-  switch (
-    getResearchOutputAssociation(researchOutputData, isProjectOutputsEnabled)
-  ) {
+  switch (getResearchOutputAssociation(researchOutputData)) {
     case 'working group':
       return 'Working Group';
     case 'project':

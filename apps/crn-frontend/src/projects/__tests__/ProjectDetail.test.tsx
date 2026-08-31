@@ -1,7 +1,7 @@
 import { Suspense, FC } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
-import { enable, disable, reset } from '@asap-hub/flags';
+import { reset } from '@asap-hub/flags';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
@@ -29,13 +29,19 @@ jest.mock('../../network/teams/state', () => ({
   useMarkDiscussionAsRead: jest
     .fn()
     .mockReturnValue(jest.fn().mockResolvedValue(undefined)),
-  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
   useTeamById: jest.fn(() => jest.fn().mockResolvedValue({ id: 'team-1' })),
   usePostPreprintResearchOutput: jest.fn(),
   useManuscriptVersionSuggestions: jest.fn(() =>
     jest.fn().mockResolvedValue([]),
   ),
 }));
+jest.mock('../state', () => {
+  const actual = jest.requireActual('../state');
+  return {
+    ...actual,
+    useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  };
+});
 jest.mock('../../shared-state', () => ({
   useTeamSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
   useLabSuggestions: jest.fn(() => jest.fn().mockResolvedValue([])),
@@ -476,7 +482,6 @@ describe.each(variants)(
     });
 
     it('renders Workspace tab when user is a project member and flag is enabled', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -486,14 +491,7 @@ describe.each(variants)(
       expect(screen.getByText('Workspace')).toBeInTheDocument();
     });
 
-    it('does not render Workspace tab when flag is disabled', async () => {
-      disable('PROJECT_WORKSPACE');
-      await renderProjectDetail(Component, routeKeyword, mainProjectId);
-      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
-    });
-
     it('renders workspace route with Compliance Review heading', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -513,7 +511,6 @@ describe.each(variants)(
         role: 'Staff',
         openScienceTeamMember: true,
       };
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -530,7 +527,6 @@ describe.each(variants)(
         role: 'Staff',
         openScienceTeamMember: false,
       };
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -547,7 +543,6 @@ describe.each(variants)(
         role: 'Grantee',
         openScienceTeamMember: false,
       };
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -558,7 +553,6 @@ describe.each(variants)(
     });
 
     it('renders create manuscript route via lazy loading', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -572,7 +566,6 @@ describe.each(variants)(
     });
 
     it('renders edit manuscript route via lazy loading', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -586,7 +579,6 @@ describe.each(variants)(
     });
 
     it('renders workspace when project has no contactEmail', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -600,7 +592,6 @@ describe.each(variants)(
     });
 
     it('renders resubmit manuscript route via lazy loading', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -620,7 +611,6 @@ describe.each(variants)(
         role: 'Staff',
         openScienceTeamMember: true,
       };
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -640,7 +630,6 @@ describe.each(variants)(
         role: 'Staff',
         openScienceTeamMember: true,
       };
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -654,7 +643,6 @@ describe.each(variants)(
     });
 
     it('does not render create compliance report route for project members without OS access', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -668,13 +656,11 @@ describe.each(variants)(
     });
 
     it('renders Outputs tab with count when flag is enabled', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
       expect(screen.getByText(/^Outputs \(\d+\)$/)).toBeInTheDocument();
     });
 
     it('renders Draft Outputs tab with count when flag is enabled and user is a project member', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -685,7 +671,6 @@ describe.each(variants)(
     });
 
     it('renders Draft Outputs tab with count when flag is enabled and user is a staff', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(Component, routeKeyword, mainProjectId, {
         ...memberUser,
         projects: [],
@@ -697,7 +682,6 @@ describe.each(variants)(
     });
 
     it('does not render Draft Outputs tabs when user is not a project member or staff', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -707,16 +691,8 @@ describe.each(variants)(
       expect(screen.queryByText(/^Draft Outputs/)).not.toBeInTheDocument();
     });
 
-    it('does not render Outputs or Draft Outputs tabs when flag is disabled', async () => {
-      disable('PROJECT_OUTPUTS');
-      await renderProjectDetail(Component, routeKeyword, mainProjectId);
-      expect(screen.queryByText(/^Outputs/)).not.toBeInTheDocument();
-      expect(screen.queryByText(/^Draft Outputs/)).not.toBeInTheDocument();
-    });
-
     describe('Share an Output button', () => {
       it('is displayed to a project member', async () => {
-        enable('PROJECT_OUTPUTS');
         await renderProjectDetail(
           Component,
           routeKeyword,
@@ -729,7 +705,6 @@ describe.each(variants)(
       });
 
       it('is not displayed to a user who is not a project member', async () => {
-        enable('PROJECT_OUTPUTS');
         await renderProjectDetail(
           Component,
           routeKeyword,
@@ -742,7 +717,6 @@ describe.each(variants)(
       });
 
       it('blocks the create-output route for a user who is not a project member', async () => {
-        enable('PROJECT_OUTPUTS');
         await renderProjectDetail(
           Component,
           routeKeyword,
@@ -755,7 +729,6 @@ describe.each(variants)(
     });
 
     it('renders outputs list when navigating to outputs route', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -771,7 +744,6 @@ describe.each(variants)(
     });
 
     it('renders draft outputs list when navigating to draft-outputs route', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -782,34 +754,6 @@ describe.each(variants)(
       expect(
         await screen.findByText(/Draft: Longitudinal cohort analysis/i),
       ).toBeInTheDocument();
-    });
-
-    it('does not render outputs list when flag is disabled', async () => {
-      disable('PROJECT_OUTPUTS');
-      await renderProjectDetail(
-        Component,
-        routeKeyword,
-        mainProjectId,
-        {},
-        'outputs',
-      );
-      expect(
-        screen.queryByText(/Tracing the Origin and Progression of Parkinson/i),
-      ).not.toBeInTheDocument();
-    });
-
-    it('does not render draft outputs list when flag is disabled', async () => {
-      disable('PROJECT_OUTPUTS');
-      await renderProjectDetail(
-        Component,
-        routeKeyword,
-        mainProjectId,
-        {},
-        'draft-outputs',
-      );
-      expect(
-        screen.queryByText(/Draft: Longitudinal cohort analysis/i),
-      ).not.toBeInTheDocument();
     });
 
     it('renders milestones route and covers hasSupplementGrant logic', async () => {
@@ -824,7 +768,6 @@ describe.each(variants)(
     });
 
     it('builds correct manuscript hrefs from workspace callbacks', async () => {
-      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -873,7 +816,6 @@ describe('DiscoveryProjectDetail - specific', () => {
       teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
-    enable('PROJECT_WORKSPACE');
     await renderProjectDetail(
       DiscoveryProjectDetail,
       'discovery',
@@ -886,7 +828,6 @@ describe('DiscoveryProjectDetail - specific', () => {
   });
 
   it('renders NotFoundPage when creating output for a team-based project without teamId', async () => {
-    enable('PROJECT_OUTPUTS');
     await renderProjectDetail(
       DiscoveryProjectDetail,
       'discovery',
@@ -922,7 +863,6 @@ describe('DiscoveryProjectDetail - specific', () => {
       };
       mockUseResearchOutputById.mockReturnValue(researchOutput);
 
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         DiscoveryProjectDetail,
         'discovery',
@@ -959,7 +899,6 @@ describe('DiscoveryProjectDetail - specific', () => {
       };
       mockUseResearchOutputById.mockReturnValue(researchOutput);
 
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         DiscoveryProjectDetail,
         'discovery',
@@ -979,7 +918,6 @@ describe('DiscoveryProjectDetail - specific', () => {
     it('will show a page not found if research output does not exist', async () => {
       mockUseResearchOutputById.mockReturnValue(undefined);
 
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         DiscoveryProjectDetail,
         'discovery',
@@ -1000,7 +938,6 @@ describe('ResourceProjectDetail - specific', () => {
       teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
-    enable('PROJECT_WORKSPACE');
     await renderProjectDetail(
       ResourceProjectDetail,
       'resource',
@@ -1016,7 +953,6 @@ describe('ResourceProjectDetail - specific', () => {
 describe('TraineeProjectDetail - specific', () => {
   describe('Share an Output button', () => {
     it('is displayed to a project member', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         TraineeProjectDetail,
         'trainee',
@@ -1029,7 +965,6 @@ describe('TraineeProjectDetail - specific', () => {
     });
 
     it('is not displayed to a user who is not a project member', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         TraineeProjectDetail,
         'trainee',
@@ -1042,7 +977,6 @@ describe('TraineeProjectDetail - specific', () => {
     });
 
     it('blocks the create-output route for a user who is not a project member', async () => {
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         TraineeProjectDetail,
         'trainee',
@@ -1086,7 +1020,6 @@ describe('TraineeProjectDetail - specific', () => {
       };
       mockUseResearchOutputById.mockReturnValue(researchOutput);
 
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         TraineeProjectDetail,
         'trainee',
@@ -1118,7 +1051,6 @@ describe('TraineeProjectDetail - specific', () => {
       };
       mockUseResearchOutputById.mockReturnValue(researchOutput);
 
-      enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         TraineeProjectDetail,
         'trainee',

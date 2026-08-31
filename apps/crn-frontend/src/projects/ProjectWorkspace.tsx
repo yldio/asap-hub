@@ -9,13 +9,15 @@ import {
 } from '@asap-hub/react-components';
 import {
   useIsComplianceReviewer,
-  useManuscriptById,
   usePutManuscript,
+} from '../network/teams/state';
+import {
+  useManuscriptById,
+  usePatchProjectById,
   useUploadManuscriptFileViaPresignedUrl,
   useWorkspaceManuscripts,
-} from '../network/teams/state';
-import { usePatchProjectById } from './state';
-import { useEligibilityReason } from '../network/teams/useEligibilityReason';
+} from './state';
+import { useEligibilityReason } from './useEligibilityReason';
 import useDiscussionHandlers from '../network/teams/useDiscussionHandlers';
 
 type ProjectToolModalProps = Pick<

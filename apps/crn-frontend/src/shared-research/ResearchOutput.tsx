@@ -12,7 +12,6 @@ import {
   ResearchOutputPermissions,
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
-  useFlags,
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -97,9 +96,6 @@ const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
     sharedResearch({}).researchOutput,
   );
-
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -312,7 +308,6 @@ const ResearchOutput: React.FC = () => {
 
     const teamBasedProject = researchOutputData.teams[0];
     if (
-      isProjectOutputsEnabled &&
       entityType === 'team' &&
       teamBasedProject?.project &&
       teamBasedProject.id

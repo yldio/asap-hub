@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import SharedResearchListCard from '../SharedResearchListCard';
@@ -140,12 +139,7 @@ describe('association pill', () => {
     ],
   };
 
-  afterEach(() => {
-    disable('PROJECT_OUTPUTS');
-  });
-
-  it('shows a Project pill for a user-based project output when PROJECT_OUTPUTS is enabled', () => {
-    enable('PROJECT_OUTPUTS');
+  it('shows a Project pill for a user-based project output', () => {
     const { getByText } = render(
       <SharedResearchListCard
         {...sharedResearchListCardProps}
@@ -155,8 +149,7 @@ describe('association pill', () => {
     expect(getByText('Project')).toBeVisible();
   });
 
-  it('shows a Project pill for a team-based project output when PROJECT_OUTPUTS is enabled', () => {
-    enable('PROJECT_OUTPUTS');
+  it('shows a Project pill for a team-based project output', () => {
     const { getByText } = render(
       <SharedResearchListCard
         {...sharedResearchListCardProps}
@@ -166,8 +159,7 @@ describe('association pill', () => {
     expect(getByText('Project')).toBeVisible();
   });
 
-  it('shows a Working Group pill for a working group output when PROJECT_OUTPUTS is enabled', () => {
-    enable('PROJECT_OUTPUTS');
+  it('shows a Working Group pill for a working group output', () => {
     const { getByText } = render(
       <SharedResearchListCard
         {...sharedResearchListCardProps}
@@ -177,8 +169,7 @@ describe('association pill', () => {
     expect(getByText('Working Group')).toBeVisible();
   });
 
-  it('shows a Team pill for a team output when PROJECT_OUTPUTS is enabled', () => {
-    enable('PROJECT_OUTPUTS');
+  it('shows a Team pill for a team output', () => {
     const { getByText } = render(
       <SharedResearchListCard
         {...sharedResearchListCardProps}
@@ -186,39 +177,5 @@ describe('association pill', () => {
       />,
     );
     expect(getByText('Team')).toBeVisible();
-  });
-
-  it('shows a Working Group pill for a working group output when PROJECT_OUTPUTS is disabled', () => {
-    disable('PROJECT_OUTPUTS');
-    const { getByText } = render(
-      <SharedResearchListCard
-        {...sharedResearchListCardProps}
-        researchOutputs={[workingGroupOutput]}
-      />,
-    );
-    expect(getByText('Working Group')).toBeVisible();
-  });
-
-  it('shows a Team pill for a team output when PROJECT_OUTPUTS is disabled', () => {
-    disable('PROJECT_OUTPUTS');
-    const { getByText } = render(
-      <SharedResearchListCard
-        {...sharedResearchListCardProps}
-        researchOutputs={[teamOutput]}
-      />,
-    );
-    expect(getByText('Team', { selector: 'small' })).toBeVisible();
-  });
-
-  it('does not show a Project pill for a team-based project output when PROJECT_OUTPUTS is disabled', () => {
-    disable('PROJECT_OUTPUTS');
-    const { getByText, queryByText } = render(
-      <SharedResearchListCard
-        {...sharedResearchListCardProps}
-        researchOutputs={[teamBasedProjectOutput]}
-      />,
-    );
-    expect(queryByText('Project')).not.toBeInTheDocument();
-    expect(getByText('Team', { selector: 'small' })).toBeVisible();
   });
 });

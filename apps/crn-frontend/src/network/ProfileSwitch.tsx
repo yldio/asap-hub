@@ -13,12 +13,7 @@ const loadEventsList = () =>
 const EventsList = lazy(loadEventsList);
 
 type RequiredPaths = 'about' | 'upcoming' | 'past';
-type OptionalPaths =
-  | 'calendar'
-  | 'outputs'
-  | 'workspace'
-  | 'draftOutputs'
-  | 'compliance';
+type OptionalPaths = 'calendar' | 'outputs' | 'draftOutputs' | 'compliance';
 
 type ProfileSwitchProps = {
   About: FC;
@@ -31,7 +26,6 @@ type ProfileSwitchProps = {
   DraftOutputs?: ReactElement;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
-  Workspace?: ReactElement;
   Compliance?: ReactElement;
 };
 
@@ -45,7 +39,6 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   Outputs,
   paths,
   type,
-  Workspace,
   DraftOutputs,
   Compliance,
 }) => {
@@ -77,12 +70,6 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
           <Route
             path={paths.draftOutputs}
             element={<Frame title="Draft Outputs">{DraftOutputs}</Frame>}
-          />
-        )}
-        {Workspace && (
-          <Route
-            path={`${paths.workspace}/*`}
-            element={<Frame title="Workspace">{Workspace}</Frame>}
           />
         )}
         {Compliance && (

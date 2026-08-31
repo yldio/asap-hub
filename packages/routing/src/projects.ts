@@ -33,6 +33,7 @@ const createProjectRoute = () => {
     },
   );
   const milestones = route('/milestones', {}, {});
+  const compliance = route('/compliance', {}, {});
   const outputs = route('/outputs', {}, {});
   const draftOutputs = route('/draft-outputs', {}, {});
   const createOutput = route(
@@ -49,6 +50,7 @@ const createProjectRoute = () => {
       about,
       workspace,
       milestones,
+      compliance,
       outputs,
       draftOutputs,
       createOutput,

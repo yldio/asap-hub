@@ -87,8 +87,6 @@ const team = (() => {
   const about = route('/about', {}, {});
   const workspace = route('/workspace', {}, {});
 
-  const compliance = route('/compliance', {}, {});
-
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },
@@ -104,7 +102,6 @@ const team = (() => {
     {
       about,
       workspace,
-      compliance,
       createOutput,
       upcoming,
       past,

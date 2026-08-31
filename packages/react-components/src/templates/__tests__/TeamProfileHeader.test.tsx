@@ -183,25 +183,13 @@ it('does not render upcoming events tab when team is inactive', () => {
   ).toEqual(['About', 'Past Events (0)']);
 });
 
-it('renders compliance tabs when is ASAP team and is staff', () => {
-  render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      isAsapTeam
-      isStaff
-      manuscriptsCount={0}
-    />,
-  );
+it('does not render a compliance tab when is ASAP team and is staff', () => {
+  render(<TeamProfileHeader {...boilerplateProps} isAsapTeam isStaff />);
   expect(
     within(screen.getByRole('navigation', { name: 'tabs' }))
       .getAllByRole('link')
       .map(({ textContent }) => textContent),
-  ).toEqual([
-    'About',
-    'Compliance (0)',
-    'Upcoming Events (0)',
-    'Past Events (0)',
-  ]);
+  ).toEqual(['About', 'Upcoming Events (0)', 'Past Events (0)']);
 });
 
 it('displays upcoming event count when team is active', () => {

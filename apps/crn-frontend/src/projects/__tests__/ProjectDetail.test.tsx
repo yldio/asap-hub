@@ -1,6 +1,6 @@
 import { Suspense, FC } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { reset } from '@asap-hub/flags';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -20,9 +20,19 @@ import DiscoveryProjectDetail from '../DiscoveryProjectDetail';
 import ResourceProjectDetail from '../ResourceProjectDetail';
 import TraineeProjectDetail from '../TraineeProjectDetail';
 import { useResearchOutputById } from '../../shared-research/state';
+import { useManuscripts } from '../../network/teams/state';
+import { ASAP_TEAM_NAME } from '../../constants';
 
 jest.mock('../../network/teams/state', () => ({
   useIsComplianceReviewer: jest.fn(() => false),
+  useManuscripts: jest.fn(() => ({
+    items: [],
+    total: 3,
+    refresh: jest.fn(),
+  })),
+  useDownloadFullComplianceDataset: jest.fn(() =>
+    jest.fn().mockResolvedValue('https://example.com/compliance.csv'),
+  ),
   usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   useCreateDiscussion: jest.fn(() => jest.fn().mockResolvedValue('disc-1')),
   useReplyToDiscussion: jest.fn(() => jest.fn().mockResolvedValue(undefined)),
@@ -198,6 +208,34 @@ const mockResourceProjectWithSupplement: ResourceProjectDetailType = {
   },
 };
 
+const mockResourceProjectAsapFunded: ResourceProjectDetailType = {
+  ...mockResourceProject,
+  id: 'resource-asap',
+  teamName: ASAP_TEAM_NAME,
+  fundedTeam: {
+    id: 'team-1',
+    displayName: ASAP_TEAM_NAME,
+    teamType: 'Resource Team',
+    researchTheme: 'Theme One',
+    teamDescription: 'Team description',
+  },
+};
+
+// Funded by Team ASAP on purpose: the only conjunct that must exclude it from
+// the Compliance tab is its project type.
+const mockDiscoveryProjectAsapFunded: DiscoveryProjectDetailType = {
+  ...mockDiscoveryProject,
+  id: 'discovery-asap',
+  teamName: ASAP_TEAM_NAME,
+  fundedTeam: {
+    id: 'team-1',
+    displayName: ASAP_TEAM_NAME,
+    teamType: 'Discovery Team',
+    researchTheme: 'Theme One',
+    teamDescription: 'Team description',
+  },
+};
+
 const mockTraineeProject: TraineeProjectDetailType = {
   id: 'trainee-1',
   title: 'Trainee Project 1',
@@ -267,6 +305,8 @@ jest.mock('../state', () => ({
       'resource-no-contact': mockResourceProjectNoContact,
       'resource-collab': mockResourceProjectCollabContact,
       'resource-supplement': mockResourceProjectWithSupplement,
+      'resource-asap': mockResourceProjectAsapFunded,
+      'discovery-asap': mockDiscoveryProjectAsapFunded,
       'trainee-1': mockTraineeProject,
       'trainee-no-contact': mockTraineeProjectNoContact,
       'trainee-supplement': mockTraineeProjectWithSupplement,
@@ -295,6 +335,10 @@ jest.mock('../../shared-research/state', () => ({
 
 const mockUseResearchOutputById = useResearchOutputById as jest.MockedFunction<
   typeof useResearchOutputById
+>;
+
+const mockUseManuscripts = useManuscripts as jest.MockedFunction<
+  typeof useManuscripts
 >;
 
 // --- Test helper ---
@@ -439,6 +483,7 @@ const variants: TestVariant[] = [
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
+  mockUseManuscripts.mockClear();
 });
 
 afterEach(() => {
@@ -947,6 +992,144 @@ describe('ResourceProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('John Member');
+  });
+});
+
+describe('Compliance tab', () => {
+  const complianceDashboardHeading = 'No manuscripts available.';
+
+  // The About panel renders its own tab lists, but those tabs are buttons —
+  // only the page header tab list is made of links.
+  const getTabNames = () =>
+    screen
+      .getAllByRole('navigation', { name: 'tabs' })
+      .flatMap((tabList) => within(tabList).queryAllByRole('link'))
+      .map((tab) => tab.textContent);
+
+  const hasComplianceTab = () =>
+    getTabNames().some((name) => name?.startsWith('Compliance'));
+
+  const openScienceUser = {
+    id: 'open-science-user',
+    projects: [],
+    teams: [],
+    role: 'Staff',
+    openScienceTeamMember: true,
+  };
+
+  it('renders the Compliance tab with the manuscripts count for a member of the ASAP funded resource project', async () => {
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-asap',
+      teamBasedMemberUser,
+    );
+    expect(getTabNames()).toContain('Compliance (3)');
+  });
+
+  it('renders the compliance dashboard when following the Compliance tab', async () => {
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-asap',
+      teamBasedMemberUser,
+      'compliance',
+    );
+    expect(
+      await screen.findByRole('heading', { name: complianceDashboardHeading }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the Compliance tab for an Open Science staff member who is not a project member', async () => {
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-asap',
+      openScienceUser,
+    );
+    expect(getTabNames()).toContain('Compliance (3)');
+  });
+
+  const unreachableCases: Array<{
+    description: string;
+    Component: FC;
+    routeKeyword: string;
+    projectId: string;
+    user: Record<string, unknown>;
+    isMember: boolean;
+  }> = [
+    {
+      description: 'a non-member',
+      Component: ResourceProjectDetail,
+      routeKeyword: 'resource',
+      projectId: 'resource-asap',
+      user: nonMemberUser,
+      isMember: false,
+    },
+    {
+      description: 'a resource project not funded by Team ASAP',
+      Component: ResourceProjectDetail,
+      routeKeyword: 'resource',
+      projectId: 'resource-1',
+      user: teamBasedMemberUser,
+      isMember: true,
+    },
+    {
+      description: 'a discovery project funded by Team ASAP',
+      Component: DiscoveryProjectDetail,
+      routeKeyword: 'discovery',
+      projectId: 'discovery-asap',
+      user: teamBasedMemberUser,
+      isMember: true,
+    },
+    {
+      description: 'a trainee project',
+      Component: TraineeProjectDetail,
+      routeKeyword: 'trainee',
+      projectId: 'trainee-1',
+      user: traineeMemberUser,
+      isMember: true,
+    },
+  ];
+
+  it.each(unreachableCases)(
+    'exposes neither the Compliance tab nor the dashboard for $description',
+    async ({ Component, routeKeyword, projectId, user, isMember }) => {
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        projectId,
+        user,
+        'compliance',
+      );
+
+      expect(getTabNames()).toContain('About');
+      expect(getTabNames().includes('Workspace')).toBe(isMember);
+      expect(hasComplianceTab()).toBe(false);
+      expect(
+        screen.queryByRole('heading', { name: complianceDashboardHeading }),
+      ).not.toBeInTheDocument();
+      expect(mockUseManuscripts).not.toHaveBeenCalled();
+    },
+  );
+
+  it('fetches the manuscripts count with a fixed page size when the gate resolves true', async () => {
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-asap',
+      teamBasedMemberUser,
+    );
+    expect(mockUseManuscripts).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchQuery: '',
+        currentPage: 0,
+        pageSize: 10,
+        requestedAPCCoverage: 'all',
+        completedStatus: 'hide',
+        selectedStatuses: [],
+      }),
+    );
   });
 });
 

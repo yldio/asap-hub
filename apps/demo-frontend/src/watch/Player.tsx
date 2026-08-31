@@ -183,6 +183,7 @@ const retryButtonStyles = css({
   fontWeight: 'bold',
   cursor: 'pointer',
   ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.25)' },
+  ':disabled': { cursor: 'progress', opacity: 0.7 },
 });
 
 type Hover = { seconds: number; left: number } | null;
@@ -195,7 +196,7 @@ const Player: FC<{
   readonly currentSeconds: number;
   readonly onTimeChange: (seconds: number) => void;
   readonly registerSeek?: (seek: (seconds: number) => void) => void;
-  readonly onRequestAccess?: () => void;
+  readonly onRequestAccess?: () => void | Promise<unknown>;
 }> = ({
   access,
   chapters,
@@ -223,6 +224,9 @@ const Player: FC<{
   const [fullscreen, setFullscreen] = useState(false);
   const [playerWidth, setPlayerWidth] = useState(0);
   const [failed, setFailed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const retryingRef = useRef(false);
+  const mountedRef = useRef(true);
 
   const thumbnails = useThumbnails(access.thumbnailsVttUrl);
   const durationSeconds = durationMs / 1000;
@@ -230,10 +234,34 @@ const Player: FC<{
   const activeIndex = activeChapterIndex(chapters, currentSeconds);
   const currentChapter = chapters[activeIndex];
 
+  // reasserted on every mount so a StrictMode remount does not leave it false
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  // fresh credentials arrive as cookies on the access response, so the reload
+  // has to wait for it to settle or it goes out with the expired ones again
   const retryPlayback = useCallback(() => {
-    setFailed(false);
-    onRequestAccess?.();
-    videoRef.current?.load();
+    if (retryingRef.current) return;
+    retryingRef.current = true;
+    setRetrying(true);
+
+    const settle = (refreshed: boolean) => {
+      retryingRef.current = false;
+      if (!mountedRef.current) return;
+      setRetrying(false);
+      if (!refreshed) return;
+      setFailed(false);
+      videoRef.current?.load();
+    };
+
+    void (async () => onRequestAccess?.())().then(
+      () => settle(true),
+      () => settle(false),
+    );
   }, [onRequestAccess]);
 
   const seekTo = useCallback(
@@ -457,8 +485,13 @@ const Player: FC<{
           <span css={failureBodyStyles}>
             The stream stopped responding. Your access may have expired.
           </span>
-          <button type="button" css={retryButtonStyles} onClick={retryPlayback}>
-            Retry
+          <button
+            type="button"
+            css={retryButtonStyles}
+            onClick={retryPlayback}
+            disabled={retrying}
+          >
+            {retrying ? 'Retrying' : 'Retry'}
           </button>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { StrictMode } from 'react';
 
 import type { Chapter, VideoAccess } from '../../api/types';
 import Player from '../Player';
@@ -81,22 +82,134 @@ it('names no chapter before the first one starts', async () => {
 });
 
 describe('playback failure', () => {
-  it('explains a stream that stops and retries the access on request', async () => {
-    const onRequestAccess = jest.fn();
-    const { video } = renderPlayer({ onRequestAccess });
-    video.load = jest.fn();
+  const deferredAccess = () => {
+    let settle: (ok: boolean) => void = () => undefined;
+    const onRequestAccess = jest.fn(
+      () =>
+        new Promise<void>((resolve, reject) => {
+          settle = (ok) => (ok ? resolve() : reject(new Error('403')));
+        }),
+    );
+    return {
+      onRequestAccess,
+      grant: () => settle(true),
+      deny: () => settle(false),
+    };
+  };
+
+  it('explains a stream that stops', async () => {
+    const { video } = renderPlayer();
 
     fireEvent.error(video);
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Playback stopped',
+      /^Playback stopped/,
     );
+  });
+
+  it('reloads the stream only once the access refresh has landed', async () => {
+    const { onRequestAccess, grant } = deferredAccess();
+    const { video } = renderPlayer({ onRequestAccess });
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+    await screen.findByRole('alert');
 
     await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
-    expect(onRequestAccess).toHaveBeenCalled();
-    expect(video.load).toHaveBeenCalled();
+    // the fresh cookies ride on the access response, so a reload before it
+    // lands would go out with the expired ones
+    expect(onRequestAccess).toHaveBeenCalledTimes(1);
+    expect(video.load).not.toHaveBeenCalled();
+    expect(
+      await screen.findByRole('button', { name: 'Retrying' }),
+    ).toBeDisabled();
+    expect(screen.getByRole('alert')).toBeVisible();
+
+    grant();
+
+    await waitFor(() => expect(video.load).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+  });
+
+  it('keeps the panel and offers another go when the refresh fails', async () => {
+    const { onRequestAccess, deny } = deferredAccess();
+    const { video } = renderPlayer({ onRequestAccess });
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    deny();
+
+    expect(await screen.findByRole('button', { name: 'Retry' })).toBeEnabled();
+    expect(video.load).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent(/^Playback stopped/);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(onRequestAccess).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores a second press while a retry is in flight', async () => {
+    const { onRequestAccess, grant } = deferredAccess();
+    const { video } = renderPlayer({ onRequestAccess });
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Retrying' }));
+
+    expect(onRequestAccess).toHaveBeenCalledTimes(1);
+
+    grant();
+
+    await waitFor(() => expect(video.load).toHaveBeenCalledTimes(1));
+  });
+
+  // the app mounts in StrictMode, which unmounts and remounts once in dev
+  it('still reloads after a double mount', async () => {
+    const { onRequestAccess, grant } = deferredAccess();
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <Player
+            access={access}
+            chapters={chapters}
+            durationMs={300000}
+            currentSeconds={90}
+            onTimeChange={jest.fn()}
+            onRequestAccess={onRequestAccess}
+          />
+        </QueryClientProvider>
+      </StrictMode>,
+    );
+    const video = screen.getByTestId('demo-video') as HTMLVideoElement;
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    grant();
+
+    await waitFor(() => expect(video.load).toHaveBeenCalledTimes(1));
+  });
+
+  it('reloads straight away when nothing owns the access', async () => {
+    const { video } = renderPlayer();
+    video.load = jest.fn();
+
+    fireEvent.error(video);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    await waitFor(() => expect(video.load).toHaveBeenCalledTimes(1));
   });
 
   it('clears the panel once the stream loads again', async () => {

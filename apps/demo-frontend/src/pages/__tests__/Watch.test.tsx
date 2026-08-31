@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import type { Video, VideoAccess } from '../../api/types';
@@ -91,6 +91,67 @@ it('offers a retry when playback access fails', async () => {
 
   expect(await screen.findByText('Playback is not available')).toBeVisible();
   expect(screen.getByRole('button', { name: /retry/i })).toBeVisible();
+});
+
+describe('refreshing expired access', () => {
+  const renderWithAccess = (requestAccess: () => Promise<VideoAccess>) => {
+    renderApp(<Watch />, {
+      api: { ...api, requestAccess },
+      me: memberMe,
+      route: '/videos/video-1',
+      routePath: '/videos/:id',
+    });
+  };
+
+  it('holds the reload until the refreshed grant has landed', async () => {
+    let grant: () => void = () => undefined;
+    const requestAccess = jest
+      .fn()
+      .mockResolvedValueOnce(access)
+      .mockImplementationOnce(
+        () =>
+          new Promise<VideoAccess>((resolve) => {
+            grant = () => resolve(access);
+          }),
+      );
+    renderWithAccess(requestAccess as () => Promise<VideoAccess>);
+
+    const player = (await screen.findByTestId(
+      'demo-video',
+    )) as HTMLVideoElement;
+    player.load = jest.fn();
+
+    fireEvent.error(player);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    await waitFor(() => expect(requestAccess).toHaveBeenCalledTimes(2));
+    expect(player.load).not.toHaveBeenCalled();
+
+    grant();
+
+    await waitFor(() => expect(player.load).toHaveBeenCalledTimes(1));
+  });
+
+  it('sends the viewer to the access panel when the refresh is refused', async () => {
+    const requestAccess = jest
+      .fn()
+      .mockResolvedValueOnce(access)
+      .mockRejectedValueOnce(new Error('403'));
+    renderWithAccess(requestAccess as () => Promise<VideoAccess>);
+
+    const player = (await screen.findByTestId(
+      'demo-video',
+    )) as HTMLVideoElement;
+    player.load = jest.fn();
+
+    fireEvent.error(player);
+    await screen.findByRole('alert');
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+    expect(await screen.findByText('Playback is not available')).toBeVisible();
+    expect(player.load).not.toHaveBeenCalled();
+  });
 });
 
 it('offers a download of the stream with a safe file name', async () => {

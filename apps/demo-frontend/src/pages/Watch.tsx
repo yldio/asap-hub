@@ -80,7 +80,7 @@ const previewWrapperStyles = css({ position: 'relative' });
 const WatchPlayer: FC<{
   readonly video: Video;
   readonly access: VideoAccess;
-  readonly onRequestAccess: () => void;
+  readonly onRequestAccess: () => void | Promise<unknown>;
 }> = ({ video, access, onRequestAccess }) => {
   const isCreator = useIsCreator();
   const [searchParams] = useSearchParams();
@@ -265,8 +265,9 @@ const Watch: FC = () => {
       <WatchPlayer
         video={video.data}
         access={access.data}
-        onRequestAccess={() => {
-          void access.refetch();
+        onRequestAccess={async () => {
+          const { isError } = await access.refetch();
+          if (isError) throw new Error('Could not refresh playback access');
         }}
       />
     </>

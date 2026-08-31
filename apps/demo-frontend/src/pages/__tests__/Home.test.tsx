@@ -1114,6 +1114,122 @@ describe('reporting what a change did not do', () => {
   });
 });
 
+describe('reporting the change the creator made last', () => {
+  const failedCreate = async () => {
+    await within(sidebar()).findByText('Engineering');
+    await userEvent.click(
+      within(sidebar()).getByRole('button', { name: 'New top-level folder' }),
+    );
+    await userEvent.type(
+      screen.getByLabelText('New folder name'),
+      'Ops{Enter}',
+    );
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(/^We could not create that folder\./);
+  };
+
+  const moveUnfiledToDesign = async () => {
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.hover(
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
+    );
+    await userEvent.click(
+      await within(menu).findByRole('menuitem', { name: 'Design' }),
+    );
+  };
+
+  it('names the move the server refused after an earlier create failed', async () => {
+    renderHome({
+      api: {
+        createFolder: () => Promise.reject(new Error('boom')),
+        bulkMoveVideos: () =>
+          Promise.resolve({ moved: [], missing: [], locked: ['v-unfiled'] }),
+      },
+    });
+
+    await failedCreate();
+    await moveUnfiledToDesign();
+
+    await waitFor(
+      () =>
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          /^We did not move “Unfiled walkthrough” because another creator has it open\. Try again once they are done\.$/,
+        ),
+      { timeout: 4000 },
+    );
+    expect(screen.getAllByRole('alert')).toHaveLength(1);
+  });
+
+  it('reports the second failure in a row rather than the first', async () => {
+    renderHome({
+      api: {
+        renameFolder: () => Promise.reject(new Error('boom')),
+        bulkMoveVideos: () => Promise.reject(new Error('boom')),
+      },
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Rename' }),
+    );
+    const input = await screen.findByLabelText('Rename Design');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Brand{Enter}');
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(/^We could not rename that folder\./);
+
+    await moveUnfiledToDesign();
+
+    await waitFor(
+      () =>
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          /^We could not move “Unfiled walkthrough”\. Try again in a moment\.$/,
+        ),
+      { timeout: 4000 },
+    );
+  });
+
+  it('drops the failed create once the next change goes through', async () => {
+    renderHome({
+      api: {
+        createFolder: () => Promise.reject(new Error('boom')),
+        bulkMoveVideos: () =>
+          Promise.resolve({ moved: ['v-unfiled'], missing: [], locked: [] }),
+      },
+    });
+
+    await failedCreate();
+    await moveUnfiledToDesign();
+
+    await waitFor(
+      () => expect(screen.queryByRole('alert')).not.toBeInTheDocument(),
+      { timeout: 4000 },
+    );
+  });
+
+  it('leaves the failure behind when the creator opens another folder', async () => {
+    renderHome({
+      api: { createFolder: () => Promise.reject(new Error('boom')) },
+    });
+
+    await failedCreate();
+    await userEvent.click(
+      within(sidebar()).getByRole('link', { name: 'Engineering' }),
+    );
+
+    expect(await screen.findByText('Engineering standup')).toBeVisible();
+    await waitFor(
+      () => expect(screen.queryByRole('alert')).not.toBeInTheDocument(),
+      { timeout: 4000 },
+    );
+  });
+});
+
 describe('a shareable list', () => {
   it('opens the sort and status named in the url', async () => {
     renderHome({ route: '/?view=all&sort=title&status=drafts' });

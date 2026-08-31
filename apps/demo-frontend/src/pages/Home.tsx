@@ -394,16 +394,52 @@ const Home: FC = () => {
       ]),
     );
 
-  const moveSelected = (ids: string[], folderId: string) =>
+  const libraryMutations = [
+    createFolder,
+    renameFolder,
+    moveFolder,
+    bulkMove,
+    bulkDelete,
+  ];
+  const libraryMutationsRef = useRef(libraryMutations);
+  libraryMutationsRef.current = libraryMutations;
+
+  // a settled mutation stays terminal until it is reset, so every library action
+  // starts by dropping the outcomes of the ones before it. Resetting one that is
+  // still running would detach the callbacks it was started with, so those stay.
+  const clearLibraryOutcomes = useCallback(() => {
+    libraryMutationsRef.current.forEach((mutation) => {
+      if (!mutation.isPending) mutation.reset();
+    });
+  }, []);
+
+  const startFolderCreate = (variables: {
+    name: string;
+    parentId?: string;
+  }) => {
+    clearLibraryOutcomes();
+    createFolder.mutate(variables);
+  };
+
+  const startFolderRename = (id: string, name: string) => {
+    clearLibraryOutcomes();
+    renameFolder.mutate({ id, name });
+  };
+
+  const moveSelected = (ids: string[], folderId: string) => {
+    clearLibraryOutcomes();
     bulkMove.mutate({ ids, folderId }, { onSuccess: keepRefusedSelected });
+  };
 
   useEffect(() => {
     setSelection((current) => pruneSelection(current, orderedIds));
   }, [orderedIds]);
 
+  // the alert speaks about the folder in hand, so it goes when that folder does
   useEffect(() => {
     clearSelection();
-  }, [selectedFolder, isAllVideos, clearSelection]);
+    clearLibraryOutcomes();
+  }, [selectedFolder, isAllVideos, clearSelection, clearLibraryOutcomes]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -505,6 +541,7 @@ const Home: FC = () => {
         return;
       }
       if (target === rootFolderId) return;
+      clearLibraryOutcomes();
       moveFolder.mutate({ id: movedFolderId, parentId: target });
       return;
     }
@@ -532,6 +569,7 @@ const Home: FC = () => {
   const confirmFolderDelete = () => {
     if (!folderToDelete) return;
     const { id } = folderToDelete;
+    clearLibraryOutcomes();
     deleteFolder.mutate(id, {
       onSuccess: (result) => {
         // a folder kept because of what is inside it has not been deleted
@@ -543,6 +581,7 @@ const Home: FC = () => {
   };
 
   const confirmVideoDelete = () => {
+    clearLibraryOutcomes();
     bulkDelete.mutate(selection.ids as string[], {
       onSuccess: ({ locked, missing, rendering }) => {
         setIsDeletingVideos(false);
@@ -660,32 +699,53 @@ const Home: FC = () => {
   );
 
   const createFolderHere = (name: string) =>
-    createFolder.mutate({ name, parentId: selectedFolder });
+    startFolderCreate({ name, parentId: selectedFolder });
 
-  const libraryAlert = [
-    createFolder.isError
-      ? 'We could not create that folder. Try again in a moment.'
-      : undefined,
-    renameFolder.isError
-      ? 'We could not rename that folder. Try again in a moment.'
-      : undefined,
-    moveFolder.isError
-      ? 'We could not move that folder. Try again in a moment.'
-      : undefined,
-    bulkMove.isError
-      ? `We could not move ${videoSubject(
-          bulkMove.variables?.ids ?? [],
-          videoNames,
-        )}. Try again in a moment.`
-      : undefined,
-    bulkMove.isSuccess
-      ? refusedVideosMessage(bulkMove.data, 'move', videoNames)
-      : undefined,
-    // the delete modal carries its own failure, so this only reports the rest
-    bulkDelete.isSuccess && !isDeletingVideos
-      ? refusedVideosMessage(bulkDelete.data, 'delete', videoNames)
-      : undefined,
-  ].find((message) => message !== undefined);
+  const libraryOutcomes = [
+    {
+      at: createFolder.submittedAt,
+      message: createFolder.isError
+        ? 'We could not create that folder. Try again in a moment.'
+        : undefined,
+    },
+    {
+      at: renameFolder.submittedAt,
+      message: renameFolder.isError
+        ? 'We could not rename that folder. Try again in a moment.'
+        : undefined,
+    },
+    {
+      at: moveFolder.submittedAt,
+      message: moveFolder.isError
+        ? 'We could not move that folder. Try again in a moment.'
+        : undefined,
+    },
+    {
+      at: bulkMove.submittedAt,
+      message: bulkMove.isError
+        ? `We could not move ${videoSubject(
+            bulkMove.variables?.ids ?? [],
+            videoNames,
+          )}. Try again in a moment.`
+        : bulkMove.isSuccess
+          ? refusedVideosMessage(bulkMove.data, 'move', videoNames)
+          : undefined,
+    },
+    {
+      at: bulkDelete.submittedAt,
+      // the delete modal carries its own failure, so this only reports the rest
+      message:
+        bulkDelete.isSuccess && !isDeletingVideos
+          ? refusedVideosMessage(bulkDelete.data, 'delete', videoNames)
+          : undefined,
+    },
+  ];
+
+  // one line reports the change the creator made last, by when each was started,
+  // so a newer change that has nothing to say leaves nothing on the page
+  const libraryAlert = libraryOutcomes.reduce((latest, outcome) =>
+    outcome.at > latest.at ? outcome : latest,
+  ).message;
 
   const folderDeleteAlert = deleteFolder.isError
     ? 'We could not delete that folder. Try again in a moment.'
@@ -741,17 +801,17 @@ const Home: FC = () => {
           onCancelCreate={() => setIsCreatingFolder(false)}
           onCreate={(name) => {
             setIsCreatingFolder(false);
-            createFolder.mutate({ name });
+            startFolderCreate({ name });
           }}
           onCancelCreateChild={() => setCreatingChildOf(undefined)}
           onCreateChild={(parentId, name) => {
             setCreatingChildOf(undefined);
-            createFolder.mutate({ name, parentId });
+            startFolderCreate({ name, parentId });
           }}
           onCancelRename={() => setRenamingFolderId(undefined)}
           onRename={(id, name) => {
             setRenamingFolderId(undefined);
-            renameFolder.mutate({ id, name });
+            startFolderRename(id, name);
           }}
           isBlockedTarget={isBlockedTarget}
           homeDroppableId={homeDroppableId}

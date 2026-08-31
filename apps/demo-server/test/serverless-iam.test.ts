@@ -37,6 +37,21 @@ const statementFor = (statements: Statement[], prefix: string): Statement => {
   return found;
 };
 
+const statementForPrefix = (
+  statements: Statement[],
+  prefix: string,
+): Statement => {
+  const found = statements.find((statement) =>
+    joinedSegments(statement.Resource).some((segment) =>
+      segment.startsWith(`/${prefix}/`),
+    ),
+  );
+  if (!found) {
+    throw new Error(`no statement for the ${prefix}/ prefix`);
+  }
+  return found;
+};
+
 const encoderStatements = (): Statement[] => {
   const resources = config.resources?.Resources as unknown as Record<
     string,
@@ -70,6 +85,15 @@ describe('the api lambda role', () => {
     const actions = apiStatements().flatMap(actionsOf);
 
     expect(actions).not.toContain('s3:PutObjectAcl');
+  });
+
+  // capture parts, merged event streams and render timeline snapshots all carry
+  // the lifecycle tag, and S3 refuses a tagged PutObject without this action
+  it('can tag the objects it writes with a lifecycle tag', () => {
+    const actions = actionsOf(statementFor(apiStatements(), 's3:PutObject'));
+
+    expect(actions).toContain('s3:PutObject');
+    expect(actions).toContain('s3:PutObjectTagging');
   });
 
   // '*' would let the lambda send from every identity verified in the account,
@@ -108,5 +132,24 @@ describe('the encoder task role', () => {
     const actions = actionsOf(statementFor(encoderStatements(), 'dynamodb:'));
 
     expect(actions.sort()).toEqual(['dynamodb:Query', 'dynamodb:UpdateItem']);
+  });
+
+  // `aws s3 cp` cannot tag, so the job tags each upload in a second call and
+  // strips the tag again on acceptance; a delete left ungranted would leave the
+  // published media carrying lifecycle=render for the bucket rule to collect
+  it('can both tag and untag the media it publishes', () => {
+    const actions = actionsOf(statementForPrefix(encoderStatements(), 'media'));
+
+    expect(actions).toContain('s3:PutObject');
+    expect(actions).toContain('s3:PutObjectTagging');
+    expect(actions).toContain('s3:DeleteObjectTagging');
+  });
+
+  it('does not tag outside the media prefix', () => {
+    const actions = actionsOf(
+      statementForPrefix(encoderStatements(), 'projects'),
+    );
+
+    expect(actions.some((action) => action.endsWith('Tagging'))).toBe(false);
   });
 });

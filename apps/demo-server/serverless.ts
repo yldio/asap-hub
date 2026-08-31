@@ -164,8 +164,13 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            // capture parts, merged event streams and render timeline snapshots
+            // are written carrying the lifecycle tag the bucket rule filters on,
+            // and S3 refuses a tagged PutObject unless PutObjectTagging is
+            // granted too: s3:PutObject alone fails those writes with AccessDenied
             Action: [
               's3:PutObject',
+              's3:PutObjectTagging',
               's3:GetObject',
               's3:DeleteObject',
               's3:AbortMultipartUpload',
@@ -906,7 +911,17 @@ const serverlessConfig: AWS = {
                   },
                   {
                     Effect: 'Allow',
-                    Action: ['s3:PutObject'],
+                    // `aws s3 cp` carries no tagging option, so the job tags each
+                    // upload in a second call and strips the tag again once the
+                    // render is accepted. Those are two distinct actions:
+                    // PutObjectTagging does not cover DeleteObjectTagging, and
+                    // without the delete the published media keeps lifecycle=render
+                    // and the bucket rule removes it thirty days later
+                    Action: [
+                      's3:PutObject',
+                      's3:PutObjectTagging',
+                      's3:DeleteObjectTagging',
+                    ],
                     Resource: {
                       'Fn::Join': [
                         '',

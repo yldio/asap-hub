@@ -167,7 +167,10 @@ const writePart = async (key: string, body: string): Promise<boolean> => {
     try {
       await write();
       return true;
-    } catch {
+    } catch (error) {
+      // the counters keep going without the object, so the panel reads healthy
+      // while nothing lands: this line is the only place the loss is visible
+      console.error(`could not write the capture part ${key}`, error);
       return false;
     }
   }

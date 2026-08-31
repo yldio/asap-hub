@@ -13,14 +13,16 @@ import { uploadsRouter } from './routes/uploads';
 import { usersRouter } from './routes/users';
 import { videosRouter } from './routes/videos';
 
-const bodyErrorCodes: Record<string, string> = {
-  'entity.parse.failed': 'invalid_json',
-  'entity.too.large': 'payload_too_large',
-  'parameters.too.many': 'payload_too_large',
-  'charset.unsupported': 'unsupported_media_type',
-  'encoding.unsupported': 'unsupported_media_type',
-  'request.aborted': 'request_aborted',
-};
+// a Map rather than an object: `type` is whatever the thrown error carries, and
+// an object lookup would find Object.prototype members such as `constructor`
+const bodyErrorCodes = new Map([
+  ['entity.parse.failed', 'invalid_json'],
+  ['entity.too.large', 'payload_too_large'],
+  ['parameters.too.many', 'payload_too_large'],
+  ['charset.unsupported', 'unsupported_media_type'],
+  ['encoding.unsupported', 'unsupported_media_type'],
+  ['request.aborted', 'request_aborted'],
+]);
 
 // a body the parser refuses arrives as an http-errors object carrying both a
 // 4xx status and a `type`. Nothing else that reaches the handler carries that
@@ -44,7 +46,7 @@ const clientError = (
   }
   return {
     status: value,
-    code: bodyErrorCodes[type] ?? 'invalid_request_body',
+    code: bodyErrorCodes.get(type) ?? 'invalid_request_body',
   };
 };
 

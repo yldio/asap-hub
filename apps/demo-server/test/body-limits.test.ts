@@ -331,26 +331,84 @@ describe('the authenticated api body parser', () => {
   });
 });
 
+// the route loads the project before it reads the body, so an entity that
+// throws is the shortest way to put a chosen error in front of the real
+// appFactory handler
+const throwOnLoad = (error: unknown) => {
+  jest.spyOn(videoEntity, 'get').mockReturnValue({
+    go: async () => {
+      throw error;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+};
+
+const raise = (error: unknown) => {
+  mockUser();
+  throwOnLoad(error);
+  return saveTimeline({
+    timeline: { version: 1 },
+    timelineVersion: 4,
+    version: 3,
+  });
+};
+
+const errorWith = (fields: Record<string, unknown>) =>
+  Object.assign(new Error('raised for the handler'), fields);
+
 describe('the error handler', () => {
   it('answers a genuine server fault with a 500 and logs it', async () => {
-    mockUser();
-    jest.spyOn(videoEntity, 'get').mockReturnValue({
-      go: async () => {
-        throw new Error('dynamo is having a day');
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
-
-    const response = await saveTimeline({
-      timeline: { version: 1 },
-      timelineVersion: 4,
-      version: 3,
-    });
+    const response = await raise(new Error('dynamo is having a day'));
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: 'internal' });
     expect(console.error).toHaveBeenCalled();
   });
+
+  it('answers a 4xx status without a type with a 500', async () => {
+    const response = await raise(errorWith({ status: 409 }));
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'internal' });
+    expect(console.error).toHaveBeenCalled();
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('answers a type carried on a 5xx status with a 500', async () => {
+    const response = await raise(
+      errorWith({ status: 503, type: 'entity.parse.failed' }),
+    );
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'internal' });
+    expect(console.error).toHaveBeenCalled();
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('answers a 4xx type it has no code for with invalid_request_body', async () => {
+    const response = await raise(
+      errorWith({ status: 400, type: 'request.size.invalid' }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'invalid_request_body' });
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  // a type naming an Object.prototype member must not be found by the lookup:
+  // reported as-is it answers {} and logs the member's source
+  it.each(['constructor', 'toString', 'valueOf', '__proto__'])(
+    'answers a type of %s with invalid_request_body',
+    async (type) => {
+      const response = await raise(errorWith({ status: 400, type }));
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'invalid_request_body' });
+      expect(console.warn).toHaveBeenCalledWith(
+        'PUT /api/projects/project-1/timeline refused: invalid_request_body',
+      );
+    },
+  );
 
   it('still answers an unknown path with the 404 handler', async () => {
     const response = await api.get('/nothing-here');

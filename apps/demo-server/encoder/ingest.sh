@@ -91,19 +91,41 @@ FPS="$(awk -v r="${FRAME_RATE:-0}" 'BEGIN {
 DURATION_MS="$(probe_duration_ms "$INPUT_FILE")"
 log "probed codec=${CODEC_NAME:-none} format=${FORMAT_NAME:-unknown} ${WIDTH}x${HEIGHT} ${FPS}fps ${DURATION_MS}ms audio=${HAS_AUDIO}"
 
+# the proxy is only ever scrubbed in a browser, and the capture now films 4K on
+# a machine that can sustain it, so it is capped at the editing canvas: the
+# render reads the original and never the proxy, so the export loses nothing
+PROXY_MAX_WIDTH=1920
+PROXY_MAX_HEIGHT=1080
+# min() leaves a smaller source alone rather than upscaling it, decrease keeps
+# the aspect, and force_divisible_by=2 is what yuv420p needs: without it a
+# 3024x1964 source fits to an odd 1663 wide and libx264 refuses it
+PROXY_SCALE="scale='min(${PROXY_MAX_WIDTH},iw)':'min(${PROXY_MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2"
+
+# a copy is two orders of magnitude cheaper than an encode, so it is still worth
+# taking, but only for a source we have measured to be inside the cap already:
+# copying an oversized one through is exactly what the cap is here to stop, and
+# a source whose size would not probe cannot be shown to fit
+WITHIN_PROXY_CAP=false
+if [[ "$WIDTH" -gt 0 && "$HEIGHT" -gt 0 &&
+  "$WIDTH" -le "$PROXY_MAX_WIDTH" && "$HEIGHT" -le "$PROXY_MAX_HEIGHT" ]]; then
+  WITHIN_PROXY_CAP=true
+fi
+
 # the editor seeks the proxy, so it is always a faststart mp4: MediaRecorder WebM
 # carries neither a duration nor cues, and even an mp4 may not be faststart
 if [[ -z "$CODEC_NAME" ]]; then
   run_step "remux audio only proxy.mp4" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
     -vn -c:a aac -b:a 128k -movflags +faststart "$PROXY_FILE"
-elif [[ "$CODEC_NAME" == "h264" && ("$FORMAT_NAME" == *mp4* || "$FORMAT_NAME" == *mov*) ]]; then
+elif [[ "$CODEC_NAME" == "h264" && "$WITHIN_PROXY_CAP" == "true" &&
+  ("$FORMAT_NAME" == *mp4* || "$FORMAT_NAME" == *mov*) ]]; then
   run_step "copy proxy.mp4" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
     -c copy -movflags +faststart "$PROXY_FILE"
 else
-  run_step "transcode proxy.mp4" \
+  run_step "transcode proxy.mp4 within ${PROXY_MAX_WIDTH}x${PROXY_MAX_HEIGHT}" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
+    -vf "$PROXY_SCALE" \
     -c:v libx264 -preset veryfast -crf 24 \
     -c:a aac -b:a 128k -movflags +faststart "$PROXY_FILE"
 fi

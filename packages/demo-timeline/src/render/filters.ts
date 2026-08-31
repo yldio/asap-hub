@@ -27,13 +27,48 @@ export const filterSegment = (
 export const colourTagFilter =
   'setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709';
 
+export const evenDown = (value: number): number => 2 * Math.floor(value / 2);
+
+export const evenNear = (value: number): number => 2 * Math.round(value / 2);
+
 export const fitToCanvasFilters = (canvas: Canvas): string[] => [
-  // bt709 named on the way in and stamped on the way out
-  `scale=${canvas.width}:${canvas.height}:force_original_aspect_ratio=decrease:flags=lanczos:out_color_matrix=bt709`,
+  // bt709 named on the way in and stamped on the way out; the even size is
+  // asked for out loud so the picture the zoom reads its pixels out of is the
+  // one pictureBox predicts rather than whatever the odd size happened to be
+  `scale=${canvas.width}:${canvas.height}:force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos:out_color_matrix=bt709`,
   `pad=${canvas.width}:${canvas.height}:(ow-iw)/2:(oh-ih)/2:color=black`,
   'setsar=1',
   colourTagFilter,
 ];
+
+// where the picture itself sits inside the canvas, in canvas pixels
+export type PictureBox = { pw: number; ph: number; ox: number; oy: number };
+
+// The one definition of the letterbox: what the fit above actually draws, to
+// the pixel, so the zoom can read its pixels out of the picture rather than
+// out of the bars. Both roundings are ffmpeg's own, measured rather than
+// reasoned about: force_divisible_by=2 lands on the nearest even size, past
+// the exact fit if that is nearer, and pad silently floors an odd offset to an
+// even one under yuv420p's chroma subsampling.
+export const pictureBox = (
+  source: { width: number; height: number },
+  canvas: Canvas,
+): PictureBox => {
+  const heightLimited =
+    source.width * canvas.height <= source.height * canvas.width;
+  const pw = heightLimited
+    ? evenNear((canvas.height * source.width) / source.height)
+    : canvas.width;
+  const ph = heightLimited
+    ? canvas.height
+    : evenNear((canvas.width * source.height) / source.width);
+  return {
+    pw,
+    ph,
+    ox: evenDown(Math.trunc((canvas.width - pw) / 2)),
+    oy: evenDown(Math.trunc((canvas.height - ph) / 2)),
+  };
+};
 
 export type VideoFilterContext = { canvas: Canvas; placement: ClipPlacement };
 

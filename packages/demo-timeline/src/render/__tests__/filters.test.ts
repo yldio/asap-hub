@@ -9,6 +9,7 @@ import {
   overlayFadeRamps,
   overlayFilter,
   overlayInputFilters,
+  pictureBox,
   secondsFromMs,
   videoFilters,
   xfadeTransition,
@@ -65,11 +66,56 @@ describe('filterSegment', () => {
 describe('fitToCanvasFilters', () => {
   it('letterboxes the source into the canvas without stretching it', () => {
     expect(fitToCanvasFilters(canvas)).toEqual([
-      'scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos:out_color_matrix=bt709',
+      'scale=1920:1080:force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos:out_color_matrix=bt709',
       'pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black',
       'setsar=1',
       'setparams=colorspace=bt709:color_primaries=bt709:color_trc=bt709',
     ]);
+  });
+});
+
+// The zoom now reads its pixels out of the picture rather than the padded
+// frame, so where the fit puts that picture has to be known to the pixel. Both
+// halves are ffmpeg's own behaviour, measured on ffmpeg 9.0.1 rather than
+// reasoned about: the sizes below are what `scale` actually reported.
+describe('pictureBox', () => {
+  it.each([
+    [2560, 1664, 1662, 1080],
+    [2880, 1864, 1668, 1080],
+    [3024, 1964, 1662, 1080],
+    [3456, 2234, 1670, 1080],
+    [2880, 1800, 1728, 1080],
+    [1920, 1080, 1920, 1080],
+    // wider than the canvas, so the bars are above and below instead
+    [3440, 1440, 1920, 804],
+  ])(
+    'lands where force_divisible_by=2 lands for %ix%i',
+    (width, height, pw, ph) => {
+      expect(pictureBox({ width, height }, canvas)).toMatchObject({ pw, ph });
+    },
+  );
+
+  // 1080*2560/1664 is 1661.54 and the fit still reports 1662: the divisor is
+  // applied to the nearest even size, not to the largest one that fits
+  it('rounds up to the even size past the exact fit', () => {
+    expect(pictureBox({ width: 2560, height: 1664 }, canvas).pw).toBe(1662);
+  });
+
+  // (1920-1662)/2 is 129, and pad silently floors an odd offset to an even one
+  // under yuv420p's chroma subsampling rather than refusing it
+  it('offsets the picture where pad silently floors it to', () => {
+    expect(pictureBox({ width: 3024, height: 1964 }, canvas)).toEqual({
+      pw: 1662,
+      ph: 1080,
+      ox: 128,
+      oy: 0,
+    });
+    expect(pictureBox({ width: 3440, height: 1440 }, canvas)).toEqual({
+      pw: 1920,
+      ph: 804,
+      ox: 0,
+      oy: 138,
+    });
   });
 });
 

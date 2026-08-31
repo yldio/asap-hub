@@ -4,7 +4,10 @@ import { chain } from './filters';
 export const startArgs = ['-nostdin', '-y'];
 
 // a fixed GOP keeps every clip cuttable at the same cadence, which is what
-// makes the stage two concat able to copy the video stream untouched
+// makes the stage two concat able to copy the video stream untouched. The join
+// cuts on this grid too, so it is a constant rather than a repeated literal
+export const gopFrames = 60;
+
 export const videoEncodeArgs = (canvas: Canvas): string[] => [
   '-fps_mode',
   'cfr',
@@ -19,9 +22,9 @@ export const videoEncodeArgs = (canvas: Canvas): string[] => [
   '-crf',
   '20',
   '-g',
-  '60',
+  String(gopFrames),
   '-keyint_min',
-  '60',
+  String(gopFrames),
   '-sc_threshold',
   '0',
   '-pix_fmt',

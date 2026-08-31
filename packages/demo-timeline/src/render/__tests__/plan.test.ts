@@ -219,19 +219,99 @@ describe('buildRenderPlan', () => {
   describe('two clips with a crossfade', () => {
     const plan = planFor({ clips: crossfaded });
 
-    it('joins them with an xfade chain', () => {
+    it('blends the boundary and copies the rest', () => {
       expect(plan.steps).toMatchSnapshot();
     });
 
-    it('needs no concat list', () => {
-      expect(plan.listFile).toBeUndefined();
+    it('lists the pieces the join copies', () => {
+      expect(plan.listFile).toEqual({
+        path: '/work/concat.txt',
+        content:
+          "file '/work/piece-0.mp4'\nfile '/work/blend-1.mp4'\nfile '/work/piece-1.mp4'\n",
+      });
     });
 
-    it('takes the xfade offset from the clip layout', () => {
-      expect(plan.steps.at(-1)?.args.join(' ')).toContain(
-        'xfade=transition=fade:duration=1.000:offset=3.000',
-      );
+    // the offset was the boundary's place in the programme when the whole
+    // programme was one xfade; in a piece it is the lead in the keyframe grid
+    // pulled in, and the boundary still lands where the layout puts it
+    it('takes the xfade offset from the lead into the blend', () => {
+      expect(
+        plan.steps
+          .find((step) => step.output === '/work/blend-1.mp4')
+          ?.args.join(' '),
+      ).toContain('xfade=transition=fade:duration=1.000:offset=1.000');
     });
+  });
+
+  describe('a programme the keyframe grid cannot cut', () => {
+    // the middle clip is shorter than the two blends reaching into it
+    const plan = planFor({
+      clips: [
+        source({ id: 'a', outMs: 4000 }),
+        source({
+          id: 'b',
+          assetId: 'asset-2',
+          outMs: 2000,
+          transitionIn: { type: 'crossfade', durationMs: 500 },
+        }),
+        source({
+          id: 'c',
+          outMs: 4000,
+          transitionIn: { type: 'crossfade', durationMs: 500 },
+        }),
+      ],
+    });
+
+    it('re-encodes the programme whole rather than segmenting it', () => {
+      expect(plan.steps.at(-1)?.label).toBe('join 3 clips (xfade)');
+      expect(plan.listFile).toBeUndefined();
+      expect(plan.steps).toHaveLength(4);
+    });
+
+    it('keeps the xfade chain the layout describes', () => {
+      const args = plan.steps.at(-1)?.args.join(' ') ?? '';
+
+      expect(args).toContain(
+        '[vt0][vt1]xfade=transition=fade:duration=0.500:offset=3.500[v1]',
+      );
+      expect(args).toContain('[0:a][1:a]acrossfade=d=0.500[a1]');
+    });
+  });
+
+  describe('the steps a segmented join needs', () => {
+    const plan = planFor({ clips: crossfaded });
+
+    it('cuts and blends after the pool and before the join', () => {
+      expect(
+        plan.steps.map(({ label, serial }) => [label, serial ?? false]),
+      ).toEqual([
+        ['clip 0 (source asset-1)', false],
+        ['clip 1 (source asset-2)', false],
+        ['cut clip 0 for the join', true],
+        ['blend clip 0 into clip 1', true],
+        ['cut clip 1 for the join', true],
+        ['join 2 clips (segments)', true],
+      ]);
+    });
+
+    // the join used to be a quarter of the bar because it re-encoded the
+    // programme; copying pieces is worth a twentieth of that
+    it('bills the join as the copy it now is', () => {
+      expect(plan.steps.at(-1)?.weightMs).toBe(450);
+    });
+  });
+
+  it('delays narration into programme time across a segment boundary', () => {
+    const plan = planFor({
+      clips: crossfaded,
+      narration: [narrationTake({ startMs: 2500 })],
+    });
+    const args = plan.steps.at(-1)?.args.join(' ') ?? '';
+
+    // the piece the picture is cut at falls at 2.000s, and the take still
+    // starts where the timeline puts it: the audio never sees the seam
+    expect(args).toContain('adelay=2500:all=1[n0]');
+    expect(args).toContain('[a1][n0]amix=inputs=2');
   });
 
   describe('a clip with a banner', () => {
@@ -328,7 +408,7 @@ describe('buildRenderPlan', () => {
     });
   });
 
-  it('mixes narration into an xfade join after the clip inputs', () => {
+  it('mixes narration into a blended join after the clip inputs', () => {
     const plan = planFor({ clips: crossfaded, narration: [narrationTake()] });
 
     expect(plan.steps.at(-1)?.args).toMatchSnapshot();
@@ -912,7 +992,9 @@ describe('buildRenderPlan', () => {
       });
       const args = plan.steps.at(-1)?.args.join(' ') ?? '';
 
-      expect(args).toContain('[0:a][1:a]acrossfade=d=1.000');
+      // the demuxer the picture is copied off holds input 0, so the clips the
+      // audio is rebuilt from start at 1
+      expect(args).toContain('[1:a][2:a]acrossfade=d=1.000');
       expect(args).not.toContain('anullsrc');
     });
   });
@@ -930,10 +1012,20 @@ describe('buildRenderPlan', () => {
       ],
     });
 
-    const args = plan.steps.at(-1)?.args.join(' ') ?? '';
-
-    expect(args).toContain('[vt0][vt1]concat=n=2:v=1:a=0[v1]');
-    expect(args).toContain('[v1][vt2]xfade=transition=fade');
+    // the cut boundary needs no piece of its own: the two clips either side of
+    // it are copied whole and simply abut in the list
+    expect(plan.listFile?.content).toBe(
+      [
+        "file '/work/clip-0.mp4'",
+        "file '/work/piece-1.mp4'",
+        "file '/work/blend-2.mp4'",
+        "file '/work/piece-2.mp4'",
+        '',
+      ].join('\n'),
+    );
+    expect(plan.steps.at(-1)?.args.join(' ')).toContain(
+      '[1:a][2:a]concat=n=2:v=0:a=1[a1];[a1][3:a]acrossfade=d=0.800[a2]',
+    );
   });
 });
 

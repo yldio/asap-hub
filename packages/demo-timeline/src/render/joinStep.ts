@@ -16,6 +16,7 @@ import {
   timebaseFilter,
   xfadeTransition,
 } from './filters';
+import { joinPieces, JoinPieces, TileStarts } from './joinPieces';
 import { clipOutputPath, concatListPath } from './paths';
 import { ConcatListFile, FfmpegStep, RenderAsset } from './types';
 
@@ -27,9 +28,17 @@ export type JoinStepInput = {
   durationMs: number;
   workDir: string;
   output: string;
+  // set for a clip the plan encoded as tiles, so the join knows the picture
+  // restarts on a keyframe at every tile rather than only on the GOP grid
+  tileStarts?: TileStarts;
 };
 
-export type JoinStepResult = { step: FfmpegStep; listFile?: ConcatListFile };
+export type JoinStepResult = {
+  step: FfmpegStep;
+  listFile?: ConcatListFile;
+  // the cuts and blends the join reads, when it is joining pieces
+  pieces?: FfmpegStep[];
+};
 
 export const hasVisualTransition = (placements: ClipPlacement[]): boolean =>
   placements.some((placement) => placement.overlapMs > 0);
@@ -204,6 +213,25 @@ const foldChain = (first: string, links: ChainLink[]): Chain => {
   return { segments, label: last };
 };
 
+// The programme's own audio: a blended boundary crossfades, a cut abuts. The
+// first clip is whichever input the caller opened it as, because a join that
+// reads its picture off the concat demuxer holds that demuxer as input 0.
+const programAudioChain = (
+  boundaries: JoinBoundary[],
+  firstInput: number,
+): Chain =>
+  foldChain(
+    `${firstInput}:a`,
+    boundaries.map((boundary) => ({
+      input: `${boundary.index + firstInput}:a`,
+      name: `a${boundary.index}`,
+      filter:
+        boundary.durationMs > 0
+          ? `acrossfade=d=${secondsFromMs(boundary.durationMs)}`
+          : 'concat=n=2:v=0:a=1',
+    })),
+  );
+
 const xfadeJoin = ({
   placements,
   canvas,
@@ -242,17 +270,7 @@ const xfadeJoin = ({
     })),
   );
 
-  const programAudio = foldChain(
-    '0:a',
-    boundaries.map((boundary) => ({
-      input: `${boundary.index}:a`,
-      name: `a${boundary.index}`,
-      filter:
-        boundary.durationMs > 0
-          ? `acrossfade=d=${secondsFromMs(boundary.durationMs)}`
-          : 'concat=n=2:v=0:a=1',
-    })),
-  );
+  const programAudio = programAudioChain(boundaries, 0);
 
   const mixed = narration.length > 0;
   const mix = mixed
@@ -299,5 +317,77 @@ const xfadeJoin = ({
   };
 };
 
-export const buildJoinStep = (input: JoinStepInput): JoinStepResult =>
-  hasVisualTransition(input.placements) ? xfadeJoin(input) : concatJoin(input);
+// Everything the xfade join does to the audio, done to the audio alone. The
+// picture comes off the concat demuxer, so the clips move up one input and the
+// programme is a list of pieces rather than a list of clips: the blended spans
+// re-encoded, every other span copied out of the clip it already sits in.
+const segmentedJoin = (
+  { placements, narration, assets, durationMs, workDir, output }: JoinStepInput,
+  pieces: JoinPieces,
+): JoinStepResult => {
+  const listPath = concatListPath(workDir);
+  const programAudio = programAudioChain(joinBoundaries(placements), 1);
+  const mixed = narration.length > 0;
+  const mix = mixed
+    ? [
+        ...narrationSegments(narration, placements.length + 1),
+        mixSegment(
+          [
+            programAudio.label,
+            ...narration.map((_unused, position) => narrationLabel(position)),
+          ],
+          durationMs,
+        ),
+      ]
+    : [];
+
+  return {
+    listFile: { path: listPath, content: concatListContent(pieces.paths) },
+    pieces: pieces.steps,
+    step: {
+      label: joinLabel(placements.length, 'segments'),
+      output,
+      args: [
+        ...startArgs,
+        '-copyts',
+        '-f',
+        'concat',
+        '-safe',
+        '0',
+        '-i',
+        listPath,
+        ...placements.flatMap((placement) => [
+          '-i',
+          clipOutputPath(workDir, placement.index),
+        ]),
+        ...narrationInputArgs(narration, assets),
+        '-filter_complex',
+        graph([...programAudio.segments, ...mix]),
+        '-map',
+        '0:v',
+        '-map',
+        label(mixed ? 'a' : programAudio.label),
+        '-c:v',
+        'copy',
+        ...audioCodecArgs,
+        ...containerArgs,
+        output,
+      ],
+    },
+  };
+};
+
+export const buildJoinStep = (input: JoinStepInput): JoinStepResult => {
+  if (!hasVisualTransition(input.placements)) {
+    return concatJoin(input);
+  }
+  const pieces = joinPieces(
+    input.placements,
+    input.canvas,
+    input.workDir,
+    input.tileStarts,
+  );
+  // a programme too short to cut on the keyframe grid is re-encoded whole,
+  // which is slow but is the picture the timeline asks for
+  return pieces ? segmentedJoin(input, pieces) : xfadeJoin(input);
+};

@@ -6,6 +6,7 @@ import {
 import { Timeline } from '../schema';
 import { assetIndex } from './assets';
 import { buildClipStep } from './clipSteps';
+import { TileStarts } from './joinPieces';
 import { buildJoinStep } from './joinStep';
 import { buildAssembleStep, shiftZoomsForTile, tilePlacements } from './tiles';
 import {
@@ -66,6 +67,7 @@ export const buildRenderPlan = ({
   const listFiles: ConcatListFile[] = [];
   const svgs: SvgFile[] = [];
   const joinPieces: typeof placements = [];
+  const tileStarts: TileStarts = new Map();
 
   placements.forEach((placement) => {
     const tiles = tilePlacements(
@@ -105,6 +107,12 @@ export const buildRenderPlan = ({
       const assembled = buildAssembleStep(placement.index, tiles, workDir);
       assembleSteps.push(assembled.step);
       listFiles.push(assembled.listFile);
+      // the assembled clip carries a keyframe at every tile it was stitched
+      // from, which is the only grid the join can cut it on
+      tileStarts.set(
+        placement.index,
+        tiles.map((tile) => tile.shiftMs),
+      );
     }
   });
 
@@ -116,6 +124,7 @@ export const buildRenderPlan = ({
     durationMs,
     workDir,
     output,
+    tileStarts,
   });
 
   return {
@@ -124,7 +133,14 @@ export const buildRenderPlan = ({
     steps: [
       ...encodeSteps,
       ...assembleSteps,
-      { ...join.step, serial: true, weightMs: durationMs },
+      ...(join.pieces ?? []),
+      {
+        ...join.step,
+        serial: true,
+        // a join that reads pieces copies the picture, and the encoding it
+        // still owes the programme is billed to the blends that do it
+        weightMs: join.pieces ? Math.round(durationMs / 20) : durationMs,
+      },
     ],
     output,
     svgs: uniqueByPath(svgs),

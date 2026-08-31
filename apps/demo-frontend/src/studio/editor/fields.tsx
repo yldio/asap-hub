@@ -309,9 +309,18 @@ export const TimecodeField: FC<{
   readonly value: number;
   readonly disabled?: boolean;
   readonly minMs?: number;
+  // defaults to the furthest the document itself accepts: without a ceiling a
+  // typed time went straight in and every later save was rejected whole
   readonly maxMs?: number;
   readonly onChange: (ms: number) => void;
-}> = ({ label, value, disabled, minMs = 0, maxMs, onChange }) => {
+}> = ({
+  label,
+  value,
+  disabled,
+  minMs = 0,
+  maxMs = limits.maxTimelineMs,
+  onChange,
+}) => {
   const [draft, setDraft] = useState(formatMs(value));
   const [editing, setEditing] = useState(false);
   const [notice, setNotice] = useState<string>();
@@ -333,7 +342,7 @@ export const TimecodeField: FC<{
       return;
     }
 
-    const bounded = Math.min(maxMs ?? Infinity, Math.max(minMs, parsed));
+    const bounded = Math.min(maxMs, Math.max(minMs, parsed));
     if (bounded < parsed) {
       setNotice(`The latest this can be is ${formatMs(bounded)}.`);
     } else if (bounded > parsed) {

@@ -24,6 +24,19 @@ type Props = {
   readonly onRemove: () => void;
 };
 
+// what is left of the clip once the other three parts of the zoom have taken
+// their share; without a span there is nothing to divide and the field falls
+// back to its own ceiling
+const remainingMs = (
+  spanMs: number | undefined,
+  ...taken: number[]
+): { maxMs?: number } =>
+  spanMs === undefined
+    ? {}
+    : {
+        maxMs: Math.max(0, spanMs - taken.reduce((total, ms) => total + ms, 0)),
+      };
+
 const ZoomInspector: FC<Props> = ({
   zoom,
   readOnly,
@@ -55,32 +68,28 @@ const ZoomInspector: FC<Props> = ({
       label="Starts in the clip"
       value={zoom.startMs}
       disabled={readOnly}
-      {...(spanMs !== undefined
-        ? {
-            maxMs: Math.max(
-              0,
-              spanMs - (zoom.rampInMs + zoom.holdMs + zoom.rampOutMs),
-            ),
-          }
-        : {})}
+      {...remainingMs(spanMs, zoom.rampInMs, zoom.holdMs, zoom.rampOutMs)}
       onChange={(startMs) => onChange({ startMs })}
     />
     <TimecodeField
       label="Ramp in"
       value={zoom.rampInMs}
       disabled={readOnly}
+      {...remainingMs(spanMs, zoom.startMs, zoom.holdMs, zoom.rampOutMs)}
       onChange={(rampInMs) => onChange({ rampInMs })}
     />
     <TimecodeField
       label="Hold"
       value={zoom.holdMs}
       disabled={readOnly}
+      {...remainingMs(spanMs, zoom.startMs, zoom.rampInMs, zoom.rampOutMs)}
       onChange={(holdMs) => onChange({ holdMs })}
     />
     <TimecodeField
       label="Ramp out"
       value={zoom.rampOutMs}
       disabled={readOnly}
+      {...remainingMs(spanMs, zoom.startMs, zoom.rampInMs, zoom.holdMs)}
       onChange={(rampOutMs) => onChange({ rampOutMs })}
     />
 

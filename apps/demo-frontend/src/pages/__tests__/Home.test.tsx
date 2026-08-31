@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router';
 
-import type { Folder, Video } from '../../api/types';
+import type { BulkMoveResult, Folder, Video } from '../../api/types';
 import { creatorMe, makeVideo, memberMe, renderApp } from '../../test-utils';
 import Home from '../Home';
 
@@ -1115,7 +1115,7 @@ describe('reporting what a change did not do', () => {
 });
 
 describe('reporting the change the creator made last', () => {
-  const failedCreate = async () => {
+  const startFolderCreate = async () => {
     await within(sidebar()).findByText('Engineering');
     await userEvent.click(
       within(sidebar()).getByRole('button', { name: 'New top-level folder' }),
@@ -1124,6 +1124,10 @@ describe('reporting the change the creator made last', () => {
       screen.getByLabelText('New folder name'),
       'Ops{Enter}',
     );
+  };
+
+  const failedCreate = async () => {
+    await startFolderCreate();
     expect(
       await screen.findByRole('alert', {}, { timeout: 4000 }),
     ).toHaveTextContent(/^We could not create that folder\./);
@@ -1225,6 +1229,65 @@ describe('reporting the change the creator made last', () => {
     expect(await screen.findByText('Engineering standup')).toBeVisible();
     await waitFor(
       () => expect(screen.queryByRole('alert')).not.toBeInTheDocument(),
+      { timeout: 4000 },
+    );
+  });
+
+  it('reports a refusal that lands after a newer change has finished', async () => {
+    let settleMove!: (result: BulkMoveResult) => void;
+    renderHome({
+      api: {
+        bulkMoveVideos: () =>
+          new Promise<BulkMoveResult>((resolve) => {
+            settleMove = resolve;
+          }),
+        createFolder: () => Promise.resolve({ id: 'f-ops', name: 'Ops' }),
+      },
+    });
+
+    await moveUnfiledToDesign();
+    await startFolderCreate();
+
+    settleMove({ moved: [], missing: [], locked: ['v-unfiled'] });
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We did not move “Unfiled walkthrough” because another creator has it open\. Try again once they are done\.$/,
+    );
+  });
+
+  it('names the change started last when an older one lands after it', async () => {
+    let failCreate!: (error: Error) => void;
+    let settleMove!: (result: BulkMoveResult) => void;
+    renderHome({
+      api: {
+        createFolder: () =>
+          new Promise<Folder>((_resolve, reject) => {
+            failCreate = reject;
+          }),
+        bulkMoveVideos: () =>
+          new Promise<BulkMoveResult>((resolve) => {
+            settleMove = resolve;
+          }),
+      },
+    });
+
+    await startFolderCreate();
+    await moveUnfiledToDesign();
+
+    failCreate(new Error('boom'));
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(/^We could not create that folder\./);
+
+    settleMove({ moved: [], missing: [], locked: ['v-unfiled'] });
+
+    await waitFor(
+      () =>
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          /^We did not move “Unfiled walkthrough” because another creator has it open\. Try again once they are done\.$/,
+        ),
       { timeout: 4000 },
     );
   });

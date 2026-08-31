@@ -741,11 +741,13 @@ const Home: FC = () => {
     },
   ];
 
-  // one line reports the change the creator made last, by when each was started,
-  // so a newer change that has nothing to say leaves nothing on the page
-  const libraryAlert = libraryOutcomes.reduce((latest, outcome) =>
-    outcome.at > latest.at ? outcome : latest,
-  ).message;
+  // one line reports the change the creator made last, by when each was started.
+  // Only actions still running when the latest one began survive
+  // clearLibraryOutcomes, so the newest one with something to say is never stale,
+  // and a newer change that has nothing to say still leaves nothing behind it
+  const libraryAlert = [...libraryOutcomes]
+    .sort((first, second) => second.at - first.at)
+    .find(({ message }) => message !== undefined)?.message;
 
   const folderDeleteAlert = deleteFolder.isError
     ? 'We could not delete that folder. Try again in a moment.'

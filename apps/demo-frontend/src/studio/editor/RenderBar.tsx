@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { Link } from 'react-router';
-import { useRef } from 'react';
 import { RenderJob, VideoStatus } from '../../api/types';
 import EditorButton from './EditorButton';
 import { formatDuration } from './geometry';

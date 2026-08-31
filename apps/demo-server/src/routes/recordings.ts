@@ -138,10 +138,16 @@ const claimCaptureSession = async (
   );
 };
 
+// the read is consistent because the finalise patches eventsKey onto the row
+// and the studio asks for the stream in the very next request: an eventually
+// consistent get can still answer with the row as it was before the merge, and
+// the caller would be told the take was never finalised
 const loadSession = async (
   sessionId: string,
 ): Promise<RecordingSessionItem | undefined> => {
-  const { data } = await recordingSessionEntity.get({ sessionId }).go();
+  const { data } = await recordingSessionEntity
+    .get({ sessionId })
+    .go({ consistent: true });
   return (data as RecordingSessionItem | null) ?? undefined;
 };
 

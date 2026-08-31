@@ -131,10 +131,34 @@ const covers = (resource: string, url: string): boolean =>
       .replace(/\\\*/g, '.*')}$`,
   ).test(url);
 
+type ParsedCookie = {
+  name: string;
+  value: string;
+  path: string;
+  expired: boolean;
+};
+
+const setCookieHeader = (headers: Record<string, unknown>): string[] =>
+  (headers['set-cookie'] as string[] | undefined) ?? [];
+
+const parseSetCookie = (headers: Record<string, unknown>): ParsedCookie[] =>
+  setCookieHeader(headers).map((cookie) => {
+    const [name, ...rest] = cookie.split(';')[0]!.split('=');
+    return {
+      name: name!,
+      value: rest.join('='),
+      path: /Path=([^;]+)/.exec(cookie)![1]!,
+      expired: /Expires=Thu, 01 Jan 1970/.test(cookie),
+    };
+  });
+
+// the response also carries the headers that retire the broad cookie a viewer
+// kept from before the path narrowed; those are empty and already expired, so
+// the paths a caller is actually signed for are the ones left over
 const cookiePaths = (headers: Record<string, unknown>): string[] =>
-  (headers['set-cookie'] as string[]).map(
-    (cookie) => /Path=([^;]+)/.exec(cookie)![1]!,
-  );
+  parseSetCookie(headers)
+    .filter(({ expired }) => !expired)
+    .map(({ path }) => path);
 
 beforeEach(() => {
   jest.restoreAllMocks();
@@ -263,5 +287,99 @@ describe('POST /api/videos/:id/access', () => {
     );
     expect(cookiePaths(response.headers)[0]).toBe('/media/project-1/');
     expect(response.body.streamUrl).toBe('/media/project-1/stream.mp4');
+  });
+
+  it('retires the broad cookie a returning viewer still carries', async () => {
+    signedIn('member');
+    mockVideoGet(projectItem());
+
+    const response = await api.post('/api/videos/project-1/access');
+
+    const cookies = parseSetCookie(response.headers);
+    expect(cookies.filter(({ expired }) => expired)).toEqual([
+      {
+        name: 'CloudFront-Policy',
+        value: '',
+        path: '/media/project-1/',
+        expired: true,
+      },
+      {
+        name: 'CloudFront-Signature',
+        value: '',
+        path: '/media/project-1/',
+        expired: true,
+      },
+      {
+        name: 'CloudFront-Key-Pair-Id',
+        value: '',
+        path: '/media/project-1/',
+        expired: true,
+      },
+    ]);
+    expect(cookies.filter(({ expired }) => !expired)).toEqual([
+      {
+        name: 'CloudFront-Policy',
+        value: 'policy-value',
+        path: '/media/project-1/r2/',
+        expired: false,
+      },
+      {
+        name: 'CloudFront-Signature',
+        value: 'signature-value',
+        path: '/media/project-1/r2/',
+        expired: false,
+      },
+      {
+        name: 'CloudFront-Key-Pair-Id',
+        value: 'KEYPAIR123',
+        path: '/media/project-1/r2/',
+        expired: false,
+      },
+    ]);
+  });
+
+  it('repeats on the retiring header the attributes the broad cookie was set with', async () => {
+    signedIn('member');
+    mockVideoGet(projectItem());
+
+    const response = await api.post('/api/videos/project-1/access');
+
+    const retiring = setCookieHeader(response.headers).filter((cookie) =>
+      /Expires=Thu, 01 Jan 1970/.test(cookie),
+    );
+
+    expect(retiring).toHaveLength(3);
+    retiring.forEach((cookie) => {
+      expect(cookie).toContain('Path=/media/project-1/;');
+      expect(cookie).toContain('HttpOnly');
+      expect(cookie).toContain('Secure');
+      expect(cookie).toContain('SameSite=Lax');
+    });
+  });
+
+  it('retires nothing for a creator, whose path never narrowed', async () => {
+    signedIn('creator');
+    mockVideoGet(projectItem());
+
+    const response = await api.post('/api/videos/project-1/access');
+
+    expect(
+      parseSetCookie(response.headers).filter(({ expired }) => expired),
+    ).toEqual([]);
+    expect(setCookieHeader(response.headers)).toHaveLength(3);
+  });
+
+  it('retires nothing for an upload, whose path never narrowed either', async () => {
+    signedIn('member');
+    mockVideoGet(
+      projectItem({ kind: 'upload', mediaPath: undefined, render: undefined }),
+    );
+
+    const response = await api.post('/api/videos/project-1/access');
+
+    expect(
+      parseSetCookie(response.headers).filter(({ expired }) => expired),
+    ).toEqual([]);
+    expect(setCookieHeader(response.headers)).toHaveLength(3);
   });
 });

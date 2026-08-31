@@ -476,6 +476,19 @@ export const videosRouter = (): Router => {
       const scope = isCreator ? '' : mediaPath;
       const cookies = await buildSignedCookies(id, 'media', Date.now(), scope);
       const path = scope ? `/media/${id}/${scope}/` : `/media/${id}/`;
+      if (scope) {
+        // transitional: a viewer who watched before the path narrowed still
+        // holds the broad cookie under the same name, and it is sent alongside
+        // this one; retire this once no browser session predates that release
+        cookies.forEach(({ name }) => {
+          res.clearCookie(name, {
+            path: `/media/${id}/`,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax',
+          });
+        });
+      }
       cookies.forEach(({ name, value }) => {
         res.cookie(name, value, {
           path,

@@ -2,9 +2,11 @@
 import { css } from '@emotion/react';
 import { FC } from 'react';
 import { Link } from 'react-router';
+import { useRef } from 'react';
 import { RenderJob, VideoStatus } from '../../api/types';
 import EditorButton from './EditorButton';
 import { formatDuration } from './geometry';
+import { EtaSample, etaLabel, etaMs, withSample } from './renderEta';
 import { editorTheme } from './editorTheme';
 
 const barStyles = css({
@@ -92,6 +94,29 @@ export const whoCanSeeIt = (
     : 'Exported. Creators can watch it. Publish it for everyone else.';
 };
 
+// the pace is measured off the progress the container reports, so the label
+// is honest about whatever machine is actually rendering
+const useRenderEta = (render?: RenderJob): string | undefined => {
+  const held = useRef<{ renderId?: string; samples: EtaSample[] }>({
+    samples: [],
+  });
+  const busy = render?.state === 'queued' || render?.state === 'rendering';
+  if (!busy || !render) {
+    held.current = { samples: [] };
+    return undefined;
+  }
+  if (held.current.renderId !== render.renderId) {
+    held.current = { renderId: render.renderId, samples: [] };
+  }
+  held.current.samples = withSample(
+    held.current.samples,
+    render.progress ?? 0,
+    Date.now(),
+  );
+  const remaining = etaMs(held.current.samples, Date.now());
+  return remaining === undefined ? undefined : etaLabel(remaining);
+};
+
 type Props = {
   readonly videoId: string;
   readonly render?: RenderJob;
@@ -121,6 +146,7 @@ const RenderBar: FC<Props> = ({
 }) => {
   const busy = render?.state === 'queued' || render?.state === 'rendering';
   const download = render?.purpose === 'download';
+  const eta = useRenderEta(render);
 
   if (busy) {
     const progress = render?.progress ?? 0;
@@ -132,6 +158,7 @@ const RenderBar: FC<Props> = ({
             : render?.stage
               ? stageLabel(render.stage)
               : 'Queued'}
+          {eta ? ` · ${eta}` : ''}
         </span>
         <span
           css={trackStyles}

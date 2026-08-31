@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -35,42 +36,62 @@ export const AuthContext = createContext<AuthState>({
 
 export const useAuth = (): AuthState => useContext(AuthContext);
 
+type Session = {
+  client: Auth0Client;
+  isAuthenticated: boolean;
+  user?: User;
+};
+
+const initSession = async (): Promise<Session> => {
+  const auth0 = await createAuth0Client({
+    domain: AUTH0_DOMAIN,
+    client_id: AUTH0_CLIENT_ID,
+    audience: AUTH0_AUDIENCE,
+    redirect_uri: window.location.origin,
+    cacheLocation: 'localstorage',
+    useRefreshTokens: true,
+  });
+
+  if (window.location.search.includes('code=')) {
+    const { appState } = await auth0.handleRedirectCallback();
+    const target =
+      (appState as { returnTo?: string } | undefined)?.returnTo ?? '/';
+    window.history.replaceState({}, document.title, target);
+  }
+
+  const authenticated = await auth0.isAuthenticated();
+  return {
+    client: auth0,
+    isAuthenticated: authenticated,
+    user: authenticated ? await auth0.getUser<User>() : undefined,
+  };
+};
+
 const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [client, setClient] = useState<Auth0Client>();
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState<User>();
 
+  const session = useRef<Promise<Session>>();
+
   useEffect(() => {
     let cancelled = false;
-    const init = async () => {
-      const auth0 = await createAuth0Client({
-        domain: AUTH0_DOMAIN,
-        client_id: AUTH0_CLIENT_ID,
-        audience: AUTH0_AUDIENCE,
-        redirect_uri: window.location.origin,
-        cacheLocation: 'localstorage',
-        useRefreshTokens: true,
+
+    // Shared across a StrictMode double mount so the single-use code is redeemed once.
+    if (!session.current) session.current = initSession();
+
+    session.current
+      .then((settled) => {
+        if (cancelled) return;
+        setClient(settled.client);
+        setAuthenticated(settled.isAuthenticated);
+        setUser(settled.user);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
       });
-
-      if (window.location.search.includes('code=')) {
-        const { appState } = await auth0.handleRedirectCallback();
-        const target =
-          (appState as { returnTo?: string } | undefined)?.returnTo ?? '/';
-        window.history.replaceState({}, document.title, target);
-      }
-
-      const authenticated = await auth0.isAuthenticated();
-      if (cancelled) return;
-      setClient(auth0);
-      setAuthenticated(authenticated);
-      setUser(authenticated ? await auth0.getUser<User>() : undefined);
-      setLoading(false);
-    };
-
-    init().catch(() => {
-      if (!cancelled) setLoading(false);
-    });
 
     return () => {
       cancelled = true;

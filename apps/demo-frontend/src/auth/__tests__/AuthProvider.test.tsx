@@ -1,6 +1,7 @@
 import createAuth0Client from '@auth0/auth0-spa-js';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { StrictMode } from 'react';
 
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../../config';
 import AuthProvider, { useAuth } from '../AuthProvider';
@@ -63,6 +64,15 @@ const renderProvider = () =>
     <AuthProvider>
       <Probe />
     </AuthProvider>,
+  );
+
+const renderProviderInStrictMode = () =>
+  render(
+    <StrictMode>
+      <AuthProvider>
+        <Probe />
+      </AuthProvider>
+    </StrictMode>,
   );
 
 const setLocation = (search: string, pathname = '/videos/video-1') => {
@@ -171,6 +181,48 @@ describe('redirect callback', () => {
       expect(screen.getByTestId('state')).toHaveTextContent('in'),
     );
     expect(client.handleRedirectCallback).not.toHaveBeenCalled();
+  });
+});
+
+describe('strict mode double mount', () => {
+  it('redeems the authorization code once and ends up signed in', async () => {
+    setLocation('?code=abc&state=xyz');
+    let redeemed = false;
+    const client = makeClient({
+      handleRedirectCallback: jest.fn(() => {
+        if (redeemed) return Promise.reject(new Error('invalid_grant'));
+        redeemed = true;
+        return Promise.resolve({ appState: { returnTo: '/videos/video-1' } });
+      }),
+    });
+    createClient.mockResolvedValue(client);
+
+    renderProviderInStrictMode();
+
+    await waitFor(() =>
+      expect(screen.getByTestId('state')).toHaveTextContent(/^in$/),
+    );
+    expect(client.handleRedirectCallback).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('user')).toHaveTextContent('jane@example.com');
+  });
+
+  it('stops loading when redeeming the authorization code fails', async () => {
+    setLocation('?code=abc&state=xyz');
+    const client = makeClient({
+      handleRedirectCallback: jest.fn(() =>
+        Promise.reject(new Error('invalid_grant')),
+      ),
+    });
+    createClient.mockResolvedValue(client);
+
+    renderProviderInStrictMode();
+
+    await waitFor(() =>
+      expect(screen.getByTestId('state')).toHaveTextContent(/^out$/),
+    );
+    expect(client.handleRedirectCallback).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledTimes(1);
   });
 });
 

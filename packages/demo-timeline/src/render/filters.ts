@@ -75,6 +75,9 @@ export type OverlayWindow = Fade & {
   endMs: number;
   spanStartMs?: number;
   spanEndMs?: number;
+  // the preview eases its fade out, so by halfway the ring is already faint;
+  // a linear fade read heavier for its whole back half
+  easedFadeOut?: boolean;
   // the ring expands as it fades, exactly as the preview plays it: the art is
   // drawn crisp at its largest and scaled down per frame, so every size is a
   // downscale rather than a blow up
@@ -171,12 +174,16 @@ const overlayFadeFilters = (visible: OverlayWindow): string[] => {
   const ramps = fadeRampsOf(visible);
   const preRollMs = overlayPreRollMs(visible);
   return [
-    ...ramps.map(
-      (ramp) =>
-        `fade=t=${ramp.type}:st=${secondsFromMs(
-          ramp.fromMs + preRollMs,
-        )}:d=${secondsFromMs(ramp.durationMs)}:alpha=1`,
-    ),
+    ...ramps.flatMap((ramp) => {
+      const fade = `fade=t=${ramp.type}:st=${secondsFromMs(
+        ramp.fromMs + preRollMs,
+      )}:d=${secondsFromMs(ramp.durationMs)}:alpha=1`;
+      // two linear fades multiply into the (1-p)^2 the preview's ease-out
+      // opacity traces
+      return visible.easedFadeOut && ramp.type === 'out'
+        ? [fade, fade]
+        : [fade];
+    }),
     ...(preRollMs > 0
       ? [`trim=start=${secondsFromMs(preRollMs)}`, 'setpts=PTS-STARTPTS']
       : []),

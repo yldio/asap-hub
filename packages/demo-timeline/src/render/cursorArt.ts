@@ -27,10 +27,12 @@ export type ArtBox = { x: number; y: number; width: number; height: number };
 
 // every size is a fraction of the canvas, so a click looks the same at 1080p
 // and at 4K
+// the preview's animation starts the whole ring at 0.85, so the art carries
+// that baseline in its own opacities rather than ever compositing at full
 const rippleStyle = {
   diameter: 0.09,
   strokeWidth: 0.004,
-  strokeOpacity: 0.9,
+  startOpacity: 0.85,
   fillOpacity: 0.18,
 } as const;
 
@@ -79,13 +81,19 @@ export const rippleSvg = ({ point, canvas, color }: CursorArtInput): string => {
   // a white page and a coloured one stays readable on its own colour
   const edge = edgeFor(ink);
 
+  const at = (value: number): string =>
+    (value * rippleStyle.startOpacity).toFixed(3);
   return svgDocument(box, [
     `<circle cx="${centre}" cy="${centre}" r="${
       radius + strokeWidth
-    }" fill="none" stroke="${edge.color}" stroke-opacity="${
-      edge.opacity
-    }" stroke-width="${strokeWidth}"/>`,
-    `<circle cx="${centre}" cy="${centre}" r="${radius}" fill="${ink}" fill-opacity="${rippleStyle.fillOpacity}" stroke="${ink}" stroke-opacity="${rippleStyle.strokeOpacity}" stroke-width="${strokeWidth}"/>`,
+    }" fill="none" stroke="${edge.color}" stroke-opacity="${at(
+      edge.opacity,
+    )}" stroke-width="${strokeWidth}"/>`,
+    `<circle cx="${centre}" cy="${centre}" r="${radius}" fill="${ink}" fill-opacity="${at(
+      rippleStyle.fillOpacity,
+    )}" stroke="${ink}" stroke-opacity="${at(
+      1,
+    )}" stroke-width="${strokeWidth}"/>`,
   ]);
 };
 
@@ -117,6 +125,7 @@ export type CursorArt = ArtBox & {
   durationMs: number;
   fadeInMs: number;
   fadeOutMs: number;
+  easedFadeOut?: boolean;
   grow?: { durationMs: number; fromScale: number };
 };
 
@@ -135,6 +144,7 @@ export const cursorArt = (
       durationMs: rippleDurationMs,
       fadeInMs: 0,
       fadeOutMs: rippleDurationMs,
+      easedFadeOut: true,
       grow: {
         durationMs: rippleDurationMs,
         fromScale: rippleFromScale / rippleToScale,

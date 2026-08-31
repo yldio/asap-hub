@@ -1,5 +1,5 @@
 import { Canvas, Zoom } from '../schema';
-import { secondsFromMs } from './filters';
+import { PictureBox, secondsFromMs } from './filters';
 
 const gain = (value: number): string => value.toFixed(3);
 
@@ -106,6 +106,32 @@ export const onZoomedFrame = (
 const magnified = (size: number, scale: string): string =>
   `2*floor(${size}*(${scale})/2)`;
 
+type Axis = 'in_w' | 'in_h';
+
+// the picture at the magnification the whole canvas would have had, kept even
+// the way the fit's own force_divisible_by=2 keeps it
+const magnifiedPicture = (
+  size: number,
+  canvasSize: number,
+  frame: string,
+): string => `2*round(${size}*(${frame})/${canvasSize}/2)`;
+
+// pad has no t and no n, so the bar is written against in_w, the one variable
+// it is given that carries the scale the filter before it just applied
+const barOffset = (offset: number, size: number, axis: Axis): string =>
+  `2*floor(${offset}*${axis}/${size}/2)`;
+
+// the +2 of slack guarantees the padded frame is never a pixel short of the
+// magnified canvas, which would let the crop below clamp itself off the window;
+// the slack is black and the window never reaches it
+const paddedSize = (canvasSize: number, size: number, axis: Axis): string =>
+  `2*floor(${canvasSize}*${axis}/${size}/2)+2`;
+
+// pad leaves in_w as the padded width, slack and all, so the window is held
+// inside the magnified canvas by name and floored here rather than by crop
+const windowAt = (crop: string, frame: string, canvasSize: number): string =>
+  `min(2*floor((${crop})*(${frame})/2),(${frame})-${canvasSize})`;
+
 // The zoom is a window of the picture magnified back up to the canvas. zoompan
 // did that by cropping whole input pixels out of the canvas sized frame and
 // rescaling them with its own hardwired bicubic, which on a 2560x1440 capture
@@ -113,7 +139,17 @@ const magnified = (size: number, scale: string): string =>
 // lanczos scale to `scale` times the canvas, cropped back to the canvas, gives
 // 62.4dB and moves the window a whole output pixel at a time rather than a whole
 // source pixel.
-export const zoomFilters = (clip: Zoom[], canvas: Canvas): string[] => {
+// A source whose aspect is not the canvas's is letterboxed, and its `picture`
+// says where the fit draws it. The zoom then magnifies the picture alone and
+// pads the bars back around it, so the pixels come off the source at its own
+// resolution instead of out of a frame already resampled down to the canvas:
+// on a 3024x1964 capture that measured 10.23 CPU seconds against 20.85 for a
+// held 2x, and 2.78x fewer pixels thrown away.
+export const zoomFilters = (
+  clip: Zoom[],
+  canvas: Canvas,
+  picture?: PictureBox,
+): string[] => {
   const written = zoomExpressions(clip);
   if (!written) {
     return [];
@@ -121,9 +157,38 @@ export const zoomFilters = (clip: Zoom[], canvas: Canvas): string[] => {
   const width = magnified(canvas.width, written.scale);
   const height = magnified(canvas.height, written.scale);
 
+  if (!picture) {
+    return [
+      `fps=${canvas.fps}`,
+      `scale=w='${width}':h='${height}':eval=frame:flags=lanczos:out_color_matrix=bt709`,
+      `crop=${canvas.width}:${canvas.height}:x='(${written.cropX})*(${width})':y='(${written.cropY})*(${height})'`,
+    ];
+  }
+
   return [
     `fps=${canvas.fps}`,
-    `scale=w='${width}':h='${height}':eval=frame:flags=lanczos:out_color_matrix=bt709`,
-    `crop=${canvas.width}:${canvas.height}:x='(${written.cropX})*(${width})':y='(${written.cropY})*(${height})'`,
+    `scale=w='${magnifiedPicture(
+      picture.pw,
+      canvas.width,
+      width,
+    )}':h='${magnifiedPicture(
+      picture.ph,
+      canvas.height,
+      height,
+    )}':eval=frame:flags=lanczos:out_color_matrix=bt709`,
+    `pad=w='${paddedSize(canvas.width, picture.pw, 'in_w')}':h='${paddedSize(
+      canvas.height,
+      picture.ph,
+      'in_h',
+    )}':x='${barOffset(picture.ox, picture.pw, 'in_w')}':y='${barOffset(
+      picture.oy,
+      picture.ph,
+      'in_h',
+    )}':color=black:eval=frame`,
+    `crop=${canvas.width}:${canvas.height}:x='${windowAt(
+      written.cropX,
+      width,
+      canvas.width,
+    )}':y='${windowAt(written.cropY, height, canvas.height)}'`,
   ];
 };

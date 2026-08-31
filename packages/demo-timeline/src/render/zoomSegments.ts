@@ -1,5 +1,6 @@
 import { Canvas, Zoom } from '../schema';
 import { zoomDurationMs } from '../zoom';
+import { evenDown, evenNear, PictureBox } from './filters';
 
 // A zoom is a ramp in, a hold and a ramp out, and only the ramps actually
 // move the window. This reads a clip's zooms as a run of quiet, still and
@@ -161,9 +162,7 @@ export const zoomSpans = (zooms: Zoom[], durationMs: number): ZoomSpan[] => {
   }, []);
 };
 
-const evenDown = (value: number): number => 2 * Math.floor(value / 2);
 const evenUp = (value: number): number => 2 * Math.ceil(value / 2);
-const evenNear = (value: number): number => 2 * Math.round(value / 2);
 
 // the frame the moving chain magnifies to, kept even because the chain runs
 // in yuv420p
@@ -176,6 +175,56 @@ const magnifiedSize = (size: number, scale: number): number =>
 const movingCropAt = (share: number, frame: number, shown: number): number =>
   evenDown(Math.min(Math.max(Math.round(share * frame), 0), frame - shown));
 
+// What the moving chain shows on one axis: the magnified picture, where inside
+// it the window starts, and how much black the canvas puts either side when the
+// window reaches past the picture. Only the source can supply `visible`; the
+// bars are the canvas's own, and pixels were never there to crop.
+type AxisWindow = {
+  frame: number;
+  movingAt: number;
+  visible: number;
+  barLow: number;
+};
+
+const axisWindow = (
+  canvasSize: number,
+  scale: number,
+  share: number,
+  picture?: { size: number; offset: number },
+): AxisWindow => {
+  const canvasFrame = magnifiedSize(canvasSize, scale);
+  if (!picture) {
+    return {
+      frame: canvasFrame,
+      movingAt: movingCropAt(share, canvasFrame, canvasSize),
+      visible: canvasSize,
+      barLow: 0,
+    };
+  }
+  const frame = evenNear((picture.size * canvasFrame) / canvasSize);
+  const padAt = evenDown((picture.offset * frame) / picture.size);
+  // the letterboxed moving chain spells the even floor out in its crop, so the
+  // window is floored before it is held inside the frame rather than rounded
+  const want =
+    Math.min(evenDown(share * canvasFrame), canvasFrame - canvasSize) - padAt;
+  // Zooms stack, so five held 4x ones aimed at a corner can put the whole
+  // window inside a bar. A crop of nothing is not a rectangle ffmpeg will take,
+  // so two pixels of picture are always kept: the moving chain shows solid
+  // black there and this shows all but two columns of it.
+  const barLow = Math.min(Math.max(0, -want), canvasSize - 2);
+  const barHigh = Math.min(
+    Math.max(0, want + canvasSize - frame),
+    canvasSize - 2 - barLow,
+  );
+  const visible = canvasSize - barLow - barHigh;
+  return {
+    frame,
+    movingAt: Math.min(Math.max(0, want), frame - visible),
+    visible,
+    barLow,
+  };
+};
+
 type StillAxis = {
   crop: number;
   cropAt: number;
@@ -185,7 +234,7 @@ type StillAxis = {
 
 // how far the source crop may be pulled back, and how much wider it may be
 // cut, hunting for the alignment; the pixels this adds are the only extra work
-const gridSteps = 32;
+const gridSteps = 48;
 
 // beating the candidate before it by less than this is float noise, and a
 // wider crop bought with nothing is just more work
@@ -197,16 +246,14 @@ const closer = 1e-6;
 // magnification comes out exact. What the pull back and the widening overhang
 // is taken off again by a second crop, which costs nothing.
 const stillAxis = (
-  canvasSize: number,
+  shown: number,
   inputSize: number,
-  scale: number,
-  share: number,
+  frame: number,
+  movingAt: number,
 ): StillAxis => {
-  const frame = magnifiedSize(canvasSize, scale);
   const gain = frame / inputSize;
-  const movingAt = movingCropAt(share, frame, canvasSize);
   const from = movingAt / gain;
-  const to = (movingAt + canvasSize) / gain;
+  const to = (movingAt + shown) / gain;
 
   let cropAt = evenDown(from);
   let showAt = evenNear(movingAt - cropAt * gain);
@@ -227,7 +274,7 @@ const stillAxis = (
 
   const covers = Math.min(evenUp(to - cropAt), evenDown(inputSize - cropAt));
   let crop = covers;
-  let scaled = Math.max(evenNear(covers * gain), showAt + canvasSize);
+  let scaled = Math.max(evenNear(covers * gain), showAt + shown);
   let wrongBy = Infinity;
   for (let wider = 0; wider <= 2 * gridSteps; wider += 2) {
     const wide = covers + wider;
@@ -235,7 +282,7 @@ const stillAxis = (
     if (cropAt + wide > inputSize) {
       break;
     }
-    if (size >= showAt + canvasSize) {
+    if (size >= showAt + shown) {
       const off = Math.abs(size - wide * gain) / (wide * gain);
       if (off < wrongBy - closer) {
         crop = wide;
@@ -258,20 +305,47 @@ export const stillFilters = (
   window: StillWindow,
   canvas: Canvas,
   input: { width: number; height: number },
+  picture?: PictureBox,
 ): string[] => {
-  const x = stillAxis(canvas.width, input.width, window.scale, window.cropX);
-  const y = stillAxis(canvas.height, input.height, window.scale, window.cropY);
+  const across = axisWindow(
+    canvas.width,
+    window.scale,
+    window.cropX,
+    picture && { size: picture.pw, offset: picture.ox },
+  );
+  const down = axisWindow(
+    canvas.height,
+    window.scale,
+    window.cropY,
+    picture && { size: picture.ph, offset: picture.oy },
+  );
+  const x = stillAxis(
+    across.visible,
+    input.width,
+    across.frame,
+    across.movingAt,
+  );
+  const y = stillAxis(down.visible, input.height, down.frame, down.movingAt);
   const overhangs =
     x.showAt > 0 ||
     y.showAt > 0 ||
-    x.scaled !== canvas.width ||
-    y.scaled !== canvas.height;
+    x.scaled !== across.visible ||
+    y.scaled !== down.visible;
+  const barred =
+    across.visible !== canvas.width || down.visible !== canvas.height;
 
   return [
     `crop=${x.crop}:${y.crop}:${x.cropAt}:${y.cropAt}`,
     `scale=${x.scaled}:${y.scaled}:flags=lanczos:out_color_matrix=bt709`,
+    // the overhang comes off before the bar goes on: trimming a padded frame
+    // either eats the bar or lets the picture spill over it
     ...(overhangs
-      ? [`crop=${canvas.width}:${canvas.height}:${x.showAt}:${y.showAt}`]
+      ? [`crop=${across.visible}:${down.visible}:${x.showAt}:${y.showAt}`]
+      : []),
+    ...(barred
+      ? [
+          `pad=${canvas.width}:${canvas.height}:${across.barLow}:${down.barLow}:color=black`,
+        ]
       : []),
   ];
 };

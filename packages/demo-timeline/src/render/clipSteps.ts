@@ -40,6 +40,8 @@ import {
   OverlayWindow,
   overlayFilter,
   overlayInputFilters,
+  PictureBox,
+  pictureBox,
   secondsFromMs,
   videoFilters,
 } from './filters';
@@ -351,27 +353,32 @@ const pointerOverlays = (
         : [];
     });
 
-// The zoom magnifies whatever it is handed, so a capture at least as large as
-// the canvas is cropped at its own resolution and scaled down once, rather than
-// being fitted to the canvas and then magnified back out of it. The aspect has
-// to match exactly: otherwise the canvas fit letterboxes the picture, and the
-// preview scales those bars along with it.
+// The zoom magnifies whatever it is handed, so a capture the fit only ever
+// shrinks is cropped at its own resolution and scaled down once, rather than
+// being fitted to the canvas and then magnified back out of it. A 16:10 panel
+// qualifies as readily as a 16:9 one: the letterbox stays exactly where the fit
+// put it, and only where the zoom's pixels come from changes.
 const sourceTheZoomCrops = (
   clip: Clip,
   canvas: Canvas,
   assets: Map<string, RenderAsset>,
-): { width: number; height: number } | undefined => {
+): { width: number; height: number; picture?: PictureBox } | undefined => {
   if (clip.kind !== 'source') {
     return undefined;
   }
   const { width, height } = assets.get(clip.assetId) ?? {};
-  return width !== undefined &&
-    height !== undefined &&
-    width >= canvas.width &&
-    height >= canvas.height &&
-    width * canvas.height === height * canvas.width
+  if (width === undefined || height === undefined) {
+    return undefined;
+  }
+  const picture = pictureBox({ width, height }, canvas);
+  if (picture.pw > width || picture.ph > height) {
+    return undefined;
+  }
+  // a capture that fills the canvas has no bars to reckon with, so it keeps the
+  // chain it has always emitted, down to the byte
+  return picture.pw === canvas.width && picture.ph === canvas.height
     ? { width, height }
-    : undefined;
+    : { width, height, picture };
 };
 
 // the zoom's own scale is the canvas fit when it stands at rest, so a source it
@@ -391,12 +398,12 @@ const pictureFilters = (
     return [
       ...(source ? [] : videoFilters({ canvas, placement })),
       `fps=${canvas.fps}`,
-      ...stillFilters(stillWindow, canvas, source ?? canvas),
+      ...stillFilters(stillWindow, canvas, source ?? canvas, source?.picture),
       'setsar=1',
       colourTagFilter,
     ];
   }
-  const zoom = zoomFilters(clipZoom, canvas);
+  const zoom = zoomFilters(clipZoom, canvas, source?.picture);
   if (zoom.length === 0) {
     return videoFilters({ canvas, placement });
   }

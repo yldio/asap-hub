@@ -38,6 +38,17 @@ const assets: RenderAsset[] = [
     hasAudio: false,
   },
   { assetId: 'voice-1', path: '/media/voice-1.m4a', durationMs: 20000 },
+  // the 16:10 panel most of these demos are recorded on: the canvas fit
+  // letterboxes it, so the zoom has bars to reckon with
+  {
+    assetId: 'wide-1',
+    path: '/media/wide-1.mp4',
+    durationMs: 60000,
+    width: 3024,
+    height: 1964,
+    fps: 30,
+    hasAudio: true,
+  },
 ];
 
 const source = (overrides: Partial<SourceClip> = {}): SourceClip => ({
@@ -434,6 +445,90 @@ describe('buildRenderPlan', () => {
 
       expect(args).toContain("x='(clip(0.5000*(1-1/(1+1.000*if(");
       expect(args).toContain('+0.2000*(1-1/(1+1.000*if(');
+    });
+  });
+
+  // A 16:10 capture used to be fitted to the canvas first and magnified back
+  // out of the result, so the zoom cropped an already resampled frame. The
+  // letterbox stays exactly where the fit put it and only the zoom's pixels
+  // change: they come out of the picture, at its own resolution.
+  describe('a letterboxed clip with a zoom', () => {
+    const wide = source({ assetId: 'wide-1' });
+
+    it('scales the picture, pads the bars and crops the window', () => {
+      expect(
+        planFor({ clips: [wide], zooms: [zoom()] }).steps[0],
+      ).toMatchSnapshot();
+    });
+
+    it('never fits the capture to the canvas first', () => {
+      const args =
+        planFor({ clips: [wide], zooms: [zoom()] }).steps[0]?.args.join(' ') ??
+        '';
+
+      expect(args).not.toContain('force_original_aspect_ratio');
+      // the bar is written against the magnified picture, the only width pad
+      // is given that carries the scale
+      expect(args).toContain("x='2*floor(128*in_w/1662/2)'");
+    });
+
+    const held = planFor({
+      clips: [wide],
+      zooms: [
+        zoom({
+          startMs: 0,
+          rampInMs: 0,
+          holdMs: 10_000,
+          rampOutMs: 0,
+          focus: { x: 0, y: 0.5 },
+        }),
+      ],
+    });
+
+    it('cuts a held window out of the source and pads the bar back on', () => {
+      expect(held.steps[0]).toMatchSnapshot();
+    });
+
+    // the window aimed at the left edge reaches 256 output pixels past the
+    // picture, which no crop of the source can supply
+    it('supplies the bar the held window reaches into', () => {
+      expect(held.steps[0]?.args.join(' ')).toContain(
+        'crop=1664:1080:0:100,pad=1920:1080:256:0:color=black',
+      );
+    });
+
+    // the overlays composite onto the finished picture at canvas coordinates
+    // and ride the same window expression, so a bar changes nothing about
+    // where any of them land
+    const overlaid = (assetId: string) =>
+      planFor({
+        clips: [source({ assetId })],
+        zooms: [zoom()],
+        banners: [banner()],
+        cursor: [
+          cursorLayer({
+            path: [
+              { tMs: 0, x: 0.1, y: 0.2 },
+              { tMs: 1000, x: 0.6, y: 0.7 },
+            ],
+          }),
+        ],
+      });
+
+    it('composites banners, rings and the pointer over it unchanged', () => {
+      expect(overlaid('wide-1').steps[0]).toMatchSnapshot();
+    });
+
+    it('places every overlay exactly where a 16:9 capture would', () => {
+      const segments = (assetId: string) => {
+        const graph =
+          overlaid(assetId).steps[0]?.args.find((arg) =>
+            arg.includes('[v0];'),
+          ) ?? '';
+        return graph.slice(graph.indexOf('[v0];'));
+      };
+
+      expect(segments('wide-1')).toEqual(segments('asset-1'));
     });
   });
 

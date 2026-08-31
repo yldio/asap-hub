@@ -52,6 +52,17 @@ const gsi1KeysOf = (row: VideoRow): Record<string, string> => {
   return { GSI1PK: Item.GSI1PK ?? '', GSI1SK: Item.GSI1SK ?? '' };
 };
 
+// the same cut: the section files were sliced at the chapter starts, so a list
+// with the same starts still describes them however the titles have changed
+const sameCut = (
+  chapters: { startMs: number }[] = [],
+  existing: { startMs: number }[] = [],
+): boolean =>
+  chapters.length === existing.length &&
+  chapters.every(
+    (chapter, index) => chapter.startMs === existing[index]?.startMs,
+  );
+
 export const videosRouter = (): Router => {
   const router = asyncRouter();
 
@@ -273,9 +284,13 @@ export const videosRouter = (): Router => {
         expectedVersion: version,
         set: {
           ...next,
-          // the section files were cut from the chapters the render saw, so a
-          // new chapter list leaves none of them describing a chapter any more
-          ...(changes.chapters ? { sectionCount: 0 } : {}),
+          // the section files were cut on the chapter starts, so a start moving
+          // leaves none of them describing a chapter any more. The editor sends
+          // the whole list on every save, renames included, and a rename cuts
+          // nothing new.
+          ...(sameCut(next.chapters, existing.chapters)
+            ? {}
+            : { sectionCount: 0 }),
           updatedAt: new Date().toISOString(),
           ...gsi1KeysOf({ ...existing, ...next }),
         },

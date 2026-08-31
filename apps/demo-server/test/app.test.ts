@@ -467,56 +467,114 @@ describe('PATCH /api/videos/:id', () => {
     expect(response.body.error).toBe('validation');
   });
 
-  // the sections were cut from the chapters the render saw, so a new list leaves
-  // none of the files describing a chapter
-  it('forgets the cut sections when the chapters are rewritten', async () => {
-    mockUser('creator', 'auth0|creator', 'Ana');
-    mockVideoGet(
-      videoItem({
-        lockedBy: 'auth0|creator',
-        lockedByName: 'Ana',
-        lockExpiresAt: Date.now() + 60000,
-        sectionCount: 3,
-      }),
-    );
-    mockSend.mockResolvedValue({});
+  // the sections were cut at the chapter starts, so a start moving leaves none
+  // of the files describing a chapter
+  describe('the sections a render cut', () => {
+    const cut = [
+      { startMs: 0, title: 'Intro' },
+      { startMs: 60000, title: 'Second' },
+    ];
 
-    const response = await api
-      .patch('/api/videos/video-1')
-      .set('Authorization', creatorToken)
-      .send({
-        version: 1,
-        chapters: [{ startMs: 0, title: 'Intro' }],
-      });
+    const sectioned = () => {
+      mockUser('creator', 'auth0|creator', 'Ana');
+      mockVideoGet(
+        videoItem({
+          lockedBy: 'auth0|creator',
+          lockedByName: 'Ana',
+          lockExpiresAt: Date.now() + 60000,
+          chapters: cut,
+          sectionCount: 2,
+        }),
+      );
+      mockSend.mockResolvedValue({});
+    };
 
-    expect(response.status).toBe(200);
-    expect(
-      mockSend.mock.calls[0][0].input.ExpressionAttributeValues[
-        ':sectionCount'
-      ],
-    ).toBe(0);
-  });
+    const writtenValues = () =>
+      mockSend.mock.calls[0][0].input.ExpressionAttributeValues;
 
-  it('leaves the cut sections alone when only the title moves', async () => {
-    mockUser('creator', 'auth0|creator', 'Ana');
-    mockVideoGet(
-      videoItem({
-        lockedBy: 'auth0|creator',
-        lockedByName: 'Ana',
-        lockExpiresAt: Date.now() + 60000,
-        sectionCount: 3,
-      }),
-    );
-    mockSend.mockResolvedValue({});
+    it('are forgotten when a chapter is added', async () => {
+      sectioned();
 
-    await api
-      .patch('/api/videos/video-1')
-      .set('Authorization', creatorToken)
-      .send({ version: 1, title: 'Renamed' });
+      const response = await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({
+          version: 1,
+          chapters: [...cut, { startMs: 120000, title: 'Third' }],
+        });
 
-    expect(
-      mockSend.mock.calls[0][0].input.ExpressionAttributeValues,
-    ).not.toHaveProperty(':sectionCount');
+      expect(response.status).toBe(200);
+      expect(writtenValues()[':sectionCount']).toBe(0);
+    });
+
+    it('are forgotten when a start moves', async () => {
+      sectioned();
+
+      await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({
+          version: 1,
+          chapters: [
+            { startMs: 0, title: 'Intro' },
+            { startMs: 90000, title: 'Second' },
+          ],
+        });
+
+      expect(writtenValues()[':sectionCount']).toBe(0);
+    });
+
+    it('are forgotten when a chapter is removed', async () => {
+      sectioned();
+
+      await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({ version: 1, chapters: [{ startMs: 0, title: 'Intro' }] });
+
+      expect(writtenValues()[':sectionCount']).toBe(0);
+    });
+
+    // the editor sends the whole list on every save, so a rename arrives as the
+    // same starts under a new name and must not throw the files away
+    it('survive a chapter being renamed', async () => {
+      sectioned();
+
+      await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({
+          version: 1,
+          chapters: [
+            { startMs: 0, title: 'Intro' },
+            { startMs: 60000, title: 'Renamed' },
+          ],
+        });
+
+      expect(writtenValues()).not.toHaveProperty(':sectionCount');
+    });
+
+    it('survive the demo being renamed with its chapters attached', async () => {
+      sectioned();
+
+      await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({ version: 1, title: 'Renamed', chapters: cut });
+
+      expect(writtenValues()).not.toHaveProperty(':sectionCount');
+    });
+
+    it('survive a save that carries no chapters at all', async () => {
+      sectioned();
+
+      await api
+        .patch('/api/videos/video-1')
+        .set('Authorization', creatorToken)
+        .send({ version: 1, title: 'Renamed' });
+
+      expect(writtenValues()).not.toHaveProperty(':sectionCount');
+    });
   });
 });
 

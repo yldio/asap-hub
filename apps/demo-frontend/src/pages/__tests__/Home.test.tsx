@@ -912,6 +912,208 @@ describe('folder create, rename and delete', () => {
   });
 });
 
+describe('reporting what a change did not do', () => {
+  it('surfaces a failed rename instead of quietly dropping it', async () => {
+    renderHome({
+      api: { renameFolder: () => Promise.reject(new Error('boom')) },
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Rename' }),
+    );
+    const input = await screen.findByLabelText('Rename Design');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Brand{Enter}');
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We could not rename that folder\. Try again in a moment\.$/,
+    );
+  });
+
+  it('surfaces a failed folder create', async () => {
+    renderHome({
+      api: { createFolder: () => Promise.reject(new Error('boom')) },
+    });
+
+    await within(sidebar()).findByText('Engineering');
+    await userEvent.click(
+      within(sidebar()).getByRole('button', { name: 'New top-level folder' }),
+    );
+    await userEvent.type(
+      screen.getByLabelText('New folder name'),
+      'Ops{Enter}',
+    );
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We could not create that folder\. Try again in a moment\.$/,
+    );
+  });
+
+  it('keeps a move the server refused selected and says who has it open', async () => {
+    const bulkMoveVideos = jest.fn(() =>
+      Promise.resolve({ moved: [], missing: [], locked: ['v-unfiled'] }),
+    );
+    renderHome({ api: { bulkMoveVideos } });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.hover(
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
+    );
+    await userEvent.click(
+      await within(menu).findByRole('menuitem', { name: 'Design' }),
+    );
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We did not move “Unfiled walkthrough” because another creator has it open\. Try again once they are done\.$/,
+    );
+    expect(cardFor('Unfiled walkthrough')).toHaveAttribute(
+      'data-selected',
+      'true',
+    );
+  });
+
+  it('surfaces a failed move', async () => {
+    renderHome({
+      api: { bulkMoveVideos: () => Promise.reject(new Error('boom')) },
+    });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.hover(
+      within(menu).getByRole('menuitem', { name: 'Move to folder' }),
+    );
+    await userEvent.click(
+      await within(menu).findByRole('menuitem', { name: 'Design' }),
+    );
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We could not move “Unfiled walkthrough”\. Try again in a moment\.$/,
+    );
+  });
+
+  it('names the running export when a delete is refused', async () => {
+    const bulkDeleteVideos = jest.fn(() =>
+      Promise.resolve({
+        deleted: [],
+        missing: [],
+        locked: [],
+        rendering: ['v-unfiled'],
+      }),
+    );
+    renderHome({ api: { bulkDeleteVideos } });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Delete' }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    expect(
+      await screen.findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We did not delete “Unfiled walkthrough” because an export is running\. Try again once the export finishes\.$/,
+    );
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+  });
+
+  it('surfaces a failed delete inside the modal it left open', async () => {
+    renderHome({
+      api: { bulkDeleteVideos: () => Promise.reject(new Error('boom')) },
+    });
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Delete' }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    expect(
+      await within(dialog).findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We could not delete “Unfiled walkthrough”\. Try again in a moment\.$/,
+    );
+  });
+
+  it('keeps the modal open when the folder was kept', async () => {
+    const deleteFolder = jest.fn(() =>
+      Promise.resolve({
+        locked: [],
+        rendering: ['v-hidden'],
+        kept: ['f-design'],
+      }),
+    );
+    renderHome({ api: { deleteFolder }, route: '/?folder=f-design' });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Delete' }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText(/This folder is empty/);
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    expect(
+      await within(dialog).findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We kept “Design” because an export is running on 1 video inside\. Try again once that is done\.$/,
+    );
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(queryString()).toBe('?folder=f-design');
+  });
+
+  it('surfaces a failed folder delete without closing the modal', async () => {
+    renderHome({
+      api: { deleteFolder: () => Promise.reject(new Error('boom')) },
+      route: '/?folder=f-design',
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Delete' }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText(/This folder is empty/);
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    expect(
+      await within(dialog).findByRole('alert', {}, { timeout: 4000 }),
+    ).toHaveTextContent(
+      /^We could not delete that folder\. Try again in a moment\.$/,
+    );
+    expect(queryString()).toBe('?folder=f-design');
+  });
+});
+
 describe('a shareable list', () => {
   it('opens the sort and status named in the url', async () => {
     renderHome({ route: '/?view=all&sort=title&status=drafts' });

@@ -2,10 +2,12 @@ import { makeVideo } from '../../test-utils';
 import {
   deleteTitle,
   deleteWarning,
+  keptFolderMessage,
   matchesQuery,
   matchesStatusFilter,
   parseSort,
   parseStatusFilter,
+  refusedVideosMessage,
   sortVideos,
 } from '../state';
 
@@ -157,6 +159,116 @@ describe('naming what a delete would remove', () => {
   it('stops naming them once the list is long', () => {
     expect(deleteWarning(['a', 'b', 'c', 'd', 'e'])).toBe(
       '“a”, “b”, “c” and 2 more and their files will be permanently removed and cannot be recovered.',
+    );
+  });
+});
+
+describe('reporting what the server refused', () => {
+  const names = new Map([
+    ['v-1', 'Sprint retro'],
+    ['v-2', 'Sprint 42'],
+  ]);
+
+  it('says nothing when everything went through', () => {
+    expect(
+      refusedVideosMessage(
+        { locked: [], missing: [], rendering: [] },
+        'move',
+        names,
+      ),
+    ).toBeUndefined();
+    expect(refusedVideosMessage(undefined, 'delete', names)).toBeUndefined();
+  });
+
+  it('names the one demo another creator holds open', () => {
+    expect(refusedVideosMessage({ locked: ['v-1'] }, 'move', names)).toBe(
+      'We did not move “Sprint retro” because another creator has it open. Try again once they are done.',
+    );
+  });
+
+  it('counts several and keeps the verb of the action', () => {
+    expect(
+      refusedVideosMessage({ locked: ['v-1', 'v-2'] }, 'delete', names),
+    ).toBe(
+      'We did not delete 2 videos because another creator has them open. Try again once they are done.',
+    );
+  });
+
+  it('blames the export rather than a lock when a render is running', () => {
+    expect(refusedVideosMessage({ rendering: ['v-2'] }, 'delete', names)).toBe(
+      'We did not delete “Sprint 42” because an export is running. Try again once the export finishes.',
+    );
+  });
+
+  it('tells a missing demo apart from a refused one', () => {
+    expect(refusedVideosMessage({ missing: ['v-1'] }, 'move', names)).toBe(
+      'We did not move “Sprint retro” because it is no longer in the library. Reload to see what is left.',
+    );
+  });
+
+  it('reports every reason in the one result', () => {
+    expect(
+      refusedVideosMessage(
+        { locked: ['v-1'], rendering: ['v-2'], missing: ['v-gone'] },
+        'delete',
+        names,
+      ),
+    ).toBe(
+      'We did not delete “Sprint retro” because another creator has it open. Try again once they are done. ' +
+        'We did not delete “Sprint 42” because an export is running. Try again once the export finishes. ' +
+        'We did not delete 1 video because it is no longer in the library. Reload to see what is left.',
+    );
+  });
+
+  it('counts an id it has no title for', () => {
+    expect(refusedVideosMessage({ locked: ['v-unknown'] }, 'move', names)).toBe(
+      'We did not move 1 video because another creator has it open. Try again once they are done.',
+    );
+  });
+});
+
+describe('reporting a folder the delete kept', () => {
+  it('says nothing when the folder went', () => {
+    expect(
+      keptFolderMessage({ locked: [], rendering: [], kept: [] }, 'Engineering'),
+    ).toBeUndefined();
+    expect(keptFolderMessage(undefined, 'Engineering')).toBeUndefined();
+  });
+
+  it('names the folder and the lock that kept it', () => {
+    expect(
+      keptFolderMessage(
+        { locked: ['v-1'], rendering: [], kept: ['f-eng'] },
+        'Engineering',
+      ),
+    ).toBe(
+      'We kept “Engineering” because another creator has 1 video inside open. Try again once that is done.',
+    );
+  });
+
+  it('counts the subfolders that stayed with it and both reasons', () => {
+    expect(
+      keptFolderMessage(
+        {
+          locked: ['v-1'],
+          rendering: ['v-2', 'v-3'],
+          kept: ['f-eng', 'f-sprint'],
+        },
+        'Engineering',
+      ),
+    ).toBe(
+      'We kept “Engineering” and 1 folder inside it because another creator has 1 video inside open and an export is running on 2 videos inside. Try again once that is done.',
+    );
+  });
+
+  it('still explains itself when the server gave no reason', () => {
+    expect(
+      keptFolderMessage(
+        { locked: [], rendering: [], kept: ['f-eng'] },
+        'Engineering',
+      ),
+    ).toBe(
+      'We kept “Engineering” because something inside could not be deleted. Try again once that is done.',
     );
   });
 });

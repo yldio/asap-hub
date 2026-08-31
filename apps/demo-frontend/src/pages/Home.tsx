@@ -61,12 +61,16 @@ import {
   defaultStatusFilter,
   deleteTitle,
   deleteWarning,
+  keptFolderMessage,
   matchesQuery,
   matchesStatusFilter,
   parseSort,
   parseStatusFilter,
+  refusedVideosMessage,
   sortVideos,
   useViewMode,
+  videoSubject,
+  type RefusedVideos,
 } from '../library/state';
 import { Button, Modal, Spinner } from '../ui/components';
 import {
@@ -180,6 +184,19 @@ const emptyStyles = css({
   borderRadius: rem(8),
   color: lead.rgb,
   textAlign: 'center' as const,
+});
+
+const alertStyles = css({
+  margin: 0,
+  paddingBottom: rem(16),
+  fontSize: rem(14),
+  color: ember.rgb,
+});
+
+const modalAlertStyles = css({
+  margin: `${rem(16)} 0 0`,
+  fontSize: rem(14),
+  color: ember.rgb,
 });
 
 const dangerTitleStyles = css({
@@ -357,6 +374,29 @@ const Home: FC = () => {
 
   const clearSelection = useCallback(() => setSelection(emptySelection), []);
 
+  const videoNames = useMemo(
+    () =>
+      new Map(
+        [...(allVideos.data ?? []), ...(videos.data ?? [])].map(
+          ({ id, title }) => [id, title] as const,
+        ),
+      ),
+    [allVideos.data, videos.data],
+  );
+
+  // whatever the server refused stays selected, so it is still the thing in hand
+  const keepRefusedSelected = ({ locked, missing, rendering }: RefusedVideos) =>
+    setSelection((current) =>
+      pruneSelection(current, [
+        ...(locked ?? []),
+        ...(rendering ?? []),
+        ...(missing ?? []),
+      ]),
+    );
+
+  const moveSelected = (ids: string[], folderId: string) =>
+    bulkMove.mutate({ ids, folderId }, { onSuccess: keepRefusedSelected });
+
   useEffect(() => {
     setSelection((current) => pruneSelection(current, orderedIds));
   }, [orderedIds]);
@@ -470,13 +510,19 @@ const Home: FC = () => {
     }
 
     if (ids.length === 0) return;
-    bulkMove.mutate({ ids, folderId: target }, { onSuccess: clearSelection });
+    moveSelected(ids, target);
   };
 
-  const openFolderDeleteModal = useCallback((folder: Folder) => {
-    setFolderToDelete(folder);
-    setConfirmName('');
-  }, []);
+  const resetFolderDelete = deleteFolder.reset;
+
+  const openFolderDeleteModal = useCallback(
+    (folder: Folder) => {
+      resetFolderDelete();
+      setFolderToDelete(folder);
+      setConfirmName('');
+    },
+    [resetFolderDelete],
+  );
 
   const closeFolderDeleteModal = () => {
     setFolderToDelete(undefined);
@@ -487,7 +533,9 @@ const Home: FC = () => {
     if (!folderToDelete) return;
     const { id } = folderToDelete;
     deleteFolder.mutate(id, {
-      onSuccess: () => {
+      onSuccess: (result) => {
+        // a folder kept because of what is inside it has not been deleted
+        if ((result?.kept ?? []).length > 0) return;
         closeFolderDeleteModal();
         if (selectedFolder === id) void navigate('/');
       },
@@ -496,11 +544,11 @@ const Home: FC = () => {
 
   const confirmVideoDelete = () => {
     bulkDelete.mutate(selection.ids as string[], {
-      onSuccess: ({ locked }) => {
+      onSuccess: ({ locked, missing, rendering }) => {
         setIsDeletingVideos(false);
-        // anything another creator holds open survives, so it stays selected
-        // and visible rather than silently looking deleted
-        if (locked.length === 0) clearSelection();
+        // anything the server refused survives, so it stays selected and
+        // visible rather than silently looking deleted
+        keepRefusedSelected({ locked, missing, rendering });
       },
     });
   };
@@ -614,6 +662,44 @@ const Home: FC = () => {
   const createFolderHere = (name: string) =>
     createFolder.mutate({ name, parentId: selectedFolder });
 
+  const libraryAlert = [
+    createFolder.isError
+      ? 'We could not create that folder. Try again in a moment.'
+      : undefined,
+    renameFolder.isError
+      ? 'We could not rename that folder. Try again in a moment.'
+      : undefined,
+    moveFolder.isError
+      ? 'We could not move that folder. Try again in a moment.'
+      : undefined,
+    bulkMove.isError
+      ? `We could not move ${videoSubject(
+          bulkMove.variables?.ids ?? [],
+          videoNames,
+        )}. Try again in a moment.`
+      : undefined,
+    bulkMove.isSuccess
+      ? refusedVideosMessage(bulkMove.data, 'move', videoNames)
+      : undefined,
+    // the delete modal carries its own failure, so this only reports the rest
+    bulkDelete.isSuccess && !isDeletingVideos
+      ? refusedVideosMessage(bulkDelete.data, 'delete', videoNames)
+      : undefined,
+  ].find((message) => message !== undefined);
+
+  const folderDeleteAlert = deleteFolder.isError
+    ? 'We could not delete that folder. Try again in a moment.'
+    : folderToDelete && deleteFolder.isSuccess
+      ? keptFolderMessage(deleteFolder.data, folderToDelete.name)
+      : undefined;
+
+  const videoDeleteAlert = bulkDelete.isError
+    ? `We could not delete ${videoSubject(
+        bulkDelete.variables ?? [],
+        videoNames,
+      )}. Try again in a moment.`
+    : undefined;
+
   const usesAllVideos = isSearching || isAllVideos;
   const isLoadingList = usesAllVideos ? allVideos.isLoading : videos.isLoading;
   const hasListError = usesAllVideos ? allVideos.isError : videos.isError;
@@ -710,6 +796,12 @@ const Home: FC = () => {
               {showsFolderCards && ` · ${folderCount(childFolders.length)}`}
             </span>
           </div>
+
+          {libraryAlert && (
+            <p css={alertStyles} role="alert">
+              {libraryAlert}
+            </p>
+          )}
 
           {showsFolderCards && (
             <>
@@ -870,10 +962,7 @@ const Home: FC = () => {
                 disabled={folder.id === rootFolderId && !selectedFolder}
                 onSelect={() => {
                   setVideoMenu(undefined);
-                  bulkMove.mutate(
-                    { ids: selection.ids as string[], folderId: folder.id },
-                    { onSuccess: clearSelection },
-                  );
+                  moveSelected(selection.ids as string[], folder.id);
                 }}
               >
                 <span css={{ paddingLeft: rem(depth * 14) }}>
@@ -887,6 +976,7 @@ const Home: FC = () => {
             danger
             onSelect={() => {
               setVideoMenu(undefined);
+              bulkDelete.reset();
               setIsDeletingVideos(true);
             }}
           >
@@ -949,6 +1039,11 @@ const Home: FC = () => {
                   </label>
                 </>
               )}
+              {folderDeleteAlert && (
+                <p css={modalAlertStyles} role="alert">
+                  {folderDeleteAlert}
+                </p>
+              )}
               <div css={modalActionsStyles}>
                 <Button onClick={closeFolderDeleteModal}>Cancel</Button>
                 <Button
@@ -975,6 +1070,11 @@ const Home: FC = () => {
         >
           <h2 css={dangerTitleStyles}>{deleteTitle(selectedTitles)}</h2>
           <div css={dangerNoticeStyles}>{deleteWarning(selectedTitles)}</div>
+          {videoDeleteAlert && (
+            <p css={modalAlertStyles} role="alert">
+              {videoDeleteAlert}
+            </p>
+          )}
           <div css={modalActionsStyles}>
             <Button onClick={() => setIsDeletingVideos(false)}>Cancel</Button>
             <Button

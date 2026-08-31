@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import type { Video } from '../api/types';
-import { videoCount } from '../utils/format';
+import type { FolderDeleteResult, Video } from '../api/types';
+import { folderCount, videoCount } from '../utils/format';
 
 export type ViewMode = 'grid' | 'list';
 export type SortMode = 'newest' | 'oldest' | 'title';
@@ -121,6 +121,96 @@ export const deleteWarning = (titles: readonly string[]): string =>
     : `${listed(
         titles,
       )} and their files will be permanently removed and cannot be recovered.`;
+
+// the server applies what it can and reports the rest back, so the page has to
+// say which demos stayed behind and why
+export type RefusedVideos = {
+  readonly locked?: readonly string[];
+  readonly missing?: readonly string[];
+  readonly rendering?: readonly string[];
+};
+
+export const videoSubject = (
+  ids: readonly string[],
+  names: ReadonlyMap<string, string>,
+): string => {
+  const only = ids.length === 1 ? names.get(ids[0] as string) : undefined;
+  return only ? quoted(only) : videoCount(ids.length);
+};
+
+export const refusedVideosMessage = (
+  result: RefusedVideos | undefined,
+  action: 'move' | 'delete',
+  names: ReadonlyMap<string, string>,
+): string | undefined => {
+  const locked = result?.locked ?? [];
+  const rendering = result?.rendering ?? [];
+  const missing = result?.missing ?? [];
+
+  const sentence = (ids: readonly string[], because: string, next: string) =>
+    `We did not ${action} ${videoSubject(
+      ids,
+      names,
+    )} because ${because}. ${next}`;
+
+  const parts = [
+    locked.length > 0
+      ? sentence(
+          locked,
+          `another creator has ${locked.length === 1 ? 'it' : 'them'} open`,
+          'Try again once they are done.',
+        )
+      : undefined,
+    rendering.length > 0
+      ? sentence(
+          rendering,
+          'an export is running',
+          'Try again once the export finishes.',
+        )
+      : undefined,
+    missing.length > 0
+      ? sentence(
+          missing,
+          `${
+            missing.length === 1 ? 'it is' : 'they are'
+          } no longer in the library`,
+          'Reload to see what is left.',
+        )
+      : undefined,
+  ].filter((part): part is string => part !== undefined);
+
+  return parts.length > 0 ? parts.join(' ') : undefined;
+};
+
+export const keptFolderMessage = (
+  result: FolderDeleteResult | undefined,
+  name: string,
+): string | undefined => {
+  const kept = result?.kept ?? [];
+  if (kept.length === 0) return undefined;
+
+  const locked = result?.locked ?? [];
+  const rendering = result?.rendering ?? [];
+  const reasons = [
+    locked.length > 0
+      ? `another creator has ${videoCount(locked.length)} inside open`
+      : undefined,
+    rendering.length > 0
+      ? `an export is running on ${videoCount(rendering.length)} inside`
+      : undefined,
+  ].filter((reason): reason is string => reason !== undefined);
+
+  const subject =
+    kept.length === 1
+      ? quoted(name)
+      : `${quoted(name)} and ${folderCount(kept.length - 1)} inside it`;
+
+  return `We kept ${subject} because ${
+    reasons.length > 0
+      ? reasons.join(' and ')
+      : 'something inside could not be deleted'
+  }. Try again once that is done.`;
+};
 
 export const matchesQuery = (video: Video, query: string): boolean =>
   video.title.toLowerCase().includes(query.toLowerCase());

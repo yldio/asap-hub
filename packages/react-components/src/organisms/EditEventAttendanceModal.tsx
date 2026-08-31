@@ -43,6 +43,7 @@ import {
   iconButtonStyles,
 } from './shared-event-card-styles';
 import SourceLists from './SourceLists';
+import Toast from './Toast';
 import UploadListModal, {
   UploadListResult,
   UploadListSourceFile,
@@ -413,6 +414,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     () => new Set(teams.map((team) => team.teamId)),
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaveError, setHasSaveError] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -420,6 +422,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const title = isEditMode ? 'Edit Attendance' : 'Add Attendance';
 
   const attendedCount = rows.filter((team) => team.attended).length;
+  const allAttended = rows.length > 0 && attendedCount === rows.length;
   const saveEnabled = rows.length > 0 && !isSaving;
   const addedTeamIds = new Set(rows.map((team) => team.teamId));
 
@@ -552,16 +555,18 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     });
   };
 
-  const markAllAttended = () =>
-    setRows((current) => current.map((team) => ({ ...team, attended: true })));
+  const toggleMarkAllAttended = () =>
+    setRows((current) =>
+      current.map((team) => ({ ...team, attended: !allAttended })),
+    );
 
   const handleSave = async () => {
     setIsSaving(true);
+    setHasSaveError(false);
     try {
       await onSave(rows);
     } catch {
-      // The caller surfaces the error; the modal only needs to unlock so the
-      // user can retry or cancel instead of staying stuck on "saving".
+      setHasSaveError(true);
     } finally {
       setIsSaving(false);
     }
@@ -606,6 +611,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       </header>
 
       <div css={bodyStyles}>
+        {hasSaveError && (
+          <Toast>An error has occurred. Please try again later.</Toast>
+        )}
         {onSelectInterestGroup && interestGroups.length > 0 && (
           <section css={[sectionStyles, spacingMedium]}>
             <SectionTitle optional>
@@ -755,9 +763,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                 noMargin
                 enabled={!isCancelling}
                 overrideStyles={markAllButtonStyles}
-                onClick={markAllAttended}
+                onClick={toggleMarkAllAttended}
               >
-                Mark All Attended
+                {allAttended ? 'Mark All Not Attended' : 'Mark All Attended'}
               </Button>
             )}
           </div>

@@ -108,6 +108,7 @@ const parseUserMetadata = ({
   projects,
   role,
   openScienceTeamMember,
+  techSupport,
 }: UserMetadataResponse) => ({
   teams: groupTeams(teams),
   workingGroups: groupWorkingGroups(workingGroups),
@@ -115,6 +116,7 @@ const parseUserMetadata = ({
   projects: uniqueById(projects),
   role,
   openScienceTeamMember,
+  techSupport,
 });
 
 const parseKRSyncMetadata = ({

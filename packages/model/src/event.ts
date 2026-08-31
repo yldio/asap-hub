@@ -49,6 +49,7 @@ export type EventSpeaker =
   | EventSpeakerExternalUser;
 
 export type EventTeamAttendance = {
+  id: string;
   team: {
     id: string;
     displayName: string;
@@ -137,6 +138,16 @@ export type EventUpdateDataObject = Partial<
 
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
+
+export type EventAttendanceUpdateItem = {
+  id?: string;
+  teamId: string;
+  attended: boolean;
+};
+
+export type EventUpdateDetailsRequest = {
+  attendance: EventAttendanceUpdateItem[];
+};
 
 type BaseFilterOptions = {
   workingGroupId?: never;

@@ -28420,6 +28420,7 @@ export type EventsContentFragment = Pick<
       items: Array<
         Maybe<
           Pick<Attendance, 'attended'> & {
+            sys: Pick<Sys, 'id'>;
             team?: Maybe<
               Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                 sys: Pick<Sys, 'id'>;
@@ -28839,6 +28840,7 @@ export type FetchEventByIdQuery = {
           items: Array<
             Maybe<
               Pick<Attendance, 'attended'> & {
+                sys: Pick<Sys, 'id'>;
                 team?: Maybe<
                   Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                     sys: Pick<Sys, 'id'>;
@@ -29321,6 +29323,7 @@ export type FetchEventsQuery = {
                 items: Array<
                   Maybe<
                     Pick<Attendance, 'attended'> & {
+                      sys: Pick<Sys, 'id'>;
                       team?: Maybe<
                         Pick<
                           Teams,
@@ -29967,6 +29970,7 @@ export type FetchEventsByUserIdQuery = {
                             items: Array<
                               Maybe<
                                 Pick<Attendance, 'attended'> & {
+                                  sys: Pick<Sys, 'id'>;
                                   team?: Maybe<
                                     Pick<
                                       Teams,
@@ -30716,6 +30720,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                             items: Array<
                               Maybe<
                                 Pick<Attendance, 'attended'> & {
+                                  sys: Pick<Sys, 'id'>;
                                   team?: Maybe<
                                     Pick<
                                       Teams,
@@ -31465,6 +31470,7 @@ export type FetchEventsByTeamIdQuery = {
                             items: Array<
                               Maybe<
                                 Pick<Attendance, 'attended'> & {
+                                  sys: Pick<Sys, 'id'>;
                                   team?: Maybe<
                                     Pick<
                                       Teams,
@@ -39392,6 +39398,7 @@ export type UsersContentFragment = Pick<
   | 'expertiseAndResourceDescription'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -39786,6 +39793,7 @@ export type FetchUserByIdQuery = {
       | 'expertiseAndResourceDescription'
       | 'role'
       | 'openScienceTeamMember'
+      | 'techSupport'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -40009,6 +40017,7 @@ export type UserListItemContentFragment = Pick<
   | 'dismissedGettingStarted'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
   | 'orcid'
 > & {
   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -40083,6 +40092,7 @@ export type FetchUsersQuery = {
             | 'dismissedGettingStarted'
             | 'role'
             | 'openScienceTeamMember'
+            | 'techSupport'
             | 'orcid'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -40169,6 +40179,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'dismissedGettingStarted'
                     | 'role'
                     | 'openScienceTeamMember'
+                    | 'techSupport'
                     | 'orcid'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -40263,6 +40274,7 @@ export type FetchUsersByTeamMembershipIdQuery = {
                     | 'dismissedGettingStarted'
                     | 'role'
                     | 'openScienceTeamMember'
+                    | 'techSupport'
                     | 'orcid'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -40359,6 +40371,7 @@ export type FetchUsersByLabIdQuery = {
                         | 'dismissedGettingStarted'
                         | 'role'
                         | 'openScienceTeamMember'
+                        | 'techSupport'
                         | 'orcid'
                       > & {
                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -40439,6 +40452,7 @@ export type FetchUserByIdForAlgoliaListQuery = {
       | 'alumniSinceDate'
       | 'createdDate'
       | 'openScienceTeamMember'
+      | 'techSupport'
       | 'orcid'
       | 'country'
       | 'city'
@@ -41497,6 +41511,19 @@ export const EventsContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'attended' },
@@ -50144,6 +50171,7 @@ export const UsersContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'openScienceTeamMember' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'techSupport' } },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
@@ -51408,6 +51436,7 @@ export const UserListItemContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'openScienceTeamMember' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'techSupport' } },
           { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
           {
             kind: 'Field',
@@ -75579,6 +75608,7 @@ export const FetchUserByIdForAlgoliaListDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'openScienceTeamMember' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'techSupport' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
                 {
                   kind: 'Field',

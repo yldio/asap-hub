@@ -110,6 +110,7 @@ describe('User', () => {
         nickname: undefined,
         onboarded: true,
         openScienceTeamMember: undefined,
+        techSupport: undefined,
         orcid: '0000-0001-8203-6901',
         role: 'Grantee',
         stateOrProvince: undefined,

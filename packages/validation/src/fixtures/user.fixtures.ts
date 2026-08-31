@@ -43,6 +43,7 @@ export const getUserResponse = (): UserResponse => ({
   avatarUrl: `https://test.com/api/assets/asap-dev/contentful-asset-id`,
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   biography: 'Biography',
   labs: [
     { id: 'cd7be4902', name: 'Barcelona' },

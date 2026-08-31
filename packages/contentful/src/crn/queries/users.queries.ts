@@ -52,6 +52,7 @@ export const usersContentQueryFragment = gql`
     }
     role
     openScienceTeamMember
+    techSupport
     responsibilities
     researchInterests
     reachOut
@@ -437,6 +438,7 @@ export const userListItemContentQueryFragment = gql`
     dismissedGettingStarted
     role
     openScienceTeamMember
+    techSupport
     orcid
     researchTagsCollection(limit: 20) {
       items {
@@ -570,6 +572,7 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
       alumniSinceDate
       createdDate
       openScienceTeamMember
+      techSupport
       orcid
       avatar {
         url

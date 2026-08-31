@@ -52,6 +52,7 @@ export const toAuthUser = (
   | 'projects'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
 > & {
   teams: User['teams'];
   workingGroups: User['workingGroups'];
@@ -68,6 +69,7 @@ export const toAuthUser = (
   projects: uniqueById(user.projects),
   role: user.role,
   openScienceTeamMember: user.openScienceTeamMember,
+  techSupport: user.techSupport,
   algoliaApiKey: null,
   teams: groupRolesById(user.teams, ({ role, ...team }) => ({
     ...team,
@@ -125,6 +127,7 @@ export const createAuthUser = (): User => ({
   ],
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
 });
 
 export const getJwtPayload = (): JwtPayload => ({

@@ -71,6 +71,7 @@ export type EventAttendanceTeam = {
   attended: boolean;
   teamType?: EventAttendanceTeamType;
   isTeamInactive?: boolean;
+  attendanceId?: string;
 };
 
 export type EventAttendanceSinceLastEvent = {

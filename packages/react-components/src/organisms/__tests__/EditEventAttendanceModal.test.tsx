@@ -138,7 +138,7 @@ describe('EditEventAttendanceModal', () => {
     expect(screen.getByText('2 Attended')).toBeInTheDocument();
   });
 
-  it('Should mark all teams as attended', async () => {
+  it('Should mark all teams as attended and flip the button to "Mark All Not Attended"', async () => {
     renderModal();
 
     await userEvent.click(
@@ -152,6 +152,33 @@ describe('EditEventAttendanceModal', () => {
       screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
     ).toBeChecked();
     expect(screen.getByText('2 Attended')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Mark All Not Attended' }),
+    ).toBeInTheDocument();
+  });
+
+  it('Should mark all teams as not attended when all are attended', async () => {
+    renderModal({
+      teams: [
+        { teamId: 't1', teamName: 'Team Alpha', attended: true },
+        { teamId: 't2', teamName: 'Team Beta', attended: true },
+      ],
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Mark All Not Attended' }),
+    );
+
+    expect(
+      screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),
+    ).not.toBeChecked();
+    expect(
+      screen.getByRole('checkbox', { name: 'Team Beta attendance' }),
+    ).not.toBeChecked();
+    expect(screen.getByText('0 Attended')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Mark All Attended' }),
+    ).toBeInTheDocument();
   });
 
   it('Should remove a team from the list', async () => {
@@ -581,6 +608,27 @@ describe('EditEventAttendanceModal', () => {
       expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled(),
     );
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
+    expect(
+      screen.getByText('An error has occurred. Please try again later.'),
+    ).toBeInTheDocument();
+  });
+
+  it('Should clear the error toast when the user tries saving again', async () => {
+    const failingOnSave = jest.fn().mockRejectedValueOnce(new Error('nope'));
+    renderModal({ onSave: failingOnSave });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument(),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(
+      screen.queryByText('An error has occurred. Please try again later.'),
+    ).not.toBeInTheDocument();
   });
 
   it('Should close immediately on cancel when nothing has changed', async () => {
@@ -716,7 +764,7 @@ describe('EditEventAttendanceModal', () => {
     it('Should disable the Mark All Attended button', async () => {
       await enterCancelConfirmation();
       expect(
-        screen.getByRole('button', { name: 'Mark All Attended' }),
+        screen.getByRole('button', { name: 'Mark All Not Attended' }),
       ).toBeDisabled();
     });
 
@@ -779,7 +827,7 @@ describe('EditEventAttendanceModal', () => {
         screen.getByRole('button', { name: 'Keep Editing' }),
       );
       expect(
-        screen.getByRole('button', { name: 'Mark All Attended' }),
+        screen.getByRole('button', { name: 'Mark All Not Attended' }),
       ).toBeEnabled();
       expect(
         screen.getByRole('checkbox', { name: 'Team Alpha attendance' }),

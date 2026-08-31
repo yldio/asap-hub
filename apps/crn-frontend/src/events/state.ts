@@ -6,14 +6,22 @@ import {
   nullOnUndefined,
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  EventResponse,
+  EventUpdateDetailsRequest,
+  ListEventResponse,
+} from '@asap-hub/model';
 import { SpeakerGroup } from '@asap-hub/react-components';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
-import { getEvent, getEvents } from './api';
+import { getEvent, getEvents, patchEvent } from './api';
 import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
@@ -43,6 +51,19 @@ export const useQuietRefreshEventById = (id: string) => {
     const event = await getEvent(id, await getAuthorization());
     queryClient.setQueryData(eventQueryKeys.detail(id), event ?? null);
   };
+};
+
+export const usePatchEvent = (id: string) => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data: EventUpdateDetailsRequest) =>
+      patchEvent(id, data, await getAuthorization()),
+    onSuccess: (event) => {
+      queryClient.setQueryData(eventQueryKeys.detail(id), event);
+    },
+  });
+  return mutateAsync;
 };
 
 export const usePrefetchEvents = (options: GetEventListOptions) => {

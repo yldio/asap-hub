@@ -18,6 +18,7 @@ import {
 jest.mock('../api', () => ({
   getEvent: jest.fn(),
   getEvents: jest.fn(),
+  patchEvent: jest.fn(),
 }));
 
 jest.mock('../../hooks/algolia', () => ({

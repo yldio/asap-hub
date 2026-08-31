@@ -1,9 +1,5 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
-import {
-  CalendarDataProvider,
-  EventDataProvider,
-  UserResponse,
-} from '@asap-hub/model';
+import { CalendarDataProvider, UserResponse } from '@asap-hub/model';
 import {
   addUserIdProp,
   AuthHandler,
@@ -95,6 +91,7 @@ import {
   DashboardDataProvider,
   DiscoverDataProvider,
   DiscussionDataProvider,
+  EventDataProvider,
   GuideDataProvider,
   ImpactDataProvider,
   InterestGroupDataProvider,

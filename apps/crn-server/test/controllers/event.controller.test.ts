@@ -6,10 +6,9 @@ import {
   getListEventDataObject,
   getListEventResponse,
 } from '../fixtures/events.fixtures';
-import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { eventDataProviderMock } from '../mocks/event.data-provider.mock';
 
 describe('Event controller', () => {
-  const eventDataProviderMock = getDataProviderMock();
   const eventController = new Events(eventDataProviderMock);
 
   afterEach(() => {
@@ -110,6 +109,23 @@ describe('Event controller', () => {
         '7',
         eventUpdate,
       );
+    });
+  });
+
+  describe('updateEventDetails method', () => {
+    test('Should update attendance and return the refreshed event', async () => {
+      const event = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue(event);
+
+      const result = await eventController.updateEventDetails('7', {
+        attendance: [{ teamId: 'team-1', attended: true }],
+      });
+
+      expect(eventDataProviderMock.updateEventDetails).toHaveBeenCalledWith(
+        '7',
+        { attendance: [{ teamId: 'team-1', attended: true }] },
+      );
+      expect(result).toEqual(getEventResponse());
     });
   });
 

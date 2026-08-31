@@ -41,6 +41,7 @@ const props = {
   ),
   role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
   openScienceTeamMember: boolean('Open Science Team Member', false),
+  techSupport: boolean('Tech Support', false),
   labs: Array.from({ length: number('Labs', 0, { min: 0 }) }).map((_, i) => ({
     id: `${i}`,
     name: `${i}`,

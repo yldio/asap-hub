@@ -123,6 +123,7 @@ export default class UserController {
       displayName,
       membershipStatus: user.membershipStatus,
       openScienceTeamMember: user.openScienceTeamMember,
+      techSupport: user.techSupport,
       teams: user.teams,
       alumniSinceDate: user.alumniSinceDate,
       avatarUrl: user.avatarUrl,

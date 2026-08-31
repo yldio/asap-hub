@@ -76,6 +76,9 @@ export const useCursorCapture = (
   const [status, setStatus] = useState<RecordingSessionStatus>();
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState<string>();
+  // the session whose events reached this browser, so a closed one that never
+  // did is not mistaken for a spent one
+  const [readSessionId, setReadSessionId] = useState<string>();
 
   const start = useCallback(() => {
     setError(undefined);
@@ -226,16 +229,27 @@ export const useCursorCapture = (
             return undefined;
           }
         }
-        // finalising closed the session, whether just now or on an earlier
-        // apply; saying so at once is what lets the next recording open a
-        // fresh one without waiting on the poll
+        let ndjson: string;
+        try {
+          ndjson = await api.captureEvents(projectId, session.sessionId);
+        } catch {
+          // the finalise landed, so every event is safe on the server and the
+          // retry is taken as already finalised: the take is one press away
+          setError(
+            'Could not read the captured events. Nothing is lost, try Add cursor effects again.',
+          );
+          return undefined;
+        }
+        // the events are in hand, which is what spends the session: saying so
+        // at once is what lets the next recording open a fresh one without
+        // waiting on the poll, and a session read is a session safe to replace
+        setReadSessionId(session.sessionId);
         setStatus((current) =>
           current
             ? { ...current, state: 'closed' }
             : { state: 'closed', eventCount: 0, clientCount: 0 },
         );
 
-        const ndjson = await api.captureEvents(projectId, session.sessionId);
         const events = parseCaptureEvents(ndjson);
         if (events.length === 0) {
           setError('That capture recorded nothing to add.');
@@ -270,7 +284,7 @@ export const useCursorCapture = (
         }
         return applied;
       } catch {
-        setError('Could not read the captured events.');
+        setError('Could not turn the capture into cursor effects.');
         return undefined;
       } finally {
         setApplying(false);
@@ -283,10 +297,16 @@ export const useCursorCapture = (
   // spent by an earlier apply is replaced without the creator doing anything,
   // and a project that never tracked the cursor is left alone
   const ensureOpen = useCallback(() => {
-    if (session && status && status.state !== 'open') {
-      start();
+    if (!session || !status || status.state === 'open') {
+      return;
     }
-  }, [session, start, status]);
+    // a closed session whose events were never read still holds the whole take,
+    // and the fresh one would overwrite the only id that still reaches it
+    if (status.state === 'closed' && readSessionId !== session.sessionId) {
+      return;
+    }
+    start();
+  }, [readSessionId, session, start, status]);
 
   return {
     session,

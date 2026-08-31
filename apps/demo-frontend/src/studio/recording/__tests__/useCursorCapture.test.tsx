@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import { CaptureSurface, CursorEffect } from '@asap-hub/demo-timeline';
 import { TestApiProvider } from '../../../api/ApiProvider';
@@ -20,14 +20,18 @@ const session = {
 
 const open = { state: 'open' as const, eventCount: 42, clientCount: 1 };
 
-const render = (api: Partial<Api>, recorded?: CaptureSurface) => {
-  const wrapper = ({ children }: { children: ReactNode }) => (
+const apiWrapper =
+  (api: Partial<Api>) =>
+  ({ children }: { children: ReactNode }) => (
     <AuthContext.Provider value={authenticatedState as AuthState}>
       <TestApiProvider api={api}>{children}</TestApiProvider>
     </AuthContext.Provider>
   );
-  return renderHook(() => useCursorCapture('project-1', recorded), { wrapper });
-};
+
+const render = (api: Partial<Api>, recorded?: CaptureSurface) =>
+  renderHook(() => useCursorCapture('project-1', recorded), {
+    wrapper: apiWrapper(api),
+  });
 
 beforeEach(() => window.localStorage.clear());
 
@@ -735,5 +739,141 @@ describe('a finalise that does not land', () => {
     );
 
     expect(view.result.current.status?.state).toBe('closed');
+  });
+});
+
+// The finalise landed, so every event is safe in S3 and the session is closed
+// for good. Declaring it closed here anyway let the auto reopen take that as
+// leave to replace it, and the take stayed on the server behind an id nothing
+// pointed at any more: one blip on one fetch lost the whole thing.
+describe('an events fetch that does not land', () => {
+  const ndjson = JSON.stringify({
+    id: 'c1',
+    type: 'click',
+    t: 5_000,
+    x: 640,
+    y: 360,
+    viewportW: 1280,
+    viewportH: 720,
+  });
+
+  const request = {
+    stoppedAtEpochMs: 10_000,
+    frame: { width: 1280, height: 720 },
+    targets: [{ clipId: 'clip-1', existing: [] }],
+  };
+
+  const closed = { state: 'closed' as const, eventCount: 42, clientCount: 1 };
+
+  // the studio keeps a session open from an effect on this callback, so a
+  // status flip on its own is enough to replace the session under the creator
+  const renderReopening = (api: Partial<Api>) =>
+    renderHook(
+      () => {
+        const capture = useCursorCapture('project-1');
+        const { ensureOpen } = capture;
+        useEffect(() => ensureOpen(), [ensureOpen]);
+        return capture;
+      },
+      { wrapper: apiWrapper(api) },
+    );
+
+  const afterAFailedFetch = async () => {
+    const startCapture = jest
+      .fn()
+      .mockResolvedValueOnce(session)
+      .mockResolvedValue({ ...session, sessionId: 'session-2' });
+    // only the session the take was captured in holds it; a replacement is
+    // empty, which is what losing it looks like from here
+    let fetches = 0;
+    const captureEvents = jest.fn().mockImplementation((_project, id) => {
+      fetches += 1;
+      if (id !== 'session-1') {
+        return Promise.resolve('');
+      }
+      return fetches === 1
+        ? Promise.reject(new Error('offline'))
+        : Promise.resolve(ndjson);
+    });
+    // the server takes the retry as already finalised, which is the path the
+    // second apply has to survive
+    const finaliseCapture = jest
+      .fn()
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValue(new ApiError(409, 'closed', 'already_finalised'));
+
+    const view = renderReopening({
+      startCapture,
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture,
+      captureEvents,
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+    await act(async () => {
+      await view.result.current.apply(request);
+    });
+    return { startCapture, view };
+  };
+
+  it('keeps the session whose events it could not read', async () => {
+    const { startCapture, view } = await afterAFailedFetch();
+
+    expect(view.result.current.session?.sessionId).toBe('session-1');
+    expect(window.localStorage.getItem('demo-hub.capture.project-1')).toContain(
+      'session-1',
+    );
+    expect(startCapture).toHaveBeenCalledTimes(1);
+    expect(view.result.current.error).toMatch(/nothing is lost/i);
+  });
+
+  it('gives the whole take back on the next try', async () => {
+    const { view } = await afterAFailedFetch();
+
+    const applied = await act(async () => view.result.current.apply(request));
+
+    expect(applied?.map(({ clipId }) => clipId)).toEqual(['clip-1']);
+    expect(applied?.[0]?.effects).toHaveLength(1);
+  });
+
+  // the poll says closed within five seconds of the finalise whatever this
+  // hook believes, and a reload asks the same question from scratch
+  it('leaves an unread closed session alone when the poll reports it', async () => {
+    window.localStorage.setItem(
+      'demo-hub.capture.project-1',
+      JSON.stringify(session),
+    );
+    const startCapture = jest.fn().mockResolvedValue(session);
+
+    const view = renderReopening({
+      startCapture,
+      captureStatus: jest.fn().mockResolvedValue(closed),
+    });
+
+    await waitFor(() =>
+      expect(view.result.current.status?.state).toBe('closed'),
+    );
+    expect(startCapture).not.toHaveBeenCalled();
+    expect(view.result.current.session?.sessionId).toBe('session-1');
+  });
+
+  // what breaks after the stream is in hand is not a network problem, and
+  // sending the creator back to the button they just pressed would loop them
+  it('does not blame the fetch for what came after it', async () => {
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents: jest.fn().mockResolvedValue(undefined),
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    const applied = await act(async () => view.result.current.apply(request));
+
+    expect(applied).toBeUndefined();
+    expect(view.result.current.error).toBe(
+      'Could not turn the capture into cursor effects.',
+    );
   });
 });

@@ -65,21 +65,12 @@ type RequestOptions = {
   body?: unknown;
   credentials?: RequestCredentials;
   keepalive?: boolean;
-  // the captured event stream is ndjson, not json, and reading it as json made
-  // every apply throw the "returned no JSON" guard below
-  as?: 'json' | 'text';
 };
 
 const request = async <T>(
   path: string,
   token: string,
-  {
-    method = 'GET',
-    body,
-    credentials,
-    keepalive,
-    as = 'json',
-  }: RequestOptions = {},
+  { method = 'GET', body, credentials, keepalive }: RequestOptions = {},
 ): Promise<T> => {
   const response = await fetch(`${API_BASE_URL}/api${path}`, {
     method,
@@ -95,9 +86,7 @@ const request = async <T>(
   const payload =
     response.status === 204
       ? undefined
-      : as === 'text'
-        ? await response.text().catch(() => undefined)
-        : await response.json().catch(() => undefined);
+      : await response.json().catch(() => undefined);
 
   // a 200 with an unparseable body is the SPA fallback masking an api miss
   if (response.ok && response.status !== 204 && payload === undefined) {
@@ -395,14 +384,27 @@ export const createApi = (getToken: GetToken) => ({
       { method: 'POST', body: window },
     ),
 
-  captureEvents: async (id: string, sessionId: string): Promise<string> =>
-    request<string>(
+  // the api authorises the read and names the object; the stream itself comes
+  // from storage on the same origin, which is what keeps a long take from
+  // outgrowing the response the api may return
+  captureEvents: async (id: string, sessionId: string): Promise<string> => {
+    const { url } = await request<{ url: string }>(
       `/projects/${encodeURIComponent(id)}/recordings/${encodeURIComponent(
         sessionId,
       )}/events`,
       await getToken(),
-      { as: 'text' },
-    ),
+    );
+    // storage takes the cookie the call above set, and refuses a request
+    // carrying a bearer header beside it
+    const response = await fetch(url, { credentials: 'same-origin' });
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        `Request to ${url} failed with status ${response.status}`,
+      );
+    }
+    return response.text();
+  },
 
   startRender: async (
     id: string,

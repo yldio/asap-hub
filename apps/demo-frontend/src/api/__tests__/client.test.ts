@@ -497,18 +497,52 @@ describe('createApi endpoints', () => {
 });
 
 describe('the captured event stream', () => {
-  // it is ndjson, not json. Read as json it parsed to undefined and tripped the
-  // "returned no JSON" guard, so every apply threw and the button did nothing
-  it('reads the stream as text rather than json', async () => {
-    const ndjson =
-      '{"id":"e1","type":"click","t":1}\n{"id":"e2","type":"move","t":2}\n';
+  const ndjson =
+    '{"id":"e1","type":"click","t":1}\n{"id":"e2","type":"move","t":2}\n';
+
+  const respondWithStream = (url = '/projects/p1/capture/s1/events.ndjson') => {
+    respond({ url });
     fetchMock.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.reject(new Error('not json')),
       text: () => Promise.resolve(ndjson),
     });
+  };
+
+  // a long take merges to more than a lambda response may carry, so the api
+  // names the object and the stream itself is read straight from storage
+  it('reads the stream from the path the api names', async () => {
+    respondWithStream();
 
     await expect(api.captureEvents('p1', 's1')).resolves.toBe(ndjson);
+
+    const [minted, streamed] = fetchMock.mock.calls;
+    expect(minted[0]).toBe(
+      `${API_BASE_URL}/api/projects/p1/recordings/s1/events`,
+    );
+    expect((minted[1] as RequestInit).headers).toMatchObject({
+      Authorization: 'Bearer a-token',
+    });
+    expect(streamed[0]).toBe('/projects/p1/capture/s1/events.ndjson');
+  });
+
+  // storage authorises the read with the cookie the minting call set, and a
+  // bearer header alongside it is what a signed request refuses
+  it('sends no bearer token to storage, only the cookie', async () => {
+    respondWithStream();
+
+    await api.captureEvents('p1', 's1');
+
+    const [, init] = fetchMock.mock.calls[1];
+    expect((init as RequestInit).headers).toBeUndefined();
+    expect((init as RequestInit).credentials).toBe('same-origin');
+  });
+
+  it('raises the storage failure rather than returning a partial take', async () => {
+    respond({ url: '/projects/p1/capture/s1/events.ndjson' });
+    fetchMock.mockResolvedValueOnce({ ok: false, status: 403 });
+
+    const error = await captureApiError(api.captureEvents('p1', 's1'));
+    expect(error.status).toBe(403);
   });
 });

@@ -3,10 +3,11 @@ import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { createHash, randomBytes, timingSafeEqual } from 'crypto';
 import { Request, Response, Router } from 'express';
 import { requireCreator } from '../auth';
-import { getDemoHostname, getTableName } from '../config';
+import { getDemoHostname, getTableName, isLocal } from '../config';
 import { getDocumentClient } from '../data/client';
 import { recordingSessionEntity } from '../data/entities';
 import { finaliseRecordingSchema, maxCaptureBatchEvents } from '../schemas';
+import { buildSignedCookies } from '../signed-cookies';
 import {
   captureLifecycleTag,
   deletePrefix,
@@ -379,7 +380,12 @@ export const recordingsRouter = (): Router => {
     },
   );
 
-  // the editor reads the immutable stream back to derive effects from it
+  // The editor reads the immutable stream back to derive effects from it, and
+  // a long take merges to tens of megabytes: proxying that through the handler
+  // failed the whole apply at the gateway, which caps a lambda response at 6MB.
+  // The stream already lives under projects/{id}/, which the same origin serves
+  // from storage, so this route authorises the read and names the object rather
+  // than carrying its bytes.
   router.get(
     '/:id/recordings/:sessionId/events',
     videoId,
@@ -394,7 +400,22 @@ export const recordingsRouter = (): Router => {
         return;
       }
 
-      res.type(ndjsonContentType).send(await getObjectText(session.eventsKey));
+      const id = pathParam(req, 'id');
+      // deployed, projects/ sits behind a CloudFront key group; locally the
+      // vite proxy reads the same path straight from MinIO
+      if (!isLocal()) {
+        const cookies = await buildSignedCookies(id, 'projects');
+        cookies.forEach(({ name, value }) => {
+          res.cookie(name, value, {
+            path: `/projects/${id}/`,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax',
+          });
+        });
+      }
+
+      res.json({ url: `/${session.eventsKey}` });
     },
   );
 

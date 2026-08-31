@@ -7,12 +7,14 @@ import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { createHash } from 'crypto';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
+import { isLocal } from '../src/config';
 import {
   recordingSessionEntity,
   userEntity,
   videoEntity,
 } from '../src/data/entities';
 import { captureQuota } from '../src/routes/recordings';
+import { buildSignedCookies } from '../src/signed-cookies';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -22,6 +24,24 @@ jest.mock('../src/storage', () => ({
   getObjectText: jest.fn(),
   deletePrefix: jest.fn(),
 }));
+
+jest.mock('../src/config', () => ({
+  ...jest.requireActual('../src/config'),
+  isLocal: jest.fn(() => true),
+}));
+
+jest.mock('../src/signed-cookies', () => ({
+  buildSignedCookies: jest.fn(async () => [
+    { name: 'CloudFront-Policy', value: 'a-policy' },
+    { name: 'CloudFront-Signature', value: 'a-signature' },
+    { name: 'CloudFront-Key-Pair-Id', value: 'KEYPAIR123' },
+  ]),
+}));
+
+const mockIsLocal = isLocal as jest.MockedFunction<typeof isLocal>;
+const mockBuildSignedCookies = buildSignedCookies as jest.MockedFunction<
+  typeof buildSignedCookies
+>;
 
 const mockSend = jest.fn();
 jest.mock('../src/data/client', () => ({
@@ -224,6 +244,9 @@ beforeEach(() => {
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
   (storage.deletePrefix as jest.Mock).mockReset().mockResolvedValue(undefined);
+  // restoreAllMocks leaves the module factory mocks alone
+  mockIsLocal.mockReset().mockReturnValue(true);
+  mockBuildSignedCookies.mockClear();
 });
 
 describe('POST /api/projects/:id/recordings', () => {
@@ -464,6 +487,113 @@ describe('GET /api/projects/:id/recordings/:sessionId', () => {
       .set('Authorization', creatorToken);
 
     expect(response.status).toBe(404);
+  });
+});
+
+describe('GET /api/projects/:id/recordings/:sessionId/events', () => {
+  const finalisedSession = (overrides: Record<string, unknown> = {}) =>
+    sessionItem({
+      state: 'closed',
+      parts: [],
+      eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      ...overrides,
+    });
+
+  const getEvents = (authorization = creatorToken) =>
+    api
+      .get('/api/projects/project-1/recordings/session-1/events')
+      .set('Authorization', authorization);
+
+  const cookiesOf = (response: { headers: Record<string, unknown> }) =>
+    (response.headers['set-cookie'] ?? []) as string[];
+
+  // a long take merges to far more than a lambda response may carry, so the
+  // route names the object and the browser reads it from storage
+  it('hands back the path the stream is served from, not the stream', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      url: '/projects/project-1/capture/session-1/events.ndjson',
+    });
+    expect(storage.getObjectText).not.toHaveBeenCalled();
+  });
+
+  it('still refuses a session nothing has finalised yet', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession({ eventsKey: undefined }));
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'not_finalised' });
+  });
+
+  it('still refuses a caller who may not read the project', async () => {
+    mockUser('member', 'auth0|member');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+
+    const response = await getEvents(memberToken);
+
+    expect(response.status).toBe(403);
+    expect(mockBuildSignedCookies).not.toHaveBeenCalled();
+  });
+
+  it('is not found for a session belonging to another project', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession({ videoId: 'project-2' }));
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(404);
+  });
+
+  // deployed the path is a CloudFront one behind the same key group the sources
+  // are served through, so the route that authorises the read signs it too
+  it('signs the project prefix the path sits under when deployed', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+    // auth decodes the bearer token only in local mode, so stay local for the
+    // middleware and flip to deployed for the handler's own isLocal() check
+    mockIsLocal.mockReturnValueOnce(true).mockReturnValue(false);
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(200);
+    expect(mockBuildSignedCookies).toHaveBeenCalledWith(
+      'project-1',
+      'projects',
+    );
+    expect(cookiesOf(response).map((cookie) => cookie.split('=')[0])).toEqual([
+      'CloudFront-Policy',
+      'CloudFront-Signature',
+      'CloudFront-Key-Pair-Id',
+    ]);
+    expect(
+      cookiesOf(response).every((cookie) =>
+        cookie.includes('Path=/projects/project-1/'),
+      ),
+    ).toBe(true);
+  });
+
+  it('signs nothing locally, where the vite proxy reads minio directly', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(finalisedSession());
+
+    const response = await getEvents();
+
+    expect(response.status).toBe(200);
+    expect(mockBuildSignedCookies).not.toHaveBeenCalled();
+    expect(response.headers['set-cookie']).toBeUndefined();
   });
 });
 
@@ -1008,16 +1138,12 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
         eventsKey: retry.body.eventsKey,
       }),
     );
-    (storage.getObjectText as jest.Mock).mockResolvedValue(
-      '{"id":"e1","t":1}\n',
-    );
-
     const events = await api
       .get('/api/projects/project-1/recordings/session-1/events')
       .set('Authorization', creatorToken);
 
     expect(events.status).toBe(200);
-    expect(events.text).toBe('{"id":"e1","t":1}\n');
+    expect(events.body).toEqual({ url: `/${retry.body.eventsKey}` });
   });
 
   // the parts are the only copy of the stream until the row points at the

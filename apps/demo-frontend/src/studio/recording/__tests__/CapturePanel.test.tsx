@@ -120,6 +120,18 @@ describe('a capture that has already been used', () => {
     expect(screen.getByText(/has been used/i)).toBeVisible();
   });
 
+  // nothing reopens a closed capture whose events are still on the server, and
+  // the button beside this sentence is the one that would lose them
+  it('does not promise a fresh one for a capture nothing has read', () => {
+    panel({ session, status: closed, unreadEvents: true });
+
+    expect(screen.queryByText(/has been used/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/events have not been read yet/i)).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    ).toBeEnabled();
+  });
+
   it('does not offer one while the capture is still running', () => {
     panel({ session, status: open });
 

@@ -877,3 +877,127 @@ describe('an events fetch that does not land', () => {
     );
   });
 });
+
+// Which session's events were read outlived nothing: it was held in this
+// hook's state while the session itself sat in storage, so every reload asked
+// the guard above a question it could no longer answer and it refused them
+// all. A spent session left in place takes the next take's batches into a
+// closed session the server drops, behind a panel still showing the last
+// take's frozen count.
+describe('the reopen after the page has been away', () => {
+  const ndjson = JSON.stringify({
+    id: 'c1',
+    type: 'click',
+    t: 5_000,
+    x: 640,
+    y: 360,
+    viewportW: 1280,
+    viewportH: 720,
+  });
+
+  const request = {
+    stoppedAtEpochMs: 10_000,
+    frame: { width: 1280, height: 720 },
+    targets: [{ clipId: 'clip-1', existing: [] }],
+  };
+
+  const closed = { state: 'closed' as const, eventCount: 42, clientCount: 1 };
+
+  const renderReopening = (api: Partial<Api>) =>
+    renderHook(
+      () => {
+        const capture = useCursorCapture('project-1');
+        const { ensureOpen } = capture;
+        useEffect(() => ensureOpen(), [ensureOpen]);
+        return capture;
+      },
+      { wrapper: apiWrapper(api) },
+    );
+
+  // the window this covers: the apply lands and the reopen that normally
+  // follows it does not, so the session the creator comes back to is the one
+  // the apply left behind
+  const applyThenLoseTheReopen = async (captureEvents: jest.Mock) => {
+    const startCapture = jest
+      .fn()
+      .mockResolvedValueOnce(session)
+      .mockRejectedValue(new Error('offline'));
+    const view = renderReopening({
+      startCapture,
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture: jest.fn().mockResolvedValue(undefined),
+      captureEvents,
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+    await act(async () => {
+      await view.result.current.apply(request);
+    });
+    return { startCapture, view };
+  };
+
+  it('opens a fresh one for a session whose events are in hand', async () => {
+    const { startCapture, view } = await applyThenLoseTheReopen(
+      jest.fn().mockResolvedValue(ndjson),
+    );
+    await waitFor(() => expect(startCapture).toHaveBeenCalledTimes(2));
+    expect(window.localStorage.getItem('demo-hub.capture.project-1')).toContain(
+      'session-1',
+    );
+    view.unmount();
+
+    const reopened = jest
+      .fn()
+      .mockResolvedValue({ ...session, sessionId: 'session-2' });
+    const second = renderReopening({
+      startCapture: reopened,
+      captureStatus: jest.fn().mockResolvedValue(closed),
+    });
+
+    await waitFor(() => expect(reopened).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(second.result.current.session?.sessionId).toBe('session-2'),
+    );
+  });
+
+  it('leaves a session whose events never arrived alone', async () => {
+    const { startCapture, view } = await applyThenLoseTheReopen(
+      jest.fn().mockRejectedValue(new Error('offline')),
+    );
+    expect(startCapture).toHaveBeenCalledTimes(1);
+    view.unmount();
+
+    const reopened = jest
+      .fn()
+      .mockResolvedValue({ ...session, sessionId: 'session-2' });
+    const second = renderReopening({
+      startCapture: reopened,
+      captureStatus: jest.fn().mockResolvedValue(closed),
+    });
+
+    await waitFor(() =>
+      expect(second.result.current.status?.state).toBe('closed'),
+    );
+    expect(reopened).not.toHaveBeenCalled();
+    expect(second.result.current.session?.sessionId).toBe('session-1');
+    expect(window.localStorage.getItem('demo-hub.capture.project-1')).toContain(
+      'session-1',
+    );
+  });
+
+  // the panel promises a fresh capture starts by itself, which is a lie in the
+  // one state the reopen refuses
+  it('says whether the closed session still holds unread events', async () => {
+    const { view } = await applyThenLoseTheReopen(
+      jest.fn().mockRejectedValue(new Error('offline')),
+    );
+    view.unmount();
+
+    const second = renderReopening({
+      startCapture: jest.fn(),
+      captureStatus: jest.fn().mockResolvedValue(closed),
+    });
+
+    await waitFor(() => expect(second.result.current.unreadEvents).toBe(true));
+  });
+});

@@ -81,6 +81,9 @@ type Props = {
   readonly session?: RecordingSession;
   readonly status?: RecordingSessionStatus;
   readonly readOnly: boolean;
+  // a closed capture whose events nobody has read is the one state no fresh
+  // capture is started for, because starting one loses the take it still holds
+  readonly unreadEvents?: boolean;
   readonly onStart: () => void;
   readonly onNewBookmark: () => void;
   readonly onApply: () => void;
@@ -96,6 +99,7 @@ const CapturePanel: FC<Props> = ({
   session,
   status,
   readOnly,
+  unreadEvents = false,
   onStart,
   onNewBookmark,
   onApply,
@@ -233,8 +237,9 @@ const CapturePanel: FC<Props> = ({
       {finished ? (
         <>
           <p css={hintStyles}>
-            This capture has been used. A fresh one starts by itself while this
-            page is open.
+            {unreadEvents
+              ? 'This capture is closed and its events have not been read yet. Add cursor effects brings them in; tracking the cursor again starts an empty capture and leaves them behind.'
+              : 'This capture has been used. A fresh one starts by itself while this page is open.'}
           </p>
           <EditorButton
             icon={<PlusIcon size={15} />}

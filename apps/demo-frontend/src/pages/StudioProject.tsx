@@ -714,6 +714,7 @@ const Editor: FC<EditorProps> = ({
               session={capture.session}
               status={capture.status}
               readOnly={readOnly}
+              unreadEvents={capture.unreadEvents}
               applying={capture.applying}
               error={capture.error ?? applyRefusal}
               onStart={capture.start}

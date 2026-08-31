@@ -25,6 +25,12 @@ const pollMs = 5000;
 // session meant no status, and no status disabled the button that applies them.
 const sessionKey = (projectId: string) => `demo-hub.capture.${projectId}`;
 
+// which session's events reached this browser has to outlive the page for the
+// same reason the session does: held in state alone, every reload forgot it,
+// and a reopen that cannot tell a spent session from an unread one refuses
+// both, so the next take posted into a closed session the server drops
+const readKey = (projectId: string) => `demo-hub.capture.${projectId}.read`;
+
 // a session stored before the bookmark named the project carries a loader for
 // that one take, and saving it again would bring the old trouble back
 const reusableBookmark = (session: RecordingSession): RecordingSession =>
@@ -55,7 +61,25 @@ const rememberSession = (
       );
     } else {
       window.localStorage.removeItem(sessionKey(projectId));
+      // the marker names a session nothing points at any more
+      window.localStorage.removeItem(readKey(projectId));
     }
+  } catch {
+    // a browser refusing storage is not a reason to refuse the capture
+  }
+};
+
+const storedReadSessionId = (projectId: string): string | undefined => {
+  try {
+    return window.localStorage.getItem(readKey(projectId)) ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const rememberRead = (projectId: string, sessionId: string): void => {
+  try {
+    window.localStorage.setItem(readKey(projectId), sessionId);
   } catch {
     // a browser refusing storage is not a reason to refuse the capture
   }
@@ -78,7 +102,9 @@ export const useCursorCapture = (
   const [error, setError] = useState<string>();
   // the session whose events reached this browser, so a closed one that never
   // did is not mistaken for a spent one
-  const [readSessionId, setReadSessionId] = useState<string>();
+  const [readSessionId, setReadSessionId] = useState<string | undefined>(() =>
+    storedReadSessionId(projectId),
+  );
 
   const start = useCallback(() => {
     setError(undefined);
@@ -243,6 +269,7 @@ export const useCursorCapture = (
         // the events are in hand, which is what spends the session: saying so
         // at once is what lets the next recording open a fresh one without
         // waiting on the poll, and a session read is a session safe to replace
+        rememberRead(projectId, session.sessionId);
         setReadSessionId(session.sessionId);
         setStatus((current) =>
           current
@@ -293,26 +320,30 @@ export const useCursorCapture = (
     [api, deriveTarget, projectId, session],
   );
 
+  // a closed session whose events were never read still holds the whole take,
+  // and a fresh one would overwrite the only id that still reaches it
+  const unreadEvents = Boolean(
+    session &&
+      status?.state === 'closed' &&
+      readSessionId !== session.sessionId,
+  );
+
   // a new recording needs a session that is still taking events; a session
   // spent by an earlier apply is replaced without the creator doing anything,
   // and a project that never tracked the cursor is left alone
   const ensureOpen = useCallback(() => {
-    if (!session || !status || status.state === 'open') {
-      return;
-    }
-    // a closed session whose events were never read still holds the whole take,
-    // and the fresh one would overwrite the only id that still reaches it
-    if (status.state === 'closed' && readSessionId !== session.sessionId) {
+    if (!session || !status || status.state === 'open' || unreadEvents) {
       return;
     }
     start();
-  }, [readSessionId, session, start, status]);
+  }, [session, start, status, unreadEvents]);
 
   return {
     session,
     status,
     applying,
     error,
+    unreadEvents,
     start,
     newBookmark,
     apply,

@@ -958,8 +958,11 @@ const serverlessConfig: AWS = {
           Family: encoderName,
           RequiresCompatibilities: ['FARGATE'],
           NetworkMode: 'awsvpc',
-          Cpu: '4096',
-          Memory: '8192',
+          // 16 vCPU runs the encoder pool at its full four lanes; Fargate
+          // bills by vCPU-second, so the bigger task costs the same per
+          // export and finishes four times sooner
+          Cpu: '16384',
+          Memory: '32768',
           // a render pulls every source of a project onto the task, the 20 GiB
           // Fargate default is not enough for that
           EphemeralStorage: { SizeInGiB: 100 },

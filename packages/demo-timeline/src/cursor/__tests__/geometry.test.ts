@@ -1,6 +1,7 @@
 import { CaptureSurface } from '../../schema';
 import {
   CapturePlacement,
+  fitToFrame,
   toFramePoint,
   viewRatio,
   sharedView,
@@ -382,5 +383,160 @@ describe('footage that disagrees with the claimed surface', () => {
     );
 
     expect(confirmed).toEqual(whole);
+  });
+});
+
+// The studio asks for 1920x1080, so on any bigger display the browser hands
+// back a scaled copy of whatever it shared. Weighing the footage against the
+// claim in pixel counts then missed by hundreds rather than by the eight it
+// allowed, and the decoration was never taken off.
+describe('footage the browser scaled down before handing it back', () => {
+  const gapPx = 12;
+  const barPx = 38;
+  const output = { width: 1920, height: 1080 };
+
+  // the compositor holds the window under its bar and inside its gaps while the
+  // browser insists the window sits at the desktop corner
+  const wayland = (screenW: number, screenH: number, dpr: number) => {
+    const winW = screenW - 2 * gapPx;
+    const winH = screenH - barPx - gapPx;
+    const desktop = { x: gapPx + winW * 0.63, y: barPx + winH * 0.41 };
+    const event: CapturePlacement = {
+      x: 0,
+      y: 0,
+      viewportW: winW,
+      viewportH: winH - 121,
+      devicePixelRatio: dpr,
+      screenX: desktop.x - gapPx,
+      screenY: desktop.y - barPx,
+      screenW,
+      screenH,
+      screenLeft: 0,
+      screenTop: 0,
+      winX: 0,
+      winY: 0,
+      winW,
+      winH,
+      platform: 'Linux x86_64',
+    };
+    return { winW, winH, desktop, event };
+  };
+
+  // a capture is fitted into what the studio asked for rather than stretched,
+  // and lands on even dimensions
+  const handedBack = (width: number, height: number, scaled: boolean) => {
+    const fit = scaled ? Math.min(1, 1920 / width, 1080 / height) : 1;
+    const even = (value: number) => Math.round((value * fit) / 2) * 2;
+    return { width: even(width), height: even(height) };
+  };
+
+  const offBy = (
+    got: { x: number; y: number } | undefined,
+    want: typeof got,
+  ) => {
+    if (!got || !want) {
+      throw new Error('every fixture here describes a readable surface');
+    }
+    return Math.max(
+      Math.abs(got.x - want.x) * output.width,
+      Math.abs(got.y - want.y) * output.height,
+    );
+  };
+
+  const displays = [
+    [1920, 1080],
+    [2560, 1440],
+    [3840, 2160],
+  ] as const;
+
+  const sweep = <T>(extra: readonly T[]) =>
+    displays.flatMap(([screenW, screenH]) =>
+      [1, 2].flatMap((dpr) =>
+        [false, true].flatMap((scaled) =>
+          extra.map((over) => ({ screenW, screenH, dpr, scaled, over })),
+        ),
+      ),
+    );
+
+  // a fifth of a pixel of quantising, plus the row the even dimensions round
+  // away, is all a correct reading can be out by
+  const tolerancePx = 1;
+
+  it.each(sweep([41, 48]))(
+    'takes a $over row decoration off a $screenW x$screenH capture at dpr $dpr, scaled $scaled',
+    ({ screenW, screenH, dpr, scaled, over: cut }) => {
+      const { winW, winH, desktop, event } = wayland(screenW, screenH, dpr);
+      const source = handedBack(winW * dpr, (winH - cut) * dpr, scaled);
+      const want = fitToFrame(
+        {
+          x: (desktop.x - gapPx) / winW,
+          y: (desktop.y - barPx - cut) / (winH - cut),
+        },
+        { width: winW, height: winH - cut },
+        output,
+      );
+
+      expect(
+        offBy(toFramePoint(event, output, 'monitor', source), want),
+      ).toBeLessThanOrEqual(tolerancePx);
+    },
+  );
+
+  it.each(sweep([0]))(
+    'leaves a whole $screenW x$screenH screen at dpr $dpr where it was, scaled $scaled',
+    ({ screenW, screenH, dpr, scaled }) => {
+      const { desktop, event } = wayland(screenW, screenH, dpr);
+      const source = handedBack(screenW * dpr, screenH * dpr, scaled);
+      const want = fitToFrame(
+        { x: desktop.x / screenW, y: desktop.y / screenH },
+        { width: screenW, height: screenH },
+        output,
+      );
+
+      expect(
+        offBy(toFramePoint(event, output, 'monitor', source), want),
+      ).toBeLessThanOrEqual(tolerancePx);
+    },
+  );
+
+  // a window this much taller in proportion than its screen makes a scaled
+  // whole-screen capture look, on the window reading alone, like an 82 row
+  // decoration; recognising the claim by shape is what rules that out
+  it('does not invent a decoration on a scaled whole screen capture', () => {
+    const tallWindow: CapturePlacement = {
+      x: 0,
+      y: 0,
+      viewportW: 3640,
+      viewportH: 2009,
+      devicePixelRatio: 1,
+      screenX: 1820,
+      screenY: 1065,
+      screenW: 3840,
+      screenH: 2160,
+      screenLeft: 0,
+      screenTop: 0,
+      winX: 0,
+      winY: 0,
+      winW: 3640,
+      winH: 2130,
+      platform: 'Linux x86_64',
+    };
+
+    expect(
+      toFramePoint(tallWindow, output, 'monitor', {
+        width: 1920,
+        height: 1080,
+      }),
+    ).toEqual(toFramePoint(tallWindow, output, 'monitor'));
+  });
+
+  it('leaves footage far shorter than the window alone', () => {
+    const { event } = wayland(1920, 1080, 1);
+    const halved = toFramePoint(event, output, 'monitor', {
+      width: 1896,
+      height: 500,
+    });
+
+    expect(halved).toEqual(toFramePoint(event, output, 'monitor'));
   });
 });

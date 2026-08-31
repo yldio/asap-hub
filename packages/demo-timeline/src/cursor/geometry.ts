@@ -212,12 +212,23 @@ export const fitToFrame = (
   };
 };
 
+const shapeTolerancePx = 8;
+
+// A decoration is a title bar's worth of rows: the creator's own takes measured
+// 41 and 48 of them. Capping it both outright and as a share of the window
+// leaves footage that is dramatically shorter than the window alone, as
+// something this reading cannot explain, rather than cutting it by a wild
+// amount.
+const decorationMaxPx = 120;
+const decorationMaxShare = 0.15;
+
 // The footage's own pixel size is the ground truth about what was shared: on
 // Wayland the portal picks the surface itself, and it can hand back the
 // browser window, minus its decoration rows, while the browser believes the
-// whole screen was asked for and says so. When the claimed box and the footage
-// disagree, and the footage is as wide as the window but shorter, the
-// recording is read as the window's lower part, cut at the top.
+// whole screen was asked for and says so. The browser also scales a capture
+// down to the size the studio asks for, so both readings are taken in
+// proportion: the footage either has the claimed box's shape, or the window's
+// width over a short enough height to be the window cut at the top.
 const reconciledView = (
   event: CapturePlacement,
   surface: CaptureSurface,
@@ -227,30 +238,41 @@ const reconciledView = (
   if (!view) {
     return undefined;
   }
+  if (!positive(source.width) || !positive(source.height)) {
+    return view;
+  }
+  const claimedScale = source.width / view.rect.width;
+  const claimed =
+    Math.abs(source.height / claimedScale - view.rect.height) <=
+    shapeTolerancePx;
+  if (claimed || !positive(event.winW) || !positive(event.winH)) {
+    return view;
+  }
   const dpr =
     event.devicePixelRatio && event.devicePixelRatio > 0
       ? event.devicePixelRatio
       : 1;
-  const tolerancePx = 8 * dpr;
-  const claimed =
-    Math.abs(view.rect.width * dpr - source.width) <= tolerancePx &&
-    Math.abs(view.rect.height * dpr - source.height) <= tolerancePx;
-  if (claimed || !positive(event.winW) || !positive(event.winH)) {
+  // footage handed back at native size is read at the ratio the browser
+  // reported, so the few pixels of border the portal shaves off the width stay
+  // border instead of being spread down the height as scale
+  const scale =
+    Math.abs(source.width - event.winW * dpr) <= shapeTolerancePx * dpr
+      ? dpr
+      : source.width / event.winW;
+  const cutTop = event.winH - source.height / scale;
+  const decorationMax = Math.min(
+    decorationMaxPx,
+    event.winH * decorationMaxShare,
+  );
+  if (cutTop <= 0 || cutTop > decorationMax) {
     return view;
   }
-  const windowMatches =
-    Math.abs(event.winW * dpr - source.width) <= tolerancePx &&
-    source.height < event.winH * dpr;
-  if (!windowMatches) {
-    return view;
-  }
-  const cutTop = event.winH - source.height / dpr;
   return {
     rect: {
       x: finite(event.winX),
       y: finite(event.winY) + cutTop,
-      width: source.width / dpr,
-      height: source.height / dpr,
+      width: source.width / scale,
+      height: source.height / scale,
     },
     at: { x: finite(event.screenX), y: finite(event.screenY) },
   };

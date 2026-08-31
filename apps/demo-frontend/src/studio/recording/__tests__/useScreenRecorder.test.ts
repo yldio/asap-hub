@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { FrameSource } from '../frameRateProbe';
 import { useScreenRecorder } from '../useScreenRecorder';
 
 type FakeRecorder = MediaRecorder & {
@@ -42,6 +43,7 @@ const fakeStream = (displaySurface?: string) => {
   const track = {
     stop: jest.fn(),
     getSettings: () => (displaySurface ? { displaySurface } : {}),
+    applyConstraints: jest.fn(() => Promise.resolve()),
     addEventListener: jest.fn((type: string, listener: () => void) => {
       if (type === 'ended') ended.push(listener);
     }),
@@ -580,5 +582,203 @@ describe('endings that used to be silent or doubled', () => {
     );
 
     expect([first, second].filter(Boolean)).toHaveLength(1);
+  });
+});
+
+// A 2x zoom out of a 3840x2160 source is an exact crop rather than an upscale,
+// but a box that cannot feed that pipeline delivered a quarter of the frames it
+// was asked for. Which box this is cannot be read off a property, so it is
+// measured while the count runs, and the resolution is settled before the
+// recorder has written anything.
+describe('choosing the capture resolution by measurement', () => {
+  const canvasSized = { width: { ideal: 1920 }, height: { ideal: 1080 } };
+  const twiceCanvas = { width: { ideal: 3840 }, height: { ideal: 2160 } };
+
+  const frameFeed = () => {
+    const listeners: (() => void)[] = [];
+    const detach = jest.fn();
+    const source: FrameSource = (_stream, onFrame) => {
+      listeners.push(onFrame);
+      return detach;
+    };
+    return { source, detach, tick: () => listeners.forEach((at) => at()) };
+  };
+
+  // Real timers throughout: the count is deadline driven off the injected
+  // clock, so advancing that clock and letting the real 200ms interval read it
+  // needs no fake timers, which do not fire under this package's NODE_ENV.
+  const measuring = (overrides: Record<string, unknown> = {}) => {
+    let clock = 1000;
+    const frames = frameFeed();
+    const built = setup({
+      countdownMs: 3000,
+      now: () => clock,
+      frameSource: frames.source,
+      ...overrides,
+    });
+    return {
+      ...built,
+      frames,
+      advance: (ms: number) => {
+        clock += ms;
+      },
+      // frames spread evenly across a span of the count, which is how a machine
+      // that is keeping up delivers them
+      deliver: (spanMs: number, fps: number) => {
+        const count = Math.round((spanMs * fps) / 1000);
+        const from = clock;
+        for (let index = 1; index <= count; index += 1) {
+          clock = from + Math.round((spanMs * index) / count);
+          frames.tick();
+        }
+      },
+    };
+  };
+
+  it('asks for twice the canvas when it can measure what arrives', async () => {
+    const { view, options } = measuring();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
+    expect(request?.video).toMatchObject(twiceCanvas);
+  });
+
+  it('keeps that resolution when the delivered frames sustain the rate', async () => {
+    const { view, stream, options, recorders, deliver } = measuring();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    await act(async () => {
+      deliver(3000, 30);
+    });
+
+    await waitFor(() => expect(view.result.current.status).toBe('recording'));
+    const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
+    expect(request?.video).toMatchObject(twiceCanvas);
+    expect(stream.track.applyConstraints).not.toHaveBeenCalled();
+    expect(recorders[0]?.started).toBe(5000);
+  });
+
+  // the whole point of measuring: a resolution change after recorder.start()
+  // poisons the file for ffmpeg, which reads one size for the whole of it
+  it('steps down to the canvas size before the recorder starts', async () => {
+    const { view, stream, recorders, deliver } = measuring();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    const startedWhenConstrained: (number | undefined)[] = [];
+    stream.track.applyConstraints.mockImplementation(() => {
+      startedWhenConstrained.push(recorders[0]?.started);
+      return Promise.resolve();
+    });
+
+    await act(async () => {
+      // near enough 30fps to begin with, then the collapse once the encoder's
+      // queue fills, which is why the verdict comes off the last window
+      deliver(1000, 30);
+      deliver(2000, 8);
+    });
+
+    await waitFor(() => expect(view.result.current.status).toBe('recording'));
+    expect(stream.track.applyConstraints).toHaveBeenCalledWith(canvasSized);
+    expect(startedWhenConstrained).toEqual([undefined]);
+    expect(recorders[0]?.started).toBe(5000);
+  });
+
+  it('records at the canvas size when the creator skips the count', async () => {
+    const { view, stream, recorders, frames } = measuring();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    await act(async () => {
+      view.result.current.startNow();
+    });
+
+    expect(view.result.current.status).toBe('recording');
+    expect(recorders[0]?.started).toBe(5000);
+    expect(stream.track.applyConstraints).toHaveBeenCalledWith(canvasSized);
+    // abandoned rather than waited on: the safe resolution is always available
+    expect(frames.detach).toHaveBeenCalled();
+  });
+
+  it('asks for the canvas size when nothing can count the frames', async () => {
+    const { view, stream, options } = measuring({ frameSource: undefined });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
+    expect(request?.video).toMatchObject(canvasSized);
+    expect(stream.track.applyConstraints).not.toHaveBeenCalled();
+  });
+
+  it('asks for the canvas size when the count is too short to measure in', async () => {
+    const { view, options } = measuring({ countdownMs: 1000 });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    const [request] = options.getDisplayMedia.mock.calls[0] ?? [];
+    expect(request?.video).toMatchObject(canvasSized);
+  });
+
+  describe('letting go of the stream it was reading', () => {
+    it('detaches when the count is cancelled', async () => {
+      const { view, frames } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      act(() => view.result.current.cancel());
+
+      expect(frames.detach).toHaveBeenCalled();
+      expect(view.result.current.status).toBe('idle');
+    });
+
+    it('detaches when the editor goes away mid count', async () => {
+      const { view, frames } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      view.unmount();
+
+      expect(frames.detach).toHaveBeenCalled();
+    });
+
+    it('detaches when the share ends mid count', async () => {
+      const { view, stream, frames, recorders } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      act(() => stream.track.end());
+
+      expect(frames.detach).toHaveBeenCalled();
+      expect(view.result.current.error).toBe(
+        'The screen share ended before recording began.',
+      );
+      expect(recorders[0]?.started).toBeUndefined();
+    });
+
+    it('detaches when a stop lands mid count', async () => {
+      const { view, frames } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      const take = await act(async () => view.result.current.stop());
+
+      expect(take).toBeUndefined();
+      expect(frames.detach).toHaveBeenCalled();
+    });
   });
 });

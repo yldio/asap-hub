@@ -5,6 +5,13 @@ import {
 } from '@asap-hub/demo-timeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  CaptureProbe,
+  FrameSource,
+  probeDeliveredFrames,
+  probeMinCountdownMs,
+  videoFrameSource,
+} from './frameRateProbe';
+import {
   extensionForMimeType,
   pickAudioMimeType,
   pickVideoMimeType,
@@ -73,6 +80,9 @@ export type ScreenRecorderOptions = {
   createRecorder?: RecorderFactory;
   isTypeSupported?: (mimeType: string) => boolean;
   now?: () => number;
+  // how the studio counts the frames the capture really delivers, which is what
+  // decides the resolution it records at; absent, it records at the canvas size
+  frameSource?: FrameSource;
 };
 
 export type ScreenRecorder = {
@@ -101,15 +111,36 @@ type DisplayVideoConstraints = MediaTrackConstraints & {
   cursor?: 'always' | 'motion' | 'never';
 };
 
-const displayConstraints: DisplayMediaStreamOptions = {
+const canvasSize = { width: 1920, height: 1080 };
+
+// The zoom crops out of the source, so footage at twice the canvas makes a 2x
+// zoom an exact crop instead of a magnified fit. Anything the machine cannot
+// sustain is walked back to the canvas size before a single frame is written.
+const highResolutionScale = 2;
+
+const canvasSizeConstraints: MediaTrackConstraints = {
+  width: { ideal: canvasSize.width },
+  height: { ideal: canvasSize.height },
+};
+
+const displayConstraints = (
+  highResolution: boolean,
+): DisplayMediaStreamOptions => ({
   video: {
     frameRate: { ideal: 30, max: 60 },
-    width: { ideal: 1920 },
-    height: { ideal: 1080 },
+    ...(highResolution
+      ? {
+          width: { ideal: canvasSize.width * highResolutionScale },
+          height: { ideal: canvasSize.height * highResolutionScale },
+        }
+      : canvasSizeConstraints),
     cursor: 'always',
   } as DisplayVideoConstraints,
   audio: false,
-};
+});
+
+// evaluated once, so the hook's callbacks keep their identity between renders
+const browserFrameSource = videoFrameSource();
 
 type Session = {
   recorder: MediaRecorder;
@@ -169,6 +200,7 @@ export const useScreenRecorder = ({
   createRecorder,
   isTypeSupported,
   now = systemNow,
+  frameSource = browserFrameSource,
 }: ScreenRecorderOptions): ScreenRecorder => {
   const [status, setStatus] = useState<RecorderStatus>('idle');
   const [error, setError] = useState<string>();
@@ -180,6 +212,7 @@ export const useScreenRecorder = ({
 
   const screenRef = useRef<Session>();
   const micRef = useRef<Session>();
+  const probeRef = useRef<CaptureProbe>();
   const stopRef = useRef<() => Promise<RecordedTake | undefined>>();
   const onEndedRef = useRef(onEnded);
   onEndedRef.current = onEnded;
@@ -197,12 +230,14 @@ export const useScreenRecorder = ({
   const startingRef = useRef(false);
   const finishingRef = useRef(false);
 
+  // only the count's own machinery: the take stays armed until it has actually
+  // begun, because settling the resolution can outlast the count by a few
+  // milliseconds and cancelling inside that gap still has to hand the screen back
   const stopCounting = useCallback(() => {
     if (countdownRef.current) {
       clearInterval(countdownRef.current);
       countdownRef.current = undefined;
     }
-    beginRef.current = undefined;
     setCountdownMsLeft(0);
   }, []);
 
@@ -252,6 +287,7 @@ export const useScreenRecorder = ({
       if (countdownRef.current) {
         clearInterval(countdownRef.current);
       }
+      probeRef.current?.detach();
       stopTracks(screenRef.current?.stream);
       stopTracks(micRef.current?.stream);
     },
@@ -289,9 +325,16 @@ export const useScreenRecorder = ({
     // that lands before this one begins
     startedAtRef.current = 0;
 
+    // Asking high is only ever done where the answer can be checked and undone:
+    // something has to count the frames the machine really delivers, and the
+    // count has to be long enough to hold a measurement. Either missing, this is
+    // the request the studio has always made.
+    const measurable =
+      frameSource !== undefined && countdownMs >= probeMinCountdownMs;
+
     let stream: MediaStream;
     try {
-      stream = await display(displayConstraints);
+      stream = await display(displayConstraints(measurable));
     } catch (cause) {
       setError(
         cause instanceof Error && cause.name === 'NotAllowedError'
@@ -304,10 +347,33 @@ export const useScreenRecorder = ({
     }
 
     try {
+      // read before anything else touches the track, and never disturbed after:
+      // the picker's surface is not something applyConstraints can change
       surfaceRef.current = sharedSurface(stream);
       setDisplaySurface(surfaceRef.current);
       const recorder = factory(stream, { mimeType: videoMimeType });
-      screenRef.current = session(recorder, stream, videoMimeType);
+      const screen = session(recorder, stream, videoMimeType);
+      screenRef.current = screen;
+
+      // The measurement runs alongside the count, on the live stream, before any
+      // of it is being written down. Its own video element only reads the frames
+      // the recorder is already being fed, so the reading it takes is if anything
+      // a shade pessimistic, which is the safe direction to be wrong in.
+      probeRef.current = measurable
+        ? probeDeliveredFrames({
+            stream,
+            frameSource,
+            now,
+            // a step down the track refuses leaves the take at whatever was
+            // delivered: worth a slow file, not worth abandoning the recording
+            stepDown: () =>
+              Promise.resolve(
+                stream
+                  .getVideoTracks()[0]
+                  ?.applyConstraints?.(canvasSizeConstraints),
+              ).catch(() => undefined),
+          })
+        : undefined;
 
       // the picker's own Stop sharing button ends the take as well, and it has
       // to finish the recording rather than only relabel it
@@ -352,6 +418,7 @@ export const useScreenRecorder = ({
 
       const begin = () => {
         beginRef.current = undefined;
+        probeRef.current = undefined;
         try {
           startedAtRef.current = now();
           pausedMsRef.current = 0;
@@ -372,6 +439,34 @@ export const useScreenRecorder = ({
         }
       };
 
+      // the count reaching zero and the creator skipping it can land either side
+      // of a step down, and starting one recorder twice throws
+      let beginning = false;
+
+      // The one boundary the resolution may cross: ffmpeg reads a single size
+      // for the whole file, so a track still being reconstrained must not have
+      // recorder.start() called over the top of it. Whatever the measurement has
+      // by now is the answer, and asking for it tears the probe down, so a take
+      // that begins early simply gets the safe resolution rather than waiting.
+      const settleThenBegin = () => {
+        if (beginning) {
+          return;
+        }
+        beginning = true;
+        const stepDown = probeRef.current?.settle();
+        if (!stepDown) {
+          begin();
+          return;
+        }
+        void stepDown.then(() => {
+          // cancelled, stopped, or the share ended while the track was still
+          // being walked back down
+          if (screenRef.current === screen) {
+            begin();
+          }
+        });
+      };
+
       startingRef.current = false;
       if (countdownMs > 0) {
         // the wall clock, not the interval, decides when the count ends: the
@@ -379,7 +474,7 @@ export const useScreenRecorder = ({
         // they are demoing, and background intervals are throttled
         setStatus('counting');
         setCountdownMsLeft(countdownMs);
-        beginRef.current = begin;
+        beginRef.current = settleThenBegin;
         const deadline = now() + countdownMs;
         countdownRef.current = setInterval(() => {
           const left = deadline - now();
@@ -388,13 +483,15 @@ export const useScreenRecorder = ({
             return;
           }
           stopCounting();
-          begin();
+          settleThenBegin();
         }, 200);
       } else {
-        begin();
+        settleThenBegin();
       }
     } catch {
       startingRef.current = false;
+      probeRef.current?.detach();
+      probeRef.current = undefined;
       stopTracks(stream);
       stopTracks(micRef.current?.stream);
       screenRef.current = undefined;
@@ -405,6 +502,7 @@ export const useScreenRecorder = ({
   }, [
     countdownMs,
     createRecorder,
+    frameSource,
     getDisplayMedia,
     getUserMedia,
     isTypeSupported,
@@ -429,7 +527,10 @@ export const useScreenRecorder = ({
     if (!beginRef.current) {
       return;
     }
+    beginRef.current = undefined;
     stopCounting();
+    probeRef.current?.detach();
+    probeRef.current = undefined;
     stopTracks(screenRef.current?.stream);
     stopTracks(micRef.current?.stream);
     screenRef.current = undefined;
@@ -466,7 +567,10 @@ export const useScreenRecorder = ({
     finishingRef.current = true;
     // a take the count never started holds nothing worth handing back
     const began = startedAtRef.current > 0;
+    beginRef.current = undefined;
     stopCounting();
+    probeRef.current?.detach();
+    probeRef.current = undefined;
     setStatus('finishing');
     stopTicking();
     // stopping while paused still ends that span, so the events captured

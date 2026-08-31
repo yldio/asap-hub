@@ -244,12 +244,19 @@ const copyCursorLayer = (
   return [...timeline.cursor, { ...from, clipId: toClipId }];
 };
 
+const hasClip = (timeline: Timeline, clipId: string): boolean =>
+  timeline.clips.some((clip) => clip.id === clipId);
+
 // a clip gains its cursor layer the first time something is put on it
 const withCursorLayer = (
   timeline: Timeline,
   clipId: string,
   change: (layer: Timeline['cursor'][number]) => Timeline['cursor'][number],
 ): Timeline['cursor'] => {
+  // a layer on a clip that is gone is a document the server rejects for good
+  if (!hasClip(timeline, clipId)) {
+    return timeline.cursor;
+  }
   const existing = timeline.cursor.find((layer) => layer.clipId === clipId);
   if (!existing) {
     return [
@@ -595,7 +602,7 @@ export const timelineReducer = (
       const moving = from?.effects.find(
         (effect) => effect.id === action.effectId,
       );
-      if (!from || !moving) {
+      if (!from || !moving || !hasClip(timeline, action.toClipId)) {
         return timeline;
       }
 

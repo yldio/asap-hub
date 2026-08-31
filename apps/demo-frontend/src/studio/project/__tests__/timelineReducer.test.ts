@@ -1,10 +1,12 @@
 import {
   createEmptyTimeline,
+  CursorEffect,
   limits,
   parseTimeline,
   Timeline,
+  timelineSchema,
 } from '@asap-hub/demo-timeline';
-import { timelineReducer } from '../timelineReducer';
+import { TimelineAction, timelineReducer } from '../timelineReducer';
 
 const withClips = (): Timeline => {
   const empty = createEmptyTimeline();
@@ -890,5 +892,77 @@ describe('setCursorAlign', () => {
     expect(cleared.cursor[0]).not.toHaveProperty('alignXPx');
     expect(cleared.cursor[0]).not.toHaveProperty('alignYPx');
     expect(() => parseTimeline(cleared)).not.toThrow();
+  });
+});
+
+// a capture is applied two round trips after the creator asked for it, so the
+// clip it was read against can be deleted while it is in flight
+describe('a cursor action naming a clip that is gone', () => {
+  const effect: CursorEffect = {
+    id: 'effect-1',
+    tMs: 500,
+    type: 'ripple',
+    point: { x: 0.5, y: 0.5 },
+    origin: 'manual',
+  };
+
+  const withoutClip2 = (): Timeline =>
+    timelineReducer(
+      timelineReducer(withClips(), {
+        type: 'addCursorEffect',
+        clipId: 'clip-1',
+        effect,
+      }),
+      { type: 'removeClip', clipId: 'clip-2' },
+    );
+
+  const cases: [string, TimelineAction][] = [
+    [
+      'applyCapture',
+      {
+        type: 'applyCapture',
+        clipId: 'clip-2',
+        path: [{ tMs: 0, x: 0.5, y: 0.5 }],
+        effects: [],
+      },
+    ],
+    ['addCursorEffect', { type: 'addCursorEffect', clipId: 'clip-2', effect }],
+    [
+      'setCursorOffset',
+      { type: 'setCursorOffset', clipId: 'clip-2', offsetMs: 1500 },
+    ],
+    [
+      'setCursorPointer',
+      { type: 'setCursorPointer', clipId: 'clip-2', pointer: 'hand' },
+    ],
+    [
+      'moveCursorEffect',
+      {
+        type: 'moveCursorEffect',
+        fromClipId: 'clip-1',
+        toClipId: 'clip-2',
+        effectId: 'effect-1',
+        tMs: 200,
+      },
+    ],
+  ];
+
+  it.each(cases)('leaves %s no layer the server would reject', (_, action) => {
+    const timeline = timelineReducer(withoutClip2(), action);
+
+    expect(timeline.cursor.map((layer) => layer.clipId)).toEqual(['clip-1']);
+    expect(timelineSchema.safeParse(timeline).success).toBe(true);
+  });
+
+  it('keeps the effect where it is when the clip it was dragged to is gone', () => {
+    const timeline = timelineReducer(withoutClip2(), {
+      type: 'moveCursorEffect',
+      fromClipId: 'clip-1',
+      toClipId: 'clip-2',
+      effectId: 'effect-1',
+      tMs: 200,
+    });
+
+    expect(timeline.cursor[0]?.effects).toEqual([effect]);
   });
 });

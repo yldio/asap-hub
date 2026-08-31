@@ -275,6 +275,7 @@ describe('a time typed past what the surrounding data allows', () => {
     );
   });
 
+  // the banner starts a second in, so the programme only has eleven left to give
   it('keeps a banner from outlasting the programme', async () => {
     const onBanner = jest.fn();
     render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
@@ -282,10 +283,38 @@ describe('a time typed past what the surrounding data allows', () => {
     await type(/Length/, absurd);
 
     expect(screen.getByRole('alert')).toHaveTextContent(
+      'The latest this can be is 0:11.00.',
+    );
+    expect(onBanner).toHaveBeenLastCalledWith(
+      expect.objectContaining({ durationMs: 11000 }),
+    );
+  });
+
+  it('measures the length left from wherever the banner now starts', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, '0:10.00');
+    await type(/Length/, absurd);
+
+    expect(onBanner).toHaveBeenLastCalledWith(
+      expect.objectContaining({ startMs: 10000, durationMs: 2000 }),
+    );
+  });
+
+  // a start is where the creator is going, not what they have settled on, so it
+  // is held to the programme itself rather than to the length still on the banner
+  it('lets a banner start anywhere inside the programme', async () => {
+    const onBanner = jest.fn();
+    render(<EditableBanner programmeMs={12000} onBanner={onBanner} />);
+
+    await type(/Starts at/, absurd);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
       'The latest this can be is 0:12.00.',
     );
     expect(onBanner).toHaveBeenLastCalledWith(
-      expect.objectContaining({ durationMs: 12000 }),
+      expect.objectContaining({ startMs: 12000 }),
     );
   });
 });

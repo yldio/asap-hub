@@ -57,7 +57,11 @@ const BannerInspector: FC<Props> = ({
       value={banner.durationMs}
       disabled={readOnly}
       minMs={200}
-      {...(programmeMs !== undefined ? { maxMs: programmeMs } : {})}
+      // the banner has to end inside the programme, so what is left to it is
+      // whatever the start it was given has not already spent
+      {...(programmeMs !== undefined
+        ? { maxMs: Math.max(0, programmeMs - banner.startMs) }
+        : {})}
       onChange={(durationMs) => onChange({ durationMs })}
     />
     <SelectField

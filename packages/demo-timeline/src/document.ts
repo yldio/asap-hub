@@ -34,8 +34,34 @@ const readSchemaVersion = (value: unknown): number => {
   return value.schemaVersion;
 };
 
+const withoutSurface = (layer: unknown): unknown => {
+  if (typeof layer !== 'object' || layer === null || !('surface' in layer)) {
+    return layer;
+  }
+  return Object.fromEntries(
+    Object.entries(layer as Record<string, unknown>).filter(
+      ([key]) => key !== 'surface',
+    ),
+  );
+};
+
 // each future version adds a step here; a document only ever moves forward
-const migrations: Record<number, (value: unknown) => unknown> = {};
+const migrations: Record<number, (value: unknown) => unknown> = {
+  // Version 1 let every applied capture stamp the cursor layer with whichever
+  // surface that apply resolved, which for a document holding several takes was
+  // the newest take's and wrong for all the others. From version 2 only the take
+  // itself writes it, and a value left by version 1 cannot be told from a good
+  // one, so it goes: the clip then reads through the live recorder again, which
+  // is the only way a wrongly mapped one can be put right.
+  1: (value) => {
+    const { cursor } = value as { cursor?: unknown };
+    return {
+      ...(value as Record<string, unknown>),
+      schemaVersion: 2,
+      ...(Array.isArray(cursor) ? { cursor: cursor.map(withoutSurface) } : {}),
+    };
+  },
+};
 
 export const migrateTimeline = (value: unknown): unknown => {
   let migrated = value;

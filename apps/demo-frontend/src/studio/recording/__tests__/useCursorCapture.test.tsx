@@ -1,12 +1,17 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { ReactNode, useEffect } from 'react';
 
-import { CaptureSurface, CursorEffect } from '@asap-hub/demo-timeline';
+import {
+  CaptureSurface,
+  CursorEffect,
+  parseTimeline,
+} from '@asap-hub/demo-timeline';
 import { TestApiProvider } from '../../../api/ApiProvider';
 import { ApiError } from '../../../api/client';
 import type { Api } from '../../../api/client';
 import { AuthContext, AuthState } from '../../../auth/AuthProvider';
 import { authenticatedState } from '../../../test-utils';
+import { captureTargets } from '../cursorPlacement';
 import { useCursorCapture } from '../useCursorCapture';
 
 const session = {
@@ -611,6 +616,106 @@ describe('two takes recorded on different surfaces', () => {
     expect(results?.[0]?.effects[0]?.point.x).toBeCloseTo(onMonitor, 3);
     expect(results?.[1]?.surface).toBe('browser');
     expect(results?.[1]?.effects[0]?.point.x).toBeCloseTo(onTab, 3);
+  });
+});
+
+// A document saved while every apply stamped its own surface on the layer holds
+// the newest take's on all of them. Nothing in the studio edits a clip's
+// surface, so unless loading the document lets that value go, a clip the first
+// apply guessed wrong about is wrong for good and only re-recording fixes it.
+describe('a clip whose surface came from an older apply', () => {
+  const takeStart = 1_700_000_000_000;
+
+  const legacyDocument = {
+    schemaVersion: 1,
+    canvas: { width: 1920, height: 1080, fps: 30 },
+    clips: [
+      {
+        kind: 'source',
+        id: 'clip-1',
+        assetId: 'asset-1',
+        inMs: 0,
+        outMs: 10_000,
+        volume: 1,
+      },
+    ],
+    banners: [],
+    narration: [],
+    zooms: [],
+    chapters: [],
+    cursor: [
+      {
+        clipId: 'clip-1',
+        offsetMs: 0,
+        path: [],
+        effects: [],
+        recordedAtEpochMs: takeStart,
+        surface: 'monitor',
+      },
+    ],
+  };
+
+  const ndjson = JSON.stringify({
+    id: 'c1',
+    type: 'click',
+    t: takeStart + 2_000,
+    x: 1129.4,
+    y: 593.1,
+    viewportW: 1134,
+    viewportH: 943,
+    screenX: 1129.4,
+    screenY: 680.1,
+    screenW: 1920,
+    screenH: 1080,
+    screenLeft: 0,
+    screenTop: 0,
+    winX: 0,
+    winY: 0,
+    winW: 1134,
+    winH: 1030,
+  });
+
+  const onMonitor = 1129.4 / 1920;
+
+  const applied = async (recorded: CaptureSurface) => {
+    const view = render(
+      {
+        startCapture: jest.fn().mockResolvedValue(session),
+        captureStatus: jest.fn().mockResolvedValue(open),
+        finaliseCapture: jest.fn().mockResolvedValue(undefined),
+        captureEvents: jest.fn().mockResolvedValue(ndjson),
+      },
+      recorded,
+    );
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    const request = captureTargets(
+      parseTimeline(legacyDocument),
+      undefined,
+      takeStart + 10_000,
+      () => ({ durationMs: 10_000 }),
+    );
+    if (!request) {
+      throw new Error('the legacy document should offer a target');
+    }
+    const results = await act(async () => view.result.current.apply(request));
+    return results?.[0];
+  };
+
+  it('lets the live recorder map it again', async () => {
+    const result = await applied('browser');
+
+    expect(result?.surface).toBe('browser');
+    expect(result?.effects[0]?.point.x).toBeGreaterThan(0.8);
+    // and the two readings really do disagree, or nothing above is proved
+    expect(result?.effects[0]?.point.x).not.toBeCloseTo(onMonitor, 3);
+  });
+
+  it('is read as a screen again when that is what the recorder says', async () => {
+    const result = await applied('monitor');
+
+    expect(result?.effects[0]?.point.x).toBeCloseTo(onMonitor, 3);
   });
 });
 

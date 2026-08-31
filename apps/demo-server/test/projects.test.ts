@@ -303,7 +303,7 @@ describe('PUT /api/projects/:id/timeline', () => {
     expect(ExpressionAttributeValues[':timeline']).toMatchObject({
       key: 'projects/project-1/timeline/5-generated-project-id.json',
       timelineVersion: 5,
-      schemaVersion: 1,
+      schemaVersion: 2,
     });
   });
 

@@ -559,7 +559,6 @@ describe('splitAt', () => {
     const captured = timelineReducer(withClips(), {
       type: 'applyCapture',
       clipId: 'clip-1',
-      surface: 'monitor',
       path: [{ tMs: 100, x: 0.5, y: 0.5 }],
       effects: [
         {
@@ -663,7 +662,6 @@ describe('duplicateClip', () => {
     const captured = timelineReducer(withClips(), {
       type: 'applyCapture',
       clipId: 'clip-1',
-      surface: 'monitor',
       path: [{ tMs: 100, x: 0.5, y: 0.5 }],
       effects: [
         {
@@ -1093,6 +1091,42 @@ describe('a playhead that is not on a whole millisecond', () => {
     });
 
     expect(() => parseTimeline(JSON.parse(JSON.stringify(next)))).not.toThrow();
+  });
+});
+
+describe('applyCapture', () => {
+  const capturedOn = (surface: 'browser' | 'monitor') =>
+    timelineReducer(
+      timelineReducer(createEmptyTimeline(), {
+        type: 'addClip',
+        assetId: 'asset-1',
+        durationMs: 5000,
+        clipId: 'clip-1',
+        recordedAtEpochMs: 1_700_000_000_000,
+        surface,
+      }),
+      {
+        type: 'applyCapture',
+        clipId: 'clip-1',
+        path: [{ tMs: 0, x: 0.1, y: 0.1 }],
+        effects: [],
+      },
+    ).cursor[0];
+
+  it('leaves the surface the take wrote where it is', () => {
+    expect(capturedOn('monitor')).toMatchObject({ surface: 'monitor' });
+    expect(capturedOn('browser')).toMatchObject({ surface: 'browser' });
+  });
+
+  it('gives a clip that kept no surface none of its own', () => {
+    expect(
+      timelineReducer(withClips(), {
+        type: 'applyCapture',
+        clipId: 'clip-1',
+        path: [{ tMs: 0, x: 0.1, y: 0.1 }],
+        effects: [],
+      }).cursor[0],
+    ).not.toHaveProperty('surface');
   });
 });
 

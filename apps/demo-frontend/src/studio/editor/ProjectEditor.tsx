@@ -525,7 +525,6 @@ const ProjectEditor: FC<Props> = ({
             clipId: layer.clipId,
             path: layer.path,
             effects: layer.effects,
-            ...(layer.surface ? { surface: layer.surface } : {}),
           });
         });
         endGesture();

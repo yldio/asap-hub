@@ -35,6 +35,8 @@ export type CaptureApplied = {
   clipId: string;
   path: CursorLayer['path'];
   effects: CursorEffect[];
+  // what this apply read the events through; it is a report, not something the
+  // document keeps, because only the take itself can say what it recorded
   surface?: CaptureSurface;
 };
 

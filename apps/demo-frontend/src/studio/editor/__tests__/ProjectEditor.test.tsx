@@ -1,9 +1,16 @@
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ProjectAsset } from '../../../api/types';
 import { screenCapture, useHoldCapture } from '../../recording/captureLock';
+import { CaptureApply } from '../../recording/cursorPlacement';
 import { TimelineAction, timelineReducer } from '../../project/timelineReducer';
 import { ProjectEditor as Editor } from '../../project/useProjectEditor';
 import ProjectEditor from '../ProjectEditor';
@@ -58,7 +65,10 @@ const renderEditor = ({
   timeline?: Timeline;
   assets?: ProjectAsset[];
   readOnly?: boolean;
-  recorder?: () => ReactNode;
+  recorder?: (
+    addAsset: (added: ProjectAsset) => void,
+    applyCursorCapture: (apply: CaptureApply) => boolean,
+  ) => ReactNode;
   onDownloadClips?: (clipIds: string[]) => void;
 } = {}) => {
   const calls: Call[] = [];
@@ -284,6 +294,56 @@ describe('while something is recording', () => {
     expect(
       screen.getByRole('button', { name: 'Import a video' }),
     ).toBeEnabled();
+  });
+});
+
+// An apply resolves the surface from the clip's own take, or, for a clip that
+// kept none, from the newest take the recorder saw. Writing that second kind
+// back onto the clip made it the clip's own for good: every later apply read it
+// first, no inspector can edit it, and the pointer stayed where it was wrong.
+describe('the surface an apply resolved', () => {
+  const applying = (surface: string) =>
+    jest.fn().mockResolvedValue([
+      {
+        clipId: 'clip-a',
+        path: [{ tMs: 0, x: 0.5, y: 0.5 }],
+        effects: [],
+        surface,
+      },
+    ]);
+
+  const captured = async (surface: string) => {
+    const apply = applying(surface);
+    const { calls } = renderEditor({
+      timeline: withClip(),
+      recorder: (_addAsset, applyCursorCapture) => (
+        <button type="button" onClick={() => applyCursorCapture(apply)}>
+          Add cursor effects
+        </button>
+      ),
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+    await waitFor(() => expect(apply).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(
+        calls.filter((call) => call.action?.type === 'applyCapture'),
+      ).toHaveLength(1),
+    );
+    return calls.find((call) => call.action?.type === 'applyCapture')?.action;
+  };
+
+  it('never reaches the document', async () => {
+    expect(await captured('monitor')).not.toHaveProperty('surface');
+  });
+
+  it('still lands the effects it derived', async () => {
+    expect(await captured('monitor')).toMatchObject({
+      clipId: 'clip-a',
+      path: [{ tMs: 0, x: 0.5, y: 0.5 }],
+    });
   });
 });
 

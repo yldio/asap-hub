@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { pointerVariantIds } from './cursor/pointerArt';
 
-export const currentSchemaVersion = 1;
+export const currentSchemaVersion = 2;
 
 export const limits = {
   clips: 200,
@@ -171,8 +171,11 @@ export const cursorLayerSchema = z.object({
   // which drawn pointer walks the path; the whole capture shares one, and a
   // layer saved before the picker existed falls back to the default
   pointer: z.enum(pointerVariantIds).optional(),
-  // what the recording shows, which is what the capture was mapped through; a
-  // layer saved before the studio asked the browser falls back to the tab
+  // what the take in this clip was a recording of, written when the clip is
+  // added and never again: only the take itself knows, and a capture applied
+  // later has nothing but the newest take to go on. A clip recorded before the
+  // studio asked the browser, or by a browser that would not say, carries none
+  // and the live recorder answers for it.
   surface: z.enum(captureSurfaces).optional(),
   // Wall clock when the take in this clip started, which is the instant the
   // footage shows at t=0. A capture is clicked on a few seconds into the take,

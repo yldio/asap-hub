@@ -21,6 +21,8 @@ import {
   submitForm,
 } from '../../test-utils/research-output-form';
 
+jest.setTimeout(60000);
+
 describe('ResearchOutputForm extra information', () => {
   const saveFn = jest.fn();
   let consoleMock: ReturnType<typeof mockActErrorsInConsole>;

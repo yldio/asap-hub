@@ -106,7 +106,11 @@ describe('parseSheet', () => {
 
   it('Should return nothing for a sheet that has no rows', () => {
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([]), 'Empty');
+    XLSX.utils.book_append_sheet(
+      workbook,
+      XLSX.utils.aoa_to_sheet([]),
+      'Empty',
+    );
 
     expect(
       parseSheet(XLSX.write(workbook, { type: 'array', bookType: 'xlsx' })),

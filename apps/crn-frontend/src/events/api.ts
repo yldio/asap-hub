@@ -98,24 +98,25 @@ export const getTeamsForMatching = async (
   algoliaClient: AlgoliaClient<'crn'>,
 ): Promise<TeamListItemResponse[]> => {
   const items: TeamListItemResponse[] = [];
-  let currentPage = 0;
   let total = Infinity;
 
-  while (items.length < total) {
+  for (let currentPage = 0; items.length < total; currentPage += 1) {
     // eslint-disable-next-line no-await-in-loop
-    const result = await getAlgoliaTeams(algoliaClient, {
-      searchQuery: '',
-      teamType: 'all',
-      currentPage,
-      pageSize: teamsForMatchingPageSize,
-    });
-    // Guard against a page that returns nothing so the loop always terminates.
-    if (result.items.length === 0) {
+    const { items: pageItems, total: pageTotal } = await getAlgoliaTeams(
+      algoliaClient,
+      {
+        searchQuery: '',
+        teamType: 'all',
+        currentPage,
+        pageSize: teamsForMatchingPageSize,
+      },
+    );
+    // An empty page guarantees termination even if total is off.
+    if (pageItems.length === 0) {
       break;
     }
-    items.push(...result.items);
-    total = result.total;
-    currentPage += 1;
+    items.push(...pageItems);
+    total = pageTotal;
   }
 
   return items;

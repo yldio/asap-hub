@@ -3,12 +3,7 @@ import * as XLSX from 'xlsx';
 export type ParsedTeamRow = { name: string; attended: boolean };
 
 const teamHeaderAliases = ['team', 'team name', 'teams'];
-const attendanceHeaderAliases = [
-  'attendance',
-  'attended',
-  'status',
-  'present',
-];
+const attendanceHeaderAliases = ['attendance', 'attended', 'status', 'present'];
 const attendedValues = new Set([
   'yes',
   'y',
@@ -35,9 +30,7 @@ const toCellText = (value: unknown): string => {
 // Blank or unrecognised status defaults to not attended.
 // SheetJS coerces TRUE/FALSE cells to real booleans, so handle those directly.
 const parseAttended = (value: unknown): boolean =>
-  typeof value === 'boolean'
-    ? value
-    : attendedValues.has(normalizeCell(value));
+  typeof value === 'boolean' ? value : attendedValues.has(normalizeCell(value));
 
 const findColumns = (
   firstRow: unknown[] = [],
@@ -49,11 +42,11 @@ const findColumns = (
     attendanceHeaderAliases.includes(normalizeCell(cell)),
   );
   const hasHeader = teamHeader !== -1 || attendanceColumn !== -1;
-  return {
-    teamColumn: teamHeader === -1 ? 0 : teamHeader,
-    attendanceColumn,
-    skipFirstRow: hasHeader,
-  };
+  // With no team header, fall back to the first column that is not the status
+  // column, so a status-first sheet doesn't read the status as team names.
+  const teamColumn =
+    teamHeader !== -1 ? teamHeader : attendanceColumn === 0 ? 1 : 0;
+  return { teamColumn, attendanceColumn, skipFirstRow: hasHeader };
 };
 
 export const parseSheet = (data: ArrayBuffer | string): ParsedTeamRow[] => {

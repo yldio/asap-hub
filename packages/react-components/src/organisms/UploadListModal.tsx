@@ -559,8 +559,9 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
 
       <div css={bodyStyles}>
         <Paragraph noMargin accent="lead">
-          Add teams from a list. Matched teams are added and marked attended.
-          Teams already added are skipped. CSV or XLSX files only.
+          Add teams from a list, each with the attendance marked in the file.
+          Teams already on the list keep their place and take the file&apos;s
+          attendance. CSV or XLSX files only.
         </Paragraph>
 
         <section css={uploadSectionStyles}>

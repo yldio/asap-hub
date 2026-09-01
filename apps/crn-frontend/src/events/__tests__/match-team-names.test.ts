@@ -113,6 +113,24 @@ describe('matchTeamNames', () => {
     expect(result).toEqual({ matched: [], unmatched: [] });
   });
 
+  it('Should keep two Hub teams distinct when they differ only by a leading Team prefix', () => {
+    const teams = [
+      team({ id: 't-science', displayName: 'Science' }),
+      team({ id: 't-team-science', displayName: 'Team Science' }),
+    ];
+
+    const result = matchTeamNames(
+      [row('Science', true), row('Team Science', false)],
+      teams,
+    );
+
+    expect(result.matched).toEqual([
+      expect.objectContaining({ teamId: 't-science', attended: true }),
+      expect.objectContaining({ teamId: 't-team-science', attended: false }),
+    ]);
+    expect(result.unmatched).toEqual([]);
+  });
+
   it('Should match an inactive team and flag it', () => {
     const result = matchTeamNames(
       [row('Alessi')],

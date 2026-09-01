@@ -133,9 +133,9 @@ describe('parseSheet', () => {
     `(
       'Should read attendance cell "$cell" as attended=$attended',
       ({ cell, attended }) => {
-        expect(
-          parseSheet(`Team Name,Attendance\nAguzzi,${cell}\n`),
-        ).toEqual([{ name: 'Aguzzi', attended }]);
+        expect(parseSheet(`Team Name,Attendance\nAguzzi,${cell}\n`)).toEqual([
+          { name: 'Aguzzi', attended },
+        ]);
       },
     );
 
@@ -157,10 +157,21 @@ describe('parseSheet', () => {
       ]);
     });
 
+    it('Should not read the status column as team names when the team header is unrecognised', () => {
+      expect(parseSheet('Attendance,Owner\nYes,Aguzzi\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+      ]);
+    });
+
     it('Should read a status column when the team column has no header', () => {
-      expect(parseSheet(toXlsxBuffer([[42, 'Attendance'], ['Aguzzi', 'Yes']]))).toEqual(
-        [{ name: 'Aguzzi', attended: true }],
-      );
+      expect(
+        parseSheet(
+          toXlsxBuffer([
+            [42, 'Attendance'],
+            ['Aguzzi', 'Yes'],
+          ]),
+        ),
+      ).toEqual([{ name: 'Aguzzi', attended: true }]);
     });
   });
 
@@ -178,7 +189,9 @@ describe('parseSheet', () => {
     );
 
     expect(
-      names(parseSheet(XLSX.write(workbook, { type: 'array', bookType: 'xlsx' }))),
+      names(
+        parseSheet(XLSX.write(workbook, { type: 'array', bookType: 'xlsx' })),
+      ),
     ).toEqual(['Aguzzi']);
   });
 

@@ -7,6 +7,7 @@ import {
   ListUserProductivityResponse,
   SortTeamProductivity,
   SortUserProductivity,
+  TeamProductivityOpensearchDocument,
   TeamProductivityPerformance,
   TeamProductivityResponse,
   UserProductivityPerformance,
@@ -17,10 +18,13 @@ import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options'
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import { makePerformanceQuery } from '../utils/state';
 import {
+  getTeamHubResearchOutputs,
   getTeamProductivity,
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
+  TeamHubResearchOutputs,
+  TeamHubResearchOutputsOptions,
 } from './api';
 
 export const userProductivityQueryKeys = {
@@ -104,5 +108,26 @@ export const useAnalyticsTeamProductivity = (
         () => getTeamProductivity(opensearchClient, options),
         { total: 0, items: [] },
       ),
+  }).data;
+};
+
+export const teamHubResearchOutputsQueryKeys = {
+  all: ['analytics-team-hub-research-outputs'] as const,
+  detail: (teamId: string) =>
+    [...teamHubResearchOutputsQueryKeys.all, teamId] as const,
+};
+
+export const useTeamHubResearchOutputs = (
+  options: TeamHubResearchOutputsOptions,
+): TeamHubResearchOutputs => {
+  const opensearchClient =
+    useAnalyticsOpensearch<TeamProductivityOpensearchDocument>(
+      'team-productivity',
+    ).client;
+
+  return useSuspenseQuery({
+    queryKey: teamHubResearchOutputsQueryKeys.detail(options.teamId),
+    queryFn: (): Promise<TeamHubResearchOutputs> =>
+      getTeamHubResearchOutputs(opensearchClient, options),
   }).data;
 };

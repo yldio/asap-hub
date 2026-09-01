@@ -85,6 +85,7 @@ export type OutputDocumentTypeParameter =
 
 const team = (() => {
   const about = route('/about', {}, {});
+  const metrics = route('/metrics', {}, {});
   const workspace = route('/workspace', {}, {});
 
   const createOutput = route(
@@ -101,6 +102,7 @@ const team = (() => {
     { teamId: stringParser },
     {
       about,
+      metrics,
       workspace,
       createOutput,
       upcoming,

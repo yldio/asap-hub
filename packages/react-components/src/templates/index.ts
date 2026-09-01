@@ -88,6 +88,7 @@ export { default as SigninPage } from './SigninPage';
 export { default as TagsPage } from './TagsPage';
 export { default as TagsPageBody } from './TagsPageBody';
 export { default as TagsPageHeader } from './TagsPageHeader';
+export { default as TeamMetricsPage } from './TeamMetricsPage';
 export { default as TeamProfileAbout } from './TeamProfileAbout';
 export { default as TeamProfileHeader } from './TeamProfileHeader';
 export { default as TeamProfilePage } from './TeamProfilePage';

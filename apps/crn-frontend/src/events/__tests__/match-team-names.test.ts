@@ -34,26 +34,23 @@ describe('normalizeTeamName', () => {
 });
 
 describe('matchTeamNames', () => {
-  it('Should match a name and carry its uploaded attendance status', () => {
-    const result = matchTeamNames([row('Alessi', true)], [team()]);
+  it.each([true, false])(
+    'Should match a name and carry attended=%s from the file',
+    (attended) => {
+      const result = matchTeamNames([row('Alessi', attended)], [team()]);
 
-    expect(result.matched).toEqual([
-      {
-        teamId: 't-alessi',
-        teamName: 'Alessi',
-        attended: true,
-        teamType: 'Discovery Team',
-        isTeamInactive: false,
-      },
-    ]);
-    expect(result.unmatched).toEqual([]);
-  });
-
-  it('Should match a name marked not attended', () => {
-    const result = matchTeamNames([row('Alessi', false)], [team()]);
-
-    expect(result.matched[0]?.attended).toEqual(false);
-  });
+      expect(result.matched).toEqual([
+        {
+          teamId: 't-alessi',
+          teamName: 'Alessi',
+          attended,
+          teamType: 'Discovery Team',
+          isTeamInactive: false,
+        },
+      ]);
+      expect(result.unmatched).toEqual([]);
+    },
+  );
 
   it.each(['Team Alessi', 'ALESSI', '  alessi  '])(
     'Should match %s against the stored display name',

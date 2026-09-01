@@ -46,10 +46,7 @@ export type UploadListUnmatchedTeam = {
 };
 
 export type UploadListResult = {
-  // Every uploaded name resolved to a Hub Team, with its uploaded status. The
-  // modal splits these against the current table into new additions and
-  // "already in" (updated in place), so resolution stays independent of table
-  // state.
+  // Every resolved Hub Team, new or already on the table; the modal splits them.
   matched: EventAttendanceTeam[];
   unmatched: UploadListUnmatchedTeam[];
 };
@@ -68,9 +65,8 @@ type UploadListModalProps = {
     files: File[],
   ) => void | Promise<void>;
   onBack: () => void;
-  // Team ids currently on the attendance table (including unsaved additions).
-  // Resolved teams already present are shown as "already in" and updated in
-  // place rather than listed as new additions.
+  // Team ids already on the table (including unsaved additions), shown as
+  // "already in" rather than new.
   currentTeamIds?: ReadonlySet<string>;
   maxFileSizeMb?: number;
   accept?: string;
@@ -475,15 +471,10 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   ): team is UploadListUnmatchedTeam & { suggestion: UploadListSuggestion } =>
     !!team.suggestion && addedSuggestionIds.has(team.suggestion.teamId);
 
-  // A resolved team already on the attendance table is "already in": not listed
-  // as a new addition, updated in place on save. Split against the live table
-  // (which includes unsaved additions), not the server state.
   const alreadyIn = result
     ? result.matched.filter((team) => currentTeamIds.has(team.teamId))
     : [];
-  const newMatchedCount = result
-    ? result.matched.length - alreadyIn.length
-    : 0;
+  const newMatchedCount = result ? result.matched.length - alreadyIn.length : 0;
 
   const matchedTeams: EventAttendanceTeam[] = result
     ? [
@@ -506,9 +497,6 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     ? result.matched.length + result.unmatched.length
     : 0;
 
-  // "Already in" Teams are not listed as additions, so a file whose names are
-  // all already on the attendance table leaves both sections empty; their
-  // status is still updated on save.
   const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
   const emptyResultMessage =
     totalTeams === 0

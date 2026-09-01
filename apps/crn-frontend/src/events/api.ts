@@ -92,8 +92,7 @@ export const patchEvent = async (
   return resp.json();
 };
 
-// One Algolia pass per upload instead of one query per uploaded name: the whole
-// corpus is resolved in memory by matchTeamNames.
+// Fetch the whole team corpus once per upload; matchTeamNames resolves in memory.
 export const getTeamsForMatching = async (
   algoliaClient: AlgoliaClient<'crn'>,
 ): Promise<TeamListItemResponse[]> => {

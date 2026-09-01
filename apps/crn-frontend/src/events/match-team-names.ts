@@ -61,7 +61,8 @@ export const matchTeamNames = (
       return;
     }
 
-    const team = byFullName.get(full) ?? byStrippedName.get(stripTeamPrefix(full));
+    const team =
+      byFullName.get(full) ?? byStrippedName.get(stripTeamPrefix(full));
     if (!team) {
       if (!seenUnmatched.has(full)) {
         seenUnmatched.add(full);

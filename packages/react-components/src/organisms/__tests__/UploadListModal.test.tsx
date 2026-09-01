@@ -104,6 +104,15 @@ describe('UploadListModal', () => {
     expect(screen.getByRole('button', { name: 'Add Attendees' })).toBeEnabled();
   });
 
+  it('Should treat every resolved team as new when currentTeamIds is omitted', async () => {
+    const { container } = renderModal({ currentTeamIds: undefined });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(await screen.findByText('3 matched')).toBeInTheDocument();
+    expect(screen.getByText('0 already in')).toBeInTheDocument();
+  });
+
   it('Should render a seeded result without any upload', () => {
     renderModal({
       initialFiles: [makeFile('seeded.csv')],

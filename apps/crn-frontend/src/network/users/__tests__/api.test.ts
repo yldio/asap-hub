@@ -17,7 +17,7 @@ import type {
 } from '@asap-hub/algolia';
 import { createAlgoliaResponse } from '@asap-hub/algolia';
 
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { BackendError, GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import {
@@ -410,6 +410,41 @@ describe('patchUser', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
     );
+  });
+
+  // The modal turns this body into the offending field's inline error, so
+  // discarding it would leave the user with only the generic toast.
+  it('preserves the validation body of a rejection', async () => {
+    const patch = { contactEmail: 'test@test' };
+    const body = {
+      error: 'Bad Request',
+      message: 'Validation error',
+      statusCode: 400,
+      data: [
+        {
+          instancePath: '/contactEmail',
+          keyword: 'pattern',
+          params: {},
+          schemaPath: '#/properties/contactEmail/pattern',
+        },
+      ],
+    };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(400, body);
+
+    const error = await patchUser('42', patch, '').catch((thrown) => thrown);
+
+    expect(error).toBeInstanceOf(BackendError);
+    expect(error).toMatchObject({ statusCode: 400, response: body });
+  });
+
+  it('tolerates a rejection carrying no JSON body', async () => {
+    const patch = { biography: 'New Bio' };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(502, '<html>502</html>');
+
+    const error = await patchUser('42', patch, '').catch((thrown) => thrown);
+
+    expect(error).toBeInstanceOf(BackendError);
+    expect(error).toMatchObject({ statusCode: 502, response: undefined });
   });
 });
 

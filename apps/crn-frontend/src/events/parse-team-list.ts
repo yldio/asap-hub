@@ -1,11 +1,29 @@
 import * as XLSX from 'xlsx';
 
-const headerAliases = ['team', 'team name', 'teams'];
+export type ParsedTeamRow = { name: string; attended: boolean };
 
-const normalizeHeader = (value: unknown): string =>
+const teamHeaderAliases = ['team', 'team name', 'teams'];
+const attendanceHeaderAliases = [
+  'attendance',
+  'attended',
+  'status',
+  'present',
+];
+const attendedValues = new Set([
+  'yes',
+  'y',
+  'true',
+  '1',
+  'attended',
+  'present',
+]);
+
+const normalizeCell = (value: unknown): string =>
   typeof value === 'string'
     ? value.trim().replace(/\s+/g, ' ').toLowerCase()
-    : '';
+    : typeof value === 'number'
+      ? String(value)
+      : '';
 
 const toCellText = (value: unknown): string => {
   if (typeof value === 'string') {
@@ -14,21 +32,31 @@ const toCellText = (value: unknown): string => {
   return typeof value === 'number' ? String(value) : '';
 };
 
-// The Team column is found by header so an export from the Hub's analytics
-// pages (which emits "Team Name") uploads unedited. A file without a
-// recognised header is treated as a bare list, so its first row is data.
-const findTeamColumn = (
+// Blank or unrecognised status defaults to not attended.
+// SheetJS coerces TRUE/FALSE cells to real booleans, so handle those directly.
+const parseAttended = (value: unknown): boolean =>
+  typeof value === 'boolean'
+    ? value
+    : attendedValues.has(normalizeCell(value));
+
+const findColumns = (
   firstRow: unknown[] = [],
-): { column: number; skipFirstRow: boolean } => {
-  const column = firstRow.findIndex((cell) =>
-    headerAliases.includes(normalizeHeader(cell)),
+): { teamColumn: number; attendanceColumn: number; skipFirstRow: boolean } => {
+  const teamHeader = firstRow.findIndex((cell) =>
+    teamHeaderAliases.includes(normalizeCell(cell)),
   );
-  return column === -1
-    ? { column: 0, skipFirstRow: false }
-    : { column, skipFirstRow: true };
+  const attendanceColumn = firstRow.findIndex((cell) =>
+    attendanceHeaderAliases.includes(normalizeCell(cell)),
+  );
+  const hasHeader = teamHeader !== -1 || attendanceColumn !== -1;
+  return {
+    teamColumn: teamHeader === -1 ? 0 : teamHeader,
+    attendanceColumn,
+    skipFirstRow: hasHeader,
+  };
 };
 
-export const parseSheet = (data: ArrayBuffer | string): string[] => {
+export const parseSheet = (data: ArrayBuffer | string): ParsedTeamRow[] => {
   const workbook =
     typeof data === 'string'
       ? XLSX.read(data, { type: 'string' })
@@ -41,16 +69,18 @@ export const parseSheet = (data: ArrayBuffer | string): string[] => {
   }
 
   const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1 });
-  const { column, skipFirstRow } = findTeamColumn(rows[0]);
+  const { teamColumn, attendanceColumn, skipFirstRow } = findColumns(rows[0]);
 
   return rows
     .slice(skipFirstRow ? 1 : 0)
-    .map((row) => toCellText(row[column]))
-    .filter(Boolean);
+    .map((row) => ({
+      name: toCellText(row[teamColumn]),
+      attended:
+        attendanceColumn === -1 ? false : parseAttended(row[attendanceColumn]),
+    }))
+    .filter((row) => row.name);
 };
 
-// FileReader rather than file.text()/arrayBuffer(): jsdom does not implement
-// the Blob methods, so those only work in the browser.
 const readFile = (file: File): Promise<ArrayBuffer | string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -64,7 +94,9 @@ const readFile = (file: File): Promise<ArrayBuffer | string> =>
     }
   });
 
-export const parseTeamNames = async (files: File[]): Promise<string[]> => {
+export const parseTeamRows = async (
+  files: File[],
+): Promise<ParsedTeamRow[]> => {
   const perFile = await Promise.all(
     files.map(async (file) => parseSheet(await readFile(file))),
   );

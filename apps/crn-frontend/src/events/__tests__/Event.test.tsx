@@ -459,8 +459,9 @@ describe('the NEW_EVENT_PAGE flag', () => {
         expect(await findByText(/1 not matched/)).toBeVisible();
       });
 
-      it('counts a team already on the attendance list instead of adding it', async () => {
+      it('does not re-add a team already on the list but updates its status on save', async () => {
         mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
         mockGetTeamsForMatching.mockResolvedValue([
           {
             ...createTeamListItemResponse(),
@@ -469,17 +470,35 @@ describe('the NEW_EVENT_PAGE flag', () => {
           },
         ]);
 
-        const { container, findByText } = await openUploadList();
-        await uploadCsv(container, 'Team Name\nTeam One\n');
+        const { container, findByText, findByRole, getByRole } =
+          await openUploadList();
+        await uploadCsv(container, 'Team Name,Attendance\nTeam One,Yes\n');
 
         expect(
           await findByText(
             'All 1 Teams in this list are already in the attendance table.',
           ),
         ).toBeVisible();
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Add Attendees' }),
+        );
+        await userEvent.click(getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              attendance: [
+                { id: 'attendance-1', teamId: 't1', attended: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
       });
 
-      it('saves uploaded teams without an attendance id', async () => {
+      it('saves a new uploaded team with its status and no attendance id', async () => {
         mockGetEvent.mockResolvedValue(eventWithOneTeam());
         mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
         mockGetTeamsForMatching.mockResolvedValue([
@@ -487,7 +506,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
         ]);
 
         const { container, findByRole, getByRole } = await openUploadList();
-        await uploadCsv(container, 'Team Name\nAlessi\n');
+        await uploadCsv(container, 'Team Name,Attendance\nAlessi,Yes\n');
 
         await userEvent.click(
           await findByRole('button', { name: 'Add Attendees' }),

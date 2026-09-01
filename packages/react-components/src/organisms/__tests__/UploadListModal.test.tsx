@@ -22,7 +22,10 @@ const uploadResult: UploadListResult = {
       teamType: 'Discovery Team',
     },
   ],
-  alreadyInCount: 2,
+  alreadyIn: [
+    { teamId: 'a1', teamName: 'Genetics', attended: true },
+    { teamId: 'a2', teamName: 'Proteomics', attended: false },
+  ],
   unmatched: [
     {
       name: 'Imagimg',
@@ -321,7 +324,11 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
-        alreadyInCount: 3,
+        alreadyIn: [
+          { teamId: 'a1', teamName: 'A', attended: true },
+          { teamId: 'a2', teamName: 'B', attended: false },
+          { teamId: 'a3', teamName: 'C', attended: true },
+        ],
         unmatched: [],
       })),
     });
@@ -340,7 +347,7 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
-        alreadyInCount: 0,
+        alreadyIn: [],
         unmatched: [],
       })),
     });
@@ -435,7 +442,7 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: uploadResult.matched,
-        alreadyInCount: 0,
+        alreadyIn: [],
         unmatched: [],
       })),
     });
@@ -454,7 +461,7 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
-        alreadyInCount: 0,
+        alreadyIn: [],
         unmatched: uploadResult.unmatched,
       })),
     });
@@ -476,7 +483,35 @@ describe('UploadListModal', () => {
     );
 
     expect(onAddAttendees).toHaveBeenCalledWith(
-      [expect.objectContaining({ teamId: 'm1', teamName: 'Imaging' })],
+      [
+        expect.objectContaining({ teamId: 'm1', teamName: 'Imaging' }),
+        expect.objectContaining({ teamId: 'a1', attended: true }),
+        expect.objectContaining({ teamId: 'a2', attended: false }),
+      ],
+      [expect.objectContaining({ name: 'teams.csv' })],
+    );
+  });
+
+  it('Should let the user apply status updates when every team is already in', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [],
+        alreadyIn: [{ teamId: 'a1', teamName: 'Genetics', attended: false }],
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    const addButton = await screen.findByRole('button', {
+      name: 'Add Attendees',
+    });
+    expect(addButton).toBeEnabled();
+
+    await userEvent.click(addButton);
+
+    expect(onAddAttendees).toHaveBeenCalledWith(
+      [expect.objectContaining({ teamId: 'a1', attended: false })],
       [expect.objectContaining({ name: 'teams.csv' })],
     );
   });

@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 
-import { parseSheet, parseTeamNames } from '../parse-team-list';
+import { parseSheet, parseTeamRows } from '../parse-team-list';
 
 const toXlsxBuffer = (rows: unknown[][]): ArrayBuffer => {
   const workbook = XLSX.utils.book_new();
@@ -20,6 +20,9 @@ const xlsxFile = (rows: unknown[][], name = 'teams.xlsx') =>
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 
+const names = (rows: ReturnType<typeof parseSheet>) =>
+  rows.map(({ name }) => name);
+
 const realFileReader = window.FileReader;
 
 const withFailingFileReader = (error: Error | null) => {
@@ -35,46 +38,48 @@ afterEach(() => {
 
 describe('parseSheet', () => {
   it('Should read a CSV with a Team Name header', () => {
-    expect(parseSheet('Team Name\nAguzzi\nTeam Alessi\n')).toEqual([
+    expect(names(parseSheet('Team Name\nAguzzi\nTeam Alessi\n'))).toEqual([
       'Aguzzi',
       'Team Alessi',
     ]);
   });
 
   it('Should treat the first row as data when no header is recognised', () => {
-    expect(parseSheet('Aguzzi\nAlessi\n')).toEqual(['Aguzzi', 'Alessi']);
+    expect(names(parseSheet('Aguzzi\nAlessi\n'))).toEqual(['Aguzzi', 'Alessi']);
   });
 
   it('Should accept Team and Teams as header aliases', () => {
-    expect(parseSheet('Team\nAguzzi\n')).toEqual(['Aguzzi']);
-    expect(parseSheet('  TEAMS  \nAguzzi\n')).toEqual(['Aguzzi']);
+    expect(names(parseSheet('Team\nAguzzi\n'))).toEqual(['Aguzzi']);
+    expect(names(parseSheet('  TEAMS  \nAguzzi\n'))).toEqual(['Aguzzi']);
   });
 
   it('Should use the headed column when it is not the first one', () => {
     expect(
-      parseSheet('Email,Team Name\na@b.com,Aguzzi\nc@d.com,Alessi\n'),
+      names(parseSheet('Email,Team Name\na@b.com,Aguzzi\nc@d.com,Alessi\n')),
     ).toEqual(['Aguzzi', 'Alessi']);
   });
 
   it('Should keep a quoted comma inside a single name', () => {
-    expect(parseSheet('Team Name\n"Aguzzi, Alessi"\n')).toEqual([
+    expect(names(parseSheet('Team Name\n"Aguzzi, Alessi"\n'))).toEqual([
       'Aguzzi, Alessi',
     ]);
   });
 
   it('Should read a semicolon delimited CSV', () => {
-    expect(parseSheet('Email;Team Name\na@b.com;Aguzzi\n')).toEqual(['Aguzzi']);
+    expect(names(parseSheet('Email;Team Name\na@b.com;Aguzzi\n'))).toEqual([
+      'Aguzzi',
+    ]);
   });
 
   it('Should tolerate a BOM and CRLF line endings', () => {
-    expect(parseSheet('﻿Team Name\r\nAguzzi\r\nAlessi\r\n')).toEqual([
+    expect(names(parseSheet('﻿Team Name\r\nAguzzi\r\nAlessi\r\n'))).toEqual([
       'Aguzzi',
       'Alessi',
     ]);
   });
 
   it('Should skip empty rows and blank cells', () => {
-    expect(parseSheet('Team Name\nAguzzi\n\n   \nAlessi\n')).toEqual([
+    expect(names(parseSheet('Team Name\nAguzzi\n\n   \nAlessi\n'))).toEqual([
       'Aguzzi',
       'Alessi',
     ]);
@@ -82,16 +87,18 @@ describe('parseSheet', () => {
 
   it('Should read an XLSX file', () => {
     expect(
-      parseSheet(toXlsxBuffer([['Team Name'], ['Aguzzi'], ['Alessi']])),
+      names(parseSheet(toXlsxBuffer([['Team Name'], ['Aguzzi'], ['Alessi']]))),
     ).toEqual(['Aguzzi', 'Alessi']);
   });
 
   it('Should read numeric team names as text', () => {
-    expect(parseSheet(toXlsxBuffer([['Team Name'], [42]]))).toEqual(['42']);
+    expect(names(parseSheet(toXlsxBuffer([['Team Name'], [42]])))).toEqual([
+      '42',
+    ]);
   });
 
   it('Should treat a non-text header cell as no header at all', () => {
-    expect(parseSheet(toXlsxBuffer([[42], ['Aguzzi']]))).toEqual([
+    expect(names(parseSheet(toXlsxBuffer([[42], ['Aguzzi']])))).toEqual([
       '42',
       'Aguzzi',
     ]);
@@ -99,6 +106,62 @@ describe('parseSheet', () => {
 
   it('Should return nothing for a sheet with no rows', () => {
     expect(parseSheet('')).toEqual([]);
+  });
+
+  describe('attendance status', () => {
+    it('Should default to not attended when there is no status column', () => {
+      expect(parseSheet('Team Name\nAguzzi\n')).toEqual([
+        { name: 'Aguzzi', attended: false },
+      ]);
+    });
+
+    it.each`
+      cell          | attended
+      ${'Yes'}      | ${true}
+      ${'yes'}      | ${true}
+      ${'Y'}        | ${true}
+      ${'TRUE'}     | ${true}
+      ${'1'}        | ${true}
+      ${'Attended'} | ${true}
+      ${'Present'}  | ${true}
+      ${'No'}       | ${false}
+      ${'n'}        | ${false}
+      ${'FALSE'}    | ${false}
+      ${'0'}        | ${false}
+      ${''}         | ${false}
+      ${'maybe'}    | ${false}
+    `(
+      'Should read attendance cell "$cell" as attended=$attended',
+      ({ cell, attended }) => {
+        expect(
+          parseSheet(`Team Name,Attendance\nAguzzi,${cell}\n`),
+        ).toEqual([{ name: 'Aguzzi', attended }]);
+      },
+    );
+
+    it('Should accept Attended, Status and Present as status headers', () => {
+      expect(parseSheet('Team Name,Attended\nAguzzi,Yes\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+      ]);
+      expect(parseSheet('Team Name,Status\nAguzzi,Yes\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+      ]);
+      expect(parseSheet('Team,Present\nAguzzi,No\n')).toEqual([
+        { name: 'Aguzzi', attended: false },
+      ]);
+    });
+
+    it('Should read the status column even when it comes first', () => {
+      expect(parseSheet('Attendance,Team Name\nYes,Aguzzi\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+      ]);
+    });
+
+    it('Should read a status column when the team column has no header', () => {
+      expect(parseSheet(toXlsxBuffer([[42, 'Attendance'], ['Aguzzi', 'Yes']]))).toEqual(
+        [{ name: 'Aguzzi', attended: true }],
+      );
+    });
   });
 
   it('Should ignore every sheet after the first', () => {
@@ -115,12 +178,10 @@ describe('parseSheet', () => {
     );
 
     expect(
-      parseSheet(XLSX.write(workbook, { type: 'array', bookType: 'xlsx' })),
+      names(parseSheet(XLSX.write(workbook, { type: 'array', bookType: 'xlsx' }))),
     ).toEqual(['Aguzzi']);
   });
 
-  // XLSX.read always yields at least one sheet, so the guard against a
-  // sheetless workbook is only reachable with the reader stubbed out.
   it('Should return nothing for a workbook with no sheet', async () => {
     jest.resetModules();
     jest.doMock('xlsx', () => ({
@@ -136,25 +197,28 @@ describe('parseSheet', () => {
   });
 });
 
-describe('parseTeamNames', () => {
-  it('Should concatenate names across files in order', async () => {
+describe('parseTeamRows', () => {
+  it('Should concatenate rows across files in order', async () => {
     await expect(
-      parseTeamNames([
-        csvFile('Team Name\nAguzzi\n', 'first.csv'),
+      parseTeamRows([
+        csvFile('Team Name,Attendance\nAguzzi,Yes\n', 'first.csv'),
         xlsxFile([['Team Name'], ['Alessi']], 'second.xlsx'),
       ]),
-    ).resolves.toEqual(['Aguzzi', 'Alessi']);
+    ).resolves.toEqual([
+      { name: 'Aguzzi', attended: true },
+      { name: 'Alessi', attended: false },
+    ]);
   });
 
   it('Should return nothing when no files are given', async () => {
-    await expect(parseTeamNames([])).resolves.toEqual([]);
+    await expect(parseTeamRows([])).resolves.toEqual([]);
   });
 
   it('Should reject with the error the reader reports', async () => {
     const error = new Error('unreadable');
     withFailingFileReader(error);
 
-    await expect(parseTeamNames([csvFile('Team Name\nAguzzi\n')])).rejects.toBe(
+    await expect(parseTeamRows([csvFile('Team Name\nAguzzi\n')])).rejects.toBe(
       error,
     );
   });
@@ -163,7 +227,7 @@ describe('parseTeamNames', () => {
     withFailingFileReader(null);
 
     await expect(
-      parseTeamNames([csvFile('Team Name\nAguzzi\n', 'broken.csv')]),
+      parseTeamRows([csvFile('Team Name\nAguzzi\n', 'broken.csv')]),
     ).rejects.toThrow('Could not read broken.csv');
   });
 });

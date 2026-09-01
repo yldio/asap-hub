@@ -47,7 +47,9 @@ export type UploadListUnmatchedTeam = {
 
 export type UploadListResult = {
   matched: EventAttendanceTeam[];
-  alreadyInCount: number;
+  // Teams from the file already on the attendance table: not re-added, but
+  // their attendance status is updated in place.
+  alreadyIn: EventAttendanceTeam[];
   unmatched: UploadListUnmatchedTeam[];
 };
 
@@ -478,12 +480,14 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     ? result.unmatched.filter((team) => !isPromoted(team))
     : [];
 
+  const alreadyIn = result?.alreadyIn ?? [];
   const totalTeams = result
-    ? result.matched.length + result.alreadyInCount + result.unmatched.length
+    ? result.matched.length + alreadyIn.length + result.unmatched.length
     : 0;
 
-  // "Already in" Teams are only ever a count, so a list whose names are all
-  // already on the attendance table leaves both sections empty.
+  // "Already in" Teams are not listed as additions, so a file whose names are
+  // all already on the attendance table leaves both sections empty; their
+  // status is still updated on save.
   const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
   const emptyResultMessage =
     totalTeams === 0
@@ -491,7 +495,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       : `All ${totalTeams} Teams in this list are already in the attendance table.`;
 
   const isDirty = files.length > 0 || matchedTeams.length > 0;
-  const addEnabled = matchedTeams.length > 0 && !isSaving;
+  const addEnabled =
+    (matchedTeams.length > 0 || alreadyIn.length > 0) && !isSaving;
 
   const requestClose = () => {
     if (isDirty) {
@@ -504,7 +509,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const handleAddAttendees = async () => {
     setIsSaving(true);
     try {
-      await onAddAttendees(matchedTeams, files);
+      await onAddAttendees([...matchedTeams, ...alreadyIn], files);
     } catch {
       // The caller surfaces the error; the modal only needs to unlock so the
       // user can retry or cancel instead of staying stuck on "saving".
@@ -607,7 +612,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
               <span css={summarySeparatorStyles}>•</span>
               <span>{result.matched.length} matched</span>
               <span css={summarySeparatorStyles}>•</span>
-              <span>{result.alreadyInCount} already in</span>
+              <span>{alreadyIn.length} already in</span>
             </div>
 
             {!hasSections && (

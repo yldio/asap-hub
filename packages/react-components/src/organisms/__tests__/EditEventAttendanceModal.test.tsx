@@ -64,7 +64,7 @@ const onUploadList = jest.fn(async () => ({
   matched: [
     { teamId: 'uploaded-1', teamName: 'Uploaded Team', attended: true },
   ],
-  alreadyInCount: 0,
+  alreadyIn: [],
   unmatched: [],
 }));
 
@@ -476,6 +476,36 @@ describe('EditEventAttendanceModal', () => {
     expect(screen.getByText('Source lists')).toBeInTheDocument();
     expect(screen.getByText('• 1 File')).toBeInTheDocument();
     expect(screen.getByText('teams.csv')).toBeInTheDocument();
+  });
+
+  it('Should update an already-listed team from an upload without duplicating it', async () => {
+    const uploadUpdate = jest.fn(async () => ({
+      matched: [],
+      alreadyIn: [{ teamId: 't1', teamName: 'Team Alpha', attended: false }],
+      unmatched: [],
+    }));
+    const { container } = renderModal({ teams, onUploadList: uploadUpdate });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /Upload a List/ }),
+    );
+    await userEvent.upload(
+      container.querySelector('input[type="file"]') as HTMLInputElement,
+      new File(['team'], 'teams.csv', { type: 'text/csv' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add Attendees' }),
+    );
+
+    // No duplicate row is added: the two seeded teams remain.
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(onSave).toHaveBeenCalledWith([
+      expect.objectContaining({ teamId: 't1', attended: false }),
+      expect.objectContaining({ teamId: 't2', attended: false }),
+    ]);
   });
 
   it('Should pluralise the source list count for multiple files', () => {

@@ -5,9 +5,8 @@ import {
   UploadListUnmatchedTeam,
 } from '@asap-hub/react-components';
 
-// The Hub renders Teams as `Team {displayName}` but stores the bare
-// displayName, so a list transcribed from the UI carries a prefix that is not
-// part of any stored name.
+import { ParsedTeamRow } from './parse-team-list';
+
 export const normalizeTeamName = (name: string): string =>
   name
     .trim()
@@ -15,16 +14,19 @@ export const normalizeTeamName = (name: string): string =>
     .toLowerCase()
     .replace(/^team /, '');
 
-const toAttendanceTeam = (team: TeamListItemResponse): EventAttendanceTeam => ({
+const toAttendanceTeam = (
+  team: TeamListItemResponse,
+  attended: boolean,
+): EventAttendanceTeam => ({
   teamId: team.id,
   teamName: team.displayName,
-  attended: true,
+  attended,
   teamType: team.teamType,
   isTeamInactive: !!team.inactiveSince,
 });
 
 export const matchTeamNames = (
-  names: string[],
+  rows: ParsedTeamRow[],
   teams: TeamListItemResponse[],
   currentRows: EventAttendanceTeam[],
 ): UploadListResult => {
@@ -34,11 +36,11 @@ export const matchTeamNames = (
   const currentTeamIds = new Set(currentRows.map(({ teamId }) => teamId));
 
   const matched: EventAttendanceTeam[] = [];
+  const alreadyIn: EventAttendanceTeam[] = [];
   const unmatched: UploadListUnmatchedTeam[] = [];
   const seen = new Set<string>();
-  let alreadyInCount = 0;
 
-  names.forEach((name) => {
+  rows.forEach(({ name, attended }) => {
     const normalized = normalizeTeamName(name);
     if (!normalized || seen.has(normalized)) {
       return;
@@ -48,14 +50,16 @@ export const matchTeamNames = (
     const team = teamsByName.get(normalized);
     if (!team) {
       unmatched.push({ name: name.trim() });
-    } else if (currentTeamIds.has(team.id)) {
-      // Counted, never listed: the modal's total is
-      // matched + alreadyInCount + unmatched, so the sets must stay disjoint.
-      alreadyInCount += 1;
+      return;
+    }
+
+    const entry = toAttendanceTeam(team, attended);
+    if (currentTeamIds.has(team.id)) {
+      alreadyIn.push(entry);
     } else {
-      matched.push(toAttendanceTeam(team));
+      matched.push(entry);
     }
   });
 
-  return { matched, alreadyInCount, unmatched };
+  return { matched, alreadyIn, unmatched };
 };

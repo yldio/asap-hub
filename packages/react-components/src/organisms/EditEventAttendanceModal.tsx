@@ -443,6 +443,25 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       return [...current, ...additions];
     });
 
+  // Upload upserts: a Team already on the table keeps its row (and its
+  // server-side attendanceId) but takes the uploaded attendance status; a new
+  // Team is appended. Kept separate from addTeams so the search and
+  // interest-group paths stay append-only and never overwrite a toggle.
+  const applyUploadedTeams = (teamsToApply: EventAttendanceTeam[]) => {
+    setRows((current) => {
+      const byId = new Map(current.map((team) => [team.teamId, team]));
+      teamsToApply.forEach((team) =>
+        byId.set(team.teamId, { ...byId.get(team.teamId), ...team }),
+      );
+      return [...byId.values()];
+    });
+    setManualTeamIds((prev) => {
+      const next = new Set(prev);
+      teamsToApply.forEach((team) => next.add(team.teamId));
+      return next;
+    });
+  };
+
   const addManualTeams = (teamsToAdd: EventAttendanceTeam[]) => {
     addTeams(teamsToAdd);
     setManualTeamIds((prev) => {
@@ -469,7 +488,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     uploadedTeams: EventAttendanceTeam[],
     files: File[],
   ) => {
-    addManualTeams(uploadedTeams);
+    applyUploadedTeams(uploadedTeams);
     const addedDate = new Date().toLocaleDateString('en-GB');
     setSourceFiles((current) => [
       ...current,

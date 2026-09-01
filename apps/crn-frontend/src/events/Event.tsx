@@ -25,7 +25,7 @@ import { useState } from 'react';
 
 import { downloadEventSpeakers } from './export';
 import { matchTeamNames } from './match-team-names';
-import { parseTeamNames } from './parse-team-list';
+import { parseTeamRows } from './parse-team-list';
 import {
   useEventById,
   useEventSpeakerGroups,
@@ -97,11 +97,11 @@ const Event: React.FC = () => {
             teams={teams}
             loadSearchOptions={async () => []}
             onUploadList={async (files: File[]) => {
-              const [names, corpus] = await Promise.all([
-                parseTeamNames(files),
+              const [rows, corpus] = await Promise.all([
+                parseTeamRows(files),
                 fetchTeamsForMatching(),
               ]);
-              return matchTeamNames(names, corpus, teams);
+              return matchTeamNames(rows, corpus, teams);
             }}
             onSave={async (updatedTeams: EventAttendanceTeam[]) => {
               await patchEvent({

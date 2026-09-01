@@ -1,11 +1,5 @@
-import {
-  BackendError,
-  validationErrorsAreSupported,
-} from '@asap-hub/frontend-utils';
-import {
-  isValidationErrorResponse,
-  ValidationErrorResponse,
-} from '@asap-hub/model';
+import { getSupportedValidationErrors } from '@asap-hub/frontend-utils';
+import { ValidationErrorResponse } from '@asap-hub/model';
 import { useAuthorization } from './auth/useAuthorization';
 import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
@@ -87,15 +81,11 @@ export const handleError =
     setErrors: (errors: ValidationErrorResponse['data']) => void,
   ) =>
   (error: unknown) => {
-    if (error instanceof BackendError) {
-      const { response } = error;
-      if (
-        isValidationErrorResponse(response) &&
-        validationErrorsAreSupported(response, supportedErrors)
-      ) {
-        setErrors(response.data);
-        return;
-      }
-    }
-    throw error;
+    const validationErrors = getSupportedValidationErrors(
+      error,
+      supportedErrors,
+    );
+    if (!validationErrors) throw error;
+
+    setErrors(validationErrors);
   };

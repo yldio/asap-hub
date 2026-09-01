@@ -64,7 +64,6 @@ const onUploadList = jest.fn(async () => ({
   matched: [
     { teamId: 'uploaded-1', teamName: 'Uploaded Team', attended: true },
   ],
-  alreadyIn: [],
   unmatched: [],
 }));
 
@@ -479,9 +478,10 @@ describe('EditEventAttendanceModal', () => {
   });
 
   it('Should update an already-listed team from an upload without duplicating it', async () => {
+    // t1 is already among `teams`, so the modal classifies it as already-in and
+    // updates the row in place rather than adding a duplicate.
     const uploadUpdate = jest.fn(async () => ({
-      matched: [],
-      alreadyIn: [{ teamId: 't1', teamName: 'Team Alpha', attended: false }],
+      matched: [{ teamId: 't1', teamName: 'Team Alpha', attended: false }],
       unmatched: [],
     }));
     const { container } = renderModal({ teams, onUploadList: uploadUpdate });

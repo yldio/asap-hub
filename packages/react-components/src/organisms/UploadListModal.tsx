@@ -46,10 +46,11 @@ export type UploadListUnmatchedTeam = {
 };
 
 export type UploadListResult = {
+  // Every uploaded name resolved to a Hub Team, with its uploaded status. The
+  // modal splits these against the current table into new additions and
+  // "already in" (updated in place), so resolution stays independent of table
+  // state.
   matched: EventAttendanceTeam[];
-  // Teams from the file already on the attendance table: not re-added, but
-  // their attendance status is updated in place.
-  alreadyIn: EventAttendanceTeam[];
   unmatched: UploadListUnmatchedTeam[];
 };
 
@@ -67,6 +68,10 @@ type UploadListModalProps = {
     files: File[],
   ) => void | Promise<void>;
   onBack: () => void;
+  // Team ids currently on the attendance table (including unsaved additions).
+  // Resolved teams already present are shown as "already in" and updated in
+  // place rather than listed as new additions.
+  currentTeamIds?: ReadonlySet<string>;
   maxFileSizeMb?: number;
   accept?: string;
   initialFiles?: File[];
@@ -364,10 +369,13 @@ const suggestionToTeam = (
   teamType: suggestion.teamType,
 });
 
+const noTeamIds: ReadonlySet<string> = new Set();
+
 const UploadListModal: React.FC<UploadListModalProps> = ({
   onUploadList,
   onAddAttendees,
   onBack,
+  currentTeamIds = noTeamIds,
   maxFileSizeMb = defaultMaxFileSizeMb,
   accept = defaultAccept,
   initialFiles = [],
@@ -467,9 +475,23 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   ): team is UploadListUnmatchedTeam & { suggestion: UploadListSuggestion } =>
     !!team.suggestion && addedSuggestionIds.has(team.suggestion.teamId);
 
+  // A resolved team already on the attendance table is "already in": not listed
+  // as a new addition, updated in place on save. Split against the live table
+  // (which includes unsaved additions), not the server state.
+  const alreadyIn = result
+    ? result.matched.filter((team) => currentTeamIds.has(team.teamId))
+    : [];
+  const newMatchedCount = result
+    ? result.matched.length - alreadyIn.length
+    : 0;
+
   const matchedTeams: EventAttendanceTeam[] = result
     ? [
-        ...result.matched.filter((team) => !removedMatchedIds.has(team.teamId)),
+        ...result.matched.filter(
+          (team) =>
+            !currentTeamIds.has(team.teamId) &&
+            !removedMatchedIds.has(team.teamId),
+        ),
         ...result.unmatched
           .filter(isPromoted)
           .map((team) => suggestionToTeam(team.suggestion)),
@@ -480,9 +502,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     ? result.unmatched.filter((team) => !isPromoted(team))
     : [];
 
-  const alreadyIn = result?.alreadyIn ?? [];
   const totalTeams = result
-    ? result.matched.length + alreadyIn.length + result.unmatched.length
+    ? result.matched.length + result.unmatched.length
     : 0;
 
   // "Already in" Teams are not listed as additions, so a file whose names are
@@ -610,7 +631,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             <div css={summaryStyles}>
               <span css={summaryStrongStyles}>{totalTeams} Teams</span>
               <span css={summarySeparatorStyles}>•</span>
-              <span>{result.matched.length} matched</span>
+              <span>{newMatchedCount} matched</span>
               <span css={summarySeparatorStyles}>•</span>
               <span>{alreadyIn.length} already in</span>
             </div>

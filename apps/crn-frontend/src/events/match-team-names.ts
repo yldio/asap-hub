@@ -25,18 +25,17 @@ const toAttendanceTeam = (
   isTeamInactive: !!team.inactiveSince,
 });
 
+// Resolves uploaded names to Hub Teams; the modal decides which are already on
+// the table (it owns the live rows, including unsaved additions).
 export const matchTeamNames = (
   rows: ParsedTeamRow[],
   teams: TeamListItemResponse[],
-  currentRows: EventAttendanceTeam[],
 ): UploadListResult => {
   const teamsByName = new Map(
     teams.map((team) => [normalizeTeamName(team.displayName), team]),
   );
-  const currentTeamIds = new Set(currentRows.map(({ teamId }) => teamId));
 
   const matched: EventAttendanceTeam[] = [];
-  const alreadyIn: EventAttendanceTeam[] = [];
   const unmatched: UploadListUnmatchedTeam[] = [];
   const seen = new Set<string>();
 
@@ -53,13 +52,8 @@ export const matchTeamNames = (
       return;
     }
 
-    const entry = toAttendanceTeam(team, attended);
-    if (currentTeamIds.has(team.id)) {
-      alreadyIn.push(entry);
-    } else {
-      matched.push(entry);
-    }
+    matched.push(toAttendanceTeam(team, attended));
   });
 
-  return { matched, alreadyIn, unmatched };
+  return { matched, unmatched };
 };

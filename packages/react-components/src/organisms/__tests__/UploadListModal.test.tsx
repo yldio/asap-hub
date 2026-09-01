@@ -13,6 +13,7 @@ import { silver } from '../../colors';
 
 import UploadListModal, { UploadListResult } from '../UploadListModal';
 
+// m1 is new; a1/a2 are resolved teams already on the table (see currentIds).
 const uploadResult: UploadListResult = {
   matched: [
     {
@@ -21,8 +22,6 @@ const uploadResult: UploadListResult = {
       attended: true,
       teamType: 'Discovery Team',
     },
-  ],
-  alreadyIn: [
     { teamId: 'a1', teamName: 'Genetics', attended: true },
     { teamId: 'a2', teamName: 'Proteomics', attended: false },
   ],
@@ -38,6 +37,8 @@ const uploadResult: UploadListResult = {
     { name: 'Data Scince' },
   ],
 };
+
+const currentIds = new Set(['a1', 'a2']);
 
 const onUploadList = jest.fn(async () => uploadResult);
 const onAddAttendees = jest.fn();
@@ -56,6 +57,7 @@ const renderModal = (
         onUploadList={onUploadList}
         onAddAttendees={onAddAttendees}
         onBack={onBack}
+        currentTeamIds={currentIds}
         {...overrides}
       />
     </StaticRouter>,
@@ -322,9 +324,9 @@ describe('UploadListModal', () => {
 
   it('Should explain an empty card when every team is already in', async () => {
     const { container } = renderModal({
+      currentTeamIds: new Set(['a1', 'a2', 'a3']),
       onUploadList: jest.fn(async () => ({
-        matched: [],
-        alreadyIn: [
+        matched: [
           { teamId: 'a1', teamName: 'A', attended: true },
           { teamId: 'a2', teamName: 'B', attended: false },
           { teamId: 'a3', teamName: 'C', attended: true },
@@ -347,7 +349,6 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
-        alreadyIn: [],
         unmatched: [],
       })),
     });
@@ -442,7 +443,6 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: uploadResult.matched,
-        alreadyIn: [],
         unmatched: [],
       })),
     });
@@ -461,7 +461,6 @@ describe('UploadListModal', () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
-        alreadyIn: [],
         unmatched: uploadResult.unmatched,
       })),
     });
@@ -495,8 +494,7 @@ describe('UploadListModal', () => {
   it('Should let the user apply status updates when every team is already in', async () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
-        matched: [],
-        alreadyIn: [{ teamId: 'a1', teamName: 'Genetics', attended: false }],
+        matched: [{ teamId: 'a1', teamName: 'Genetics', attended: false }],
         unmatched: [],
       })),
     });

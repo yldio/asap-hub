@@ -47,10 +47,6 @@ const fullResult: UploadListResult = {
       teamType: 'Discovery Team',
     },
   ],
-  alreadyIn: [
-    { teamId: 'a1', teamName: 'Genetics', attended: true },
-    { teamId: 'a2', teamName: 'Proteomics', attended: false },
-  ],
   unmatched: [
     {
       name: 'Imagimg',
@@ -99,7 +95,6 @@ export const NoMatches: Story = {
     initialFiles: seedFiles,
     initialResult: {
       matched: [],
-      alreadyIn: [],
       unmatched: fullResult.unmatched,
     },
     initialSectionsOpen: true,

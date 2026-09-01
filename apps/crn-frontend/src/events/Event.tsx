@@ -101,7 +101,7 @@ const Event: React.FC = () => {
                 parseTeamRows(files),
                 fetchTeamsForMatching(),
               ]);
-              return matchTeamNames(rows, corpus, teams);
+              return matchTeamNames(rows, corpus);
             }}
             onSave={async (updatedTeams: EventAttendanceTeam[]) => {
               await patchEvent({

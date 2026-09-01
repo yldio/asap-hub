@@ -607,6 +607,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         onUploadList={onUploadList}
         onAddAttendees={handleUploadAddAttendees}
         onBack={() => setShowUploadList(false)}
+        currentTeamIds={new Set(rows.map((team) => team.teamId))}
       />
     );
   }

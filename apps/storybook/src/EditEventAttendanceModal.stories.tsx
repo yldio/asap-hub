@@ -117,7 +117,6 @@ const commonArgs = {
   // demonstrated in the Attendance > Edit and Save story, not here.
   onUploadList: async () => ({
     matched: [],
-    alreadyIn: [],
     unmatched: [],
   }),
   onSave: () => undefined,

@@ -1,6 +1,10 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { isEnabled } from '@asap-hub/flags';
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  BackendError,
+  createSentryHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -154,8 +158,12 @@ export const patchUser = async (
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
-    throw new Error(
+    // The body names the field the API rejected, which the modal turns into
+    // that field's inline error. A plain Error would discard it.
+    throw new BackendError(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
     );
   }
   return resp.json();

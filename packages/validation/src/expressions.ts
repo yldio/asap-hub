@@ -1,9 +1,6 @@
 export const urlExpression =
   "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
 
-export const emailExpression =
-  "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$";
-
 // The regexp validations on each product's user email fields, mirrored here so a
 // form refuses what Contentful would and the user sees the fault on blur rather
 // than after a round-trip. The two content models disagree — GP2 allows no

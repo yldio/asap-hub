@@ -9,10 +9,27 @@ import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
 import { NullableOptionalProperties } from '../utils/types';
 
-const ajv = new Ajv({ useDefaults: true });
-const ajvCoerced = new Ajv({ coerceTypes: 'array', useDefaults: true });
-addFormats(ajv, ['date-time']);
-addFormats(ajvCoerced, ['date-time']);
+// One compiled instance per option set, created on first use. `allErrors` has
+// to be opt-in per schema rather than global: it makes AJV report every failure
+// instead of the first, which the Contact Details form needs to mark both email
+// fields at once, but which would change the error count for every other
+// schema in both servers.
+const ajvInstances = new Map<string, Ajv>();
+
+const ajvFor = ({ coerce = false, allErrors = false } = {}): Ajv => {
+  const key = `${coerce}:${allErrors}`;
+  const existing = ajvInstances.get(key);
+  if (existing) return existing;
+
+  const instance = new Ajv({
+    useDefaults: true,
+    allErrors,
+    ...(coerce ? { coerceTypes: 'array' as const } : {}),
+  });
+  addFormats(instance, ['date-time']);
+  ajvInstances.set(key, instance);
+  return instance;
+};
 
 // AJV requires setting every optional property nullable in the validatio schema
 // however marking it as nullable does not enforce the null types
@@ -30,6 +47,7 @@ export function validateInput<T, B extends boolean>(
   options?: {
     skipNull?: B;
     coerce?: boolean;
+    allErrors?: boolean;
     nullableKeys?: string[];
   },
 ): (
@@ -41,10 +59,11 @@ export function validateInput<T>(
   options?: {
     skipNull?: boolean;
     coerce?: boolean;
+    allErrors?: boolean;
     nullableKeys?: string[];
   },
 ): (data: Record<string, T>) => NonNullable<T> | NullableOptionalProperties<T> {
-  const ajvValidation = (options?.coerce ? ajvCoerced : ajv).compile(schema);
+  const ajvValidation = ajvFor(options).compile(schema);
 
   return (data) => {
     if (validate(ajvValidation, data)) {

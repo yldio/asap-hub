@@ -1,6 +1,7 @@
 import { ComponentProps, ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
+import { ServerValidationError } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 
 import { NavigationBlockerProvider } from '../../navigation';
@@ -279,6 +280,26 @@ describe('EditModal', () => {
           await waitFor(() =>
             expect(screen.getByTitle(/error icon/i)).toBeInTheDocument(),
           );
+        });
+
+        it('stays silent when the form already reported the failure on a field', async () => {
+          const handleSave = jest.fn().mockRejectedValueOnce(
+            new ServerValidationError([
+              {
+                instancePath: '/contactEmail',
+                keyword: 'pattern',
+                params: {},
+                schemaPath: '#/properties/contactEmail/pattern',
+              },
+            ]),
+          );
+          renderEditModal({ handleSave });
+
+          const saveButton = screen.getByRole('button', { name: 'Save' });
+          await userEvent.click(saveButton);
+
+          await waitFor(() => expect(saveButton).toBeEnabled());
+          expect(screen.queryByTitle(/error icon/i)).not.toBeInTheDocument();
         });
 
         it('re-enables the save button', async () => {

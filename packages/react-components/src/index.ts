@@ -356,6 +356,7 @@ export {
   TagsPage,
   TagsPageBody,
   TagsPageHeader,
+  TeamMetricsPage,
   TeamProfileAbout,
   TeamProfilePage,
   ToolModal,

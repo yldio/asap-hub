@@ -192,6 +192,11 @@ export const teamRecordSearchQueryBuilder = (
       term: { outputType: options.outputType },
     });
   }
+  if (options.teamId) {
+    mustClauses.push({
+      term: { id: options.teamId },
+    });
+  }
 
   return {
     from: options.currentPage * options.pageSize,

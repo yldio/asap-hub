@@ -373,6 +373,11 @@ export type UserProductivityResponse = UserProductivityDataObject;
 export type ListUserProductivityResponse =
   ListResponse<UserProductivityResponse>;
 
+export type TeamProductivityOpensearchDocument = TeamProductivityDataObject & {
+  timeRange: TimeRangeOption;
+  outputType: OutputTypeOption;
+};
+
 export type ListTeamProductivityDataObject =
   ListResponse<TeamProductivityDataObject>;
 export type TeamProductivityResponse = TeamProductivityDataObject;

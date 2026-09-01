@@ -99,9 +99,9 @@ export const getTeamsForMatching = async (
 ): Promise<TeamListItemResponse[]> => {
   const items: TeamListItemResponse[] = [];
   let currentPage = 0;
-  let total = 0;
+  let total = Infinity;
 
-  do {
+  while (items.length < total) {
     // eslint-disable-next-line no-await-in-loop
     const result = await getAlgoliaTeams(algoliaClient, {
       searchQuery: '',
@@ -109,10 +109,14 @@ export const getTeamsForMatching = async (
       currentPage,
       pageSize: teamsForMatchingPageSize,
     });
+    // Guard against a page that returns nothing so the loop always terminates.
+    if (result.items.length === 0) {
+      break;
+    }
     items.push(...result.items);
     total = result.total;
     currentPage += 1;
-  } while (items.length < total && items.length > 0);
+  }
 
   return items;
 };

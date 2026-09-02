@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 
@@ -276,4 +277,15 @@ it('forwards the click handler to the anchor', () => {
 
   getByText('text').click();
   expect(handleClick).toHaveBeenCalled();
+});
+
+it('passes openInNewTab through to the anchor', () => {
+  const { getByRole } = render(
+    <Link href="/teams/42" openInNewTab>
+      text
+    </Link>,
+    { wrapper: MemoryRouter },
+  );
+
+  expect(getByRole('link')).toHaveAttribute('target', '_blank');
 });

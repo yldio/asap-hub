@@ -126,3 +126,26 @@ describe('for an internal link with a router', () => {
     expect(fireEvent.click(anchor)).toBe(false);
   });
 });
+
+describe('openInNewTab', () => {
+  it('opens an internal link in a new tab instead of routing', () => {
+    const { getByRole } = render(
+      <Anchor href="/teams/42" openInNewTab>
+        text
+      </Anchor>,
+      { wrapper: MemoryRouterWithFuture },
+    );
+
+    const anchor = getByRole('link');
+    expect(anchor).toHaveAttribute('target', '_blank');
+    expect(anchor).toHaveAttribute('rel', 'noreferrer noopener');
+  });
+
+  it('keeps an internal link in the same tab by default', () => {
+    const { getByRole } = render(<Anchor href="/teams/42">text</Anchor>, {
+      wrapper: MemoryRouterWithFuture,
+    });
+
+    expect(getByRole('link')).not.toHaveAttribute('target');
+  });
+});

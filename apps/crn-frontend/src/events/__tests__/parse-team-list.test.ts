@@ -172,6 +172,34 @@ describe('parseSheet', () => {
       ]);
     });
 
+    it('Should read a Y/N column in a file with no headers at all', () => {
+      expect(parseSheet('Aguzzi,Y\nAlessi,N\nChen,Y\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+        { name: 'Alessi', attended: false },
+        { name: 'Chen', attended: true },
+      ]);
+    });
+
+    it('Should sniff a headerless status column past the second one', () => {
+      expect(parseSheet('Aguzzi,a@b.com,Yes\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+      ]);
+    });
+
+    it('Should leave a headerless non-status column alone', () => {
+      expect(parseSheet('Aguzzi,a@b.com\nAlessi,c@d.com\n')).toEqual([
+        { name: 'Aguzzi', attended: false },
+        { name: 'Alessi', attended: false },
+      ]);
+    });
+
+    it('Should skip a blank column to reach the real status column', () => {
+      expect(parseSheet('Aguzzi,,Yes\nAlessi,,No\n')).toEqual([
+        { name: 'Aguzzi', attended: true },
+        { name: 'Alessi', attended: false },
+      ]);
+    });
+
     it('Should read a status column when the team column has no header', () => {
       expect(
         parseSheet(

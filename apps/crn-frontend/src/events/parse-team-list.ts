@@ -27,26 +27,52 @@ const toCellText = (value: unknown): string => {
   return typeof value === 'number' ? String(value) : '';
 };
 
-// Blank or unrecognised status defaults to not attended.
 // SheetJS coerces TRUE/FALSE cells to real booleans, so handle those directly.
 const parseAttended = (value: unknown): boolean =>
   typeof value === 'boolean' ? value : attendedValues.has(normalizeCell(value));
 
+const statusValues = new Set([...attendedValues, 'no', 'n', 'false', '0']);
+
+// A headerless list still carries attendance when one of its columns holds
+// nothing but yes/no values. Column 0 holds the names, so only look past it,
+// and require every non-empty cell to parse: an email or project column fails
+// that and is left alone.
+const sniffAttendanceColumn = (rows: unknown[][]): number => {
+  const width = Math.max(...rows.map((row) => row.length), 0);
+
+  for (let column = 1; column < width; column += 1) {
+    const cells = rows
+      .map((row) => normalizeCell(row[column]))
+      .filter((cell) => cell !== '');
+    if (cells.length > 0 && cells.every((cell) => statusValues.has(cell))) {
+      return column;
+    }
+  }
+  return -1;
+};
+
 const findColumns = (
-  firstRow: unknown[] = [],
+  rows: unknown[][],
 ): { teamColumn: number; attendanceColumn: number; skipFirstRow: boolean } => {
+  const [firstRow = []] = rows;
   const teamHeader = firstRow.findIndex((cell) =>
     teamHeaderAliases.includes(normalizeCell(cell)),
   );
-  const attendanceColumn = firstRow.findIndex((cell) =>
+  const attendanceHeader = firstRow.findIndex((cell) =>
     attendanceHeaderAliases.includes(normalizeCell(cell)),
   );
-  const hasHeader = teamHeader !== -1 || attendanceColumn !== -1;
+  const hasHeader = teamHeader !== -1 || attendanceHeader !== -1;
   // With no team header, fall back to the first column that is not the status
   // column, so a status-first sheet doesn't read the status as team names.
   const teamColumn =
-    teamHeader !== -1 ? teamHeader : attendanceColumn === 0 ? 1 : 0;
-  return { teamColumn, attendanceColumn, skipFirstRow: hasHeader };
+    teamHeader !== -1 ? teamHeader : attendanceHeader === 0 ? 1 : 0;
+  return {
+    teamColumn,
+    attendanceColumn: hasHeader
+      ? attendanceHeader
+      : sniffAttendanceColumn(rows),
+    skipFirstRow: hasHeader,
+  };
 };
 
 export const parseSheet = (data: ArrayBuffer | string): ParsedTeamRow[] => {
@@ -62,7 +88,7 @@ export const parseSheet = (data: ArrayBuffer | string): ParsedTeamRow[] => {
   }
 
   const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1 });
-  const { teamColumn, attendanceColumn, skipFirstRow } = findColumns(rows[0]);
+  const { teamColumn, attendanceColumn, skipFirstRow } = findColumns(rows);
 
   return rows
     .slice(skipFirstRow ? 1 : 0)

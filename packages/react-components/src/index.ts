@@ -251,6 +251,7 @@ export {
   TeamCard,
   TeamCollaborationTable,
   TeamInterestGroupsTabbedCard,
+  TeamLeadershipMetrics,
   TeamMembersSection,
   TeamMembersTabbedCard,
   TeamProductivityTable,

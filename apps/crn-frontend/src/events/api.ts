@@ -13,7 +13,13 @@ import {
 import { API_BASE_URL } from '../config';
 import { getAlgoliaTeams } from '../network/teams/api';
 
-const teamsForMatchingPageSize = 1000;
+// Shared with the state hook so the cache key and the request cannot drift.
+export const teamsForMatchingOptions = {
+  searchQuery: '',
+  teamType: 'all',
+  currentPage: 0,
+  pageSize: 1000,
+} as const;
 
 export const getEvents = async (
   algoliaClient: AlgoliaClient<'crn'>,
@@ -103,12 +109,7 @@ export const getTeamsForMatching = async (
     // eslint-disable-next-line no-await-in-loop
     const { items: pageItems, total: pageTotal } = await getAlgoliaTeams(
       algoliaClient,
-      {
-        searchQuery: '',
-        teamType: 'all',
-        currentPage,
-        pageSize: teamsForMatchingPageSize,
-      },
+      { ...teamsForMatchingOptions, currentPage },
     );
     // An empty page guarantees termination even if total is off.
     if (pageItems.length === 0) {

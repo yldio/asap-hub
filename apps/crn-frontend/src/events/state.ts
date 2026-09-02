@@ -22,7 +22,13 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { teamQueryKeys } from '../network/teams/state';
-import { getEvent, getEvents, getTeamsForMatching, patchEvent } from './api';
+import {
+  getEvent,
+  getEvents,
+  getTeamsForMatching,
+  patchEvent,
+  teamsForMatchingOptions,
+} from './api';
 import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
@@ -97,13 +103,6 @@ export const useEvents = (
       }),
   }).data;
 };
-
-const teamsForMatchingOptions = {
-  searchQuery: '',
-  teamType: 'all',
-  currentPage: 0,
-  pageSize: 1000,
-} as const;
 
 // fetchQuery rather than a hook subscription: the corpus is only needed once a
 // file is actually uploaded, and it must not suspend inside the modal.

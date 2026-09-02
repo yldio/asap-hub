@@ -580,6 +580,72 @@ describe('Reminders data provider', () => {
       });
     });
 
+    describe('Compliance report submission on a resubmitted manuscript', () => {
+      // A compliance report submission changes the manuscript status, which
+      // republishes the manuscript entry and bumps sys.publishedAt. A manuscript
+      // that was resubmitted more than 7 days ago must not re-surface a
+      // "Manuscript Resubmitted" reminder because of that later republish.
+      const manuscript = getContentfulReminderManuscriptCollectionItem();
+      manuscript!.sys.firstPublishedAt = '2024-12-01T00:00:00.000Z';
+      manuscript!.previousStatus = 'Manuscript Resubmitted';
+      manuscript!.status = 'Review Compliance Report';
+      manuscript!.statusUpdatedAt = '2025-01-08T10:00:00.000Z';
+      manuscript!.statusUpdatedBy = {
+        firstName: 'Jannet',
+        lastName: 'Doe',
+        sys: {
+          id: 'user-who-updated-manuscript-status',
+        },
+      };
+      manuscript!.teamsCollection!.items[0]!.displayName = 'ASAP';
+      manuscript!.versionsCollection = {
+        total: 2,
+        items: [
+          getManuscriptVersion({
+            count: 1,
+            firstAuthorIds: ['first-author-user'],
+            additionalAuthorIds: [],
+            correspondingAuthorIds: [],
+            createdById: 'user-who-created-manuscript',
+            createdByFirstName: 'Jane',
+            createdByLastName: 'Doe',
+            firstPublishedAt: '2024-12-01T00:00:00.000Z',
+          }),
+          getManuscriptVersion({
+            count: 2,
+            firstAuthorIds: ['first-author-user'],
+            additionalAuthorIds: [],
+            correspondingAuthorIds: [],
+            createdById: 'user-who-resubmitted-manuscript',
+            createdByFirstName: 'John',
+            createdByLastName: 'Doe',
+            firstPublishedAt: '2024-12-01T00:00:00.000Z',
+          }),
+        ],
+      };
+
+      test('shows the status change reminder but not a resubmission reminder', async () => {
+        const expectedStatusUpdatedReminder =
+          getManuscriptStatusUpdatedReminder();
+        expectedStatusUpdatedReminder.data.previousStatus =
+          'Manuscript Resubmitted';
+
+        mockContentfulGraphqlResponse(manuscript);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'first-author-user',
+          timezone,
+        });
+
+        expect(result.items).toEqual(
+          expect.arrayContaining([expectedStatusUpdatedReminder]),
+        );
+        expect(
+          result.items.some((item) => item.type === 'Manuscript Resubmitted'),
+        ).toBe(false);
+      });
+    });
+
     describe('User-based project manuscripts', () => {
       const projectName = 'Genetic Determinants of Progression';
       const fetchOptions = { timezone };
@@ -1018,6 +1084,9 @@ describe('Reminders data provider', () => {
           items: [
             {
               count: 1,
+              sys: {
+                firstPublishedAt: '2024-12-01T10:00:00.000Z',
+              },
               additionalAuthorsCollection: {
                 items: [],
               },
@@ -1044,6 +1113,9 @@ describe('Reminders data provider', () => {
             },
             {
               count: 2,
+              sys: {
+                firstPublishedAt: '2025-01-06T17:00:00.000Z',
+              },
               correspondingAuthorCollection: {
                 items: [],
               },

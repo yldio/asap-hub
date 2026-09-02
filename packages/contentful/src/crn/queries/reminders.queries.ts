@@ -69,6 +69,9 @@ export const FETCH_REMINDERS = gql`
           total
           items {
             count
+            sys {
+              firstPublishedAt
+            }
             createdBy {
               sys {
                 id

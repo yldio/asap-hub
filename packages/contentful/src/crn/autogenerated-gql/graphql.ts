@@ -36716,6 +36716,7 @@ export type FetchRemindersQuery = {
               items: Array<
                 Maybe<
                   Pick<ManuscriptVersions, 'count'> & {
+                    sys: Pick<Sys, 'firstPublishedAt'>;
                     createdBy?: Maybe<
                       Pick<Users, 'firstName' | 'lastName'> & {
                         sys: Pick<Sys, 'id'>;
@@ -67842,6 +67843,22 @@ export const FetchRemindersDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstPublishedAt',
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                   {
                                     kind: 'Field',

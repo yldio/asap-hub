@@ -25,6 +25,7 @@ import {
 } from '../colors';
 import {
   binIcon,
+  InactiveBadgeIcon,
   crossIcon,
   InterestGroupsIcon,
   plusIcon,
@@ -821,6 +822,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       >
                         {team.teamName}
                       </Link>
+                      {team.isTeamInactive && <InactiveBadgeIcon />}
                     </span>
                     <span css={attendanceCellStyles}>
                       <span css={attendanceSwitchStyles}>

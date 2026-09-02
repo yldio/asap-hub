@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router';
@@ -106,6 +106,25 @@ describe('EditEventAttendanceModal', () => {
     expect(
       screen.queryByRole('button', { name: 'Mark All Attended' }),
     ).not.toBeInTheDocument();
+  });
+
+  it('Should flag an inactive team in the attendees table', () => {
+    renderModal({
+      teams: [
+        { ...teams[0]!, isTeamInactive: true },
+        { ...teams[1]!, isTeamInactive: false },
+      ],
+    });
+
+    const inactiveRow = screen
+      .getByRole('link', { name: 'Team Alpha' })
+      .closest('span') as HTMLElement;
+    const activeRow = screen
+      .getByRole('link', { name: 'Team Beta' })
+      .closest('span') as HTMLElement;
+
+    expect(within(inactiveRow).getByTitle('Inactive Team')).toBeInTheDocument();
+    expect(within(activeRow).queryByTitle('Inactive Team')).toBeNull();
   });
 
   it('Should render the "Edit Attendance" title, rows and counts when attendees exist', () => {

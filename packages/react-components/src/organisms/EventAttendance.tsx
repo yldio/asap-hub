@@ -15,6 +15,7 @@ import {
 } from '../icons';
 import { EventAttendanceMetric } from '../molecules';
 import { rem } from '../pixels';
+import { pluralizeTeams } from '../utils/events';
 
 import { defaultVisibleTeams, teamIcon } from './shared-event-card';
 import {
@@ -202,7 +203,7 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
             variant="progress"
             label="This event"
             value={attendancePercentage}
-            caption={`${teamsAttended} of ${teamsTotal} teams`}
+            caption={`${teamsAttended} of ${pluralizeTeams(teamsTotal)}`}
           />
           {!sinceLastEvent ? (
             <EventAttendanceMetric
@@ -216,7 +217,9 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               direction="none"
               label="Since last event"
               value={0}
-              caption={`No change from ${sinceLastEvent.teamsAttended} of ${sinceLastEvent.teamsTotal} teams`}
+              caption={`No change from ${
+                sinceLastEvent.teamsAttended
+              } of ${pluralizeTeams(sinceLastEvent.teamsTotal)}`}
             />
           ) : (
             <EventAttendanceMetric
@@ -224,7 +227,9 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
               direction={sinceLastEvent.count < 0 ? 'down' : 'up'}
               label="Since last event"
               value={Math.abs(sinceLastEvent.count)}
-              caption={`from ${sinceLastEvent.teamsAttended} of ${sinceLastEvent.teamsTotal} teams`}
+              caption={`from ${
+                sinceLastEvent.teamsAttended
+              } of ${pluralizeTeams(sinceLastEvent.teamsTotal)}`}
             />
           )}
         </div>

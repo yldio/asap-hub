@@ -32,6 +32,7 @@ import {
 } from '../molecules/shared-metric-card-styles';
 import SpeakerUserRow from '../molecules/SpeakerUserRow';
 import { rem, tabletScreen } from '../pixels';
+import { pluralizeTeams } from '../utils';
 
 import { defaultVisibleTeams, teamIcon } from './shared-event-card';
 import {
@@ -379,7 +380,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
             <FindingsMetric
               label="Preliminary findings"
               value={findingsPercentage}
-              caption={`${teamsShared} of ${teamsTotal} teams`}
+              caption={`${teamsShared} of ${pluralizeTeams(teamsTotal)}`}
             />
           )}
         </div>

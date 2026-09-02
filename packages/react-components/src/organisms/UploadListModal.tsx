@@ -16,6 +16,7 @@ import {
 import {
   binIcon,
   chevronDownIcon,
+  InactiveBadgeIcon,
   crossIcon,
   crossSmallIcon,
   chevronLeftIcon,
@@ -24,6 +25,7 @@ import {
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
 import { rem } from '../pixels';
+import { pluralizeTeams } from '../utils/events';
 import {
   EventAttendanceTeam,
   EventAttendanceTeamType,
@@ -497,11 +499,25 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
     ? result.matched.length + result.unmatched.length
     : 0;
 
+  // A file that yields no names is reported as an upload error rather than as
+  // an empty result, so the counts line never reads "0 Teams".
+  const yieldedNothing = !!result && totalTeams === 0;
+  // A file or selection problem is the more specific cause, so it wins.
+  const shownError =
+    error ??
+    (yieldedNothing
+      ? 'No team names found. Check that the file has a Team Name column.'
+      : null);
+
   const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
+  // Describes the file, not the current view: once the user deletes the rows
+  // themselves there is nothing to explain, so no message is shown.
   const emptyResultMessage =
-    totalTeams === 0
-      ? 'No Team names found. Check that the file has a Team column.'
-      : `All ${totalTeams} Teams in this list are already in the attendance table.`;
+    newMatchedCount === 0
+      ? `All ${pluralizeTeams(alreadyIn.length)} in this list ${
+          alreadyIn.length === 1 ? 'is' : 'are'
+        } already in the attendance table.`
+      : null;
 
   const isDirty = files.length > 0 || matchedTeams.length > 0;
   const addEnabled =
@@ -608,24 +624,26 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             {!isUploading && plusIcon}
             Add
           </Button>
-          {error && (
+          {shownError && (
             <p css={errorStyles} role="alert">
-              {error}
+              {shownError}
             </p>
           )}
         </section>
 
-        {result && (
+        {result && !yieldedNothing && (
           <div css={resultStyles}>
             <div css={summaryStyles}>
-              <span css={summaryStrongStyles}>{totalTeams} Teams</span>
+              <span css={summaryStrongStyles}>
+                {pluralizeTeams(totalTeams, true)}
+              </span>
               <span css={summarySeparatorStyles}>•</span>
               <span>{newMatchedCount} matched</span>
               <span css={summarySeparatorStyles}>•</span>
               <span>{alreadyIn.length} already in</span>
             </div>
 
-            {!hasSections && (
+            {!hasSections && emptyResultMessage && (
               <p css={emptyResultStyles}>{emptyResultMessage}</p>
             )}
 
@@ -644,8 +662,8 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                       >
                         {tickSmallIcon}
                         <span>
-                          <strong>{matchedTeams.length} teams</strong> will be
-                          added and marked if attended
+                          <strong>{pluralizeTeams(matchedTeams.length)}</strong>{' '}
+                          will be added and marked if attended
                         </span>
                       </span>
                       <span css={chevronStyles(matchedOpen)}>
@@ -659,6 +677,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                             <span css={matchedTeamStyles}>
                               {teamIcon(team.teamType)}
                               <Link
+                                openInNewTab
                                 href={
                                   network({})
                                     .teams({})
@@ -669,6 +688,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
                                   {team.teamName}
                                 </span>
                               </Link>
+                              {team.isTeamInactive && <InactiveBadgeIcon />}
                             </span>
                             <Button
                               noMargin

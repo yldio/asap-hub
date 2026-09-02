@@ -35,7 +35,7 @@ import {
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
-import { noop } from '../utils';
+import { noop, pluralizeTeams } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
 import {
@@ -727,7 +727,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                         <span css={searchOptionMetaStyles}>
                           {allAdded
                             ? '• all teams already added'
-                            : `• adds ${option.teams.length} teams`}
+                            : `• adds ${pluralizeTeams(option.teams.length)}`}
                         </span>
                       )}
                     </span>

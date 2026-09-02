@@ -99,7 +99,7 @@ describe('UploadListModal', () => {
     expect(screen.getByText('5 Teams')).toBeInTheDocument();
     expect(screen.getByText('1 matched')).toBeInTheDocument();
     expect(screen.getByText('2 already in')).toBeInTheDocument();
-    expect(screen.getByText('1 teams')).toBeInTheDocument();
+    expect(screen.getByText('1 team')).toBeInTheDocument();
     expect(screen.getByText('2 not matched')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add Attendees' })).toBeEnabled();
   });
@@ -284,16 +284,7 @@ describe('UploadListModal', () => {
       ).toBeDisabled(),
     );
     expect(screen.queryByText('5 Teams')).not.toBeInTheDocument();
-  });
-
-  it('Should show a read error when the upload parse fails', async () => {
-    const { container } = renderModal({
-      onUploadList: jest.fn().mockRejectedValue(new Error('nope')),
-    });
-
-    await upload(makeFile('teams.csv'), container);
-
-    expect(await screen.findByRole('alert')).toHaveTextContent(
+    expect(screen.getByRole('alert')).toHaveTextContent(
       'Something went wrong reading this file. Please try again.',
     );
   });
@@ -348,13 +339,76 @@ describe('UploadListModal', () => {
 
     expect(
       await screen.findByText(
-        'All 3 Teams in this list are already in the attendance table.',
+        'All 3 teams in this list are already in the attendance table.',
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('3 Teams')).toBeInTheDocument();
   });
 
-  it('Should explain an empty card when no team names were found', async () => {
+  it('Should not claim teams were already in after the user deletes them', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [{ teamId: 'm1', teamName: 'Imaging', attended: true }],
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+    await userEvent.click(
+      await screen.findByRole('button', {
+        name: /will be added and marked if attended/,
+      }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Remove Imaging' }),
+    );
+
+    expect(screen.getByText('1 Team')).toBeInTheDocument();
+    expect(screen.queryByText(/already in the attendance table/)).toBeNull();
+    expect(screen.queryByText(/No team names found/)).toBeNull();
+  });
+
+  it('Should say "1 team" rather than "1 teams"', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [{ teamId: 'm1', teamName: 'Imaging', attended: true }],
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(await screen.findByText('1 Team')).toBeInTheDocument();
+    expect(screen.getByText('1 team')).toBeInTheDocument();
+  });
+
+  it('Should flag an inactive matched team and open its link in a new tab', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [
+          {
+            teamId: 'm1',
+            teamName: 'Imaging',
+            attended: true,
+            isTeamInactive: true,
+          },
+        ],
+        unmatched: [],
+      })),
+      initialSectionsOpen: true,
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    const link = await screen.findByRole('link', { name: 'Imaging' });
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
+    expect(
+      within(link.closest('div') as HTMLElement).getByTitle(/inactive/i),
+    ).toBeInTheDocument();
+  });
+
+  it('Should warn instead of showing zeroed counts when no names were found', async () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
         matched: [],
@@ -364,11 +418,32 @@ describe('UploadListModal', () => {
 
     await upload(makeFile('teams.csv'), container);
 
-    expect(
-      await screen.findByText(
-        'No Team names found. Check that the file has a Team column.',
-      ),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'No team names found. Check that the file has a Team Name column.',
+    );
+    expect(screen.queryByText('0 Teams')).not.toBeInTheDocument();
+    expect(screen.queryByText('0 matched')).not.toBeInTheDocument();
+  });
+
+  it('Should keep the size warning ahead of the empty-file warning', async () => {
+    const { container } = renderModal({
+      onUploadList: jest.fn(async () => ({
+        matched: [],
+        unmatched: [],
+      })),
+    });
+
+    const fileInput = container.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    await userEvent.upload(fileInput, [
+      makeFile('huge.csv', 11 * 1000 * 1000),
+      makeFile('empty.csv'),
+    ]);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'The file size exceeds the limit of 10 MB. Please upload a smaller file.',
+    );
   });
 
   it('Should reset per-team edits when a new file is uploaded', async () => {

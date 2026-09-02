@@ -476,7 +476,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
 
         expect(
           await findByText(
-            'All 1 Teams in this list are already in the attendance table.',
+            'All 1 team in this list is already in the attendance table.',
           ),
         ).toBeVisible();
 

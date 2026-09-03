@@ -67826,6 +67826,11 @@ export const FetchRemindersDocument = {
                             name: { kind: 'Name', value: 'limit' },
                             value: { kind: 'IntValue', value: '10' },
                           },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: { kind: 'EnumValue', value: 'count_ASC' },
+                          },
                         ],
                         selectionSet: {
                           kind: 'SelectionSet',

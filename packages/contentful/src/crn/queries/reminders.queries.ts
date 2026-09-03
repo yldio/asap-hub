@@ -65,7 +65,7 @@ export const FETCH_REMINDERS = gql`
             }
           }
         }
-        versionsCollection(limit: 10) {
+        versionsCollection(limit: 10, order: count_ASC) {
           total
           items {
             count

@@ -24,6 +24,9 @@ export const formattedMaterialByEventType = (
   }
 };
 
+const discussionTeamPrefix = (teams: string): string =>
+  teams ? ` on **${teams}**` : '';
+
 export default class ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}
 
@@ -196,7 +199,11 @@ export default class ReminderController {
                 manuscriptId: reminder.data.manuscriptId,
               }).$
             }?tab=discussions`,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** started a discussion on:`,
+            description: `**${
+              reminder.data.createdBy
+            }**${discussionTeamPrefix(
+              reminder.data.manuscriptTeams,
+            )} started a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
@@ -214,7 +221,11 @@ export default class ReminderController {
                 manuscriptId: reminder.data.manuscriptId,
               }).$
             }?tab=discussions`,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** started a discussion on:`,
+            description: `**${
+              reminder.data.createdBy
+            }**${discussionTeamPrefix(
+              reminder.data.manuscriptTeams,
+            )} started a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
@@ -232,7 +243,11 @@ export default class ReminderController {
                 manuscriptId: reminder.data.manuscriptId,
               }).$
             }?tab=discussions`,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** replied to a discussion on:`,
+            description: `**${
+              reminder.data.createdBy
+            }**${discussionTeamPrefix(
+              reminder.data.manuscriptTeams,
+            )} replied to a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
@@ -247,7 +262,11 @@ export default class ReminderController {
                 manuscriptId: reminder.data.manuscriptId,
               }).$
             }?tab=discussions`,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a discussion on:`,
+            description: `**${
+              reminder.data.createdBy
+            }**${discussionTeamPrefix(
+              reminder.data.manuscriptTeams,
+            )} replied to a discussion on:`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };

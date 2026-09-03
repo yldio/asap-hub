@@ -236,6 +236,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
   interestGroups: [{ name: 'Interest Group 1' }],
   orcid: '123-456-789',
   degree: 'MPH',
+  personalEmail: 'personal@rdy.io',
   teams: [
     {
       role: 'Lead PI (Core Leadership)',

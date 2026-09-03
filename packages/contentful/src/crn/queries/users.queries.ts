@@ -268,6 +268,7 @@ export const FETCH_PUBLIC_USERS = gql`
         lastName
         institution
         orcid
+        personalEmail
         userSocials {
           website1
           website2

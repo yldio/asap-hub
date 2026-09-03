@@ -81,10 +81,11 @@ const getDuplicateLink = ({
   id,
   publishingEntity,
   workingGroups,
+  teams,
   project,
 }: Pick<
   ResearchOutputResponse,
-  'id' | 'publishingEntity' | 'workingGroups' | 'project'
+  'id' | 'publishingEntity' | 'workingGroups' | 'teams' | 'project'
 >) => {
   switch (getResearchOutputEntityType({ publishingEntity })) {
     case 'working-group': {
@@ -100,6 +101,15 @@ const getDuplicateLink = ({
       const projectRoute = project && projectRouteByType[project.projectType];
       return project?.id && projectRoute
         ? projectRoute(project.id).duplicateOutput({ id }).$
+        : undefined;
+    }
+    case 'team': {
+      // Team outputs are duplicated through their linked project's route
+      const teamProject = teams[0]?.project;
+      const teamProjectRoute =
+        teamProject && projectRouteByType[teamProject.projectType];
+      return teamProject && teamProjectRoute
+        ? teamProjectRoute(teamProject.id).duplicateOutput({ id }).$
         : undefined;
     }
     default:
@@ -140,12 +150,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     props.documentType,
   );
 
+  const duplicateLink = getDuplicateLink({ id, ...props });
+
   const visibleActions = getVisibleResearchOutputActions(permissions, {
     published,
     isInReview,
     hasRelatedManuscript: !!relatedManuscriptVersion,
     isWorkingGroupOutput: !!(props.workingGroups && props.workingGroups[0]?.id),
     isGrantDocument,
+    hasDuplicateDestination: !!duplicateLink,
   });
 
   const tags = [
@@ -208,8 +221,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
       setDisplayNoNewManuscriptVersionModal(true);
     }
   };
-
-  const duplicateLink = getDuplicateLink({ id, ...props });
 
   return (
     <div>

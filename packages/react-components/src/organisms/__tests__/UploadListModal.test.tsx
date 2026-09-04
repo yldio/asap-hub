@@ -89,6 +89,18 @@ describe('UploadListModal', () => {
     ).toBeDisabled();
   });
 
+  it('Should explain the expected file format in a tooltip', async () => {
+    renderModal();
+
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /info/i }));
+
+    expect(screen.getByRole('tooltip')).toHaveTextContent(
+      'Your file needs two columns.For team names, use the header Team.For attendance, use Attended.Mark attendance as yes/no.',
+    );
+  });
+
   it('Should upload a file and show the result summary and sections', async () => {
     const { container } = renderModal();
 

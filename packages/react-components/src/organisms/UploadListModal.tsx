@@ -23,7 +23,7 @@ import {
   plusIcon,
   tickSmallIcon,
 } from '../icons';
-import { ConfirmableModalFooter, Modal } from '../molecules';
+import { ConfirmableModalFooter, Modal, TooltipInfo } from '../molecules';
 import { rem } from '../pixels';
 import { pluralizeTeams } from '../utils/events';
 import {
@@ -336,6 +336,18 @@ const emptyResultStyles = css({
   lineHeight: rem(24),
 });
 
+// Caption/C1 from the designs: four lines at 16px with nothing between them,
+// so the shared 6px row gap is dropped here.
+const formatTooltipStyles = css({
+  gap: 0,
+  paddingTop: 0,
+  paddingBottom: 0,
+  textAlign: 'left',
+  fontSize: rem(14),
+  fontWeight: 400,
+  lineHeight: rem(16),
+});
+
 const unmatchedHelpStyles = css({
   margin: 0,
   color: lead.rgb,
@@ -578,6 +590,16 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
           Add teams from a list. Matched teams are added and marked attended. If
           a team is already in your list, their attendance will be updated to
           match the file. CSV or XLSX files only.
+          <TooltipInfo
+            width={296}
+            background={neutral1000.rgb}
+            overrideTooltipStyles={formatTooltipStyles}
+          >
+            <span>Your file needs two columns.</span>
+            <span>For team names, use the header Team.</span>
+            <span>For attendance, use Attended.</span>
+            <span>Mark attendance as yes/no.</span>
+          </TooltipInfo>
         </Paragraph>
 
         <section css={uploadSectionStyles}>

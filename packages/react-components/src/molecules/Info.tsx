@@ -42,9 +42,11 @@ interface InfoProps {
   openOnHover?: boolean;
   // Renders the bubble in a portal, for tooltips inside a scrollable area.
   floating?: boolean;
+  icon?: ReactNode;
 }
 const Info: React.FC<InfoProps> = ({
   children,
+  icon = infoIcon,
   width,
   background,
   openOnHover = false,
@@ -131,7 +133,7 @@ const Info: React.FC<InfoProps> = ({
             </Portal>
           )
         : tooltip}
-      <span>{infoIcon}</span>
+      <span>{icon}</span>
     </button>
   );
 };

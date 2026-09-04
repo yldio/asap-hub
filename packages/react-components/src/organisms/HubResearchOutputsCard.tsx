@@ -202,7 +202,7 @@ const HubResearchOutputsCard: React.FC<HubResearchOutputsCardProps> = ({
       ))}
     </div>
 
-    <ExpandableText variant="arrow">
+    <ExpandableText variant="arrow" expandOnce>
       <div css={detailsStyles}>
         <div css={detailsBlockStyles}>
           <Subtitle accent="lead" noMargin>

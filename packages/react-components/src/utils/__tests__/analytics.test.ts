@@ -5,7 +5,11 @@ import {
   sadFaceIcon,
   informationInverseIcon,
 } from '../../icons';
-import { getPerformanceText, getPerformanceMoodIcon } from '../analytics';
+import {
+  getPerformanceText,
+  getPerformanceMoodIcon,
+  getPerformanceMoodLabel,
+} from '../analytics';
 
 describe('getPerformanceText', () => {
   const performanceMetrics: PerformanceMetrics = {
@@ -37,5 +41,52 @@ describe('getPerformanceText', () => {
     expect(getPerformanceMoodIcon(0, true)).toBe(informationInverseIcon);
     expect(getPerformanceMoodIcon(null, true)).toBe(informationInverseIcon);
     expect(getPerformanceMoodIcon(null, false)).toBe(informationInverseIcon);
+  });
+});
+
+describe('getPerformanceMoodLabel', () => {
+  it('returns limited data message when isLimitedData is true', () => {
+    expect(getPerformanceMoodLabel(95, true)).toBe(
+      'There is limited available data to calculate this metric at this time.',
+    );
+  });
+
+  it('returns limited data message when percentage is null', () => {
+    expect(getPerformanceMoodLabel(null, false)).toBe(
+      'There is limited available data to calculate this metric at this time.',
+    );
+    expect(getPerformanceMoodLabel(null, true)).toBe(
+      'There is limited available data to calculate this metric at this time.',
+    );
+  });
+
+  it('returns outstanding message when percentage is 90 or above', () => {
+    expect(getPerformanceMoodLabel(95, false)).toBe(
+      'Your team is doing an outstanding job! Keep up the good work!',
+    );
+    expect(getPerformanceMoodLabel(90, false)).toBe(
+      'Your team is doing an outstanding job! Keep up the good work!',
+    );
+  });
+
+  it('returns adequate message when percentage is between 80 and 89', () => {
+    expect(getPerformanceMoodLabel(85, false)).toBe(
+      'Your team is doing an adequate job for this metric.',
+    );
+    expect(getPerformanceMoodLabel(80, false)).toBe(
+      'Your team is doing an adequate job for this metric.',
+    );
+  });
+
+  it('returns improvement message when percentage is below 80', () => {
+    expect(getPerformanceMoodLabel(50, false)).toBe(
+      'We encourage your team to work to improve.',
+    );
+    expect(getPerformanceMoodLabel(1, false)).toBe(
+      'We encourage your team to work to improve.',
+    );
+    expect(getPerformanceMoodLabel(0, false)).toBe(
+      'We encourage your team to work to improve.',
+    );
   });
 });

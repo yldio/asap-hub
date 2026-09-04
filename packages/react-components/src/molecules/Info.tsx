@@ -15,8 +15,10 @@ const buttonStyles = css({
 
 interface InfoProps {
   children: ReactNode;
+  width?: string | number;
+  background?: string;
 }
-const Info: React.FC<InfoProps> = ({ children }) => {
+const Info: React.FC<InfoProps> = ({ children, width, background }) => {
   const [tooltipShown, setTooltipShown] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -48,7 +50,9 @@ const Info: React.FC<InfoProps> = ({ children }) => {
       css={buttonStyles}
       onClick={() => setTooltipShown((shown) => !shown)}
     >
-      <Tooltip shown={tooltipShown}>{children}</Tooltip>
+      <Tooltip shown={tooltipShown} width={width} background={background}>
+        {children}
+      </Tooltip>
       <span>{infoIcon}</span>
     </button>
   );

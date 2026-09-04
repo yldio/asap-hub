@@ -70,6 +70,9 @@ interface TooltipProps {
   bottom?: string;
   textStyles?: SerializedStyles;
   width?: string | number;
+  // Recolours the bubble and its tail together; the tail is drawn by a
+  // pseudo-element that no style prop can reach from the outside.
+  background?: string;
 }
 const Tooltip: React.FC<TooltipProps> = ({
   children,
@@ -78,6 +81,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   bottom,
   textStyles,
   width,
+  background,
 }) => {
   const widthValue =
     width !== undefined
@@ -92,6 +96,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         css={[
           tooltipStyles,
           { width: widthValue },
+          background ? { '::before': { borderTopColor: background } } : {},
           shown || { display: 'none' },
           maxContent && { width: 'max-content' },
           bottom && { bottom },
@@ -102,6 +107,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           css={[
             bubbleStyles,
             { maxWidth: widthValue },
+            background ? { backgroundColor: background } : {},
             maxContent && { width: 'max-content', maxWidth: 'fit-content' },
             textStyles,
           ]}

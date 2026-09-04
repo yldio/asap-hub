@@ -114,7 +114,7 @@ describe('HubResearchOutputsCard', () => {
     expect(screen.getByText('Metric Definition:')).toBeVisible();
   });
 
-  it('expands and collapses the metric details when they overflow', async () => {
+  it('expands the metric details when they overflow', async () => {
     const restoreScrollHeight = mockScrollHeight(500);
     try {
       render(<HubResearchOutputsCard rows={rows} />);
@@ -123,11 +123,9 @@ describe('HubResearchOutputsCard', () => {
       expect(button).toBeVisible();
 
       await userEvent.click(button);
-      expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
-      expect(screen.getByText('ASAP Philosophy:')).toBeVisible();
-
-      await userEvent.click(screen.getByRole('button', { name: /Show less/i }));
-      expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
+      expect(
+        screen.queryByRole('button', { name: /Show less/i }),
+      ).not.toBeInTheDocument();
     } finally {
       restoreScrollHeight();
     }

@@ -1202,7 +1202,7 @@ const getManuscriptRemindersFromQuery = (
       if (isStaffAndMemberOfOpenScienceTeam(user)) {
         if (
           isManuscriptResubmitted &&
-          inLast7Days(manuscriptItem.sys.publishedAt, timezone) &&
+          inLast7Days(manuscriptLastVersion.sys.firstPublishedAt, timezone) &&
           isReminderForDifferentUser(
             manuscriptLastVersion.createdBy?.sys.id,
             userId,
@@ -1225,7 +1225,7 @@ const getManuscriptRemindersFromQuery = (
 
       if (
         isManuscriptResubmitted &&
-        inLast7Days(manuscript.sys.publishedAt, timezone) &&
+        inLast7Days(manuscriptLastVersion.sys.firstPublishedAt, timezone) &&
         (isManuscriptAuthor(manuscriptLastVersion, userId) ||
           isManuscriptProjectManagerOrLeadPI(
             manuscript.teamsCollection,
@@ -1505,7 +1505,7 @@ const createManuscriptResubmittedReminder = (
       title: manuscript.title || '',
       teams: getManuscriptAssociationName(manuscript),
       resubmittedBy: `${lastVersion?.createdBy?.firstName} ${lastVersion?.createdBy?.lastName}`,
-      resubmittedAt: manuscript.sys.publishedAt,
+      resubmittedAt: lastVersion?.sys.firstPublishedAt,
     },
   };
 };

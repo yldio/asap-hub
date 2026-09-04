@@ -76,8 +76,14 @@ const arrowIconStyles = css({
 const ExpandableText: React.FC<{
   variant?: 'chevron' | 'arrow';
   toggleMarginTop?: number;
+  expandOnce?: boolean;
   children?: React.ReactNode;
-}> = ({ variant = 'chevron', toggleMarginTop = 16, children }) => {
+}> = ({
+  variant = 'chevron',
+  toggleMarginTop = 16,
+  expandOnce = false,
+  children,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);
@@ -86,6 +92,8 @@ const ExpandableText: React.FC<{
       (textElement?.current?.scrollHeight || 0) > expandableMaxHeight,
     );
   }, [textElement?.current?.scrollHeight]);
+
+  const hideToggle = expandOnce && expanded;
 
   return (
     <div>
@@ -98,7 +106,7 @@ const ExpandableText: React.FC<{
       >
         {children}
       </div>
-      {showToggle && (
+      {showToggle && !hideToggle && (
         <div css={buttonContainerStyles(toggleMarginTop)}>
           {variant === 'chevron' ? (
             <Button linkStyle onClick={() => setExpanded(!expanded)}>

@@ -1411,9 +1411,7 @@ export const getTeamNames = (
       ...new Set(teams.filter((teamName): teamName is string => !!teamName)),
     ].map((teamName) => `Team ${teamName}`);
 
-    if (teamNames.length === 0) return '';
-    if (teamNames.length === 1 && teamNames[0]) return teamNames[0];
-    if (teamNames.length === 2) return teamNames.join(' and ');
+    if (teamNames.length <= 2) return teamNames.join(' and ');
 
     return `${teamNames.slice(0, -1).join(', ')} and ${teamNames.slice(-1)}`;
   }

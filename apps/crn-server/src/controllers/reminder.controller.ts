@@ -187,73 +187,10 @@ export default class ReminderController {
           };
         }
 
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Created by Grantee'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            href: `${
-              compliance({}).manuscript({
-                manuscriptId: reminder.data.manuscriptId,
-              }).$
-            }?tab=discussions`,
-            description: `**${
-              reminder.data.createdBy
-            }**${discussionTeamPrefix(
-              reminder.data.manuscriptTeams,
-            )} started a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Created by Open Science Member'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            href: `${
-              compliance({}).manuscript({
-                manuscriptId: reminder.data.manuscriptId,
-              }).$
-            }?tab=discussions`,
-            description: `**${
-              reminder.data.createdBy
-            }**${discussionTeamPrefix(
-              reminder.data.manuscriptTeams,
-            )} started a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Replied To by Grantee'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            href: `${
-              compliance({}).manuscript({
-                manuscriptId: reminder.data.manuscriptId,
-              }).$
-            }?tab=discussions`,
-            description: `**${
-              reminder.data.createdBy
-            }**${discussionTeamPrefix(
-              reminder.data.manuscriptTeams,
-            )} replied to a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
         if (reminder.entity === 'Discussion') {
+          const isCreated =
+            reminder.type === 'Discussion Created by Grantee' ||
+            reminder.type === 'Discussion Created by Open Science Member';
           return {
             id: reminder.id,
             entity: reminder.entity,
@@ -262,11 +199,13 @@ export default class ReminderController {
                 manuscriptId: reminder.data.manuscriptId,
               }).$
             }?tab=discussions`,
-            description: `**${
-              reminder.data.createdBy
-            }**${discussionTeamPrefix(
+            description: `**${reminder.data.createdBy}**${discussionTeamPrefix(
               reminder.data.manuscriptTeams,
-            )} replied to a discussion on:`,
+            )} ${
+              isCreated
+                ? 'started a discussion on:'
+                : 'replied to a discussion on:'
+            }`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };

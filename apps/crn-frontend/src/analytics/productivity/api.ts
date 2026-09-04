@@ -5,8 +5,10 @@ import {
   UserProductivityPerformance,
   DocumentCategoryOption,
   OutputTypeOption,
+  outputTypes,
   TimeRangeOption,
   UserProductivityResponse,
+  TeamProductivityOpensearchDocument,
   TeamProductivityResponse,
 } from '@asap-hub/model';
 import {
@@ -162,6 +164,37 @@ export const getTeamProductivity = (
     sort: teamProductivityOpensearchSort[sort],
     outputType,
   });
+};
+
+export type TeamHubResearchOutputsOptions = {
+  teamId: string;
+};
+
+export type TeamHubResearchOutputs = {
+  all?: TeamProductivityOpensearchDocument;
+  public?: TeamProductivityOpensearchDocument;
+};
+
+const HUB_RESEARCH_OUTPUTS_TIME_RANGE: TimeRangeOption = 'all';
+
+export const getTeamHubResearchOutputs = async (
+  client: OpensearchClient<TeamProductivityOpensearchDocument>,
+  { teamId }: TeamHubResearchOutputsOptions,
+): Promise<TeamHubResearchOutputs> => {
+  const { items } = await client.search({
+    searchTags: [],
+    searchScope: 'flat',
+    sort: [],
+    currentPage: 0,
+    pageSize: outputTypes.length,
+    timeRange: HUB_RESEARCH_OUTPUTS_TIME_RANGE,
+    teamId,
+  });
+
+  return {
+    all: items.find(({ outputType }) => outputType === 'all'),
+    public: items.find(({ outputType }) => outputType === 'public'),
+  };
 };
 
 export const getUserProductivityPerformance = async (

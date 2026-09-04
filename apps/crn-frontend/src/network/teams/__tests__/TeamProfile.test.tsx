@@ -7,6 +7,7 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import { TeamResponse } from '@asap-hub/model';
+import { disable, enable } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -15,6 +16,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
+import { getTeamHubResearchOutputs } from '../../../analytics/productivity/api';
 import { getTeam } from '../api';
 import TeamProfile from '../TeamProfile';
 
@@ -42,6 +44,7 @@ jest.mock('../api', () => ({
 jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
+jest.mock('../../../analytics/productivity/api');
 
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
@@ -304,5 +307,84 @@ describe('The project banner', () => {
     localStorage.setItem(dismissedKey, 'true');
     await renderPage(teamWithProject);
     expect(screen.queryByText(bannerText)).not.toBeInTheDocument();
+  });
+});
+
+describe('the metrics tab', () => {
+  const mockGetTeamHubResearchOutputs =
+    getTeamHubResearchOutputs as jest.MockedFunction<
+      typeof getTeamHubResearchOutputs
+    >;
+  const team = createTeamResponse();
+  const teamMember = {
+    teams: [{ id: team.id, role: 'Project Manager' as const }],
+  };
+
+  beforeEach(() => {
+    enable('TEAM_METRICS_TAB');
+    mockGetTeamHubResearchOutputs.mockResolvedValue({});
+  });
+
+  it('is shown to a member of the team', async () => {
+    await renderPage(team, {}, teamMember);
+
+    expect(screen.getByText('Metrics')).toBeVisible();
+  });
+
+  it('is shown to staff who are not on the team', async () => {
+    await renderPage(team, {}, { role: 'Staff' });
+
+    expect(screen.getByText('Metrics')).toBeVisible();
+  });
+
+  it('is hidden from a user who is neither staff nor on the team', async () => {
+    await renderPage(
+      team,
+      {},
+      { teams: [{ id: 'another-team', role: 'Project Manager' }] },
+    );
+
+    expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+  });
+
+  it('is hidden when the flag is disabled', async () => {
+    disable('TEAM_METRICS_TAB');
+
+    await renderPage(team, {}, teamMember);
+
+    expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+  });
+
+  it('renders the hub research outputs of the team', async () => {
+    await renderPage(
+      team,
+      {},
+      teamMember,
+      network({}).teams({}).team({ teamId: team.id }).metrics({}).$,
+    );
+
+    expect(
+      await screen.findByTestId('hub-research-outputs-table'),
+    ).toBeVisible();
+    expect(mockGetTeamHubResearchOutputs).toHaveBeenCalledWith(
+      expect.anything(),
+      { teamId: team.id },
+    );
+  });
+
+  it('does not render the metrics route when the flag is disabled', async () => {
+    disable('TEAM_METRICS_TAB');
+
+    await renderPage(
+      team,
+      {},
+      teamMember,
+      network({}).teams({}).team({ teamId: team.id }).metrics({}).$,
+    );
+
+    expect(
+      screen.queryByTestId('hub-research-outputs-table'),
+    ).not.toBeInTheDocument();
+    expect(mockGetTeamHubResearchOutputs).not.toHaveBeenCalled();
   });
 });

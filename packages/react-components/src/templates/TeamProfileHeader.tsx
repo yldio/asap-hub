@@ -99,6 +99,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly upcomingEventsCount?: number;
   readonly pastEventsCount?: number;
   readonly isAsapTeam?: boolean;
+  readonly showMetricsTab?: boolean;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -111,6 +112,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   upcomingEventsCount,
   pastEventsCount,
   isAsapTeam = false,
+  showMetricsTab = false,
   teamStatus,
   teamType,
   resourceType,
@@ -152,6 +154,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         nav={
           <TabNav>
             <TabLink href={route.about({}).$}>About</TabLink>
+            {showMetricsTab && (
+              <TabLink href={route.metrics({}).$}>Metrics</TabLink>
+            )}
             {isActive && (
               <TabLink href={route.upcoming({}).$}>
                 Upcoming Events {`(${upcomingEventsCount})`}

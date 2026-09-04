@@ -206,7 +206,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'team-productivity',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         name: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,

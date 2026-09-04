@@ -289,6 +289,8 @@ export {
   ComplianceDashboard,
   ComplianceReportForm,
   ContactInfoModal,
+  contactInfoServerErrorPaths,
+  invalidEmailMessage,
   ContentPage,
   CreateMilestoneModal,
   DashboardPage,

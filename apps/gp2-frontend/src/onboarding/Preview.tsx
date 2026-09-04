@@ -1,6 +1,7 @@
 import {
   BiographyModal,
   ContactInformationModal,
+  contactInformationServerErrorPaths,
   ContributingCohortsModal,
   FundingProviderModal,
   KeyInformationModal,
@@ -14,7 +15,10 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Route, Routes } from 'react-router';
-import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import {
+  loadInstitutionOptions,
+  toServerValidationError,
+} from '@asap-hub/frontend-utils';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
@@ -85,6 +89,15 @@ const Preview: React.FC<Record<string, never>> = () => {
               <ContactInformationModal
                 {...userData}
                 {...commonModalProps}
+                onSave={(patchedUser) =>
+                  commonModalProps
+                    .onSave(patchedUser)
+                    .catch(
+                      toServerValidationError(
+                        contactInformationServerErrorPaths,
+                      ),
+                    )
+                }
                 countryCodeSuggestions={countryCodesSuggestions}
               />
             }

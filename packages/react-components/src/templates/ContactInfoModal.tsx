@@ -1,5 +1,13 @@
-import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-import { urlExpression, USER_SOCIAL_RESEARCHER_ID } from '@asap-hub/validation';
+import {
+  isServerValidationError,
+  UserPatchRequest,
+  UserResponse,
+} from '@asap-hub/model';
+import {
+  crnEmailExpression,
+  urlExpression,
+  USER_SOCIAL_RESEARCHER_ID,
+} from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -18,6 +26,7 @@ import {
   XIcon,
 } from '../icons';
 import { mailToSupport } from '../mail';
+import { rem } from '../pixels';
 import { FormSection, LabeledTextField } from '../molecules';
 import { EditUserModal } from '../organisms';
 import { formatUserSocial, noop } from '../utils';
@@ -51,6 +60,45 @@ type ContactInfoModalProps = {
   readonly backHref: string;
   readonly onSave?: (data: UserPatchRequest) => void | Promise<void>;
 } & Pick<UserResponse, 'social'>;
+export const invalidEmailMessage =
+  'Enter a valid email address, for example name@gmail.com.';
+
+// Defer to the browser's own message ("A part following '@' should not contain
+// the symbol '+'.") and to the server's, both more specific than this one.
+const emailValidationMessage = ({
+  typeMismatch,
+  customError,
+}: ValidityState) =>
+  typeMismatch || customError ? undefined : invalidEmailMessage;
+
+// Gives the hint below the input 16 to clear the validation message, instead of
+// the 6 it uses when sitting directly under the input.
+//
+// Keyed on the message being non-empty rather than on `input:invalid`, which is
+// already true for a required field on first render and would move the hint with
+// nothing on screen. The message is the last div TextField renders after the
+// input, and it collapses when empty.
+// Wraps the field rather than reaching into LabeledTextField: its
+// `overrideStyles` prop is dead, and applying it would silently activate a
+// dormant style in DiscussionModal, which passes it too.
+const emailFieldStyles = css({
+  '> div:has(input ~ div:last-of-type:not(:empty)) > div:last-of-type': {
+    paddingTop: rem(16),
+  },
+});
+
+const emailFields = ['contactEmail', 'personalEmail'] as const;
+type EmailField = (typeof emailFields)[number];
+
+// Exported so the caller wiring toServerValidationError uses the same list this
+// modal can render. A path it cannot map produces a save that reports nothing.
+export const contactInfoServerErrorPaths = emailFields.map(
+  (field) => `/${field}`,
+);
+
+const emailFieldForInstancePath = (instancePath: string) =>
+  emailFields.find((field) => `/${field}` === instancePath);
+
 const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   email = '',
   personalEmail = '',
@@ -84,64 +132,132 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   const [newResearcherId, setNewResearcherId] = useState(researcherId);
   const [newTwitter, setNewTwitter] = useState(twitter);
   const [newBlueSky, setNewBlueSky] = useState(blueSky);
+  const [serverErrors, setServerErrors] = useState<
+    Partial<Record<EmailField, string>>
+  >({});
+
+  // Both fields clear, not just the edited one: a server error goes through
+  // setCustomValidity, and EditModal gates the whole save on reportValidity(),
+  // so a stale error on one email blocks the save that would report the other.
+  // The round-trip re-reports whatever is still wrong.
+  const clearServerErrors = () =>
+    setServerErrors((current) =>
+      Object.keys(current).length === 0 ? current : {},
+    );
 
   return (
     <EditUserModal
       backHref={backHref}
       title="Contact Details"
-      dirty={newEmail !== email || newPersonalEmail !== personalEmail}
+      // Every edited field, not just the emails: EditModal only warns on unsaved
+      // changes when `dirty`, so a narrower check loses a website edit silently
+      // once a rejected email puts the modal back in its `initial` state.
+      dirty={
+        newEmail !== email ||
+        newPersonalEmail !== personalEmail ||
+        newWebsite1 !== website1 ||
+        newWebsite2 !== website2 ||
+        newGithub !== github ||
+        newLinkedIn !== linkedIn ||
+        newGoogleScholar !== googleScholar ||
+        newResearchGate !== researchGate ||
+        newResearcherId !== researcherId ||
+        newTwitter !== twitter ||
+        newBlueSky !== blueSky
+      }
       onSave={async () => {
-        await onSave({
-          contactEmail: newEmail,
-          personalEmail: newPersonalEmail,
-          social: {
-            twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
-            blueSky: formatUserSocial(newBlueSky, 'blueSky') || undefined,
-            researcherId: newResearcherId || undefined,
-            researchGate:
-              formatUserSocial(newResearchGate, 'researchGate') || undefined,
-            github: formatUserSocial(newGithub, 'github') || undefined,
-            googleScholar:
-              formatUserSocial(newGoogleScholar, 'googleScholar') || undefined,
-            linkedIn: formatUserSocial(newLinkedIn, 'linkedIn') || undefined,
-            website1: newWebsite1 || undefined,
-            website2: newWebsite2 || undefined,
-          },
-        });
+        clearServerErrors();
+        try {
+          await onSave({
+            contactEmail: newEmail,
+            personalEmail: newPersonalEmail,
+            social: {
+              twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
+              blueSky: formatUserSocial(newBlueSky, 'blueSky') || undefined,
+              researcherId: newResearcherId || undefined,
+              researchGate:
+                formatUserSocial(newResearchGate, 'researchGate') || undefined,
+              github: formatUserSocial(newGithub, 'github') || undefined,
+              googleScholar:
+                formatUserSocial(newGoogleScholar, 'googleScholar') ||
+                undefined,
+              linkedIn: formatUserSocial(newLinkedIn, 'linkedIn') || undefined,
+              website1: newWebsite1 || undefined,
+              website2: newWebsite2 || undefined,
+            },
+          });
+        } catch (error) {
+          if (!isServerValidationError(error)) throw error;
+
+          const messages: Partial<Record<EmailField, string>> = {};
+          error.validationErrors.forEach(({ instancePath }) => {
+            const field = emailFieldForInstancePath(instancePath);
+            if (field) messages[field] = invalidEmailMessage;
+          });
+
+          if (Object.keys(messages).length === 0) {
+            // Nothing is on screen, and EditModal drops its toast for a
+            // ServerValidationError — so downgrade to keep the generic report.
+            throw new Error(error.message, { cause: error });
+          }
+
+          setServerErrors(messages);
+          // EditModal treats a resolved promise as a save and navigates away.
+          throw error;
+        }
         void navigate(backHref);
       }}
     >
       {({ isSaving }) => (
         <FormSection>
-          <LabeledTextField
-            type="email"
-            value={newEmail}
-            onChange={setNewEmail}
-            enabled={!isSaving}
-            title="Contact email"
-            subtitle="(optional)"
-            description={
-              <>
-                People in the ASAP Network will contact you using{' '}
-                <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>.
-                To use a different correspondence email address, please add it
-                below.
-              </>
-            }
-            hint="Note: This will not affect the way you login into the Hub."
-            placeholder="Add a different email"
-          />
-          <LabeledTextField
-            type="email"
-            value={newPersonalEmail}
-            onChange={setNewPersonalEmail}
-            enabled={!isSaving}
-            title="Personal Email"
-            subtitle="(optional)"
-            description="Enter a permanent personal email (e.g., Gmail or Yahoo) where we can reach you once you transition to a CRN alum. Because alumni lose access to the CRN Hub, ASAP staff may use this information to keep in touch."
-            hint="Note: This address is hidden from the community and will not appear on your profile. Only administrative staff will have access."
-            placeholder="Add a personal email"
-          />
+          <div css={emailFieldStyles}>
+            <LabeledTextField
+              type="email"
+              value={newEmail}
+              onChange={(value) => {
+                setNewEmail(value);
+                clearServerErrors();
+              }}
+              enabled={!isSaving}
+              // The browser ANDs its own address check with `pattern`, so this
+              // adds the content model's rule on top of type="email" rather than
+              // replacing it: test@test passes the browser and fails here.
+              pattern={crnEmailExpression}
+              customValidationMessage={serverErrors.contactEmail ?? ''}
+              getValidationMessage={emailValidationMessage}
+              title="Contact email"
+              subtitle="(optional)"
+              description={
+                <>
+                  People in the ASAP Network will contact you using{' '}
+                  <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>
+                  . To use a different correspondence email address, please add
+                  it below.
+                </>
+              }
+              hint="Note: This will not affect the way you login into the Hub."
+              placeholder="Add a different email"
+            />
+          </div>
+          <div css={emailFieldStyles}>
+            <LabeledTextField
+              type="email"
+              value={newPersonalEmail}
+              onChange={(value) => {
+                setNewPersonalEmail(value);
+                clearServerErrors();
+              }}
+              enabled={!isSaving}
+              pattern={crnEmailExpression}
+              customValidationMessage={serverErrors.personalEmail ?? ''}
+              getValidationMessage={emailValidationMessage}
+              title="Personal Email"
+              subtitle="(optional)"
+              description="Enter a permanent personal email (e.g., Gmail or Yahoo) where we can reach you once you transition to a CRN alum. Because alumni lose access to the CRN Hub, ASAP staff may use this information to keep in touch."
+              hint="Note: This address is hidden from the community and will not appear on your profile. Only administrative staff will have access."
+              placeholder="Add a personal email"
+            />
+          </div>
           <LabeledTextField
             title="Website 1"
             subtitle="(optional)"

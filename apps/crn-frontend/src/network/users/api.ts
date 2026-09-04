@@ -1,5 +1,9 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  BackendError,
+  createSentryHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   ExternalAuthorResponse,
   ListResponse,
@@ -128,8 +132,12 @@ export const patchUser = async (
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
-    throw new Error(
+    // The body carries which field the API rejected, which the modal turns into
+    // that field's inline error. A plain Error would discard it.
+    throw new BackendError(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
     );
   }
   return resp.json();

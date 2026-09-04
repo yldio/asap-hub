@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 
 import { Card, Paragraph, Subtitle } from '../atoms';
 import { charcoal, lead, steel } from '../colors';
-import { ExpandableText, TooltipInfo } from '../molecules';
+import { ExpandableText, Info, TooltipInfo } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
-import { getPerformanceMoodIcon } from '../utils';
+import { getPerformanceMoodIcon, getPerformanceMoodLabel } from '../utils';
 
 export type HubResearchOutputRow = {
   outputType: string;
@@ -123,6 +123,19 @@ const mobileLabelStyles = css({
   color: charcoal.rgb,
 });
 
+const percentageLabelContainerStyles = css({
+  display: 'flex',
+  marginTop: rem(4),
+});
+
+const percentageLabelStyles = css({
+  display: 'flex',
+  maxWidth: 'unset',
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    maxWidth: rem(90),
+  },
+});
+
 const formatPercentage = (publicPercentage: number | null) =>
   publicPercentage === null ? 'N/A' : `${publicPercentage}%`;
 
@@ -133,7 +146,18 @@ const PercentageValue: React.FC<{ publicPercentage: number | null }> = ({
     <span css={percentageValueStyles}>
       {formatPercentage(publicPercentage)}
     </span>
-    {getPerformanceMoodIcon(publicPercentage, publicPercentage === null)}
+    <span css={percentageLabelContainerStyles}>
+      <Info
+        icon={getPerformanceMoodIcon(
+          publicPercentage,
+          publicPercentage === null,
+        )}
+      >
+        <span css={percentageLabelStyles}>
+          {getPerformanceMoodLabel(publicPercentage, publicPercentage === null)}
+        </span>
+      </Info>
+    </span>
   </span>
 );
 

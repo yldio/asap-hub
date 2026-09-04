@@ -190,7 +190,10 @@ const HubResearchOutputsCard: React.FC<HubResearchOutputsCardProps> = ({
             <div css={mobileLabelStyles}>
               % Public Outputs (ASAP-Funded){' '}
               <TooltipInfo
-                overrideWrapperStyles={css({ marginTop: rem(4) })}
+                overrideWrapperStyles={css({
+                  marginTop: rem(4),
+                  paddingLeft: 0,
+                })}
                 overrideTooltipStyles={css({ maxWidth: rem(100) })}
               >
                 {PUBLIC_OUTPUTS_TOOLTIP}

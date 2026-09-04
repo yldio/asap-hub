@@ -42,6 +42,11 @@ describe('getPerformanceText', () => {
     expect(getPerformanceMoodIcon(null, true)).toBe(informationInverseIcon);
     expect(getPerformanceMoodIcon(null, false)).toBe(informationInverseIcon);
   });
+
+  it('getPerformanceMoodIcon defaults isLimitedData to false', () => {
+    expect(getPerformanceMoodIcon(95)).toBe(happyFaceIcon);
+    expect(getPerformanceMoodIcon(null)).toBe(informationInverseIcon);
+  });
 });
 
 describe('getPerformanceMoodLabel', () => {
@@ -87,6 +92,15 @@ describe('getPerformanceMoodLabel', () => {
     );
     expect(getPerformanceMoodLabel(0, false)).toBe(
       'We encourage your team to work to improve.',
+    );
+  });
+
+  it('defaults isLimitedData to false', () => {
+    expect(getPerformanceMoodLabel(95)).toBe(
+      'Your team is doing an outstanding job! Keep up the good work!',
+    );
+    expect(getPerformanceMoodLabel(null)).toBe(
+      'There is limited available data to calculate this metric at this time.',
     );
   });
 });

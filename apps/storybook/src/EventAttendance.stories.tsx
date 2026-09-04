@@ -212,7 +212,6 @@ export const EditAndSave: Story = {
                   teamType: 'Discovery Team',
                 },
               ],
-              alreadyInCount: 0,
               unmatched: [{ name: 'Data Scince' }],
             })}
             onSave={(updated) => {

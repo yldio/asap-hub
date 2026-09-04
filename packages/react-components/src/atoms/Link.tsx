@@ -90,6 +90,7 @@ type LinkProps = {
   readonly ellipsed?: boolean;
   readonly underlined?: boolean;
   readonly onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  readonly openInNewTab?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
 const Link: React.FC<LinkProps> = ({
@@ -107,6 +108,7 @@ const Link: React.FC<LinkProps> = ({
   fullWidth = false,
   ellipsed = false,
   underlined = false,
+  openInNewTab = false,
 }) => {
   const linkStyles = ({ colors }: Theme) =>
     buttonStyle
@@ -133,6 +135,7 @@ const Link: React.FC<LinkProps> = ({
     <Anchor
       href={href}
       enabled={enabled}
+      openInNewTab={openInNewTab}
       aria-label={label}
       onClick={onClick}
       css={(theme) => linkStyles(theme)}

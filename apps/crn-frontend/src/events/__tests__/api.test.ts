@@ -6,11 +6,12 @@ import {
 import {
   createEventResponse,
   createListEventResponse,
+  createTeamListItemResponse,
 } from '@asap-hub/fixtures';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getEvent, getEvents, patchEvent } from '../api';
+import { getEvent, getEvents, getTeamsForMatching, patchEvent } from '../api';
 
 jest.mock('../../config');
 
@@ -275,5 +276,70 @@ describe('getEvents', () => {
       },
       false,
     );
+  });
+});
+
+describe('getTeamsForMatching', () => {
+  type Search = ClientSearch<'crn', 'team'>;
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'crn'>;
+
+  const hit = (index: number) =>
+    ({
+      ...createTeamListItemResponse(index),
+      objectID: `t${index}`,
+      __meta: { type: 'team' as const },
+    }) as unknown as Awaited<ReturnType<Search>>['hits'][number];
+
+  beforeEach(() => {
+    search.mockReset();
+  });
+
+  it('fetches the whole team corpus in a single query', async () => {
+    search.mockResolvedValueOnce(
+      createAlgoliaResponse<'crn', 'team'>([hit(0), hit(1)]),
+    );
+
+    const teams = await getTeamsForMatching(algoliaSearchClient);
+
+    expect(teams).toHaveLength(2);
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({ hitsPerPage: 1000, page: 0 }),
+    );
+  });
+
+  it('pages until the whole corpus is collected', async () => {
+    search
+      .mockResolvedValueOnce(
+        createAlgoliaResponse<'crn', 'team'>([hit(0)], { nbHits: 2 }),
+      )
+      .mockResolvedValueOnce(
+        createAlgoliaResponse<'crn', 'team'>([hit(1)], { nbHits: 2 }),
+      );
+
+    const teams = await getTeamsForMatching(algoliaSearchClient);
+
+    expect(teams.map(({ id }) => id)).toEqual(['t0', 't1']);
+    expect(search).toHaveBeenCalledTimes(2);
+    expect(search).toHaveBeenLastCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({ page: 1 }),
+    );
+  });
+
+  it('stops when the corpus is empty', async () => {
+    search.mockResolvedValueOnce(
+      createAlgoliaResponse<'crn', 'team'>([], { nbHits: 5 }),
+    );
+
+    await expect(getTeamsForMatching(algoliaSearchClient)).resolves.toEqual([]);
+    expect(search).toHaveBeenCalledTimes(1);
   });
 });

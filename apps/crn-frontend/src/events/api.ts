@@ -8,8 +8,18 @@ import {
   EventResponse,
   EventUpdateDetailsRequest,
   ListEventResponse,
+  TeamListItemResponse,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import { getAlgoliaTeams } from '../network/teams/api';
+
+// Shared with the state hook so the cache key and the request cannot drift.
+export const teamsForMatchingOptions = {
+  searchQuery: '',
+  teamType: 'all',
+  currentPage: 0,
+  pageSize: 1000,
+} as const;
 
 export const getEvents = async (
   algoliaClient: AlgoliaClient<'crn'>,
@@ -86,4 +96,28 @@ export const patchEvent = async (
     );
   }
   return resp.json();
+};
+
+// Fetch the whole team corpus once per upload; matchTeamNames resolves in memory.
+export const getTeamsForMatching = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+): Promise<TeamListItemResponse[]> => {
+  const items: TeamListItemResponse[] = [];
+  let total = Infinity;
+
+  for (let currentPage = 0; items.length < total; currentPage += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    const { items: pageItems, total: pageTotal } = await getAlgoliaTeams(
+      algoliaClient,
+      { ...teamsForMatchingOptions, currentPage },
+    );
+    // An empty page guarantees termination even if total is off.
+    if (pageItems.length === 0) {
+      break;
+    }
+    items.push(...pageItems);
+    total = pageTotal;
+  }
+
+  return items;
 };

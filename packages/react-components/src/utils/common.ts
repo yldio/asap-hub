@@ -16,6 +16,12 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = (): void => {};
 
+// Touch taps fire an emulated mouseenter right before the click, which would
+// flash a hover-only affordance on mobile; only hover-capable pointers count.
+export const canHover = (): boolean =>
+  typeof window.matchMedia !== 'function' ||
+  window.matchMedia('(hover: hover)').matches;
+
 export const getSvgAspectRatio = (element: React.ReactElement): number => {
   const markup = renderToStaticMarkup(element);
 

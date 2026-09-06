@@ -591,6 +591,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
           a team is already in your list, their attendance will be updated to
           match the file. CSV or XLSX files only.
           <TooltipInfo
+            openOnHover
             width={296}
             background={neutral1000.rgb}
             overrideTooltipStyles={formatTooltipStyles}

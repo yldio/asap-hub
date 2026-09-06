@@ -73,6 +73,43 @@ describe('TooltipInfo', () => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
 
+  it('renders the bubble outside the button when floating', async () => {
+    const { container } = render(
+      <TooltipInfo openOnHover floating>
+        Test Content
+      </TooltipInfo>,
+    );
+
+    await userEvent.hover(screen.getByRole('button', { name: /info/i }));
+
+    const tooltip = screen.getByRole('tooltip');
+    expect(tooltip).toHaveTextContent('Test Content');
+    expect(container).not.toContainElement(tooltip);
+  });
+
+  it('keeps the floating bubble on the icon while an ancestor scrolls', async () => {
+    jest
+      .spyOn(HTMLButtonElement.prototype, 'getBoundingClientRect')
+      .mockReturnValueOnce({ left: 100, top: 200, width: 24 } as DOMRect)
+      .mockReturnValueOnce({ left: 100, top: 150, width: 24 } as DOMRect);
+
+    render(
+      <TooltipInfo openOnHover floating>
+        Test Content
+      </TooltipInfo>,
+    );
+    await userEvent.hover(screen.getByRole('button', { name: /info/i }));
+
+    const anchorOf = () =>
+      screen.getByRole('tooltip').closest('span[style]') as HTMLElement;
+    expect(anchorOf()).toHaveStyle({ left: '112px', top: '200px' });
+
+    fireEvent.scroll(window);
+
+    expect(anchorOf()).toHaveStyle({ left: '112px', top: '150px' });
+    jest.restoreAllMocks();
+  });
+
   it('calls preventDefault when user clicks on the button', () => {
     render(<TooltipInfo>Test Content</TooltipInfo>);
 

@@ -592,6 +592,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
           match the file. CSV or XLSX files only.
           <TooltipInfo
             openOnHover
+            floating
             width={296}
             background={neutral1000.rgb}
             overrideTooltipStyles={formatTooltipStyles}

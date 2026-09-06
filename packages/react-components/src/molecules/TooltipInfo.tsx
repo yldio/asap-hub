@@ -23,6 +23,7 @@ type TooltipInfoProps = {
   width?: string | number;
   background?: string;
   openOnHover?: boolean;
+  floating?: boolean;
 };
 
 const TooltipInfo: React.FC<TooltipInfoProps> = ({
@@ -32,12 +33,18 @@ const TooltipInfo: React.FC<TooltipInfoProps> = ({
   width,
   background,
   openOnHover,
+  floating,
 }) => (
   <span
     css={[infoWrapperStyle, overrideWrapperStyles]}
     onClick={(e) => e.preventDefault()}
   >
-    <Info width={width} background={background} openOnHover={openOnHover}>
+    <Info
+      width={width}
+      background={background}
+      openOnHover={openOnHover}
+      floating={floating}
+    >
       <span css={[infoStyle, overrideTooltipStyles]}>{children}</span>
     </Info>
   </span>

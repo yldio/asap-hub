@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useDismissable } from '../../hooks';
@@ -19,8 +19,11 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
 const loadEventsList = () =>
   import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
+const loadTeamMetrics = () =>
+  import(/* webpackChunkName: "network-team-metrics" */ './TeamMetrics');
 
 const About = lazy(loadAbout);
+const TeamMetrics = lazy(loadTeamMetrics);
 type TeamProfileProps = {
   currentTime: Date;
 };
@@ -36,8 +39,13 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     'crn-team-project-banner-dismissed',
   );
 
+  const { isEnabled } = useFlags();
+
   const isStaff = user?.role === 'Staff';
   const isAsapTeam = team?.displayName === ASAP_TEAM_NAME;
+  const isTeamMember = !!user?.teams.some(({ id }) => id === teamId);
+  const canViewMetrics =
+    isEnabled('TEAM_METRICS_TAB') && (isStaff || isTeamMember);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -49,11 +57,14 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   });
 
   if (team) {
-    const { about, past, upcoming, workspace } = route({ teamId });
+    const { about, metrics, past, upcoming, workspace } = route({ teamId });
     const paths = {
       about: about.template.replace(/^\//, ''),
       past: past.template.replace(/^\//, ''),
       upcoming: upcoming.template.replace(/^\//, ''),
+      ...(canViewMetrics
+        ? { metrics: metrics.template.replace(/^\//, '') }
+        : {}),
     };
 
     return (
@@ -70,6 +81,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                 {...team}
                 isStaff={isStaff}
                 isAsapTeam={isAsapTeam}
+                showMetricsTab={canViewMetrics}
                 teamListElementId={teamListElementId}
                 upcomingEventsCount={upcomingEvents?.total || 0}
                 pastEventsCount={pastEvents?.total || 0}
@@ -84,6 +96,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       isAsapTeam={isAsapTeam}
                     />
                   )}
+                  Metrics={
+                    canViewMetrics ? <TeamMetrics teamId={teamId} /> : undefined
+                  }
                   currentTime={currentTime}
                   displayName={team.displayName}
                   eventConstraint={{ teamId }}

@@ -331,3 +331,20 @@ it('renders breadcrumbs to the resource teams list', () => {
     breadcrumbs.getByRole('link', { name: 'Resource Teams' }),
   ).toHaveAttribute('href', network({}).resourceTeams({}).$);
 });
+
+it('does not render the metrics tab by default', () => {
+  render(<TeamProfileHeader {...boilerplateProps} />);
+
+  expect(
+    screen.queryByRole('link', { name: 'Metrics' }),
+  ).not.toBeInTheDocument();
+});
+
+it('renders a metrics tab linking to the team metrics when enabled', () => {
+  render(<TeamProfileHeader {...boilerplateProps} showMetricsTab />);
+
+  expect(screen.getByRole('link', { name: 'Metrics' })).toHaveAttribute(
+    'href',
+    network({}).teams({}).team({ teamId: boilerplateProps.id }).metrics({}).$,
+  );
+});

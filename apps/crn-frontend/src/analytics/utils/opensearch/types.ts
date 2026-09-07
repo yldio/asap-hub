@@ -43,6 +43,7 @@ export type OpensearchSearchOptions = {
   documentCategory?: DocumentCategoryOption;
   sort?: OpensearchSort[];
   outputType?: OutputTypeOption;
+  teamId?: string;
 };
 
 type SortConfigOrder = 'asc' | 'desc';
@@ -132,7 +133,7 @@ export type ShouldClause =
     }
   | { match: Record<string, string> };
 
-type TermKey = 'timeRange' | 'documentCategory' | 'outputType';
+type TermKey = 'timeRange' | 'documentCategory' | 'outputType' | 'id';
 
 type ExclusiveRecord<K extends string, V> = {
   [P in K]: { [_ in P]: V } & { [O in Exclude<K, P>]?: never };

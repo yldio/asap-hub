@@ -125,6 +125,7 @@ export class OpensearchClient<T> {
     documentCategory,
     sort,
     outputType,
+    teamId,
   }: Omit<OpensearchSearchOptions, 'currentPage' | 'pageSize'> & {
     currentPage?: number;
     pageSize?: number;
@@ -138,6 +139,7 @@ export class OpensearchClient<T> {
       searchTags,
       sort: sort as OpensearchSort[],
       outputType,
+      teamId,
     });
     const response = await this.request<OpensearchHitsResponse<T>>(searchQuery);
 

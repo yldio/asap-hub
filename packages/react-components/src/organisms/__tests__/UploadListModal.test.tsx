@@ -357,6 +357,22 @@ describe('UploadListModal', () => {
     expect(screen.getByText('3 Teams')).toBeInTheDocument();
   });
 
+  it('Should name a single already-added team without counting it', async () => {
+    const { container } = renderModal({
+      currentTeamIds: new Set(['a1']),
+      onUploadList: jest.fn(async () => ({
+        matched: [{ teamId: 'a1', teamName: 'A', attended: true }],
+        unmatched: [],
+      })),
+    });
+
+    await upload(makeFile('teams.csv'), container);
+
+    expect(
+      await screen.findByText('This team is already in the attendance table.'),
+    ).toBeInTheDocument();
+  });
+
   it('Should not claim teams were already in after the user deletes them', async () => {
     const { container } = renderModal({
       onUploadList: jest.fn(async () => ({
@@ -378,20 +394,6 @@ describe('UploadListModal', () => {
     expect(screen.getByText('1 Team')).toBeInTheDocument();
     expect(screen.queryByText(/already in the attendance table/)).toBeNull();
     expect(screen.queryByText(/No team names found/)).toBeNull();
-  });
-
-  it('Should say "1 team" rather than "1 teams"', async () => {
-    const { container } = renderModal({
-      onUploadList: jest.fn(async () => ({
-        matched: [{ teamId: 'm1', teamName: 'Imaging', attended: true }],
-        unmatched: [],
-      })),
-    });
-
-    await upload(makeFile('teams.csv'), container);
-
-    expect(await screen.findByText('1 Team')).toBeInTheDocument();
-    expect(screen.getByText('1 team')).toBeInTheDocument();
   });
 
   it('Should flag an inactive matched team and open its link in a new tab', async () => {

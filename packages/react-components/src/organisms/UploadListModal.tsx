@@ -524,12 +524,13 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
   // Describes the file, not the current view: once the user deletes the rows
   // themselves there is nothing to explain, so no message is shown.
-  const emptyResultMessage =
-    newMatchedCount === 0
-      ? `All ${pluralizeTeams(alreadyIn.length)} in this list ${
-          alreadyIn.length === 1 ? 'is' : 'are'
-        } already in the attendance table.`
-      : null;
+  const alreadyInMessage =
+    alreadyIn.length === 1
+      ? 'This team is already in the attendance table.'
+      : `All ${pluralizeTeams(
+          alreadyIn.length,
+        )} in this list are already in the attendance table.`;
+  const emptyResultMessage = newMatchedCount === 0 ? alreadyInMessage : null;
 
   const isDirty = files.length > 0 || matchedTeams.length > 0;
   const addEnabled =

@@ -470,19 +470,16 @@ describe('the NEW_EVENT_PAGE flag', () => {
           },
         ]);
 
-        const { container, findByText, findByRole, getByRole } =
-          await openUploadList();
+        const { container, getByRole } = await openUploadList();
         await uploadCsv(container, 'Team Name,Attendance\nTeam One,Yes\n');
 
-        expect(
-          await findByText(
-            'All 1 team in this list is already in the attendance table.',
-          ),
-        ).toBeVisible();
-
-        await userEvent.click(
-          await findByRole('button', { name: 'Add Attendees' }),
+        // Enabled means the upload resolved the team; the wording it shows for
+        // an already-added one belongs to the modal's own test.
+        await waitFor(() =>
+          expect(getByRole('button', { name: 'Add Attendees' })).toBeEnabled(),
         );
+
+        await userEvent.click(getByRole('button', { name: 'Add Attendees' }));
         await userEvent.click(getByRole('button', { name: 'Save' }));
 
         await waitFor(() =>

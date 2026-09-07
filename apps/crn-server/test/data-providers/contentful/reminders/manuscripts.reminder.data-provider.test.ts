@@ -604,10 +604,10 @@ describe('Reminders data provider', () => {
 
         test.each`
           scenario                                                 | status                        | statusUpdatedTo               | reportedStatus
-          ${'a resubmission overwrote the status'}                  | ${'Manuscript Resubmitted'}   | ${'Review Compliance Report'} | ${'Review Compliance Report'}
-          ${'the status still matches the change'}                  | ${'Review Compliance Report'} | ${'Review Compliance Report'} | ${'Review Compliance Report'}
-          ${'the change predates the status updated to field'}      | ${'Review Compliance Report'} | ${null}                       | ${'Review Compliance Report'}
-          ${'the change deliberately set the resubmission status'}  | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}
+          ${'a resubmission overwrote the status'}                 | ${'Manuscript Resubmitted'}   | ${'Review Compliance Report'} | ${'Review Compliance Report'}
+          ${'the status still matches the change'}                 | ${'Review Compliance Report'} | ${'Review Compliance Report'} | ${'Review Compliance Report'}
+          ${'the change predates the status updated to field'}     | ${'Review Compliance Report'} | ${null}                       | ${'Review Compliance Report'}
+          ${'the change deliberately set the resubmission status'} | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}
         `(
           'reports $reportedStatus as the new status when $scenario',
           async ({ status, statusUpdatedTo, reportedStatus }) => {

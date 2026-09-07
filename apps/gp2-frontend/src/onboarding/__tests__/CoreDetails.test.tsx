@@ -1,6 +1,7 @@
 import { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { invalidEmailMessage } from '@asap-hub/react-components';
 import { ToastContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
@@ -13,6 +14,7 @@ import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
+  BackendError,
   createTestQueryClient,
   loadInstitutionOptions,
 } from '@asap-hub/frontend-utils';
@@ -210,6 +212,50 @@ describe('CoreDetails', () => {
       }),
       expect.anything(),
     );
+  });
+
+  // This mount was left unwired once already: without the converter a server
+  // rejection stays a raw BackendError and the user gets only the generic
+  // toast, with nothing marking the field.
+  it('shows an API email rejection on the field', async () => {
+    // setServerError lands outside act(); the assertions below are the proof.
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    mockPatchUser.mockRejectedValueOnce(
+      new BackendError(
+        'failed',
+        {
+          error: 'Bad Request',
+          message: 'Validation error',
+          statusCode: 400,
+          data: [
+            {
+              instancePath: '/alternativeEmail',
+              keyword: 'pattern',
+              params: {},
+              schemaPath: '#/properties/alternativeEmail/pattern',
+            },
+          ],
+        },
+        400,
+      ),
+    );
+    await renderCoreDetails(user.id);
+
+    const [, contactInformationEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    await userEvent.click(contactInformationEditButton!);
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByText(invalidEmailMessage)).toBeVisible();
+    expect(
+      screen.queryByText(/unable to save your changes/i),
+    ).not.toBeInTheDocument();
+    consoleErrorSpy.mockRestore();
   });
 
   it('updates the avatar', async () => {

@@ -1,4 +1,4 @@
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, toServerValidationError } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
@@ -21,7 +21,6 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { resolveResearchOutputFlowId } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
-  toServerValidationError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useGeneratedContent,

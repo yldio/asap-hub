@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { invalidEmailMessage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 import {
@@ -11,6 +12,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
+  BackendError,
   createTestQueryClient,
   loadInstitutionOptions,
 } from '@asap-hub/frontend-utils';
@@ -447,6 +449,73 @@ describe('the contact info modal', () => {
       expect.objectContaining({ contactEmail: 'contact@example.comm' }),
       expect.any(String),
     );
+  });
+
+  // The modal cannot read a BackendError; this wiring is what turns the API's
+  // 400 into the field's inline error rather than the generic toast.
+  const rejectWith = (instancePath: string) => {
+    mockPatchUser.mockRejectedValueOnce(
+      new BackendError(
+        'failed',
+        {
+          error: 'Bad Request',
+          message: 'Validation error',
+          statusCode: 400,
+          data: [
+            {
+              instancePath,
+              keyword: 'pattern',
+              params: {},
+              schemaPath: `#/properties${instancePath}/pattern`,
+            },
+          ],
+        },
+        400,
+      ),
+    );
+  };
+
+  const renderContactInfo = () =>
+    renderWithRoot(
+      <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
+        <Routes>
+          <Route
+            path="/profile/*"
+            element={
+              <Editing
+                user={{ ...createUserResponse(), id }}
+                backHref="/profile"
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+  it.each(['/contactEmail', '/personalEmail'])(
+    'reports an API rejection of %s on that field',
+    async (instancePath) => {
+      rejectWith(instancePath);
+      // setServerErrors lands outside act(); the assertion below is the proof.
+      const consoleMock = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const { findByText } = renderContactInfo();
+
+      await userEvent.click(await findByText(/save/i));
+
+      expect(await findByText(invalidEmailMessage)).toBeVisible();
+      consoleMock.mockRestore();
+    },
+  );
+
+  it('reports generically when the rejection names another field', async () => {
+    rejectWith('/jobTitle');
+    const { findByText } = renderContactInfo();
+
+    await userEvent.click(await findByText(/save/i));
+
+    expect(await findByText(/unable to save your changes/i)).toBeVisible();
   });
 });
 

@@ -1,10 +1,14 @@
-import { ValidationErrorResponse } from '@asap-hub/model';
+import {
+  ServerValidationError,
+  ValidationErrorResponse,
+} from '@asap-hub/model';
 import {
   BackendError,
   createListApiUrlFactory,
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
+  toServerValidationError,
   getTimezone,
 } from '../api-util';
 
@@ -184,6 +188,95 @@ describe('validationErrorsAreSupported', () => {
         ['/2', '/3'],
       ),
     ).toBe(false);
+  });
+});
+
+describe('toServerValidationError', () => {
+  const convert = toServerValidationError(['/contactEmail']);
+
+  const backendError = (response: unknown) =>
+    new BackendError('failed', response as ValidationErrorResponse, 400);
+
+  const validationBody = (instancePath: string) => ({
+    error: 'Bad Request' as const,
+    message: 'Validation error' as const,
+    statusCode: 400,
+    data: [
+      {
+        instancePath,
+        keyword: 'pattern',
+        params: {},
+        schemaPath: `#/properties${instancePath}/pattern`,
+      },
+    ],
+  });
+
+  const capture = (error: unknown) => {
+    try {
+      convert(error);
+      return undefined;
+    } catch (thrown) {
+      return thrown;
+    }
+  };
+
+  it('converts a supported validation response', () => {
+    const thrown = capture(backendError(validationBody('/contactEmail')));
+
+    expect(thrown).toBeInstanceOf(ServerValidationError);
+    expect((thrown as ServerValidationError).validationErrors).toEqual(
+      validationBody('/contactEmail').data,
+    );
+  });
+
+  // The predicate is all-or-nothing on the returned paths: a caller that cannot
+  // render every one of them must keep the generic report instead.
+  it('rethrows unchanged when a path is not supported', () => {
+    const error = backendError(validationBody('/jobTitle'));
+
+    expect(capture(error)).toBe(error);
+  });
+
+  it('rethrows a non-BackendError unchanged', () => {
+    const error = new Error('boom');
+
+    expect(capture(error)).toBe(error);
+  });
+
+  // isValidationErrorResponse reads `.message` without a nil guard, and callers
+  // build the body from `resp.json().catch(() => undefined)`.
+  it.each([
+    ['the body is absent', undefined],
+    ['the body is not an object', 'upstream exploded'],
+    ['the body is null', null],
+    ['the body has no message', { statusCode: 400 }],
+    [
+      'the body has data but no message',
+      { statusCode: 400, data: [{ instancePath: '/contactEmail' }] },
+    ],
+    [
+      'data is not a list',
+      {
+        error: 'Bad Request',
+        message: 'Validation error',
+        statusCode: 400,
+        data: null,
+      },
+    ],
+    [
+      'the response is not a validation error',
+      {
+        error: 'Forbidden',
+        message: 'Forbidden',
+        statusCode: 403,
+      },
+    ],
+  ])('rethrows unchanged when %s', (_label, response) => {
+    const error = backendError(response);
+    const thrown = capture(error);
+
+    expect(thrown).toBe(error);
+    expect(thrown).not.toBeInstanceOf(TypeError);
   });
 });
 

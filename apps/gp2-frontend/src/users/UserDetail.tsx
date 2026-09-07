@@ -1,6 +1,7 @@
 import {
   BiographyModal,
   ContactInformationModal,
+  contactInformationServerErrorPaths,
   ContributingCohortsModal,
   FundingProviderModal,
   KeyInformationModal,
@@ -21,7 +22,10 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router';
-import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import {
+  loadInstitutionOptions,
+  toServerValidationError,
+} from '@asap-hub/frontend-utils';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -151,6 +155,15 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                         <ContactInformationModal
                           {...user}
                           {...commonModalProps}
+                          onSave={(patchedUser) =>
+                            commonModalProps
+                              .onSave(patchedUser)
+                              .catch(
+                                toServerValidationError(
+                                  contactInformationServerErrorPaths,
+                                ),
+                              )
+                          }
                           countryCodeSuggestions={countryCodesSuggestions}
                         />
                       }

@@ -1,12 +1,13 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2, isServerValidationError } from '@asap-hub/model';
 import {
+  invalidEmailMessage,
   LabeledDropdown,
   LabeledTextField,
   pixels,
   FormSection,
 } from '@asap-hub/react-components';
 import {
-  emailExpression,
+  gp2EmailExpression,
   telephoneNumberExpression,
 } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -35,6 +36,10 @@ type ContactInformationModalProps = Pick<
     countryCodeSuggestions: { name: string; dialCode: string }[];
   };
 
+// Exported so the caller wiring toServerValidationError uses the same list this
+// modal can render. A path it cannot map produces a save that reports nothing.
+export const contactInformationServerErrorPaths = ['/alternativeEmail'];
+
 const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   onSave,
   backHref,
@@ -47,6 +52,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   const [newAlternativeEmail, setNewAlternativeEmail] = useState(
     alternativeEmail || '',
   );
+  const [serverError, setServerError] = useState('');
   const [newCountryCode, setNewCountryCode] = useState(
     telephone?.countryCode || '',
   );
@@ -62,13 +68,31 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
       title="Contact Information"
       description="Provide alternative contact details."
       onSave={async () => {
-        await onSave({
-          alternativeEmail: newAlternativeEmail || null,
-          telephone: {
-            countryCode: newCountryCode || undefined,
-            number: newNumber || undefined,
-          },
-        });
+        setServerError('');
+        try {
+          await onSave({
+            alternativeEmail: newAlternativeEmail || null,
+            telephone: {
+              countryCode: newCountryCode || undefined,
+              number: newNumber || undefined,
+            },
+          });
+        } catch (error) {
+          if (!isServerValidationError(error)) throw error;
+
+          const rejectsTheEmail = error.validationErrors.some(
+            ({ instancePath }) => instancePath === '/alternativeEmail',
+          );
+          if (!rejectsTheEmail) {
+            // Nothing is on screen, and EditModal drops its toast for a
+            // ServerValidationError — so downgrade to keep the generic report.
+            throw new Error(error.message, { cause: error });
+          }
+
+          setServerError(invalidEmailMessage);
+          // EditModal treats a resolved promise as a save and navigates away.
+          throw error;
+        }
         void navigate(backHref);
       }}
       backHref={backHref}
@@ -90,10 +114,25 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
               description="An alternative way for members to contact you. This will not affect the way that you login."
               enabled={!isSaving}
               value={newAlternativeEmail}
-              onChange={setNewAlternativeEmail}
+              onChange={(value) => {
+                setNewAlternativeEmail(value);
+                // A stale server error keeps the field DOM-invalid through
+                // setCustomValidity, and EditModal gates the save on
+                // reportValidity(), so it would block the next attempt.
+                setServerError('');
+              }}
+              customValidationMessage={serverError}
               type={'email'}
-              pattern={emailExpression}
-              getValidationMessage={() => 'Please enter a valid email address'}
+              // The browser ANDs its own address check with `pattern`, so this
+              // adds the content model's rule on top rather than replacing it:
+              // test@test passes the browser and fails here.
+              pattern={gp2EmailExpression}
+              // Defer to the browser's own message ("A part following '@'
+              // should not contain the symbol '+'.") and to the server's, both
+              // more specific than this one.
+              getValidationMessage={({ typeMismatch, customError }) =>
+                typeMismatch || customError ? undefined : invalidEmailMessage
+              }
             />
             <div css={telephoneContainerStyles}>
               <div css={css({ flex: `0 0 ${rem(208)}` })}>

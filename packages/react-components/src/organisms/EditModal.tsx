@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
+import { isServerValidationError } from '@asap-hub/model';
 import { FormSection, Modal, ModalEditHeaderDecorator } from '../molecules';
 import { useNavigationWarning } from '../navigation';
 import { rem } from '../pixels';
@@ -68,9 +69,12 @@ const EditModal: React.FC<EditModalProps> = ({
         if (formRef.current) {
           setStatus('hasSaved');
         }
-      } catch {
+      } catch (error) {
         if (!formRef.current) return;
-        setStatus('hasError');
+        // A ServerValidationError means the form has already marked the
+        // offending field, so the generic toast would be a second, vaguer
+        // message for the same problem.
+        setStatus(isServerValidationError(error) ? 'initial' : 'hasError');
       }
     }
   };

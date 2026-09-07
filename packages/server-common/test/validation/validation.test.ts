@@ -57,4 +57,51 @@ describe('Validate Input', () => {
     });
     expect(validateTestSchema({ param: null })).toEqual({ param: null });
   });
+
+  describe('allErrors', () => {
+    const twoFieldSchema: JSONSchemaType<{ one?: string; two?: string }> = {
+      type: 'object',
+      properties: {
+        one: { type: 'string', pattern: '^ok$', nullable: true },
+        two: { type: 'string', pattern: '^ok$', nullable: true },
+      },
+      additionalProperties: false,
+    };
+    const bothInvalid = { one: 'no', two: 'no' };
+
+    const paths = (validate: (data: Record<string, unknown>) => unknown) => {
+      try {
+        validate(bothInvalid);
+        return [];
+      } catch (error) {
+        return ((error as { data: { instancePath: string }[] }).data ?? []).map(
+          ({ instancePath }) => instancePath,
+        );
+      }
+    };
+
+    // Off by default, and it has to stay that way: validationErrorsAreSupported
+    // is all-or-nothing on the returned paths, so reporting more errors changes
+    // how every existing consumer behaves.
+    test('Should report only the first failure by default', () => {
+      expect(paths(validateInput(twoFieldSchema))).toEqual(['/one']);
+    });
+
+    test('Should report every failure when opted in', () => {
+      expect(paths(validateInput(twoFieldSchema, { allErrors: true }))).toEqual(
+        ['/one', '/two'],
+      );
+    });
+
+    // The instances are cached per option pair; asking for one combination must
+    // not hand back the instance compiled for another.
+    test('Should keep the setting separate from coerce', () => {
+      expect(
+        paths(validateInput(twoFieldSchema, { coerce: true, allErrors: true })),
+      ).toEqual(['/one', '/two']);
+      expect(paths(validateInput(twoFieldSchema, { coerce: true }))).toEqual([
+        '/one',
+      ]);
+    });
+  });
 });

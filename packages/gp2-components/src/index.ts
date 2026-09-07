@@ -22,6 +22,7 @@ export {
   BiographyModal,
   CardTable,
   ContactInformationModal,
+  contactInformationServerErrorPaths,
   ContributingCohortsModal,
   DashboardHeader,
   DashboardUserCard,

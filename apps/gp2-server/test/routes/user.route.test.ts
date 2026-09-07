@@ -383,14 +383,27 @@ describe('/users/ route', () => {
           });
         expect(response.status).toBe(200);
       });
-      test('does not allow invalid secondary email', async () => {
+      test('allows a valid secondary email', async () => {
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
-          .send({
-            alternativeEmail: 'invalid-email',
-          });
-        expect(response.status).toBe(400);
+          .send({ alternativeEmail: 'name@gmail.com' });
+
+        expect(response.status).toBe(200);
       });
+
+      // test@test and the apostrophe reached Contentful before and failed at the
+      // write with no field named: the GP2 content model requires a dot in the
+      // domain and disallows the apostrophe that CRN permits.
+      test.each(['invalid-email', 'test@test', "o'brien@x.com"])(
+        'does not allow %p as a secondary email',
+        async (alternativeEmail) => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ alternativeEmail });
+
+          expect(response.status).toBe(400);
+        },
+      );
 
       describe('telephone', () => {
         test('allow valid inputs', async () => {

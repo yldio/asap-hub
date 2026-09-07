@@ -1,3 +1,4 @@
+import { toServerValidationError } from '@asap-hub/frontend-utils';
 import {
   ManuscriptVersionResponse,
   researchOutputDocumentTypeToType,
@@ -43,7 +44,6 @@ import {
   useRelatedEventsSuggestions,
   useRelatedResearchSuggestions,
   useResearchTags,
-  toServerValidationError,
 } from '../shared-state';
 
 type UserBasedOutputProps = {

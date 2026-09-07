@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import {
-  emailExpression,
+  gp2EmailExpression,
   orcidExpression,
   telephoneCountryExpression,
   telephoneNumberExpression,
@@ -69,10 +69,11 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
     },
     onboarded: { type: 'boolean', nullable: true },
+    // Defence in depth behind the form, which validates against the same rule.
     alternativeEmail: {
       type: 'string',
       nullable: true,
-      pattern: emailExpression,
+      pattern: gp2EmailExpression,
     },
     telephone: {
       nullable: true,

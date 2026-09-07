@@ -1,3 +1,4 @@
+import { toServerValidationError } from '@asap-hub/frontend-utils';
 import {
   ManuscriptVersionResponse,
   researchOutputDocumentTypeToType,
@@ -48,7 +49,6 @@ import {
   useRelatedResearchSuggestions,
   useResearchTags,
   useTeamSuggestions,
-  toServerValidationError,
 } from '../shared-state';
 import { useTeamById } from '../network/teams/state';
 

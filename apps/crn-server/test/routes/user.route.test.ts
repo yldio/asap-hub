@@ -415,7 +415,6 @@ describe('/users/ route', () => {
       const stringFields: StringKeys<UserPatchRequest> = [
         'biography',
         'city',
-        'contactEmail',
         'country',
         'expertiseAndResourceDescription',
         'firstName',
@@ -446,6 +445,63 @@ describe('/users/ route', () => {
               .send({ [parameter]: null });
 
             expect(response.status).toBe(200);
+          });
+        },
+      );
+
+      test('Should report both email fields when both are invalid', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({ contactEmail: 'test@test', personalEmail: 'a@b' });
+
+        expect(response.status).toBe(400);
+        expect(
+          response.body.data.map(
+            ({ instancePath }: { instancePath: string }) => instancePath,
+          ),
+        ).toEqual(expect.arrayContaining(['/contactEmail', '/personalEmail']));
+      });
+
+      describe.each(['contactEmail', 'personalEmail'])(
+        'For the %s field',
+        (parameter) => {
+          test.each(['', null, 'name@gmail.com', "o'brien@x.com"])(
+            'Should accept %p',
+            async (value) => {
+              const response = await supertest(appWithMockedAuth)
+                .patch(`/users/${userId}`)
+                .send({ [parameter]: value });
+
+              expect(response.status).toBe(200);
+            },
+          );
+
+          test.each([
+            ['test@test', 'the content model requires a dot in the domain'],
+            ['a!b@c.com', 'the content model disallows ! in the local part'],
+            ['some random string', 'it is not an email at all'],
+            [`${'a'.repeat(250)}@gmail.com`, 'it exceeds the Symbol cap'],
+          ])('Should reject %p, because %s', async (value) => {
+            const response = await supertest(appWithMockedAuth)
+              .patch(`/users/${userId}`)
+              .send({ [parameter]: value });
+
+            expect(response.status).toBe(400);
+            expect(response.body.data).toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({ instancePath: `/${parameter}` }),
+              ]),
+            );
+          });
+
+          test('Should not reach the controller when the value is rejected', async () => {
+            userControllerMock.update.mockClear();
+
+            await supertest(appWithMockedAuth)
+              .patch(`/users/${userId}`)
+              .send({ [parameter]: 'test@test' });
+
+            expect(userControllerMock.update).not.toHaveBeenCalled();
           });
         },
       );

@@ -25,6 +25,7 @@ import {
 } from '../colors';
 import {
   binIcon,
+  InactiveBadgeIcon,
   crossIcon,
   InterestGroupsIcon,
   plusIcon,
@@ -35,7 +36,7 @@ import {
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
-import { noop } from '../utils';
+import { noop, pluralizeTeams } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
 import {
@@ -443,6 +444,24 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       return [...current, ...additions];
     });
 
+  // Upsert kept separate from addTeams so the search and interest-group paths
+  // stay append-only: an existing row keeps its attendanceId and takes the
+  // uploaded status; a new team is appended.
+  const applyUploadedTeams = (teamsToApply: EventAttendanceTeam[]) => {
+    setRows((current) => {
+      const byId = new Map(current.map((team) => [team.teamId, team]));
+      teamsToApply.forEach((team) =>
+        byId.set(team.teamId, { ...byId.get(team.teamId), ...team }),
+      );
+      return [...byId.values()];
+    });
+    setManualTeamIds((prev) => {
+      const next = new Set(prev);
+      teamsToApply.forEach((team) => next.add(team.teamId));
+      return next;
+    });
+  };
+
   const addManualTeams = (teamsToAdd: EventAttendanceTeam[]) => {
     addTeams(teamsToAdd);
     setManualTeamIds((prev) => {
@@ -469,7 +488,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     uploadedTeams: EventAttendanceTeam[],
     files: File[],
   ) => {
-    addManualTeams(uploadedTeams);
+    applyUploadedTeams(uploadedTeams);
     const addedDate = new Date().toLocaleDateString('en-GB');
     setSourceFiles((current) => [
       ...current,
@@ -588,6 +607,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         onUploadList={onUploadList}
         onAddAttendees={handleUploadAddAttendees}
         onBack={() => setShowUploadList(false)}
+        currentTeamIds={new Set(rows.map((team) => team.teamId))}
       />
     );
   }
@@ -708,7 +728,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                         <span css={searchOptionMetaStyles}>
                           {allAdded
                             ? '• all teams already added'
-                            : `• adds ${option.teams.length} teams`}
+                            : `• adds ${pluralizeTeams(option.teams.length)}`}
                         </span>
                       )}
                     </span>
@@ -802,6 +822,7 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                       >
                         {team.teamName}
                       </Link>
+                      {team.isTeamInactive && <InactiveBadgeIcon />}
                     </span>
                     <span css={attendanceCellStyles}>
                       <span css={attendanceSwitchStyles}>

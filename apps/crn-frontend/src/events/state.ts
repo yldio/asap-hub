@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { User } from '@asap-hub/auth';
 import {
   createQueryKeys,
@@ -21,7 +21,14 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
-import { getEvent, getEvents, patchEvent } from './api';
+import { teamQueryKeys } from '../network/teams/state';
+import {
+  getEvent,
+  getEvents,
+  getTeamsForMatching,
+  patchEvent,
+  teamsForMatchingOptions,
+} from './api';
 import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
@@ -95,4 +102,21 @@ export const useEvents = (
         items: [],
       }),
   }).data;
+};
+
+// fetchQuery rather than a hook subscription: the corpus is only needed once a
+// file is actually uploaded, and it must not suspend inside the modal.
+export const useTeamsForMatching = () => {
+  const { client } = useAlgolia();
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    () =>
+      queryClient.fetchQuery({
+        queryKey: teamQueryKeys.list(teamsForMatchingOptions),
+        queryFn: () => getTeamsForMatching(client),
+        staleTime: Infinity,
+      }),
+    [client, queryClient],
+  );
 };

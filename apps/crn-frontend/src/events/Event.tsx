@@ -24,11 +24,14 @@ import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { useState } from 'react';
 
 import { downloadEventSpeakers } from './export';
+import { matchTeamNames } from './match-team-names';
+import { parseTeamRows } from './parse-team-list';
 import {
   useEventById,
   useEventSpeakerGroups,
   usePatchEvent,
   useQuietRefreshEventById,
+  useTeamsForMatching,
 } from './state';
 
 const mapAttendanceTeams = (attendance: EventResponse['attendance'] = []) =>
@@ -51,6 +54,7 @@ const Event: React.FC = () => {
   const user = useCurrentUserCRN();
   const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const patchEvent = usePatchEvent(eventId);
+  const fetchTeamsForMatching = useTeamsForMatching();
 
   const hasFinished = useDateHasPassed(
     considerEndedAfter(event?.endDate || ''),
@@ -92,6 +96,13 @@ const Event: React.FC = () => {
           <EditEventAttendanceModal
             teams={teams}
             loadSearchOptions={async () => []}
+            onUploadList={async (files: File[]) => {
+              const [rows, corpus] = await Promise.all([
+                parseTeamRows(files),
+                fetchTeamsForMatching(),
+              ]);
+              return matchTeamNames(rows, corpus);
+            }}
             onSave={async (updatedTeams: EventAttendanceTeam[]) => {
               await patchEvent({
                 attendance: updatedTeams.map((team) => ({

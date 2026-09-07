@@ -3,21 +3,26 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, renderHook, waitFor } from '@testing-library/react';
 import { Component, ReactNode, Suspense } from 'react';
 
-import { createEventResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createTeamListItemResponse,
+} from '@asap-hub/fixtures';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvent, getEvents } from '../api';
+import { getEvent, getEvents, getTeamsForMatching } from '../api';
 import {
   eventQueryKeys,
   useEventById,
   useEvents,
   useEventSpeakerGroups,
   useQuietRefreshEventById,
+  useTeamsForMatching,
 } from '../state';
 
 jest.mock('../api', () => ({
   getEvent: jest.fn(),
   getEvents: jest.fn(),
+  getTeamsForMatching: jest.fn(),
   patchEvent: jest.fn(),
 }));
 
@@ -188,3 +193,38 @@ const EventsProbe = () => {
   useEvents(listOptions);
   return <>rendered</>;
 };
+
+describe('useTeamsForMatching', () => {
+  const mockGetTeamsForMatching = getTeamsForMatching as jest.MockedFunction<
+    typeof getTeamsForMatching
+  >;
+
+  beforeEach(() => {
+    mockGetTeamsForMatching.mockReset();
+    mockGetTeamsForMatching.mockResolvedValue([createTeamListItemResponse()]);
+  });
+
+  it('does not fetch the corpus until it is called', async () => {
+    const queryClient = createTestQueryClient();
+    renderHook(() => useTeamsForMatching(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(mockGetTeamsForMatching).not.toHaveBeenCalled());
+  });
+
+  it('fetches the corpus once and caches it across calls', async () => {
+    const queryClient = createTestQueryClient();
+    const { result } = renderHook(() => useTeamsForMatching(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(result.current).toBeDefined());
+
+    const first = await result.current();
+    const second = await result.current();
+
+    expect(first).toEqual(second);
+    expect(mockGetTeamsForMatching).toHaveBeenCalledTimes(1);
+  });
+});

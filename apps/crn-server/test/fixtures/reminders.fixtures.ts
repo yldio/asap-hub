@@ -667,6 +667,7 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   title: 'Contextual AI models for single-cell protein biology',
   status: 'Waiting for Report',
   previousStatus: null,
+  statusUpdatedTo: null,
   statusUpdatedAt: null,
   statusUpdatedBy: null,
   teamsCollection: {

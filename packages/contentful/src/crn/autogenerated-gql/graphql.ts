@@ -9573,6 +9573,7 @@ export type Manuscripts = Entry &
     status?: Maybe<Scalars['String']>;
     statusUpdatedAt?: Maybe<Scalars['DateTime']>;
     statusUpdatedBy?: Maybe<Users>;
+    statusUpdatedTo?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
     teamsCursorCollection?: Maybe<ManuscriptsTeamsCursorCollection>;
@@ -36673,7 +36674,11 @@ export type FetchRemindersQuery = {
       Maybe<
         Pick<
           Manuscripts,
-          'title' | 'status' | 'previousStatus' | 'statusUpdatedAt'
+          | 'title'
+          | 'status'
+          | 'previousStatus'
+          | 'statusUpdatedTo'
+          | 'statusUpdatedAt'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
           statusUpdatedBy?: Maybe<
@@ -67539,6 +67544,10 @@ export const FetchRemindersDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'previousStatus' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusUpdatedTo' },
                       },
                       {
                         kind: 'Field',

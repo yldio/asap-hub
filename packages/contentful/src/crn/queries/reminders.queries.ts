@@ -20,6 +20,7 @@ export const FETCH_REMINDERS = gql`
         title
         status
         previousStatus
+        statusUpdatedTo
         statusUpdatedAt
         statusUpdatedBy {
           sys {

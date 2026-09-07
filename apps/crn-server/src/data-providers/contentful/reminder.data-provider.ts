@@ -1257,6 +1257,7 @@ const getManuscriptRemindersFromQuery = (
       }
 
       if (
+        !hasResubmissionOverwrittenStatus(manuscriptItem) &&
         inLast7Days(manuscriptItem.statusUpdatedAt, timezone) &&
         isManuscriptStatusUpdatedByAnotherUser(manuscriptItem, userId) &&
         (isManuscriptAuthor(manuscriptFirstVersion, userId) ||
@@ -1577,6 +1578,25 @@ const createDiscussionRepliedToReminder = (
   };
 };
 
+/**
+ * A resubmission overwrites `status` without touching the status-change audit
+ * fields, so `statusUpdatedTo` — written only by an actual status change — is
+ * what the reminder must report. Entries changed before that field existed fall
+ * back to the live status.
+ */
+const getStatusUpdatedTo = (manuscript: ManuscriptItem): ManuscriptStatus =>
+  (manuscript.statusUpdatedTo ?? manuscript.status) as ManuscriptStatus;
+
+/**
+ * Without `statusUpdatedTo` there is no way to tell the change apart from the
+ * resubmission that overwrote the status, so the reminder is dropped rather
+ * than reporting a transition nobody made.
+ */
+const hasResubmissionOverwrittenStatus = (
+  manuscript: ManuscriptItem,
+): boolean =>
+  !manuscript.statusUpdatedTo && manuscript.status === 'Manuscript Resubmitted';
+
 const createManuscriptStatusUpdatedReminder = (
   manuscript: ValidManuscriptItem,
 ): ManuscriptStatusUpdatedReminder => ({
@@ -1586,7 +1606,7 @@ const createManuscriptStatusUpdatedReminder = (
   data: {
     manuscriptId: manuscript.sys.id,
     title: manuscript.title || '',
-    status: manuscript.status as ManuscriptStatus,
+    status: getStatusUpdatedTo(manuscript),
     previousStatus: manuscript.previousStatus as ManuscriptStatus,
     teams: getManuscriptAssociationName(manuscript),
     updatedBy: `${manuscript.statusUpdatedBy?.firstName} ${manuscript.statusUpdatedBy?.lastName}`,

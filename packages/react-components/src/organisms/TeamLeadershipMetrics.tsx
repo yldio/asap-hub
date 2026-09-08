@@ -1,4 +1,4 @@
-import MetricsCard, { Metric } from './MetricsCard';
+import MetricsCard, { BooleanStatus, Metric } from './MetricsCard';
 
 export type TeamLeadershipMetricsProps = {
   workingGroupLead: boolean;
@@ -13,7 +13,7 @@ const TeamLeadershipMetrics: React.FC<TeamLeadershipMetricsProps> = ({
     {
       id: 'workingGroup',
       name: 'Working Group(s) Lead',
-      status: workingGroupLead ? 'Y' : 'N',
+      status: <BooleanStatus value={workingGroupLead} />,
       philosophy:
         'ASAP believes in ensuring that credit is given to contributors.',
       definition:
@@ -22,7 +22,7 @@ const TeamLeadershipMetrics: React.FC<TeamLeadershipMetricsProps> = ({
     {
       id: 'interestGroup',
       name: 'Interest Group(s) Lead',
-      status: interestGroupLead ? 'Y' : 'N',
+      status: <BooleanStatus value={interestGroupLead} />,
       philosophy:
         'ASAP believes in ensuring that credit is given to contributors.',
       definition:

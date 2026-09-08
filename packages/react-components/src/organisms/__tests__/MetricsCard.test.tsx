@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import MetricsCard, { Metric } from '../MetricsCard';
+import MetricsCard, { Metric, MoodStatus } from '../MetricsCard';
 
 const metrics: Metric[] = [
   {
@@ -115,5 +115,27 @@ describe('MetricsCard', () => {
     } finally {
       restoreScrollHeight();
     }
+  });
+});
+
+describe('MoodStatus', () => {
+  it('exposes the mood label as an accessible name on the status icon', () => {
+    render(<MoodStatus percentage={95} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Your team is doing an outstanding job! Keep up the good work!',
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('exposes the limited data label when percentage is null', () => {
+    render(<MoodStatus percentage={null} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'There is limited available data to calculate this metric at this time.',
+      }),
+    ).toBeInTheDocument();
   });
 });

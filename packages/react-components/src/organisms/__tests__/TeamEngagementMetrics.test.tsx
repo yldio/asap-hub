@@ -15,7 +15,7 @@ describe('TeamEngagementMetrics', () => {
       <TeamEngagementMetrics
         speakerDiversity={95}
         traineePresentations={84}
-        meetingRepAttendance={null}
+        meetingRepAttendance={{ percentage: null, limitedData: true }}
       />,
     );
 
@@ -30,5 +30,18 @@ describe('TeamEngagementMetrics', () => {
     expect(getPerformanceMoodLabel).toHaveBeenNthCalledWith(1, 95, false);
     expect(getPerformanceMoodLabel).toHaveBeenNthCalledWith(2, 84, false);
     expect(getPerformanceMoodLabel).toHaveBeenNthCalledWith(3, null, true);
+  });
+
+  it('handles limited data values', () => {
+    render(
+      <TeamEngagementMetrics
+        speakerDiversity={95}
+        traineePresentations={84}
+        meetingRepAttendance={{ percentage: null, limitedData: true }}
+      />,
+    );
+
+    expect(getPerformanceMoodIcon).toHaveBeenLastCalledWith(null, true);
+    expect(getPerformanceMoodLabel).toHaveBeenLastCalledWith(null, true);
   });
 });

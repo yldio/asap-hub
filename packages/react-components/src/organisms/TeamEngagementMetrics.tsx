@@ -3,7 +3,10 @@ import MetricsCard, { Metric, MoodStatus } from './MetricsCard';
 export type TeamEngagementMetricsProps = {
   speakerDiversity: number | null;
   traineePresentations: number | null;
-  meetingRepAttendance: number | null;
+  meetingRepAttendance: {
+    percentage: number | null;
+    limitedData: boolean;
+  };
 };
 
 const TeamEngagementMetrics: React.FC<TeamEngagementMetricsProps> = ({
@@ -33,7 +36,12 @@ const TeamEngagementMetrics: React.FC<TeamEngagementMetricsProps> = ({
     {
       id: 'meetingRepAttendance',
       name: 'Meeting Rep Attendance',
-      status: <MoodStatus percentage={meetingRepAttendance} />,
+      status: (
+        <MoodStatus
+          percentage={meetingRepAttendance.percentage}
+          limitedData={meetingRepAttendance.limitedData}
+        />
+      ),
       philosophy:
         'ASAP believes in fostering an environment where teams can share their work with others in the network. This sharing enables potential collaboration and can spark new ideas.',
       definition:

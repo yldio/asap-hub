@@ -1,4 +1,4 @@
-import MetricsCard, { Metric } from './MetricsCard';
+import MetricsCard, { BooleanStatus, Metric } from './MetricsCard';
 
 export type TeamAward = {
   id: string;
@@ -16,7 +16,7 @@ const TeamAwardMetrics: React.FC<TeamAwardMetricsProps> = ({ awards }) => {
   const metrics: Metric[] = awards.map((award) => ({
     id: award.id,
     name: award.name,
-    status: award.status ? 'Y' : 'N',
+    status: <BooleanStatus value={award.status} />,
     philosophy: award.philosophy,
     definition: award.metricDefinition,
   }));

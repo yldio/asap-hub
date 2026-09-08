@@ -129,13 +129,21 @@ export type Metric = {
   definition: string;
 };
 
-export const MoodStatus: React.FC<{ percentage: number | null }> = ({
-  percentage,
-}) => (
-  <Info icon={getPerformanceMoodIcon(percentage, percentage === null)}>
-    {getPerformanceMoodLabel(percentage, percentage === null)}
-  </Info>
+export const BooleanStatus: React.FC<{ value: boolean }> = ({ value }) => (
+  <>{value ? 'Y' : 'N'}</>
 );
+
+export const MoodStatus: React.FC<{
+  percentage: number | null;
+  limitedData?: boolean;
+}> = ({ percentage, limitedData = false }) => {
+  const label = getPerformanceMoodLabel(percentage, limitedData);
+  return (
+    <Info label={label} icon={getPerformanceMoodIcon(percentage, limitedData)}>
+      {label}
+    </Info>
+  );
+};
 
 const MetricDetails: React.FC<Pick<Metric, 'philosophy' | 'definition'>> = ({
   philosophy,

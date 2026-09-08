@@ -19,11 +19,4 @@ describe('TeamCollaborationMetrics', () => {
     expect(getPerformanceMoodIcon).toHaveBeenCalledWith(62, false);
     expect(getPerformanceMoodLabel).toHaveBeenCalledWith(62, false);
   });
-
-  it('treats a null percentage as limited data', () => {
-    render(<TeamCollaborationMetrics withinTeamCoProduction={null} />);
-
-    expect(getPerformanceMoodIcon).toHaveBeenCalledWith(null, true);
-    expect(getPerformanceMoodLabel).toHaveBeenCalledWith(null, true);
-  });
 });

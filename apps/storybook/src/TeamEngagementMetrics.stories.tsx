@@ -24,7 +24,7 @@ type Story = StoryObj<typeof TeamEngagementMetrics>;
 const props: TeamEngagementMetricsProps = {
   speakerDiversity: null,
   traineePresentations: null,
-  meetingRepAttendance: null,
+  meetingRepAttendance: { percentage: 0, limitedData: true },
 };
 
 export const Default: Story = {
@@ -35,7 +35,7 @@ export const WithScores: Story = {
   args: {
     speakerDiversity: 95,
     traineePresentations: 84,
-    meetingRepAttendance: 42,
+    meetingRepAttendance: { percentage: 42, limitedData: false },
   },
 };
 

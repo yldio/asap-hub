@@ -23,7 +23,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $IMAGE_NAME . -f .github/Dockerfile --target integration
-          GHCR_IMAGE_NAME=ghcr.io/yldio/$IMAGE_NAME
+          GHCR_IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:$IMAGE_TAG
           docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:latest
           echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_ENV

@@ -1331,18 +1331,18 @@ describe('User data provider', () => {
 
         await userDataProvider.update('123', {
           social: {
-            github: 'yldio',
-            twitter: 'yldio',
+            github: 'asaphub',
+            twitter: 'asaphub',
           },
         });
 
         expect(patchAndPublish).toHaveBeenCalledWith(
           socialsEntry,
-          expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+          expect.objectContaining({ github: 'asaphub', twitter: 'asaphub' }),
         );
         expect(patchAndPublish).not.toHaveBeenCalledWith(
           entry,
-          expect.objectContaining({ github: 'yldio' }),
+          expect.objectContaining({ github: 'asaphub' }),
         );
       });
 
@@ -1358,7 +1358,7 @@ describe('User data provider', () => {
         environmentMock.createEntryWithId.mockResolvedValueOnce(createdEntry);
 
         await userDataProvider.update('123', {
-          social: { github: 'yldio' },
+          social: { github: 'asaphub' },
         });
 
         expect(environmentMock.createEntryWithId).toHaveBeenCalledWith(
@@ -1366,7 +1366,7 @@ describe('User data provider', () => {
           'socials-entry-id',
           expect.objectContaining({
             fields: expect.objectContaining({
-              github: { 'en-US': 'yldio' },
+              github: { 'en-US': 'asaphub' },
             }),
           }),
         );
@@ -1382,7 +1382,7 @@ describe('User data provider', () => {
         );
 
         await userDataProvider.update('123', {
-          social: { github: 'yldio' },
+          social: { github: 'asaphub' },
         });
 
         expect(environmentMock.getEntry).toHaveBeenCalledWith(
@@ -1391,7 +1391,7 @@ describe('User data provider', () => {
         expect(environmentMock.createEntryWithId).not.toHaveBeenCalled();
         expect(existingEntry.update).toHaveBeenCalled();
         expect(existingEntry.fields).toEqual(
-          expect.objectContaining({ github: { 'en-US': 'yldio' } }),
+          expect.objectContaining({ github: { 'en-US': 'asaphub' } }),
         );
       });
 
@@ -1408,8 +1408,8 @@ describe('User data provider', () => {
 
         await userDataProvider.update('123', {
           social: {
-            github: 'yldio',
-            twitter: 'yldio',
+            github: 'asaphub',
+            twitter: 'asaphub',
           },
         });
 
@@ -1420,8 +1420,8 @@ describe('User data provider', () => {
           linkedIn: null,
           researchGate: null,
           researcherId: null,
-          github: 'yldio',
-          twitter: 'yldio',
+          github: 'asaphub',
+          twitter: 'asaphub',
           blueSky: null,
         });
       });
@@ -1766,8 +1766,8 @@ describe('User data provider', () => {
           '123',
           {
             social: {
-              github: 'yldio',
-              twitter: 'yldio',
+              github: 'asaphub',
+              twitter: 'asaphub',
             },
           },
           { suppressConflict: true },
@@ -1775,11 +1775,11 @@ describe('User data provider', () => {
 
         expect(patchAndPublish).toHaveBeenCalledWith(
           socialsEntry,
-          expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+          expect.objectContaining({ github: 'asaphub', twitter: 'asaphub' }),
         );
         expect(patchAndPublishConflict).not.toHaveBeenCalledWith(
           entry,
-          expect.objectContaining({ github: 'yldio' }),
+          expect.objectContaining({ github: 'asaphub' }),
         );
       });
       test('maps avatar value to a linked resource', async () => {

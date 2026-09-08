@@ -50,7 +50,7 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
             displayName: 'Filipe Pinheiro',
             firstName: 'Filipe',
             lastName: 'Pinheiro',
-            email: 'filipe@yld.io',
+            email: 'filipe@example.com',
             teams: [
               {
                 id: 'team-id-2',
@@ -67,13 +67,13 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
             displayName: 'João Tiago',
             firstName: 'João',
             lastName: 'Tiago',
-            email: 'joao.tiago@yld.io',
+            email: 'joao.tiago@example.com',
             teams: [],
           },
           role: 'Project Manager',
         },
       ],
-      contactEmails: ['joao.tiago@yld.io'],
+      contactEmails: ['joao.tiago@example.com'],
       calendars: [
         {
           id: 'hub@asap.science',

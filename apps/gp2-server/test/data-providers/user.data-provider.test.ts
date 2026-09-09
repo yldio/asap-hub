@@ -2712,13 +2712,13 @@ describe('User data provider', () => {
     test('flattens `social` values', async () => {
       await userDataProvider.update('123', {
         social: {
-          github: 'yldio',
-          twitter: 'yldio',
+          github: 'asaphub',
+          twitter: 'asaphub',
         },
       });
       expect(patchAndPublish).toHaveBeenCalledWith(
         entry,
-        expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+        expect.objectContaining({ github: 'asaphub', twitter: 'asaphub' }),
       );
       expect(patchAndPublish).toHaveBeenCalledWith(
         entry,
@@ -2729,21 +2729,21 @@ describe('User data provider', () => {
     test('includes undefined `social` values as null to allow unsetting', async () => {
       await userDataProvider.update('123', {
         social: {
-          github: 'yldio',
-          twitter: 'yldio',
+          github: 'asaphub',
+          twitter: 'asaphub',
         },
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         blog: null,
         blueSky: null,
-        github: 'yldio',
+        github: 'asaphub',
         googleScholar: null,
         linkedIn: null,
         orcid: null,
         researcherId: null,
         researchGate: null,
         threads: null,
-        twitter: 'yldio',
+        twitter: 'asaphub',
       });
     });
     test('maps avatar value to a linked resource', async () => {

@@ -240,7 +240,7 @@ const getGoogleEvent = (): calendarV3.Schema$Event => ({
   summary: 'Event Title',
   description: 'Event Description',
   creator: {
-    email: 'yld@asap.science',
+    email: 'calendar@asap.science',
   },
   organizer: {
     email: 'google-calendar-id',

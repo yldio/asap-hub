@@ -597,13 +597,13 @@ describe('Email Notification Service', () => {
       await emailNotificationService.sendEmailNotification(
         'discussion_created_by_grantee',
         manuscript.sys.id,
-        'tester@yld.com',
+        'tester@example.com',
         { id: 'discussion-id-1', userName: 'Jane Doe' },
       );
 
       expect(mockedPostmark).toHaveBeenCalledTimes(1);
       expect(mockedPostmark).toHaveBeenCalledWith(
-        expect.objectContaining({ To: 'tester@yld.com' }),
+        expect.objectContaining({ To: 'tester@example.com' }),
       );
     });
 

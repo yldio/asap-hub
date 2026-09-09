@@ -9,7 +9,7 @@ async function createReleaseAndUpload() {
   }
   const cli = new SentryCli(null, {
     authToken: process.env.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN,
-    org: 'yld',
+    org: 'coalitionforaligningscience',
     project: 'asap-hub-frontend',
   });
   try {

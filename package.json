@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yldio/asap-hub.git"
+    "url": "https://github.com/mjff-eng/asap-hub.git"
   },
   "scripts": {
     "algolia:clear-index": "yarn workspace @asap-hub/asap-cli algolia:clear-index",

@@ -656,7 +656,6 @@ export class ManuscriptContentfulDataProvider
       published = await patchAndPublish(manuscriptEntry, {
         status: manuscriptData.status,
         previousStatus,
-        statusUpdatedTo: manuscriptData.status,
         statusUpdatedBy: getLinkEntity(userId),
         statusUpdatedAt: new Date(),
       });

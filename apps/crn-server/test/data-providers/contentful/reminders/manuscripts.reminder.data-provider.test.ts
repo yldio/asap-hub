@@ -579,10 +579,14 @@ describe('Reminders data provider', () => {
         );
       });
 
-      describe('New status of the change', () => {
-        const getManuscriptWithRecentStatusChange = () => {
+      describe('Status change superseded by a resubmission', () => {
+        // Once the manuscript is resubmitted, the recorded status change no
+        // longer describes where the manuscript stands, so the reminder is
+        // dropped. The resubmission has its own reminder.
+        const getResubmittedManuscriptWithRecentStatusChange = () => {
           const manuscript = getContentfulReminderManuscriptCollectionItem()!;
           manuscript.previousStatus = 'Waiting for Report';
+          manuscript.status = 'Manuscript Resubmitted';
           manuscript.statusUpdatedAt = '2025-01-08T10:00:00.000Z';
           manuscript.statusUpdatedBy = {
             firstName: 'Jannet',
@@ -591,56 +595,61 @@ describe('Reminders data provider', () => {
               id: 'user-who-updated-manuscript-status',
             },
           };
-          manuscript.teamsCollection!.items[0]!.displayName = 'ASAP';
+          manuscript.versionsCollection = {
+            total: 2,
+            items: [
+              getManuscriptVersion({
+                count: 1,
+                firstAuthorIds: ['first-author-user'],
+                additionalAuthorIds: [],
+                correspondingAuthorIds: [],
+                createdById: 'user-who-created-manuscript',
+                createdByFirstName: 'Jane',
+                createdByLastName: 'Doe',
+              }),
+              getManuscriptVersion({
+                count: 2,
+                firstAuthorIds: ['first-author-user'],
+                additionalAuthorIds: [],
+                correspondingAuthorIds: [],
+                createdById: 'user-who-resubmitted-manuscript',
+                createdByFirstName: 'John',
+                createdByLastName: 'Doe',
+              }),
+            ],
+          };
 
           return manuscript;
         };
 
-        const fetchAsFirstAuthor = () =>
-          remindersDataProvider.fetch({
+        test('the author should not see the status updated reminder', async () => {
+          mockContentfulGraphqlResponse(
+            getResubmittedManuscriptWithRecentStatusChange(),
+          );
+
+          const result = await remindersDataProvider.fetch({
             userId: 'first-author-user',
             timezone,
           });
 
-        test.each`
-          scenario                                                 | status                        | statusUpdatedTo               | reportedStatus
-          ${'a resubmission overwrote the status'}                 | ${'Manuscript Resubmitted'}   | ${'Review Compliance Report'} | ${'Review Compliance Report'}
-          ${'the status still matches the change'}                 | ${'Review Compliance Report'} | ${'Review Compliance Report'} | ${'Review Compliance Report'}
-          ${'the change predates the status updated to field'}     | ${'Review Compliance Report'} | ${null}                       | ${'Review Compliance Report'}
-          ${'the change deliberately set the resubmission status'} | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}   | ${'Manuscript Resubmitted'}
-        `(
-          'reports $reportedStatus as the new status when $scenario',
-          async ({ status, statusUpdatedTo, reportedStatus }) => {
-            const manuscript = getManuscriptWithRecentStatusChange();
-            manuscript.status = status;
-            manuscript.statusUpdatedTo = statusUpdatedTo;
-
-            mockContentfulGraphqlResponse(manuscript);
-
-            const expectedStatusUpdatedReminder =
-              getManuscriptStatusUpdatedReminder();
-            expectedStatusUpdatedReminder.data.status = reportedStatus;
-
-            const result = await fetchAsFirstAuthor();
-            expect(result.items).toEqual(
-              expect.arrayContaining([expectedStatusUpdatedReminder]),
-            );
-          },
-        );
-
-        test('does not report a resubmission as a status change when the change predates the status updated to field', async () => {
-          const manuscript = getManuscriptWithRecentStatusChange();
-          manuscript.status = 'Manuscript Resubmitted';
-          manuscript.statusUpdatedTo = null;
-
-          mockContentfulGraphqlResponse(manuscript);
-
-          const result = await fetchAsFirstAuthor();
           expect(
             result.items.some(
               (item) => item.type === 'Manuscript Status Updated',
             ),
           ).toBe(false);
+        });
+
+        test('the author should still see the manuscript resubmitted reminder', async () => {
+          mockContentfulGraphqlResponse(
+            getResubmittedManuscriptWithRecentStatusChange(),
+          );
+
+          const result = await remindersDataProvider.fetch({
+            userId: 'first-author-user',
+            timezone,
+          });
+
+          expect(result.items).toEqual([getManuscriptResubmittedReminder()]);
         });
       });
     });

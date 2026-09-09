@@ -6464,7 +6464,6 @@ type Manuscripts implements Entry & _Node {
   status(locale: String, useFallbackLocale: Boolean): String
   statusUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   statusUpdatedBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
-  statusUpdatedTo(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TeamsFilter): ManuscriptsTeamsCollection
   teamsCursorCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TeamsFilter): ManuscriptsTeamsCursorCollection

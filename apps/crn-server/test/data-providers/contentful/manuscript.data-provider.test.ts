@@ -403,11 +403,6 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
-          path: '/fields/statusUpdatedTo',
-          value: { 'en-US': 'Review Compliance Report' },
-        },
-        {
-          op: 'add',
           path: '/fields/statusUpdatedBy',
           value: {
             'en-US': {

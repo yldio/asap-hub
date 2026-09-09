@@ -1578,12 +1578,6 @@ const createDiscussionRepliedToReminder = (
   };
 };
 
-/**
- * A resubmission overwrites `status` without touching the status-change audit
- * fields, so the recorded change no longer describes where the manuscript
- * stands. The resubmission has its own reminder, which is the one worth
- * showing.
- */
 const isStatusSupersededByResubmission = (
   manuscript: ManuscriptItem,
 ): boolean => manuscript.status === 'Manuscript Resubmitted';

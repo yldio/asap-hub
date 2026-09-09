@@ -9,15 +9,17 @@ async function createReleaseAndUpload() {
   }
   const cli = new SentryCli(null, {
     authToken: process.env.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN,
-    org: 'coalitionforaligningscience',
+    // numeric org id: immune to slug renames
+    org: '850903',
     project: 'asap-hub-frontend',
   });
   try {
     const release = process.env.FRONTEND_RELEASE;
     console.log('Creating sentry release ' + release);
     await cli.releases.new(release);
+    console.log('Associating commits');
+    await cli.releases.setCommits(release, { auto: true, ignoreMissing: true });
     console.log('Uploading source maps');
-    cli.releases.setCommits(release, { auto: true });
     await cli.releases.uploadSourceMaps(release, {
       include: ['build/static/js'],
       urlPrefix: '~/static/js',

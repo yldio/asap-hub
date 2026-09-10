@@ -143,6 +143,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/contentful-app-extensions/event-additional-materials"\
     },\
     {\
+      "name": "@asap-hub/contentful-app-event-attendance",\
+      "reference": "workspace:packages/contentful-app-extensions/event-attendance"\
+    },\
+    {\
       "name": "@asap-hub/contentful-app-event-custom-validation",\
       "reference": "workspace:packages/contentful-app-extensions/event-custom-validation"\
     },\
@@ -277,6 +281,7 @@ const RAW_RUNTIME_STATE =
     ["@asap-hub/contentful-app-date-field-as-last-published-at", ["workspace:packages/contentful-app-extensions/date-field-as-last-published-at"]],\
     ["@asap-hub/contentful-app-disabled-fields", ["workspace:packages/contentful-app-extensions/disabled-fields"]],\
     ["@asap-hub/contentful-app-event-additional-materials", ["workspace:packages/contentful-app-extensions/event-additional-materials"]],\
+    ["@asap-hub/contentful-app-event-attendance", ["workspace:packages/contentful-app-extensions/event-attendance"]],\
     ["@asap-hub/contentful-app-event-custom-validation", ["workspace:packages/contentful-app-extensions/event-custom-validation"]],\
     ["@asap-hub/contentful-app-event-speakers-gp2", ["workspace:packages/contentful-app-extensions/event-speakers-gp2"]],\
     ["@asap-hub/contentful-app-event-speakers-title", ["workspace:packages/contentful-app-extensions/event-speakers-title"]],\
@@ -466,6 +471,10 @@ const RAW_RUNTIME_STATE =
     [\
       "@asap-hub/contentful-app-event-additional-materials",\
       "workspace:packages/contentful-app-extensions/event-additional-materials"\
+    ],\
+    [\
+      "@asap-hub/contentful-app-event-attendance",\
+      "workspace:packages/contentful-app-extensions/event-attendance"\
     ],\
     [\
       "@asap-hub/contentful-app-event-custom-validation",\
@@ -12299,6 +12308,36 @@ const RAW_RUNTIME_STATE =
           ["@contentful/app-sdk", "npm:4.51.0"],\
           ["@contentful/f36-components", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:4.81.1"],\
           ["@contentful/f36-tokens", "npm:4.2.0"],\
+          ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.23"],\
+          ["@testing-library/dom", "npm:10.4.1"],\
+          ["@testing-library/jest-dom", "npm:6.9.1"],\
+          ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.2"],\
+          ["@types/jest", "npm:29.5.14"],\
+          ["@types/node", "npm:20.10.5"],\
+          ["@types/react", "npm:18.3.12"],\
+          ["@types/react-dom", "npm:18.3.1"],\
+          ["contentful-management", "npm:10.46.4"],\
+          ["cross-env", "npm:7.0.3"],\
+          ["emotion", "npm:10.0.27"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
+          ["react-scripts", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:5.0.1"],\
+          ["typescript", "patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@asap-hub/contentful-app-event-attendance", [\
+      ["workspace:packages/contentful-app-extensions/event-attendance", {\
+        "packageLocation": "./packages/contentful-app-extensions/event-attendance/",\
+        "packageDependencies": [\
+          ["@asap-hub/contentful-app-event-attendance", "workspace:packages/contentful-app-extensions/event-attendance"],\
+          ["@contentful/app-scripts", "npm:1.33.2"],\
+          ["@contentful/app-sdk", "npm:4.51.0"],\
+          ["@contentful/f36-components", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:4.81.1"],\
+          ["@contentful/f36-tokens", "npm:4.2.0"],\
+          ["@contentful/field-editor-reference", "virtual:19c9f708eca3d47369c1a0ea590c8ca8f7067323538872cc7586d47ecab0ec157f1339899ca30aae318e9507d0d5eb8339ded949aeb54107c3939c310f8690d3#npm:5.31.2"],\
+          ["@contentful/field-editor-shared", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:1.8.0"],\
           ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.23"],\
           ["@testing-library/dom", "npm:10.4.1"],\
           ["@testing-library/jest-dom", "npm:6.9.1"],\

@@ -7,11 +7,7 @@ import {
   CustomEntityCardProps,
   useEntity,
 } from '@contentful/field-editor-reference';
-import {
-  useSDK,
-  useCMA,
-  useAutoResizer,
-} from '@contentful/react-apps-toolkit';
+import { useSDK, useCMA, useAutoResizer } from '@contentful/react-apps-toolkit';
 import Field, { CustomCard } from '../../locations/Field';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
@@ -179,13 +175,19 @@ describe('Field component', () => {
           });
         }
         if (entryId === 'join-1') {
-          return Promise.resolve({ fields: { team: { 'en-US': link('team-1') } } });
+          return Promise.resolve({
+            fields: { team: { 'en-US': link('team-1') } },
+          });
         }
         if (entryId === 'join-2') {
-          return Promise.resolve({ fields: { team: { 'en-US': link('team-2') } } });
+          return Promise.resolve({
+            fields: { team: { 'en-US': link('team-2') } },
+          });
         }
         if (entryId === 'existing-att') {
-          return Promise.resolve({ fields: { team: { 'en-US': link('team-1') } } });
+          return Promise.resolve({
+            fields: { team: { 'en-US': link('team-1') } },
+          });
         }
         return Promise.resolve({ fields: {} });
       });

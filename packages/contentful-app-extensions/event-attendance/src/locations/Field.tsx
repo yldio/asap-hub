@@ -19,11 +19,7 @@ import {
   formatRelativeDateTime,
 } from '@contentful/f36-components';
 import { FieldExtensionSDK, Entry, Link } from '@contentful/app-sdk';
-import {
-  useSDK,
-  useCMA,
-  useAutoResizer,
-} from '@contentful/react-apps-toolkit';
+import { useSDK, useCMA, useAutoResizer } from '@contentful/react-apps-toolkit';
 
 const LOCALE = 'en-US';
 
@@ -76,9 +72,7 @@ const AttendanceCard = ({
       status={status}
     >
       <Heading marginBottom="none">{data.fields.displayName?.[LOCALE]}</Heading>
-      {attended !== null && (
-        <Text as="p">{attended ? 'Yes' : 'No'}</Text>
-      )}
+      {attended !== null && <Text as="p">{attended ? 'Yes' : 'No'}</Text>}
       <Stack spacing="spacingXs" marginTop="spacingXs">
         {interestGroupId && <InterestGroupBadge id={interestGroupId} />}
         {inactiveSince && (
@@ -185,7 +179,9 @@ const Field = () => {
         joinLinks.map((link) => cma.entry.get({ entryId: link.sys.id })),
       );
       const teamIds = joins
-        .map((join) => join.fields.team?.[LOCALE]?.sys?.id as string | undefined)
+        .map(
+          (join) => join.fields.team?.[LOCALE]?.sys?.id as string | undefined,
+        )
         .filter((id): id is string => Boolean(id));
 
       const currentLinks = getFieldLinks(sdk.field.getValue());

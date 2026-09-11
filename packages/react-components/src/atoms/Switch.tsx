@@ -1,5 +1,6 @@
 import { css, Theme } from '@emotion/react';
 import { error500, fern, neutral800, pearl, steel } from '../colors';
+import { mobileScreen } from '../pixels';
 import { noop } from '../utils';
 
 export type SwitchSize = 'default' | 'large';
@@ -27,6 +28,17 @@ const sizes = {
     knobColor: pearl.rgb,
     travel: '27.82px',
   },
+} as const;
+
+// The larger toggle shrinks on mobile, where the attendee rows have less room.
+const largeMobileGeometry = {
+  width: '35px',
+  height: '16.47px',
+  borderRadius: '10.2941px',
+  knobSize: '12.04px',
+  knobTop: '2.06px',
+  knobLeft: '1.84px',
+  travel: '19.09px',
 } as const;
 
 const toggleStyles = (
@@ -81,6 +93,25 @@ const toggleStyles = (
         backgroundColor: geometry.knobColor,
       },
     },
+
+    ...(isLarge
+      ? {
+          [`@media (max-width: ${mobileScreen.max}px)`]: {
+            width: largeMobileGeometry.width,
+            height: largeMobileGeometry.height,
+            borderRadius: largeMobileGeometry.borderRadius,
+            '::before': {
+              top: largeMobileGeometry.knobTop,
+              left: largeMobileGeometry.knobLeft,
+              width: largeMobileGeometry.knobSize,
+              height: largeMobileGeometry.knobSize,
+            },
+            ':checked::before': {
+              transform: `translateX(${largeMobileGeometry.travel})`,
+            },
+          },
+        }
+      : {}),
   });
 };
 

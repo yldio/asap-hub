@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { GradientProgressBar } from '../atoms';
 import { attendanceGradient } from '../atoms/findingsGradient';
 import { neutral200, neutral1000, steel } from '../colors';
-import { rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const containerStyles = css({
   boxSizing: 'border-box',
@@ -30,6 +30,11 @@ const valueStyles = css({
   fontSize: rem(30),
   lineHeight: rem(40),
   color: neutral1000.rgb,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontFamily: 'inherit',
+    fontSize: rem(21),
+    lineHeight: rem(32),
+  },
 });
 
 const dividerStyles = css({

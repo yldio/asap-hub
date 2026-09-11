@@ -281,15 +281,12 @@ describe('EventAttendance', () => {
     expect(getByText('Show 2 more')).toBeInTheDocument();
   });
 
-  it('divides the rows of a section but not its last row', () => {
+  it('divides every team row', () => {
     const { getByText } = renderCard();
     const firstRow = getByText('Team Alpha').closest('tr') as HTMLElement;
     const lastRow = getByText('Team Beta').closest('tr') as HTMLElement;
     expect(firstRow).toHaveStyleRule('border-bottom', `1px solid ${steel.rgb}`);
-    expect(lastRow).not.toHaveStyleRule(
-      'border-bottom',
-      `1px solid ${steel.rgb}`,
-    );
+    expect(lastRow).toHaveStyleRule('border-bottom', `1px solid ${steel.rgb}`);
   });
 
   it('shrinks the attendance column to its header so teams get the space', () => {

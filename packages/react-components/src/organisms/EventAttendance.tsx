@@ -13,7 +13,7 @@ import {
   tickInCircleIcon,
 } from '../icons';
 import { EventAttendanceMetric } from '../molecules';
-import { rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { pluralizeTeams } from '../utils/events';
 
 import { teamIcon } from './shared-event-card';
@@ -63,14 +63,25 @@ const attendanceColStyles = css({ width: '1%' });
 
 const metricStyles = css({ marginTop: rem(24) });
 
+// The shared table wrapper and header cell are also used by EventSpeakers, so
+// the attendance-specific spacing and colour are layered on here.
+const attendanceTableWrapperStyles = css({ marginTop: rem(32) });
+
+const attendanceHeaderCellStyles = css({ color: neutral1000.rgb });
+
 const sectionHeaderCellStyles = css({
   textAlign: 'left',
   fontWeight: 400,
   padding: `${rem(16)} 0`,
+  // the count drops under the title where the row is too narrow for both
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    '> span': { display: 'block' },
+  },
 });
 
 const sectionTitleStyles = css({
   fontSize: rem(14),
+  fontWeight: 700,
   lineHeight: rem(16),
   color: neutral1000.rgb,
 });
@@ -79,7 +90,10 @@ const sectionSeparatorStyles = css({
   fontSize: rem(14),
   lineHeight: rem(16),
   color: lead.rgb,
-  padding: `0 ${rem(4)}`,
+  padding: `0 ${rem(8)}`,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
 });
 
 const sectionCountStyles = css({
@@ -89,14 +103,14 @@ const sectionCountStyles = css({
 });
 
 const sectionHelperStyles = css({
-  margin: `${rem(4)} 0 0`,
+  margin: `${rem(8)} 0 0`,
   fontSize: rem(14),
   lineHeight: rem(16),
   color: neutral800.rgb,
 });
 
 const showMoreCellStyles = css({
-  padding: `${rem(16)} 0 0`,
+  padding: `${rem(16)} 0`,
 });
 
 export type EventAttendanceTeamType = TeamType;
@@ -147,11 +161,8 @@ const attendedCount = (teams: EventAttendanceTeam[]) =>
 
 const TeamRows: React.FC<{ teams: EventAttendanceTeam[] }> = ({ teams }) => (
   <>
-    {teams.map((team, index) => (
-      <tr
-        key={team.teamId}
-        css={index < teams.length - 1 ? rowDividerStyles : undefined}
-      >
+    {teams.map((team) => (
+      <tr key={team.teamId} css={rowDividerStyles}>
         <td css={teamCellStyles}>
           <span css={[teamInnerStyles, teamInfoNoWrapStyles]}>
             {teamIcon(team.teamType)}
@@ -309,7 +320,11 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
         )}
 
         <div
-          css={[tableWrapperStyles, teamsOverflowing && horizontalScrollGutter]}
+          css={[
+            tableWrapperStyles,
+            attendanceTableWrapperStyles,
+            teamsOverflowing && horizontalScrollGutter,
+          ]}
           ref={tableRef}
         >
           <table css={tableStyles}>
@@ -319,10 +334,16 @@ const EventAttendance: React.FC<EventAttendanceProps> = ({
             </colgroup>
             <thead>
               <tr>
-                <th css={headerCellStyles} scope="col">
+                <th
+                  css={[headerCellStyles, attendanceHeaderCellStyles]}
+                  scope="col"
+                >
                   Teams
                 </th>
-                <th css={headerCellStyles} scope="col">
+                <th
+                  css={[headerCellStyles, attendanceHeaderCellStyles]}
+                  scope="col"
+                >
                   Attendance
                 </th>
               </tr>

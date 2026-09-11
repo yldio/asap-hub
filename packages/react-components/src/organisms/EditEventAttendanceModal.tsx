@@ -13,7 +13,6 @@ import {
   Switch,
 } from '../atoms';
 import {
-  charcoal,
   lead,
   neutral200,
   neutral800,
@@ -264,12 +263,19 @@ const attendeesTableHeaderStyles = css({
   justifyContent: 'space-between',
   fontSize: rem(17),
   fontWeight: 'bold',
-  color: charcoal.rgb,
-  paddingBottom: rem(16),
+  lineHeight: rem(24),
+  letterSpacing: rem(0.1),
+  color: neutral1000.rgb,
+  paddingBottom: rem(12),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(14),
+    lineHeight: rem(16),
+    letterSpacing: 'normal',
+  },
 });
 
 const attendanceHeaderStyles = css({
-  paddingRight: rem(24),
+  paddingRight: rem(12),
 });
 
 const attendeesRowsStyles = css({
@@ -281,7 +287,7 @@ const attendeesRowsStyles = css({
 const attendeesGroupsStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(32),
+  gap: rem(40),
 });
 
 const attendeesGroupStyles = css({
@@ -299,7 +305,7 @@ const groupHeaderStyles = css({
 const groupTitleStyles = css({
   margin: 0,
   fontSize: rem(14),
-  fontWeight: 400,
+  fontWeight: 700,
   lineHeight: rem(16),
   color: neutral1000.rgb,
 });
@@ -326,6 +332,8 @@ const attendeeRowStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: rem(16),
+  paddingBottom: rem(16),
+  borderBottom: `1px solid ${steel.rgb}`,
 });
 
 const teamCellStyles = css({
@@ -333,6 +341,8 @@ const teamCellStyles = css({
   alignItems: 'center',
   gap: rem(8),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(14),
+    lineHeight: rem(16),
     '> svg': {
       display: 'none',
     },
@@ -347,7 +357,10 @@ const attendanceCellStyles = css({
 
 const attendanceSwitchStyles = css({
   display: 'inline-flex',
-  paddingRight: rem(24),
+  paddingRight: rem(32),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    paddingRight: rem(16),
+  },
 });
 
 const searchOptionStyles = css({

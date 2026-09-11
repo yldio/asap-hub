@@ -33,30 +33,35 @@ const teams = [
     teamName: 'Barbieri',
     attended: true,
     teamType: 'Discovery Team' as const,
+    isFromInterestGroup: true,
   },
   {
     teamId: 't2',
     teamName: 'De Camilli',
     attended: true,
     teamType: 'Discovery Team' as const,
+    isFromInterestGroup: true,
   },
   {
     teamId: 't3',
     teamName: 'Edwards',
     attended: true,
     teamType: 'Resource Team' as const,
+    isFromInterestGroup: true,
   },
   {
     teamId: 't4',
     teamName: 'Ferguson',
     attended: true,
     teamType: 'Resource Team' as const,
+    isFromInterestGroup: true,
   },
   {
     teamId: 't5',
     teamName: 'Herzog',
-    attended: true,
+    attended: false,
     teamType: 'Resource Team' as const,
+    isFromInterestGroup: true,
   },
   {
     teamId: 't6',
@@ -66,37 +71,26 @@ const teams = [
   },
 ];
 
-export const Increase: Story = {
+export const Default: Story = {
   args: {
-    teamsAttended: 5,
-    teamsTotal: 6,
-    sinceLastEvent: {
-      count: 2,
-      teamsAttended: 4,
-      teamsTotal: 6,
-    },
     teams,
+    interestGroupName: 'Alpha Synuclein',
     onExport: () => undefined,
     onEdit: () => undefined,
   },
 };
 
-export const Decrease: Story = {
+export const ReadOnly: Story = {
   args: {
-    ...Increase.args,
-    sinceLastEvent: {
-      count: -1,
-      teamsAttended: 6,
-      teamsTotal: 6,
-    },
+    teams,
+    interestGroupName: 'Alpha Synuclein',
   },
 };
 
-export const NoComparison: Story = {
+// Every row came from an upload, so there is no metric tile to show.
+export const AdditionalTeamsOnly: Story = {
   args: {
-    teamsAttended: 5,
-    teamsTotal: 6,
-    teams,
+    teams: teams.map((team) => ({ ...team, isFromInterestGroup: false })),
     onExport: () => undefined,
     onEdit: () => undefined,
   },
@@ -108,18 +102,13 @@ const manyTeams = Array.from({ length: 14 }, (_, index) => ({
   teamName: `Team ${index + 1}`,
   attended: index < 11,
   teamType: teamTypes[index % 2],
+  isFromInterestGroup: index < 9,
 }));
 
 export const ManyTeams: Story = {
   args: {
-    teamsAttended: 11,
-    teamsTotal: 14,
-    sinceLastEvent: {
-      count: 3,
-      teamsAttended: 10,
-      teamsTotal: 14,
-    },
     teams: manyTeams,
+    interestGroupName: 'Alpha Synuclein',
     onExport: () => undefined,
     onEdit: () => undefined,
   },
@@ -127,25 +116,9 @@ export const ManyTeams: Story = {
 
 export const Empty: Story = {
   args: {
-    teamsAttended: 0,
-    teamsTotal: 0,
-    teams: [],
-    onAddAttendance: () => undefined,
-  },
-};
-
-export const EmptyReadOnly: Story = {
-  args: {
-    teamsAttended: 0,
-    teamsTotal: 0,
     teams: [],
   },
 };
-
-const editInterestGroups = [
-  { id: 'ig1', name: 'Alpha Synuclein' },
-  { id: 'ig2', name: 'Mitochondria' },
-];
 
 const loadSearchOptions = async (
   inputValue: string,
@@ -169,17 +142,6 @@ const loadSearchOptions = async (
     option.label.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
-const onSelectInterestGroup = async (
-  interestGroupId: string,
-): Promise<EventAttendanceTeam[]> => [
-  {
-    teamId: `${interestGroupId}-team-1`,
-    teamName: `${interestGroupId} Team A`,
-    attended: true,
-    teamType: 'Discovery Team',
-  },
-];
-
 // Composes the read-only card with the edit modal so Save updates the card —
 // open the pencil, change attendance, and Save to see the card refresh.
 export const EditAndSave: Story = {
@@ -191,18 +153,16 @@ export const EditAndSave: Story = {
     return (
       <>
         <EventAttendance
-          teamsAttended={attendanceTeams.filter((team) => team.attended).length}
-          teamsTotal={attendanceTeams.length}
           teams={attendanceTeams}
+          interestGroupName="Alpha Synuclein"
           onExport={() => undefined}
           onEdit={() => setIsEditing(true)}
         />
         {isEditing && (
           <EditEventAttendanceModal
             teams={attendanceTeams}
-            interestGroups={editInterestGroups}
+            interestGroupName="Alpha Synuclein"
             loadSearchOptions={loadSearchOptions}
-            onSelectInterestGroup={onSelectInterestGroup}
             onUploadList={async () => ({
               matched: [
                 {

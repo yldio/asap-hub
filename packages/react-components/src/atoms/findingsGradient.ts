@@ -8,3 +8,7 @@ export const findingsGradient = `linear-gradient(90deg, ${findingsRampStops})`;
 
 // Green sits near 100% then blends back to purple at the seam so the ring loops.
 export const findingsConicRamp = `conic-gradient(from 0deg, ${findingsRampStops}, ${iris.hex} 100%)`;
+
+// Three-stop ramp used by the attendance bar, where the whole ramp maps onto
+// the filled portion rather than the track.
+export const attendanceGradient = `linear-gradient(90deg, ${iris.hex} 0%, ${info500.hex} 48.44%, ${fern.hex} 100%)`;

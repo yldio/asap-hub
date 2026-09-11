@@ -15,11 +15,10 @@ import {
 import {
   charcoal,
   lead,
+  neutral200,
   neutral800,
   neutral1000,
-  paper,
   pearl,
-  silver,
   steel,
   tin,
 } from '../colors';
@@ -28,15 +27,14 @@ import {
   InactiveBadgeIcon,
   crossIcon,
   InterestGroupsIcon,
-  plusIcon,
+  lockSmallIcon,
   searchIcon,
   TeamIcon,
-  tickSmallIcon,
   uploadIcon,
 } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
-import { noop, pluralizeTeams } from '../utils';
+import { pluralizeTeams } from '../utils';
 import { EventAttendanceTeam } from './EventAttendance';
 import { teamIcon } from './shared-event-card';
 import {
@@ -62,18 +60,16 @@ export type AttendanceSearchOption = MultiSelectOptionsType &
 
 type EditEventAttendanceModalProps = {
   teams?: EventAttendanceTeam[];
-  interestGroups?: ReadonlyArray<{ id: string; name: string }>;
+  interestGroupName?: string;
   loadSearchOptions: (inputValue: string) => Promise<AttendanceSearchOption[]>;
-  onSelectInterestGroup?: (
-    interestGroupId: string,
-  ) => Promise<EventAttendanceTeam[]>;
   onUploadList?: (files: File[]) => Promise<UploadListResult>;
   sourceLists?: UploadListSourceFile[];
   onSave: (teams: EventAttendanceTeam[]) => void | Promise<void>;
   onDismiss: () => void;
 };
 
-const defaultVisibleTeams = 10;
+// Rows past this count are hidden behind the section's own "Show more".
+const visibleTeamsPerSection = 5;
 
 const modalStyles = css({
   width: '100%',
@@ -100,7 +96,6 @@ const bodyStyles = css({
   padding: `0 ${rem(24)}`,
 });
 
-const spacingMedium = css({ marginTop: rem(32) });
 const spacingLarge = css({ marginTop: rem(48) });
 
 // The upload section is hidden on mobile, so the search field needs its own
@@ -117,12 +112,6 @@ const attendeesSpacingStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: rem(56),
   },
-});
-
-const sectionStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(16),
 });
 
 const uploadSectionStyles = css({
@@ -180,57 +169,6 @@ const uploadButtonStyles = (enabled: boolean) =>
     },
     ...buttonIconGapReset,
   });
-
-const pillRowStyles = (columnCount: number, rowCount: number) =>
-  css({
-    display: 'grid',
-    gap: rem(8),
-    gridAutoFlow: 'column',
-    gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
-    gridTemplateRows: `repeat(${rowCount}, auto)`,
-    [`@media (max-width: ${mobileScreen.max}px)`]: {
-      gridAutoFlow: 'row',
-      gridTemplateColumns: '1fr',
-      gridTemplateRows: 'none',
-    },
-  });
-
-const pillStyles = (enabled: boolean) =>
-  css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    justifySelf: 'start',
-    maxWidth: 'none',
-    gap: rem(8),
-    padding: `${rem(6)} ${rem(16)}`,
-    border: `1px solid ${steel.rgb}`,
-    borderRadius: rem(24),
-    backgroundColor: enabled ? paper.rgb : silver.rgb,
-    color: neutral1000.rgb,
-    fontWeight: 'normal',
-    '> svg': {
-      width: rem(24),
-      height: rem(24),
-      ...(enabled
-        ? {}
-        : { fill: neutral1000.rgb, filter: 'none', stroke: 'none' }),
-    },
-    ...buttonIconGapReset,
-  });
-
-const addedPillStyles = (enabled: boolean) =>
-  css(
-    enabled
-      ? {
-          color: neutral800.rgb,
-          backgroundColor: pearl.rgb,
-          '> svg:first-of-type': {
-            fill: neutral800.rgb,
-          },
-        }
-      : {},
-  );
 
 const attendeesHeaderStyles = css({
   display: 'flex',
@@ -316,7 +254,7 @@ const attendeesCardStyles = (enabled: boolean) =>
   css({
     border: `1px solid ${steel.rgb}`,
     borderRadius: rem(8),
-    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    backgroundColor: enabled ? pearl.rgb : neutral200.rgb,
     padding: rem(24),
     overflowX: 'auto',
   });
@@ -340,8 +278,47 @@ const attendeesRowsStyles = css({
   gap: rem(16),
 });
 
-const showMoreStyles = css({
-  marginTop: rem(16),
+const attendeesGroupsStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+});
+
+const attendeesGroupStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(16),
+});
+
+const groupHeaderStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(4),
+});
+
+const groupTitleStyles = css({
+  margin: 0,
+  fontSize: rem(14),
+  fontWeight: 400,
+  lineHeight: rem(16),
+  color: neutral1000.rgb,
+});
+
+const groupHelperStyles = css({
+  margin: 0,
+  fontSize: rem(14),
+  fontWeight: 400,
+  lineHeight: rem(16),
+  color: neutral800.rgb,
+});
+
+const lockStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: rem(24),
+  height: rem(24),
+  flexShrink: 0,
 });
 
 const attendeeRowStyles = css({
@@ -392,11 +369,93 @@ const placeholderStyles = css({
   color: tin.rgb,
 });
 
+const AttendeeGroup: React.FC<{
+  title: string;
+  helperText?: string;
+  teams: EventAttendanceTeam[];
+  // Interest-group teams can be toggled but not removed, so they show a lock
+  // where the removable rows show their bin button.
+  locked?: boolean;
+  enabled: boolean;
+  onToggleAttended: (teamId: string) => void;
+  onRemove: (teamId: string) => void;
+}> = ({
+  title,
+  helperText,
+  teams,
+  locked = false,
+  enabled,
+  onToggleAttended,
+  onRemove,
+}) => {
+  const [expanded, setExpanded] = useState(false);
+  const visibleTeams = expanded
+    ? teams
+    : teams.slice(0, visibleTeamsPerSection);
+  const hiddenCount = teams.length - visibleTeams.length;
+
+  return (
+    <div css={attendeesGroupStyles}>
+      <div css={groupHeaderStyles}>
+        <p css={groupTitleStyles}>
+          {title} ({teams.length})
+        </p>
+        {helperText && <p css={groupHelperStyles}>{helperText}</p>}
+      </div>
+      <div css={attendeesRowsStyles} role="list">
+        {visibleTeams.map((team) => (
+          <div key={team.teamId} css={attendeeRowStyles} role="listitem">
+            <span css={teamCellStyles}>
+              {teamIcon(team.teamType)}
+              <Link
+                href={network({}).teams({}).team({ teamId: team.teamId }).$}
+              >
+                {team.teamName}
+              </Link>
+              {team.isTeamInactive && <InactiveBadgeIcon />}
+            </span>
+            <span css={attendanceCellStyles}>
+              <span css={attendanceSwitchStyles}>
+                <Switch
+                  size="large"
+                  checked={team.attended}
+                  enabled={enabled}
+                  ariaLabel={`${team.teamName} attendance`}
+                  onClick={() => onToggleAttended(team.teamId)}
+                />
+              </span>
+              {locked ? (
+                <span css={lockStyles}>{lockSmallIcon}</span>
+              ) : (
+                <Button
+                  noMargin
+                  enabled={enabled}
+                  aria-label={`Remove ${team.teamName}`}
+                  onClick={() => onRemove(team.teamId)}
+                  overrideStyles={deleteButtonStyles(enabled, 'light')}
+                >
+                  {binIcon}
+                </Button>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+      {(hiddenCount > 0 || expanded) && (
+        <div>
+          <Button linkStyle onClick={() => setExpanded(!expanded)}>
+            {expanded ? 'Show less' : `Show ${hiddenCount} more`}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   teams = [],
-  interestGroups = [],
+  interestGroupName,
   loadSearchOptions,
-  onSelectInterestGroup,
   onUploadList,
   sourceLists = [],
   onSave,
@@ -406,18 +465,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const [showUploadList, setShowUploadList] = useState(false);
   const [sourceFiles, setSourceFiles] =
     useState<UploadListSourceFile[]>(sourceLists);
-  // Each active interest group maps to the team ids it contributed, so toggling
-  // a group off can drop only the teams no other group (or manual add) still owns.
-  const [addedGroups, setAddedGroups] = useState<
-    ReadonlyMap<string, ReadonlyArray<string>>
-  >(() => new Map());
-  const [manualTeamIds, setManualTeamIds] = useState<ReadonlySet<string>>(
-    () => new Set(teams.map((team) => team.teamId)),
-  );
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaveError, setHasSaveError] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   const isEditMode = teams.length > 0;
   const title = isEditMode ? 'Edit Attendance' : 'Add Attendance';
@@ -427,13 +477,8 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
   const saveEnabled = rows.length > 0 && !isSaving;
   const addedTeamIds = new Set(rows.map((team) => team.teamId));
 
-  const visibleRows = expanded ? rows : rows.slice(0, defaultVisibleTeams);
-  const hiddenCount = rows.length - visibleRows.length;
-
-  const interestGroupColumns = interestGroups.length > 3 ? 2 : 1;
-  const interestGroupRows = Math.ceil(
-    interestGroups.length / interestGroupColumns,
-  );
+  const interestGroupRows = rows.filter((team) => team.isFromInterestGroup);
+  const additionalRows = rows.filter((team) => !team.isFromInterestGroup);
 
   const addTeams = (teamsToAdd: EventAttendanceTeam[]) =>
     setRows((current) => {
@@ -444,10 +489,10 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       return [...current, ...additions];
     });
 
-  // Upsert kept separate from addTeams so the search and interest-group paths
-  // stay append-only: an existing row keeps its attendanceId and takes the
-  // uploaded status; a new team is appended.
-  const applyUploadedTeams = (teamsToApply: EventAttendanceTeam[]) => {
+  // Upsert kept separate from addTeams so the search path stays append-only: an
+  // existing row keeps its attendanceId (and its interest-group provenance) and
+  // takes the uploaded status; a new team is appended.
+  const applyUploadedTeams = (teamsToApply: EventAttendanceTeam[]) =>
     setRows((current) => {
       const byId = new Map(current.map((team) => [team.teamId, team]));
       teamsToApply.forEach((team) =>
@@ -455,34 +500,6 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       );
       return [...byId.values()];
     });
-    setManualTeamIds((prev) => {
-      const next = new Set(prev);
-      teamsToApply.forEach((team) => next.add(team.teamId));
-      return next;
-    });
-  };
-
-  const addManualTeams = (teamsToAdd: EventAttendanceTeam[]) => {
-    addTeams(teamsToAdd);
-    setManualTeamIds((prev) => {
-      const next = new Set(prev);
-      teamsToAdd.forEach((team) => next.add(team.teamId));
-      return next;
-    });
-  };
-
-  const addInterestGroup = (
-    groupId: string,
-    groupTeams: EventAttendanceTeam[],
-  ) => {
-    addTeams(groupTeams);
-    setAddedGroups((prev) =>
-      new Map(prev).set(
-        groupId,
-        groupTeams.map((team) => team.teamId),
-      ),
-    );
-  };
 
   const handleUploadAddAttendees = (
     uploadedTeams: EventAttendanceTeam[],
@@ -511,27 +528,11 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
     setShowUploadList(false);
   };
 
-  const removeInterestGroup = (groupId: string) => {
-    const remaining = new Map(addedGroups);
-    remaining.delete(groupId);
-    const ownedByRemaining = new Set<string>();
-    remaining.forEach((teamIds) =>
-      teamIds.forEach((teamId) => ownedByRemaining.add(teamId)),
-    );
-    setRows((current) =>
-      current.filter(
-        (team) =>
-          manualTeamIds.has(team.teamId) || ownedByRemaining.has(team.teamId),
-      ),
-    );
-    setAddedGroups(remaining);
-  };
-
   const handleSelectSearchOption = (option: AttendanceSearchOption) => {
     if (option.optionType === 'interestGroup') {
-      addInterestGroup(option.value, option.teams);
+      addTeams(option.teams);
     } else {
-      addManualTeams([
+      addTeams([
         {
           teamId: option.value,
           teamName: option.label,
@@ -550,29 +551,8 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
       ),
     );
 
-  const removeTeam = (teamId: string) => {
+  const removeTeam = (teamId: string) =>
     setRows((current) => current.filter((team) => team.teamId !== teamId));
-    setManualTeamIds((prev) => {
-      if (!prev.has(teamId)) {
-        return prev;
-      }
-      const next = new Set(prev);
-      next.delete(teamId);
-      return next;
-    });
-    // Drop the team from any interest group that contributed it, and stop
-    // treating a group as "added" once it has no teams left.
-    setAddedGroups((prev) => {
-      const next = new Map<string, ReadonlyArray<string>>();
-      prev.forEach((teamIds, groupId) => {
-        const remaining = teamIds.filter((id) => id !== teamId);
-        if (remaining.length > 0) {
-          next.set(groupId, remaining);
-        }
-      });
-      return next;
-    });
-  };
 
   const toggleMarkAllAttended = () =>
     setRows((current) =>
@@ -634,54 +614,6 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
         {hasSaveError && (
           <Toast>An error has occurred. Please try again later.</Toast>
         )}
-        {onSelectInterestGroup && interestGroups.length > 0 && (
-          <section css={[sectionStyles, spacingMedium]}>
-            <SectionTitle optional>
-              Add teams from this event&apos;s groups
-            </SectionTitle>
-            <div css={pillRowStyles(interestGroupColumns, interestGroupRows)}>
-              {interestGroups.map((group) => {
-                const added = addedGroups.has(group.id);
-                return (
-                  <Button
-                    key={group.id}
-                    noMargin
-                    enabled={!isCancelling}
-                    overrideStyles={css([
-                      pillStyles(!isCancelling),
-                      added && addedPillStyles(!isCancelling),
-                    ])}
-                    onClick={() => {
-                      if (added) {
-                        removeInterestGroup(group.id);
-                      } else {
-                        void onSelectInterestGroup(group.id)
-                          .then((groupTeams) =>
-                            addInterestGroup(group.id, groupTeams),
-                          )
-                          .catch(noop);
-                      }
-                    }}
-                  >
-                    {added ? tickSmallIcon : plusIcon}
-                    <InterestGroupsIcon
-                      color={
-                        isCancelling
-                          ? neutral1000.rgb
-                          : added
-                            ? neutral800.rgb
-                            : undefined
-                      }
-                      filled={isCancelling}
-                    />
-                    {group.name}
-                  </Button>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
         <div css={searchSpacingStyles}>
           <MultiSelect<AttendanceSearchOption, false>
             isMulti={false}
@@ -806,54 +738,32 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                 <span>Team</span>
                 <span css={attendanceHeaderStyles}>Attendance</span>
               </div>
-              <div css={attendeesRowsStyles} role="list">
-                {visibleRows.map((team) => (
-                  <div
-                    key={team.teamId}
-                    css={attendeeRowStyles}
-                    role="listitem"
-                  >
-                    <span css={teamCellStyles}>
-                      {teamIcon(team.teamType)}
-                      <Link
-                        href={
-                          network({}).teams({}).team({ teamId: team.teamId }).$
-                        }
-                      >
-                        {team.teamName}
-                      </Link>
-                      {team.isTeamInactive && <InactiveBadgeIcon />}
-                    </span>
-                    <span css={attendanceCellStyles}>
-                      <span css={attendanceSwitchStyles}>
-                        <Switch
-                          checked={team.attended}
-                          enabled={!isCancelling}
-                          uncheckedColor="error"
-                          ariaLabel={`${team.teamName} attendance`}
-                          onClick={() => toggleAttended(team.teamId)}
-                        />
-                      </span>
-                      <Button
-                        noMargin
-                        enabled={!isCancelling}
-                        aria-label={`Remove ${team.teamName}`}
-                        onClick={() => removeTeam(team.teamId)}
-                        overrideStyles={deleteButtonStyles(!isCancelling)}
-                      >
-                        {binIcon}
-                      </Button>
-                    </span>
-                  </div>
-                ))}
+              <div css={attendeesGroupsStyles}>
+                {interestGroupRows.length > 0 && (
+                  <AttendeeGroup
+                    title={
+                      interestGroupName
+                        ? `From ${interestGroupName}`
+                        : 'From interest group'
+                    }
+                    helperText="Added automatically because this group is hosting. These cannot be removed."
+                    teams={interestGroupRows}
+                    locked
+                    enabled={!isCancelling}
+                    onToggleAttended={toggleAttended}
+                    onRemove={removeTeam}
+                  />
+                )}
+                {additionalRows.length > 0 && (
+                  <AttendeeGroup
+                    title="Additional teams"
+                    teams={additionalRows}
+                    enabled={!isCancelling}
+                    onToggleAttended={toggleAttended}
+                    onRemove={removeTeam}
+                  />
+                )}
               </div>
-              {hiddenCount > 0 && (
-                <div css={showMoreStyles}>
-                  <Button linkStyle onClick={() => setExpanded(true)}>
-                    Show {hiddenCount} more
-                  </Button>
-                </div>
-              )}
             </div>
           )}
         </section>

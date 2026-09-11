@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 
+import { rem } from '../../pixels';
 import GradientProgressBar from '../GradientProgressBar';
 
 describe('GradientProgressBar', () => {
@@ -27,6 +28,33 @@ describe('GradientProgressBar', () => {
 
     rerender(<GradientProgressBar percentage={-20} />);
     expect(getByRole('progressbar').firstElementChild).toHaveStyle('width: 0%');
+  });
+
+  it('anchors the gradient to the track by default', () => {
+    const { getByRole } = render(<GradientProgressBar percentage={50} />);
+    const fill = getByRole('progressbar').firstElementChild;
+    expect(fill).toHaveStyle('background-size: 200% 100%');
+    expect(fill).toHaveStyle('height: 100%');
+  });
+
+  it('anchors the gradient to the fill and takes the given geometry', () => {
+    const { getByRole } = render(
+      <GradientProgressBar
+        percentage={50}
+        height={24}
+        radius={999}
+        gradient="linear-gradient(90deg, red 0%, blue 100%)"
+        gradientAnchor="fill"
+      />,
+    );
+    const bar = getByRole('progressbar');
+    expect(bar).toHaveStyle(`height: ${rem(24)}`);
+    expect(bar).toHaveStyle(`border-radius: ${rem(999)}`);
+    const fill = bar.firstElementChild;
+    expect(fill).not.toHaveStyle('background-size: 200% 100%');
+    expect(fill).toHaveStyle(
+      'background: linear-gradient(90deg, red 0%, blue 100%)',
+    );
   });
 
   it('exposes the label as an accessible name', () => {

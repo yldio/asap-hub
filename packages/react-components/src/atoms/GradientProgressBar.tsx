@@ -8,19 +8,29 @@ import { findingsGradient } from './findingsGradient';
 type GradientProgressBarProps = {
   percentage: number;
   label?: string;
+  height?: number;
+  radius?: number;
+  gradient?: string;
+  // 'track' stretches the ramp across the whole track, so the tip colour tracks
+  // the value; 'fill' maps the whole ramp onto the filled portion instead.
+  gradientAnchor?: 'track' | 'fill';
 };
 
 const GradientProgressBar: React.FC<GradientProgressBarProps> = ({
   percentage,
   label,
+  height = 8,
+  radius = 4,
+  gradient = findingsGradient,
+  gradientAnchor = 'track',
 }) => {
   const value = clampPercentage(percentage);
   return (
     <div
       css={{
         width: '100%',
-        height: rem(8),
-        borderRadius: rem(4),
+        height: rem(height),
+        borderRadius: rem(radius),
         backgroundColor: steel.rgb,
         overflow: 'hidden',
       }}
@@ -33,11 +43,16 @@ const GradientProgressBar: React.FC<GradientProgressBarProps> = ({
       <div
         css={{
           height: '100%',
-          borderRadius: rem(4),
-          background: findingsGradient,
-          // Reveal only the 0→value slice so the tip colour tracks the value.
-          backgroundSize: `${value > 0 ? 10000 / value : 100}% 100%`,
-          backgroundRepeat: 'no-repeat',
+          borderRadius: rem(radius),
+          background: gradient,
+          ...(gradientAnchor === 'track'
+            ? {
+                // Reveal only the 0→value slice so the tip colour tracks the
+                // value.
+                backgroundSize: `${value > 0 ? 10000 / value : 100}% 100%`,
+                backgroundRepeat: 'no-repeat' as const,
+              }
+            : {}),
         }}
         style={{ width: `${value}%` }}
       />

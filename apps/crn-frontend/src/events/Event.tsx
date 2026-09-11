@@ -1,4 +1,5 @@
 import {
+  compareAttendanceTeams,
   EditEventAttendanceModal,
   EventAttendance,
   EventAttendanceTeam,
@@ -29,6 +30,7 @@ import { parseTeamRows } from './parse-team-list';
 import {
   useEventById,
   useEventSpeakerGroups,
+  useInterestGroupTeams,
   usePatchEvent,
   useQuietRefreshEventById,
   useTeamsForMatching,
@@ -55,6 +57,7 @@ const Event: React.FC = () => {
   const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const patchEvent = usePatchEvent(eventId);
   const fetchTeamsForMatching = useTeamsForMatching();
+  const interestGroupTeams = useInterestGroupTeams(event?.interestGroup?.id);
 
   const hasFinished = useDateHasPassed(
     considerEndedAfter(event?.endDate || ''),
@@ -64,9 +67,41 @@ const Event: React.FC = () => {
     const displayCalendar =
       event.interestGroup === undefined || event.interestGroup.active;
 
-    const teams = mapAttendanceTeams(event.attendance);
-    const teamsTotal = teams.length;
-    const teamsAttended = teams.filter(({ attended }) => attended).length;
+    // Teams whose membership has ended no longer count as coming from the
+    // interest group: they are neither seeded nor locked.
+    const currentInterestGroupTeams = (interestGroupTeams ?? []).filter(
+      (team) => !team.endDate,
+    );
+    const interestGroupTeamIds = new Set(
+      currentInterestGroupTeams.map((team) => team.id),
+    );
+    const recordedTeams = mapAttendanceTeams(event.attendance).map((team) => ({
+      ...team,
+      isFromInterestGroup: interestGroupTeamIds.has(team.teamId),
+    }));
+    const recordedTeamIds = new Set(recordedTeams.map(({ teamId }) => teamId));
+    // Interest-group teams with no attendance record yet still need a row; they
+    // get one persisted on save.
+    const seededTeams = currentInterestGroupTeams
+      .filter((team) => !recordedTeamIds.has(team.id))
+      .map((team) => ({
+        teamId: team.id,
+        teamName: team.displayName,
+        attended: false,
+        isTeamInactive: !!team.inactiveSince,
+        isFromInterestGroup: true,
+      }));
+    const allTeams = [...recordedTeams, ...seededTeams];
+    // Sorted here rather than in the components so rows don't jump under the
+    // cursor while attendance is toggled in the modal.
+    const teams = [
+      ...allTeams
+        .filter(({ isFromInterestGroup }) => isFromInterestGroup)
+        .sort(compareAttendanceTeams),
+      ...allTeams
+        .filter(({ isFromInterestGroup }) => !isFromInterestGroup)
+        .sort(compareAttendanceTeams),
+    ];
     const isEventProjectManager = !!user?.interestGroups.some(
       (ig) =>
         ig.id === event.interestGroup?.id &&
@@ -78,23 +113,14 @@ const Event: React.FC = () => {
     const attendance = hasFinished ? (
       <>
         <EventAttendance
-          teamsAttended={teamsAttended}
-          teamsTotal={teamsTotal}
           teams={teams}
-          sinceLastEvent={
-            event.previousEventAttendance && {
-              count:
-                teamsAttended - event.previousEventAttendance.teamsAttended,
-              teamsAttended: event.previousEventAttendance.teamsAttended,
-              teamsTotal: event.previousEventAttendance.teamsTotal,
-            }
-          }
-          onAddAttendance={isTechSupport ? openAttendanceEditor : undefined}
+          interestGroupName={event.interestGroup?.name}
           onEdit={isTechSupport ? openAttendanceEditor : undefined}
         />
         {isEditingAttendance && (
           <EditEventAttendanceModal
             teams={teams}
+            interestGroupName={event.interestGroup?.name}
             loadSearchOptions={async () => []}
             onUploadList={async (files: File[]) => {
               const [rows, corpus] = await Promise.all([

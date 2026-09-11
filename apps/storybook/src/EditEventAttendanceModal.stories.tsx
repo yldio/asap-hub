@@ -7,7 +7,6 @@ const meta: Meta<typeof EditEventAttendanceModal> = {
   component: EditEventAttendanceModal,
   argTypes: {
     loadSearchOptions: { control: false },
-    onSelectInterestGroup: { control: false },
     onUploadList: { control: false },
     onSave: { control: false },
     onDismiss: { control: false },
@@ -72,22 +71,14 @@ const loadSearchOptions = async (inputValue: string) =>
     option.label.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
-// Six groups so desktop shows two columns of three (top-to-bottom, then a new
-// column); mobile stacks them in a single column.
-const interestGroups = [
-  { id: 'ig1', name: 'Alpha Synuclein' },
-  { id: 'ig2', name: 'Mitochondria' },
-  { id: 'ig3', name: 'GBA1' },
-  { id: 'ig4', name: 'LRRK2' },
-  { id: 'ig5', name: 'Autophagy' },
-  { id: 'ig6', name: 'Neuroinflammation' },
-];
-
+// The first four rows come from the hosting interest group, so they render
+// locked under their own section.
 const teams = Array.from({ length: 6 }, (_, index) => ({
   teamId: `team-${index + 1}`,
   teamName: `Team ${index + 1}`,
   attended: index < 5,
   teamType: teamTypes[index % 2],
+  isFromInterestGroup: index < 4,
 }));
 
 // Simulate a round-trip so the Download loading spinner is visible.
@@ -97,22 +88,8 @@ const delay = (ms: number) =>
   });
 
 const commonArgs = {
-  interestGroups,
+  interestGroupName: 'Alpha Synuclein',
   loadSearchOptions,
-  onSelectInterestGroup: async (interestGroupId: string) => [
-    {
-      teamId: `${interestGroupId}-team-1`,
-      teamName: `${interestGroupId} Team A`,
-      attended: true,
-      teamType: 'Discovery Team' as const,
-    },
-    {
-      teamId: `${interestGroupId}-team-2`,
-      teamName: `${interestGroupId} Team B`,
-      attended: true,
-      teamType: 'Resource Team' as const,
-    },
-  ],
   // Present only so the "Upload a list" button renders; the full upload flow is
   // demonstrated in the Attendance > Edit and Save story, not here.
   onUploadList: async () => ({

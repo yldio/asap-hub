@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 
-import { color, error500 } from '../../colors';
+import { color, error500, steel } from '../../colors';
 import Switch from '../Switch';
 
 const props: ComponentProps<typeof Switch> = {
@@ -69,6 +69,33 @@ describe('Switch', () => {
 
     const switchElement = screen.getByRole('checkbox');
     expect(getComputedStyle(switchElement).backgroundColor).toBe(error500.rgb);
+  });
+
+  it('keeps the default geometry when no size is given', () => {
+    render(<Switch {...props} />);
+
+    const switchElement = screen.getByRole('checkbox');
+    expect(switchElement).toHaveStyle('width: 40px');
+    expect(switchElement).toHaveStyle('height: 20px');
+    expect(switchElement).toHaveStyle('border-radius: 10px');
+  });
+
+  it('grows to the large geometry when size is large', () => {
+    render(<Switch {...props} size="large" />);
+
+    const switchElement = screen.getByRole('checkbox');
+    expect(switchElement).toHaveStyle('width: 51px');
+    expect(switchElement).toHaveStyle('height: 24px');
+    expect(switchElement).toHaveStyle('border-radius: 15px');
+    expect(switchElement).toHaveStyle('border: 1px solid transparent');
+  });
+
+  it('paints the large off state grey', () => {
+    render(<Switch {...props} size="large" />);
+
+    expect(getComputedStyle(screen.getByRole('checkbox')).backgroundColor).toBe(
+      steel.rgb,
+    );
   });
 
   it('uses ThemeProvider theme primaryColor', () => {

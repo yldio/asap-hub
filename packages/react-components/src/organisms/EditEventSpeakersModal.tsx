@@ -139,8 +139,14 @@ const cardSurfaceStyles = (enabled: boolean) =>
       : colour.background.disabled,
   });
 
-const groupsCardStyles = (enabled: boolean) =>
-  css([cardSurfaceStyles(enabled), { padding: rem(24), overflowX: 'auto' }]);
+const groupsCardStyles = (enabled: boolean, isPastEvent: boolean) =>
+  css([
+    cardSurfaceStyles(enabled),
+    {
+      padding: `${rem(24)} ${rem(24)} ${isPastEvent ? rem(8) : 0}`,
+      overflowX: 'auto',
+    },
+  ]);
 
 const groupsTableHeaderStyles = css({
   display: 'flex',
@@ -152,7 +158,6 @@ const groupsTableHeaderStyles = css({
   lineHeight: rem(24),
   letterSpacing: rem(0.1),
   color: colour.foreground.primary,
-  paddingBottom: rem(16),
 });
 
 const groupsRowsStyles = css({
@@ -675,7 +680,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
           ) : (
             visibleGroups.length > 0 && (
               <div
-                css={groupsCardStyles(!isCancelling)}
+                css={groupsCardStyles(!isCancelling, isPastEvent)}
                 role="group"
                 aria-label="Speakers"
               >

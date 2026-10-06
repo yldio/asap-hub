@@ -98,7 +98,6 @@ const nestedListStyles = css({
   flexDirection: 'column',
   gap: rem(16),
   marginTop: rem(16),
-  paddingBottom: rem(12),
   paddingLeft: rem(32),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     gap: rem(24),

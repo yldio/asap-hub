@@ -1021,6 +1021,7 @@ const parseGraphQLInterestGroupMemberships = (
               teamId: team.sys.id,
               startDate,
               endDate,
+              inactiveSince: team.inactiveSince,
             },
           ]
         : [],

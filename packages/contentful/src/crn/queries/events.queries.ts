@@ -450,6 +450,7 @@ export const FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID = gql`
                   sys {
                     id
                   }
+                  inactiveSince
                 }
               }
             }

@@ -32015,7 +32015,9 @@ export type FetchInterestGroupTeamsByCalendarIdQuery = {
               items: Array<
                 Maybe<
                   Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
-                    team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                    team?: Maybe<
+                      Pick<Teams, 'inactiveSince'> & { sys: Pick<Sys, 'id'> }
+                    >;
                   }
                 >
               >;
@@ -32679,6 +32681,24 @@ export type FetchInterestGroupIdByInterestGroupTeamIdQuery = {
         items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
       }>;
     }>;
+  }>;
+};
+
+export type FetchInterestGroupIdsByTeamIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchInterestGroupIdsByTeamIdQuery = {
+  interestGroupsTeamsCollection?: Maybe<{
+    items: Array<
+      Maybe<{
+        linkedFrom?: Maybe<{
+          interestGroupsCollection?: Maybe<{
+            items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+          }>;
+        }>;
+      }>
+    >;
   }>;
 };
 
@@ -60907,6 +60927,13 @@ export const FetchInterestGroupTeamsByCalendarIdDocument = {
                                                         ],
                                                       },
                                                     },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'inactiveSince',
+                                                      },
+                                                    },
                                                   ],
                                                 },
                                               },
@@ -62052,6 +62079,150 @@ export const FetchInterestGroupIdByInterestGroupTeamIdDocument = {
 } as unknown as DocumentNode<
   FetchInterestGroupIdByInterestGroupTeamIdQuery,
   FetchInterestGroupIdByInterestGroupTeamIdQueryVariables
+>;
+export const FetchInterestGroupIdsByTeamIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroupIdsByTeamId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroupsTeamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'team' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'sys' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'interestGroupsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupIdsByTeamIdQuery,
+  FetchInterestGroupIdsByTeamIdQueryVariables
 >;
 export const FetchInterestGroupsByTeamIdDocument = {
   kind: 'Document',

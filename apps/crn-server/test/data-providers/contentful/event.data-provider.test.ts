@@ -852,6 +852,24 @@ describe('Events Contentful Data Provider', () => {
           expect(speakers).toEqual([{ user: expectedUser }]);
         });
 
+        test('Should only list the project speaker when the user has no role in the team', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+            team: {
+              sys: { id: 'team-without-user' },
+              displayName: 'Other Team',
+              inactiveSince: null,
+            },
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              project: expect.objectContaining({ id: 'project-id-1' }),
+            }),
+          ]);
+        });
+
         test('Should only list the team speaker when the user has no role in the project', async () => {
           const speakers = await fetchWithSpeaker({
             project: speakerProject([]),

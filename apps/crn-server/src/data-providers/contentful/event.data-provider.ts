@@ -817,7 +817,9 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
           .filter((s) => s?.role)[0]?.role || undefined;
 
       if (!role || user.onboarded !== true) {
-        speakerList.push({ team: parseSpeakerTeam(team) });
+        if (!projectRole) {
+          speakerList.push({ team: parseSpeakerTeam(team) });
+        }
         return speakerList;
       }
 

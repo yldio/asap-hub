@@ -988,6 +988,64 @@ describe('the NEW_EVENT_PAGE flag', () => {
       });
     });
 
+    describe('past event findings', () => {
+      it('saves one value for a speaker entry linked to both a team and a project', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          speakers: [
+            {
+              id: 'es-both',
+              project: {
+                id: 'p1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+              user: { id: 'u3', displayName: 'User u3' },
+              role: 'Independent Project - Lead',
+              preliminaryDataShared: false,
+            },
+            teamSpeaker('t-alpha', 'Alpha', 'u3', 'es-both'),
+          ],
+        });
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Alpha' }),
+        );
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Project One' }),
+        );
+        const [teamToggle] = modal.getAllByRole('checkbox', {
+          name: 'User u3 preliminary findings shared',
+        });
+        await userEvent.click(teamToggle!);
+        await userEvent.click(modal.getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              speakersToRemove: [],
+              preliminaryDataShared: [
+                { speakerId: 'es-both', shared: true },
+                { speakerId: 'es-both', shared: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+    });
+
     it('shows the show more control beyond five team rows', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),

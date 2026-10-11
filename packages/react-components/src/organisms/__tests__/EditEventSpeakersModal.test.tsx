@@ -570,6 +570,60 @@ describe('EditEventSpeakersModal', () => {
     expect(screen.getByText('0 of 1 shared')).toBeVisible();
   });
 
+  it('Should toggle every row backed by the same speaker entry', async () => {
+    renderModal({
+      groups: [
+        getTeamGroup({ users: [getUser({ speakerIds: ['es-both'] })] }),
+        getProjectGroup({
+          users: [getUser({ speakerIds: ['es-both'], roles: ['Lead'] })],
+        }),
+      ],
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Project One' }),
+    );
+    const [teamToggle, projectToggle] = screen.getAllByRole('checkbox', {
+      name: 'Jane Doe preliminary findings shared',
+    });
+    await userEvent.click(teamToggle!);
+
+    expect(teamToggle).toBeChecked();
+    expect(projectToggle).toBeChecked();
+    expect(screen.getAllByText('1 of 1 shared')).toHaveLength(2);
+
+    await userEvent.click(projectToggle!);
+
+    expect(teamToggle).not.toBeChecked();
+    expect(projectToggle).not.toBeChecked();
+  });
+
+  it('Should toggle the same person separately when each row has its own speaker entry', async () => {
+    renderModal({
+      groups: [
+        getTeamGroup({ users: [getUser({ speakerIds: ['es-team'] })] }),
+        getProjectGroup({ users: [getUser({ speakerIds: ['es-project'] })] }),
+      ],
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Project One' }),
+    );
+    const [teamToggle, projectToggle] = screen.getAllByRole('checkbox', {
+      name: 'Jane Doe preliminary findings shared',
+    });
+    await userEvent.click(teamToggle!);
+
+    expect(teamToggle).toBeChecked();
+    expect(projectToggle).not.toBeChecked();
+  });
+
   it('Should add into the matching group and leave the other groups alone', async () => {
     renderModal({
       groups: [

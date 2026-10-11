@@ -187,26 +187,22 @@ const removeGroupUser = (group: SpeakerGroup, userId: string): SpeakerGroup =>
     ? { ...group, users: group.users.filter((user) => user.id !== userId) }
     : { ...group, users: group.users.filter((user) => user.id !== userId) };
 
-const setGroupUserShared = (
+const setGroupUsersShared = (
   group: SpeakerGroup,
-  userId: string,
+  matches: (user: SpeakerGroupExternalUser | SpeakerGroupUser) => boolean,
   shared: boolean,
 ): SpeakerGroup =>
   group.variant === 'external'
     ? {
         ...group,
         users: group.users.map((user) =>
-          user.id === userId
-            ? { ...user, preliminaryFindingsShared: shared }
-            : user,
+          matches(user) ? { ...user, preliminaryFindingsShared: shared } : user,
         ),
       }
     : {
         ...group,
         users: group.users.map((user) =>
-          user.id === userId
-            ? { ...user, preliminaryFindingsShared: shared }
-            : user,
+          matches(user) ? { ...user, preliminaryFindingsShared: shared } : user,
         ),
       };
 
@@ -424,14 +420,24 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
     });
   };
 
+  // One speaker entry can back both a team row and a project row.
   const toggleUserShared = (groupId: string, userId: string, shared: boolean) =>
-    updateGroups((current) =>
-      current.map((group) =>
-        group.id === groupId
-          ? setGroupUserShared(group, userId, shared)
-          : group,
-      ),
-    );
+    updateGroups((current) => {
+      const entryIds = new Set(
+        current
+          .find((group) => group.id === groupId)
+          ?.users.find((user) => user.id === userId)?.speakerIds,
+      );
+      return current.map((group) =>
+        setGroupUsersShared(
+          group,
+          (user) =>
+            (group.id === groupId && user.id === userId) ||
+            (user.speakerIds ?? []).some((id) => entryIds.has(id)),
+          shared,
+        ),
+      );
+    });
 
   const expandSection = (variant: SpeakerGroup['variant']) =>
     setExpandedSections((current) => new Set(current).add(variant));

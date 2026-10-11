@@ -778,21 +778,26 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
       return speakerList;
     }
 
-    if (project && user?.__typename === 'Users' && user.onboarded === true) {
-      const role = findProjectRole(project, user.sys.id);
-      if (role) {
-        speakerList.push({
-          id: speakerId,
-          project: parseSpeakerProject(project),
-          user: parseEventSpeakerUser(user),
-          role,
-          preliminaryDataShared: !!speaker.preliminaryDataShared,
-        });
-      }
+    const projectRole =
+      project && user?.__typename === 'Users' && user.onboarded === true
+        ? findProjectRole(project, user.sys.id)
+        : undefined;
+    if (project && projectRole && user?.__typename === 'Users') {
+      speakerList.push({
+        id: speakerId,
+        project: parseSpeakerProject(project),
+        user: parseEventSpeakerUser(user),
+        role: projectRole,
+        preliminaryDataShared: !!speaker.preliminaryDataShared,
+      });
     }
 
     if (!team) {
-      if (!project && user?.__typename === 'Users' && user.onboarded === true) {
+      if (
+        !projectRole &&
+        user?.__typename === 'Users' &&
+        user.onboarded === true
+      ) {
         speakerList.push({
           user: parseEventSpeakerUser(user),
         });

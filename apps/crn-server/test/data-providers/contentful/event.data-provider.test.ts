@@ -831,7 +831,7 @@ describe('Events Contentful Data Provider', () => {
           ]);
         });
 
-        test('Should skip a project speaker without a role in the project', async () => {
+        test('Should fall back to the plain user when they have no role in the project', async () => {
           const speakers = await fetchWithSpeaker({
             team: null,
             project: speakerProject([
@@ -840,16 +840,49 @@ describe('Events Contentful Data Provider', () => {
             ]),
           });
 
-          expect(speakers).toEqual([]);
+          expect(speakers).toEqual([{ user: expectedUser }]);
         });
 
-        test('Should skip a project speaker when project members are not fetched', async () => {
+        test('Should fall back to the plain user when project members are not fetched', async () => {
           const speakers = await fetchWithSpeaker({
             team: null,
             project: { ...speakerProject(), membersCollection: undefined },
           });
 
-          expect(speakers).toEqual([]);
+          expect(speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should only list the team speaker when the user has no role in the project', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject([]),
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              team: expect.objectContaining({ id: 'team-id-3' }),
+              user: expectedUser,
+            }),
+          ]);
+        });
+
+        test('Should keep a project-only speaker in the events list', async () => {
+          const contentfulGraphQLResponse =
+            getContentfulGraphqlEventsResponse();
+          const event = contentfulGraphQLResponse.eventsCollection!.items[0]!;
+          event.speakersCollection!.items = [
+            {
+              ...getContentfulGraphqlEvent().speakersCollection!.items[0]!,
+              team: null,
+              project: { ...speakerProject(), membersCollection: undefined },
+            },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await eventDataProvider.fetch({});
+
+          expect(result.items[0]!.speakers).toEqual([{ user: expectedUser }]);
         });
 
         test('Should leave the project type undefined when it is not a known type', async () => {

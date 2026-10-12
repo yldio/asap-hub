@@ -21,28 +21,13 @@ import { Button, Paragraph } from '../atoms';
 import { minusIcon, plusIcon } from '../icons';
 import { rem } from '../pixels';
 import { iconButtonStyles } from './shared-event-card-styles';
+import { frameStyles, toolbarStyles } from './shared-pdf-viewer-styles';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
-
-const toolbarStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: rem(16),
-});
 
 const zoomStyles = css({
   display: 'flex',
   gap: rem(8),
-});
-
-const frameStyles = css({
-  position: 'relative',
-  marginTop: rem(16),
-  width: '100%',
-  aspectRatio: '1 / 1.414',
-  borderRadius: rem(16),
-  overflow: 'hidden',
 });
 
 const containerStyles = css({

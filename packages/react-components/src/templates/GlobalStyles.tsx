@@ -12,8 +12,8 @@ const styles = {
     ...fontStyles,
     ...themes.light,
   },
-  // Outranks pdf.js's `:root { color-scheme: light dark }`, which would
-  // otherwise give dark-mode users dark form controls app-wide
+  // html:root outranks pdf.js's `:root { color-scheme: light dark }`, which
+  // made form controls dark in dark mode
   'html:root': {
     colorScheme: 'light',
   },

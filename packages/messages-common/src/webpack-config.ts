@@ -36,8 +36,7 @@ const configFactory = (
     ],
   },
   plugins: [
-    // react-components lazy-loads a pdf.js viewer that no email renders, and
-    // webpack has no loader for its CSS, so skip pdf.js instead of parsing it
+    // No email renders the PDF viewer, and webpack can't load pdf.js's CSS
     new IgnorePlugin({ resourceRegExp: /^pdfjs-dist(\/|$)/ }),
     TemplatePlugin(appOrigin),
   ],

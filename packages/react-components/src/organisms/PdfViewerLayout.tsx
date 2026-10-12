@@ -31,8 +31,7 @@ type PdfViewerLayoutProps = {
   children?: ReactNode;
 };
 
-// Kept apart from PdfViewer so the card's Suspense fallback renders the same
-// layout without statically importing pdf.js
+// Separate from PdfViewer so the Suspense fallback can use it without pdf.js
 const PdfViewerLayout: React.FC<PdfViewerLayoutProps> = ({
   toolbar = (
     <Paragraph noMargin accent="lead">

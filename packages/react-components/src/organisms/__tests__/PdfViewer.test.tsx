@@ -89,8 +89,8 @@ describe('PdfViewer', () => {
     expect(jest.mocked(linkService?.setDocument)).toHaveBeenCalledWith(
       pdfDocument,
     );
-    // PDFViewer hands the document to the find controller once a page has
-    // rendered; doing it earlier too would reset a search typed in between
+    // PDFViewer does this after the first render. Calling it earlier too
+    // resets a search typed in between.
     const [findController] = jest.mocked(PDFFindController).mock.instances;
     expect(PDFViewer).toHaveBeenCalledWith(
       expect.objectContaining({ findController }),

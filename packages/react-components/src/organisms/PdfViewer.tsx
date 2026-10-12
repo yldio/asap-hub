@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
-// The legacy build polyfills what the modern one calls unguarded
-// (Map.getOrInsertComputed, Math.sumPrecise, Uint8Array.toHex), which browsers
-// our browserslist still lets in lack. pdf_viewer.mjs reads
-// globalThis.pdfjsLib, which pdf.mjs sets, so it must load first.
+// The legacy build polyfills APIs the modern one needs, such as
+// Map.getOrInsertComputed, which some supported browsers lack.
+// pdf_viewer.mjs reads globalThis.pdfjsLib, so pdf.mjs must load first.
 import {
   getDocument,
   GlobalWorkerOptions,
@@ -27,10 +26,8 @@ import PdfViewerLayout from './PdfViewerLayout';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
 
-// pdf.js reads each page's text for search with `for await` over a
-// ReadableStream, which Safari 26 can't iterate: every page came back empty
-// and Safari's searches found nothing. Drop this once Safari can, or pdf.js's
-// legacy build polyfills it. (jsdom has no ReadableStream at all.)
+// pdf.js's search reads page text with `for await` over a ReadableStream,
+// which Safari 26 doesn't support yet. jsdom has no ReadableStream.
 if (
   typeof ReadableStream !== 'undefined' &&
   !(Symbol.asyncIterator in ReadableStream.prototype)
@@ -73,8 +70,7 @@ const pageFieldStyles = css({
   width: rem(64),
 });
 
-// Button stretches to fill its row, and to the full width on mobile; the
-// toolbar's buttons keep their own size
+// Button grows to fill its row, and to full width on mobile
 const buttonStyles = css({
   flexGrow: 0,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -104,7 +100,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
   const [pagesCount, setPagesCount] = useState(0);
   const [isFitToPage, setIsFitToPage] = useState(false);
   const [query, setQuery] = useState('');
-  // undefined until pdf.js reports a result for the current query
   const [matches, setMatches] = useState<MatchesCount>();
   const [hasError, setHasError] = useState(false);
 
@@ -118,8 +113,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
       externalLinkTarget: LinkTarget.BLANK,
     });
     const findController = new PDFFindController({ eventBus, linkService });
-    // pdf.js scrolls to a match with Element.scrollIntoView, which also
-    // scrolls the page around the viewer and pushes the toolbar off screen
+    // pdf.js's scrollIntoView also scrolls the page, hiding the toolbar
     const scrollMatchIntoView =
       findController.scrollMatchIntoView.bind(findController);
     findController.scrollMatchIntoView = (match) => {
@@ -150,8 +144,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
     linkService.setViewer(viewer);
     viewerRef.current = viewer;
     eventBus.on('pagesinit', () => {
-      // in the A4-shaped frame, fitting the page also fits its width, so a
-      // separate fit-to-width option would do nothing
       viewer.currentScaleValue = 'page-fit';
       setPagesCount(viewer.pagesCount);
     });
@@ -161,8 +153,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
     eventBus.on('scalechanging', (event: { presetValue?: string }) =>
       setIsFitToPage(event.presetValue === 'page-fit'),
     );
-    // pdf.js reports 0 of 0 until it selects a match, so only NOT_FOUND
-    // means there are none
+    // pdf.js reports 0 of 0 until it selects a match
     const showMatches = (matchesCount: MatchesCount) => {
       if (matchesCount.total > 0) {
         setMatches(matchesCount);
@@ -184,9 +175,8 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
         }
       },
     );
-    // PDFViewer only applies 'page-fit' when it is set, so re-apply it on
-    // resize unless the user has zoomed. border-box keeps a scrollbar
-    // appearing from triggering it again.
+    // PDFViewer fits the page only when 'page-fit' is set, so re-apply it on
+    // resize. border-box ignores scrollbars, which would retrigger it.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? undefined
@@ -197,14 +187,14 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
           });
     resizeObserver?.observe(container, { box: 'border-box' });
 
-    // ponytail: no wasmUrl/standardFontDataUrl, so scanned images (JBIG2, JPEG 2000)
-    // won't decode; serve pdfjs-dist's wasm/ and standard_fonts/ if scans show up
+    // No wasmUrl or standardFontDataUrl: scanned images (JBIG2, JPEG 2000)
+    // won't decode. Serve pdfjs-dist's wasm/ and standard_fonts/ if needed.
     const loadingTask = getDocument({ url });
     void loadingTask.promise
       .then((pdfDocument) => {
         viewer.setDocument(pdfDocument);
         linkService.setDocument(pdfDocument);
-        // rejects when the first page can't be read, which no event reports
+        // rejects when the first page can't be read
         return viewer.pagesPromise;
       })
       .catch(() => {
@@ -215,8 +205,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
       });
     return () => {
       resizeObserver?.disconnect();
-      // drops the listeners pdf.js keeps on document, which would otherwise
-      // hold the viewer and its pages after unmount
+      // releases the listeners pdf.js adds to document
       viewer.setDocument(null);
       linkService.setDocument(null);
       void loadingTask.destroy();

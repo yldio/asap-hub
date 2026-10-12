@@ -1,7 +1,5 @@
-// pdfjs-dist ships ESM only (left untransformed under node_modules) and draws
-// on canvas, which jsdom lacks, so both its legacy build/pdf.mjs and
-// web/pdf_viewer.mjs entries resolve here. getDocument never settles by
-// default, leaving any rendered viewer in its loading state.
+// pdfjs-dist is ESM-only and draws on canvas, which jsdom lacks. getDocument
+// never settles unless a test mocks it, so the viewer stays loading.
 class EventBus {
   listeners = {};
 

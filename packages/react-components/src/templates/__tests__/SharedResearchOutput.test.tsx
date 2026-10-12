@@ -244,6 +244,9 @@ describe('Grant Document page', () => {
       'href',
       '/projects/discovery/project-id',
     );
+    expect(
+      screen.queryByRole('link', { name: /access output/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders breadcrumbs to shared research above the header', () => {

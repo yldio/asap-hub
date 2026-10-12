@@ -2290,7 +2290,28 @@ describe('Events Contentful Data Provider', () => {
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
       }, 10_000);
 
-      test('skips speakers that are being removed, not on the event or already unlinked', async () => {
+      test('deletes a speaker that is being removed instead of unlinking it', async () => {
+        const { eventEntry, speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
+        speakerEntry.isPublished = jest.fn(() => true);
+        speakerEntry.unpublish = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.delete = jest.fn().mockResolvedValue(undefined);
+        mockPollingConsistency();
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToRemove: ['speaker-1'],
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(speakerEntry.delete).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledTimes(1);
+        expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+          speakers: [],
+        });
+      });
+
+      test('skips speakers that are not on the event or already unlinked', async () => {
         mockEventWithSpeaker({ team: { 'en-US': entityLink('team-1') } });
 
         await eventDataProvider.updateEventDetails('123', {

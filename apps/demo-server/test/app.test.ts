@@ -12,6 +12,7 @@ import {
   userEntity,
   videoEntity,
 } from '../src/data/entities';
+import * as cascade from '../src/routes/cascade';
 import * as storage from '../src/storage';
 /* eslint-enable import/first */
 
@@ -244,6 +245,44 @@ describe('GET /api/videos/:id', () => {
     expect(response.status).toBe(200);
     expect(response.body.status).toBe('draft');
   });
+
+  it('is not found for a video that does not exist', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(null);
+
+    const response = await api
+      .get('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+  });
+});
+
+describe('POST /api/videos/:id/access', () => {
+  it('is not found for a video that does not exist', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(null);
+
+    const response = await api
+      .post('/api/videos/video-1/access')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+  });
+
+  it('refuses a member the media of a draft', async () => {
+    mockUser('member', 'auth0|member', 'Bob');
+    mockVideoGet(videoItem({ status: 'draft' }));
+
+    const response = await api
+      .post('/api/videos/video-1/access')
+      .set('Authorization', memberToken);
+
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({ error: 'forbidden' });
+  });
 });
 
 describe('leases', () => {
@@ -283,6 +322,68 @@ describe('leases', () => {
     expect(response.body).toEqual({ error: 'not_found' });
   });
 
+  it('surfaces a lease write that failed for any other reason', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await api
+      .post('/api/videos/video-1/lease')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(500);
+  });
+
+  it('releases the lease only if the caller still holds it', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockSend.mockResolvedValue({});
+
+    const response = await api
+      .delete('/api/videos/video-1/lease')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    const params = mockSend.mock.calls[0][0].input;
+    expect(params.Key).toEqual({ PK: 'VIDEO#video-1', SK: 'META' });
+    expect(params.UpdateExpression).toBe(
+      'REMOVE lockedBy, lockedByName, lockExpiresAt',
+    );
+    expect(params.ConditionExpression).toBe('lockedBy = :sub');
+    expect(params.ExpressionAttributeValues).toEqual({
+      ':sub': 'auth0|creator',
+    });
+  });
+
+  // someone took the lease over, or it was never ours: either way there is
+  // nothing of the caller's left to release
+  it('answers 204 when the lease is no longer the caller to release', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await api
+      .delete('/api/videos/video-1/lease')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+  });
+
+  it('fails when the release fails for any other reason', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await api
+      .delete('/api/videos/video-1/lease')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(500);
+  });
+
   it('returns 409 with the holder name when someone else holds the lease', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
     mockSend.mockRejectedValue(
@@ -304,6 +405,20 @@ describe('leases', () => {
 });
 
 describe('PATCH /api/videos/:id', () => {
+  it('is not found for a video that does not exist, without writing', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(null);
+
+    const response = await api
+      .patch('/api/videos/video-1')
+      .set('Authorization', creatorToken)
+      .send({ title: 'New title', version: 1 });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
   it('refuses when the caller does not hold the lease', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
     mockVideoGet(videoItem({ lockedBy: 'auth0|other', lockedByName: 'Diana' }));
@@ -565,6 +680,45 @@ describe('PATCH /api/videos/:id', () => {
       expect(writtenValues()).not.toHaveProperty(':sectionCount');
     });
 
+    // a row written before chapters were stored has no list to compare with
+    describe('on a demo that never had chapters', () => {
+      const unchaptered = () => {
+        mockUser('creator', 'auth0|creator', 'Ana');
+        mockVideoGet(
+          videoItem({
+            lockedBy: 'auth0|creator',
+            lockedByName: 'Ana',
+            lockExpiresAt: Date.now() + 60000,
+            chapters: undefined,
+          }),
+        );
+        mockSend.mockResolvedValue({});
+      };
+
+      it('cut nothing new when only the title changes', async () => {
+        unchaptered();
+
+        const response = await api
+          .patch('/api/videos/video-1')
+          .set('Authorization', creatorToken)
+          .send({ version: 1, title: 'Renamed' });
+
+        expect(response.status).toBe(200);
+        expect(writtenValues()).not.toHaveProperty(':sectionCount');
+      });
+
+      it('are forgotten once a first chapter list arrives', async () => {
+        unchaptered();
+
+        await api
+          .patch('/api/videos/video-1')
+          .set('Authorization', creatorToken)
+          .send({ version: 1, chapters: [{ startMs: 0, title: 'Intro' }] });
+
+        expect(writtenValues()[':sectionCount']).toBe(0);
+      });
+    });
+
     it('survive a save that carries no chapters at all', async () => {
       sectioned();
 
@@ -621,6 +775,36 @@ describe('POST /api/videos/:id/publish', () => {
     expect(mockSend).not.toHaveBeenCalled();
   });
 
+  it('reports a version clash and stops there', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    const get = jest.spyOn(videoEntity, 'get').mockReturnValue({
+      go: async () => ({ data: heldLease() }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+        Item: {
+          lockedBy: { S: 'auth0|creator' },
+          lockedByName: { S: 'Ana' },
+          lockExpiresAt: { N: String(Date.now() + 60000) },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
+      }),
+    );
+
+    const response = await api
+      .post('/api/videos/video-1/publish')
+      .set('Authorization', creatorToken)
+      .send({ version: 1 });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'conflict', holderName: 'Ana' });
+    // the lease read, and no second read to answer with
+    expect(get).toHaveBeenCalledTimes(1);
+  });
+
   it('refuses to publish on an expired lease', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
     mockVideoGet(heldLease({ lockExpiresAt: Date.now() - 1000 }));
@@ -638,6 +822,34 @@ describe('POST /api/videos/:id/publish', () => {
 });
 
 describe('DELETE /api/videos/:id', () => {
+  it('deletes the demo and everything under it for the lease holder', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(heldLease());
+    const deleteCascade = jest
+      .spyOn(cascade, 'deleteVideoCascade')
+      .mockResolvedValue(undefined);
+
+    const response = await api
+      .delete('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    expect(deleteCascade).toHaveBeenCalledWith('video-1');
+  });
+
+  it('answers 204 for a demo that is already gone, deleting nothing', async () => {
+    mockUser('creator', 'auth0|creator', 'Ana');
+    mockVideoGet(null);
+    const deleteCascade = jest.spyOn(cascade, 'deleteVideoCascade');
+
+    const response = await api
+      .delete('/api/videos/video-1')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(204);
+    expect(deleteCascade).not.toHaveBeenCalled();
+  });
+
   it('refuses to delete a demo someone else is editing', async () => {
     mockUser('creator', 'auth0|creator', 'Ana');
     mockVideoGet(

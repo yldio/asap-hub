@@ -4,6 +4,7 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { assetEntity, userEntity, videoEntity } from '../src/data/entities';
@@ -157,6 +158,14 @@ const mockTimeline = (timeline: Timeline) => {
   (storage.getObjectText as jest.Mock).mockResolvedValue(
     JSON.stringify(timeline),
   );
+};
+
+// the ingest job is started after the response, so its failure lands later
+const settle = async (until: () => boolean) => {
+  for (let tick = 0; tick < 50 && !until(); tick += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => setImmediate(resolve));
+  }
 };
 
 const timelineUsing = (assetId: string, where: 'clip' | 'narration') =>
@@ -351,6 +360,19 @@ describe('POST /api/projects/:id/assets/:assetId/parts', () => {
     expect(response.status).toBe(404);
     expect(storage.signUploadParts).not.toHaveBeenCalled();
   });
+
+  it('is not found for a project that is not there', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(null);
+    const getAsset = jest.spyOn(assetEntity, 'get');
+
+    const response = await sign();
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(getAsset).not.toHaveBeenCalled();
+    expect(storage.signUploadParts).not.toHaveBeenCalled();
+  });
 });
 
 describe('POST /api/projects/:id/assets/:assetId/complete', () => {
@@ -401,6 +423,71 @@ describe('POST /api/projects/:id/assets/:assetId/complete', () => {
 
     expect(response.status).toBe(404);
     expect(storage.completeMultipartUpload).not.toHaveBeenCalled();
+  });
+
+  it('is not found for a plain upload', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem({ kind: 'upload' }));
+
+    const response = await complete();
+
+    expect(response.status).toBe(404);
+    expect(storage.completeMultipartUpload).not.toHaveBeenCalled();
+  });
+
+  // a clip with no probed length cannot be trimmed back out, so an asset whose
+  // ingest never started must say so rather than sit in preparing for ever
+  it('marks the asset failed when the ingest job cannot start', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockAssetGet(assetItem());
+    const set = mockAssetPatch(assetItem({ state: 'preparing' }));
+    mockRun.mockRejectedValueOnce(new Error('no capacity'));
+    const logged = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const response = await complete();
+    await settle(() => set.mock.calls.length > 1);
+
+    expect(response.status).toBe(200);
+    expect(response.body.asset.state).toBe('preparing');
+    expect(set).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        state: 'failed',
+        error: 'the file could not be prepared for editing',
+      }),
+    );
+    expect(logged).toHaveBeenCalledWith(
+      'could not start the ingest job for asset asset-1',
+      expect.any(Error),
+    );
+  });
+
+  it('still answers the upload when the failure cannot be written either', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockAssetGet(assetItem());
+    const failedWrite = jest.fn().mockRejectedValue(new Error('throttled'));
+    const set = jest
+      .fn()
+      .mockReturnValueOnce({
+        go: async () => ({ data: assetItem({ state: 'preparing' }) }),
+      })
+      .mockReturnValueOnce({ go: failedWrite });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(assetEntity, 'patch').mockReturnValue({ set } as any);
+    mockRun.mockRejectedValueOnce(new Error('no capacity'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await complete();
+    await settle(() => failedWrite.mock.calls.length > 0);
+
+    expect(response.status).toBe(200);
+    expect(set).toHaveBeenLastCalledWith(
+      expect.objectContaining({ state: 'failed' }),
+    );
+    expect(failedWrite).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -559,6 +646,44 @@ describe('PATCH /api/projects/:id/assets/:assetId', () => {
 
     expect((await rename({ label: 'Nope' })).status).toBe(404);
   });
+
+  const patchFailingWith = (error: Error) => {
+    const set = jest.fn().mockReturnValue({
+      go: async () => {
+        throw error;
+      },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(assetEntity, 'patch').mockReturnValue({ set } as any);
+  };
+
+  it('answers 404 when the source was deleted before the rename landed', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    patchFailingWith(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+      }),
+    );
+
+    const response = await rename({ label: 'The attendance flow' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+  });
+
+  // a throttle or a timeout is not a row that is not there
+  it('surfaces any other write failure as a server error', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    patchFailingWith(new Error('ProvisionedThroughputExceededException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await rename({ label: 'The attendance flow' });
+
+    expect(response.status).toBe(500);
+  });
 });
 
 describe('DELETE /api/projects/:id/assets/:assetId', () => {
@@ -642,6 +767,18 @@ describe('DELETE /api/projects/:id/assets/:assetId', () => {
 
     expect(response.status).toBe(409);
     expect(response.body).toEqual({ error: 'asset_in_use' });
+    expect(deleteRow).not.toHaveBeenCalled();
+  });
+
+  it('is not found for a project that is not there', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(null);
+    const deleteRow = mockAssetDelete();
+
+    const response = await remove();
+
+    expect(response.status).toBe(404);
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
     expect(deleteRow).not.toHaveBeenCalled();
   });
 

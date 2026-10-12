@@ -3,7 +3,7 @@ process.env.TABLE_NAME = 'demo-hub-test-data';
 process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
 import supertest from 'supertest';
 import {
   claimsMiddleware,
@@ -11,6 +11,7 @@ import {
   toStatus,
   userMiddleware,
 } from '../src/auth';
+import * as config from '../src/config';
 import { inviteEntity, userEntity } from '../src/data/entities';
 /* eslint-enable import/first */
 
@@ -226,6 +227,57 @@ describe('/userinfo fallback', () => {
     expect(response.body).toEqual({ error: 'not_invited' });
   });
 
+  it('skips the lookup when no auth0 domain is configured', async () => {
+    jest.spyOn(config, 'getAuth0Domain').mockReturnValue('');
+    const fetchMock = jest.fn();
+    global.fetch = fetchMock as unknown as typeof fetch;
+    mockUserGet(null);
+
+    const response = await supertest(harness())
+      .get('/me')
+      .set('Authorization', `Bearer ${bare}`);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({ error: 'not_invited' });
+  });
+
+  // a caller rotating tokens must not grow a warm lambda's memory without end
+  it('forgets the oldest token once the cache is full', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        sub: 'auth0|member',
+        email: 'bob@example.com',
+        email_verified: true,
+      }),
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+    const tokenNumber = (n: number) =>
+      token({ sub: 'auth0|member', name: 'Bob', jti: `token-${n}` });
+    const authenticate = async (n: number) => {
+      const req = {
+        headers: { authorization: `Bearer ${tokenNumber(n)}` },
+      } as unknown as Request;
+      const next = jest.fn();
+      await claimsMiddleware(req, {} as Response, next);
+      expect(next).toHaveBeenCalled();
+      return req.claims;
+    };
+
+    for (let n = 0; n <= 500; n += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await authenticate(n);
+    }
+    expect(fetchMock).toHaveBeenCalledTimes(501);
+
+    expect((await authenticate(1))?.email).toBe('bob@example.com');
+    expect(fetchMock).toHaveBeenCalledTimes(501);
+
+    expect((await authenticate(0))?.email).toBe('bob@example.com');
+    expect(fetchMock).toHaveBeenCalledTimes(502);
+  });
+
   it('refuses the request when the userinfo call throws', async () => {
     global.fetch = jest
       .fn()
@@ -237,6 +289,25 @@ describe('/userinfo fallback', () => {
       .set('Authorization', `Bearer ${bare}`);
 
     expect(response.status).toBe(403);
+  });
+});
+
+describe('a request that reaches the user lookup without claims', () => {
+  it('is refused as unauthenticated without touching the user table', async () => {
+    const get = mockUserGet(activeUser());
+    const app = express();
+    app.use((req, res, next) => {
+      userMiddleware(req, res, next).catch(next);
+    });
+    app.get('/me', (req, res) => {
+      res.json(req.user);
+    });
+
+    const response = await supertest(app).get('/me');
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: 'unauthenticated' });
+    expect(get).not.toHaveBeenCalled();
   });
 });
 

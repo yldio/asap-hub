@@ -419,6 +419,109 @@ describe('POST /api/projects/:id/render', () => {
     expect(setValue(1, 'render')).toMatchObject({ state: 'failed' });
   });
 
+  it('still answers 502 when the failed state cannot be written either', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const logged = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    run.mockRejectedValue(new Error('no capacity'));
+    mockSend
+      .mockResolvedValueOnce({})
+      .mockRejectedValueOnce(new Error('ThrottlingException'));
+
+    const response = await start();
+
+    expect(response.status).toBe(502);
+    expect(response.body).toEqual({ error: 'render_start_failed' });
+    expect(setValue(1, 'render')).toMatchObject({ state: 'failed' });
+    expect(logged).toHaveBeenCalledWith(
+      'could not start the render job for project-1',
+      expect.any(Error),
+    );
+  });
+
+  it('fails when the task arn cannot be written for any other reason', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    mockSend
+      .mockResolvedValueOnce({})
+      .mockRejectedValueOnce(new Error('ThrottlingException'));
+
+    const response = await start();
+
+    expect(response.status).toBe(500);
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  // the container bumps the version as it reports progress, so the editor's
+  // copy is stale and it has to reread before trying again
+  it('starts nothing when the queue write loses the version race', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSend.mockRejectedValue(
+      new ConditionalCheckFailedException({
+        message: 'The conditional request failed',
+        $metadata: {},
+        Item: {
+          lockedBy: 'auth0|creator',
+          lockedByName: 'Ana',
+          lockExpiresAt: Date.now() + 60_000,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
+      }),
+    );
+
+    const response = await start();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'conflict', holderName: 'Ana' });
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it('starts nothing when the queue write fails for any other reason', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+
+    const response = await start();
+
+    expect(response.status).toBe(500);
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it('refuses to export while a voice over take is still being prepared', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockOwnedAssets(
+      { assetId: 'asset-1', state: 'ready' },
+      { assetId: 'voice-1', state: 'preparing' },
+    );
+    (storage.getObjectText as jest.Mock).mockResolvedValue(
+      JSON.stringify({
+        ...timelineWithClip(),
+        narration: [
+          {
+            id: 'take-1',
+            assetId: 'voice-1',
+            startMs: 0,
+            inMs: 0,
+            outMs: 3000,
+            volume: 1,
+          },
+        ],
+      }),
+    );
+
+    const response = await start();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'asset_not_ready' });
+    expect(run).not.toHaveBeenCalled();
+  });
+
   it('is not found for a plain upload', async () => {
     mockUser('creator', 'auth0|creator');
     mockVideoGet(projectItem({ kind: 'upload' }));
@@ -678,6 +781,70 @@ describe('DELETE /api/projects/:id/render', () => {
 
     expect(response.status).toBe(200);
     expect(setValue(0, 'render')).toMatchObject({ state: 'cancelled' });
+  });
+
+  const versionConflict = () =>
+    conditionFailure({
+      lockedBy: 'auth0|creator',
+      lockedByName: 'Ana',
+      lockExpiresAt: Date.now() + 60_000,
+    });
+
+  // a container reporting faster than the editor can reread would otherwise
+  // keep the request spinning for ever
+  it('gives up with a conflict once the version has moved on every attempt', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(rendering());
+    mockSend.mockRejectedValue(versionConflict());
+
+    const response = await cancel();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'conflict' });
+    expect(mockSend).toHaveBeenCalledTimes(4);
+    expect(stop).not.toHaveBeenCalled();
+  });
+
+  it('is not found when the project is deleted while the cancel rereads it', async () => {
+    mockUser('creator', 'auth0|creator');
+    let reads = 0;
+    jest.spyOn(videoEntity, 'get').mockReturnValue({
+      go: async () => {
+        reads += 1;
+        return { data: reads === 1 ? rendering() : null };
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    mockSend.mockRejectedValueOnce(versionConflict());
+
+    const response = await cancel();
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(stop).not.toHaveBeenCalled();
+  });
+
+  it('fails when the cancellation write fails for any other reason', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(rendering());
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+
+    const response = await cancel();
+
+    expect(response.status).toBe(500);
+    expect(stop).not.toHaveBeenCalled();
+  });
+
+  it('is not found for a project that is not there', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(null);
+
+    const response = await cancel();
+
+    expect(response.status).toBe(404);
+    expect(mockSend).not.toHaveBeenCalled();
+    expect(stop).not.toHaveBeenCalled();
   });
 
   it('refuses to cancel a render that is not running', async () => {

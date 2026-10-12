@@ -837,6 +837,38 @@ describe('POST /api/capture', () => {
     expect(release.ConditionExpression).toContain('contains(#parts, :partId)');
   });
 
+  // the finalise merged and dropped the parts in between, so there is no slot
+  // left to give back and nothing is written
+  it('gives nothing back when the slot is no longer on the row', async () => {
+    mockSessionGetSequence(
+      sessionItem({ parts: [], eventCount: 0 }),
+      sessionItem({ state: 'closed', parts: [], eventCount: 2 }),
+    );
+    (storage.putObject as jest.Mock).mockRejectedValue(
+      new Error('s3 is having a day'),
+    );
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(204);
+    expect(storage.putObject).toHaveBeenCalledTimes(2);
+    expect(captureWrites()).toHaveLength(1);
+  });
+
+  // a throttle is not a lost condition: the batch did not land, and the
+  // failure is the server's rather than one more quiet 204
+  it('fails when the counter write fails for any other reason', async () => {
+    mockSessionGet(sessionItem());
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await postCapture(batch());
+
+    expect(response.status).toBe(500);
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
   it('never writes anything under raw/', async () => {
     mockSessionGet(sessionItem());
 
@@ -1410,6 +1442,88 @@ describe('POST /api/projects/:id/recordings/:sessionId/finalise', () => {
       'application/x-ndjson',
       'lifecycle=capture',
     );
+  });
+
+  // a take whose recorder never reported its first frame still has an end
+  it('closes a session without a start time when none was reported', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1"}\n');
+
+    const response = await finalise({ stoppedAtEpochMs: 1_700_000_060_000 });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      state: 'closed',
+      eventsKey: 'projects/project-1/capture/session-1/events.ndjson',
+      eventCount: 1,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+    const { UpdateExpression, ExpressionAttributeValues } =
+      mockSend.mock.calls[0]![0].input;
+    expect(UpdateExpression).not.toContain('startedAtEpochMs');
+    expect(ExpressionAttributeValues).not.toHaveProperty(':startedAt');
+    expect(ExpressionAttributeValues[':stoppedAt']).toBe(1_700_000_060_000);
+  });
+
+  it('merges nothing when the close fails for any other reason', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem());
+    mockSend.mockRejectedValue(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(500);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(storage.deletePrefix).not.toHaveBeenCalled();
+  });
+
+  // the row already points at the merged stream, so stray parts only cost
+  // storage until their lifecycle rule removes them
+  it('still answers with the merged stream when the parts cannot be dropped', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockSessionGet(sessionItem({ parts: ['tab-a:1'] }));
+    const patch = mockSessionPatch();
+    (storage.getObjectText as jest.Mock).mockResolvedValue('{"id":"e1"}\n');
+    (storage.deletePrefix as jest.Mock).mockRejectedValue(
+      new Error('s3 is having a day'),
+    );
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.eventsKey).toBe(
+      'projects/project-1/capture/session-1/events.ndjson',
+    );
+    expect(patch.set).toHaveBeenCalledWith(
+      expect.objectContaining({ parts: [] }),
+    );
+  });
+
+  it('is not found for a project that is not there', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(null);
+    const get = jest.spyOn(recordingSessionEntity, 'get');
+
+    const response = await finalise({
+      startedAtEpochMs: 1_700_000_000_000,
+      stoppedAtEpochMs: 1_700_000_060_000,
+    });
+
+    expect(response.status).toBe(404);
+    expect(get).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
   });
 });
 

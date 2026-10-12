@@ -274,6 +274,83 @@ describe('POST /api/videos/:id/reencode', () => {
   });
 });
 
+describe('POST /api/videos/:id/reencode when a write goes wrong', () => {
+  // a failed first encode never published a stream, so whatever sits at the
+  // stream key is not a copy worth re-encoding from
+  it('looks no further than the original for an upload whose encode failed', async () => {
+    mockVideoGet(uploadItem({ processingState: 'failed' }));
+    mockExisting('media/video-1/stream.mp4');
+
+    const response = await reencode();
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({ error: 'no_source' });
+    expect(storage.objectSize).toHaveBeenCalledTimes(1);
+    expect(storage.objectSize).toHaveBeenCalledWith('raw/video-1/original.mp4');
+  });
+
+  it('starts nothing when queueing fails for any other reason', async () => {
+    mockVideoGet(uploadItem());
+    mockExisting('raw/video-1/original.mp4');
+    mockSend.mockRejectedValueOnce(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await reencode();
+
+    expect(response.status).toBe(500);
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it('still answers 502 when the failure cannot be recorded either', async () => {
+    mockVideoGet(uploadItem());
+    mockExisting('raw/video-1/original.mp4');
+    run.mockRejectedValueOnce(new Error('no capacity'));
+    mockSend
+      .mockResolvedValueOnce({})
+      .mockRejectedValueOnce(new Error('ThrottlingException'));
+    const logged = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const response = await reencode();
+
+    expect(response.status).toBe(502);
+    expect(response.body).toEqual({ error: 'reencode_start_failed' });
+    expect(mockSend).toHaveBeenCalledTimes(2);
+    expect(logged).toHaveBeenCalledWith(
+      'could not start the re-encode job for video-1',
+      expect.any(Error),
+    );
+  });
+
+  // a later re-encode owns the row by then, so its own task arn must stay
+  it('leaves the task arn off a row a later re-encode already took', async () => {
+    mockVideoGet(uploadItem());
+    mockExisting('raw/video-1/original.mp4');
+    mockSend.mockResolvedValueOnce({}).mockRejectedValueOnce(conditionFailed());
+
+    const response = await reencode();
+
+    expect(response.status).toBe(200);
+    expect(response.body.video.id).toBe('video-1');
+    expect(sentInput(1).ConditionExpression).toContain(':reencodeId');
+  });
+
+  it('fails when the task arn cannot be written for any other reason', async () => {
+    mockVideoGet(uploadItem());
+    mockExisting('raw/video-1/original.mp4');
+    mockSend
+      .mockResolvedValueOnce({})
+      .mockRejectedValueOnce(new Error('ThrottlingException'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await reencode();
+
+    expect(response.status).toBe(500);
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('isReencodeActive', () => {
   const now = Date.parse('2026-10-12T15:00:00.000Z');
   const queuedAt = (ms: number) => ({
@@ -289,6 +366,13 @@ describe('isReencodeActive', () => {
 
   it('lets a re-encode whose task never reported age out', () => {
     expect(isReencodeActive(queuedAt(now - maxReencodeAgeMs - 1), now)).toBe(
+      false,
+    );
+  });
+
+  it('measures the age against the current time by default', () => {
+    expect(isReencodeActive(queuedAt(Date.now() - 60_000))).toBe(true);
+    expect(isReencodeActive(queuedAt(Date.now() - maxReencodeAgeMs - 1))).toBe(
       false,
     );
   });

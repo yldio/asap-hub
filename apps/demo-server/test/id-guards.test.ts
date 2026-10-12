@@ -100,6 +100,34 @@ describe('folder id path guard', () => {
   });
 });
 
+// the id lands in S3 keys and CloudFront policy resources, so a traversal is
+// refused as a missing video before anything reads or signs it
+describe('video id path guard', () => {
+  it('refuses a traversal id on GET without reading the table', async () => {
+    const get = jest.spyOn(videoEntity, 'get');
+
+    const response = await api
+      .get('/api/videos/..%2F..%2Fmedia')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(get).not.toHaveBeenCalled();
+  });
+
+  it('refuses a traversal id on access before signing anything', async () => {
+    const get = jest.spyOn(videoEntity, 'get');
+
+    const response = await api
+      .post('/api/videos/..%2Fprojects/access')
+      .set('Authorization', creatorToken);
+
+    expect(response.status).toBe(404);
+    expect(response.headers['set-cookie']).toBeUndefined();
+    expect(get).not.toHaveBeenCalled();
+  });
+});
+
 describe('body supplied folder ids', () => {
   it('rejects a traversal folderId on bulk-move before any write', async () => {
     const patch = jest.spyOn(videoEntity, 'patch');

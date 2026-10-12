@@ -1,8 +1,10 @@
 process.env.SLS_STAGE = 'local';
 process.env.TABLE_NAME = 'demo-hub-test-data';
 
-// eslint-disable-next-line import/first
-import { videoEntity } from '../src/data/entities';
+/* eslint-disable import/first */
+import { getTableName } from '../src/config';
+import { createService, videoEntity } from '../src/data/entities';
+/* eslint-enable import/first */
 
 describe('video entity keys', () => {
   const base = {
@@ -90,5 +92,23 @@ describe('video entity keys', () => {
       durationMs: 123456,
       processingState: 'ready',
     });
+  });
+});
+
+describe('the service', () => {
+  it('joins every entity on the one table', () => {
+    const service = createService();
+
+    expect(Object.keys(service.entities).sort()).toEqual([
+      'asset',
+      'folder',
+      'invite',
+      'user',
+      'video',
+    ]);
+    const params = service.entities.invite
+      .get({ email: 'bob@example.com' })
+      .params() as { TableName: string };
+    expect(params.TableName).toBe(getTableName());
   });
 });

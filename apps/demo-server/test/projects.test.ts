@@ -4,7 +4,11 @@ process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
-import { createEmptyTimeline, Timeline } from '@asap-hub/demo-timeline';
+import {
+  createEmptyTimeline,
+  parseTimeline,
+  Timeline,
+} from '@asap-hub/demo-timeline';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { folderEntity, userEntity, videoEntity } from '../src/data/entities';
@@ -19,6 +23,19 @@ jest.mock('../src/storage', () => ({
 }));
 
 jest.mock('uuid', () => ({ v4: () => 'generated-project-id' }));
+
+// the real parser, behind a mock so one test can make it break unexpectedly
+jest.mock('@asap-hub/demo-timeline', () => {
+  const actual = jest.requireActual('@asap-hub/demo-timeline');
+  return { ...actual, parseTimeline: jest.fn(actual.parseTimeline) };
+});
+
+const mockParseTimeline = parseTimeline as jest.MockedFunction<
+  typeof parseTimeline
+>;
+const { parseTimeline: actualParseTimeline } = jest.requireActual(
+  '@asap-hub/demo-timeline',
+);
 
 const mockSend = jest.fn();
 jest.mock('../src/data/client', () => ({
@@ -122,6 +139,7 @@ beforeEach(() => {
   (storage.putObject as jest.Mock).mockReset().mockResolvedValue(undefined);
   (storage.getObjectText as jest.Mock).mockReset();
   (storage.deleteObject as jest.Mock).mockReset().mockResolvedValue(undefined);
+  mockParseTimeline.mockReset().mockImplementation(actualParseTimeline);
 });
 
 describe('POST /api/projects', () => {
@@ -496,6 +514,67 @@ describe('PUT /api/projects/:id/timeline', () => {
     });
 
     expect(response.status).toBe(409);
+  });
+
+  it('is not found for a project that is not there', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(null);
+
+    const response = await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(response.status).toBe(404);
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  // every list sits inside its own limit and the body inside the parser's,
+  // but four full pointer paths still make a document too big to keep
+  it('refuses a valid timeline too large to store', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    const path = Array.from({ length: 20_000 }, (_, index) => ({
+      tMs: index * 100,
+      x: 0.1234567890123,
+      y: 0.9876543210987,
+    }));
+    const timeline: Timeline = {
+      ...timelineWithClip(),
+      cursor: Array.from({ length: 4 }, () => ({
+        clipId: 'clip-1',
+        offsetMs: 0,
+        path,
+        effects: [],
+      })),
+    };
+
+    const response = await save({ timeline, timelineVersion: 4, version: 3 });
+
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ error: 'timeline_too_large' });
+    expect(storage.putObject).not.toHaveBeenCalled();
+  });
+
+  it('fails as a server error when reading the document breaks unexpectedly', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(projectItem());
+    mockParseTimeline.mockImplementation(() => {
+      throw new RangeError('Maximum call stack size exceeded');
+    });
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const response = await save({
+      timeline: timelineWithClip(),
+      timelineVersion: 4,
+      version: 3,
+    });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'internal' });
+    expect(storage.putObject).not.toHaveBeenCalled();
   });
 
   it('refuses a member', async () => {

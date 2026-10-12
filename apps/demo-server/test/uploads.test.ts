@@ -303,6 +303,25 @@ describe('POST /api/uploads/:videoId/parts', () => {
     );
   });
 
+  // a part url is write access to the original, so a published video's
+  // source is never handed out again
+  it.each([
+    ['a video already past uploading', videoItem({ processingState: 'ready' })],
+    ['a video that does not exist', null],
+  ])('signs nothing for %s', async (_label, item) => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(item);
+
+    const response = await api
+      .post('/api/uploads/video-1/parts')
+      .set('Authorization', creatorToken)
+      .send({ uploadId: 'upload-1', partNumbers: [1] });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'not_found' });
+    expect(storage.signUploadParts).not.toHaveBeenCalled();
+  });
+
   it('rejects an empty part list', async () => {
     mockUser('creator', 'auth0|creator');
 
@@ -397,6 +416,22 @@ describe('POST /api/uploads/:videoId/complete', () => {
       .send({ uploadId: 'upload-1', parts: [{ partNumber: 1, eTag: 'abc' }] });
 
     expect(response.status).toBe(200);
+    expect(mockStartLocalEncode).not.toHaveBeenCalled();
+  });
+
+  it('completes nothing for a video already past uploading', async () => {
+    mockUser('creator', 'auth0|creator');
+    mockVideoGet(videoItem({ processingState: 'processing' }));
+    const patch = jest.spyOn(videoEntity, 'patch');
+
+    const response = await api
+      .post('/api/uploads/video-1/complete')
+      .set('Authorization', creatorToken)
+      .send({ uploadId: 'upload-1', parts: [{ partNumber: 1, eTag: 'abc' }] });
+
+    expect(response.status).toBe(404);
+    expect(storage.completeMultipartUpload).not.toHaveBeenCalled();
+    expect(patch).not.toHaveBeenCalled();
     expect(mockStartLocalEncode).not.toHaveBeenCalled();
   });
 

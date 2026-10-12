@@ -230,6 +230,27 @@ describe('PATCH /api/folders/:id move guards', () => {
     expect(put).not.toHaveBeenCalled();
   });
 
+  it('moves a folder and its subtree under another parent within the depth limit', async () => {
+    mockFolderGet({ id: 'a', name: 'A' });
+    mockFolders([
+      { id: 'a', name: 'A' },
+      { id: 'a2', name: 'A2', parentId: 'a' },
+      { id: 'b', name: 'B' },
+    ]);
+    const put = mockFolderPut();
+
+    const response = await api
+      .patch('/api/folders/a')
+      .set('Authorization', creatorToken)
+      .send({ parentId: 'b' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ id: 'a', name: 'A', parentId: 'b' });
+    expect(put).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'a', name: 'A', parentId: 'b' }),
+    );
+  });
+
   it('detaches to the top level on the TOP sentinel', async () => {
     mockFolderGet({ id: 'b', name: 'B', parentId: 'a' });
     mockFolders([

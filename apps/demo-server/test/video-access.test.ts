@@ -3,7 +3,7 @@ import express, { Request } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../src/app';
 import { Role } from '../src/auth';
-import { userEntity, videoEntity } from '../src/data/entities';
+import { assetEntity, userEntity, videoEntity } from '../src/data/entities';
 import { resetPrivateKeyCache } from '../src/signed-cookies';
 
 // deployed is the only mode that signs anything, so this file runs the app the
@@ -381,5 +381,52 @@ describe('POST /api/videos/:id/access', () => {
       parseSetCookie(response.headers).filter(({ expired }) => expired),
     ).toEqual([]);
     expect(setCookieHeader(response.headers)).toHaveLength(3);
+  });
+});
+
+describe('GET /api/projects/:id/assets', () => {
+  // projects/ sits behind the same key group as media/, so a source the editor
+  // plays would load as a black frame without its own cookie
+  it('signs the editor for the sources the urls it hands out point at', async () => {
+    signedIn('creator');
+    mockVideoGet(projectItem());
+    jest.spyOn(assetEntity.query, 'byVideo').mockReturnValue({
+      go: async () => ({
+        data: [
+          {
+            videoId: 'project-1',
+            assetId: 'asset-1',
+            kind: 'video',
+            state: 'ready',
+            key: 'projects/project-1/assets/asset-1/original.webm',
+            mimeType: 'video/webm',
+            label: 'Screen recording',
+            createdAt: '2026-08-01T10:00:00.000Z',
+            updatedAt: '2026-08-01T10:00:00.000Z',
+          },
+        ],
+      }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const response = await api.get('/api/projects/project-1/assets');
+
+    expect(response.status).toBe(200);
+    expect(response.body.assets[0].url).toBe(
+      '/projects/project-1/assets/asset-1/original.webm',
+    );
+    expect(policyResource()).toBe(
+      'https://demos.example.org/projects/project-1/*',
+    );
+    expect(cookiePaths(response.headers)).toEqual([
+      '/projects/project-1/',
+      '/projects/project-1/',
+      '/projects/project-1/',
+    ]);
+    setCookieHeader(response.headers).forEach((cookie) => {
+      expect(cookie).toContain('HttpOnly');
+      expect(cookie).toContain('Secure');
+      expect(cookie).toContain('SameSite=Lax');
+    });
   });
 });

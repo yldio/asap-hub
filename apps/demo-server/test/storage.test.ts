@@ -14,16 +14,23 @@ delete env.BUCKET_NAME;
 const bucket = 'demo-hub-local-storage';
 
 /* eslint-disable import/first */
-import { S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Readable } from 'stream';
+import * as config from '../src/config';
 import {
   abortMultipartUpload,
   abortMultipartUploadsUnder,
   completeMultipartUpload,
   createMultipartUpload,
+  deleteObject,
   deletePrefix,
   getObject,
+  getObjectText,
   getS3Client,
   objectSize,
   putObject,
@@ -61,6 +68,7 @@ afterEach(() => {
 
 describe('client configuration', () => {
   afterEach(() => {
+    jest.restoreAllMocks();
     setS3Client(undefined);
   });
 
@@ -78,6 +86,16 @@ describe('client configuration', () => {
     const credentials = await client.config.credentials();
     expect(credentials.accessKeyId).toBe('minioadmin');
     expect(credentials.secretAccessKey).toBe('minioadmin');
+  });
+
+  it('leaves the endpoint and addressing to the SDK when deployed', () => {
+    setS3Client(undefined);
+    jest.spyOn(config, 'isLocal').mockReturnValue(false);
+
+    const client = getS3Client();
+
+    expect(client.config.isCustomEndpoint).toBe(false);
+    expect(client.config.forcePathStyle).toBe(false);
   });
 
   it('reuses the client across calls', () => {
@@ -250,6 +268,49 @@ describe('getObject', () => {
     await getObject('media/video-1/index.m3u8');
 
     expect(lastInput()).not.toHaveProperty('Range');
+  });
+});
+
+describe('getObjectText', () => {
+  it('reads the whole object as utf8 text, however it was chunked', async () => {
+    send.mockResolvedValue({
+      Body: Readable.from([Buffer.from('{"clips":'), '[],"title":"Café"}']),
+    });
+
+    await expect(
+      getObjectText('projects/video-1/timeline/4.json'),
+    ).resolves.toBe('{"clips":[],"title":"Café"}');
+    expect(send.mock.calls[0]![0]).toBeInstanceOf(GetObjectCommand);
+    expect(lastInput()).toEqual({
+      Bucket: bucket,
+      Key: 'projects/video-1/timeline/4.json',
+    });
+  });
+
+  it('rejects when the stream breaks part way through', async () => {
+    const body = new Readable({
+      read() {
+        this.push('{"clips":');
+        this.destroy(new Error('socket hang up'));
+      },
+    });
+    send.mockResolvedValue({ Body: body });
+
+    await expect(
+      getObjectText('projects/video-1/timeline/4.json'),
+    ).rejects.toThrow('socket hang up');
+  });
+});
+
+describe('deleteObject', () => {
+  it('deletes the one key from the bucket', async () => {
+    await deleteObject('projects/video-1/timeline/3.json');
+
+    expect(send.mock.calls[0]![0]).toBeInstanceOf(DeleteObjectCommand);
+    expect(lastInput()).toEqual({
+      Bucket: bucket,
+      Key: 'projects/video-1/timeline/3.json',
+    });
   });
 });
 

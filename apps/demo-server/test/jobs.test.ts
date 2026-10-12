@@ -3,7 +3,12 @@ process.env.TABLE_NAME = 'demo-hub-test-data';
 process.env.BUCKET_NAME = 'demo-hub-test-storage';
 
 /* eslint-disable import/first */
-import { RunTaskCommand, StopTaskCommand } from '@aws-sdk/client-ecs';
+import {
+  ECSClient,
+  RunTaskCommand,
+  StopTaskCommand,
+} from '@aws-sdk/client-ecs';
+import { spawn } from 'child_process';
 import { EventEmitter } from 'events';
 import { getBucketName, getRegion, getTableName, isLocal } from '../src/config';
 import * as dockerRunner from '../src/jobs/docker-runner';
@@ -16,7 +21,13 @@ jest.mock('../src/config', () => ({
   isLocal: jest.fn(() => true),
 }));
 
+jest.mock('child_process', () => ({
+  ...jest.requireActual('child_process'),
+  spawn: jest.fn(),
+}));
+
 const mockIsLocal = isLocal as jest.MockedFunction<typeof isLocal>;
+const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 
 const taskArn =
   'arn:aws:ecs:us-east-1:111111111111:task/demo-hub-dev-encoder/abc';
@@ -176,6 +187,24 @@ describe('the docker runner', () => {
     expect(spawn).toHaveBeenCalledWith('docker', ['rm', '-f', 'container-1']);
   });
 
+  it('drives the docker cli with its output piped back by default', async () => {
+    mockSpawn.mockReturnValue(
+      fakeChild({ stdout: 'container-1\n' }) as unknown as ReturnType<
+        typeof spawn
+      >,
+    );
+
+    await dockerRunner.createDockerJobRunner().stop('container-1');
+
+    expect(mockSpawn).toHaveBeenCalledWith(
+      'docker',
+      ['rm', '-f', 'container-1'],
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
+  });
+
   it('rejects when docker exits non zero', async () => {
     const spawn = spawnReturning(
       fakeChild({ code: 125, stderr: 'no such image' }),
@@ -252,5 +281,41 @@ describe('the ECS runner', () => {
       task: taskArn,
       reason: 'stopped by the demo hub',
     });
+  });
+});
+
+describe('the ECS runner built from the environment', () => {
+  it('has no cluster, network or task definition the stack did not set', () => {
+    expect(ecsRunner.ecsOptionsFromEnv()).toEqual({
+      cluster: '',
+      taskDefinition: '',
+      containerName: 'encoder',
+      subnets: [],
+      securityGroups: [],
+    });
+  });
+
+  it('runs tasks through a client for the configured region', async () => {
+    const sdkSend = jest
+      .spyOn(ECSClient.prototype, 'send')
+      .mockResolvedValue({ tasks: [{ taskArn }] } as never);
+
+    const { jobId } = await ecsRunner
+      .createEcsJobRunner()
+      .run('encode', { VIDEO_ID: 'video-1' });
+
+    expect(jobId).toEqual(taskArn);
+    const [client] = sdkSend.mock.contexts as ECSClient[];
+    expect(await client!.config.region()).toBe(getRegion());
+    const command = sdkSend.mock.calls[0]?.[0] as RunTaskCommand;
+    expect(command.input.overrides?.containerOverrides).toEqual([
+      {
+        name: 'encoder',
+        environment: [
+          { name: 'JOB', value: 'encode' },
+          { name: 'VIDEO_ID', value: 'video-1' },
+        ],
+      },
+    ]);
   });
 });

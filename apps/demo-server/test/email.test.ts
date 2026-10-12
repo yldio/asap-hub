@@ -98,3 +98,20 @@ describe('sendInviteEmail when local', () => {
     );
   });
 });
+
+describe('the SES client', () => {
+  it('is built for the configured SES region the first time an invite goes out', async () => {
+    setSesClient(undefined);
+    const sdkSend = jest
+      .spyOn(SESClient.prototype, 'send')
+      .mockResolvedValue({} as never);
+
+    await sendInviteEmail('bob@example.com');
+    await sendInviteEmail('carol@example.com');
+
+    expect(sdkSend).toHaveBeenCalledTimes(2);
+    const [first, second] = sdkSend.mock.contexts as SESClient[];
+    expect(second).toBe(first);
+    expect(await first!.config.region()).toBe('eu-west-1');
+  });
+});

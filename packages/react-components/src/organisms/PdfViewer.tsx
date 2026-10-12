@@ -9,7 +9,9 @@ import {
 } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {
   EventBus,
+  FindState,
   LinkTarget,
+  PDFFindController,
   PDFLinkService,
   PDFViewer,
 } from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
@@ -17,18 +19,34 @@ import 'pdfjs-dist/legacy/web/pdf_viewer.css';
 import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { useEffect, useRef, useState } from 'react';
 
-import { Button, Paragraph } from '../atoms';
-import { minusIcon, plusIcon } from '../icons';
+import { Button, Paragraph, TextField } from '../atoms';
+import {
+  chevronDownIcon,
+  chevronUpIcon,
+  minusIcon,
+  plusIcon,
+  searchIcon,
+} from '../icons';
 import { rem } from '../pixels';
 import { iconButtonStyles } from './shared-event-card-styles';
 import { frameStyles, toolbarStyles } from './shared-pdf-viewer-styles';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
 
-const zoomStyles = css({
+const controlsStyles = css({
   display: 'flex',
+  alignItems: 'center',
   gap: rem(8),
+  whiteSpace: 'nowrap',
 });
+
+const searchStyles = css([controlsStyles, { flexGrow: 1 }]);
+
+const pageFieldStyles = css({
+  width: rem(64),
+});
+
+type MatchesCount = { current: number; total: number };
 
 const containerStyles = css({
   position: 'absolute',
@@ -44,7 +62,14 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const viewerRef = useRef<PDFViewer>();
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageDraft, setPageDraft] = useState<string>();
   const [pagesCount, setPagesCount] = useState(0);
+  const [isFitToPage, setIsFitToPage] = useState(false);
+  const [query, setQuery] = useState('');
+  const [matches, setMatches] = useState<MatchesCount>({
+    current: 0,
+    total: 0,
+  });
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -56,7 +81,36 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
       eventBus,
       externalLinkTarget: LinkTarget.BLANK,
     });
-    const viewer = new PDFViewer({ container, eventBus, linkService });
+    const findController = new PDFFindController({ eventBus, linkService });
+    // pdf.js scrolls to a match with Element.scrollIntoView, which also
+    // scrolls the page around the viewer and pushes the toolbar off screen
+    const scrollMatchIntoView =
+      findController.scrollMatchIntoView.bind(findController);
+    findController.scrollMatchIntoView = (match) => {
+      match.element.scrollIntoView = () => {
+        const matchBox = match.element.getBoundingClientRect();
+        const containerBox = container.getBoundingClientRect();
+        container.scrollBy({
+          top:
+            matchBox.top -
+            containerBox.top -
+            (parseFloat(getComputedStyle(match.element).scrollMarginTop) ||
+              0),
+          left:
+            matchBox.left +
+            matchBox.width / 2 -
+            containerBox.left -
+            containerBox.width / 2,
+        });
+      };
+      scrollMatchIntoView(match);
+    };
+    const viewer = new PDFViewer({
+      container,
+      eventBus,
+      linkService,
+      findController,
+    });
     linkService.setViewer(viewer);
     viewerRef.current = viewer;
     eventBus.on('pagesinit', () => {
@@ -66,15 +120,35 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     eventBus.on('pagechanging', (event: { pageNumber: number }) =>
       setPageNumber(event.pageNumber),
     );
-    // PDFViewer only applies 'page-width' when it is set, so re-apply it on
-    // resize unless the user has zoomed. border-box keeps a scrollbar
-    // appearing from triggering it again.
+    eventBus.on('scalechanging', (event: { presetValue?: string }) =>
+      setIsFitToPage(event.presetValue === 'page-fit'),
+    );
+    eventBus.on(
+      'updatefindmatchescount',
+      (event: { matchesCount: MatchesCount }) => setMatches(event.matchesCount),
+    );
+    eventBus.on(
+      'updatefindcontrolstate',
+      (event: { state: number; matchesCount: MatchesCount }) => {
+        // a pending search still reports the previous query's count
+        if (event.state !== FindState.PENDING) {
+          setMatches(event.matchesCount);
+        }
+      },
+    );
+    // PDFViewer only applies a fit when it is set, so re-apply it on resize
+    // unless the user has zoomed. border-box keeps a scrollbar appearing from
+    // triggering it again.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? undefined
         : new ResizeObserver(() => {
-            if (viewer.currentScaleValue === 'page-width') {
-              viewer.currentScaleValue = 'page-width';
+            const { currentScaleValue } = viewer;
+            if (
+              currentScaleValue === 'page-width' ||
+              currentScaleValue === 'page-fit'
+            ) {
+              viewer.currentScaleValue = currentScaleValue;
             }
           });
     resizeObserver?.observe(container, { box: 'border-box' });
@@ -86,6 +160,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
       (pdfDocument) => {
         viewer.setDocument(pdfDocument);
         linkService.setDocument(pdfDocument);
+        findController.setDocument(pdfDocument);
       },
       () => {
         // the cleanup's destroy() rejects a load still in flight when the url changes
@@ -104,15 +179,104 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     return <Paragraph accent="lead">Unable to display this PDF.</Paragraph>;
   }
 
+  const goToPage = () => {
+    const page = Number(pageDraft);
+    if (
+      viewerRef.current &&
+      Number.isInteger(page) &&
+      page >= 1 &&
+      page <= pagesCount
+    ) {
+      viewerRef.current.currentPageNumber = page;
+    }
+    setPageDraft(undefined);
+  };
+
+  const find = (findQuery: string, again = false, findPrevious = false) =>
+    viewerRef.current?.eventBus.dispatch('find', {
+      source: null,
+      type: again ? 'again' : '',
+      query: findQuery,
+      caseSensitive: false,
+      entireWord: false,
+      highlightAll: true,
+      findPrevious,
+      matchDiacritics: false,
+    });
+
   return (
     <>
       <div css={toolbarStyles}>
         {pagesCount > 0 ? (
           <>
-            <span>
-              Page {pageNumber} / {pagesCount}
-            </span>
-            <div css={zoomStyles}>
+            <div css={controlsStyles}>
+              <div css={pageFieldStyles}>
+                <TextField
+                  aria-label="Page number"
+                  value={pageDraft ?? String(pageNumber)}
+                  onChange={setPageDraft}
+                  onBlur={goToPage}
+                  onKeyDown={(event) => event.key === 'Enter' && goToPage()}
+                />
+              </div>
+              <span>/ {pagesCount}</span>
+            </div>
+            <div css={searchStyles}>
+              <TextField
+                type="search"
+                aria-label="Search document"
+                placeholder="Search document"
+                leftIndicator={searchIcon}
+                value={query}
+                onChange={(newQuery) => {
+                  setQuery(newQuery);
+                  find(newQuery);
+                }}
+                onKeyDown={(event) =>
+                  event.key === 'Enter' && find(query, true, event.shiftKey)
+                }
+              />
+              <span aria-live="polite">
+                {query &&
+                  (matches.total
+                    ? `${matches.current} of ${matches.total}`
+                    : 'No matches')}
+              </span>
+              <Button
+                small
+                noMargin
+                aria-label="Previous match"
+                enabled={matches.total > 0}
+                onClick={() => find(query, true, true)}
+                overrideStyles={iconButtonStyles}
+              >
+                {chevronUpIcon}
+              </Button>
+              <Button
+                small
+                noMargin
+                aria-label="Next match"
+                enabled={matches.total > 0}
+                onClick={() => find(query, true)}
+                overrideStyles={iconButtonStyles}
+              >
+                {chevronDownIcon}
+              </Button>
+            </div>
+            <div css={controlsStyles}>
+              <Button
+                small
+                noMargin
+                onClick={() => {
+                  if (viewerRef.current) {
+                    viewerRef.current.currentScaleValue = isFitToPage
+                      ? 'page-width'
+                      : 'page-fit';
+                  }
+                }}
+              >
+                {isFitToPage ? 'Fit to width' : 'Fit to page'}
+              </Button>
               <Button
                 small
                 noMargin

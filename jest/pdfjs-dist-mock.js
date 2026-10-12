@@ -17,7 +17,16 @@ class EventBus {
 const PDFViewer = jest.fn(function PDFViewer({ eventBus }) {
   this.eventBus = eventBus;
   this.pagesCount = 0;
-  this.currentScaleValue = 'auto';
+  this.currentPageNumber = 1;
+  let currentScaleValue = 'auto';
+  Object.defineProperty(this, 'currentScaleValue', {
+    configurable: true,
+    get: () => currentScaleValue,
+    set: (presetValue) => {
+      currentScaleValue = presetValue;
+      eventBus.dispatch('scalechanging', { presetValue });
+    },
+  });
   this.setDocument = jest.fn((pdfDocument) => {
     this.pagesCount = pdfDocument.numPages;
     eventBus.dispatch('pagesinit');
@@ -31,10 +40,19 @@ const PDFLinkService = jest.fn(function PDFLinkService() {
   this.setDocument = jest.fn();
 });
 
+const PDFFindController = jest.fn(function PDFFindController() {
+  this.setDocument = jest.fn();
+  this.scrollMatchIntoView = jest.fn(({ element }) =>
+    element.scrollIntoView({ block: 'start', inline: 'center' }),
+  );
+});
+
 module.exports = {
   __esModule: true,
   GlobalWorkerOptions: {},
+  FindState: { FOUND: 0, NOT_FOUND: 1, WRAPPED: 2, PENDING: 3 },
   LinkTarget: { NONE: 0, SELF: 1, BLANK: 2, PARENT: 3, TOP: 4 },
+  PDFFindController,
   PDFLinkService,
   getDocument: jest.fn(() => ({
     promise: new Promise(() => {}),

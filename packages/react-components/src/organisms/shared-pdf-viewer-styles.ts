@@ -1,14 +1,19 @@
 import { css } from '@emotion/react';
 
-import { rem } from '../pixels';
+import { borderWidth, textPaddingBottom, textPaddingTop } from '../form';
+import { lineHeight, rem } from '../pixels';
 
 // Kept apart from PdfViewer so the card's Suspense fallback can reserve the
 // same space without statically importing pdf.js
 export const toolbarStyles = css({
   display: 'flex',
+  flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignItems: 'center',
-  minHeight: rem(40),
+  gap: rem(8),
+  minHeight: rem(
+    textPaddingTop + lineHeight + textPaddingBottom + 2 * borderWidth,
+  ),
   marginTop: rem(16),
 });
 

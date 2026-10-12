@@ -107,6 +107,49 @@ describe('playback failure', () => {
     );
   });
 
+  const failWith = (video: HTMLVideoElement, code: number, message: string) => {
+    Object.defineProperty(video, 'error', {
+      value: { code, message },
+      configurable: true,
+    });
+    fireEvent.error(video);
+  };
+
+  it('says the browser could not decode the video rather than blaming access', async () => {
+    const { video } = renderPlayer();
+
+    failWith(video, 3, 'PIPELINE_ERROR_DECODE: video decode failed');
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/^Playback failed/);
+    expect(alert).toHaveTextContent('could not decode this video');
+    expect(alert).not.toHaveTextContent('access may have expired');
+  });
+
+  it('names both causes when the source will not open at all', async () => {
+    const { video } = renderPlayer();
+
+    failWith(video, 4, 'DEMUXER_ERROR_COULD_NOT_OPEN');
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/^Playback could not start/);
+    expect(alert).toHaveTextContent('access may have expired');
+    expect(alert).toHaveTextContent('cannot play this video format');
+  });
+
+  it('hands the browser error on so it can be reported', async () => {
+    const onPlaybackError = jest.fn();
+    const { video } = renderPlayer({ onPlaybackError });
+
+    failWith(video, 3, 'PIPELINE_ERROR_DECODE: video decode failed');
+
+    await screen.findByRole('alert');
+    expect(onPlaybackError).toHaveBeenCalledWith({
+      code: 3,
+      message: 'PIPELINE_ERROR_DECODE: video decode failed',
+    });
+  });
+
   it('reloads the stream only once the access refresh has landed', async () => {
     const { onRequestAccess, grant } = deferredAccess();
     const { video } = renderPlayer({ onRequestAccess });

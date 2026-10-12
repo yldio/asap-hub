@@ -188,6 +188,35 @@ const retryButtonStyles = css({
 
 type Hover = { seconds: number; left: number } | null;
 
+export type PlaybackError = { code: number; message: string };
+
+// MediaError.MEDIA_ERR_DECODE and MEDIA_ERR_SRC_NOT_SUPPORTED
+const decodeErrorCode = 3;
+const unsupportedErrorCode = 4;
+
+type Failure = 'stream' | 'decode' | 'unsupported';
+
+const failureOf = (code?: number): Failure => {
+  if (code === decodeErrorCode) return 'decode';
+  if (code === unsupportedErrorCode) return 'unsupported';
+  return 'stream';
+};
+
+const failureCopy: Record<Failure, { title: string; body: string }> = {
+  stream: {
+    title: 'Playback stopped',
+    body: 'The stream stopped responding. Your access may have expired.',
+  },
+  decode: {
+    title: 'Playback failed',
+    body: 'Your browser could not decode this video. If Retry does not help, ask an admin to re-encode the demo.',
+  },
+  unsupported: {
+    title: 'Playback could not start',
+    body: 'Your access may have expired, or your browser cannot play this video format. If Retry does not help, ask an admin to re-encode the demo.',
+  },
+};
+
 const Player: FC<{
   readonly access: VideoAccess;
   readonly chapters: Chapter[];
@@ -197,6 +226,7 @@ const Player: FC<{
   readonly onTimeChange: (seconds: number) => void;
   readonly registerSeek?: (seek: (seconds: number) => void) => void;
   readonly onRequestAccess?: () => void | Promise<unknown>;
+  readonly onPlaybackError?: (error: PlaybackError) => void;
 }> = ({
   access,
   chapters,
@@ -206,6 +236,7 @@ const Player: FC<{
   onTimeChange,
   registerSeek,
   onRequestAccess,
+  onPlaybackError,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -223,7 +254,7 @@ const Player: FC<{
   const [panelOpen, setPanelOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [playerWidth, setPlayerWidth] = useState(0);
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<Failure | null>(null);
   const [retrying, setRetrying] = useState(false);
   const retryingRef = useRef(false);
   const mountedRef = useRef(true);
@@ -254,7 +285,7 @@ const Player: FC<{
       if (!mountedRef.current) return;
       setRetrying(false);
       if (!refreshed) return;
-      setFailed(false);
+      setFailure(null);
       videoRef.current?.load();
     };
 
@@ -279,7 +310,7 @@ const Player: FC<{
   }, [registerSeek, seekTo]);
 
   // a fresh url means fresh credentials, so the failure panel steps aside
-  useEffect(() => setFailed(false), [access.streamUrl]);
+  useEffect(() => setFailure(null), [access.streamUrl]);
 
   useEffect(() => {
     if (!initialSeconds || !Number.isFinite(initialSeconds)) return;
@@ -449,11 +480,15 @@ const Player: FC<{
           wake();
         }}
         onPause={() => setPlaying(false)}
-        onError={() => {
+        onError={(event) => {
+          const { error } = event.currentTarget;
           setPlaying(false);
-          setFailed(true);
+          setFailure(failureOf(error?.code));
+          if (error) {
+            onPlaybackError?.({ code: error.code, message: error.message });
+          }
         }}
-        onLoadedData={() => setFailed(false)}
+        onLoadedData={() => setFailure(null)}
         onVolumeChange={(event) => {
           setMuted(event.currentTarget.muted);
           setVolume(event.currentTarget.volume);
@@ -468,7 +503,7 @@ const Player: FC<{
         }}
       />
 
-      {!started && !failed && (
+      {!started && !failure && (
         <button
           type="button"
           css={centerPlayStyles}
@@ -479,12 +514,10 @@ const Player: FC<{
         </button>
       )}
 
-      {failed && (
+      {failure && (
         <div css={failurePanelStyles} role="alert">
-          <strong>Playback stopped</strong>
-          <span css={failureBodyStyles}>
-            The stream stopped responding. Your access may have expired.
-          </span>
+          <strong>{failureCopy[failure].title}</strong>
+          <span css={failureBodyStyles}>{failureCopy[failure].body}</span>
           <button
             type="button"
             css={retryButtonStyles}

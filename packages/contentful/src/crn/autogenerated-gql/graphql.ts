@@ -28544,7 +28544,7 @@ export type EventsContentFragment = Pick<
         Pick<EventSpeakers, 'preliminaryDataShared'> & {
           sys: Pick<Sys, 'id'>;
           team?: Maybe<
-            Pick<Teams, 'displayName' | 'inactiveSince'> & {
+            Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
               sys: Pick<Sys, 'id'>;
             }
           >;
@@ -29018,7 +29018,7 @@ export type FetchEventByIdQuery = {
             Pick<EventSpeakers, 'preliminaryDataShared'> & {
               sys: Pick<Sys, 'id'>;
               team?: Maybe<
-                Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                   sys: Pick<Sys, 'id'>;
                 }
               >;
@@ -29653,9 +29653,10 @@ export type FetchEventsQuery = {
                   Pick<EventSpeakers, 'preliminaryDataShared'> & {
                     sys: Pick<Sys, 'id'>;
                     team?: Maybe<
-                      Pick<Teams, 'displayName' | 'inactiveSince'> & {
-                        sys: Pick<Sys, 'id'>;
-                      }
+                      Pick<
+                        Teams,
+                        'displayName' | 'teamType' | 'inactiveSince'
+                      > & { sys: Pick<Sys, 'id'> }
                     >;
                     project?: Maybe<
                       Pick<Projects, 'title' | 'projectType'> & {
@@ -30397,7 +30398,7 @@ export type FetchEventsByUserIdQuery = {
                                 team?: Maybe<
                                   Pick<
                                     Teams,
-                                    'displayName' | 'inactiveSince'
+                                    'displayName' | 'teamType' | 'inactiveSince'
                                   > & { sys: Pick<Sys, 'id'> }
                                 >;
                                 project?: Maybe<
@@ -31148,7 +31149,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                 team?: Maybe<
                                   Pick<
                                     Teams,
-                                    'displayName' | 'inactiveSince'
+                                    'displayName' | 'teamType' | 'inactiveSince'
                                   > & { sys: Pick<Sys, 'id'> }
                                 >;
                                 project?: Maybe<
@@ -31899,7 +31900,7 @@ export type FetchEventsByTeamIdQuery = {
                                 team?: Maybe<
                                   Pick<
                                     Teams,
-                                    'displayName' | 'inactiveSince'
+                                    'displayName' | 'teamType' | 'inactiveSince'
                                   > & { sys: Pick<Sys, 'id'> }
                                 >;
                                 project?: Maybe<
@@ -42516,6 +42517,10 @@ export const EventsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'displayName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamType' },
                             },
                             {
                               kind: 'Field',

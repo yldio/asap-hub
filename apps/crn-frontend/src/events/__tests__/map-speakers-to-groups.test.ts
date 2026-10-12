@@ -113,6 +113,21 @@ describe('mapSpeakersToGroups', () => {
     expect(group).toMatchObject({ isTeamInactive: true });
   });
 
+  it('carries the team type so the team row shows its icon', () => {
+    const [group] = mapSpeakersToGroups(
+      makeEvent([
+        {
+          id: 'es-1',
+          team: { id: 't1', displayName: 'Alpha', teamType: 'Resource Team' },
+          user: { id: 'u1', displayName: 'User u1' },
+          role: 'Chair',
+        },
+      ]),
+    );
+
+    expect(group).toMatchObject({ teamType: 'Resource Team' });
+  });
+
   it('merges multiple roles for the same user within a team and dedupes them', () => {
     const [group] = mapSpeakersToGroups(
       makeEvent([

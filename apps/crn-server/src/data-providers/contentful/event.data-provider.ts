@@ -747,6 +747,7 @@ const parseSpeakerTeam = (team: SpeakerTeam): EventSpeakerTeam['team'] => ({
   id: team.sys.id,
   displayName: team.displayName ?? '',
   inactiveSince: team.inactiveSince ?? undefined,
+  ...(isTeamType(team.teamType) ? { teamType: team.teamType } : {}),
 });
 
 const parseSpeakerProject = (

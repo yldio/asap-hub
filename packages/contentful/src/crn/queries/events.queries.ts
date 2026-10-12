@@ -218,6 +218,7 @@ export const eventsContentQueryFragment = gql`
             id
           }
           displayName
+          teamType
           inactiveSince
         }
         project {

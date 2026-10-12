@@ -95,6 +95,7 @@ export const mapSpeakersToGroups = (event: EventResponse): SpeakerGroup[] => {
       id: team.id,
       variant: 'team' as const,
       teamName: team.displayName,
+      teamType: team.teamType,
       isTeamInactive: !!team.inactiveSince,
       users: new Map(),
     };

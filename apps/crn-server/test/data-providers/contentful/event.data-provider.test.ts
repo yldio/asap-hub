@@ -740,6 +740,32 @@ describe('Events Contentful Data Provider', () => {
         ]);
       });
 
+      test.each`
+        teamType           | expected
+        ${'Resource Team'} | ${'Resource Team'}
+        ${'Unknown'}       | ${undefined}
+        ${null}            | ${undefined}
+      `(
+        'Should return the speaker team type $expected for $teamType',
+        async ({ teamType, expected }) => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          const [speaker] = contentfulGraphQLResponse.speakersCollection!.items;
+          contentfulGraphQLResponse.speakersCollection!.items = [
+            { ...speaker!, team: { ...speaker!.team!, teamType } },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: contentfulGraphQLResponse,
+          });
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          const [first] = result!.speakers;
+          expect(first && 'team' in first ? first.team?.teamType : null).toBe(
+            expected,
+          );
+        },
+      );
+
       describe('Project speakers', () => {
         const speakerProject = (
           members: { userId: string; role: string | null }[] = [

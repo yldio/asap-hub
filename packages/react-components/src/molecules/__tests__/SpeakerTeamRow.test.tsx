@@ -119,6 +119,16 @@ it('hides the per speaker toggles when showShared is false', () => {
   expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
 });
 
+it.each`
+  teamType            | icon
+  ${'Discovery Team'} | ${'Discovery Team Icon'}
+  ${'Resource Team'}  | ${'Resource Team Icon'}
+  ${undefined}        | ${'Team'}
+`('renders the $icon icon for a $teamType team', ({ teamType, icon }) => {
+  render(<SpeakerTeamRow {...defaultProps} teamType={teamType} />);
+  expect(screen.getByTitle(icon)).toBeInTheDocument();
+});
+
 it('renders the project icon rather than the team icon for the project variant', () => {
   render(
     <SpeakerTeamRow

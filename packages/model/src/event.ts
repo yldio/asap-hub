@@ -25,8 +25,14 @@ export interface EventSpeakerExternalUserData {
   name: string;
 }
 
+export type EventSpeakerTeamData = Pick<
+  TeamResponse,
+  'displayName' | 'id' | 'inactiveSince'
+> &
+  Partial<Pick<TeamResponse, 'teamType'>>;
+
 export type EventSpeakerTeam = {
-  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
+  team: EventSpeakerTeamData;
 };
 
 export type EventSpeakerProjectData = {
@@ -38,7 +44,7 @@ export type EventSpeakerProjectData = {
 export type EventSpeakerUser = {
   // Contentful eventSpeakers entry id; optional as only the CRN read path sets it.
   id?: string;
-  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
+  team: EventSpeakerTeamData;
   user: EventSpeakerUserData;
   role: string;
   preliminaryDataShared?: boolean;
@@ -59,7 +65,7 @@ export type EventSpeakerUserWithoutTeam = {
 export type EventSpeakerExternalUser = {
   id?: string;
   externalUser: EventSpeakerExternalUserData;
-  team?: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
+  team?: EventSpeakerTeamData;
   project?: EventSpeakerProjectData;
 };
 

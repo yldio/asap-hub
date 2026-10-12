@@ -2346,6 +2346,72 @@ describe('Events Contentful Data Provider', () => {
         expect(patchAndPublish).not.toHaveBeenCalled();
         warnSpy.mockRestore();
       });
+
+      describe('when a speaker entry write fails', () => {
+        const mockEventWithTwoSpeakers = () => {
+          const eventEntry = getEntry(
+            {
+              speakers: {
+                'en-US': [speakerLink('speaker-1'), speakerLink('speaker-2')],
+              },
+            },
+            { id: '123' },
+          );
+          const removedEntry = getEntry({}, { id: 'speaker-1' });
+          removedEntry.isPublished = jest.fn(() => true);
+          removedEntry.unpublish = jest.fn().mockResolvedValue(removedEntry);
+          removedEntry.delete = jest.fn().mockResolvedValue(undefined);
+          const keptEntry = getEntry(
+            {
+              team: { 'en-US': entityLink('team-1') },
+              project: { 'en-US': entityLink('project-1') },
+              preliminaryDataShared: { 'en-US': false },
+            },
+            { id: 'speaker-2' },
+          );
+          when(environmentMock.getEntry)
+            .calledWith('123')
+            .mockResolvedValue(eventEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-1')
+            .mockResolvedValue(removedEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-2')
+            .mockResolvedValue(keptEntry);
+          (patchAndPublish as jest.Mock).mockRejectedValueOnce(
+            new Error('Version mismatch'),
+          );
+          return { removedEntry };
+        };
+
+        test('does not delete removed speakers when unlinking another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers();
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              speakersToUnlink: [{ speakerId: 'speaker-2', field: 'project' }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+
+        test('does not delete removed speakers when updating the findings of another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers();
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              preliminaryDataShared: [{ speakerId: 'speaker-2', shared: true }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+      });
     });
   });
 

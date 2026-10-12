@@ -363,14 +363,6 @@ export class EventContentfulDataProvider implements EventDataProvider {
       );
     }
 
-    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
-      patchFields.speakers = await this.buildSpeakerLinks(
-        environment,
-        event,
-        data.speakersToRemove,
-      );
-    }
-
     let unlinkedSpeakers: EventSpeakerUnlinkItem[] = [];
     if (data.speakersToUnlink && data.speakersToUnlink.length > 0) {
       unlinkedSpeakers = await this.unlinkSpeakers(
@@ -388,6 +380,15 @@ export class EventContentfulDataProvider implements EventDataProvider {
         event,
         data.preliminaryDataShared,
         data.speakersToRemove ?? [],
+      );
+    }
+
+    // Deleting is irreversible, so it runs only once the other speaker writes succeed.
+    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
+      patchFields.speakers = await this.buildSpeakerLinks(
+        environment,
+        event,
+        data.speakersToRemove,
       );
     }
 

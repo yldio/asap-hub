@@ -63,7 +63,11 @@ import {
   isTeamType,
   ListEventDataObject,
 } from '@asap-hub/model';
-import { Alerts, cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import {
+  Alerts,
+  cleanArray,
+  parseUserDisplayName,
+} from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';

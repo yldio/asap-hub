@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useLocation } from 'react-router';
 import type { Video } from '../../api/types';
 import { makeVideo } from '../../test-utils';
 import { editPathOf, VideoCard, VideoStatusBadge } from '../VideoCard';
@@ -216,5 +216,61 @@ describe('VideoCard', () => {
     expect(screen.getByTestId('video-card-p1')).not.toHaveAttribute(
       'data-selected',
     );
+  });
+});
+
+describe('opening a card with a double click', () => {
+  const PathProbe = () => (
+    <span data-testid="path">{useLocation().pathname}</span>
+  );
+
+  const renderOpenable = (video: Video, isCreator: boolean) => {
+    const onOpenMenu = jest.fn();
+    render(
+      <MemoryRouter>
+        <VideoCard
+          video={video}
+          view="list"
+          isCreator={isCreator}
+          isSelected={false}
+          onSelect={jest.fn()}
+          onOpenMenu={onOpenMenu}
+        />
+        <PathProbe />
+      </MemoryRouter>,
+    );
+    return { onOpenMenu };
+  };
+
+  const path = () => screen.getByTestId('path').textContent;
+
+  it('opens a finished demo for watching', async () => {
+    renderOpenable(
+      project({ id: 'v1', kind: 'upload', processingState: 'ready' }),
+      false,
+    );
+
+    await userEvent.dblClick(screen.getByText(/^Uploaded/));
+
+    expect(path()).toBe('/videos/v1');
+  });
+
+  it('opens a creator straight into the editor of a draft', async () => {
+    renderOpenable(project({ id: 'p1' }), true);
+
+    await userEvent.dblClick(screen.getByText(/^Created/));
+
+    expect(path()).toBe('/studio/projects/p1');
+  });
+
+  it('leaves a double click on its own controls to those controls', async () => {
+    const { onOpenMenu } = renderOpenable(project({ id: 'p1' }), true);
+
+    await userEvent.dblClick(
+      screen.getByRole('button', { name: 'Actions for Sprint 42 demo' }),
+    );
+
+    expect(path()).toBe('/');
+    expect(onOpenMenu).toHaveBeenCalled();
   });
 });

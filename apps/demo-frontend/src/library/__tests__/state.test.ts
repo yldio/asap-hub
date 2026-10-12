@@ -1,3 +1,5 @@
+import { act, renderHook } from '@testing-library/react';
+
 import { makeVideo } from '../../test-utils';
 import {
   deleteTitle,
@@ -9,6 +11,7 @@ import {
   parseStatusFilter,
   refusedVideosMessage,
   sortVideos,
+  useViewMode,
 } from '../state';
 
 // three of the four share a recorded date, which is what used to make the two
@@ -75,6 +78,20 @@ describe('sortVideos', () => {
         'title',
       ).map(({ title }) => title),
     ).toEqual(['Apple', 'zebra']);
+  });
+
+  it('breaks a tie between titles that differ only in case by id', () => {
+    expect(
+      ids(
+        sortVideos(
+          [
+            makeVideo({ id: 'b', title: 'demo' }),
+            makeVideo({ id: 'a', title: 'Demo' }),
+          ],
+          'title',
+        ),
+      ),
+    ).toEqual(['a', 'b']);
   });
 
   it('leaves the input untouched', () => {
@@ -270,5 +287,41 @@ describe('reporting a folder the delete kept', () => {
     ).toBe(
       'We kept “Engineering” because something inside could not be deleted. Try again once that is done.',
     );
+  });
+});
+
+describe('useViewMode', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('starts on the grid and remembers a switch to the list', () => {
+    const { result } = renderHook(() => useViewMode());
+    expect(result.current[0]).toBe('grid');
+
+    act(() => result.current[1]('list'));
+
+    expect(result.current[0]).toBe('list');
+    expect(renderHook(() => useViewMode()).result.current[0]).toBe('list');
+  });
+
+  it('still toggles when storage is blocked', () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+
+    const { result } = renderHook(() => useViewMode());
+    expect(result.current[0]).toBe('grid');
+
+    act(() => result.current[1]('list'));
+
+    expect(result.current[0]).toBe('list');
   });
 });

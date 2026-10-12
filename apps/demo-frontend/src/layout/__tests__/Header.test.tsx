@@ -1,5 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router';
 
 import { adminMe, memberMe, renderApp } from '../../test-utils';
 import { themeStorageKey } from '../../ui/themeMode';
@@ -86,4 +87,32 @@ it('offers the account menu as menu items rather than loose links', async () => 
   ).toBeVisible();
   // nothing inside the menu is left as a plain link or button
   expect(within(menu).queryByRole('link')).toBeNull();
+});
+
+const PathProbe = () => (
+  <span data-testid="path">{useLocation().pathname}</span>
+);
+
+it.each([
+  ['Upload a demo', '/studio/upload'],
+  ['Invites', '/invites'],
+  ['Manage users', '/users'],
+])('follows %s and closes the menu', async (name, path) => {
+  renderApp(
+    <>
+      <Header />
+      <PathProbe />
+    </>,
+    { me: adminMe, routePath: '*' },
+  );
+  await userEvent.click(screen.getByRole('button', { name: adminMe.name }));
+
+  await userEvent.click(screen.getByRole('menuitem', { name }));
+
+  expect(screen.getByTestId('path')).toHaveTextContent(path);
+  expect(screen.queryByRole('menu')).toBeNull();
+  expect(screen.getByRole('button', { name: adminMe.name })).toHaveAttribute(
+    'aria-expanded',
+    'false',
+  );
 });

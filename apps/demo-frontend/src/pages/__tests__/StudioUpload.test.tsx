@@ -1,6 +1,7 @@
 import { createEmptyTimeline } from '@asap-hub/demo-timeline';
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router';
 
 import type { Me, Video } from '../../api/types';
 import { renderApp } from '../../test-utils';
@@ -187,6 +188,72 @@ it('aborts the multipart upload when cancelled', async () => {
   );
 });
 
+it('files the upload under the title, folder and date that were chosen', async () => {
+  renderUpload();
+
+  await userEvent.upload(
+    screen.getByLabelText('Recording'),
+    makeFile(partSize * 2),
+  );
+  await userEvent.clear(screen.getByLabelText('Title'));
+  await userEvent.type(screen.getByLabelText('Title'), 'Sprint 42 retro');
+  await screen.findByRole('option', { name: 'Sprints' });
+  await userEvent.selectOptions(screen.getByLabelText('Folder'), 'Sprints');
+  fireEvent.change(screen.getByLabelText('Recorded on'), {
+    target: { value: '2026-08-01' },
+  });
+  await userEvent.click(screen.getByRole('button', { name: 'Start upload' }));
+
+  await waitFor(() =>
+    expect(baseApi.createUpload).toHaveBeenCalledWith({
+      title: 'Sprint 42 retro',
+      folderId: 'folder-1',
+      recordedAt: '2026-08-01',
+    }),
+  );
+});
+
+it('falls back to a plain message when the failure carries none', async () => {
+  renderUpload({
+    createUpload: jest.fn(() => Promise.reject('offline')) as never,
+  });
+
+  await userEvent.upload(
+    screen.getByLabelText('Recording'),
+    makeFile(partSize * 2),
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Start upload' }));
+
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    /^The upload did not finish\. Your finished parts were kept/,
+  );
+});
+
+it('starts over after a failed upload even when the abort is refused', async () => {
+  const abortUpload = jest.fn(() => Promise.reject(new Error('gone')));
+  renderUpload({
+    abortUpload,
+    completeUpload: jest.fn(() =>
+      Promise.reject(new Error('Completing the upload failed')),
+    ),
+  });
+
+  await userEvent.upload(
+    screen.getByLabelText('Recording'),
+    makeFile(partSize * 2),
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Start upload' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    'Completing the upload failed',
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+  expect(abortUpload).toHaveBeenCalledWith('video-1', 'upload-1');
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Start upload' })).toBeEnabled();
+});
+
 describe('starting a demo in the studio', () => {
   // the button used to post a project on the first click, so every stray one
   // left an "Untitled demo" in the library for good
@@ -214,6 +281,70 @@ describe('starting a demo in the studio', () => {
     await waitFor(() =>
       expect(baseApi.createProject).toHaveBeenCalledWith(
         expect.objectContaining({ title: 'Sprint 43 demo' }),
+      ),
+    );
+  });
+
+  const PathProbe = () => (
+    <span data-testid="path">{useLocation().pathname}</span>
+  );
+
+  it.each([
+    ['an error', new Error('Folder is gone')],
+    ['a bare rejection', 'offline'],
+  ])(
+    'stays on the page with the name kept when opening fails with %s',
+    async (_label, failure) => {
+      const createProject = jest.fn(() => Promise.reject(failure));
+      renderApp(
+        <>
+          <StudioUpload />
+          <PathProbe />
+        </>,
+        {
+          api: { ...baseApi, createProject } as never,
+          me: creatorMe,
+          route: '/studio/upload',
+          routePath: '*',
+        },
+      );
+
+      await userEvent.type(screen.getByLabelText('Name'), 'Sprint 43 demo');
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Open the studio' }),
+      );
+
+      await waitFor(() => expect(createProject).toHaveBeenCalled());
+      expect(screen.getByTestId('path')).toHaveTextContent('/studio/upload');
+      expect(screen.getByLabelText('Name')).toHaveValue('Sprint 43 demo');
+      expect(
+        screen.getByRole('button', { name: 'Open the studio' }),
+      ).toBeEnabled();
+    },
+  );
+
+  it('opens the new project in the studio', async () => {
+    renderApp(
+      <>
+        <StudioUpload />
+        <PathProbe />
+      </>,
+      {
+        api: baseApi,
+        me: creatorMe,
+        route: '/studio/upload',
+        routePath: '*',
+      },
+    );
+
+    await userEvent.type(screen.getByLabelText('Name'), 'Sprint 43 demo');
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Open the studio' }),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('path')).toHaveTextContent(
+        '/studio/projects/project-9',
       ),
     );
   });

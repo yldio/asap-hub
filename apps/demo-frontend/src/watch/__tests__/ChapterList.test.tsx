@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import ChapterList from '../ChapterList';
 
 const chapters = [
@@ -45,5 +47,38 @@ describe('chapter downloads', () => {
 
     const button = screen.getByRole('button', { name: /New section 1/ });
     expect(button.querySelector('a')).toBeNull();
+  });
+});
+
+it('says so when a demo has no chapters', () => {
+  list({ chapters: [] });
+
+  expect(screen.getByText('This demo has no chapters yet.')).toBeVisible();
+  expect(screen.queryByRole('button')).toBeNull();
+});
+
+describe('previewing a chapter', () => {
+  it('previews the chapter under the pointer and drops it on leave', async () => {
+    const onHover = jest.fn();
+    list({ onHover });
+    const row = screen.getByRole('button', { name: /New section 2/ });
+
+    await userEvent.hover(row);
+    expect(onHover).toHaveBeenLastCalledWith(chapters[1]);
+
+    await userEvent.unhover(row);
+    expect(onHover).toHaveBeenLastCalledWith(null);
+  });
+
+  it('previews the focused chapter and drops it when focus moves on', async () => {
+    const onHover = jest.fn();
+    list({ onHover });
+
+    await userEvent.tab();
+    expect(onHover).toHaveBeenLastCalledWith(chapters[0]);
+
+    await userEvent.tab();
+    expect(onHover).toHaveBeenCalledWith(null);
+    expect(onHover).toHaveBeenLastCalledWith(chapters[1]);
   });
 });

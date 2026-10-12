@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StrictMode } from 'react';
 
@@ -281,6 +287,88 @@ it('plays and pauses from the control bar', async () => {
   expect(video.pause).toHaveBeenCalled();
 });
 
+it('offers play again once the video pauses', async () => {
+  const { video } = renderPlayer();
+
+  fireEvent.play(video);
+  expect(
+    await screen.findByRole('button', { name: 'Pause' }),
+  ).toBeInTheDocument();
+
+  fireEvent.pause(video);
+
+  expect(await screen.findByRole('button', { name: 'Play' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Pause' })).toBeNull();
+});
+
+describe('controls when the pointer leaves', () => {
+  const wrapperOf = (video: HTMLVideoElement) =>
+    video.parentElement as HTMLElement;
+
+  it('hides them straight away over a playing video', async () => {
+    const { video } = renderPlayer();
+    fireEvent.play(video);
+    const pause = await screen.findByRole('button', { name: 'Pause' });
+    expect(pause).toBeVisible();
+
+    fireEvent.mouseLeave(wrapperOf(video));
+
+    await waitFor(() => expect(pause).not.toBeVisible());
+  });
+
+  it('keeps them over a paused video', () => {
+    const { video } = renderPlayer();
+
+    fireEvent.mouseLeave(wrapperOf(video));
+
+    expect(screen.getByRole('button', { name: 'Full screen' })).toBeVisible();
+  });
+});
+
+it('shows how far each chapter has buffered', () => {
+  const { video } = renderPlayer();
+  const bufferedFills = () =>
+    Array.from(screen.getByRole('slider', { name: 'Seek' }).children)
+      .filter((segment) => segment.childElementCount === 2)
+      .map(
+        (segment) => (segment.firstElementChild as HTMLElement).style.transform,
+      );
+
+  Object.defineProperty(video, 'buffered', {
+    value: { length: 1, end: () => 120 },
+    configurable: true,
+  });
+  fireEvent.progress(video);
+  expect(bufferedFills()).toEqual(['scaleX(1)', 'scaleX(0.25)']);
+
+  Object.defineProperty(video, 'buffered', {
+    value: { length: 0, end: () => 0 },
+    configurable: true,
+  });
+  fireEvent.progress(video);
+  expect(bufferedFills()).toEqual(['scaleX(0)', 'scaleX(0)']);
+});
+
+it('previews the hovered time over the seek bar and drops it on leave', () => {
+  renderPlayer();
+  const bar = screen.getByRole('slider', { name: 'Seek' });
+  Object.defineProperty(bar, 'getBoundingClientRect', {
+    value: () => ({ left: 0, width: 300, top: 0, height: 16 }) as DOMRect,
+    configurable: true,
+  });
+
+  const move = createEvent.pointerMove(bar);
+  Object.defineProperty(move, 'clientX', { value: 150 });
+  fireEvent(bar, move);
+
+  const tooltip = screen.getByTestId('seek-tooltip');
+  expect(tooltip).toHaveTextContent('2:30');
+  expect(tooltip).toHaveTextContent('Event attendance');
+
+  fireEvent.pointerLeave(bar);
+  expect(screen.queryByTestId('seek-tooltip')).toBeNull();
+});
+
 it('hides the big centre play button once playback has started', async () => {
   const { video } = renderPlayer();
 
@@ -397,6 +485,19 @@ describe('keyboard shortcuts', () => {
 
     expect(video.play).not.toHaveBeenCalled();
     input.remove();
+  });
+
+  it('does nothing for a key it has no shortcut for', () => {
+    const { video, setCurrentTime, onTimeChange } = renderPlayer();
+    engage();
+    Object.defineProperty(video, 'paused', { value: true, configurable: true });
+
+    fireEvent.keyDown(window, { key: 'k' });
+
+    expect(video.play).not.toHaveBeenCalled();
+    expect(video.muted).toBe(false);
+    expect(setCurrentTime).not.toHaveBeenCalled();
+    expect(onTimeChange).not.toHaveBeenCalled();
   });
 
   it('ignores shortcuts when the player is not engaged', () => {

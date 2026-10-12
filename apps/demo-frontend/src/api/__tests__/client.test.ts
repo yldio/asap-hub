@@ -495,6 +495,233 @@ describe('createApi endpoints', () => {
     expect(url).toEqual(`${API_BASE_URL}/api/users/auth0%7C1`);
     expect(init.method).toEqual('DELETE');
   });
+
+  it('asks for a re-encode of a video', async () => {
+    respond({ video: { id: 'v 1', reencode: { state: 'queued' } } });
+    await expect(api.reencodeVideo('v 1')).resolves.toEqual({
+      id: 'v 1',
+      reencode: { state: 'queued' },
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/videos/v%201/reencode`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toBeUndefined();
+  });
+
+  it('reports a playback error the browser raised', async () => {
+    fetchMock.mockResolvedValueOnce({ ok: true, status: 204 });
+    const error = { code: 3, message: 'DECODE', userAgent: 'Firefox' };
+    await expect(api.reportPlaybackError('v1', error)).resolves.toBeUndefined();
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/videos/v1/playback-errors`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toEqual(JSON.stringify(error));
+  });
+});
+
+describe('studio project endpoints', () => {
+  const timeline = { clips: [] } as never;
+
+  it('creates a project and hands back its first timeline', async () => {
+    const created = { video: { id: 'p1' }, timeline, timelineVersion: 1 };
+    respond(created);
+    const input = { title: 'Sprint 43', folderId: 'f1' };
+    await expect(api.createProject(input)).resolves.toEqual(created);
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toEqual(JSON.stringify(input));
+  });
+
+  it('reads the timeline of a project', async () => {
+    respond({ timeline, timelineVersion: 7 });
+    await expect(api.getTimeline('p 1')).resolves.toEqual({
+      timeline,
+      timelineVersion: 7,
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p%201/timeline`);
+    expect(init.method).toEqual('GET');
+  });
+
+  it('saves the timeline with the versions it was edited from', async () => {
+    respond({ video: { id: 'p1' }, timelineVersion: 8 });
+    const input = { timeline, timelineVersion: 7, version: 3 };
+    await expect(api.saveTimeline('p1', input)).resolves.toEqual({
+      video: { id: 'p1' },
+      timelineVersion: 8,
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/timeline`);
+    expect(init.method).toEqual('PUT');
+    expect(init.body).toEqual(JSON.stringify(input));
+  });
+
+  it('refuses to save on unload a timeline too large for a keepalive body', () => {
+    const input = {
+      timeline: { clips: [], padding: 'x'.repeat(60_001) } as never,
+      timelineVersion: 7,
+      version: 3,
+    };
+
+    expect(api.saveTimelineOnUnload('p1', 'unload-token', input)).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('lists the assets of a project', async () => {
+    respond({ assets: [{ assetId: 'a1' }] });
+    await expect(api.listAssets('p1')).resolves.toEqual([{ assetId: 'a1' }]);
+    expect(lastCall().url).toEqual(`${API_BASE_URL}/api/projects/p1/assets`);
+  });
+
+  it('creates an asset upload', async () => {
+    const created = { assetId: 'a1', uploadId: 'u1', key: 'k', partSize: 5 };
+    respond(created);
+    const input = {
+      kind: 'audio' as const,
+      mimeType: 'audio/webm',
+      label: 'Narration',
+      extension: 'webm',
+    };
+    await expect(api.createAsset('p1', input)).resolves.toEqual(created);
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/assets`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toEqual(JSON.stringify(input));
+  });
+
+  it('asks for part urls for an asset', async () => {
+    respond({ urls: [{ partNumber: 1, url: 'https://s3/1' }] });
+    await expect(
+      api.createAssetPartUrls('p1', 'a/1', 'u1', [1]),
+    ).resolves.toEqual([{ partNumber: 1, url: 'https://s3/1' }]);
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/assets/a%2F1/parts`);
+    expect(init.body).toEqual(
+      JSON.stringify({ uploadId: 'u1', partNumbers: [1] }),
+    );
+  });
+
+  it('completes an asset upload', async () => {
+    respond({ asset: { assetId: 'a1', state: 'ready' } });
+    const parts = [{ partNumber: 1, eTag: 'etag-1' }];
+    await expect(api.completeAsset('p1', 'a1', 'u1', parts)).resolves.toEqual({
+      assetId: 'a1',
+      state: 'ready',
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/assets/a1/complete`);
+    expect(init.body).toEqual(JSON.stringify({ uploadId: 'u1', parts }));
+  });
+
+  it('renames an asset', async () => {
+    respond({ asset: { assetId: 'a1', label: 'Voice over' } });
+    await expect(api.renameAsset('p1', 'a1', 'Voice over')).resolves.toEqual({
+      assetId: 'a1',
+      label: 'Voice over',
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/assets/a1`);
+    expect(init.method).toEqual('PATCH');
+    expect(init.body).toEqual(JSON.stringify({ label: 'Voice over' }));
+  });
+
+  it('deletes an asset', async () => {
+    fetchMock.mockResolvedValueOnce({ ok: true, status: 204 });
+    await expect(api.deleteAsset('p1', 'a1')).resolves.toBeUndefined();
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/assets/a1`);
+    expect(init.method).toEqual('DELETE');
+  });
+
+  it('surfaces a refused asset delete', async () => {
+    respond({ error: 'in_use' }, 409);
+    const failure = await captureApiError(api.deleteAsset('p1', 'a1'));
+    expect(failure.status).toEqual(409);
+    expect(failure.code).toEqual('in_use');
+  });
+
+  it('starts a capture session', async () => {
+    respond({ sessionId: 's1', token: 't', captureUrl: 'https://c' });
+    await expect(api.startCapture('p1')).resolves.toEqual({
+      sessionId: 's1',
+      token: 't',
+      captureUrl: 'https://c',
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/recordings`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toBeUndefined();
+  });
+
+  it('mints a new capture bookmark', async () => {
+    respond({ snippetUrl: 'javascript:1', captureUrl: 'https://c' });
+    await expect(api.newCaptureBookmark('p1')).resolves.toEqual({
+      snippetUrl: 'javascript:1',
+      captureUrl: 'https://c',
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/capture-bookmark`);
+    expect(init.method).toEqual('POST');
+  });
+
+  it('reads the status of a capture session', async () => {
+    respond({ state: 'open', eventCount: 4, clientCount: 1 });
+    await expect(api.captureStatus('p1', 's 1')).resolves.toEqual({
+      state: 'open',
+      eventCount: 4,
+      clientCount: 1,
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/recordings/s%201`);
+    expect(init.method).toEqual('GET');
+  });
+
+  it('finalises a capture with the recording window', async () => {
+    respond({ eventsKey: 'events/s1.ndjson' });
+    const window = { startedAtEpochMs: 1000, stoppedAtEpochMs: 5000 };
+    await expect(api.finaliseCapture('p1', 's1', window)).resolves.toEqual({
+      eventsKey: 'events/s1.ndjson',
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(
+      `${API_BASE_URL}/api/projects/p1/recordings/s1/finalise`,
+    );
+    expect(init.method).toEqual('POST');
+    expect(init.body).toEqual(JSON.stringify(window));
+  });
+
+  it('starts a render of every clip', async () => {
+    respond({ video: { id: 'p1', render: { state: 'queued' } } });
+    await expect(api.startRender('p1', 4)).resolves.toEqual({
+      id: 'p1',
+      render: { state: 'queued' },
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/render`);
+    expect(init.method).toEqual('POST');
+    expect(init.body).toEqual(JSON.stringify({ version: 4 }));
+  });
+
+  it('starts a render of the chosen clips only', async () => {
+    respond({ video: { id: 'p1' } });
+    await api.startRender('p1', 4, ['c1', 'c2']);
+    expect(lastCall().init.body).toEqual(
+      JSON.stringify({ version: 4, clipIds: ['c1', 'c2'] }),
+    );
+  });
+
+  it('cancels a render', async () => {
+    respond({ video: { id: 'p1', render: { state: 'cancelled' } } });
+    await expect(api.cancelRender('p1', 5)).resolves.toEqual({
+      id: 'p1',
+      render: { state: 'cancelled' },
+    });
+    const { url, init } = lastCall();
+    expect(url).toEqual(`${API_BASE_URL}/api/projects/p1/render`);
+    expect(init.method).toEqual('DELETE');
+    expect(init.body).toEqual(JSON.stringify({ version: 5 }));
+  });
 });
 
 describe('the captured event stream', () => {
@@ -638,6 +865,47 @@ describe('the captured event stream', () => {
     expect(failure.status).toBe(409);
     expect(failure.code).toBe('not_finalised');
     expect(error).toHaveBeenCalledWith(expect.stringContaining('409'));
+  });
+
+  it('names a stream that was never written as missing', async () => {
+    refuseStream();
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      json: () => Promise.resolve({ error: 'stream_missing' }),
+    });
+
+    const failure = await captureStreamError(api.captureEvents('p1', 's1'));
+
+    expect(failure).toBeInstanceOf(CaptureStreamError);
+    expect(failure.reason).toBe('missing');
+    expect(failure.message).toBe(
+      'No captured event stream was written for session s1',
+    );
+    expect(failure.inlineStatus).toBe(404);
+    expect(failure.bytes).toBe(64);
+  });
+
+  it('logs the bare status when the refusal names no code', async () => {
+    respond(undefined, 502);
+
+    await captureApiError(api.captureEvents('p1', 's1'));
+
+    expect(error).toHaveBeenCalledWith(
+      'the api refused to authorise the captured events: 502',
+    );
+  });
+
+  it('logs a failure to authorise the read that carries no status', async () => {
+    fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+
+    await expect(api.captureEvents('p1', 's1')).rejects.toThrow(
+      'Failed to fetch',
+    );
+
+    expect(error).toHaveBeenCalledWith(
+      'the api refused to authorise the captured events: TypeError: Failed to fetch',
+    );
   });
 
   it('logs the status storage refused the stream with', async () => {

@@ -480,3 +480,127 @@ it('reports what the browser said when a video will not play', async () => {
     }),
   );
 });
+
+it('keeps the failure panel up when the playback error cannot be reported', async () => {
+  const reportPlaybackError = jest.fn(() =>
+    Promise.reject(new ApiError(500, 'down')),
+  );
+  renderApp(<Watch />, {
+    api: { ...api, reportPlaybackError },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  const player = (await screen.findByTestId('demo-video')) as HTMLVideoElement;
+  Object.defineProperty(player, 'error', {
+    value: { code: 3, message: 'PIPELINE_ERROR_DECODE' },
+    configurable: true,
+  });
+  fireEvent.error(player);
+
+  await waitFor(() => expect(reportPlaybackError).toHaveBeenCalled());
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    /^Playback failed/,
+  );
+});
+
+it('loads the demo again from the retry after a failed load', async () => {
+  const getVideo = jest
+    .fn()
+    .mockRejectedValueOnce(new ApiError(400, 'bad'))
+    .mockResolvedValue(video);
+  renderApp(<Watch />, {
+    api: { ...api, getVideo },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  expect(await screen.findByText('We could not load this demo')).toBeVisible();
+  await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByTestId('demo-video')).toBeVisible();
+  expect(getVideo).toHaveBeenCalledTimes(2);
+});
+
+// a freshly uploaded demo can be missing for a moment before its row lands
+it('waits out a demo that is not there yet instead of giving up', async () => {
+  const getVideo = jest
+    .fn()
+    .mockRejectedValueOnce(new ApiError(404, 'not found'))
+    .mockResolvedValue(video);
+  renderApp(<Watch />, {
+    api: { ...api, getVideo },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  expect(
+    await screen.findByTestId('demo-video', {}, { timeout: 4000 }),
+  ).toBeVisible();
+  expect(getVideo).toHaveBeenCalledTimes(2);
+  expect(screen.queryByText('We could not load this demo')).toBeNull();
+});
+
+it('explains that a studio draft has to be exported before anyone can watch it', async () => {
+  renderApp(<Watch />, {
+    api: {
+      ...api,
+      getVideo: () =>
+        Promise.resolve({
+          ...video,
+          kind: 'studio' as const,
+          processingState: 'empty' as const,
+        }),
+    },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  expect(
+    await screen.findByText('This demo has not been exported yet'),
+  ).toBeVisible();
+  expect(screen.getByText(/A creator has to export it/)).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Check again' })).toBeNull();
+});
+
+it('checks again on request and plays the demo once it has finished encoding', async () => {
+  const getVideo = jest
+    .fn()
+    .mockResolvedValueOnce({ ...video, processingState: 'processing' })
+    .mockResolvedValue(video);
+  renderApp(<Watch />, {
+    api: { ...api, getVideo },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Check again' }),
+  );
+
+  expect(await screen.findByTestId('demo-video')).toBeVisible();
+  expect(getVideo).toHaveBeenCalledTimes(2);
+});
+
+it('asks for playback access again from the retry', async () => {
+  const requestAccess = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('403'))
+    .mockResolvedValue(access);
+  renderApp(<Watch />, {
+    api: { ...api, requestAccess },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+
+  expect(await screen.findByTestId('demo-video')).toBeVisible();
+  expect(requestAccess).toHaveBeenCalledTimes(2);
+});

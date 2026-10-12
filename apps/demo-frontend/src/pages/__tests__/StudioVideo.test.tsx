@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Route, Routes } from 'react-router';
 
 import { ApiError } from '../../api/client';
 import type { Me, Video, VideoAccess } from '../../api/types';
@@ -1035,5 +1036,31 @@ it('shows an uploading screen while the recording is still uploading', async () 
   });
 
   expect(await screen.findByText('This demo is still uploading')).toBeVisible();
+  expect(screen.queryByTestId('studio-video')).not.toBeInTheDocument();
+});
+
+it('sends a studio project on to the editor that owns it', async () => {
+  renderApp(
+    <Routes>
+      <Route path="/studio/videos/:id" element={<StudioVideo />} />
+      <Route path="/studio/projects/:id" element={<p>timeline editor</p>} />
+    </Routes>,
+    {
+      api: {
+        ...baseApi,
+        getVideo: () =>
+          Promise.resolve({
+            ...video,
+            kind: 'studio' as const,
+            processingState: 'empty' as const,
+          }),
+      },
+      me: creatorMe,
+      route: '/studio/videos/video-1',
+      routePath: '*',
+    },
+  );
+
+  expect(await screen.findByText('timeline editor')).toBeVisible();
   expect(screen.queryByTestId('studio-video')).not.toBeInTheDocument();
 });

@@ -1,5 +1,5 @@
 import createAuth0Client from '@auth0/auth0-spa-js';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StrictMode } from 'react';
 import {
@@ -172,6 +172,16 @@ it('stops loading when the client cannot be created', async () => {
   await waitFor(() =>
     expect(screen.getByTestId('state')).toHaveTextContent(/^out$/),
   );
+});
+
+it('refuses every action until a provider is mounted', () => {
+  const { result } = renderHook(() => useAuth());
+
+  expect(result.current.isLoading).toBe(true);
+  expect(result.current.isAuthenticated).toBe(false);
+  expect(() => result.current.getToken()).toThrow('Auth client is not ready');
+  expect(() => result.current.login()).toThrow('Auth client is not ready');
+  expect(() => result.current.logout()).toThrow('Auth client is not ready');
 });
 
 describe('redirect callback', () => {

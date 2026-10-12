@@ -109,6 +109,13 @@ describe('pruneSelection', () => {
     });
   });
 
+  it('keeps the anchor when it survives the prune', () => {
+    expect(pruneSelection({ ids: ['a', 'z'], anchor: 'a' }, ordered)).toEqual({
+      ids: ['a'],
+      anchor: 'a',
+    });
+  });
+
   it('returns the same object when nothing changed', () => {
     const current = { ids: ['a', 'b'], anchor: 'a' };
     expect(pruneSelection(current, ordered)).toBe(current);

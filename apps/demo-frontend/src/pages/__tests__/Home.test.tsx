@@ -1419,6 +1419,27 @@ describe('folder cards under a status filter', () => {
     await screen.findByText('Unfiled walkthrough');
     expect(within(contentSection()).getByText('Engineering')).toBeVisible();
   });
+
+  it('brings them back when the filter is reset to every status', async () => {
+    renderHome({ route: '/?status=drafts' });
+    await screen.findByRole('heading', { name: 'Home', level: 1 });
+    await waitFor(() =>
+      expect(within(contentSection()).queryByText('Folders')).toBeNull(),
+    );
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Filter by status' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'All statuses' }),
+    );
+
+    await waitFor(() => expect(queryString()).not.toContain('status'));
+    expect(
+      await within(contentSection()).findByText('Engineering'),
+    ).toBeVisible();
+    expect(screen.getByText('Unfiled walkthrough')).toBeVisible();
+  });
 });
 
 describe('headings', () => {
@@ -1479,4 +1500,389 @@ describe('on a narrow screen', () => {
       within(sidebar()).queryByRole('button', { name: 'Folders' }),
     ).toBeNull();
   });
+});
+
+describe('dragging onto a folder', () => {
+  type Box = { left: number; top: number; width: number; height: number };
+  const boxes = new Map<Element, Box>();
+  const elsewhere: Box = { left: 0, top: 0, width: 100, height: 20 };
+  const dropZone: Box = { left: 500, top: 500, width: 100, height: 20 };
+
+  beforeEach(() => {
+    boxes.clear();
+    // jsdom lays nothing out, so dnd-kit only sees a drop target given a box
+    jest
+      .spyOn(Element.prototype, 'getBoundingClientRect')
+      .mockImplementation(function measure(this: Element) {
+        const { left, top, width, height } = boxes.get(this) ?? elsewhere;
+        return {
+          left,
+          top,
+          width,
+          height,
+          x: left,
+          y: top,
+          right: left + width,
+          bottom: top + height,
+          toJSON: () => ({}),
+        };
+      });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const sidebarRow = (name: string): HTMLElement =>
+    within(sidebar()).getByRole('link', { name }).parentElement as HTMLElement;
+
+  // a creator's folder card is draggable, which announces it as a button
+  const folderCard = (name: string): HTMLElement =>
+    within(contentSection()).getByRole('button', {
+      name: new RegExp(`^${name}`),
+    });
+
+  const startDrag = async (
+    user: ReturnType<typeof userEvent.setup>,
+    source: HTMLElement,
+    target: HTMLElement,
+  ) => {
+    boxes.set(target, dropZone);
+    await user.pointer([
+      { keys: '[MouseLeft>]', target: source, coords: { x: 10, y: 10 } },
+      { target: source, coords: { x: 30, y: 10 } },
+    ]);
+  };
+
+  const finishDrag = (
+    user: ReturnType<typeof userEvent.setup>,
+    target: HTMLElement,
+  ) =>
+    user.pointer([
+      { target, coords: { x: 510, y: 510 } },
+      { keys: '[/MouseLeft]', target },
+    ]);
+
+  const drag = async (source: HTMLElement, target: HTMLElement) => {
+    const user = userEvent.setup();
+    await startDrag(user, source, target);
+    await finishDrag(user, target);
+  };
+
+  const moved = { moved: ['v-unfiled'], missing: [] };
+
+  describe('a video', () => {
+    it('moves into a folder in the tree, carrying its title', async () => {
+      const bulkMoveVideos = jest.fn(() => Promise.resolve(moved));
+      renderHome({ api: { bulkMoveVideos } });
+      await screen.findByText('Unfiled walkthrough');
+      const user = userEvent.setup();
+
+      await startDrag(
+        user,
+        cardFor('Unfiled walkthrough'),
+        sidebarRow('Design'),
+      );
+      expect(screen.getAllByText('Unfiled walkthrough')).toHaveLength(2);
+      await finishDrag(user, sidebarRow('Design'));
+
+      await waitFor(() =>
+        expect(bulkMoveVideos).toHaveBeenCalledWith(['v-unfiled'], 'f-design'),
+      );
+      expect(screen.getAllByText('Unfiled walkthrough')).toHaveLength(1);
+    });
+
+    it('moves into a folder card', async () => {
+      const bulkMoveVideos = jest.fn(() => Promise.resolve(moved));
+      renderHome({ api: { bulkMoveVideos } });
+      await screen.findByText('Unfiled walkthrough');
+
+      await drag(cardFor('Unfiled walkthrough'), folderCard('Engineering'));
+
+      await waitFor(() =>
+        expect(bulkMoveVideos).toHaveBeenCalledWith(['v-unfiled'], 'f-eng'),
+      );
+    });
+
+    it('takes the rest of the selection with it', async () => {
+      const bulkMoveVideos = jest.fn(() =>
+        Promise.resolve({ moved: ['v-eng', 'v-sprint'], missing: [] }),
+      );
+      renderHome({ api: { bulkMoveVideos }, route: '/?view=all' });
+      await screen.findByText('Sprint retro');
+      const user = userEvent.setup();
+      await user.click(cardFor('Engineering standup'));
+      await user.keyboard('{Control>}');
+      await user.click(cardFor('Sprint retro'));
+      await user.keyboard('{/Control}');
+
+      await startDrag(user, cardFor('Sprint retro'), sidebarRow('Design'));
+      expect(screen.getByText('2 videos')).toBeVisible();
+      await finishDrag(user, sidebarRow('Design'));
+
+      await waitFor(() =>
+        expect(bulkMoveVideos).toHaveBeenCalledWith(
+          ['v-eng', 'v-sprint'],
+          'f-design',
+        ),
+      );
+    });
+
+    it('stays where it was when it is let go away from any folder', async () => {
+      const bulkMoveVideos = jest.fn(() => Promise.resolve(moved));
+      renderHome({ api: { bulkMoveVideos } });
+      await screen.findByText('Unfiled walkthrough');
+      const card = cardFor('Unfiled walkthrough');
+
+      await drag(card, card);
+
+      expect(screen.getAllByText('Unfiled walkthrough')).toHaveLength(1);
+      expect(bulkMoveVideos).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('a folder', () => {
+    const moveFolder = jest.fn((id: string, parentId?: string) =>
+      Promise.resolve({ id, name: 'Moved', parentId }),
+    );
+
+    beforeEach(() => {
+      moveFolder.mockClear();
+    });
+
+    it('moves into another folder in the tree, carrying its name', async () => {
+      renderHome({ api: { moveFolder } });
+      await within(sidebar()).findByText('Design');
+      const user = userEvent.setup();
+      const before = screen.getAllByText('Design').length;
+
+      await startDrag(user, sidebarRow('Design'), sidebarRow('Engineering'));
+      expect(screen.getAllByText('Design')).toHaveLength(before + 1);
+      await finishDrag(user, sidebarRow('Engineering'));
+
+      await waitFor(() =>
+        expect(moveFolder).toHaveBeenCalledWith('f-design', 'f-eng'),
+      );
+    });
+
+    it('moves from its card into another folder card', async () => {
+      renderHome({ api: { moveFolder } });
+      await screen.findByText('Unfiled walkthrough');
+
+      await drag(folderCard('Design'), folderCard('Engineering'));
+
+      await waitFor(() =>
+        expect(moveFolder).toHaveBeenCalledWith('f-design', 'f-eng'),
+      );
+    });
+
+    it('comes out to the top level when a nested one is dropped on Home', async () => {
+      renderHome({ api: { moveFolder }, route: '/?folder=f-sprint' });
+      await within(sidebar()).findByText('Sprints');
+
+      await drag(sidebarRow('Sprints'), sidebarRow('Home'));
+
+      await waitFor(() =>
+        expect(moveFolder).toHaveBeenCalledWith('f-sprint', 'TOP'),
+      );
+    });
+
+    it('offers no Home target to a folder already at the top level', async () => {
+      renderHome({ api: { moveFolder }, route: '/?folder=f-eng' });
+      await within(sidebar()).findByText('Design');
+
+      await drag(sidebarRow('Design'), sidebarRow('Home'));
+
+      expect(moveFolder).not.toHaveBeenCalled();
+    });
+
+    it('never lands inside its own subfolder', async () => {
+      renderHome({ api: { moveFolder } });
+      await userEvent.click(
+        await within(sidebar()).findByRole('button', {
+          name: 'Expand Engineering',
+        }),
+      );
+
+      await drag(sidebarRow('Engineering'), sidebarRow('Sprints'));
+
+      expect(moveFolder).not.toHaveBeenCalled();
+    });
+
+    it('says when the move did not go through', async () => {
+      renderHome({
+        api: { moveFolder: () => Promise.reject(new Error('boom')) },
+      });
+      await within(sidebar()).findByText('Design');
+
+      await drag(sidebarRow('Design'), sidebarRow('Engineering'));
+
+      expect(
+        await screen.findByRole('alert', {}, { timeout: 4000 }),
+      ).toHaveTextContent(
+        /^We could not move that folder\. Try again in a moment\.$/,
+      );
+    });
+  });
+});
+
+describe('backing out of a menu or a dialog', () => {
+  it('closes the folder menu on Escape', async () => {
+    renderHome();
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    expect(
+      await screen.findByRole('menu', { name: 'Actions for Design' }),
+    ).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(
+      screen.queryByRole('menu', { name: 'Actions for Design' }),
+    ).toBeNull();
+  });
+
+  it('closes the video menu on Escape', async () => {
+    renderHome();
+
+    await screen.findByText('Unfiled walkthrough');
+    await openVideoMenu('Unfiled walkthrough');
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.queryByRole('menu', { name: 'Video actions' })).toBeNull();
+  });
+
+  it('drops a subfolder that is still being named on Escape', async () => {
+    const createFolder = jest.fn();
+    renderHome({ api: { createFolder } });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'New subfolder' }),
+    );
+    await userEvent.type(
+      await screen.findByLabelText('New subfolder in Design'),
+      'Sub{Escape}',
+    );
+
+    expect(screen.queryByLabelText('New subfolder in Design')).toBeNull();
+    expect(createFolder).not.toHaveBeenCalled();
+  });
+
+  it('keeps the old name when a rename is abandoned on Escape', async () => {
+    const renameFolder = jest.fn();
+    renderHome({ api: { renameFolder } });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Actions for Design' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Rename' }),
+    );
+    const input = await screen.findByLabelText('Rename Design');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Brand{Escape}');
+
+    expect(screen.queryByLabelText('Rename Design')).toBeNull();
+    expect(
+      within(sidebar()).getByRole('link', { name: 'Design' }),
+    ).toBeVisible();
+    expect(renameFolder).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      'cancel',
+      () => userEvent.click(screen.getByRole('button', { name: 'Cancel' })),
+    ],
+    ['escape', () => userEvent.keyboard('{Escape}')],
+  ])(
+    'keeps the videos when the delete dialog is left on %s',
+    async (_how, leave) => {
+      const bulkDeleteVideos = jest.fn();
+      renderHome({ api: { bulkDeleteVideos } });
+
+      await screen.findByText('Unfiled walkthrough');
+      const menu = await openVideoMenu('Unfiled walkthrough');
+      await userEvent.click(
+        within(menu).getByRole('menuitem', { name: 'Delete' }),
+      );
+      expect(await screen.findByRole('dialog')).toBeVisible();
+
+      await leave();
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+      expect(bulkDeleteVideos).not.toHaveBeenCalled();
+      expect(screen.getByText('Unfiled walkthrough')).toBeVisible();
+    },
+  );
+});
+
+describe('opening a video from its menu', () => {
+  const PathProbe = () => (
+    <span data-testid="path">{useLocation().pathname}</span>
+  );
+
+  const renderRouted = () =>
+    renderApp(
+      <>
+        <Home />
+        <PathProbe />
+      </>,
+      { api: baseApi() as never, me: creatorMe, routePath: '*' },
+    );
+
+  it.each([
+    ['Watch', '/videos/v-unfiled'],
+    ['Edit', '/studio/videos/v-unfiled'],
+  ])('%s goes to %s', async (item, path) => {
+    renderRouted();
+
+    await screen.findByText('Unfiled walkthrough');
+    const menu = await openVideoMenu('Unfiled walkthrough');
+    await userEvent.click(within(menu).getByRole('menuitem', { name: item }));
+
+    expect(screen.getByTestId('path')).toHaveTextContent(path);
+    expect(screen.queryByRole('menu', { name: 'Video actions' })).toBeNull();
+  });
+});
+
+it('names a single subfolder in the delete warning', async () => {
+  renderHome();
+
+  await userEvent.click(
+    await within(sidebar()).findByRole('button', {
+      name: 'Expand Engineering',
+    }),
+  );
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Actions for Sprints' }),
+  );
+  await userEvent.click(
+    await screen.findByRole('menuitem', { name: 'Delete' }),
+  );
+
+  const dialog = await screen.findByRole('dialog');
+  expect(
+    await within(dialog).findByText(
+      /This folder contains 1 video and 1 folder\./,
+    ),
+  ).toBeVisible();
+  expect(dialog).toHaveTextContent(
+    '1 video and 1 subfolder, including their video files, will be permanently deleted',
+  );
+});
+
+it('says there is nothing in the library yet', async () => {
+  renderHome({
+    api: { listAllVideos: () => Promise.resolve([]) },
+    route: '/?view=all',
+  });
+
+  expect(await screen.findByText('No videos yet.')).toBeVisible();
 });

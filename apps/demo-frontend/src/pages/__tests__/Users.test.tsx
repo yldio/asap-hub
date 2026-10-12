@@ -327,3 +327,71 @@ it('deletes a user after confirming and names the email', async () => {
 
   expect(deleteUser).toHaveBeenCalledWith('auth0|1');
 });
+
+it('searches by name and by email', async () => {
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.resolve(items) },
+  });
+  await screen.findByText('jane@example.com');
+  const search = screen.getByLabelText('Search users');
+
+  await userEvent.type(search, 'doe');
+  await waitFor(() =>
+    expect(screen.queryByText('dana@example.com')).toBeNull(),
+  );
+  expect(screen.getByText('jane@example.com')).toBeVisible();
+
+  await userEvent.clear(search);
+  await userEvent.type(search, 'DANA@');
+  await waitFor(() =>
+    expect(screen.queryByText('jane@example.com')).toBeNull(),
+  );
+  expect(screen.getByText('dana@example.com')).toBeVisible();
+
+  await userEvent.clear(search);
+  await userEvent.type(search, 'nobody');
+  expect(await screen.findByText('No users match')).toBeVisible();
+});
+
+it('closes the revoke dialog on escape without changing anything', async () => {
+  const updateUser = jest.fn();
+  renderApp(<Users />, {
+    me: adminMe,
+    api: { listUsers: () => Promise.resolve(items), updateUser },
+  });
+
+  const row = await rowFor('jane@example.com');
+  await userEvent.click(within(row).getByRole('button', { name: 'Revoke' }));
+  await userEvent.keyboard('{Escape}');
+
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(updateUser).not.toHaveBeenCalled();
+});
+
+it.each([
+  [
+    'cancel',
+    () => userEvent.click(screen.getByRole('button', { name: 'Cancel' })),
+  ],
+  ['escape', () => userEvent.keyboard('{Escape}')],
+])(
+  'keeps the user when the delete dialog is left on %s',
+  async (_how, leave) => {
+    const deleteUser = jest.fn();
+    renderApp(<Users />, {
+      me: adminMe,
+      api: { listUsers: () => Promise.resolve(items), deleteUser },
+    });
+
+    const row = await rowFor('jane@example.com');
+    await userEvent.click(within(row).getByRole('button', { name: 'Delete' }));
+    expect(screen.getByRole('dialog')).toBeVisible();
+
+    await leave();
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(deleteUser).not.toHaveBeenCalled();
+    expect(screen.getByText('jane@example.com')).toBeVisible();
+  },
+);

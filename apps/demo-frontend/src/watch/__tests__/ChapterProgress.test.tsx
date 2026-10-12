@@ -111,3 +111,22 @@ it('does not seek when the duration is unknown', () => {
 
   expect(onSeek).not.toHaveBeenCalled();
 });
+
+it('draws a chapter that shares its start with the next as an empty segment', () => {
+  const { bar } = renderProgress({
+    chapters: [
+      { startMs: 0, title: 'Intro' },
+      { startMs: 40000, title: 'Twin' },
+      { startMs: 40000, title: 'Middle' },
+    ],
+    currentSeconds: 40,
+  });
+
+  const fills = Array.from(bar.children).map(
+    (segment) => segment.firstElementChild as HTMLElement,
+  );
+  expect(fills).toHaveLength(3);
+  expect(fills[0]).toHaveStyle({ transform: 'scaleX(1)' });
+  expect(fills[1]).toHaveStyle({ transform: 'scaleX(0)' });
+  expect(fills[2]).toHaveStyle({ transform: 'scaleX(0)' });
+});

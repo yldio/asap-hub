@@ -463,6 +463,33 @@ it('lists the newest invite first', async () => {
   expect(emails).toEqual(['carl@example.com', 'jane@example.com']);
 });
 
+it('lists invites sent at the same moment by address', async () => {
+  const sentAt = '2026-03-01T00:00:00.000Z';
+  renderApp(<Invites />, {
+    me: creatorMe,
+    api: {
+      listInvites: () =>
+        Promise.resolve([
+          { email: 'zoe@example.com', role: 'member', createdAt: sentAt },
+          { email: 'amir@example.com', role: 'member', createdAt: sentAt },
+          { email: 'mo@example.com', role: 'member', createdAt: sentAt },
+        ] as Invite[]),
+    },
+  });
+
+  await screen.findByText('zoe@example.com');
+  const emails = screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((row) => row.firstElementChild?.textContent);
+
+  expect(emails).toEqual([
+    'amir@example.com',
+    'mo@example.com',
+    'zoe@example.com',
+  ]);
+});
+
 it('confirms that the invite went out', async () => {
   renderApp(<Invites />, {
     me: creatorMe,

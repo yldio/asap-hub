@@ -599,10 +599,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
           return [];
         }
 
-        await patchAndPublish(
-          speakerEntry,
-          Object.fromEntries(linkedFields.map((field) => [field, null])),
+        // Removing the field, not setting it to null, keeps the CMS speaker field app working.
+        const patchedEntry = await speakerEntry.patch(
+          linkedFields.map((field) => ({
+            op: 'remove' as const,
+            path: `/fields/${field}`,
+          })),
         );
+        await patchedEntry.publish();
         return linkedFields.map((field) => ({ speakerId, field }));
       }),
     );

@@ -2240,6 +2240,8 @@ describe('Events Contentful Data Provider', () => {
           { id: '123' },
         );
         const speakerEntry = getEntry(fields, { id: 'speaker-1' });
+        speakerEntry.patch = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.publish = jest.fn().mockResolvedValue(speakerEntry);
         when(environmentMock.getEntry)
           .calledWith('123')
           .mockResolvedValue(eventEntry);
@@ -2249,7 +2251,7 @@ describe('Events Contentful Data Provider', () => {
         return { eventEntry, speakerEntry };
       };
 
-      test('clears only the requested link and keeps the speaker on the event', async () => {
+      test('removes only the requested link field and keeps the speaker on the event', async () => {
         const { eventEntry, speakerEntry } = mockEventWithSpeaker({
           team: { 'en-US': entityLink('team-1') },
           project: { 'en-US': entityLink('project-1') },
@@ -2262,14 +2264,12 @@ describe('Events Contentful Data Provider', () => {
           speakersToUnlink: [{ speakerId: 'speaker-1', field: 'project' }],
         });
 
-        expect(patchAndPublish).toHaveBeenCalledTimes(1);
-        expect(patchAndPublish).toHaveBeenCalledWith(speakerEntry, {
-          project: null,
-        });
-        expect(patchAndPublish).not.toHaveBeenCalledWith(
-          eventEntry,
-          expect.anything(),
-        );
+        expect(speakerEntry.patch).toHaveBeenCalledWith([
+          { op: 'remove', path: '/fields/project' },
+        ]);
+        expect(speakerEntry.publish).toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        expect(eventEntry.patch).not.toHaveBeenCalled();
       });
 
       test('waits until the GraphQL API no longer returns the link', async () => {
@@ -2305,6 +2305,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         expect(speakerEntry.delete).toHaveBeenCalled();
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
         expect(patchAndPublish).toHaveBeenCalledTimes(1);
         expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
           speakers: [],
@@ -2312,7 +2313,9 @@ describe('Events Contentful Data Provider', () => {
       });
 
       test('skips speakers that are not on the event or already unlinked', async () => {
-        mockEventWithSpeaker({ team: { 'en-US': entityLink('team-1') } });
+        const { speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
 
         await eventDataProvider.updateEventDetails('123', {
           speakersToUnlink: [
@@ -2321,6 +2324,7 @@ describe('Events Contentful Data Provider', () => {
           ],
         });
 
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
         expect(patchAndPublish).not.toHaveBeenCalled();
         expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
       });
@@ -2348,7 +2352,7 @@ describe('Events Contentful Data Provider', () => {
       });
 
       describe('when a speaker entry write fails', () => {
-        const mockEventWithTwoSpeakers = () => {
+        const mockEventWithTwoSpeakers = (failing: 'unlink' | 'findings') => {
           const eventEntry = getEntry(
             {
               speakers: {
@@ -2378,14 +2382,20 @@ describe('Events Contentful Data Provider', () => {
           when(environmentMock.getEntry)
             .calledWith('speaker-2')
             .mockResolvedValue(keptEntry);
-          (patchAndPublish as jest.Mock).mockRejectedValueOnce(
-            new Error('Version mismatch'),
-          );
+          if (failing === 'unlink') {
+            keptEntry.patch = jest
+              .fn()
+              .mockRejectedValue(new Error('Version mismatch'));
+          } else {
+            (patchAndPublish as jest.Mock).mockRejectedValueOnce(
+              new Error('Version mismatch'),
+            );
+          }
           return { removedEntry };
         };
 
         test('does not delete removed speakers when unlinking another speaker fails', async () => {
-          const { removedEntry } = mockEventWithTwoSpeakers();
+          const { removedEntry } = mockEventWithTwoSpeakers('unlink');
 
           await expect(
             eventDataProvider.updateEventDetails('123', {
@@ -2399,7 +2409,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         test('does not delete removed speakers when updating the findings of another speaker fails', async () => {
-          const { removedEntry } = mockEventWithTwoSpeakers();
+          const { removedEntry } = mockEventWithTwoSpeakers('findings');
 
           await expect(
             eventDataProvider.updateEventDetails('123', {

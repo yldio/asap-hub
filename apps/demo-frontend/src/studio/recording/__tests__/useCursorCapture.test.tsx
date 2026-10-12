@@ -1106,3 +1106,230 @@ describe('the reopen after the page has been away', () => {
     await waitFor(() => expect(second.result.current.unreadEvents).toBe(true));
   });
 });
+
+describe('storage the browser will not read', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('starts with no session when the stored one is not readable', () => {
+    window.localStorage.setItem('demo-hub.capture.project-1', '{not json');
+
+    const view = render({ captureStatus: jest.fn() });
+
+    expect(view.result.current.session).toBeUndefined();
+  });
+
+  it('still starts a capture when storage cannot be read at all', async () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    const startCapture = jest.fn().mockResolvedValue(session);
+
+    const view = render({
+      startCapture,
+      captureStatus: jest.fn().mockResolvedValue(open),
+    });
+    expect(view.result.current.session).toBeUndefined();
+    expect(view.result.current.unreadEvents).toBe(false);
+
+    await act(async () => view.result.current.start());
+
+    await waitFor(() => expect(view.result.current.status).toEqual(open));
+    expect(view.result.current.session?.sessionId).toBe('session-1');
+  });
+});
+
+it('keeps no bookmark asked for before any capture was started', async () => {
+  const newCaptureBookmark = jest.fn().mockResolvedValue({
+    snippetUrl: 'http://localhost/capture/v1.js#project.project-1.second',
+    captureUrl: 'http://localhost/capture',
+  });
+  const view = render({ newCaptureBookmark });
+
+  await act(async () => view.result.current.newBookmark());
+
+  expect(newCaptureBookmark).toHaveBeenCalledWith('project-1');
+  expect(view.result.current.session).toBeUndefined();
+  expect(view.result.current.error).toBeUndefined();
+  expect(window.localStorage.getItem('demo-hub.capture.project-1')).toBeNull();
+});
+
+it('lets go of a session the server says has expired', async () => {
+  window.localStorage.setItem(
+    'demo-hub.capture.project-1',
+    JSON.stringify(session),
+  );
+  window.localStorage.setItem('demo-hub.capture.project-1.read', 'session-1');
+  const expired = { state: 'expired' as const, eventCount: 0, clientCount: 0 };
+
+  const view = render({ captureStatus: jest.fn().mockResolvedValue(expired) });
+
+  await waitFor(() => expect(view.result.current.status).toEqual(expired));
+  expect(window.localStorage.getItem('demo-hub.capture.project-1')).toBeNull();
+  expect(
+    window.localStorage.getItem('demo-hub.capture.project-1.read'),
+  ).toBeNull();
+});
+
+describe('a poll that answers after the session changed', () => {
+  const pollsBySession = () => {
+    let settleOld: {
+      resolve: (value: unknown) => void;
+      reject: (cause: unknown) => void;
+    } = {
+      resolve: () => undefined,
+      reject: () => undefined,
+    };
+    const captureStatus = jest.fn((_projectId: string, sessionId: string) =>
+      sessionId === 'session-1'
+        ? new Promise((resolve, reject) => {
+            settleOld = { resolve, reject };
+          })
+        : Promise.resolve(open),
+    );
+    return { captureStatus, old: () => settleOld };
+  };
+
+  const replaced = async (captureStatus: Api['captureStatus']) => {
+    window.localStorage.setItem(
+      'demo-hub.capture.project-1',
+      JSON.stringify(session),
+    );
+    const view = render({
+      captureStatus,
+      startCapture: jest
+        .fn()
+        .mockResolvedValue({ ...session, sessionId: 'session-2' }),
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.status).toEqual(open));
+    return view;
+  };
+
+  it('does not put the old session state on the new one', async () => {
+    const { captureStatus, old } = pollsBySession();
+    const view = await replaced(
+      captureStatus as unknown as Api['captureStatus'],
+    );
+
+    await act(async () => {
+      old().resolve({ state: 'expired', eventCount: 0, clientCount: 0 });
+    });
+
+    expect(view.result.current.status).toEqual(open);
+    expect(view.result.current.session?.sessionId).toBe('session-2');
+    expect(window.localStorage.getItem('demo-hub.capture.project-1')).toContain(
+      'session-2',
+    );
+  });
+
+  it('does not drop the new session when the old one is gone', async () => {
+    const { captureStatus, old } = pollsBySession();
+    const view = await replaced(
+      captureStatus as unknown as Api['captureStatus'],
+    );
+
+    await act(async () => {
+      old().reject(new ApiError(404, 'not found'));
+    });
+
+    expect(view.result.current.session?.sessionId).toBe('session-2');
+    expect(view.result.current.status).toEqual(open);
+  });
+});
+
+describe('an apply with nothing to apply', () => {
+  const request = {
+    stoppedAtEpochMs: 2000,
+    frame: { width: 1920, height: 1080 },
+    targets: [{ clipId: 'clip-1', existing: [] }],
+  };
+
+  it('does nothing before a capture has been started', async () => {
+    const finaliseCapture = jest.fn();
+    const view = render({ finaliseCapture });
+
+    const applied = await act(async () => view.result.current.apply(request));
+
+    expect(applied).toBeUndefined();
+    expect(finaliseCapture).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when no clip can take the effects', async () => {
+    const finaliseCapture = jest.fn();
+    const view = render({
+      startCapture: jest.fn().mockResolvedValue(session),
+      captureStatus: jest.fn().mockResolvedValue(open),
+      finaliseCapture,
+    });
+    await act(async () => view.result.current.start());
+    await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+    const applied = await act(async () =>
+      view.result.current.apply({ ...request, targets: [] }),
+    );
+
+    expect(applied).toBeUndefined();
+    expect(finaliseCapture).not.toHaveBeenCalled();
+    expect(view.result.current.applying).toBe(false);
+  });
+});
+
+it('names the status when the capture could not be closed', async () => {
+  const view = render({
+    startCapture: jest.fn().mockResolvedValue(session),
+    captureStatus: jest.fn().mockResolvedValue(open),
+    finaliseCapture: jest.fn().mockRejectedValue(new ApiError(500, 'nope')),
+    captureEvents: jest.fn(),
+  });
+  await act(async () => view.result.current.start());
+  await waitFor(() => expect(view.result.current.session).toBeDefined());
+
+  await act(async () =>
+    view.result.current.apply({
+      stoppedAtEpochMs: 2000,
+      frame: { width: 1920, height: 1080 },
+      targets: [{ clipId: 'clip-1', existing: [] }],
+    }),
+  );
+
+  expect(view.result.current.error).toBe(
+    'Could not close the capture (500). Nothing is lost, try Add cursor effects again.',
+  );
+});
+
+it('reports a session closed even before the poll has answered', async () => {
+  const view = render({
+    startCapture: jest.fn().mockResolvedValue(session),
+    captureStatus: jest.fn(() => new Promise(() => undefined)),
+    finaliseCapture: jest.fn().mockResolvedValue(undefined),
+    captureEvents: jest.fn().mockResolvedValue(
+      JSON.stringify({
+        id: 'c1',
+        type: 'click',
+        t: 5_000,
+        x: 640,
+        y: 360,
+        viewportW: 1280,
+        viewportH: 720,
+      }),
+    ),
+  });
+  await act(async () => view.result.current.start());
+  await waitFor(() => expect(view.result.current.session).toBeDefined());
+  expect(view.result.current.status).toBeUndefined();
+
+  const applied = await act(async () =>
+    view.result.current.apply({
+      stoppedAtEpochMs: 10_000,
+      frame: { width: 1280, height: 720 },
+      targets: [{ clipId: 'clip-1', existing: [] }],
+    }),
+  );
+
+  expect(applied?.map(({ clipId }) => clipId)).toEqual(['clip-1']);
+  expect(view.result.current.status).toEqual({
+    state: 'closed',
+    eventCount: 0,
+    clientCount: 0,
+  });
+});

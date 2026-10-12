@@ -176,6 +176,30 @@ describe('heartbeat renewal', () => {
     expect(result.current.lease.status).toBe('held');
   });
 
+  it('keeps the token it holds when a refresh fails', async () => {
+    const acquireLease = jest.fn().mockResolvedValue(undefined);
+    const releaseLeaseOnUnload = jest.fn();
+    const getToken = jest
+      .fn()
+      .mockResolvedValueOnce('token')
+      .mockRejectedValue(new Error('no session'));
+    const { result } = renderLease(
+      { acquireLease, releaseLeaseOnUnload } as Partial<Api>,
+      { auth: { ...authenticatedState, getToken } as AuthState },
+    );
+
+    await waitFor(() => expect(result.current.lease.status).toBe('held'));
+    await afterHeartbeats();
+    expect(getToken.mock.calls.length).toBeGreaterThan(1);
+
+    act(() => {
+      window.dispatchEvent(new Event('beforeunload'));
+    });
+
+    expect(result.current.lease.status).toBe('held');
+    expect(releaseLeaseOnUnload).toHaveBeenCalledWith('video-1', 'token');
+  });
+
   it('stops renewing once the lease is lost', async () => {
     const acquireLease = jest
       .fn()

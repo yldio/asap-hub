@@ -75,3 +75,54 @@ describe('while the count is running', () => {
     expect(onCancel).toHaveBeenCalled();
   });
 });
+
+describe('before a recording', () => {
+  it('lets the creator leave the microphone out', async () => {
+    const onMicrophoneChange = jest.fn();
+    panel({ onMicrophoneChange });
+
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Microphone' }));
+
+    expect(onMicrophoneChange).toHaveBeenCalledWith(false);
+  });
+});
+
+describe('while a take is paused', () => {
+  it('says so and offers to carry on', async () => {
+    const onResume = jest.fn();
+    panel({ status: 'paused', elapsedMs: 65_000, onResume });
+
+    expect(screen.getByText('Paused')).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: 'Pause' }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Resume' }));
+
+    expect(onResume).toHaveBeenCalled();
+  });
+});
+
+describe('a problem with the recording', () => {
+  it('is raised as an alert', () => {
+    panel({ error: 'Could not start the recording.' });
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Could not start the recording.',
+    );
+  });
+
+  it('mentions a missing microphone without raising the alarm', () => {
+    panel({
+      status: 'recording',
+      error: 'The microphone was not available, recording without it.',
+    });
+
+    expect(
+      screen.getByText(
+        'The microphone was not available, recording without it.',
+      ),
+    ).toBeVisible();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+});

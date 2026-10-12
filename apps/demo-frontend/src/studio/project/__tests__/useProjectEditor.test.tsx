@@ -19,9 +19,13 @@ const addClip = (assetId: string, clipId: string) => ({
   durationMs: 5000,
 });
 
-const renderEditor = (api: Partial<Api>, onLeaseLost = jest.fn()) => {
+const renderEditor = (
+  api: Partial<Api>,
+  onLeaseLost = jest.fn(),
+  auth: AuthState = authenticatedState,
+) => {
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <AuthContext.Provider value={authenticatedState as AuthState}>
+    <AuthContext.Provider value={auth}>
       <TestApiProvider api={api}>{children}</TestApiProvider>
     </AuthContext.Provider>
   );
@@ -578,5 +582,167 @@ describe('a trim drag over a zoom or a chapter', () => {
     expect(view.result.current.timeline.chapters).toEqual([
       expect.objectContaining({ id: 'ch-1', offsetMs: 800 }),
     ]);
+  });
+});
+
+describe('an edit that changes nothing', () => {
+  it('is not recorded and leaves nothing to save', async () => {
+    const saveTimeline = jest.fn();
+    const { view } = renderEditor({ saveTimeline });
+    const before = view.result.current.timeline;
+
+    act(() =>
+      view.result.current.dispatch({
+        type: 'duplicateClip',
+        clipId: 'missing',
+        newClipId: 'clip-copy',
+      }),
+    );
+
+    expect(view.result.current.timeline).toBe(before);
+    expect(view.result.current.dirty).toBe(false);
+    expect(view.result.current.canUndo).toBe(false);
+    await settle();
+    expect(saveTimeline).not.toHaveBeenCalled();
+  });
+});
+
+describe('undo and redo', () => {
+  it('does nothing when there is nothing to undo or redo', () => {
+    const { view } = renderEditor({ saveTimeline: jest.fn() });
+    const before = view.result.current.timeline;
+
+    act(() => view.result.current.undo());
+    act(() => view.result.current.redo());
+
+    expect(view.result.current.timeline).toBe(before);
+    expect(view.result.current.canUndo).toBe(false);
+    expect(view.result.current.canRedo).toBe(false);
+  });
+
+  it('puts an undone edit back', () => {
+    const { view } = renderEditor({ saveTimeline: jest.fn() });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    act(() => view.result.current.undo());
+    expect(view.result.current.timeline.clips).toHaveLength(0);
+    expect(view.result.current.canRedo).toBe(true);
+
+    act(() => view.result.current.redo());
+
+    expect(view.result.current.timeline.clips).toEqual([
+      expect.objectContaining({ id: 'clip-1', assetId: 'asset-1' }),
+    ]);
+    expect(view.result.current.canRedo).toBe(false);
+  });
+});
+
+describe('flushing', () => {
+  it('sends nothing when the server already has every edit', async () => {
+    const saveTimeline = jest.fn();
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.flush());
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(saveTimeline).not.toHaveBeenCalled();
+  });
+
+  it('queues a newer revision behind the save in flight', async () => {
+    let land = (value: SavedTimeline) => value as unknown;
+    const saveTimeline = jest
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise<SavedTimeline>((resolve) => {
+            land = resolve;
+          }),
+      )
+      .mockResolvedValue({
+        video: { ...project, version: 5 },
+        timelineVersion: 6,
+      });
+    const { view } = renderEditor({ saveTimeline });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    act(() => view.result.current.flush());
+    act(() => view.result.current.dispatch(addClip('asset-2', 'clip-2')));
+    act(() => view.result.current.flush());
+
+    expect(saveTimeline).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      land({ video: { ...project, version: 4 }, timelineVersion: 5 });
+    });
+
+    await waitFor(() => expect(saveTimeline).toHaveBeenCalledTimes(2));
+    expect(saveTimeline.mock.calls[1]?.[1]).toMatchObject({
+      timelineVersion: 5,
+      version: 4,
+      timeline: expect.objectContaining({
+        clips: [
+          expect.objectContaining({ id: 'clip-1' }),
+          expect.objectContaining({ id: 'clip-2' }),
+        ],
+      }),
+    });
+    await waitFor(() => expect(view.result.current.dirty).toBe(false));
+  });
+});
+
+describe('a conflict on a project that has no timeline yet', () => {
+  it('keeps the timeline version it holds and retries on the new row version', async () => {
+    const saveTimeline = jest
+      .fn()
+      .mockRejectedValueOnce(new ApiError(409, 'conflict', 'conflict'))
+      .mockResolvedValue({
+        video: { ...project, version: 9 },
+        timelineVersion: 5,
+      });
+    const getVideo = jest.fn().mockResolvedValue({ ...project, version: 8 });
+    const { view } = renderEditor({ saveTimeline, getVideo });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await settle();
+
+    await waitFor(() => expect(saveTimeline).toHaveBeenCalledTimes(2));
+    expect(saveTimeline.mock.calls[1]?.[1]).toMatchObject({
+      timelineVersion: 4,
+      version: 8,
+    });
+  });
+});
+
+describe('leaving the page without a held token', () => {
+  it('falls back to the ordinary save', async () => {
+    const saveTimeline = jest.fn().mockResolvedValue({
+      video: { ...project, version: 4 },
+      timelineVersion: 5,
+    });
+    const saveTimelineOnUnload = jest.fn();
+    const { view } = renderEditor(
+      { saveTimeline, saveTimelineOnUnload },
+      jest.fn(),
+      {
+        ...authenticatedState,
+        getToken: () => Promise.reject(new Error('no session')),
+      },
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    act(() => view.result.current.dispatch(addClip('asset-1', 'clip-1')));
+    await act(async () => {
+      window.dispatchEvent(new Event('beforeunload'));
+    });
+
+    expect(saveTimelineOnUnload).not.toHaveBeenCalled();
+    expect(saveTimeline).toHaveBeenCalledWith(
+      'project-1',
+      expect.objectContaining({ timelineVersion: 4, version: 3 }),
+    );
   });
 });

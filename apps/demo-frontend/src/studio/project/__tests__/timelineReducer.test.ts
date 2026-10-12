@@ -1281,3 +1281,479 @@ describe('a cursor action naming a clip that is gone', () => {
     expect(timeline.cursor[0]?.effects).toEqual([effect]);
   });
 });
+
+describe('content past the end of the programme', () => {
+  const banner = {
+    id: 'banner-late',
+    startMs: 12_000,
+    durationMs: 2000,
+    preset: 'lowerThird' as const,
+    text: 'Credits',
+    position: 'bottom' as const,
+    animation: 'fade' as const,
+  };
+
+  it('keeps a banner beyond the last clip the same distance from the end', () => {
+    const added = timelineReducer(withClips(), { type: 'addBanner', banner });
+
+    const timeline = timelineReducer(added, {
+      type: 'removeClip',
+      clipId: 'clip-1',
+    });
+
+    expect(timeline.banners[0]?.startMs).toBe(7000);
+  });
+});
+
+describe('a transition left on the first clip', () => {
+  it('drops the transition a clip moved to the front had', () => {
+    const blended = timelineReducer(withClips(), {
+      type: 'setTransition',
+      clipId: 'clip-2',
+      transition: { type: 'crossfade', durationMs: 500 },
+    });
+
+    const promoted = timelineReducer(blended, {
+      type: 'moveClip',
+      clipId: 'clip-2',
+      toIndex: 0,
+    });
+    const demoted = timelineReducer(promoted, {
+      type: 'moveClip',
+      clipId: 'clip-2',
+      toIndex: 1,
+    });
+
+    expect(promoted.clips[0]?.transitionIn).toBeUndefined();
+    expect(demoted.clips[1]).toMatchObject({ id: 'clip-2' });
+    expect(demoted.clips[1]?.transitionIn).toBeUndefined();
+  });
+
+  it('clears one a stored document kept at the next edit', () => {
+    const base = withClips();
+    const stored: Timeline = {
+      ...base,
+      clips: base.clips.map((clip, index) =>
+        index === 0
+          ? { ...clip, transitionIn: { type: 'crossfade', durationMs: 500 } }
+          : clip,
+      ),
+    };
+
+    const timeline = timelineReducer(stored, {
+      type: 'setClipVolume',
+      clipId: 'clip-2',
+      volume: 0.5,
+    });
+
+    expect(timeline.clips[0]?.transitionIn).toBeUndefined();
+    expect(timeline.clips[1]).toMatchObject({ volume: 0.5 });
+    expect(() => parseTimeline(timeline)).not.toThrow();
+  });
+});
+
+describe('splitAt leaving the tracks before the cut alone', () => {
+  it('keeps an early chapter and another clip chapter where they were', () => {
+    const base: Timeline = {
+      ...withClips(),
+      chapters: [
+        { id: 'ch-early', clipId: 'clip-1', offsetMs: 500, title: 'Intro' },
+        { id: 'ch-other', clipId: 'clip-2', offsetMs: 3000, title: 'Other' },
+      ],
+    };
+
+    const split = timelineReducer(base, {
+      type: 'splitAt',
+      tMs: 2000,
+      clipId: 'clip-new',
+    });
+
+    expect(split.chapters).toEqual([
+      { id: 'ch-early', clipId: 'clip-1', offsetMs: 500, title: 'Intro' },
+      { id: 'ch-other', clipId: 'clip-2', offsetMs: 3000, title: 'Other' },
+    ]);
+  });
+});
+
+describe('duplicateClip of a clip that is gone', () => {
+  it('leaves the timeline as it was', () => {
+    const before = withClips();
+
+    expect(
+      timelineReducer(before, {
+        type: 'duplicateClip',
+        clipId: 'missing',
+        newClipId: 'clip-copy',
+      }),
+    ).toBe(before);
+  });
+});
+
+describe('toggleMute', () => {
+  it('silences a clip and gives its sound back on the second press', () => {
+    const muted = timelineReducer(withClips(), {
+      type: 'toggleMute',
+      clipId: 'clip-1',
+    });
+    const unmuted = timelineReducer(muted, {
+      type: 'toggleMute',
+      clipId: 'clip-1',
+    });
+
+    expect(muted.clips[0]).toMatchObject({ volume: 0 });
+    expect(muted.clips[1]).toMatchObject({ volume: 1 });
+    expect(unmuted.clips[0]).toMatchObject({ volume: 1 });
+  });
+
+  it('leaves a title card alone', () => {
+    const withTitle = timelineReducer(withClips(), {
+      type: 'addTitleCard',
+      clipId: 'title-1',
+      index: 0,
+      text: 'Attendance',
+      durationMs: 3000,
+    });
+
+    const timeline = timelineReducer(withTitle, {
+      type: 'toggleMute',
+      clipId: 'title-1',
+    });
+
+    expect(timeline.clips[0]).toEqual(withTitle.clips[0]);
+  });
+});
+
+describe('editing one item among several', () => {
+  const banner = (id: string, text: string) => ({
+    id,
+    startMs: 1000,
+    durationMs: 2000,
+    preset: 'lowerThird' as const,
+    text,
+    position: 'bottom' as const,
+    animation: 'fade' as const,
+  });
+
+  it('updates only the banner it names', () => {
+    const two = [banner('banner-1', 'One'), banner('banner-2', 'Two')].reduce(
+      (timeline, next) =>
+        timelineReducer(timeline, { type: 'addBanner', banner: next }),
+      withClips(),
+    );
+
+    const timeline = timelineReducer(two, {
+      type: 'updateBanner',
+      bannerId: 'banner-2',
+      change: { text: 'Second' },
+    });
+
+    expect(timeline.banners.map(({ text }) => text)).toEqual(['One', 'Second']);
+  });
+
+  it('retimes only the voice over take it names', () => {
+    const take = (id: string) => ({
+      id,
+      assetId: `audio-${id}`,
+      startMs: 0,
+      inMs: 0,
+      outMs: 2000,
+      volume: 1,
+    });
+    const two = timelineReducer(
+      timelineReducer(withClips(), {
+        type: 'addNarration',
+        narration: take('take-1'),
+      }),
+      { type: 'addNarration', narration: take('take-2') },
+    );
+
+    const timeline = timelineReducer(two, {
+      type: 'updateNarration',
+      narrationId: 'take-2',
+      change: { startMs: 3000 },
+    });
+
+    expect(timeline.narration.map(({ startMs }) => startMs)).toEqual([0, 3000]);
+  });
+
+  it('renames only the chapter it names', () => {
+    const two = [
+      { id: 'chapter-1', title: 'Intro' },
+      { id: 'chapter-2', title: 'Outro' },
+    ].reduce(
+      (timeline, { id, title }) =>
+        timelineReducer(timeline, {
+          type: 'addChapter',
+          id,
+          clipId: 'clip-1',
+          offsetMs: 0,
+          title,
+        }),
+      withClips(),
+    );
+
+    const timeline = timelineReducer(two, {
+      type: 'updateChapter',
+      chapterId: 'chapter-1',
+      title: 'Welcome',
+    });
+
+    expect(timeline.chapters.map(({ title }) => title)).toEqual([
+      'Welcome',
+      'Outro',
+    ]);
+  });
+
+  it('removes only the chapter it names', () => {
+    const two = ['chapter-1', 'chapter-2'].reduce(
+      (timeline, id) =>
+        timelineReducer(timeline, {
+          type: 'addChapter',
+          id,
+          clipId: 'clip-1',
+          offsetMs: 0,
+          title: id,
+        }),
+      withClips(),
+    );
+
+    const timeline = timelineReducer(two, {
+      type: 'removeChapter',
+      chapterId: 'chapter-1',
+    });
+
+    expect(timeline.chapters.map(({ id }) => id)).toEqual(['chapter-2']);
+  });
+});
+
+describe('zooms', () => {
+  const zoom = (id: string, startMs: number) => ({
+    id,
+    clipId: 'clip-1',
+    startMs,
+    rampInMs: 100,
+    holdMs: 400,
+    rampOutMs: 100,
+    focus: { x: 0.5, y: 0.5 },
+    scale: 2,
+    easing: 'easeInOut' as const,
+  });
+
+  const withZooms = () =>
+    timelineReducer(
+      timelineReducer(withClips(), { type: 'addZoom', zoom: zoom('z1', 500) }),
+      { type: 'addZoom', zoom: zoom('z2', 2000) },
+    );
+
+  it('updates one without letting it change id or clip', () => {
+    const timeline = timelineReducer(withZooms(), {
+      type: 'updateZoom',
+      zoomId: 'z2',
+      change: { scale: 3, startMs: 2500, id: 'hacked', clipId: 'clip-2' },
+    });
+
+    expect(timeline.zooms[0]).toEqual(zoom('z1', 500));
+    expect(timeline.zooms[1]).toMatchObject({
+      id: 'z2',
+      clipId: 'clip-1',
+      scale: 3,
+      startMs: 2500,
+    });
+  });
+
+  it('removes one', () => {
+    const timeline = timelineReducer(withZooms(), {
+      type: 'removeZoom',
+      zoomId: 'z1',
+    });
+
+    expect(timeline.zooms.map(({ id }) => id)).toEqual(['z2']);
+  });
+});
+
+describe('editing cursor effects', () => {
+  const effect = (
+    id: string,
+    tMs: number,
+    origin: CursorEffect['origin'],
+  ): CursorEffect => ({
+    id,
+    tMs,
+    type: 'ripple',
+    point: { x: 0.5, y: 0.5 },
+    origin,
+  });
+
+  const captured = (): Timeline =>
+    timelineReducer(withClips(), {
+      type: 'applyCapture',
+      clipId: 'clip-1',
+      path: [],
+      effects: [
+        effect('derived-1', 500, 'derived'),
+        effect('manual-1', 1500, 'manual'),
+        effect('derived-2', 2500, 'derived'),
+      ],
+    });
+
+  const effectsOf = (timeline: Timeline, clipId: string) =>
+    timeline.cursor.find((layer) => layer.clipId === clipId)?.effects;
+
+  it('marks a derived effect as hand edited when it is changed', () => {
+    const timeline = timelineReducer(captured(), {
+      type: 'updateCursorEffect',
+      clipId: 'clip-1',
+      effectId: 'derived-1',
+      change: { point: { x: 0.1, y: 0.2 }, id: 'hacked' },
+    });
+
+    expect(effectsOf(timeline, 'clip-1')?.[0]).toEqual({
+      ...effect('derived-1', 500, 'derived-edited'),
+      point: { x: 0.1, y: 0.2 },
+    });
+    expect(effectsOf(timeline, 'clip-1')?.[2]).toEqual(
+      effect('derived-2', 2500, 'derived'),
+    );
+  });
+
+  it('keeps a manual effect manual when it is changed', () => {
+    const timeline = timelineReducer(captured(), {
+      type: 'updateCursorEffect',
+      clipId: 'clip-1',
+      effectId: 'manual-1',
+      change: { tMs: 1800 },
+    });
+
+    expect(effectsOf(timeline, 'clip-1')?.[1]).toEqual(
+      effect('manual-1', 1800, 'manual'),
+    );
+  });
+
+  it('removes one effect and keeps the rest', () => {
+    const timeline = timelineReducer(captured(), {
+      type: 'removeCursorEffect',
+      clipId: 'clip-1',
+      effectId: 'manual-1',
+    });
+
+    expect(effectsOf(timeline, 'clip-1')?.map(({ id }) => id)).toEqual([
+      'derived-1',
+      'derived-2',
+    ]);
+  });
+
+  it('sets the pointer drawn for a clip', () => {
+    const timeline = timelineReducer(captured(), {
+      type: 'setCursorPointer',
+      clipId: 'clip-1',
+      pointer: 'hand',
+    });
+
+    expect(timeline.cursor[0]).toMatchObject({ pointer: 'hand' });
+  });
+
+  describe('dragging an effect', () => {
+    it('re-sorts it by time when it stays on its own clip', () => {
+      const timeline = timelineReducer(captured(), {
+        type: 'moveCursorEffect',
+        fromClipId: 'clip-1',
+        toClipId: 'clip-1',
+        effectId: 'derived-1',
+        tMs: 3000,
+      });
+
+      expect(effectsOf(timeline, 'clip-1')).toEqual([
+        effect('manual-1', 1500, 'manual'),
+        effect('derived-2', 2500, 'derived'),
+        effect('derived-1', 3000, 'derived-edited'),
+      ]);
+    });
+
+    it('gives it to a clip that has no cursor layer yet', () => {
+      const timeline = timelineReducer(captured(), {
+        type: 'moveCursorEffect',
+        fromClipId: 'clip-1',
+        toClipId: 'clip-2',
+        effectId: 'manual-1',
+        tMs: 200,
+      });
+
+      expect(effectsOf(timeline, 'clip-1')?.map(({ id }) => id)).toEqual([
+        'derived-1',
+        'derived-2',
+      ]);
+      expect(
+        timeline.cursor.find((layer) => layer.clipId === 'clip-2'),
+      ).toEqual({
+        clipId: 'clip-2',
+        offsetMs: 0,
+        path: [],
+        effects: [effect('manual-1', 200, 'manual')],
+      });
+      expect(timelineSchema.safeParse(timeline).success).toBe(true);
+    });
+
+    it('slots it into the layer of the clip it lands on, in time order', () => {
+      const both = timelineReducer(captured(), {
+        type: 'applyCapture',
+        clipId: 'clip-2',
+        path: [],
+        effects: [
+          effect('other-1', 100, 'manual'),
+          effect('other-2', 900, 'manual'),
+        ],
+      });
+
+      const timeline = timelineReducer(both, {
+        type: 'moveCursorEffect',
+        fromClipId: 'clip-1',
+        toClipId: 'clip-2',
+        effectId: 'derived-2',
+        tMs: 400,
+      });
+
+      expect(effectsOf(timeline, 'clip-1')?.map(({ id }) => id)).toEqual([
+        'derived-1',
+        'manual-1',
+      ]);
+      expect(effectsOf(timeline, 'clip-2')).toEqual([
+        effect('other-1', 100, 'manual'),
+        effect('derived-2', 400, 'derived-edited'),
+        effect('other-2', 900, 'manual'),
+      ]);
+    });
+  });
+});
+
+describe('setCanvas', () => {
+  it('hands back the same timeline when nothing about the canvas changed', () => {
+    const before = withClips();
+
+    expect(
+      timelineReducer(before, {
+        type: 'setCanvas',
+        canvas: { ...before.canvas },
+      }),
+    ).toBe(before);
+  });
+
+  it('takes a canvas of a different size', () => {
+    const before = withClips();
+
+    const timeline = timelineReducer(before, {
+      type: 'setCanvas',
+      canvas: { ...before.canvas, width: 3840, height: 2160 },
+    });
+
+    expect(timeline.canvas).toMatchObject({ width: 3840, height: 2160 });
+    expect(timeline.clips).toBe(before.clips);
+  });
+});
+
+it('leaves the timeline alone for an action it does not know', () => {
+  const before = withClips();
+
+  expect(
+    timelineReducer(before, { type: 'unknown' } as unknown as TimelineAction),
+  ).toBe(before);
+});

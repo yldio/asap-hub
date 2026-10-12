@@ -116,6 +116,15 @@ describe('microphoneRecordingSupport', () => {
     expect(support.supported).toBe(false);
   });
 
+  it('says so when there is no MediaRecorder to record with', () => {
+    expect(
+      microphoneRecordingSupport({ getUserMedia: jest.fn() }, undefined),
+    ).toEqual({
+      supported: false,
+      reason: 'This browser has no MediaRecorder, so it cannot record.',
+    });
+  });
+
   it('says so when no audio format can be recorded', () => {
     const support = microphoneRecordingSupport(
       { getUserMedia: jest.fn() },

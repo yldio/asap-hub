@@ -158,6 +158,20 @@ describe('the message each half of a failed read produces', () => {
     );
   });
 
+  it('lets the studio move on when storage says the stream was never written', async () => {
+    const { applied, view } = await applyWith(
+      rejectingWith(new CaptureStreamError('missing', 'gone')),
+    );
+
+    expect(applied).toBeUndefined();
+    expect(view.result.current.error).toBe(
+      'That capture closed without writing its events, so there is nothing to add. Record the take again.',
+    );
+    expect(window.localStorage.getItem('demo-hub.capture.project-1.read')).toBe(
+      'session-1',
+    );
+  });
+
   it('keeps a session whose stream is only unreachable, which is not the same thing', async () => {
     await applyWith(rejectingWith(new CaptureStreamError('unreachable', 'no')));
 

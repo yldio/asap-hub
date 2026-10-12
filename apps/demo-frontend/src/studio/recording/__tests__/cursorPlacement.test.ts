@@ -232,3 +232,24 @@ it('carries the probed footage size to the target', () => {
 
   expect(target?.source).toEqual({ width: 1892, height: 982 });
 });
+
+it('never makes a title card a target', () => {
+  const document = timeline();
+  const withTitle: Timeline = {
+    ...document,
+    clips: [
+      {
+        kind: 'title',
+        id: 'title-1',
+        durationMs: 2000,
+        preset: 'centered',
+        text: 'Attendance',
+      },
+      ...document.clips,
+    ],
+  };
+
+  const targets = request(withTitle, 0)?.targets;
+
+  expect(targets?.map(({ clipId }) => clipId)).toEqual(['clip-b']);
+});

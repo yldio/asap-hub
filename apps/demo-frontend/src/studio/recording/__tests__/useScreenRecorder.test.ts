@@ -781,4 +781,139 @@ describe('choosing the capture resolution by measurement', () => {
       expect(frames.detach).toHaveBeenCalled();
     });
   });
+
+  describe('a step down still in flight when the take begins', () => {
+    it('starts the recorder once however often the count is skipped', async () => {
+      const { view, stream, recorders } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      const start = jest.spyOn(recorders[0] as FakeRecorder, 'start');
+      await act(async () => {
+        view.result.current.startNow();
+        view.result.current.startNow();
+      });
+
+      expect(view.result.current.status).toBe('recording');
+      expect(stream.track.applyConstraints).toHaveBeenCalledTimes(1);
+      expect(start).toHaveBeenCalledTimes(1);
+    });
+
+    it('records anyway when the track refuses the smaller size', async () => {
+      const { view, stream, recorders } = measuring();
+
+      await act(async () => {
+        await view.result.current.start();
+      });
+      stream.track.applyConstraints.mockImplementation(() =>
+        Promise.reject(new Error('OverconstrainedError')),
+      );
+      await act(async () => {
+        view.result.current.startNow();
+      });
+
+      await waitFor(() => expect(view.result.current.status).toBe('recording'));
+      expect(view.result.current.error).toBeUndefined();
+      expect(recorders[0]?.started).toBe(5000);
+    });
+  });
+});
+
+describe('a start that goes wrong', () => {
+  it('says the recording could not start when the picker fails for another reason', async () => {
+    const { view } = setup({
+      getDisplayMedia: jest.fn().mockRejectedValue(new Error('boom')),
+    });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(view.result.current.error).toBe('Could not start the recording.');
+    expect(view.result.current.status).toBe('idle');
+  });
+
+  it('hands the screen back when the recorder cannot be made', async () => {
+    const { view, stream, options } = setup({
+      createRecorder: jest.fn(() => {
+        throw new Error('NotSupportedError');
+      }),
+    });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(view.result.current.error).toBe('Could not start the recording.');
+    expect(view.result.current.status).toBe('idle');
+    expect(stream.track.stop).toHaveBeenCalled();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    expect(options.getDisplayMedia).toHaveBeenCalledTimes(2);
+  });
+
+  it('hands the screen and the microphone back when the recorder will not start', async () => {
+    const microphone = fakeStream();
+    const recorders: FakeRecorder[] = [];
+    const { view, stream } = setup({
+      withMicrophone: true,
+      getUserMedia: jest.fn().mockResolvedValue(microphone),
+      createRecorder: jest.fn(() => {
+        const recorder = fakeRecorder();
+        if (recorders.length === 0) {
+          recorder.start = () => {
+            throw new DOMException('Not ready', 'InvalidStateError');
+          };
+        }
+        recorders.push(recorder);
+        return recorder;
+      }),
+    });
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+
+    expect(view.result.current.error).toBe('Could not start the recording.');
+    expect(view.result.current.status).toBe('idle');
+    expect(stream.track.stop).toHaveBeenCalled();
+    expect(microphone.track.stop).toHaveBeenCalled();
+    await expect(
+      act(async () => view.result.current.stop()),
+    ).resolves.toBeUndefined();
+  });
+});
+
+describe('skipping or cancelling with no count running', () => {
+  it('does nothing before anything has been started', () => {
+    const { view, options } = setup();
+
+    act(() => {
+      view.result.current.startNow();
+      view.result.current.cancel();
+    });
+
+    expect(view.result.current.status).toBe('idle');
+    expect(options.getDisplayMedia).not.toHaveBeenCalled();
+  });
+
+  it('leaves a take that is already recording alone', async () => {
+    const { view, stream, recorders } = setup();
+
+    await act(async () => {
+      await view.result.current.start();
+    });
+    const start = jest.spyOn(recorders[0] as FakeRecorder, 'start');
+    act(() => {
+      view.result.current.startNow();
+      view.result.current.cancel();
+    });
+
+    expect(view.result.current.status).toBe('recording');
+    expect(start).not.toHaveBeenCalled();
+    expect(stream.track.stop).not.toHaveBeenCalled();
+  });
 });

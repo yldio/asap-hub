@@ -131,6 +131,23 @@ describe('uploadParts', () => {
     expect(new Set(started).size).toBeLessThan(plans.length);
   });
 
+  it('refuses a part it was given no address for, before uploading it', async () => {
+    const put = jest.fn().mockResolvedValue('etag');
+
+    await expect(
+      uploadParts({
+        file: fakeFile(20),
+        plans: planParts(20, 10),
+        urls: [{ partNumber: 1, url: 'https://s3/1' }],
+        concurrency: 1,
+        put,
+        wait: noWait,
+      }),
+    ).rejects.toThrow('Missing upload URL for part 2');
+
+    expect(put.mock.calls.map(([url]) => url)).toEqual(['https://s3/1']);
+  });
+
   it('reports bytes per finished part', async () => {
     const onPartDone = jest.fn();
     await uploadParts({

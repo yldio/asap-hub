@@ -170,3 +170,87 @@ it('stays quiet about staleness while events are fresh', () => {
 
   expect(screen.queryByText(/nothing has arrived/i)).not.toBeInTheDocument();
 });
+
+describe('loading the capture another way', () => {
+  it('gives the console line and its instructions when asked for', async () => {
+    const user = userEvent.setup();
+    panel({ session });
+
+    await user.click(screen.getByRole('button', { name: 'Console' }));
+
+    const snippet = screen.getByLabelText(
+      'Capture snippet',
+    ) as HTMLTextAreaElement;
+    expect(snippet.value).toBe(
+      `var s=document.createElement('script');s.src='${session.snippetUrl}';document.body.appendChild(s);`,
+    );
+    expect(screen.getByText(/open the developer console/i)).toBeVisible();
+  });
+
+  it('gives a script tag for a site the creator controls', async () => {
+    const user = userEvent.setup();
+    panel({ session });
+
+    await user.click(screen.getByRole('button', { name: 'Script tag' }));
+
+    expect(
+      (screen.getByLabelText('Capture snippet') as HTMLTextAreaElement).value,
+    ).toBe(`<script src="${session.snippetUrl}"></script>`);
+  });
+
+  it('selects the whole snippet when it is focused, ready to copy by hand', async () => {
+    const user = userEvent.setup();
+    panel({ session });
+    const snippet = screen.getByLabelText(
+      'Capture snippet',
+    ) as HTMLTextAreaElement;
+
+    await user.click(snippet);
+
+    expect(snippet.selectionStart).toBe(0);
+    expect(snippet.selectionEnd).toBe(snippet.value.length);
+  });
+});
+
+describe('copying the snippet', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('puts it on the clipboard and says so', async () => {
+    const user = userEvent.setup();
+    panel({ session });
+
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+
+    expect(await navigator.clipboard.readText()).toBe(
+      (screen.getByLabelText('Capture snippet') as HTMLTextAreaElement).value,
+    );
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeVisible();
+  });
+
+  it('offers to copy again once another way is picked', async () => {
+    const user = userEvent.setup();
+    panel({ session });
+
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    await screen.findByRole('button', { name: 'Copied' });
+    await user.click(screen.getByRole('button', { name: 'Console' }));
+
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeVisible();
+  });
+
+  it('does not claim a copy the browser refused', async () => {
+    const user = userEvent.setup();
+    const writeText = jest
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockRejectedValue(new Error('NotAllowedError'));
+    panel({ session });
+
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+
+    expect(writeText).toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: 'Copied' }),
+    ).not.toBeInTheDocument();
+  });
+});

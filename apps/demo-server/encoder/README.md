@@ -26,7 +26,10 @@ credentials come from the task role.
 1. Derives `videoId` from the second segment of `S3_OBJECT_KEY` (`raw/{videoId}/original.mp4`).
 2. Downloads the raw object to `/scratch`.
 3. Probes the duration and rounds it to integer milliseconds.
-4. Encodes `stream.mp4` (H.264 CRF 24, AAC 128k, `+faststart`, fixed 60 frame keyframe group).
+4. Encodes `stream.mp4` (H.264 High CRF 24, 8-bit 4:2:0 at even dimensions, stereo AAC 128k,
+   first picture and sound track only, no timecode track, `+faststart`, fixed 60 frame keyframe
+   group). Browsers only agree on 8-bit 4:2:0: a ProRes or 10-bit source left in its own pixel
+   format plays in some and not others.
 5. Builds `sprite.jpg`, one 160px wide frame per 10 seconds, tiled 10 per row, and
    `thumbnails.vtt` mapping each 10 second range to a `#xywh` fragment in the sprite.
 6. Uploads all three to `media/{videoId}/` with explicit content types.
@@ -34,6 +37,14 @@ credentials come from the task role.
 
 Any failure sets `processingState = 'failed'` with a truncated `processingError` and exits
 non-zero. That runs from an `EXIT` trap, so a partial failure still records a state.
+
+An admin re-encode (`POST /api/videos/{id}/reencode`) starts the same job with `VIDEO_ID`,
+`REENCODE_ID` and `MEDIA_PATH` set. It reads the original upload while `raw/` still holds it
+(thirty days) and the published `stream.mp4` after that, writes everything under
+`media/{videoId}/{MEDIA_PATH}/`, and only then points `mediaPath` at it, so the demo stays
+watchable on the old file throughout. Every write is conditional on the row still naming that
+`reencodeId` as queued. A failure is recorded on `reencode` and leaves `processingState`,
+`mediaPath` and `version` alone.
 
 Steps 5 to 7 live in `finish.sh`, which `encode.sh` sources: every job that produces a
 watchable video ends the same way, so the render job can reuse it unchanged.
@@ -46,9 +57,9 @@ even an mp4 may not be faststart.
 
 1. Downloads `ASSET_KEY` to `/scratch`.
 2. Probes the codec, container, dimensions and `r_frame_rate` (`60000/1001` becomes 60fps).
-3. Writes `proxy.mp4`: `-c copy` when the source is already h264 in mp4 or mov, an audio only
-   remux when there is no video stream, otherwise a `veryfast` CRF 24 transcode. Always
-   `+faststart`.
+3. Writes `proxy.mp4`: `-c copy` when the source is already 8-bit 4:2:0 h264 in mp4 or mov
+   within the 1080p cap, an audio only remux when there is no video stream, otherwise a
+   `veryfast` CRF 24 8-bit 4:2:0 transcode. Always `+faststart`.
 4. Uploads it to `projects/{videoId}/assets/{assetId}/proxy.mp4`.
 5. Sets `state = 'ready'` with `proxyKey`, `durationMs`, `width`, `height` and `fps` on
    `PK=VIDEO#{videoId}, SK=ASSET#{assetId}`.

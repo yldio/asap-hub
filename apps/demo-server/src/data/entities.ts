@@ -106,6 +106,24 @@ export const videoEntity = new Entity(
           error: { type: 'string' },
         },
       },
+      // mediaPath only moves once the re-encode lands, so viewers keep the old file meanwhile
+      reencode: {
+        type: 'map',
+        properties: {
+          reencodeId: { type: 'string', required: true },
+          state: {
+            type: ['queued', 'done', 'failed'] as const,
+            required: true,
+          },
+          source: { type: ['original', 'stream'] as const, required: true },
+          requestedAt: { type: 'string', required: true },
+          requestedByName: { type: 'string' },
+          stage: { type: 'string' },
+          taskArn: { type: 'string' },
+          finishedAt: { type: 'string' },
+          error: { type: 'string' },
+        },
+      },
       createdAt: { type: 'string', required: true },
       updatedAt: { type: 'string', required: true },
     },

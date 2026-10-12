@@ -57,6 +57,53 @@ export const isRenderActive = (
 export const renderOf = (item: VideoItem): RenderState | undefined =>
   item.render as RenderState | undefined;
 
+export type ReencodeState = {
+  reencodeId: string;
+  state: 'queued' | 'done' | 'failed';
+  source: 'original' | 'stream';
+  requestedAt: string;
+  requestedByName?: string;
+  stage?: string;
+  taskArn?: string;
+  finishedAt?: string;
+  error?: string;
+};
+
+// a task killed without reporting would otherwise block every later re-encode
+export const maxReencodeAgeMs = 2 * 60 * 60 * 1000;
+
+export const isReencodeActive = (
+  reencode?: ReencodeState,
+  now: number = Date.now(),
+): boolean => {
+  if (!reencode || reencode.state !== 'queued') {
+    return false;
+  }
+  const requestedAt = Date.parse(reencode.requestedAt);
+  return Number.isNaN(requestedAt) || now - requestedAt < maxReencodeAgeMs;
+};
+
+export const reencodeOf = (item: VideoItem): ReencodeState | undefined =>
+  item.reencode as ReencodeState | undefined;
+
+const publicReencode = ({
+  reencodeId,
+  state,
+  source,
+  requestedAt,
+  requestedByName,
+  finishedAt,
+  error,
+}: ReencodeState) => ({
+  reencodeId,
+  state,
+  source,
+  requestedAt,
+  ...(requestedByName ? { requestedByName } : {}),
+  ...(finishedAt ? { finishedAt } : {}),
+  ...(error ? { error } : {}),
+});
+
 // render and timeline describe how a demo is made rather than how it is
 // watched: the download path, the task arn, the ffmpeg error and the timeline
 // key are the creator's business, so only a caller who can see drafts gets them
@@ -84,6 +131,9 @@ export const serialiseVideo = (item: VideoItem, forCreator = false) => ({
   ...(item.mediaPath ? { mediaPath: item.mediaPath } : {}),
   ...(forCreator && item.timeline ? { timeline: item.timeline } : {}),
   ...(forCreator && item.render ? { render: item.render } : {}),
+  ...(forCreator && item.reencode
+    ? { reencode: publicReencode(item.reencode as ReencodeState) }
+    : {}),
 });
 
 export const failedItem = (error: unknown): VideoItem | undefined =>

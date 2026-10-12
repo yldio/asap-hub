@@ -16,6 +16,20 @@ format_timestamp() {
   }'
 }
 
+reencode_condition() {
+  printf '%s' '#reencode.#reencodeId = :reencodeId AND #reencode.#state = :queued'
+}
+
+# $1 is extra "#name":"attribute" pairs
+reencode_names() {
+  printf '{"#reencode":"reencode","#reencodeId":"reencodeId","#state":"state",%s}' "$1"
+}
+
+# $1 is extra ":placeholder":{...} pairs
+reencode_values() {
+  printf '{":reencodeId":{"S":"%s"},":queued":{"S":"queued"},%s}' "$REENCODE_ID" "$1"
+}
+
 # $1 is sampled for the sprite tiles, $2 is the mp4 that gets uploaded
 finish_media() {
   local sprite_source="$1"
@@ -87,7 +101,19 @@ finish_media() {
     exit 0
   fi
 
-  MEDIA_PREFIX="s3://${BUCKET_NAME}/media/${VIDEO_ID}"
+  MEDIA_PREFIX="s3://${BUCKET_NAME}/media/${VIDEO_ID}${MEDIA_PATH:+/${MEDIA_PATH}}"
+
+  # nothing is uploaded for a re-encode that a newer one or a delete has already replaced
+  if [[ -n "${REENCODE_ID:-}" ]]; then
+    run_step "claim the upload for re-encode ${REENCODE_ID}" \
+      aws_dynamodb update-item \
+      --table-name "$TABLE_NAME" \
+      --key "{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"META\"}}" \
+      --update-expression 'SET #reencode.#stage = :stage' \
+      --condition-expression "$(reencode_condition)" \
+      --expression-attribute-names "$(reencode_names '"#stage":"stage"')" \
+      --expression-attribute-values "$(reencode_values '":stage":{"S":"upload"}')"
+  fi
 
   run_step "upload stream.mp4" \
     aws_s3 cp "$stream_file" "${MEDIA_PREFIX}/stream.mp4" \
@@ -103,6 +129,19 @@ finish_media() {
       aws_s3 cp "$THUMB_FILE" "${MEDIA_PREFIX}/thumb.jpg" \
       --content-type image/jpeg ||
       log "WARN could not upload thumb.jpg, continuing"
+  fi
+
+  if [[ -n "${REENCODE_ID:-}" ]]; then
+    run_step "point VIDEO#${VIDEO_ID} at ${MEDIA_PATH}" \
+      aws_dynamodb update-item \
+      --table-name "$TABLE_NAME" \
+      --key "{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"META\"}}" \
+      --update-expression 'SET durationMs = :durationMs, processingState = :ready, mediaPath = :mediaPath, #reencode.#state = :done, #reencode.#finishedAt = :now REMOVE processingError' \
+      --condition-expression "$(reencode_condition)" \
+      --expression-attribute-names "$(reencode_names '"#finishedAt":"finishedAt"')" \
+      --expression-attribute-values "$(reencode_values "\":durationMs\":{\"N\":\"${DURATION_MS}\"},\":ready\":{\"S\":\"ready\"},\":mediaPath\":{\"S\":$(json_string "$MEDIA_PATH")},\":done\":{\"S\":\"done\"},\":now\":{\"S\":\"$(now)\"}")"
+    log "done videoId=${VIDEO_ID} durationMs=${DURATION_MS} mediaPath=${MEDIA_PATH}"
+    return
   fi
 
   run_step "mark VIDEO#${VIDEO_ID} ready" \

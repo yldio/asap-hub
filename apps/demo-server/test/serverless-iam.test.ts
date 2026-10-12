@@ -145,6 +145,12 @@ describe('the encoder task role', () => {
     expect(actions).toContain('s3:DeleteObjectTagging');
   });
 
+  it('can read the published stream an admin re-encodes', () => {
+    const actions = actionsOf(statementForPrefix(encoderStatements(), 'media'));
+
+    expect(actions).toContain('s3:GetObject');
+  });
+
   it('does not tag outside the media prefix', () => {
     const actions = actionsOf(
       statementForPrefix(encoderStatements(), 'projects'),

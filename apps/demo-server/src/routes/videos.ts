@@ -14,6 +14,7 @@ import {
 import { buildSignedCookies } from '../signed-cookies';
 import { deleteVideoCascade, RenderInProgress } from './cascade';
 import { folderExists, rootFolderId } from './folders';
+import { registerReencodeRoutes } from './reencode';
 import {
   currentUser,
   isFolderId,
@@ -506,6 +507,8 @@ export const videosRouter = (): Router => {
       sectionsBaseUrl: `${base}/sections`,
     });
   });
+
+  registerReencodeRoutes(router);
 
   return router;
 };

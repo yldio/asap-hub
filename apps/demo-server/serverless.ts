@@ -917,7 +917,9 @@ const serverlessConfig: AWS = {
                     // PutObjectTagging does not cover DeleteObjectTagging, and
                     // without the delete the published media keeps lifecycle=render
                     // and the bucket rule removes it thirty days later
+                    // GetObject: a re-encode reads the published stream once the original has expired
                     Action: [
+                      's3:GetObject',
                       's3:PutObject',
                       's3:PutObjectTagging',
                       's3:DeleteObjectTagging',

@@ -20,10 +20,18 @@ SPRITE_COLUMNS="${SPRITE_COLUMNS:-10}"
 SKIP_AWS="${SKIP_AWS:-0}"
 WORK_DIR="${WORK_DIR:-/scratch}"
 
-# raw/{videoId}/original.mp4
-VIDEO_ID="$(printf '%s' "$S3_OBJECT_KEY" | cut -d/ -f2)"
+# raw/{videoId}/original.mp4, or media/{videoId}/... for a re-encode of the published stream
+VIDEO_ID="${VIDEO_ID:-$(printf '%s' "$S3_OBJECT_KEY" | cut -d/ -f2)}"
 if [[ -z "$VIDEO_ID" || "$VIDEO_ID" == "$S3_OBJECT_KEY" ]]; then
   log "ERROR cannot derive videoId from S3_OBJECT_KEY=$S3_OBJECT_KEY"
+  exit 1
+fi
+
+# an admin re-encode writes into its own revision directory and leaves processingState alone
+REENCODE_ID="${REENCODE_ID:-}"
+MEDIA_PATH="${MEDIA_PATH:-}"
+if [[ -n "$REENCODE_ID" && -z "$MEDIA_PATH" ]]; then
+  log "ERROR a re-encode needs MEDIA_PATH"
   exit 1
 fi
 
@@ -35,6 +43,19 @@ report_failure() {
   FAILURE_REPORTED=1
   log "FAILED $message"
   if [[ "$SKIP_AWS" == "1" ]]; then
+    return
+  fi
+  if [[ -n "$REENCODE_ID" ]]; then
+    aws_dynamodb update-item \
+      --table-name "$TABLE_NAME" \
+      --key "{\"PK\":{\"S\":\"VIDEO#${VIDEO_ID}\"},\"SK\":{\"S\":\"META\"}}" \
+      --update-expression 'SET #reencode.#state = :failed, #reencode.#error = :error, #reencode.#finishedAt = :now' \
+      --condition-expression '#reencode.#reencodeId = :reencodeId AND #reencode.#state = :queued' \
+      --expression-attribute-names \
+      '{"#reencode":"reencode","#state":"state","#error":"error","#finishedAt":"finishedAt","#reencodeId":"reencodeId"}' \
+      --expression-attribute-values \
+      "{\":failed\":{\"S\":\"failed\"},\":queued\":{\"S\":\"queued\"},\":now\":{\"S\":\"$(now)\"},\":reencodeId\":{\"S\":\"${REENCODE_ID}\"},\":error\":{\"S\":$(json_string "${message:0:500}")}}" \
+      >/dev/null || log "WARN could not record the failure on the re-encode of VIDEO#${VIDEO_ID}"
     return
   fi
   # the condition keeps a delete that raced the encode from resurrecting the item
@@ -55,7 +76,7 @@ mkdir -p "$WORK_DIR"
 INPUT_FILE="${WORK_DIR}/original"
 STREAM_FILE="${WORK_DIR}/stream.mp4"
 
-log "start videoId=${VIDEO_ID} key=${S3_OBJECT_KEY} bucket=${BUCKET_NAME}"
+log "start videoId=${VIDEO_ID} key=${S3_OBJECT_KEY} bucket=${BUCKET_NAME}${REENCODE_ID:+ reencodeId=${REENCODE_ID} mediaPath=${MEDIA_PATH}}"
 
 if [[ "$SKIP_AWS" == "1" ]]; then
   : "${LOCAL_INPUT:?LOCAL_INPUT is required when SKIP_AWS=1}"

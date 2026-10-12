@@ -27,9 +27,12 @@ const PDFViewer = jest.fn(function PDFViewer({ eventBus }) {
       eventBus.dispatch('scalechanging', { presetValue });
     },
   });
+  this.pagesPromise = Promise.resolve();
   this.setDocument = jest.fn((pdfDocument) => {
-    this.pagesCount = pdfDocument.numPages;
-    eventBus.dispatch('pagesinit');
+    this.pagesCount = pdfDocument ? pdfDocument.numPages : 0;
+    if (pdfDocument) {
+      eventBus.dispatch('pagesinit');
+    }
   });
   this.increaseScale = jest.fn();
   this.decreaseScale = jest.fn();

@@ -23,9 +23,25 @@ import { Button, Paragraph, TextField } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, minusIcon, plusIcon } from '../icons';
 import { SearchField } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
-import { frameStyles, toolbarStyles } from './shared-pdf-viewer-styles';
+import PdfViewerLayout from './PdfViewerLayout';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
+
+// pdf.js's search joins a Map iterator (Iterator.prototype.join), which Chrome
+// has but Safari doesn't: every page's text failed to normalize, so Safari
+// found nothing. Drop this once pdf.js or Safari covers it.
+const iteratorPrototype = Object.getPrototypeOf(
+  Object.getPrototypeOf(new Map().keys()),
+);
+if (!('join' in iteratorPrototype)) {
+  Object.defineProperty(iteratorPrototype, 'join', {
+    configurable: true,
+    writable: true,
+    value(this: Iterable<unknown>, separator?: string) {
+      return Array.from(this).join(separator);
+    },
+  });
+}
 
 const controlsStyles = css({
   display: 'flex',
@@ -64,9 +80,10 @@ const containerStyles = css({
 
 type PdfViewerProps = {
   url: string;
+  title: string;
 };
 
-const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
+const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const viewerRef = useRef<PDFViewer>();
   const [pageNumber, setPageNumber] = useState(1);
@@ -74,10 +91,8 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
   const [pagesCount, setPagesCount] = useState(0);
   const [isFitToPage, setIsFitToPage] = useState(false);
   const [query, setQuery] = useState('');
-  const [matches, setMatches] = useState<MatchesCount>({
-    current: 0,
-    total: 0,
-  });
+  // undefined until pdf.js reports a result for the current query
+  const [matches, setMatches] = useState<MatchesCount>();
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -133,16 +148,26 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     eventBus.on('scalechanging', (event: { presetValue?: string }) =>
       setIsFitToPage(event.presetValue === 'page-fit'),
     );
+    // pdf.js reports 0 of 0 until it selects a match, so only NOT_FOUND
+    // means there are none
+    const showMatches = (matchesCount: MatchesCount) => {
+      if (matchesCount.total > 0) {
+        setMatches(matchesCount);
+      }
+    };
     eventBus.on(
       'updatefindmatchescount',
-      (event: { matchesCount: MatchesCount }) => setMatches(event.matchesCount),
+      (event: { matchesCount: MatchesCount }) =>
+        showMatches(event.matchesCount),
     );
     eventBus.on(
       'updatefindcontrolstate',
       (event: { state: number; matchesCount: MatchesCount }) => {
-        // a pending search still reports the previous query's count
-        if (event.state !== FindState.PENDING) {
-          setMatches(event.matchesCount);
+        if (event.state === FindState.NOT_FOUND) {
+          setMatches({ current: 0, total: 0 });
+        } else if (event.state !== FindState.PENDING) {
+          // a pending search still reports the previous query's count
+          showMatches(event.matchesCount);
         }
       },
     );
@@ -162,21 +187,25 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     // ponytail: no wasmUrl/standardFontDataUrl, so scanned images (JBIG2, JPEG 2000)
     // won't decode; serve pdfjs-dist's wasm/ and standard_fonts/ if scans show up
     const loadingTask = getDocument({ url });
-    void loadingTask.promise.then(
-      (pdfDocument) => {
+    void loadingTask.promise
+      .then((pdfDocument) => {
         viewer.setDocument(pdfDocument);
         linkService.setDocument(pdfDocument);
-        findController.setDocument(pdfDocument);
-      },
-      () => {
-        // the cleanup's destroy() rejects a load still in flight when the url changes
+        // rejects when the first page can't be read, which no event reports
+        return viewer.pagesPromise;
+      })
+      .catch(() => {
+        // the cleanup's destroy() rejects a load still in flight
         if (!loadingTask.destroyed) {
           setHasError(true);
         }
-      },
-    );
+      });
     return () => {
       resizeObserver?.disconnect();
+      // drops the listeners pdf.js keeps on document, which would otherwise
+      // hold the viewer and its pages after unmount
+      viewer.setDocument(null);
+      linkService.setDocument(null);
       void loadingTask.destroy();
     };
   }, [container, url]);
@@ -211,9 +240,9 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     });
 
   return (
-    <>
-      <div css={toolbarStyles}>
-        {pagesCount > 0 ? (
+    <PdfViewerLayout
+      toolbar={
+        pagesCount > 0 ? (
           <>
             <div css={controlsStyles}>
               <div css={pageFieldStyles}>
@@ -230,11 +259,13 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
             <div role="search" css={searchStyles}>
               <div css={growStyles}>
                 <SearchField
+                  trackSearch={false}
                   aria-label="Search document"
                   placeholder="Search document"
                   value={query}
                   onChange={(newQuery) => {
                     setQuery(newQuery);
+                    setMatches(undefined);
                     find(newQuery);
                   }}
                   onKeyDown={(event) =>
@@ -244,6 +275,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               </div>
               <span aria-live="polite">
                 {query &&
+                  matches &&
                   (matches.total
                     ? `${matches.current} of ${matches.total}`
                     : 'No matches')}
@@ -251,7 +283,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               <Button
                 noMargin
                 aria-label="Previous match"
-                enabled={matches.total > 0}
+                enabled={Boolean(matches?.total)}
                 onClick={() => find(query, true, true)}
                 overrideStyles={buttonStyles}
               >
@@ -260,7 +292,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               <Button
                 noMargin
                 aria-label="Next match"
-                enabled={matches.total > 0}
+                enabled={Boolean(matches?.total)}
                 onClick={() => find(query, true)}
                 overrideStyles={buttonStyles}
               >
@@ -298,23 +330,18 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               </Button>
             </div>
           </>
-        ) : (
-          <Paragraph noMargin accent="lead">
-            Loading PDF...
-          </Paragraph>
-        )}
+        ) : undefined
+      }
+    >
+      <div
+        ref={setContainer}
+        role="region"
+        aria-label={title}
+        css={containerStyles}
+      >
+        <div className="pdfViewer" />
       </div>
-      <div css={frameStyles}>
-        <div
-          ref={setContainer}
-          role="region"
-          aria-label="Grant Document PDF"
-          css={containerStyles}
-        >
-          <div className="pdfViewer" />
-        </div>
-      </div>
-    </>
+    </PdfViewerLayout>
   );
 };
 

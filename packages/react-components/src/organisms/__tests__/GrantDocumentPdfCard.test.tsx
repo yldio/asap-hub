@@ -15,4 +15,7 @@ it('views the grant document link in the PDF viewer', async () => {
       url: 'https://example.com/grant.pdf',
     }),
   );
+  expect(
+    screen.getByRole('region', { name: 'Grant Document PDF' }),
+  ).toBeInTheDocument();
 });

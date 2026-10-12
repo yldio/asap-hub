@@ -142,4 +142,50 @@ describe('PdfViewer', () => {
 
     expect(loadingTask.destroy).toHaveBeenCalled();
   });
+
+  describe('when the viewer resizes', () => {
+    let resizeCallback: ResizeObserverCallback;
+    const disconnect = jest.fn();
+
+    beforeEach(() => {
+      globalThis.ResizeObserver = jest.fn((callback) => {
+        resizeCallback = callback;
+        return { observe: jest.fn(), disconnect, unobserve: jest.fn() };
+      }) as unknown as typeof ResizeObserver;
+    });
+
+    afterEach(() => {
+      delete (globalThis as Partial<typeof globalThis>).ResizeObserver;
+    });
+
+    const resizeAt = async (currentScaleValue: string) => {
+      mockLoadingTask(Promise.resolve({ numPages: 3 }));
+      render(<PdfViewer url={url} />);
+      await screen.findByText('Page 1 / 3');
+      const setScale = jest.fn();
+      Object.defineProperty(getViewer(), 'currentScaleValue', {
+        get: () => currentScaleValue,
+        set: setScale,
+      });
+      resizeCallback([], {} as ResizeObserver);
+      return setScale;
+    };
+
+    it('refits the pages to the new width', async () => {
+      expect(await resizeAt('page-width')).toHaveBeenCalledWith('page-width');
+    });
+
+    it('keeps the zoom the user picked', async () => {
+      expect(await resizeAt('1.5')).not.toHaveBeenCalled();
+    });
+
+    it('stops observing on unmount', () => {
+      mockLoadingTask(new Promise(() => {}));
+      const { unmount } = render(<PdfViewer url={url} />);
+
+      unmount();
+
+      expect(disconnect).toHaveBeenCalled();
+    });
+  });
 });

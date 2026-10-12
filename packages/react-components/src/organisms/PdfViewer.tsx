@@ -81,6 +81,18 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     eventBus.on('pagechanging', (event: { pageNumber: number }) =>
       setPageNumber(event.pageNumber),
     );
+    // PDFViewer only applies 'page-width' when it is set, so re-apply it on
+    // resize unless the user has zoomed. border-box keeps a scrollbar
+    // appearing from triggering it again.
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? undefined
+        : new ResizeObserver(() => {
+            if (viewer.currentScaleValue === 'page-width') {
+              viewer.currentScaleValue = 'page-width';
+            }
+          });
+    resizeObserver?.observe(container, { box: 'border-box' });
 
     // ponytail: no wasmUrl/standardFontDataUrl, so scanned images (JBIG2, JPEG 2000)
     // won't decode; serve pdfjs-dist's wasm/ and standard_fonts/ if scans show up
@@ -98,6 +110,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
       },
     );
     return () => {
+      resizeObserver?.disconnect();
       void loadingTask.destroy();
     };
   }, [container, url]);

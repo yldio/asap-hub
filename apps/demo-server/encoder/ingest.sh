@@ -61,7 +61,7 @@ run_step "download s3://${BUCKET_NAME}/${ASSET_KEY}" \
   aws_s3 cp "s3://${BUCKET_NAME}/${ASSET_KEY}" "$INPUT_FILE"
 
 STREAM_INFO="$(ffprobe -v error -select_streams v:0 \
-  -show_entries stream=codec_name,width,height,r_frame_rate \
+  -show_entries stream=codec_name,pix_fmt,width,height,r_frame_rate \
   -of default=noprint_wrappers=1 "$INPUT_FILE" || true)"
 FORMAT_NAME="$(ffprobe -v error -show_entries format=format_name -of csv=p=0 "$INPUT_FILE" || true)"
 
@@ -75,6 +75,7 @@ if [[ -n "$AUDIO_CODEC" && "$AUDIO_CODEC" != "N/A" ]]; then
 fi
 
 CODEC_NAME="$(stream_value codec_name)"
+PIX_FMT="$(stream_value pix_fmt)"
 WIDTH="$(stream_value width)"
 HEIGHT="$(stream_value height)"
 FRAME_RATE="$(stream_value r_frame_rate)"
@@ -89,7 +90,7 @@ FPS="$(awk -v r="${FRAME_RATE:-0}" 'BEGIN {
 }')"
 
 DURATION_MS="$(probe_duration_ms "$INPUT_FILE")"
-log "probed codec=${CODEC_NAME:-none} format=${FORMAT_NAME:-unknown} ${WIDTH}x${HEIGHT} ${FPS}fps ${DURATION_MS}ms audio=${HAS_AUDIO}"
+log "probed codec=${CODEC_NAME:-none} pix_fmt=${PIX_FMT:-unknown} format=${FORMAT_NAME:-unknown} ${WIDTH}x${HEIGHT} ${FPS}fps ${DURATION_MS}ms audio=${HAS_AUDIO}"
 
 # the proxy is only ever scrubbed in a browser, and the capture now films 4K on
 # a machine that can sustain it, so it is capped at the editing canvas: the
@@ -117,7 +118,9 @@ if [[ -z "$CODEC_NAME" ]]; then
   run_step "remux audio only proxy.mp4" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
     -vn -c:a aac -b:a 128k -movflags +faststart "$PROXY_FILE"
+# a copied 4:2:2 or 10-bit stream plays in some browsers and not others
 elif [[ "$CODEC_NAME" == "h264" && "$WITHIN_PROXY_CAP" == "true" &&
+  ("$PIX_FMT" == "yuv420p" || "$PIX_FMT" == "yuvj420p") &&
   ("$FORMAT_NAME" == *mp4* || "$FORMAT_NAME" == *mov*) ]]; then
   run_step "copy proxy.mp4" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
@@ -126,7 +129,7 @@ else
   run_step "transcode proxy.mp4 within ${PROXY_MAX_WIDTH}x${PROXY_MAX_HEIGHT}" \
     ffmpeg -nostdin -y -i "$INPUT_FILE" \
     -vf "$PROXY_SCALE" \
-    -c:v libx264 -preset veryfast -crf 24 \
+    -c:v libx264 -preset veryfast -crf 24 -profile:v high -pix_fmt yuv420p \
     -c:a aac -b:a 128k -movflags +faststart "$PROXY_FILE"
 fi
 

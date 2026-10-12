@@ -25,6 +25,8 @@ const centered = {
   subtitleLines: 2,
 } as const;
 
+export const centeredTitleStyle = centered;
+
 const presets: Record<TitlePreset, typeof centered> = { centered };
 
 export type TitleCardInput = {

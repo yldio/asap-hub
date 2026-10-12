@@ -36,7 +36,7 @@ const rippleStyle = {
   fillOpacity: 0.18,
 } as const;
 
-const spotlightStyle = {
+export const spotlightStyle = {
   scrim: '#000000',
   scrimOpacity: 0.55,
   clearStop: 0.08,

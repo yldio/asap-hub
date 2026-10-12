@@ -35,6 +35,9 @@ const lowerThird = {
   subtitleLines: 1,
 } as const;
 
+// the editor preview draws the banner from these same values
+export const lowerThirdStyle = lowerThird;
+
 const presets: Record<BannerPreset, typeof lowerThird> = { lowerThird };
 
 export type BannerPosition = 'top' | 'bottom';

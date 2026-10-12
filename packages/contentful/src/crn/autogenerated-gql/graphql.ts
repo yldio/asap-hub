@@ -51132,7 +51132,7 @@ export const UsersContentFragmentDoc = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'IntValue', value: '10' },
+                      value: { kind: 'IntValue', value: '50' },
                     },
                   ],
                   selectionSet: {

@@ -1,0 +1,6 @@
+{
+  "name": "@napi-rs/canvas",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Empty stand-in wired up through the root resolutions. pdfjs-dist lists @napi-rs/canvas as an optional dependency that only its Node build loads; the browser viewer never does, and the real package adds ~100 MB of native binaries to the committed Yarn cache."
+}

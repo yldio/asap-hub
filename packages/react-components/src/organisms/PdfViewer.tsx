@@ -122,7 +122,9 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     linkService.setViewer(viewer);
     viewerRef.current = viewer;
     eventBus.on('pagesinit', () => {
-      viewer.currentScaleValue = 'page-width';
+      // in the A4-shaped frame, fitting the page also fits its width, so a
+      // separate fit-to-width option would do nothing
+      viewer.currentScaleValue = 'page-fit';
       setPagesCount(viewer.pagesCount);
     });
     eventBus.on('pagechanging', (event: { pageNumber: number }) =>
@@ -144,19 +146,15 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
         }
       },
     );
-    // PDFViewer only applies a fit when it is set, so re-apply it on resize
-    // unless the user has zoomed. border-box keeps a scrollbar appearing from
-    // triggering it again.
+    // PDFViewer only applies 'page-fit' when it is set, so re-apply it on
+    // resize unless the user has zoomed. border-box keeps a scrollbar
+    // appearing from triggering it again.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? undefined
         : new ResizeObserver(() => {
-            const { currentScaleValue } = viewer;
-            if (
-              currentScaleValue === 'page-width' ||
-              currentScaleValue === 'page-fit'
-            ) {
-              viewer.currentScaleValue = currentScaleValue;
+            if (viewer.currentScaleValue === 'page-fit') {
+              viewer.currentScaleValue = 'page-fit';
             }
           });
     resizeObserver?.observe(container, { box: 'border-box' });
@@ -272,16 +270,15 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
             <div css={controlsStyles}>
               <Button
                 noMargin
+                enabled={!isFitToPage}
                 overrideStyles={buttonStyles}
                 onClick={() => {
                   if (viewerRef.current) {
-                    viewerRef.current.currentScaleValue = isFitToPage
-                      ? 'page-width'
-                      : 'page-fit';
+                    viewerRef.current.currentScaleValue = 'page-fit';
                   }
                 }}
               >
-                {isFitToPage ? 'Fit to width' : 'Fit to page'}
+                Fit to page
               </Button>
               <Button
                 noMargin

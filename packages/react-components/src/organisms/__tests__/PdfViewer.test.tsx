@@ -57,7 +57,7 @@ beforeEach(() => {
 });
 
 describe('PdfViewer', () => {
-  it('renders the document at page width with a page counter', async () => {
+  it('renders the document fitted to the page with a page counter', async () => {
     mockLoadingTask(Promise.resolve({ numPages: 3 }));
     render(<PdfViewer url={url} />);
     expect(screen.getByText('Loading PDF...')).toBeVisible();
@@ -68,7 +68,7 @@ describe('PdfViewer', () => {
     expect(screen.getByText('/ 3')).toBeVisible();
     expect(screen.queryByText('Loading PDF...')).not.toBeInTheDocument();
     expect(getDocument).toHaveBeenCalledWith({ url });
-    expect(getViewer().currentScaleValue).toBe('page-width');
+    expect(getViewer().currentScaleValue).toBe('page-fit');
     expect(
       screen.getByRole('region', { name: 'Grant Document PDF' }),
     ).toBeVisible();
@@ -206,14 +206,17 @@ describe('PdfViewer', () => {
     expect(screen.getByRole('button', { name: 'Next match' })).toBeDisabled();
   });
 
-  it('switches between fitting the page width and the whole page', async () => {
+  it('fits the whole page again after zooming', async () => {
     await renderLoaded();
+    const fitButton = screen.getByRole('button', { name: 'Fit to page' });
+    expect(fitButton).toBeDisabled();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Fit to page' }));
-    expect(getViewer().currentScaleValue).toBe('page-fit');
+    act(() => getViewer().eventBus.dispatch('scalechanging', { scale: 1.5 }));
+    const setScale = jest.spyOn(getViewer(), 'currentScaleValue', 'set');
+    await userEvent.click(fitButton);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Fit to width' }));
-    expect(getViewer().currentScaleValue).toBe('page-width');
+    expect(setScale).toHaveBeenCalledWith('page-fit');
+    expect(fitButton).toBeDisabled();
   });
 
   it('zooms in and out', async () => {
@@ -302,12 +305,9 @@ describe('PdfViewer', () => {
       return setScale;
     };
 
-    it.each(['page-width', 'page-fit'])(
-      'refits the pages to the new size at %s',
-      async (fit) => {
-        expect(await resizeAt(fit)).toHaveBeenCalledWith(fit);
-      },
-    );
+    it('refits the page to the new size', async () => {
+      expect(await resizeAt('page-fit')).toHaveBeenCalledWith('page-fit');
+    });
 
     it('keeps the zoom the user picked', async () => {
       expect(await resizeAt('1.5')).not.toHaveBeenCalled();

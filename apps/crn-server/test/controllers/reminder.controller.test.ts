@@ -779,7 +779,7 @@ describe('Reminder Controller', () => {
         expect(itemsWithPM[0]?.href).toBe('/network/users/user-pm');
       });
 
-      test('Should return the correct description for the publish material reminder', async () => {
+      test('Should return the correct description and href for the publish material reminder', async () => {
         const reminderDataObject: PublishMaterialReminder =
           getPublishMaterialReminder();
         reminderDataObject.data.title = 'Some Test Event Title';
@@ -795,6 +795,7 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             "It's time to publish the meeting materials for the Some Test Event Title event.",
+          href: `/events/some-event-id`,
         });
       });
 

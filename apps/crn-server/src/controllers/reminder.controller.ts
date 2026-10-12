@@ -291,6 +291,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
             description: `It's time to publish the meeting materials for the ${reminder.data.title} event.`,
           };
         }

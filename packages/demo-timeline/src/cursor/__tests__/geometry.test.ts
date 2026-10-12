@@ -280,6 +280,15 @@ describe('a maximised window with a taskbar is not a Wayland window', () => {
   it('still deals the spare back when the platform was never recorded', () => {
     expect(ratioOf(maximised, 'monitor').y).toBe(0.5);
   });
+
+  // a window tiled into the top half leaves far more spare than any bar, so
+  // the pointer stays where the screen numbers put it
+  it('leaves a Linux window sharing its screen with another where it was', () => {
+    expect(
+      ratioOf({ ...maximised, winH: 520, platform: 'Linux x86_64' }, 'monitor')
+        .y,
+    ).toBeCloseTo(500 / 1080, 6);
+  });
 });
 
 describe('a stream captured before the snippet reported the screen', () => {
@@ -303,6 +312,13 @@ describe('a stream captured before the snippet reported the screen', () => {
     expect(toFramePoint(real, frame)).toEqual(
       toFramePoint(real, frame, 'browser'),
     );
+  });
+
+  it('shares the page when no surface is named', () => {
+    expect(sharedView(real)).toEqual({
+      rect: { x: 0, y: 0, width: 1134, height: 943 },
+      at: { x: 1129.4, y: 593.1 },
+    });
   });
 });
 
@@ -383,6 +399,37 @@ describe('footage that disagrees with the claimed surface', () => {
     );
 
     expect(confirmed).toEqual(whole);
+  });
+
+  it('reads footage the probe could not size against the claim', () => {
+    expect(
+      toFramePoint(filtersClick, frame, 'monitor', { width: 0, height: 0 }),
+    ).toEqual(toFramePoint(filtersClick, frame, 'monitor'));
+  });
+
+  it('reads a window-shaped recording at 1x when the ratio was not reported', () => {
+    const into = { width: 1892, height: 982 };
+    const footage = { width: 1892, height: 982 };
+
+    expect(
+      toFramePoint(
+        { ...filtersClick, devicePixelRatio: undefined },
+        into,
+        'monitor',
+        footage,
+      ),
+    ).toEqual(toFramePoint(filtersClick, into, 'monitor', footage));
+  });
+
+  it('has nothing to reconcile for a surface it cannot read', () => {
+    expect(
+      toFramePoint(
+        { ...filtersClick, viewportW: 0, viewportH: 0 },
+        frame,
+        'browser',
+        { width: 1892, height: 982 },
+      ),
+    ).toBeUndefined();
   });
 });
 

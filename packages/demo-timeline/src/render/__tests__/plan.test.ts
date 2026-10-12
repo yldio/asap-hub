@@ -481,6 +481,37 @@ describe('buildRenderPlan', () => {
       );
     });
 
+    // a probed 720p capture would need upscaling to fill the fit, so cropping
+    // it at its own resolution would only magnify it twice
+    it('fits a probed capture smaller than the canvas before it zooms', () => {
+      const args =
+        buildRenderPlan({
+          timeline: timelineOf({
+            clips: [source({ assetId: 'small-1' })],
+            zooms: [zoom()],
+          }),
+          assets: [
+            ...assets,
+            {
+              assetId: 'small-1',
+              path: '/media/small-1.mp4',
+              durationMs: 60000,
+              width: 1280,
+              height: 720,
+              fps: 30,
+              hasAudio: true,
+            },
+          ],
+          workDir: '/work',
+          output: '/work/out.mp4',
+        }).steps[0]?.args.join(' ') ?? '';
+
+      expect(args).toContain('force_original_aspect_ratio=decrease');
+      expect(args.indexOf('pad=1920:1080')).toBeLessThan(
+        args.indexOf('eval=frame'),
+      );
+    });
+
     it('crops around the focus point the preview scales around', () => {
       expect(plan.steps[0]?.args.join(' ')).toContain(
         "crop=1920:1080:x='(clip(0.5000*(1-1/(1+1.000*if(",

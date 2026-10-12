@@ -1,6 +1,7 @@
 import {
   ClipPlacement,
   clipDurationMs,
+  findClip,
   insertClipAt,
   layoutClips,
   moveClip,
@@ -197,6 +198,18 @@ describe('sourceTimeAt', () => {
     const placements = layoutClips([title()]);
 
     expect(sourceTimeAt(placementAtIndex(placements, 0), 1000)).toBeUndefined();
+  });
+});
+
+describe('findClip', () => {
+  const clips: Clip[] = [source({ id: 'a' }), title({ id: 'b' })];
+
+  it('returns the clip with the id', () => {
+    expect(findClip(clips, 'b')).toEqual(title({ id: 'b' }));
+  });
+
+  it('returns nothing for an id the timeline does not hold', () => {
+    expect(findClip(clips, 'missing')).toBeUndefined();
   });
 });
 

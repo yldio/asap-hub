@@ -1,5 +1,5 @@
 import { CaptureEvent } from '../types';
-import { sliceCaptureEvents } from '../slice';
+import { pausedBeforeMs, sliceCaptureEvents } from '../slice';
 
 const takeOneStart = 1_700_000_000_000;
 // the second take starts 30 seconds after the first one ended
@@ -119,5 +119,21 @@ describe('a take that was paused mid recording', () => {
     );
 
     expect(sliced.get('clip-1')).toEqual([]);
+  });
+});
+
+describe('pausedBeforeMs', () => {
+  it('counts only the pauses that finished before the instant', () => {
+    expect(
+      pausedBeforeMs(10_000, [
+        { startMs: 1_000, endMs: 3_000 },
+        { startMs: 5_000, endMs: 6_000 },
+        { startMs: 9_000, endMs: 12_000 },
+      ]),
+    ).toBe(3_000);
+  });
+
+  it('is zero for a take that was never paused', () => {
+    expect(pausedBeforeMs(10_000)).toBe(0);
   });
 });

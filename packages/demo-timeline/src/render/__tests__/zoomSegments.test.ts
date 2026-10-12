@@ -110,6 +110,52 @@ describe('zoomSpans', () => {
     expect(spans[0]?.window).toEqual(spans[2]?.window);
   });
 
+  // the same magnification aimed somewhere else is a different window, so a
+  // creator panning between two held zooms gets two stretches, not one
+  it.each([
+    ['across', { x: 0.2, y: 0.5 }, { x: 0.8, y: 0.5 }],
+    ['down', { x: 0.5, y: 0.2 }, { x: 0.5, y: 0.8 }],
+  ])(
+    'keeps two equal holds apart when they aim at different places %s',
+    (_, first, second) => {
+      const spans = zoomSpans(
+        [
+          zoom({
+            rampInMs: 0,
+            rampOutMs: 0,
+            startMs: 0,
+            holdMs: 5000,
+            focus: first,
+          }),
+          zoom({
+            id: 'z2',
+            rampInMs: 0,
+            rampOutMs: 0,
+            startMs: 5000,
+            holdMs: 5000,
+            focus: second,
+          }),
+        ],
+        10_000,
+      );
+
+      expect(spans).toEqual([
+        {
+          startMs: 0,
+          endMs: 5000,
+          kind: 'still',
+          window: { scale: 2, cropX: first.x / 2, cropY: first.y / 2 },
+        },
+        {
+          startMs: 5000,
+          endMs: 10_000,
+          kind: 'still',
+          window: { scale: 2, cropX: second.x / 2, cropY: second.y / 2 },
+        },
+      ]);
+    },
+  );
+
   it('speaks whole-clip stillness when the ramps are zero', () => {
     const spans = zoomSpans(
       [zoom({ startMs: 0, rampInMs: 0, rampOutMs: 0, holdMs: 12_000 })],

@@ -35,6 +35,18 @@ describe('rippleSvg', () => {
       }),
     ).toContain('r="381"');
   });
+
+  it('gives a black ring a light edge so it reads on a dark page', () => {
+    const svg = rippleSvg({
+      point: { x: 0.5, y: 0.5 },
+      canvas,
+      color: '#000000',
+    });
+
+    expect(svg).toContain('fill="#000000"');
+    expect(svg).toMatch(/fill="none" stroke="#ffffff"/);
+    expect(svg).not.toContain(`fill="none" stroke="${cursorEdge}"`);
+  });
 });
 
 describe('rippleBox', () => {

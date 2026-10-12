@@ -124,6 +124,30 @@ describe('zoomTileSpans', () => {
     );
   });
 
+  // a hold shorter than a cheap tile is worth is not cut out on its own: it
+  // rides with whichever neighbour costs the most anyway
+  it('folds a short hold between two ramps into the moving chain', () => {
+    expect(zoomTileSpans([zoomOn(20_000, 2000)], 'clip-long', 50_000)).toEqual([
+      { startMs: 0, endMs: 16_400, kind: 'quiet' },
+      { startMs: 16_400, endMs: 26_400, kind: 'moving' },
+      { startMs: 26_400, endMs: 50_000, kind: 'quiet' },
+    ]);
+  });
+
+  it('hands a short hold that snaps in to the ramp out after it', () => {
+    expect(
+      zoomTileSpans(
+        [{ ...zoomOn(20_000, 2000), rampInMs: 0 }],
+        'clip-long',
+        50_000,
+      ),
+    ).toEqual([
+      { startMs: 0, endMs: 20_000, kind: 'quiet' },
+      { startMs: 20_000, endMs: 26_000, kind: 'moving' },
+      { startMs: 26_000, endMs: 50_000, kind: 'quiet' },
+    ]);
+  });
+
   it('reads a clip with no zooms as one quiet stretch', () => {
     expect(zoomTileSpans([], 'clip-long', 130_000)).toEqual([
       { startMs: 0, endMs: 130_000, kind: 'quiet' },
@@ -179,6 +203,15 @@ describe('tilePlacements', () => {
     const last = tiles[tiles.length - 1]?.placement.clip as SourceClip;
     expect(tiles).toHaveLength(2);
     expect(last.outMs).toBe(200_000);
+  });
+
+  // the footage runs out inside the first tile, so there is nothing to cut
+  // and the held tail carries the clip to its end in one process
+  it('keeps a long clip whole when its footage fits in one tile', () => {
+    const placement = placementOf();
+    const tiles = tilePlacements(placement, assetsOf(30_000), () => 9);
+
+    expect(tiles).toEqual([{ placement, shiftMs: 0, zoomed: false }]);
   });
 });
 

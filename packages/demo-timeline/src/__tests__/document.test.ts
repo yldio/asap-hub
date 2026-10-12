@@ -70,6 +70,12 @@ describe('parseTimeline', () => {
     ).toThrow(/newer than this build supports/);
   });
 
+  it('rejects a schema version older than any migration knows', () => {
+    expect(
+      parseFailure({ ...createEmptyTimeline(), schemaVersion: 0 }).message,
+    ).toBe('no migration from schema version 0');
+  });
+
   it('rejects a source clip that ends before it starts', () => {
     const timeline = withClip();
     const [clip] = timeline.clips;

@@ -200,3 +200,70 @@ describe('buildJoinStep, cut only', () => {
     expect(args).toContain('-map 0:v -map [a]');
   });
 });
+
+describe('buildJoinStep, re-encoded whole', () => {
+  const canvas: Canvas = { width: 1920, height: 1080, fps: 30 };
+
+  // the middle clip is shorter than the two blends reaching into it, so the
+  // keyframe grid cannot cut the programme and the whole join is one xfade
+  // chain; the last boundary is a plain cut inside that chain
+  const clips: Clip[] = [
+    source({ id: 'a', outMs: 4000 }),
+    source({
+      id: 'b',
+      outMs: 2000,
+      transitionIn: { type: 'crossfade', durationMs: 500 },
+    }),
+    source({
+      id: 'c',
+      outMs: 4000,
+      transitionIn: { type: 'crossfade', durationMs: 500 },
+    }),
+    source({ id: 'd', outMs: 4000 }),
+  ];
+
+  const joinOf = (narration: NarrationClip[] = []) =>
+    buildJoinStep({
+      placements: layoutClips(clips),
+      canvas,
+      narration,
+      assets: new Map([
+        [
+          'voice-1',
+          { assetId: 'voice-1', path: '/media/voice-1.m4a', durationMs: 4000 },
+        ],
+      ]),
+      durationMs: 13000,
+      workDir: '/work',
+      output: '/work/out.mp4',
+    });
+
+  it('abuts the picture and the audio at a cut inside the xfade chain', () => {
+    const { step, listFile } = joinOf();
+    const args = step.args.join(' ');
+
+    expect(listFile).toBeUndefined();
+    expect(step.label).toBe('join 4 clips (xfade)');
+    expect(args).toContain('[v2][vt3]concat=n=2:v=1:a=0[v3]');
+    expect(args).toContain('[a2][3:a]concat=n=2:v=0:a=1[a3]');
+    expect(args).toContain('-map [v3] -map [a3]');
+  });
+
+  it('mixes narration over the programme audio after the clips', () => {
+    const args = joinOf([
+      {
+        id: 'take-1',
+        assetId: 'voice-1',
+        startMs: 1500,
+        inMs: 0,
+        outMs: 4000,
+        volume: 1,
+      },
+    ]).step.args.join(' ');
+
+    expect(args).toContain('-i /work/clip-3.mp4 -i /media/voice-1.m4a');
+    expect(args).toContain('[4:a]atrim=0.000:4.000');
+    expect(args).toContain('[a3][n0]amix=inputs=2');
+    expect(args).toContain('-map [v3] -map [a]');
+  });
+});

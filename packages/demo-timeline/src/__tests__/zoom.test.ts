@@ -147,6 +147,14 @@ describe('where an effect is drawn once the picture has moved', () => {
       expect(back.y).toBeCloseTo(source.y);
     });
   });
+
+  it('leaves a drop where it landed when the view has no scale to undo', () => {
+    const point = { x: 0.62, y: 0.31 };
+
+    expect(
+      unzoomedPoint(point, { scale: 0, focus: { x: 0.25, y: 0.75 } }),
+    ).toEqual(point);
+  });
 });
 
 // two zooms aimed at the same off centre point used to push the window past

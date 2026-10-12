@@ -12,6 +12,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { MemoryRouter, useLocation } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
+import { getDocument } from 'pdfjs-dist';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -337,11 +338,12 @@ describe('Grant Document page', () => {
     ]);
   });
 
-  it('embeds the output link as a PDF only when there is a link', () => {
+  it('views the output link as a PDF only when there is a link', async () => {
     const { rerender } = renderGrantPage();
-    expect(screen.getByTitle('Grant Document PDF')).toHaveAttribute(
-      'src',
-      'https://example.com/grant.pdf',
+    await waitFor(() =>
+      expect(getDocument).toHaveBeenCalledWith({
+        url: 'https://example.com/grant.pdf',
+      }),
     );
 
     rerender(
@@ -349,7 +351,9 @@ describe('Grant Document page', () => {
         <SharedResearchOutput {...grantProps} link={undefined} />
       </MemoryRouter>,
     );
-    expect(screen.queryByTitle('Grant Document PDF')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Grant Document PDF' }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders the grants card only when there is a supplement grant', () => {

@@ -34,6 +34,11 @@ module.exports = {
     '^@tanstack/react-query-devtools(/production)?$': require.resolve(
       './react-query-devtools-mock.js',
     ),
+    '^pdfjs-dist(/web/pdf_viewer\\.mjs)?$': require.resolve(
+      './pdfjs-dist-mock.js',
+    ),
+    '^pdfjs-dist/web/pdf_viewer\\.css$|\\?url$':
+      require.resolve('./imageMock.js'),
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build(-cjs)?',

@@ -1,15 +1,14 @@
 import { css } from '@emotion/react';
+import { lazy, Suspense } from 'react';
 
-import { Card, Headline2 } from '../atoms';
-import { rem } from '../pixels';
+import { Card, Headline2, Paragraph } from '../atoms';
 
-const pdfStyles = css({
-  display: 'block',
-  marginTop: rem(16),
-  width: '100%',
-  aspectRatio: '1 / 1.414',
-  border: 0,
-  borderRadius: rem(16),
+const PdfViewer = lazy(() => import('./PdfViewer'));
+
+const cardStyles = css({
+  '@media print': {
+    display: 'none',
+  },
 });
 
 type GrantDocumentPdfCardProps = {
@@ -19,16 +18,13 @@ type GrantDocumentPdfCardProps = {
 const GrantDocumentPdfCard: React.FC<GrantDocumentPdfCardProps> = ({
   link,
 }) => (
-  <Card>
+  <Card overrideStyles={cardStyles}>
     <Headline2 styleAsHeading={4} noMargin>
       Grant Document PDF
     </Headline2>
-    <iframe
-      title="Grant Document PDF"
-      src={link}
-      loading="lazy"
-      css={pdfStyles}
-    />
+    <Suspense fallback={<Paragraph accent="lead">Loading PDF...</Paragraph>}>
+      <PdfViewer url={link} />
+    </Suspense>
   </Card>
 );
 

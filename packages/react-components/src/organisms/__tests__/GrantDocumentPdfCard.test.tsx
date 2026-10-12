@@ -1,14 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { getDocument } from 'pdfjs-dist';
 
 import GrantDocumentPdfCard from '../GrantDocumentPdfCard';
 
-it('embeds the grant document link', () => {
+it('views the grant document link in the PDF viewer', async () => {
   render(<GrantDocumentPdfCard link="https://example.com/grant.pdf" />);
 
   expect(
     screen.getByRole('heading', { name: 'Grant Document PDF' }),
   ).toBeVisible();
-  const pdf = screen.getByTitle('Grant Document PDF');
-  expect(pdf).toHaveAttribute('src', 'https://example.com/grant.pdf');
-  expect(pdf).toHaveAttribute('loading', 'lazy');
+  expect(screen.getByText('Loading PDF...')).toBeVisible();
+  await waitFor(() =>
+    expect(getDocument).toHaveBeenCalledWith({
+      url: 'https://example.com/grant.pdf',
+    }),
+  );
 });

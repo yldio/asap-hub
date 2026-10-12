@@ -1,5 +1,5 @@
-/* eslint-disable max-classes-per-file -- a fake pointer event and a fake
-   recorder are two fakes this page genuinely needs */
+/* eslint-disable max-classes-per-file -- a fake pointer event and fake
+   recorders are fakes this page genuinely needs */
 import { createEmptyTimeline } from '@asap-hub/demo-timeline';
 import {
   act,
@@ -1429,5 +1429,230 @@ describe('recording into the timeline', () => {
     );
 
     await waitFor(() => expect(api2.completeAsset).toHaveBeenCalledTimes(1));
+  });
+
+  // a take that captured no sound has nothing worth keeping as a source
+  it('uploads nothing for a voice over that recorded no sound', async () => {
+    class SilentMediaRecorder extends FakeMediaRecorder {
+      addEventListener(type: string, listener: (event: unknown) => void) {
+        if (type !== 'dataavailable') {
+          super.addEventListener(type, listener);
+        }
+      }
+    }
+    Object.defineProperty(globalThis, 'MediaRecorder', {
+      configurable: true,
+      writable: true,
+      value: SilentMediaRecorder,
+    });
+    const api2 = uploadApi();
+    renderStudio(api2);
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Record a voice over' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Start now' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Stop the voice over' }),
+    );
+
+    expect(
+      await screen.findByRole('button', { name: 'Record a voice over' }),
+    ).toBeEnabled();
+    expect(api2.createAsset).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole('group', { name: /^Voice over / }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('a header write the server takes', () => {
+  // the row moved on with the rename, and a publish at the old version would
+  // be refused as a conflict
+  it('hands the version it got back to the next write', async () => {
+    const ready = { ...project, processingState: 'ready' as const };
+    const updateVideo = jest
+      .fn()
+      .mockResolvedValue({ ...ready, title: 'A better name', version: 7 });
+    const publishVideo = jest
+      .fn()
+      .mockResolvedValue({ ...ready, status: 'published', version: 8 });
+    renderStudio({
+      getVideo: jest.fn().mockResolvedValue(ready),
+      updateVideo,
+      publishVideo,
+    });
+
+    const title = await screen.findByLabelText('Demo title');
+    await waitFor(() => expect(title).toBeEnabled());
+    fireEvent.change(title, { target: { value: 'A better name' } });
+    fireEvent.blur(title);
+    await waitFor(() =>
+      expect(updateVideo).toHaveBeenCalledWith('project-1', {
+        title: 'A better name',
+        version: 3,
+      }),
+    );
+    await act(async () => {
+      await updateVideo.mock.results[0]?.value;
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      within(
+        await screen.findByRole('dialog', { name: 'Publish this demo' }),
+      ).getByRole('button', { name: 'Publish' }),
+    );
+
+    await waitFor(() =>
+      expect(publishVideo).toHaveBeenCalledWith('project-1', 7),
+    );
+  });
+});
+
+describe('adding cursor effects from the capture panel', () => {
+  const session = {
+    sessionId: 'session-1',
+    token: 'token-1',
+    captureUrl: 'https://capture.example.com',
+    expiresAt: '2099-01-01T00:00:00.000Z',
+  };
+
+  const capturing = (overrides = {}) => ({
+    startCapture: jest.fn().mockResolvedValue(session),
+    captureStatus: jest.fn().mockResolvedValue({
+      state: 'open',
+      eventCount: 3,
+      clientCount: 1,
+      lastEventAt: new Date().toISOString(),
+    }),
+    ...overrides,
+  });
+
+  // the started capture is kept for the next visit, and must not leak into
+  // the next test's studio
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
+  const startTracking = async () => {
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Track the cursor' }),
+    );
+    const apply = await screen.findByRole('button', {
+      name: 'Add cursor effects',
+    });
+    await waitFor(() => expect(apply).toBeEnabled());
+    return apply;
+  };
+
+  it('asks for a clip first when the timeline is empty', async () => {
+    const finaliseCapture = jest.fn();
+    renderStudio(capturing({ finaliseCapture }));
+
+    await userEvent.click(await startTracking());
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Add a clip to the timeline first, then add the cursor effects to it.',
+    );
+    expect(finaliseCapture).not.toHaveBeenCalled();
+  });
+
+  it('drops that refusal once there is a clip to land on', async () => {
+    const finaliseCapture = jest.fn(() => new Promise(() => {}));
+    renderStudio(capturing({ finaliseCapture }));
+
+    await userEvent.click(await startTracking());
+    await screen.findByText(/Add a clip to the timeline first/);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+
+    await waitFor(() => expect(finaliseCapture).toHaveBeenCalled());
+    expect(
+      screen.queryByText(/Add a clip to the timeline first/),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('leaving once the editing lock has gone', () => {
+  // nothing can save these edits any more, so the dialog must not offer to
+  it('says the edits are lost and offers no save', async () => {
+    renderStudio({
+      saveTimeline: jest
+        .fn()
+        .mockRejectedValue(new ApiError(409, 'locked', 'locked', 'Bo')),
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Demo title')).toBeEnabled(),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Add to timeline' }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(await screen.findByText(/Bo is editing this demo/)).toBeVisible();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Demos' }));
+
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Unsaved changes',
+    });
+    expect(dialog).toHaveTextContent(
+      'These edits were made after the editing lock was lost, so they cannot be saved. Leaving loses them.',
+    );
+    expect(
+      within(dialog).queryByRole('button', { name: 'Save and leave' }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('backing out of a question with Escape', () => {
+  const ready = () =>
+    jest.fn().mockResolvedValue({ ...project, processingState: 'ready' });
+
+  it('leaves the demo unpublished', async () => {
+    const publishVideo = jest.fn();
+    renderStudio({ publishVideo, getVideo: ready() });
+
+    const publish = await screen.findByRole('button', { name: 'Publish' });
+    await waitFor(() => expect(publish).toBeEnabled());
+    await userEvent.click(publish);
+    await screen.findByRole('dialog', { name: 'Publish this demo' });
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(publishVideo).not.toHaveBeenCalled();
+  });
+
+  it('keeps the current export', async () => {
+    const startRender = jest.fn();
+    renderStudio({
+      startRender,
+      getVideo: ready(),
+      getTimeline: jest.fn().mockResolvedValue(clipTimeline()),
+    });
+
+    const exportAgain = await screen.findByRole('button', {
+      name: 'Export again',
+    });
+    await waitFor(() => expect(exportAgain).toBeEnabled());
+    await userEvent.click(exportAgain);
+    await screen.findByRole('dialog', { name: 'Export this demo again' });
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(startRender).not.toHaveBeenCalled();
   });
 });

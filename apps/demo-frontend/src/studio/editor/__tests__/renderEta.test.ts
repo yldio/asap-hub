@@ -48,6 +48,14 @@ describe('etaMs', () => {
     expect(waited).toBe(70 * 2000 - 10_000);
   });
 
+  it('says nothing until the pace has run long enough to trust', () => {
+    expect(etaMs([at(0, 5), at(10_000, 8)], 10_000)).toBeUndefined();
+  });
+
+  it('says nothing while progress has gone backwards', () => {
+    expect(etaMs([at(0, 40), at(30_000, 10)], 30_000)).toBeUndefined();
+  });
+
   it('never goes below zero and never speaks at the end', () => {
     const samples = [at(0, 10), at(20_000, 98)];
     expect(etaMs(samples, 1_000_000)).toBe(0);

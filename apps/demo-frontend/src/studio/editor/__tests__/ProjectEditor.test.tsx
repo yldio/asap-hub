@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
@@ -1020,5 +1021,833 @@ describe('picking clips for a download', () => {
     pick();
 
     expect(screen.queryByRole('region', { name: 'Picked clips' })).toBeNull();
+  });
+});
+
+const pairOfClips = (
+  transitionIn?: Timeline['clips'][number]['transitionIn'],
+) => ({
+  ...withClip(),
+  clips: [
+    ...withClip().clips,
+    {
+      kind: 'source' as const,
+      id: 'clip-b',
+      assetId: 'asset-a',
+      inMs: 0,
+      outMs: 8000,
+      volume: 1,
+      ...(transitionIn ? { transitionIn } : {}),
+    },
+  ],
+});
+
+const withTitleCard = (): Timeline => ({
+  ...withClip(),
+  clips: [
+    ...withClip().clips,
+    {
+      kind: 'title',
+      id: 'title-a',
+      durationMs: 3000,
+      preset: 'centered',
+      text: 'Next steps',
+    },
+  ],
+});
+
+const banner = {
+  id: 'banner-a',
+  startMs: 0,
+  durationMs: 4000,
+  preset: 'lowerThird' as const,
+  text: 'Welcome',
+  position: 'bottom' as const,
+  animation: 'fade' as const,
+};
+
+const zoom = {
+  id: 'zoom-a',
+  clipId: 'clip-a',
+  startMs: 0,
+  rampInMs: 400,
+  holdMs: 1500,
+  rampOutMs: 400,
+  focus: { x: 0.5, y: 0.5 },
+  scale: 2,
+  easing: 'easeInOut' as const,
+};
+
+const take = {
+  id: 'take-a',
+  assetId: 'asset-a',
+  startMs: 0,
+  inMs: 0,
+  outMs: 4000,
+  volume: 1,
+};
+
+const actions = (calls: Call[]) =>
+  calls.flatMap((call) => (call.action ? [call.action] : []));
+
+const clipBlock = (index: number) =>
+  screen.getAllByRole('group', { name: /^Sprint demo, / })[
+    index
+  ] as HTMLElement;
+
+// jsdom lays nothing out, so the lane and the stage are given a size to measure
+const measuredAt = (width: number, height: number) =>
+  jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+    left: 0,
+    top: 0,
+    right: width,
+    bottom: height,
+    width,
+    height,
+    x: 0,
+    y: 0,
+    toJSON: () => ({}),
+  });
+
+describe('adding a voice over', () => {
+  const narration = asset({ kind: 'audio', label: 'Narration' });
+
+  it('drops it on the voice over lane and opens it in the inspector', async () => {
+    render(<Live assets={[narration]} initial={createEmptyTimeline()} />);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add as voice over' }),
+    );
+
+    expect(
+      screen.getByRole('group', { name: 'Voice over Narration' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('complementary', { name: 'Voice over' }),
+    ).toHaveTextContent('Narration');
+  });
+
+  it('runs for the length of the recording at the playhead', async () => {
+    const { calls } = renderEditor({ assets: [narration] });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add as voice over' }),
+    );
+
+    expect(actions(calls)).toContainEqual({
+      type: 'addNarration',
+      narration: {
+        id: expect.any(String),
+        assetId: 'asset-a',
+        startMs: 0,
+        inMs: 0,
+        outMs: 8000,
+        volume: 1,
+      },
+    });
+  });
+
+  // the ingest has not measured it and there is no url to probe it from
+  it('gives a recording of unknown length a provisional one', async () => {
+    const unmeasured = asset({ kind: 'audio', url: undefined });
+    delete (unmeasured as { durationMs?: number }).durationMs;
+    const { calls } = renderEditor({ assets: [unmeasured] });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add as voice over' }),
+    );
+
+    expect(actions(calls)).toContainEqual(
+      expect.objectContaining({
+        type: 'addNarration',
+        narration: expect.objectContaining({ outMs: 10000 }),
+      }),
+    );
+    expect(calls.some((call) => call.name === 'beginGesture')).toBe(false);
+  });
+});
+
+describe('acting on the selected clip', () => {
+  const selectFirstClip = () =>
+    fireEvent.keyDown(clipBlock(0), { key: 'Enter' });
+
+  it('duplicates it', async () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+    selectFirstClip();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Duplicate' }));
+
+    expect(actions(calls)).toContainEqual({
+      type: 'duplicateClip',
+      clipId: 'clip-a',
+      newClipId: expect.any(String),
+    });
+  });
+
+  it('mutes it', async () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+    selectFirstClip();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Mute' }));
+
+    expect(actions(calls)).toContainEqual({
+      type: 'toggleMute',
+      clipId: 'clip-a',
+    });
+  });
+
+  it('duplicates and mutes nothing when no clip is selected', () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+
+    fireEvent.keyDown(document.body, { code: 'KeyD' });
+    fireEvent.keyDown(document.body, { code: 'KeyM' });
+
+    expect(actions(calls)).toEqual([]);
+  });
+
+  it('mutes a clip from its own block on the lane', async () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Mute Sprint demo' }),
+    );
+
+    expect(actions(calls)).toEqual([{ type: 'toggleMute', clipId: 'clip-a' }]);
+  });
+
+  // the inspector bounds the transition by the clip it blends out of
+  it('hands the inspector the clip before the selected one', () => {
+    renderEditor({
+      timeline: pairOfClips({ type: 'crossfade', durationMs: 1000 }),
+    });
+
+    fireEvent.keyDown(clipBlock(1), { key: 'Enter' });
+
+    expect(
+      screen.getByRole('textbox', { name: /^Transition length/ }),
+    ).toHaveValue('0:01.00');
+  });
+});
+
+describe('removing what is selected', () => {
+  it.each`
+    kind            | lane                        | timeline                                | removal
+    ${'zoom'}       | ${'Zoom 2x'}                | ${{ ...withClip(), zooms: [zoom] }}     | ${{ type: 'removeZoom', zoomId: 'zoom-a' }}
+    ${'banner'}     | ${'Banner Welcome'}         | ${{ ...withClip(), banners: [banner] }} | ${{ type: 'removeBanner', bannerId: 'banner-a' }}
+    ${'voice over'} | ${'Voice over Sprint demo'} | ${{ ...withClip(), narration: [take] }} | ${{ type: 'removeNarration', narrationId: 'take-a' }}
+  `('removes a selected $kind', async ({ lane, timeline, removal }) => {
+    const { calls } = renderEditor({ timeline });
+
+    fireEvent.keyDown(screen.getByRole('group', { name: lane }), {
+      key: 'Enter',
+    });
+    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+
+    expect(actions(calls)).toEqual([removal]);
+    expect(screen.getByRole('button', { name: 'Remove' })).toBeDisabled();
+  });
+
+  it('removes a selected click from the clip under the playhead', async () => {
+    const { calls } = renderEditor({
+      timeline: {
+        ...withClip(),
+        cursor: [
+          {
+            clipId: 'clip-a',
+            offsetMs: 0,
+            path: [],
+            effects: [
+              {
+                id: 'effect-a',
+                tMs: 1000,
+                type: 'ripple',
+                point: { x: 0.5, y: 0.5 },
+                origin: 'manual',
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Click highlight at 0:01.00' }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+
+    expect(actions(calls)).toContainEqual({
+      type: 'removeCursorEffect',
+      clipId: 'clip-a',
+      effectId: 'effect-a',
+    });
+  });
+
+  it('removes nothing when nothing is selected', () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+
+    fireEvent.keyDown(document.body, { code: 'Delete' });
+
+    expect(actions(calls)).toEqual([]);
+  });
+});
+
+describe('adding at the playhead', () => {
+  it('puts a title card after the clip under the playhead', async () => {
+    const { calls } = renderEditor({ timeline: withClip() });
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: 'Title card, goes in after the clip under the playhead',
+      }),
+    );
+
+    expect(actions(calls)).toContainEqual({
+      type: 'addTitleCard',
+      clipId: expect.any(String),
+      index: 1,
+      text: 'New chapter',
+      durationMs: 3000,
+    });
+  });
+
+  it('puts a title card at the end when no clip is under the playhead', async () => {
+    const { calls } = renderEditor();
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: 'Title card, goes in after the clip under the playhead',
+      }),
+    );
+
+    expect(actions(calls)).toContainEqual(
+      expect.objectContaining({ type: 'addTitleCard', index: 0 }),
+    );
+  });
+
+  it('opens the new title card in the inspector', async () => {
+    renderLive(withClip());
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: 'Title card, goes in after the clip under the playhead',
+      }),
+    );
+
+    expect(
+      within(
+        screen.getByRole('complementary', { name: 'Title card' }),
+      ).getByRole('textbox', { name: 'Heading' }),
+    ).toHaveValue('New chapter');
+  });
+
+  it('opens a new banner in the inspector', async () => {
+    renderLive(withClip());
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Banner, goes at the playhead' }),
+    );
+
+    expect(
+      within(screen.getByRole('complementary', { name: 'Banner' })).getByRole(
+        'textbox',
+        { name: 'Heading' },
+      ),
+    ).toHaveValue('New banner');
+  });
+
+  it('anchors a new zoom to the clip under the playhead and opens it', async () => {
+    renderLive(withClip());
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Zoom, goes at the playhead' }),
+    );
+
+    expect(screen.getByRole('complementary', { name: 'Zoom' })).toBeVisible();
+    expect(screen.getByRole('group', { name: 'Zoom 2x' })).toBeInTheDocument();
+    expect(
+      screen.getByText('Drag the picture to aim the zoom'),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('a cursor capture', () => {
+  const recorderWith =
+    (apply: CaptureApply, accepted: (landed: boolean) => void = jest.fn()) =>
+    (
+      _addAsset: (added: ProjectAsset) => void,
+      applyCursorCapture: (run: CaptureApply) => boolean,
+    ) => (
+      <button type="button" onClick={() => accepted(applyCursorCapture(apply))}>
+        Add cursor effects
+      </button>
+    );
+
+  const taken = (): Timeline => ({
+    ...withClip(),
+    cursor: [
+      {
+        clipId: 'clip-a',
+        offsetMs: 0,
+        path: [],
+        effects: [],
+        recordedAtEpochMs: 1_700_000_000_000,
+        recordedDurationMs: 9000,
+      },
+    ],
+  });
+
+  it('is turned away when the timeline has no clip to land on', async () => {
+    const apply = jest.fn();
+    const accepted = jest.fn();
+    renderEditor({ recorder: recorderWith(apply, accepted) });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+
+    expect(accepted).toHaveBeenCalledWith(false);
+    expect(apply).not.toHaveBeenCalled();
+  });
+
+  it('changes nothing when it found nothing to apply', async () => {
+    const apply = jest.fn().mockResolvedValue([]);
+    const accepted = jest.fn();
+    const { calls } = renderEditor({
+      timeline: withClip(),
+      recorder: recorderWith(apply, accepted),
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+    await act(async () => {
+      await apply.mock.results[0]?.value;
+    });
+
+    expect(accepted).toHaveBeenCalledWith(true);
+    expect(calls).toEqual([]);
+  });
+
+  // the take filmed the whole source, so the window is the footage's own length
+  // and its pixel size says what was really shared
+  it('is cut to the take using what the ingest measured', async () => {
+    const apply = jest.fn().mockResolvedValue(undefined);
+    renderEditor({
+      timeline: taken(),
+      assets: [asset({ durationMs: 12000 })],
+      recorder: recorderWith(apply),
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+
+    expect(apply).toHaveBeenCalledWith(
+      expect.objectContaining({
+        targets: [
+          expect.objectContaining({
+            clipId: 'clip-a',
+            startedAtEpochMs: 1_700_000_000_000,
+            durationMs: 12000,
+            source: { width: 1920, height: 1080 },
+          }),
+        ],
+      }),
+    );
+  });
+
+  it('falls back to the take length before the ingest has measured it', async () => {
+    const apply = jest.fn().mockResolvedValue(undefined);
+    const unmeasured = asset({
+      state: 'preparing',
+      url: undefined,
+      width: undefined,
+      height: undefined,
+    });
+    delete (unmeasured as { durationMs?: number }).durationMs;
+    renderEditor({
+      timeline: taken(),
+      assets: [unmeasured],
+      recorder: recorderWith(apply),
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add cursor effects' }),
+    );
+
+    const [target] = apply.mock.calls[0][0].targets;
+    expect(target.durationMs).toBe(9000);
+    expect(target).not.toHaveProperty('source');
+  });
+});
+
+describe('chapters in the media panel', () => {
+  const withChapter = (): Timeline => ({
+    ...withClip(),
+    chapters: [
+      { id: 'chapter-a', clipId: 'clip-a', offsetMs: 1000, title: 'Intro' },
+    ],
+  });
+
+  const retime = async (to: string) => {
+    const start = screen.getByLabelText('Start of Intro');
+    await userEvent.clear(start);
+    await userEvent.type(start, `${to}{Enter}`);
+  };
+
+  it('moves a chapter onto the clip under its new time', async () => {
+    const { calls } = renderEditor({ timeline: withChapter() });
+
+    await retime('0:05');
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'updateChapter',
+        chapterId: 'chapter-a',
+        clipId: 'clip-a',
+        offsetMs: 5000,
+      },
+    ]);
+  });
+
+  // so it still travels with that clip when it is trimmed or reordered
+  it('re-anchors a chapter moved into a later clip', async () => {
+    const { calls } = renderEditor({
+      timeline: { ...pairOfClips(), chapters: withChapter().chapters },
+    });
+
+    await retime('0:10');
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'updateChapter',
+        chapterId: 'chapter-a',
+        clipId: 'clip-b',
+        offsetMs: 2000,
+      },
+    ]);
+  });
+
+  it('removes a chapter', async () => {
+    const { calls } = renderEditor({ timeline: withChapter() });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Remove the chapter at 0:01' }),
+    );
+
+    expect(actions(calls)).toEqual([
+      { type: 'removeChapter', chapterId: 'chapter-a' },
+    ]);
+  });
+
+  it('takes a title card row to the card itself', async () => {
+    renderEditor({ timeline: withTitleCard() });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Next steps (title card)' }),
+    );
+
+    expect(
+      within(
+        screen.getByRole('complementary', { name: 'Title card' }),
+      ).getByRole('textbox', { name: 'Heading' }),
+    ).toHaveValue('Next steps');
+    await waitFor(() =>
+      expect(screen.getByRole('slider', { name: 'Seek' })).toHaveAttribute(
+        'aria-valuenow',
+        '8000',
+      ),
+    );
+  });
+});
+
+describe('editing on the lanes from the keyboard', () => {
+  it('reorders a clip with Alt and an arrow', () => {
+    const { calls } = renderEditor({ timeline: pairOfClips() });
+
+    fireEvent.keyDown(clipBlock(0), { key: 'ArrowRight', altKey: true });
+
+    expect(actions(calls)).toEqual([
+      { type: 'moveClip', clipId: 'clip-a', toIndex: 1 },
+    ]);
+  });
+
+  it('slides a banner along its lane', () => {
+    const { calls } = renderEditor({
+      timeline: { ...withClip(), banners: [banner] },
+    });
+
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Banner Welcome' }), {
+      key: 'ArrowRight',
+    });
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'updateBanner',
+        bannerId: 'banner-a',
+        change: { startMs: 100, durationMs: 4000 },
+      },
+    ]);
+  });
+
+  it('lengthens a title card from its end', () => {
+    const { calls } = renderEditor({ timeline: withTitleCard() });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Trim the end of Next steps' }),
+      { key: 'ArrowRight' },
+    );
+
+    expect(actions(calls)).toEqual([
+      { type: 'updateTitleCard', clipId: 'title-a', durationMs: 3100 },
+    ]);
+  });
+
+  // a take can only play as much audio as the recording holds
+  it('holds a voice over to the length of its recording', () => {
+    const { calls } = renderEditor({
+      timeline: { ...withClip(), narration: [take] },
+      assets: [asset({ kind: 'audio', durationMs: 4000 })],
+    });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', {
+        name: 'Change where Voice over Sprint demo ends',
+      }),
+      { key: 'ArrowRight' },
+    );
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'updateNarration',
+        narrationId: 'take-a',
+        change: { startMs: 0, inMs: 0, outMs: 4000 },
+      },
+    ]);
+  });
+
+  it('slides a zoom along its clip', () => {
+    const { calls } = renderEditor({
+      timeline: { ...withClip(), zooms: [zoom] },
+    });
+
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Zoom 2x' }), {
+      key: 'ArrowRight',
+    });
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'updateZoom',
+        zoomId: 'zoom-a',
+        change: { startMs: 100, holdMs: 1500 },
+      },
+    ]);
+  });
+});
+
+describe('dragging a clip over the one before it', () => {
+  beforeEach(() => {
+    measuredAt(1000, 100);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  // 24 pixels of travel is a second of programme time
+  const dragSecondClip = (byPx: number) => {
+    const block = clipBlock(1);
+    fireEvent.pointerDown(block, { pointerId: 1, clientX: 200 });
+    fireEvent.pointerMove(block, {
+      pointerId: 1,
+      clientX: 200 + byPx,
+      buttons: 1,
+    });
+    fireEvent.pointerUp(block, { pointerId: 1, clientX: 200 + byPx });
+  };
+
+  it('keeps the kind of blend the inspector chose', () => {
+    const { calls } = renderEditor({
+      timeline: pairOfClips({ type: 'slide', durationMs: 1000 }),
+    });
+
+    dragSecondClip(-24);
+
+    expect(actions(calls)).toEqual([
+      {
+        type: 'setTransition',
+        clipId: 'clip-b',
+        transition: { type: 'slide', durationMs: 2000 },
+      },
+    ]);
+  });
+
+  it('goes back to a plain cut once the overlap is dragged away', () => {
+    const { calls } = renderEditor({
+      timeline: pairOfClips({ type: 'slide', durationMs: 1000 }),
+    });
+
+    dragSecondClip(24);
+
+    expect(actions(calls)).toEqual([
+      { type: 'setTransition', clipId: 'clip-b', transition: undefined },
+    ]);
+  });
+});
+
+describe('aiming on the picture', () => {
+  beforeEach(() => {
+    measuredAt(1000, 100);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const stageOf = (hint: string) =>
+    screen.getByText(hint).parentElement as HTMLElement;
+
+  it('pans the focus of the selected zoom', () => {
+    const { calls } = renderEditor({
+      timeline: { ...withClip(), zooms: [zoom] },
+    });
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Zoom 2x' }), {
+      key: 'Enter',
+    });
+
+    const stage = stageOf('Drag the picture to aim the zoom');
+    fireEvent.pointerDown(stage, { pointerId: 1, clientX: 500, clientY: 50 });
+    fireEvent.pointerMove(stage, { pointerId: 1, clientX: 400, clientY: 50 });
+
+    expect(actions(calls)).toContainEqual({
+      type: 'updateZoom',
+      zoomId: 'zoom-a',
+      change: { focus: { x: 0.6, y: 0.5 } },
+    });
+  });
+
+  it('offers no aiming on a read only editor', () => {
+    renderEditor({
+      timeline: { ...withClip(), zooms: [zoom] },
+      readOnly: true,
+    });
+
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Zoom 2x' }), {
+      key: 'Enter',
+    });
+
+    expect(
+      screen.queryByText('Drag the picture to aim the zoom'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('places the selected click where the picture is clicked', async () => {
+    const { calls } = renderEditor({
+      timeline: {
+        ...withClip(),
+        cursor: [
+          {
+            clipId: 'clip-a',
+            offsetMs: 0,
+            path: [],
+            effects: [
+              {
+                id: 'effect-a',
+                tMs: 1000,
+                type: 'ripple',
+                point: { x: 0.5, y: 0.5 },
+                origin: 'manual',
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Click highlight at 0:01.00' }),
+    );
+
+    fireEvent.pointerDown(stageOf('Click or drag to place the click'), {
+      pointerId: 1,
+      clientX: 250,
+      clientY: 25,
+    });
+
+    expect(actions(calls)).toContainEqual({
+      type: 'updateCursorEffect',
+      clipId: 'clip-a',
+      effectId: 'effect-a',
+      change: { point: { x: 0.25, y: 0.25 } },
+    });
+  });
+});
+
+// the creator's pixel trim moves every click on the preview the way the
+// export moves it: 192px across and 54px up on a 1920x1080 frame
+describe('a capture lined up by hand', () => {
+  it('draws its clicks shifted by the trim', () => {
+    renderEditor({
+      timeline: {
+        ...withClip(),
+        cursor: [
+          {
+            clipId: 'clip-a',
+            offsetMs: 0,
+            path: [],
+            alignXPx: 192,
+            alignYPx: -54,
+            effects: [
+              {
+                id: 'effect-a',
+                tMs: 0,
+                type: 'ripple',
+                point: { x: 0.5, y: 0.5 },
+                origin: 'manual',
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const ring = screen.getByTestId('cursor-ripple');
+    expect(ring.style.left).toBe('60%');
+    expect(ring.style.top).toBe('45%');
+  });
+});
+
+describe('choosing the frame rate', () => {
+  it('sets the frame rate of the export', async () => {
+    const { calls } = renderEditor();
+
+    await userEvent.selectOptions(
+      screen.getByRole('combobox', { name: 'Frames per second' }),
+      '24',
+    );
+
+    expect(actions(calls)).toEqual([
+      { type: 'setCanvas', canvas: { width: 1920, height: 1080, fps: 24 } },
+    ]);
+  });
+
+  // footage added later must not overwrite what the creator picked
+  it('stops following the footage once the creator has picked one', async () => {
+    const { calls } = renderEditor({
+      assets: [asset({ width: 3840, height: 2160, fps: 60 })],
+    });
+
+    await userEvent.selectOptions(
+      screen.getByRole('combobox', { name: 'Frames per second' }),
+      '24',
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Add to timeline' }),
+    );
+
+    expect(
+      actions(calls).filter((action) => action.type === 'setCanvas'),
+    ).toEqual([
+      { type: 'setCanvas', canvas: { width: 1920, height: 1080, fps: 24 } },
+    ]);
   });
 });

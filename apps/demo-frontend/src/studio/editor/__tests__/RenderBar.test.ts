@@ -1,4 +1,8 @@
-import { renderTookLabel, stageLabel } from '../RenderBar';
+import { render, screen } from '@testing-library/react';
+import { createElement } from 'react';
+import { MemoryRouter } from 'react-router';
+import { RenderJob } from '../../../api/types';
+import RenderBar, { renderTookLabel, stageLabel } from '../RenderBar';
 
 describe('stageLabel', () => {
   // the container reports these verbatim, so a label the encoder never sends
@@ -57,5 +61,45 @@ describe('renderTookLabel', () => {
     expect(
       renderTookLabel({ ...done, finishedAt: 'not a date' }),
     ).toBeUndefined();
+  });
+});
+
+describe('the bar once a render has stopped', () => {
+  const renderBar = (job: RenderJob) =>
+    render(
+      createElement(
+        MemoryRouter,
+        null,
+        createElement(RenderBar, {
+          videoId: 'project-1',
+          render: job,
+          status: 'draft',
+          hasOutput: false,
+          canRender: true,
+          readOnly: false,
+          onLeave: () => true,
+          onRender: jest.fn(),
+          onCancel: jest.fn(),
+          onSaveDownload: jest.fn(),
+        }),
+      ),
+    );
+
+  it('says the export failed even when the container gave no reason', () => {
+    renderBar({ renderId: 'r1', state: 'failed', timelineVersion: 1 });
+
+    expect(screen.getByText('Export failed')).toBeVisible();
+  });
+
+  it('says how long the finished export took', () => {
+    renderBar({
+      renderId: 'r1',
+      state: 'done',
+      timelineVersion: 1,
+      requestedAt: '2026-08-30T19:24:24.677Z',
+      finishedAt: '2026-08-30T19:29:38.342Z',
+    });
+
+    expect(screen.getByText('Exported in 5:14.')).toBeVisible();
   });
 });

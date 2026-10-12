@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, useEffect, useRef } from 'react';
 
 import type { Chapter } from '../api/types';
-import { fern, onDark, rem } from '../ui/theme';
+import { colour, colourWithAlpha, fern, onDark, rem } from '../ui/theme';
 import { formatDuration, formatDurationWords } from '../utils/time';
 import { chapterEndMs } from './playback';
 
@@ -16,8 +16,8 @@ const panelStyles = css({
   maxWidth: 'calc(100% - 24px)',
   maxHeight: `calc(100% - ${rem(112)})`,
   overflowY: 'auto',
-  backgroundColor: 'rgba(20, 20, 20, 0.95)',
-  border: `1px solid rgba(255, 255, 255, 0.15)`,
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.95),
+  border: `1px solid ${colourWithAlpha(colour.neutral[0], 0.15)}`,
   borderRadius: rem(8),
   zIndex: 4,
 });
@@ -29,7 +29,7 @@ const headingStyles = css({
   letterSpacing: rem(1.2),
   textTransform: 'uppercase',
   fontWeight: 'bold',
-  color: 'rgba(255, 255, 255, 0.6)',
+  color: colourWithAlpha(colour.neutral[0], 0.6),
 });
 
 const listStyles = css({ listStyle: 'none', margin: 0, padding: 0 });
@@ -43,7 +43,7 @@ const rowStyles = css({
   alignItems: 'start',
   textAlign: 'left',
   border: 'none',
-  borderTop: `1px solid rgba(255, 255, 255, 0.08)`,
+  borderTop: `1px solid ${colourWithAlpha(colour.neutral[0], 0.08)}`,
   backgroundColor: 'transparent',
   padding: `${rem(14)} ${rem(18)}`,
   cursor: 'pointer',
@@ -52,11 +52,13 @@ const rowStyles = css({
   fontWeight: 500,
   lineHeight: 1.4,
   color: onDark.rgb,
-  ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+  ':hover, :focus-visible': {
+    backgroundColor: colourWithAlpha(colour.neutral[0], 0.1),
+  },
 });
 
 const activeRowStyles = css({
-  backgroundColor: 'rgba(255, 255, 255, 0.14)',
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.14),
   '::before': {
     content: '""',
     position: 'absolute',
@@ -72,8 +74,8 @@ const badgeStyles = css({
   fontSize: rem(12),
   fontWeight: 'normal',
   fontVariantNumeric: 'tabular-nums',
-  color: 'rgba(255, 255, 255, 0.85)',
-  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  color: colourWithAlpha(colour.neutral[0], 0.85),
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.15),
   borderRadius: rem(4),
   padding: `${rem(2)} ${rem(6)}`,
   alignSelf: 'start',
@@ -83,7 +85,7 @@ const lengthStyles = css({
   gridColumn: 1,
   fontSize: rem(13),
   fontWeight: 'normal',
-  color: 'rgba(255, 255, 255, 0.6)',
+  color: colourWithAlpha(colour.neutral[0], 0.6),
   paddingTop: rem(6),
 });
 

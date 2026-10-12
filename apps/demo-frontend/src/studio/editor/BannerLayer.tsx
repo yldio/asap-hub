@@ -1,6 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Banner, fadeOpacityAt } from '@asap-hub/demo-timeline';
+import {
+  Banner,
+  fadeOpacityAt,
+  lowerThirdStyle,
+} from '@asap-hub/demo-timeline';
 import {
   forwardRef,
   useCallback,
@@ -9,6 +13,18 @@ import {
   useRef,
   useState,
 } from 'react';
+
+import { colourWithAlpha } from '../../ui/theme';
+
+const scrim = (direction: string): string => {
+  const { scrim: ink, scrimEdge, scrimMid, scrimMidStop } = lowerThirdStyle;
+  return `linear-gradient(${direction}, ${colourWithAlpha(
+    ink,
+    scrimEdge,
+  )}, ${colourWithAlpha(ink, scrimMid)} ${
+    scrimMidStop * 100
+  }%, ${colourWithAlpha(ink, 0)})`;
+};
 
 const layerStyles = css({
   position: 'absolute',
@@ -21,9 +37,8 @@ const bandStyles = css({
   left: 0,
   right: 0,
   padding: '4% 6%',
-  background:
-    'linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.45) 60%, rgba(0, 0, 0, 0))',
-  color: '#ffffff',
+  background: scrim('to top'),
+  color: lowerThirdStyle.heading,
   display: 'flex',
   flexDirection: 'column',
   gap: '0.4em',
@@ -33,8 +48,7 @@ const bottomStyles = css({ bottom: 0 });
 
 const topStyles = css({
   top: 0,
-  background:
-    'linear-gradient(to bottom, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.45) 60%, rgba(0, 0, 0, 0))',
+  background: scrim('to bottom'),
 });
 
 const headingStyles = css({

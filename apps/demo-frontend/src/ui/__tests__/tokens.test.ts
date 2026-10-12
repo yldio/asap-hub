@@ -12,6 +12,6 @@ describe('the palettes', () => {
   // black in dark mode, at about 1.05:1 contrast.
   it('keeps the on-dark ink white in both themes', () => {
     expect(darkTokens['--demo-on-dark']).toBe(lightTokens['--demo-on-dark']);
-    expect(lightTokens['--demo-on-dark']).toBe('rgb(255, 255, 255)');
+    expect(lightTokens['--demo-on-dark']).toBe('#FFFFFF');
   });
 });

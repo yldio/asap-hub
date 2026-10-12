@@ -13,6 +13,7 @@ import {
   pointerVariant,
   Point,
   restingZoom,
+  spotlightStyle,
   zoomedPoint,
   ZoomView,
 } from '@asap-hub/demo-timeline';
@@ -25,6 +26,8 @@ import {
   useRef,
   useState,
 } from 'react';
+
+import { colourWithAlpha } from '../../ui/theme';
 
 const layerStyles = css({
   position: 'absolute',
@@ -57,8 +60,7 @@ const inkOf = (effect: CursorEffect): string =>
 // readable on the white page it usually sits on, and a black one on a dark app
 const edgeShadow = (ink: string): string => {
   const edge = edgeFor(ink);
-  const rgb = edge.color === '#ffffff' ? '255, 255, 255' : '0, 0, 0';
-  return `0 0 0 2px rgba(${rgb}, ${edge.opacity})`;
+  return `0 0 0 2px ${colourWithAlpha(edge.color, edge.opacity)}`;
 };
 
 // The animation is wall clock, and it ends on opacity 0. Parked on an effect to
@@ -331,9 +333,13 @@ const CursorLayer = forwardRef<CursorLayerHandle, Props>(
             style={{
               background: `radial-gradient(circle at ${
                 aligned(spotlight.point).x * 100
-              }% ${
-                aligned(spotlight.point).y * 100
-              }%, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0.55) 26%)`,
+              }% ${aligned(spotlight.point).y * 100}%, ${colourWithAlpha(
+                spotlightStyle.scrim,
+                0,
+              )} ${spotlightStyle.clearStop * 100}%, ${colourWithAlpha(
+                spotlightStyle.scrim,
+                spotlightStyle.scrimOpacity,
+              )} ${spotlightStyle.scrimStop * 100}%)`,
             }}
           />
         ) : null}

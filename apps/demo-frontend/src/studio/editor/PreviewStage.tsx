@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import {
   Banner,
+  centeredTitleStyle,
   clipLocalMs,
   ClipPlacement,
   CursorEffect,
@@ -20,7 +21,7 @@ import {
   useState,
 } from 'react';
 import { ProjectAsset } from '../../api/types';
-import { rem } from '../../ui/theme';
+import { colour, colourWithAlpha, rem } from '../../ui/theme';
 import BannerLayer, { BannerLayerHandle } from './BannerLayer';
 import { editorTheme } from './editorTheme';
 import CursorLayer, { CursorLayerHandle } from './CursorLayer';
@@ -83,8 +84,8 @@ const titleCardStyles = css({
   alignItems: 'center',
   justifyContent: 'center',
   gap: rem(12),
-  backgroundColor: '#0b0d12',
-  color: '#ffffff',
+  backgroundColor: centeredTitleStyle.background,
+  color: centeredTitleStyle.heading,
   padding: rem(48),
   textAlign: 'center',
 });
@@ -106,7 +107,7 @@ const headingStyles = css({
 const subheadingStyles = css({
   fontSize: rem(22),
   margin: 0,
-  color: '#d5d5de',
+  color: centeredTitleStyle.subtitle,
 });
 
 const hintStyles = css({
@@ -115,8 +116,8 @@ const hintStyles = css({
   bottom: rem(10),
   padding: `${rem(4)} ${rem(10)}`,
   borderRadius: rem(6),
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  color: '#ffffff',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.6),
+  color: colour.neutral[0],
   fontSize: rem(12),
   pointerEvents: 'none',
 });
@@ -130,9 +131,9 @@ const markerStyles = css({
   marginLeft: rem(-14),
   marginTop: rem(-14),
   borderRadius: '50%',
-  border: '2px solid #ffffff',
-  backgroundColor: 'rgba(255, 255, 255, 0.25)',
-  boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.45)',
+  border: `2px solid ${colour.neutral[0]}`,
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.25),
+  boxShadow: `0 0 0 2px ${colourWithAlpha(colour.neutral[900], 0.45)}`,
   cursor: 'grab',
   padding: 0,
   touchAction: 'none',

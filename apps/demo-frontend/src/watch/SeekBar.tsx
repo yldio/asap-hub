@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC, KeyboardEvent, PointerEvent, useRef, useState } from 'react';
 
 import type { Chapter } from '../api/types';
-import { fern, rem } from '../ui/theme';
+import { colour, colourWithAlpha, fern, rem } from '../ui/theme';
 import { formatDurationWords } from '../utils/time';
 import { toSegments } from './ChapterProgress';
 import { clamp, ratioAt } from './playback';
@@ -24,7 +24,7 @@ const segmentStyles = css({
   position: 'relative',
   height: rem(3),
   borderRadius: rem(2),
-  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.3),
   overflow: 'hidden',
   transition: 'height 100ms',
 });
@@ -42,7 +42,7 @@ const bufferedStyles = css({
   position: 'absolute',
   inset: 0,
   transformOrigin: 'left',
-  backgroundColor: 'rgba(255, 255, 255, 0.45)',
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.45),
 });
 
 const knobStyles = css({

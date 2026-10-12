@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import type { Chapter } from '../api/types';
-import { onDark, rem } from '../ui/theme';
+import { colour, colourWithAlpha, onDark, rem } from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import { cueAt, ThumbnailCue } from '../utils/vtt';
 import { chapterAt, clampTooltip } from './playback';
@@ -22,9 +22,9 @@ const wrapperStyles = css({
 
 const frameStyles = css({
   borderRadius: rem(4),
-  border: `1px solid rgba(255, 255, 255, 0.25)`,
+  border: `1px solid ${colourWithAlpha(colour.neutral[0], 0.25)}`,
   overflow: 'hidden',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.6),
 });
 
 // the caption is drawn over whatever frame happens to be behind it, so it needs
@@ -33,7 +33,7 @@ const captionBackdrop = {
   maxWidth: '100%',
   padding: `${rem(2)} ${rem(8)}`,
   borderRadius: rem(4),
-  backgroundColor: 'rgba(0, 0, 0, 0.82)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.82),
 } as const;
 
 const titleStyles = css({

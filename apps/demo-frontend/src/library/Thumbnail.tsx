@@ -2,13 +2,13 @@
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 
-import { onDark, rem } from '../ui/theme';
+import { colour, colourWithAlpha, onDark, rem } from '../ui/theme';
 import { thumbnailUrl } from './state';
 
 const frameStyles = css({
   position: 'relative',
   overflow: 'hidden',
-  backgroundColor: '#12141A',
+  backgroundColor: colour.neutral[900],
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -16,7 +16,7 @@ const frameStyles = css({
 
 const fallbackStyles = css({
   padding: `0 ${rem(12)}`,
-  color: '#E7E9EE',
+  color: colour.general.blue.classic[25],
   fontSize: rem(14),
   fontWeight: 'bold',
   textAlign: 'center',
@@ -41,7 +41,7 @@ const badgeStyles = css({
   bottom: rem(6),
   padding: `${rem(2)} ${rem(6)}`,
   borderRadius: rem(4),
-  backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.75),
   color: onDark.rgb,
   fontSize: rem(12),
   fontVariantNumeric: 'tabular-nums',

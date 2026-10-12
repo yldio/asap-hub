@@ -1,4 +1,5 @@
 export { rem, lineHeight } from '@asap-hub/react-components/src/pixels';
+export { colour, colourWithAlpha } from '@asap-hub/react-components/src/colors';
 export {
   fontStyles,
   captionStyles,

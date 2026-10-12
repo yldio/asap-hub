@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   CursorEffect,
   cursorColors,
+  cursorEdge,
   defaultCursorColor,
   defaultPointerVariant,
   limits,
@@ -11,6 +12,7 @@ import {
   pointerVariants,
 } from '@asap-hub/demo-timeline';
 import { FC, useEffect, useState } from 'react';
+import { colour, colourWithAlpha } from '../../ui/theme';
 import EditorButton from './EditorButton';
 import {
   fieldStyles,
@@ -101,7 +103,7 @@ const swatchStyles = css({
   cursor: 'pointer',
   border: `2px solid ${editorTheme.line}`,
   // the same dark edge the ring carries, so the swatch reads on this panel too
-  boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.45)',
+  boxShadow: `inset 0 0 0 1px ${colourWithAlpha(cursorEdge, 0.45)}`,
   ':disabled': { cursor: 'not-allowed', opacity: 0.5 },
 });
 
@@ -116,7 +118,7 @@ const pointerSwatchStyles = css({
   border: `2px solid ${editorTheme.line}`,
   // the shapes are drawn in white with a dark halo, which is unreadable on a
   // light panel, so each sits on a slate of its own
-  backgroundColor: '#3c4250',
+  backgroundColor: colour.neutral[800],
   display: 'grid',
   placeItems: 'center',
   ':disabled': { cursor: 'not-allowed', opacity: 0.5 },

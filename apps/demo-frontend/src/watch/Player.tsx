@@ -10,7 +10,14 @@ import {
 } from 'react';
 
 import type { Chapter, VideoAccess } from '../api/types';
-import { charcoal, fern, onDark, rem } from '../ui/theme';
+import {
+  colour,
+  colourWithAlpha,
+  charcoal,
+  fern,
+  onDark,
+  rem,
+} from '../ui/theme';
 import { formatDuration } from '../utils/time';
 import ChaptersPanel from './ChaptersPanel';
 import {
@@ -54,8 +61,13 @@ const controlsStyles = css({
   right: 0,
   bottom: 0,
   padding: `${rem(28)} ${rem(12)} ${rem(8)}`,
-  background:
-    'linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0))',
+  background: `linear-gradient(to top, ${colourWithAlpha(
+    colour.neutral[900],
+    0.85,
+  )}, ${colourWithAlpha(colour.neutral[900], 0.35)} 55%, ${colourWithAlpha(
+    colour.neutral[900],
+    0,
+  )})`,
   color: onDark.rgb,
   transition: 'opacity 200ms',
   display: 'grid',
@@ -84,11 +96,13 @@ const iconButtonStyles = css({
   backgroundColor: 'transparent',
   color: onDark.rgb,
   cursor: 'pointer',
-  ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.15)' },
+  ':hover, :focus-visible': {
+    backgroundColor: colourWithAlpha(colour.neutral[0], 0.15),
+  },
 });
 
 const activeIconButtonStyles = css({
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.2),
 });
 
 const volumeWrapperStyles = css({
@@ -126,7 +140,7 @@ const chapterTitleStyles = css({
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   minWidth: 0,
-  color: 'rgba(255, 255, 255, 0.85)',
+  color: colourWithAlpha(colour.neutral[0], 0.85),
 });
 
 const spacerStyles = css({ flexGrow: 1 });
@@ -142,10 +156,12 @@ const centerPlayStyles = css({
   placeItems: 'center',
   border: 'none',
   borderRadius: '50%',
-  backgroundColor: 'rgba(0, 0, 0, 0.55)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.55),
   color: onDark.rgb,
   cursor: 'pointer',
-  ':hover, :focus-visible': { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
+  ':hover, :focus-visible': {
+    backgroundColor: colourWithAlpha(colour.neutral[900], 0.75),
+  },
 });
 
 const seekWrapperStyles = css({ position: 'relative' });
@@ -161,28 +177,29 @@ const failurePanelStyles = css({
   maxWidth: 'calc(100% - 32px)',
   padding: `${rem(20)} ${rem(24)}`,
   borderRadius: rem(8),
-  backgroundColor: 'rgba(0, 0, 0, 0.75)',
-  // over the picture, like the rest of the player chrome, so the literals stay
-  color: 'rgb(255, 255, 255)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.75),
+  color: colour.neutral[0],
   textAlign: 'center',
 });
 
 const failureBodyStyles = css({
   fontSize: rem(14),
-  color: 'rgba(255, 255, 255, 0.85)',
+  color: colourWithAlpha(colour.neutral[0], 0.85),
 });
 
 const retryButtonStyles = css({
   padding: `${rem(8)} ${rem(18)}`,
-  border: '1px solid rgba(255, 255, 255, 0.35)',
+  border: `1px solid ${colourWithAlpha(colour.neutral[0], 0.35)}`,
   borderRadius: rem(4),
-  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-  color: 'rgb(255, 255, 255)',
+  backgroundColor: colourWithAlpha(colour.neutral[0], 0.15),
+  color: colour.neutral[0],
   font: 'inherit',
   fontSize: rem(14),
   fontWeight: 'bold',
   cursor: 'pointer',
-  ':hover, :focus-visible': { backgroundColor: 'rgba(255, 255, 255, 0.25)' },
+  ':hover, :focus-visible': {
+    backgroundColor: colourWithAlpha(colour.neutral[0], 0.25),
+  },
   ':disabled': { cursor: 'progress', opacity: 0.7 },
 });
 

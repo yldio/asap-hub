@@ -8,6 +8,7 @@ import { editorTheme } from './editorTheme';
 import { formatTimecode } from './geometry';
 import { isPickModifier } from './shortcuts';
 import { MuteIcon, SoundIcon } from './icons';
+import { colour, colourWithAlpha } from '../../ui/theme';
 
 const blockStyles = css({
   position: 'absolute',
@@ -124,7 +125,7 @@ const muteButtonStyles = css({
   borderRadius: 4,
   border: 0,
   color: 'inherit',
-  backgroundColor: 'rgba(0, 0, 0, 0.18)',
+  backgroundColor: colourWithAlpha(colour.neutral[900], 0.18),
   cursor: 'pointer',
 });
 

@@ -24,7 +24,7 @@ const GrantDocumentPdfCard: React.FC<GrantDocumentPdfCardProps> = ({
       Grant Document PDF
     </Headline2>
     <Suspense fallback={<PdfViewerLayout />}>
-      <PdfViewer url={link} title="Grant Document PDF" />
+      <PdfViewer key={link} url={link} title="Grant Document PDF" />
     </Suspense>
   </Card>
 );

@@ -70,7 +70,7 @@ const pageFieldStyles = css({
   width: rem(64),
 });
 
-// Button grows to fill its row, and to full width on mobile
+// Stop Button growing to fill its row, and to full width on mobile
 const buttonStyles = css({
   flexGrow: 0,
   [`@media (max-width: ${mobileScreen.max}px)`]: {

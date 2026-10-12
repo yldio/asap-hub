@@ -47,6 +47,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
 beforeEach(() => {
   currentLocation = null;
   jest.spyOn(console, 'error').mockImplementation();
+  jest.mocked(getDocument).mockClear();
 });
 
 describe('Grant Documents', () => {

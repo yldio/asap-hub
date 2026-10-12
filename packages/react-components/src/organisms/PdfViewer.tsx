@@ -23,35 +23,10 @@ import { chevronDownIcon, chevronUpIcon, minusIcon, plusIcon } from '../icons';
 import { SearchField } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import PdfViewerLayout from './PdfViewerLayout';
+import { makeReadableStreamsIterable } from './readable-stream-async-iterator';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
-
-// pdf.js's search reads page text with `for await` over a ReadableStream,
-// which Safari 26 doesn't support yet. jsdom has no ReadableStream.
-if (
-  typeof ReadableStream !== 'undefined' &&
-  !(Symbol.asyncIterator in ReadableStream.prototype)
-) {
-  Object.defineProperty(ReadableStream.prototype, Symbol.asyncIterator, {
-    configurable: true,
-    writable: true,
-    async *value(this: ReadableStream<unknown>) {
-      const reader = this.getReader();
-      try {
-        for (;;) {
-          // eslint-disable-next-line no-await-in-loop
-          const { done, value: chunk } = await reader.read();
-          if (done) {
-            return;
-          }
-          yield chunk;
-        }
-      } finally {
-        reader.releaseLock();
-      }
-    },
-  });
-}
+makeReadableStreamsIterable();
 
 const controlsStyles = css({
   display: 'flex',

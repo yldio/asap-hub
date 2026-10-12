@@ -308,39 +308,6 @@ describe('PdfViewer', () => {
     ).toBeVisible();
   });
 
-  it('lets pdf.js read streams with for await, which Safari cannot do natively', async () => {
-    const releaseLock = jest.fn();
-    class StreamWithoutIteration {
-      chunks = ['first', 'second'];
-
-      getReader() {
-        return {
-          read: async () => {
-            const value = this.chunks.shift();
-            return { done: value === undefined, value };
-          },
-          releaseLock,
-        };
-      }
-    }
-    const original = globalThis.ReadableStream;
-    globalThis.ReadableStream =
-      StreamWithoutIteration as unknown as typeof ReadableStream;
-    jest.isolateModules(() => {
-      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
-      require('../PdfViewer');
-    });
-
-    const iterator = (
-      new StreamWithoutIteration() as unknown as AsyncIterable<string>
-    )[Symbol.asyncIterator]();
-    expect(await iterator.next()).toEqual({ done: false, value: 'first' });
-    expect(await iterator.next()).toEqual({ done: false, value: 'second' });
-    expect(await iterator.next()).toEqual({ done: true, value: undefined });
-    expect(releaseLock).toHaveBeenCalled();
-    globalThis.ReadableStream = original;
-  });
-
   it('stops loading the PDF and releases the viewer on unmount', async () => {
     const loadingTask = mockLoadingTask(Promise.resolve({ numPages: 3 }));
     const { unmount } = render(<PdfViewer url={url} title={title} />);

@@ -248,6 +248,25 @@ describe('encodeLocally with ffmpeg available', () => {
     });
   });
 
+  it('encodes to 8-bit 4:2:0 with only the picture and first sound track', async () => {
+    spawnHandler = respond();
+
+    await encoder.encodeLocally('video-1');
+
+    const encodeCall = mockSpawn.mock.calls.find(
+      ([, args]) => kind(args) === 'encode',
+    );
+    const args = encodeCall?.[1] ?? [];
+    const valueOf = (flag: string) => args[args.indexOf(flag) + 1];
+    expect(valueOf('-pix_fmt')).toBe('yuv420p');
+    expect(valueOf('-profile:v')).toBe('high');
+    expect(valueOf('-write_tmcd')).toBe('0');
+    expect(args.filter((_, index) => args[index - 1] === '-map')).toEqual([
+      '0:V:0',
+      '0:a:0?',
+    ]);
+  });
+
   it('skips the sprite when the sprite ffmpeg call fails', async () => {
     spawnHandler = respond({ sprite: { code: null } });
 

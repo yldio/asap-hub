@@ -79,10 +79,15 @@ if [[ "$DURATION_MS" -le 0 ]]; then
 fi
 log "duration ${DURATION_SECONDS}s (${DURATION_MS}ms)"
 
+# libx264 keeps the source's pixel format unless told otherwise, so a ProRes or
+# 10-bit export came out as 4:2:2 10-bit H.264, which only some browsers decode
 run_step "encode stream.mp4" \
   ffmpeg -nostdin -y -i "$INPUT_FILE" \
-  -c:v libx264 -preset medium -crf 24 \
+  -map 0:V:0 -map '0:a:0?' \
+  -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' \
+  -c:v libx264 -preset medium -crf 24 -profile:v high -pix_fmt yuv420p \
   -g 60 -keyint_min 60 -sc_threshold 0 \
-  -c:a aac -b:a 128k -movflags +faststart "$STREAM_FILE"
+  -c:a aac -b:a 128k -ac 2 \
+  -dn -sn -write_tmcd 0 -movflags +faststart "$STREAM_FILE"
 
 finish_media "$INPUT_FILE" "$STREAM_FILE"

@@ -5,7 +5,6 @@ import { Button, Card, Headline3, Paragraph } from '../atoms';
 import { colour } from '../colors';
 import { ExportIcon, PencilIcon, plusIcon } from '../icons';
 import EventAttendanceMetric, {
-  captionCountStyles,
   containerStyles as metricContainerStyles,
   valueStyles,
 } from '../molecules/EventAttendanceMetric';
@@ -89,15 +88,23 @@ const countHeadlineStyles = css({
   columnGap: rem(8),
 });
 
-const countMobileStyles = {
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    fontSize: rem(16),
-    fontWeight: 600,
-    lineHeight: 24 / 16,
+// The total keeps its desktop size on mobile, unlike the findings tile.
+const countValueStyles = css([
+  valueStyles,
+  {
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      fontSize: rem(32),
+      lineHeight: 40 / 32,
+    },
   },
-};
-const countValueStyles = css([valueStyles, countMobileStyles]);
-const countLabelStyles = css([captionCountStyles, countMobileStyles]);
+]);
+const countLabelStyles = css({
+  margin: 0,
+  fontSize: rem(20),
+  fontWeight: 'bold',
+  lineHeight: 28 / 20,
+  color: colour.foreground.primary,
+});
 
 const breakdownStyles = css({
   display: 'grid',
@@ -112,11 +119,7 @@ const breakdownLabelStyles = css({
   fontSize: rem(16),
   fontWeight: 500,
   lineHeight: 24 / 16,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    fontSize: rem(14),
-    fontWeight: 400,
-    lineHeight: 24 / 14,
-  },
+  [`@media (max-width: ${mobileScreen.max}px)`]: { fontWeight: 400 },
 });
 
 const breakdownValueStyles = css({

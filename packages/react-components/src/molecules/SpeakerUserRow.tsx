@@ -143,21 +143,20 @@ export const avatar24Styles = css({
   height: rem(24),
 });
 
-const nameStyles = css({
+const nameTextStyles = {
   display: 'block',
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    whiteSpace: 'nowrap',
-    fontSize: rem(14),
-    lineHeight: 16 / 14,
-    fontWeight: 400,
-  },
-});
-
-const externalNameStyles = css({
-  display: 'block',
-  color: colour.foreground.primary,
+  fontSize: rem(16),
+  fontWeight: 400,
+  lineHeight: 24 / 16,
   [`@media (max-width: ${mobileScreen.max}px)`]: { whiteSpace: 'nowrap' },
-});
+} as const;
+
+const nameStyles = css(nameTextStyles);
+
+const externalNameStyles = css([
+  nameTextStyles,
+  { color: colour.foreground.primary },
+]);
 
 export const placeholderAvatarStyles = css({
   display: 'inline-flex',

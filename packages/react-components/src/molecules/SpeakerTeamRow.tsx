@@ -39,6 +39,11 @@ const headerStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: rem(24),
+});
+
+// On mobile the findings pill and chevron move under the name; without the
+// pill the chevron stays on the name's line.
+const stackedHeaderStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -62,17 +67,13 @@ const labelStyles = css({
   display: 'flex',
   alignItems: 'center',
   flexShrink: 0,
-  gap: rem(8),
-  fontSize: rem(17),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    fontSize: rem(14),
-    lineHeight: 16 / 14,
-    gap: `${8 / 14}em`,
-    '> svg': { display: 'none' },
-  },
+  fontSize: rem(16),
+  lineHeight: 24 / 16,
+  // `em` against the 16px label text, since `rem()` assumes 17px.
+  gap: `${8 / 16}em`,
   '> svg': {
-    width: rem(24),
-    height: rem(24),
+    width: `${24 / 16}em`,
+    height: `${24 / 16}em`,
     flexShrink: 0,
   },
 });
@@ -167,7 +168,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
 
   return (
     <div css={wrapperStyles} role="listitem">
-      <div css={headerStyles}>
+      <div css={[headerStyles, showShared && stackedHeaderStyles]}>
         <span css={labelStyles}>
           {variant === 'team' && teamIcon(teamType)}
           {variant === 'project' && projectIcon(projectType)}

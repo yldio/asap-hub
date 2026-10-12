@@ -24,9 +24,9 @@ const sectionStyles = css({
 const headingStyles = css({
   margin: 0,
   color: colour.foreground.primary,
-  fontSize: rem(14),
+  fontSize: rem(16),
   fontWeight: 700,
-  lineHeight: 16 / 14,
+  lineHeight: 24 / 16,
 });
 
 // The last visible row drops its own divider, so the line comes from here.

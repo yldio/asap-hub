@@ -6,10 +6,11 @@ import { Link, useParams, useSearchParams } from 'react-router';
 
 import { useVideo, useVideoAccess } from '../api/hooks';
 import type { Chapter, Video, VideoAccess } from '../api/types';
-import { useIsCreator } from '../auth/MeContext';
+import { useIsAdmin, useIsCreator } from '../auth/MeContext';
 import { editPathOf } from '../library/VideoCard';
 import ChapterList from '../watch/ChapterList';
 import Player from '../watch/Player';
+import { canReencode, ReencodeButton, ReencodeStatus } from '../watch/Reencode';
 import SpritePreview from '../watch/SpritePreview';
 import useThumbnails from '../watch/useThumbnails';
 import { PageHeading, SectionHeading } from '../layout/PageHeading';
@@ -84,6 +85,7 @@ const WatchPlayer: FC<{
   readonly onRequestAccess: () => void | Promise<unknown>;
 }> = ({ video, access, onRequestAccess }) => {
   const isCreator = useIsCreator();
+  const isAdmin = useIsAdmin();
   const [searchParams] = useSearchParams();
   const [currentTime, setCurrentTime] = useState(0);
   const [hoveredChapter, setHoveredChapter] = useState<number | null>(null);
@@ -141,6 +143,7 @@ const WatchPlayer: FC<{
             >
               Download
             </ButtonLink>
+            {isAdmin && canReencode(video) && <ReencodeButton video={video} />}
             {isCreator && (
               <Link to={editPathOf(video)} css={editLinkStyles}>
                 Edit demo
@@ -148,6 +151,7 @@ const WatchPlayer: FC<{
             )}
           </span>
         </div>
+        {isAdmin && <ReencodeStatus video={video} />}
       </div>
 
       <div css={previewWrapperStyles}>
@@ -185,7 +189,8 @@ const WatchPlayer: FC<{
 
 const Watch: FC = () => {
   const { id = '' } = useParams<{ id: string }>();
-  const video = useVideo(id);
+  const isAdmin = useIsAdmin();
+  const video = useVideo(id, { pollReencode: isAdmin });
   const access = useVideoAccess(id, video.data?.mediaPath);
 
   if (video.isLoading) return <Spinner label="Loading demo" />;
@@ -243,6 +248,12 @@ const Watch: FC = () => {
             >
               Check again
             </Button>
+          )}
+          {isAdmin && failed && canReencode(video.data) && (
+            <>
+              <ReencodeButton video={video.data} />
+              <ReencodeStatus video={video.data} />
+            </>
           )}
         </Card>
       </>

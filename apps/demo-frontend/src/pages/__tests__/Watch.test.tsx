@@ -2,7 +2,8 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import type { Video, VideoAccess } from '../../api/types';
-import { creatorMe, memberMe, renderApp } from '../../test-utils';
+import { ApiError } from '../../api/client';
+import { adminMe, creatorMe, memberMe, renderApp } from '../../test-utils';
 import Watch from '../Watch';
 
 const video: Video = {
@@ -323,4 +324,134 @@ it('offers no edit link to a member', async () => {
 
   await screen.findByRole('link', { name: 'Download' });
   expect(screen.queryByRole('link', { name: 'Edit demo' })).toBeNull();
+});
+
+describe('re-encoding', () => {
+  const renderWatch = (
+    me = adminMe,
+    overrides: Record<string, unknown> = {},
+    watched: Video = video,
+  ) =>
+    renderApp(<Watch />, {
+      api: { ...api, getVideo: () => Promise.resolve(watched), ...overrides },
+      me,
+      route: '/videos/video-1',
+      routePath: '/videos/:id',
+    });
+
+  it.each([
+    ['a member', memberMe],
+    ['a creator', creatorMe],
+  ])('is not offered to %s', async (_label, me) => {
+    renderWatch(me);
+
+    await screen.findByRole('link', { name: 'Download' });
+    expect(screen.queryByRole('button', { name: 'Re-encode' })).toBeNull();
+  });
+
+  it('is not offered for a studio demo', async () => {
+    renderWatch(adminMe, {}, { ...video, kind: 'studio' });
+
+    await screen.findByRole('link', { name: 'Download' });
+    expect(screen.queryByRole('button', { name: 'Re-encode' })).toBeNull();
+  });
+
+  it('asks an admin to confirm, then starts it', async () => {
+    const reencodeVideo = jest.fn(() =>
+      Promise.resolve({
+        ...video,
+        reencode: {
+          reencodeId: 'r1',
+          state: 'queued' as const,
+          source: 'original' as const,
+          requestedAt: '2026-10-12T15:00:00.000Z',
+          requestedByName: 'Amin',
+        },
+      }),
+    );
+    renderWatch(adminMe, { reencodeVideo });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Re-encode' }),
+    );
+    const dialog = screen.getByRole('dialog', { name: 'Re-encode this demo' });
+    expect(dialog).toHaveTextContent(
+      'Anyone watching keeps the current version',
+    );
+    expect(reencodeVideo).not.toHaveBeenCalled();
+
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Re-encode' }),
+    );
+
+    expect(reencodeVideo).toHaveBeenCalledWith('video-1');
+    expect(
+      await screen.findByText(/Re-encoding, started by Amin/),
+    ).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Re-encoding' })).toBeDisabled();
+  });
+
+  it('changes nothing when the admin cancels', async () => {
+    const reencodeVideo = jest.fn();
+    renderWatch(adminMe, { reencodeVideo });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Re-encode' }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(reencodeVideo).not.toHaveBeenCalled();
+  });
+
+  it('says why it could not start', async () => {
+    renderWatch(adminMe, {
+      reencodeVideo: () =>
+        Promise.reject(new ApiError(409, 'conflict', 'no_source')),
+    });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Re-encode' }),
+    );
+    await userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Re-encode',
+      }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'There is no copy of this video left to re-encode.',
+    );
+  });
+
+  it('shows an admin why the last one failed', async () => {
+    renderWatch(
+      adminMe,
+      {},
+      {
+        ...video,
+        reencode: {
+          reencodeId: 'r1',
+          state: 'failed',
+          source: 'stream',
+          requestedAt: '2026-10-12T15:00:00.000Z',
+          error: 'ffmpeg exited 1',
+        },
+      },
+    );
+
+    expect(
+      await screen.findByText('The last re-encode failed: ffmpeg exited 1'),
+    ).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Re-encode' })).toBeEnabled();
+  });
+
+  it('lets an admin recover an upload whose first encode failed', async () => {
+    renderWatch(adminMe, {}, { ...video, processingState: 'failed' });
+
+    expect(
+      await screen.findByText('This demo failed to process'),
+    ).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Re-encode' })).toBeVisible();
+  });
 });

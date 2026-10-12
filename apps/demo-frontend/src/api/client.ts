@@ -578,6 +578,15 @@ export const createApi = (getToken: GetToken) => ({
       )
     ).video,
 
+  reencodeVideo: async (id: string): Promise<Video> =>
+    (
+      await request<{ video: Video }>(
+        `/videos/${encodeURIComponent(id)}/reencode`,
+        await getToken(),
+        { method: 'POST' },
+      )
+    ).video,
+
   acquireLease: async (id: string): Promise<Lease> =>
     request<Lease>(
       `/videos/${encodeURIComponent(id)}/lease`,

@@ -99,6 +99,16 @@ export type RenderJob = {
   error?: string;
 };
 
+export type ReencodeJob = {
+  reencodeId: string;
+  state: 'queued' | 'done' | 'failed';
+  source: 'original' | 'stream';
+  requestedAt: string;
+  requestedByName?: string;
+  finishedAt?: string;
+  error?: string;
+};
+
 export type Video = {
   id: string;
   title: string;
@@ -120,6 +130,7 @@ export type Video = {
   mediaPath?: string;
   timeline?: TimelinePointer;
   render?: RenderJob;
+  reencode?: ReencodeJob;
 };
 
 export type VideoAccess = {

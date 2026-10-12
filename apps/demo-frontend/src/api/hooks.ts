@@ -83,7 +83,10 @@ export const useAllVideos = (
   });
 };
 
-export const useVideo = (id: string): UseQueryResult<Video, unknown> => {
+export const useVideo = (
+  id: string,
+  { pollReencode = false }: { pollReencode?: boolean } = {},
+): UseQueryResult<Video, unknown> => {
   const api = useApi();
   return useQuery({
     queryKey: ['video', id],
@@ -94,6 +97,22 @@ export const useVideo = (id: string): UseQueryResult<Video, unknown> => {
       error instanceof ApiError && error.status === 404
         ? count < 3
         : noRetryOnClientError(count, error),
+    // a finished re-encode moves mediaPath and reloads the player, so only an admin's page follows it
+    refetchInterval: (query) =>
+      pollReencode && query.state.data?.reencode?.state === 'queued'
+        ? 10_000
+        : false,
+  });
+};
+
+export const useReencodeVideo = (id: string) => {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.reencodeVideo(id),
+    onSuccess: (video) => {
+      queryClient.setQueryData(['video', id], video);
+    },
   });
 };
 

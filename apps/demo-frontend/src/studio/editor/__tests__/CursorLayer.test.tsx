@@ -6,7 +6,11 @@ import {
   ZoomView,
 } from '@asap-hub/demo-timeline';
 import { createRef, Profiler } from 'react';
-import CursorLayer, { CursorLayerHandle, rippleMs } from '../CursorLayer';
+import CursorLayer, {
+  CursorLayerHandle,
+  rippleMs,
+  spotlightMs,
+} from '../CursorLayer';
 
 const ripple: CursorEffect = {
   id: 'effect-1',
@@ -356,4 +360,93 @@ it('shifts a ring by the layer trim', () => {
   expect(ring.style.left).toBe('60%');
   expect(ring.style.top).toBe('45%');
   unmount();
+});
+
+describe('several clicks in a row', () => {
+  const at = (id: string, tMs: number, x = 0.5): CursorEffect => ({
+    ...ripple,
+    id,
+    tMs,
+    point: { x, y: 0.5 },
+  });
+
+  // a capture is not saved in time order, and the layer must not care
+  it('shows whichever click is running, however the capture lists them', () => {
+    const { container } = render(
+      <CursorLayer
+        effects={[
+          at('late', 5000, 0.9),
+          at('early', 1000, 0.1),
+          at('middle', 3000, 0.5),
+        ]}
+        tMs={3200}
+      />,
+    );
+
+    const rings = container.querySelectorAll<HTMLElement>(
+      '[data-testid="cursor-ripple"]',
+    );
+    expect(rings).toHaveLength(1);
+    expect(rings[0]?.style.left).toBe('50%');
+  });
+
+  it('draws a ring as the playhead reaches its click and drops it after', () => {
+    const ref = createRef<CursorLayerHandle>();
+    const { container } = render(
+      <CursorLayer
+        ref={ref}
+        effects={[at('early', 1000), at('late', 3000)]}
+        tMs={0}
+      />,
+    );
+    const rings = () =>
+      container.querySelectorAll('[data-testid="cursor-ripple"]').length;
+    expect(rings()).toBe(0);
+
+    act(() => ref.current?.setTime(1100));
+    expect(rings()).toBe(1);
+
+    act(() => ref.current?.setTime(2000));
+    expect(rings()).toBe(0);
+
+    act(() => ref.current?.setTime(3100));
+    expect(rings()).toBe(1);
+  });
+});
+
+describe('a spotlight', () => {
+  const spotlight: CursorEffect = {
+    id: 'spot-1',
+    tMs: 1000,
+    type: 'spotlight',
+    point: { x: 0.3, y: 0.4 },
+    origin: 'derived',
+  };
+
+  // the only thing a lone spotlight draws is the dimmed frame itself
+  const dimmedAt = (tMs: number): boolean => {
+    const { container, unmount } = render(
+      <CursorLayer effects={[spotlight]} tMs={tMs} />,
+    );
+    const found = container.firstElementChild?.querySelector('div');
+    unmount();
+    return Boolean(found);
+  };
+
+  it('dims the frame for as long as the render does', () => {
+    expect(dimmedAt(999)).toBe(false);
+    expect(dimmedAt(1000)).toBe(true);
+    expect(dimmedAt(1000 + spotlightMs)).toBe(true);
+    expect(dimmedAt(1000 + spotlightMs + 1)).toBe(false);
+  });
+
+  it('is no ring', () => {
+    const { container } = render(
+      <CursorLayer effects={[spotlight]} tMs={1000} />,
+    );
+
+    expect(
+      container.querySelector('[data-testid="cursor-ripple"]'),
+    ).not.toBeInTheDocument();
+  });
 });

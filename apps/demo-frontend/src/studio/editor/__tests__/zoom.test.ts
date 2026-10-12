@@ -110,4 +110,10 @@ describe('pointInBox', () => {
   it('clamps a drag that left the frame', () => {
     expect(pointInBox(-100, 5000, bounds)).toEqual({ x: 0, y: 1 });
   });
+
+  it('reads the centre on a stage that has not been measured yet', () => {
+    expect(
+      pointInBox(500, 150, { left: 0, top: 0, width: 0, height: 0 }),
+    ).toEqual({ x: 0.5, y: 0.5 });
+  });
 });

@@ -140,7 +140,12 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
         )}
       </div>
       <div css={frameStyles}>
-        <div ref={setContainer} css={containerStyles}>
+        <div
+          ref={setContainer}
+          role="region"
+          aria-label="Grant Document PDF"
+          css={containerStyles}
+        >
           <div className="pdfViewer" />
         </div>
       </div>

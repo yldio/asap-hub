@@ -58,6 +58,9 @@ describe('PdfViewer', () => {
     expect(screen.queryByText('Loading PDF...')).not.toBeInTheDocument();
     expect(getDocument).toHaveBeenCalledWith({ url });
     expect(getViewer().currentScaleValue).toBe('page-width');
+    expect(
+      screen.getByRole('region', { name: 'Grant Document PDF' }),
+    ).toBeVisible();
   });
 
   it('opens links in a new tab and follows links within the document', async () => {

@@ -7,7 +7,6 @@ import { ExportIcon, PencilIcon, plusIcon } from '../icons';
 import EventAttendanceMetric, {
   captionCountStyles,
   containerStyles as metricContainerStyles,
-  headlineRowStyles,
   valueStyles,
 } from '../molecules/EventAttendanceMetric';
 import SpeakerTeamRow from '../molecules/SpeakerTeamRow';
@@ -16,7 +15,7 @@ import SpeakerUserRow, {
   findingsColumnStyles,
   trailingColumnsStyles,
 } from '../molecules/SpeakerUserRow';
-import { rem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 import { pluralize } from '../utils';
 
 import {
@@ -71,15 +70,50 @@ const breakdownDividerStyles = css({
   backgroundColor: colour.border.tertiary,
 });
 
+const countHeadlineStyles = css({
+  display: 'flex',
+  alignItems: 'baseline',
+  flexWrap: 'wrap',
+  columnGap: rem(8),
+});
+
+const countMobileStyles = {
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(16),
+    fontWeight: 600,
+    lineHeight: 24 / 16,
+  },
+};
+const countValueStyles = css([valueStyles, countMobileStyles]);
+const countLabelStyles = css([captionCountStyles, countMobileStyles]);
+
 const breakdownStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr auto',
-  columnGap: rem(8),
+  columnGap: rem(16),
+  rowGap: rem(8),
   color: colour.foreground.tertiary,
-  '> p': { margin: 0, fontSize: rem(14), lineHeight: 16 / 14 },
 });
 
-const breakdownValueStyles = css({ textAlign: 'right' });
+const breakdownLabelStyles = css({
+  margin: 0,
+  fontSize: rem(16),
+  fontWeight: 500,
+  lineHeight: 24 / 16,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(14),
+    fontWeight: 400,
+    lineHeight: 24 / 14,
+  },
+});
+
+const breakdownValueStyles = css({
+  margin: 0,
+  textAlign: 'right',
+  fontSize: rem(16),
+  fontWeight: 'bold',
+  lineHeight: 24 / 16,
+});
 
 const SpeakerCountMetric: React.FC<{
   label: string;
@@ -87,14 +121,16 @@ const SpeakerCountMetric: React.FC<{
   breakdown: ReadonlyArray<{ label: string; value: number }>;
 }> = ({ label, value, breakdown }) => (
   <div css={metricContainerStyles}>
-    <div css={headlineRowStyles}>
-      <p css={valueStyles}>{value}</p>
-      <p css={captionCountStyles}>{label}</p>
+    <div css={countHeadlineStyles}>
+      <p css={countValueStyles}>{value}</p>
+      <p css={countLabelStyles}>{label}</p>
     </div>
     <hr css={breakdownDividerStyles} />
     <div css={breakdownStyles}>
       {breakdown.flatMap((row) => [
-        <p key={`${row.label}-label`}>{row.label}</p>,
+        <p key={`${row.label}-label`} css={breakdownLabelStyles}>
+          {row.label}
+        </p>,
         <p key={`${row.label}-value`} css={breakdownValueStyles}>
           {row.value}
         </p>,

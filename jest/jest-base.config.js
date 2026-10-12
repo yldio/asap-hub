@@ -37,8 +37,7 @@ module.exports = {
     '^pdfjs-dist/legacy/(build/pdf|web/pdf_viewer)\\.mjs$': require.resolve(
       './pdfjs-dist-mock.js',
     ),
-    '^pdfjs-dist/legacy/web/pdf_viewer\\.css$|\\?url$':
-      require.resolve('./imageMock.js'),
+    '\\.css$|\\?url$': require.resolve('./imageMock.js'),
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build(-cjs)?',

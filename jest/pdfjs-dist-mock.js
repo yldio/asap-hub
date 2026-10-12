@@ -50,8 +50,8 @@ const PDFFindController = jest.fn(function PDFFindController() {
 
 module.exports = {
   __esModule: true,
+  AnnotationEditorType: { DISABLE: -1 },
   GlobalWorkerOptions: {},
-  FindState: { FOUND: 0, NOT_FOUND: 1, WRAPPED: 2, PENDING: 3 },
   LinkTarget: { NONE: 0, SELF: 1, BLANK: 2, PARENT: 3, TOP: 4 },
   PDFFindController,
   PDFLinkService,

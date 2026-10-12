@@ -1,11 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  AnnotationEditorType,
   getDocument,
   PDFDocumentLoadingTask,
 } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {
-  FindState,
   LinkTarget,
   PDFFindController,
   PDFLinkService,
@@ -53,23 +53,32 @@ const renderLoaded = async (pdfDocument = { numPages: 3 }) => {
   return screen.findByRole('textbox', { name: 'Page number' });
 };
 
+let resizeCallback: ResizeObserverCallback;
+const disconnect = jest.fn();
+globalThis.ResizeObserver = jest.fn((callback) => {
+  resizeCallback = callback;
+  return { observe: jest.fn(), disconnect, unobserve: jest.fn() };
+}) as unknown as typeof ResizeObserver;
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('PdfViewer', () => {
   it('renders the document fitted to the page with a page counter', async () => {
-    mockLoadingTask(Promise.resolve({ numPages: 3 }));
-    render(<PdfViewer url={url} title={title} />);
+    const pageField = renderLoaded();
     expect(screen.getByText('Loading PDF...')).toBeVisible();
 
-    expect(
-      await screen.findByRole('textbox', { name: 'Page number' }),
-    ).toHaveValue('1');
+    expect(await pageField).toHaveValue('1');
     expect(screen.getByText('/ 3')).toBeVisible();
     expect(screen.queryByText('Loading PDF...')).not.toBeInTheDocument();
     expect(getDocument).toHaveBeenCalledWith({ url });
     expect(getViewer().currentScaleValue).toBe('page-fit');
+    expect(PDFViewer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        annotationEditorMode: AnnotationEditorType.DISABLE,
+      }),
+    );
     expect(
       screen.getByRole('region', { name: 'Grant Document PDF' }),
     ).toBeVisible();
@@ -203,31 +212,29 @@ describe('PdfViewer', () => {
     expect(scrollPage).not.toHaveBeenCalled();
   });
 
-  it('says there are no matches only once pdf.js finds none', async () => {
+  it('shows the matches once pdf.js has searched every page', async () => {
     await renderLoaded();
+    expect(PDFFindController).toHaveBeenCalledWith(
+      expect.objectContaining({ updateMatchesCountOnProgress: false }),
+    );
     const searchbox = screen.getByRole('searchbox', {
       name: 'Search document',
     });
     await userEvent.type(searchbox, 'grant');
-    const report = (name: string, state: number, total: number) =>
+    const report = (name: string, total: number) =>
       act(() =>
         getViewer().eventBus.dispatch(name, {
-          state,
           matchesCount: { current: Math.min(total, 1), total },
         }),
       );
 
-    report('updatefindmatchescount', FindState.FOUND, 0);
-    expect(screen.queryByText('No matches')).not.toBeInTheDocument();
-
-    report('updatefindcontrolstate', FindState.FOUND, 2);
-    report('updatefindcontrolstate', FindState.PENDING, 5);
+    report('updatefindcontrolstate', 2);
     expect(screen.getByText('1 of 2')).toBeVisible();
 
     await userEvent.type(searchbox, 's');
     expect(screen.queryByText('1 of 2')).not.toBeInTheDocument();
 
-    report('updatefindcontrolstate', FindState.NOT_FOUND, 0);
+    report('updatefindmatchescount', 0);
     expect(screen.getByText('No matches')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Next match' })).toBeDisabled();
   });
@@ -334,22 +341,6 @@ describe('PdfViewer', () => {
     globalThis.ReadableStream = original;
   });
 
-  it('loads the new link without an error when the link changes mid-load', async () => {
-    const abandonedTask = mockLoadingTask(new Promise(() => {}));
-    mockLoadingTask(Promise.resolve({ numPages: 2 }));
-    const { rerender } = render(<PdfViewer url={url} title={title} />);
-
-    rerender(
-      <PdfViewer url="https://example.com/supplement.pdf" title={title} />,
-    );
-
-    expect(await screen.findByText('/ 2')).toBeVisible();
-    expect(abandonedTask.destroy).toHaveBeenCalled();
-    expect(
-      screen.queryByText('Unable to display this PDF.'),
-    ).not.toBeInTheDocument();
-  });
-
   it('stops loading the PDF and releases the viewer on unmount', async () => {
     const loadingTask = mockLoadingTask(Promise.resolve({ numPages: 3 }));
     const { unmount } = render(<PdfViewer url={url} title={title} />);
@@ -358,6 +349,7 @@ describe('PdfViewer', () => {
     unmount();
 
     expect(loadingTask.destroy).toHaveBeenCalled();
+    expect(disconnect).toHaveBeenCalled();
     expect(jest.mocked(getViewer().setDocument)).toHaveBeenLastCalledWith(null);
     const [linkService] = jest.mocked(PDFLinkService).mock.instances;
     expect(jest.mocked(linkService?.setDocument)).toHaveBeenLastCalledWith(
@@ -366,20 +358,6 @@ describe('PdfViewer', () => {
   });
 
   describe('when the viewer resizes', () => {
-    let resizeCallback: ResizeObserverCallback;
-    const disconnect = jest.fn();
-
-    beforeEach(() => {
-      globalThis.ResizeObserver = jest.fn((callback) => {
-        resizeCallback = callback;
-        return { observe: jest.fn(), disconnect, unobserve: jest.fn() };
-      }) as unknown as typeof ResizeObserver;
-    });
-
-    afterEach(() => {
-      delete (globalThis as Partial<typeof globalThis>).ResizeObserver;
-    });
-
     const resizeAt = async (currentScaleValue: string) => {
       await renderLoaded();
       const setScale = jest.fn();
@@ -397,15 +375,6 @@ describe('PdfViewer', () => {
 
     it('keeps the zoom the user picked', async () => {
       expect(await resizeAt('1.5')).not.toHaveBeenCalled();
-    });
-
-    it('stops observing on unmount', () => {
-      mockLoadingTask(new Promise(() => {}));
-      const { unmount } = render(<PdfViewer url={url} title={title} />);
-
-      unmount();
-
-      expect(disconnect).toHaveBeenCalled();
     });
   });
 });

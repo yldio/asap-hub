@@ -3,12 +3,12 @@ import { css } from '@emotion/react';
 // Map.getOrInsertComputed, which some supported browsers lack.
 // pdf_viewer.mjs reads globalThis.pdfjsLib, so pdf.mjs must load first.
 import {
+  AnnotationEditorType,
   getDocument,
   GlobalWorkerOptions,
 } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {
   EventBus,
-  FindState,
   LinkTarget,
   PDFFindController,
   PDFLinkService,
@@ -60,24 +60,27 @@ const controlsStyles = css({
   whiteSpace: 'nowrap',
 });
 
-const searchStyles = css([controlsStyles, { flexGrow: 1 }]);
-
 const growStyles = css({
   flexGrow: 1,
 });
+
+const searchStyles = css([controlsStyles, growStyles]);
 
 const pageFieldStyles = css({
   width: rem(64),
 });
 
 // Stop Button growing to fill its row, and to full width on mobile
-const buttonStyles = css({
-  flexGrow: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
+const buttonProps = {
+  noMargin: true,
+  overrideStyles: css({
     flexGrow: 0,
-    minWidth: 'auto',
-  },
-});
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      flexGrow: 0,
+      minWidth: 'auto',
+    },
+  }),
+};
 
 type MatchesCount = { current: number; total: number };
 
@@ -112,7 +115,13 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
       eventBus,
       externalLinkTarget: LinkTarget.BLANK,
     });
-    const findController = new PDFFindController({ eventBus, linkService });
+    // Mid-search, pdf.js reports 0 of 0 or the previous query's count, so
+    // only report once every page is searched
+    const findController = new PDFFindController({
+      eventBus,
+      linkService,
+      updateMatchesCountOnProgress: false,
+    });
     // pdf.js's scrollIntoView also scrolls the page, hiding the toolbar
     const scrollMatchIntoView =
       findController.scrollMatchIntoView.bind(findController);
@@ -140,6 +149,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
       eventBus,
       linkService,
       findController,
+      annotationEditorMode: AnnotationEditorType.DISABLE,
     });
     linkService.setViewer(viewer);
     viewerRef.current = viewer;
@@ -153,28 +163,10 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
     eventBus.on('scalechanging', (event: { presetValue?: string }) =>
       setIsFitToPage(event.presetValue === 'page-fit'),
     );
-    // pdf.js reports 0 of 0 until it selects a match
-    const showMatches = (matchesCount: MatchesCount) => {
-      if (matchesCount.total > 0) {
-        setMatches(matchesCount);
-      }
-    };
-    eventBus.on(
-      'updatefindmatchescount',
-      (event: { matchesCount: MatchesCount }) =>
-        showMatches(event.matchesCount),
-    );
-    eventBus.on(
-      'updatefindcontrolstate',
-      (event: { state: number; matchesCount: MatchesCount }) => {
-        if (event.state === FindState.NOT_FOUND) {
-          setMatches({ current: 0, total: 0 });
-        } else if (event.state !== FindState.PENDING) {
-          // a pending search still reports the previous query's count
-          showMatches(event.matchesCount);
-        }
-      },
-    );
+    const showMatches = (event: { matchesCount: MatchesCount }) =>
+      setMatches(event.matchesCount);
+    eventBus.on('updatefindmatchescount', showMatches);
+    eventBus.on('updatefindcontrolstate', showMatches);
     // PDFViewer fits the page only when 'page-fit' is set, so re-apply it on
     // resize. border-box ignores scrollbars, which would retrigger it.
     const resizeObserver =
@@ -229,6 +221,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
     setPageDraft(undefined);
   };
 
+  const hasMatches = Boolean(matches?.total);
   const find = (findQuery: string, again = false, findPrevious = false) =>
     viewerRef.current?.eventBus.dispatch('find', {
       source: null,
@@ -278,34 +271,31 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
               <span aria-live="polite">
                 {query &&
                   matches &&
-                  (matches.total
+                  (hasMatches
                     ? `${matches.current} of ${matches.total}`
                     : 'No matches')}
               </span>
               <Button
-                noMargin
+                {...buttonProps}
                 aria-label="Previous match"
-                enabled={Boolean(matches?.total)}
+                enabled={hasMatches}
                 onClick={() => find(query, true, true)}
-                overrideStyles={buttonStyles}
               >
                 {chevronUpIcon}
               </Button>
               <Button
-                noMargin
+                {...buttonProps}
                 aria-label="Next match"
-                enabled={Boolean(matches?.total)}
+                enabled={hasMatches}
                 onClick={() => find(query, true)}
-                overrideStyles={buttonStyles}
               >
                 {chevronDownIcon}
               </Button>
             </div>
             <div css={controlsStyles}>
               <Button
-                noMargin
+                {...buttonProps}
                 enabled={!isFitToPage}
-                overrideStyles={buttonStyles}
                 onClick={() => {
                   if (viewerRef.current) {
                     viewerRef.current.currentScaleValue = 'page-fit';
@@ -315,18 +305,16 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
                 Fit to page
               </Button>
               <Button
-                noMargin
+                {...buttonProps}
                 aria-label="Zoom out"
                 onClick={() => viewerRef.current?.decreaseScale()}
-                overrideStyles={buttonStyles}
               >
                 {minusIcon}
               </Button>
               <Button
-                noMargin
+                {...buttonProps}
                 aria-label="Zoom in"
                 onClick={() => viewerRef.current?.increaseScale()}
-                overrideStyles={buttonStyles}
               >
                 {plusIcon}
               </Button>

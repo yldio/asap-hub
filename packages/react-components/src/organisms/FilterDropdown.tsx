@@ -2,14 +2,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { useEffect, useRef } from 'react';
 
 import { Button } from '../atoms';
-import {
-  colorWithTransparency,
-  mint,
-  paper,
-  pine,
-  steel,
-  tin,
-} from '../colors';
+import { colour, colourWithAlpha } from '../colors';
 import { filterIcon } from '../icons';
 import {
   largeDesktopScreen,
@@ -35,8 +28,8 @@ const countBadgeStyles = css({
   height: '24px',
   marginLeft: '8px',
   borderRadius: rem(12),
-  backgroundColor: mint.rgb,
-  color: pine.rgb,
+  backgroundColor: colour.background.brand,
+  color: colour.foreground.brand,
   fontSize: rem(14),
   lineHeight: 24 / 14,
   fontWeight: 'bold',
@@ -50,9 +43,9 @@ const dropdownContainer = css({
   top: rem(8),
   zIndex: 1000,
 
-  backgroundColor: paper.rgb,
-  border: `1px solid ${steel.rgb}`,
-  boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
+  backgroundColor: colour.background.primary,
+  border: `1px solid ${colour.border.tertiary}`,
+  boxShadow: `0 2px 6px 0 ${colourWithAlpha(colour.neutral[200], 0.34)}`,
 
   display: 'none',
   flexDirection: 'column',

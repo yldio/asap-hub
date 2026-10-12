@@ -14,7 +14,7 @@ import {
   PDFLinkService,
   PDFViewer,
 } from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
-import 'pdfjs-dist/legacy/web/pdf_viewer.css';
+import pdfViewerStylesUrl from 'pdfjs-dist/legacy/web/pdf_viewer.css?url';
 import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { useEffect, useRef, useState } from 'react';
 
@@ -80,6 +80,22 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
   const [query, setQuery] = useState('');
   const [matches, setMatches] = useState<MatchesCount>();
   const [hasError, setHasError] = useState(false);
+
+  // pdf.js's CSS sets `:root { color-scheme: light dark }`, which turns native
+  // controls dark in dark mode. Linking it only while the viewer is open keeps
+  // it off other pages, and html:root wins over :root in the meantime.
+  useEffect(() => {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = pdfViewerStylesUrl;
+    const lightScheme = document.createElement('style');
+    lightScheme.textContent = 'html:root { color-scheme: light; }';
+    document.head.append(stylesheet, lightScheme);
+    return () => {
+      stylesheet.remove();
+      lightScheme.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!container) {

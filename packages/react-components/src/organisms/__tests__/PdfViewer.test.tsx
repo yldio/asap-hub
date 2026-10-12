@@ -308,6 +308,22 @@ describe('PdfViewer', () => {
     ).toBeVisible();
   });
 
+  it('adds pdf.js styles only while the viewer is open', () => {
+    mockLoadingTask(new Promise(() => {}));
+    const { unmount } = render(<PdfViewer url={url} title={title} />);
+    const stylesheet = document.head.querySelector('link[rel="stylesheet"]');
+    const lightScheme = [...document.head.querySelectorAll('style')].find(
+      (style) => style.textContent === 'html:root { color-scheme: light; }',
+    );
+    expect(stylesheet).toBeInTheDocument();
+    expect(lightScheme).toBeInTheDocument();
+
+    unmount();
+
+    expect(stylesheet).not.toBeInTheDocument();
+    expect(lightScheme).not.toBeInTheDocument();
+  });
+
   it('stops loading the PDF and releases the viewer on unmount', async () => {
     const loadingTask = mockLoadingTask(Promise.resolve({ numPages: 3 }));
     const { unmount } = render(<PdfViewer url={url} title={title} />);

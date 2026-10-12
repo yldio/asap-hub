@@ -12,11 +12,6 @@ const styles = {
     ...fontStyles,
     ...themes.light,
   },
-  // html:root outranks pdf.js's `:root { color-scheme: light dark }`, which
-  // made form controls dark in dark mode
-  'html:root': {
-    colorScheme: 'light',
-  },
   'html, body, #root': {
     boxSizing: 'border-box',
     width: '100%',

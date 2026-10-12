@@ -655,9 +655,9 @@ describe('studio project endpoints', () => {
   });
 
   it('mints a new capture bookmark', async () => {
-    respond({ snippetUrl: 'javascript:1', captureUrl: 'https://c' });
+    respond({ snippetUrl: 'https://s', captureUrl: 'https://c' });
     await expect(api.newCaptureBookmark('p1')).resolves.toEqual({
-      snippetUrl: 'javascript:1',
+      snippetUrl: 'https://s',
       captureUrl: 'https://c',
     });
     const { url, init } = lastCall();

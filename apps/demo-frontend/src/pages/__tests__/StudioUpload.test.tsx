@@ -215,7 +215,7 @@ it('files the upload under the title, folder and date that were chosen', async (
 
 it('falls back to a plain message when the failure carries none', async () => {
   renderUpload({
-    createUpload: jest.fn(() => Promise.reject('offline')) as never,
+    createUpload: jest.fn().mockRejectedValue('offline') as never,
   });
 
   await userEvent.upload(

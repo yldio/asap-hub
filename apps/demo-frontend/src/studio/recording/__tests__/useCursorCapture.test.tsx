@@ -1300,7 +1300,7 @@ it('names the status when the capture could not be closed', async () => {
 it('reports a session closed even before the poll has answered', async () => {
   const view = render({
     startCapture: jest.fn().mockResolvedValue(session),
-    captureStatus: jest.fn(() => new Promise(() => undefined)),
+    captureStatus: jest.fn(() => new Promise(() => {})),
     finaliseCapture: jest.fn().mockResolvedValue(undefined),
     captureEvents: jest.fn().mockResolvedValue(
       JSON.stringify({

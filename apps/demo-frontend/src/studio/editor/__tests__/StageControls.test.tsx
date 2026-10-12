@@ -61,8 +61,9 @@ const seekBar = () => screen.getByRole('slider', { name: 'Seek' });
 
 // the bar is laid out by the browser; jsdom reports zeroes unless told
 const layOut = (element: HTMLElement, left: number, width: number) => {
-  element.getBoundingClientRect = () =>
-    ({ left, width, top: 0, height: 18 }) as DOMRect;
+  jest
+    .spyOn(element, 'getBoundingClientRect')
+    .mockReturnValue({ left, width, top: 0, height: 18 } as DOMRect);
 };
 
 describe('the time readout', () => {

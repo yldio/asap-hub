@@ -155,7 +155,9 @@ type TextFieldProps = {
   | 'pattern'
   | 'max'
   | 'onBlur'
+  | 'onKeyDown'
   | 'step'
+  | 'aria-label'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',

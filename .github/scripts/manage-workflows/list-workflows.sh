@@ -1,6 +1,3 @@
 #!/bin/bash
-OWNER=yldio
-REPO=asap-hub
-
 # list workflows
-gh api -X GET /repos/$OWNER/$REPO/actions/workflows | jq '.workflows[] | .name,.id,.path'
+gh api -X GET /repos/{owner}/{repo}/actions/workflows | jq '.workflows[] | .name,.id,.path'

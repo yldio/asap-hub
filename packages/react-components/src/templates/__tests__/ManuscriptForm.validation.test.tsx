@@ -356,7 +356,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     const firstAuthorErrorMessage =
-      'The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any. • Author B';
+      'The following first author(s) do not have a team listed as a contributor. Please add at least one of their teams, or contact support if they don’t belong to any. • Author B';
 
     const labErrorMessage =
       'The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field. • Lab One';
@@ -443,7 +443,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     expect(container).toHaveTextContent(
-      'The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any. • Author A • Author B',
+      'The following first author(s) do not have a team listed as a contributor. Please add at least one of their teams, or contact support if they don’t belong to any. • Author A • Author B',
     );
 
     expect(container).toHaveTextContent(
@@ -454,7 +454,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     expect(container).toHaveTextContent(
-      'The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any. • Author B',
+      'The following first author(s) do not have a team listed as a contributor. Please add at least one of their teams, or contact support if they don’t belong to any. • Author B',
     );
 
     expect(container).not.toHaveTextContent(

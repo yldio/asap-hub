@@ -71,6 +71,7 @@ const mapUserToPublicUser = (user: UserResponse): PublicUserResponse => ({
     role: ig.role,
   })),
   labs: user.labs,
+  personalEmail: user.personalEmail,
   researchTheme: user.researchTheme,
   researchOutputs: user.researchOutputs || [],
   tags: user.tags?.map((tag) => tag.name) || [],

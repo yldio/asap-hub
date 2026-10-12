@@ -6,11 +6,12 @@ import {
 import {
   createEventResponse,
   createListEventResponse,
+  createTeamListItemResponse,
 } from '@asap-hub/fixtures';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getEvent, getEvents } from '../api';
+import { getEvent, getEvents, getTeamsForMatching, patchEvent } from '../api';
 
 jest.mock('../../config');
 
@@ -42,6 +43,31 @@ describe('getEvent', () => {
     nock(API_BASE_URL).get('/events/42').reply(500);
     await expect(getEvent('42', '')).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch event with id 42. Expected status 2xx or 404. Received status 500."`,
+    );
+  });
+});
+
+describe('patchEvent', () => {
+  const attendance = [{ teamId: 'team-1', attended: true }];
+
+  it('makes an authorized PATCH request with the attendance payload', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .patch('/events/42', { attendance })
+      .reply(200, {});
+    await patchEvent('42', { attendance }, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns the updated event', async () => {
+    const event = createEventResponse();
+    nock(API_BASE_URL).patch('/events/42').reply(200, event);
+    expect(await patchEvent('42', { attendance }, '')).toEqual(event);
+  });
+
+  it('errors for a non-2xx status', async () => {
+    nock(API_BASE_URL).patch('/events/42').reply(500);
+    await expect(patchEvent('42', { attendance }, '')).rejects.toThrow(
+      'Failed to update event 42. Expected status 2xx. Received status 500.',
     );
   });
 });
@@ -250,5 +276,70 @@ describe('getEvents', () => {
       },
       false,
     );
+  });
+});
+
+describe('getTeamsForMatching', () => {
+  type Search = ClientSearch<'crn', 'team'>;
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'crn'>;
+
+  const hit = (index: number) =>
+    ({
+      ...createTeamListItemResponse(index),
+      objectID: `t${index}`,
+      __meta: { type: 'team' as const },
+    }) as unknown as Awaited<ReturnType<Search>>['hits'][number];
+
+  beforeEach(() => {
+    search.mockReset();
+  });
+
+  it('fetches the whole team corpus in a single query', async () => {
+    search.mockResolvedValueOnce(
+      createAlgoliaResponse<'crn', 'team'>([hit(0), hit(1)]),
+    );
+
+    const teams = await getTeamsForMatching(algoliaSearchClient);
+
+    expect(teams).toHaveLength(2);
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({ hitsPerPage: 1000, page: 0 }),
+    );
+  });
+
+  it('pages until the whole corpus is collected', async () => {
+    search
+      .mockResolvedValueOnce(
+        createAlgoliaResponse<'crn', 'team'>([hit(0)], { nbHits: 2 }),
+      )
+      .mockResolvedValueOnce(
+        createAlgoliaResponse<'crn', 'team'>([hit(1)], { nbHits: 2 }),
+      );
+
+    const teams = await getTeamsForMatching(algoliaSearchClient);
+
+    expect(teams.map(({ id }) => id)).toEqual(['t0', 't1']);
+    expect(search).toHaveBeenCalledTimes(2);
+    expect(search).toHaveBeenLastCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({ page: 1 }),
+    );
+  });
+
+  it('stops when the corpus is empty', async () => {
+    search.mockResolvedValueOnce(
+      createAlgoliaResponse<'crn', 'team'>([], { nbHits: 5 }),
+    );
+
+    await expect(getTeamsForMatching(algoliaSearchClient)).resolves.toEqual([]);
+    expect(search).toHaveBeenCalledTimes(1);
   });
 });

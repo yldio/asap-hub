@@ -127,7 +127,7 @@ describe('userToCSV', () => {
         {
           role: 'CTO',
           department: 'Technology',
-          institution: 'YLD',
+          institution: 'Wayne Enterprises',
         },
         {
           role: 'CFO',
@@ -151,7 +151,7 @@ describe('userToCSV', () => {
     expect(primaryInstitution).toEqual('Stark Industries');
     expect(primaryDepartment).toEqual('Research');
     expect(secondaryRole).toEqual('CTO');
-    expect(secondaryInstitution).toEqual('YLD');
+    expect(secondaryInstitution).toEqual('Wayne Enterprises');
     expect(secondaryDepartment).toEqual('Technology');
     expect(tertiaryRole).toEqual('CFO');
     expect(tertiaryInstitution).toEqual('Bank of America');

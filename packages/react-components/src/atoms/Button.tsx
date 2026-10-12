@@ -7,7 +7,7 @@ import {
   getButtonChildren,
   getButtonStyles,
 } from '../button';
-import { neutral500 } from '../colors';
+import { colour } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import { noop } from '../utils';
 import { getLinkColors, styles as linkStyles } from './Link';
@@ -41,7 +41,10 @@ interface NormalButtonProps {
 }
 interface LinkStyleButtonProps {
   readonly linkStyle: true;
-  readonly enabled?: undefined;
+  // Only the link colours are unaffected by `enabled` — the button itself is
+  // still rendered `disabled`, which link-styled actions inside a disabled
+  // surface need.
+  readonly enabled?: boolean;
   readonly primary?: undefined;
   readonly warning?: boolean;
   readonly active?: undefined;
@@ -98,7 +101,6 @@ const Button: React.FC<ButtonProps> = ({
             active,
             children,
             noMargin,
-            colors,
             fullWidth,
           }),
       overrideStyles,
@@ -111,7 +113,7 @@ const Button: React.FC<ButtonProps> = ({
           size={small ? 18 : 24}
           thickness={2}
           color="currentColor"
-          trackColor={neutral500.rgb}
+          trackColor={colour.neutral[100]}
         />
         {getButtonChildren(children)}
       </span>

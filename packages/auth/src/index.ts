@@ -41,6 +41,7 @@ export type User = Pick<
   | 'projects'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
 > & {
   teams: ReadonlyArray<UserTeamRoles>;
   workingGroups: ReadonlyArray<UserWorkingGroupRoles>;

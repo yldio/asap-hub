@@ -1,9 +1,14 @@
 import { render } from '@testing-library/react';
-import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
+import {
+  ResearchOutputResponse,
+  TeamMember,
+  TeamResponse,
+} from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import {
   equals,
+  getActiveProjectManager,
   getIconFromUrl,
   getSvgAspectRatio,
   isInternalLink,
@@ -11,6 +16,7 @@ import {
   splitListBy,
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
+  getResearchOutputAssociationPill,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -171,6 +177,42 @@ describe('getResearchOutputAssociation', () => {
       'working group',
     );
   });
+  it('returns project for a research output published by a project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('project');
+  });
+  it('returns project for a team-based project output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('project');
+  });
 });
 
 describe('getResearchOutputAssociationName', () => {
@@ -206,5 +248,193 @@ describe('getResearchOutputAssociationName', () => {
     expect(getResearchOutputAssociationName(researchOutput)).toEqual(
       'My new Working Group',
     );
+  });
+  it('returns project title for a project research output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'My Project',
+    );
+  });
+  it('returns an empty string for a project research output with no project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual('');
+  });
+  it('returns the project title for a team-based project output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'My Project',
+    );
+  });
+});
+
+describe('getResearchOutputAssociationPill', () => {
+  it('returns Team for a research output with only a team', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Team');
+  });
+  it('returns Team for a research output with more than one team', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Team');
+  });
+  it('returns Working Group for a research output that has a working group', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
+      ],
+      workingGroups: [{ id: '1', title: 'Working group' }],
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual(
+      'Working Group',
+    );
+  });
+  it('returns Project for a research output published by a project', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Project',
+      teams: [],
+      workingGroups: undefined,
+      project: {
+        id: 'project-1',
+        title: 'My Project',
+        projectType: 'Trainee Project',
+        projectId: 'ASAP-P1',
+      },
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Project');
+  });
+  it('returns Project for a team-based project output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      publishingEntity: 'Team',
+      teams: [
+        {
+          id: '1',
+          displayName: 'Team ASAP',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'project-1',
+            title: 'My Project',
+            projectType: 'Trainee Project',
+            projectId: 'ASAP-P1',
+          },
+        },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationPill(researchOutput)).toEqual('Project');
+  });
+});
+
+describe('getActiveProjectManager', () => {
+  const createMember = (member: Partial<TeamMember> = {}): TeamMember => ({
+    id: 'member-1',
+    firstName: 'Jane',
+    lastName: 'Doe',
+    displayName: 'Jane Doe',
+    email: 'jane@example.com',
+    role: 'Project Manager',
+    ...member,
+  });
+
+  it('returns the active Project Manager', () => {
+    const projectManager = createMember({ id: 'pm', role: 'Project Manager' });
+    const members = [
+      createMember({ id: 'key', role: 'Key Personnel' }),
+      projectManager,
+    ];
+
+    expect(getActiveProjectManager(members)).toBe(projectManager);
+  });
+
+  it('returns undefined when there is no Project Manager', () => {
+    const members = [
+      createMember({ id: 'key', role: 'Key Personnel' }),
+      createMember({ id: 'trainee', role: 'Trainee' }),
+    ];
+
+    expect(getActiveProjectManager(members)).toBeUndefined();
+  });
+
+  it('ignores an alumni Project Manager', () => {
+    const members = [
+      createMember({ role: 'Project Manager', alumniSinceDate: '2020-01-01' }),
+    ];
+
+    expect(getActiveProjectManager(members)).toBeUndefined();
+  });
+
+  it('ignores an inactive Project Manager', () => {
+    const members = [
+      createMember({
+        role: 'Project Manager',
+        inactiveSinceDate: '2020-01-01',
+      }),
+    ];
+
+    expect(getActiveProjectManager(members)).toBeUndefined();
+  });
+
+  it('returns the first active Project Manager when several exist', () => {
+    const firstActive = createMember({ id: 'pm-1', role: 'Project Manager' });
+    const members = [
+      createMember({
+        id: 'pm-alumni',
+        role: 'Project Manager',
+        alumniSinceDate: '2020-01-01',
+      }),
+      firstActive,
+      createMember({ id: 'pm-2', role: 'Project Manager' }),
+    ];
+
+    expect(getActiveProjectManager(members)).toBe(firstActive);
   });
 });

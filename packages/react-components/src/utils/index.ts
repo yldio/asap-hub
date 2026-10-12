@@ -1,5 +1,6 @@
 export * from './analytics';
 export * from './common';
+export * from './contributor-teams';
 export * from './events';
 export * from './icon';
 export * from './manuscripts';

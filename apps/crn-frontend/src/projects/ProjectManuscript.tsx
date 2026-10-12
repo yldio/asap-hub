@@ -6,7 +6,11 @@ import {
   ManuscriptError,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
+import {
+  ManuscriptHeader,
+  usePushFromHere,
+  utils,
+} from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
@@ -18,17 +22,17 @@ import {
   useTeamSuggestions,
   useImpactSuggestions,
 } from '../shared-state';
+import { usePutManuscript } from '../network/teams/state';
+import { useEligibilityReason } from './useEligibilityReason';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import {
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostManuscript,
-  usePutManuscript,
+  useProjectById,
   useResubmitManuscript,
   useUploadManuscriptFileViaPresignedUrl,
-  useInvalidateWorkspaceManuscripts,
-} from '../network/teams/state';
-import { useEligibilityReason } from '../network/teams/useEligibilityReason';
-import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { useProjectById } from './state';
+} from './state';
 
 const loadManuscriptForm = () =>
   import(
@@ -222,12 +226,15 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
       value: author.id,
     })) as (AuthorResponse & AuthorSelectOption)[];
 
+  const breadcrumbs = utils.getProjectBreadcrumbs(projectDetail, projectId);
+
   return (
     <FormProvider {...form}>
       <Frame title="Create Manuscript">
         <ManuscriptHeader
           resubmitManuscript={resubmitManuscript}
           isEditMode={!!manuscriptId && !resubmitManuscript}
+          breadcrumbs={breadcrumbs}
         />
         <ManuscriptForm
           getShortDescriptionFromDescription={

@@ -10,6 +10,10 @@ import { MetricOption } from '@asap-hub/react-components';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { OpensearchClient } from '../utils/opensearch/client';
 import { OpensearchSort, OpensearchSortMap } from '../utils/opensearch/types';
+import {
+  TeamMetricsOptions,
+  teamMetricsSearchOptions,
+} from '../utils/team-metrics';
 
 export type AnalyticsSearchOptions = {
   metric?: MetricOption;
@@ -88,3 +92,36 @@ export const getAnalyticsOSChampion = async (
     searchScope: 'extended',
     sort: sort ? osChampionOpensearchSort[sort] : undefined,
   });
+
+export type TeamLeadershipMetrics = {
+  workingGroupLead: boolean;
+  interestGroupLead: boolean;
+};
+
+const hasLeadership = (currentCount = 0, previousCount = 0): boolean =>
+  currentCount + previousCount > 0;
+
+export const getTeamLeadershipMetrics = async (
+  workingGroupClient: OpensearchClient<AnalyticsTeamLeadershipResponse>,
+  interestGroupClient: OpensearchClient<AnalyticsTeamLeadershipResponse>,
+  { teamId }: TeamMetricsOptions,
+): Promise<TeamLeadershipMetrics> => {
+  const searchOptions = teamMetricsSearchOptions(teamId);
+  const [workingGroup, interestGroup] = await Promise.all([
+    workingGroupClient.search(searchOptions),
+    interestGroupClient.search(searchOptions),
+  ]);
+  const workingGroupItem = workingGroup.items[0];
+  const interestGroupItem = interestGroup.items[0];
+
+  return {
+    workingGroupLead: hasLeadership(
+      workingGroupItem?.workingGroupLeadershipRoleCount,
+      workingGroupItem?.workingGroupPreviousLeadershipRoleCount,
+    ),
+    interestGroupLead: hasLeadership(
+      interestGroupItem?.interestGroupLeadershipRoleCount,
+      interestGroupItem?.interestGroupPreviousLeadershipRoleCount,
+    ),
+  };
+};

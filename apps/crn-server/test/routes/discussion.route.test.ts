@@ -368,6 +368,29 @@ describe('/discussions/ route', () => {
       expect(response.body).toEqual(discussionResponse);
     });
 
+    test('Should call the controller with the right parameters', async () => {
+      const manuscriptId = 'manuscript-id';
+      const title = 'A good title';
+      const text = 'A good message';
+      const notificationList = 'user1,user2';
+
+      await supertest(app).post(`/discussions`).send({
+        manuscriptId,
+        title,
+        text,
+        notificationList,
+      });
+
+      expect(discussionControllerMock.create).toHaveBeenCalledWith(
+        'user-id-0',
+        manuscriptId,
+        title,
+        text,
+        undefined,
+        notificationList,
+      );
+    });
+
     test('Should not accept discussion title over 100 characters', async () => {
       const title = 'A'.repeat(101);
 

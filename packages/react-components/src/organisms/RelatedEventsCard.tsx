@@ -3,9 +3,9 @@ import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
-import { Button, Card, Headline2, Link, Paragraph } from '../atoms';
+import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { charcoal, lead, steel } from '../colors';
+import { colour } from '../colors';
 import { formatDateToTimezone } from '../date';
 
 const container = css({
@@ -49,7 +49,7 @@ const underlineStyles = css({
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     paddingBottom: rem(16),
     '&:not(:last-child)': {
-      borderBottom: `1px solid ${steel.rgb}`,
+      borderBottom: `1px solid ${colour.border.tertiary}`,
     },
   },
 });
@@ -61,7 +61,7 @@ const paragraphStyle = css({
   alignItems: 'center',
   flexDirection: 'row',
   gap: rem(6),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const showMoreStyles = css({
@@ -70,21 +70,26 @@ const showMoreStyles = css({
   marginTop: rem(32),
   paddingTop: rem(16),
   paddingBottom: rem(16),
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: colour.foreground.primary,
+});
 
 type RelatedEventsCardProps = (
   | Pick<ResearchOutputResponse, 'relatedEvents'>
   | Pick<gp2.OutputBaseResponse, 'relatedEvents'>
 ) & {
+  description?: string;
   truncateFrom?: number;
   hub?: 'GP2' | 'CRN';
 };
 
 const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
   relatedEvents,
+  description = 'Find all related Events.',
   truncateFrom = Number.POSITIVE_INFINITY,
   hub = 'CRN',
 }) => {
@@ -98,14 +103,14 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
           ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
         ]}
       >
-        <Headline2 noMargin>Related {hub} Hub Events</Headline2>
+        <Headline3 noMargin>Related {hub} Hub Events</Headline3>
         <div css={descriptionStyles}>
-          <Paragraph noMargin accent="lead">
-            Find all related Events.
+          <Paragraph noMargin accent="tertiary">
+            {description}
           </Paragraph>
         </div>
         {relatedEvents.length === 0 ? (
-          <Paragraph noMargin accent="lead">
+          <Paragraph noMargin accent="tertiary">
             <b>No related {hub} Hub events available.</b>
           </Paragraph>
         ) : (

@@ -6,10 +6,9 @@ import {
   getListEventDataObject,
   getListEventResponse,
 } from '../fixtures/events.fixtures';
-import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { eventDataProviderMock } from '../mocks/event.data-provider.mock';
 
 describe('Event controller', () => {
-  const eventDataProviderMock = getDataProviderMock();
   const eventController = new Events(eventDataProviderMock);
 
   afterEach(() => {
@@ -113,6 +112,40 @@ describe('Event controller', () => {
     });
   });
 
+  describe('updateEventDetails method', () => {
+    test('Should update attendance and return the refreshed event', async () => {
+      const event = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue(event);
+
+      const result = await eventController.updateEventDetails('7', {
+        attendance: [{ teamId: 'team-1', attended: true }],
+      });
+
+      expect(eventDataProviderMock.updateEventDetails).toHaveBeenCalledWith(
+        '7',
+        { attendance: [{ teamId: 'team-1', attended: true }] },
+      );
+      expect(result).toEqual(getEventResponse());
+    });
+
+    test('Should update speakers and preliminary data sharing and return the refreshed event', async () => {
+      const event = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue(event);
+
+      const payload = {
+        speakersToRemove: ['speaker-1'],
+        preliminaryDataShared: [{ speakerId: 'speaker-2', shared: true }],
+      };
+      const result = await eventController.updateEventDetails('7', payload);
+
+      expect(eventDataProviderMock.updateEventDetails).toHaveBeenCalledWith(
+        '7',
+        payload,
+      );
+      expect(result).toEqual(getEventResponse());
+    });
+  });
+
   describe('fetchByGoogleId method', () => {
     const googleId = 'google-event-id';
     test('it should fetch the events', async () => {
@@ -134,6 +167,13 @@ describe('Event controller', () => {
         take: 1,
       });
       expect(result).toEqual(null);
+    });
+    test('it should throw when the matching event was skipped by the data provider', async () => {
+      eventDataProviderMock.fetch.mockResolvedValue({ total: 1, items: [] });
+
+      await expect(eventController.fetchByGoogleId(googleId)).rejects.toThrow(
+        `Event with google id ${googleId} exists but could not be parsed`,
+      );
     });
   });
 });

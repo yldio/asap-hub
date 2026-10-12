@@ -60,3 +60,19 @@ export const getPerformanceMoodIcon = (
   }
   return sadFaceIcon;
 };
+
+export const getPerformanceMoodLabel = (
+  percentage: number | null,
+  isLimitedData: boolean = false,
+) => {
+  if (isLimitedData || percentage === null) {
+    return 'There is limited available data to calculate this metric at this time.';
+  }
+  if (percentage >= 90) {
+    return 'Outstanding: 90% – 100%\nKeep up the good work!';
+  }
+  if (percentage >= 80) {
+    return 'Adequate: 80% – 89%';
+  }
+  return 'Needs Improvement: 0% – 79%';
+};

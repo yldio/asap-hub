@@ -7,15 +7,13 @@ import {
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
 import {
-  ComplianceReportPostRequest,
   DiscussionRequest,
   DiscussionResponse,
   ListPartialManuscriptResponse,
+  ListTeamAwardMetricsResponse,
   ListTeamResponse,
   ManuscriptDataObject,
   ManuscriptFileResponse,
-  ManuscriptFileType,
-  ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptWorkspaceTab,
@@ -30,30 +28,25 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAuthorization } from '../../auth/useAuthorization';
 import { useAlgolia } from '../../hooks/algolia';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import {
-  createComplianceReport,
   createDiscussion,
-  createManuscript,
   createPreprintResearchOutput,
   downloadFullComplianceDataset,
   getManuscript,
   getManuscriptWorkspaceUrl,
   getManuscripts,
-  getWorkspaceManuscripts,
-  WorkspaceManuscriptsParams,
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
   getTeam,
+  getTeamAwardMetrics,
   ManuscriptsOptions,
   markDiscussionAsRead,
-  resubmitManuscript,
   updateDiscussion,
   updateManuscript,
-  uploadManuscriptFileViaPresignedUrl,
   GetTeamsListOptions,
   getAlgoliaTeams,
 } from './api';
@@ -63,7 +56,6 @@ export const teamQueryKeys = createQueryKeys<GetTeamsListOptions>('teams');
 type ManuscriptWorkspaceUrlParams = {
   manuscriptId: string;
   tab?: ManuscriptWorkspaceTab;
-  projectWorkspaceEnabled?: boolean;
 };
 
 export const manuscriptQueryKeys = {
@@ -102,94 +94,22 @@ export const useTeamById = (id: string): TeamResponse | undefined => {
   return data ?? undefined;
 };
 
-// An empty id (form in create mode) resolves undefined without hitting the API.
-export const useManuscriptById = (
-  id: string,
-): [
-  ManuscriptResponse | undefined,
-  Dispatch<SetStateAction<ManuscriptResponse | undefined>>,
-] => {
-  const getAuthorization = useAuthorization();
-  const queryClient = useQueryClient();
-  const { data } = useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.detail(id),
-    queryFn: () =>
-      id
-        ? nullOnUndefined(async () =>
-            getManuscript(id, await getAuthorization()),
-          )
-        : null,
-  });
-  const setManuscript = useCallback<
-    Dispatch<SetStateAction<ManuscriptResponse | undefined>>
-  >(
-    (action) => {
-      queryClient.setQueryData<ManuscriptResponse | null>(
-        manuscriptQueryKeys.detail(id),
-        (cached) => {
-          const next =
-            typeof action === 'function' ? action(cached ?? undefined) : action;
-          // setQueryData treats an undefined updater result as "no update";
-          // cache null instead so writes of undefined still land.
-          return next ?? null;
-        },
-      );
-    },
-    [queryClient, id],
-  );
-  return [data ?? undefined, setManuscript];
-};
-
 export const useManuscriptWorkspaceUrl = (
   manuscriptId: string,
   tab?: ManuscriptWorkspaceTab,
-  projectWorkspaceEnabled?: boolean,
 ): ManuscriptWorkspaceUrlResponse | undefined => {
   const getAuthorization = useAuthorization();
   const { data } = useSuspenseQuery({
     queryKey: manuscriptQueryKeys.workspaceUrl({
       manuscriptId,
       tab,
-      projectWorkspaceEnabled,
     }),
     queryFn: () =>
       nullOnUndefined(async () =>
-        getManuscriptWorkspaceUrl(
-          manuscriptId,
-          await getAuthorization(),
-          tab,
-          projectWorkspaceEnabled,
-        ),
+        getManuscriptWorkspaceUrl(manuscriptId, await getAuthorization(), tab),
       ),
   });
   return data ?? undefined;
-};
-
-// `null` means there is nothing to fetch (e.g. a team-based project without a
-// resolved team) — the query resolves to empty lists without hitting the API.
-export const useWorkspaceManuscripts = (
-  params: WorkspaceManuscriptsParams | null,
-): WorkspaceManuscriptsResponse => {
-  const getAuthorization = useAuthorization();
-  const { data } = useSuspenseQuery({
-    queryKey: manuscriptQueryKeys.workspace(params ?? {}),
-    queryFn: async (): Promise<WorkspaceManuscriptsResponse> =>
-      params
-        ? getWorkspaceManuscripts(params, await getAuthorization())
-        : { manuscripts: [], collaborationManuscripts: [] },
-  });
-  return data;
-};
-
-export const useInvalidateWorkspaceManuscripts = () => {
-  const queryClient = useQueryClient();
-  return useCallback(
-    () =>
-      queryClient.invalidateQueries({
-        queryKey: manuscriptQueryKeys.workspaceAll,
-      }),
-    [queryClient],
-  );
 };
 
 // Writes a mutation response into the manuscript detail cache — never
@@ -208,52 +128,6 @@ export const useSetManuscriptItem = () => {
   );
 };
 
-export const usePostManuscript = () => {
-  const getAuthorization = useAuthorization();
-  const setManuscriptItem = useSetManuscriptItem();
-  const { mutateAsync } = useMutation({
-    mutationFn: async (payload: ManuscriptPostRequest) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return createManuscript(
-        { ...payload, notificationList },
-        await getAuthorization(),
-      );
-    },
-    onSuccess: (manuscript) => {
-      setManuscriptItem(manuscript);
-    },
-  });
-  return mutateAsync;
-};
-
-export const useResubmitManuscript = () => {
-  const getAuthorization = useAuthorization();
-  const setManuscriptItem = useSetManuscriptItem();
-  const { mutateAsync } = useMutation({
-    mutationFn: async ({
-      id,
-      payload,
-    }: {
-      id: string;
-      payload: ManuscriptPostRequest;
-    }) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return resubmitManuscript(
-        id,
-        { ...payload, notificationList },
-        await getAuthorization(),
-      );
-    },
-    onSuccess: (manuscript) => {
-      setManuscriptItem(manuscript);
-    },
-  });
-  return (id: string, payload: ManuscriptPostRequest) =>
-    mutateAsync({ id, payload });
-};
-
 export const usePutManuscript = () => {
   const getAuthorization = useAuthorization();
   const setManuscriptItem = useSetManuscriptItem();
@@ -270,7 +144,10 @@ export const usePutManuscript = () => {
         .COMPLIANCE_NOTIFICATION_LIST as string;
       return updateManuscript(
         id,
-        { ...payload, notificationList },
+        {
+          ...payload,
+          notificationList,
+        },
         await getAuthorization(),
       );
     },
@@ -309,51 +186,9 @@ export const usePutManuscript = () => {
     mutateAsync({ id, payload });
 };
 
-export const usePostComplianceReport = () => {
-  const getAuthorization = useAuthorization();
-  const { mutateAsync } = useMutation({
-    mutationFn: async (payload: ComplianceReportPostRequest) => {
-      const notificationList = getOverrides()
-        .COMPLIANCE_NOTIFICATION_LIST as string;
-      return createComplianceReport(
-        { ...payload, notificationList },
-        await getAuthorization(),
-      );
-    },
-  });
-  return mutateAsync;
-};
-
 export const useIsComplianceReviewer = (): boolean => {
   const { role, openScienceTeamMember } = useCurrentUserCRN() ?? {};
   return role === 'Staff' && !!openScienceTeamMember;
-};
-
-// Uses S3 presigned URL to upload file
-export const useUploadManuscriptFileViaPresignedUrl = () => {
-  const getAuthorization = useAuthorization();
-  const { mutateAsync } = useMutation({
-    mutationFn: async ({
-      file,
-      fileType,
-      handleError,
-    }: {
-      file: File;
-      fileType: ManuscriptFileType;
-      handleError: (errorMessage: string) => void;
-    }) =>
-      uploadManuscriptFileViaPresignedUrl(
-        file,
-        fileType,
-        await getAuthorization(),
-        handleError,
-      ),
-  });
-  return (
-    file: File,
-    fileType: ManuscriptFileType,
-    handleError: (errorMessage: string) => void,
-  ) => mutateAsync({ file, fileType, handleError });
 };
 
 export const useDownloadFullComplianceDataset = () => {
@@ -397,7 +232,10 @@ export const useReplyToDiscussion = () => {
       try {
         const discussion = await updateDiscussion(
           id,
-          { ...patch, notificationList },
+          {
+            ...patch,
+            notificationList,
+          },
           authorization,
         );
         setDiscussion(discussion);
@@ -622,4 +460,20 @@ export const usePostPreprintResearchOutput = () => {
     },
   });
   return mutateAsync;
+};
+
+export const teamAwardMetricsQueryKeys = {
+  all: ['team-award-metrics'] as const,
+  detail: (teamId: string) =>
+    [...teamAwardMetricsQueryKeys.all, teamId] as const,
+};
+
+export const useTeamAwardMetrics = (
+  teamId: string,
+): ListTeamAwardMetricsResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: teamAwardMetricsQueryKeys.detail(teamId),
+    queryFn: async () => getTeamAwardMetrics(teamId, await getAuthorization()),
+  }).data;
 };

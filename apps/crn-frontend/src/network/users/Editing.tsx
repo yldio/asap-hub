@@ -2,11 +2,16 @@ import { Route, Routes, useNavigate } from 'react-router';
 import {
   PersonalInfoModal,
   ContactInfoModal,
+  contactInfoServerErrorPaths,
   ConfirmModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { Frame, loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import {
+  Frame,
+  loadInstitutionOptions,
+  toServerValidationError,
+} from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
 import { useManageUserAvatar } from './useManageUserAvatar';
@@ -58,7 +63,11 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               personalEmail={user.personalEmail}
               fallbackEmail={user.email}
               backHref={backHref}
-              onSave={patchUser}
+              onSave={(data) =>
+                patchUser(data).catch(
+                  toServerValidationError(contactInfoServerErrorPaths),
+                )
+              }
             />
           </Frame>
         }

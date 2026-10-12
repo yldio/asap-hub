@@ -13,6 +13,8 @@ export { default as ConfirmModal } from './ConfirmModal';
 export { default as ComplianceAssignUsersModal } from './ComplianceAssignUsersModal';
 export { default as CookiesModal } from './CookiesModal';
 export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';
+export { default as DashboardEventCard } from './DashboardEventCard';
+export { default as DashboardEventsCard } from './DashboardEventsCard';
 export { default as DashboardSection } from './DashboardSection';
 export { default as DashboardUpcomingEvents } from './DashboardUpcomingEvents';
 export { default as DeliverablesCard } from './DeliverablesCard';
@@ -30,12 +32,17 @@ export type {
   SpeakerSearchOption,
   SpeakerTeamOption,
 } from './EditEventSpeakersModal';
+export { groupFindings, groupLabel } from './speaker-group';
 export type {
+  SpeakerExternalGroup,
   SpeakerGroup,
   SpeakerGroupExternalUser,
   SpeakerGroupUser,
+  SpeakerProjectGroup,
+  SpeakerTeamGroup,
 } from './speaker-group';
 export { default as EventAttendance } from './EventAttendance';
+export { compareAttendanceTeams } from './EventAttendance';
 export type {
   EventAttendanceTeam,
   EventAttendanceTeamType,
@@ -51,12 +58,22 @@ export type {
 export { default as EventCard } from './EventCard';
 export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';
+export { default as EventMonthFilter } from './EventMonthFilter';
 export { default as EventSearch } from './EventSearch';
 export { default as EventSpeakers } from './EventSpeakers';
+export { default as EventSupport } from './EventSupport';
 export { default as ExportAnalyticsModal } from './ExportAnalyticsModal';
 export { default as Filter } from './Filter';
+export { default as FilterDropdown } from './FilterDropdown';
 export { default as GoogleCalendar } from './GoogleCalendar';
+export { default as GrantDocumentGrantsCard } from './GrantDocumentGrantsCard';
+export { default as GrantDocumentHeaderCard } from './GrantDocumentHeaderCard';
+export { default as GrantDocumentOverviewCard } from './GrantDocumentOverviewCard';
+export { default as GrantDocumentPdfCard } from './GrantDocumentPdfCard';
+export { default as GrantDocumentTagsCard } from './GrantDocumentTagsCard';
 export { default as HelpSection } from './HelpSection';
+export { default as HubResearchOutputsCard } from './HubResearchOutputsCard';
+export type { HubResearchOutputRow } from './HubResearchOutputsCard';
 export { default as InterestGroupCard } from './InterestGroupCard';
 export { default as InterestGroupInformation } from './InterestGroupInformation';
 export { default as InterestGroupLeadersTabbedCard } from './InterestGroupLeadersTabbedCard';
@@ -123,7 +140,6 @@ export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export {
-  default as SharedOutputDropdown,
   SharedOutputDropdownBase,
   SharedOutputDropdownWrapper,
 } from './SharedOutputDropdown';
@@ -142,9 +158,18 @@ export type {
 export { default as SharedResearchOutputButtons } from './SharedResearchOutputButtons';
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakerList } from './SpeakerList';
+export { default as TeamAwardMetrics } from './TeamAwardMetrics';
+export type { TeamAward } from './TeamAwardMetrics';
 export { default as TeamCard } from './TeamCard';
+export { default as TeamCollaborationMetrics } from './TeamCollaborationMetrics';
+export type { TeamCollaborationMetricsProps } from './TeamCollaborationMetrics';
 export { default as TeamCollaborationTable } from './TeamCollaborationTable';
+export { default as TeamEngagementMetrics } from './TeamEngagementMetrics';
+export type { TeamEngagementMetricsProps } from './TeamEngagementMetrics';
 export { default as TeamInterestGroupsTabbedCard } from './TeamInterestGroupsTabbedCard';
+export { default as MetricsCard, MoodStatus } from './MetricsCard';
+export type { Metric, MetricsCardProps } from './MetricsCard';
+export { default as TeamLeadershipMetrics } from './TeamLeadershipMetrics';
 export { default as TeamMembersSection } from './TeamMembersSection';
 export { default as TeamLabsCard } from './TeamLabsCard';
 export { default as TeamMembersTabbedCard } from './TeamMembersTabbedCard';
@@ -181,3 +206,4 @@ export type {
   ResearchOutputConfirmModalType,
   SeenModalType,
 } from './ResearchOutputConfirmModal';
+export * from './event-month-filter-selection';

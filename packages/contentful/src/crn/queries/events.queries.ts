@@ -26,6 +26,9 @@ export const eventsContentQueryFragment = gql`
     attendanceCollection(limit: 50) @include(if: $singleEvent) {
       total
       items {
+        sys {
+          id
+        }
         attended
         team {
           sys {
@@ -34,16 +37,6 @@ export const eventsContentQueryFragment = gql`
           displayName
           teamType
           inactiveSince
-        }
-      }
-    }
-    preliminaryDataSharedCollection(limit: 50) @include(if: $singleEvent) {
-      items {
-        preliminaryDataShared
-        team {
-          sys {
-            id
-          }
         }
       }
     }
@@ -216,12 +209,36 @@ export const eventsContentQueryFragment = gql`
     }
     speakersCollection(limit: 25) {
       items {
+        sys {
+          id
+        }
+        preliminaryDataShared
         team {
           sys {
             id
           }
           displayName
+          teamType
           inactiveSince
+        }
+        project {
+          sys {
+            id
+          }
+          title
+          projectType
+          membersCollection(limit: 100) @include(if: $singleEvent) {
+            items {
+              role
+              projectMember {
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
         user {
           __typename

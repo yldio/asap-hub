@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
 import { Card, Display, StateTag } from '../atoms';
-import { lead } from '../colors';
+import { colour } from '../colors';
 import { formatDate } from '../date';
 import { rem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
@@ -11,7 +11,7 @@ import { AssociationList, UsersList } from '../molecules';
 import { SharedResearchMetadata } from '.';
 
 const timestampStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   display: 'flex',
   flexDirection: 'row',
   whiteSpace: 'pre',
@@ -59,7 +59,10 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'isInReview'
   | 'impact'
   | 'categories'
->;
+  | 'publishingEntity'
+> & {
+  isProjectOutput?: boolean;
+};
 
 const SharedResearchOutputHeaderCard: React.FC<
   SharedResearchOutputHeaderCardProps
@@ -79,11 +82,17 @@ const SharedResearchOutputHeaderCard: React.FC<
   isInReview,
   impact,
   categories,
+  publishingEntity,
+  isProjectOutput = false,
 }) => (
   <Card>
     <SharedResearchMetadata
       pills={[
-        workingGroups ? 'Working Group' : 'Team',
+        workingGroups
+          ? 'Working Group'
+          : publishingEntity === 'Project' || isProjectOutput
+            ? 'Project'
+            : 'Team',
         ...(documentType ? [documentType] : []),
         ...(type ? [type] : []),
       ]}

@@ -1,9 +1,5 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
-import {
-  CalendarDataProvider,
-  EventDataProvider,
-  UserResponse,
-} from '@asap-hub/model';
+import { CalendarDataProvider, UserResponse } from '@asap-hub/model';
 import {
   addUserIdProp,
   AuthHandler,
@@ -11,6 +7,7 @@ import {
   decodeTokenFactory,
   errorHandlerFactory,
   getHttpLogger,
+  AlertsSentry,
   HttpLogger,
   Logger,
   MemoryCacheClient,
@@ -95,6 +92,7 @@ import {
   DashboardDataProvider,
   DiscoverDataProvider,
   DiscussionDataProvider,
+  EventDataProvider,
   GuideDataProvider,
   ImpactDataProvider,
   InterestGroupDataProvider,
@@ -230,7 +228,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const reminderDataProvider =
     libs.reminderDataProvider ||
-    new ReminderContentfulDataProvider(contentfulPreviewGraphQLClient);
+    new ReminderContentfulDataProvider(
+      contentfulPreviewGraphQLClient,
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
+    );
 
   const externalAuthorDataProvider =
     libs.externalAuthorDataProvider ||
@@ -273,6 +274,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new EventContentfulDataProvider(
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
     );
 
   const tutorialDataProvider =
@@ -486,6 +488,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchOutputRoutes = researchOutputRouteFactory(
     researchOutputController,
     manuscriptController,
+    projectController,
+    teamController,
   );
   const researchTagRoutes = researchTagRouteFactory(researchTagController);
   const researchThemeRoutes = researchThemeRouteFactory(

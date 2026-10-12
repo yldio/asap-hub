@@ -4,6 +4,7 @@ import { Button } from '../atoms';
 import { aiGenerate } from '../icons';
 import { LabeledTextArea } from '../molecules';
 import { rem } from '../pixels';
+import { colour } from '../colors';
 
 type ShortDescriptionCardProps = Omit<
   ComponentProps<typeof LabeledTextArea>,
@@ -18,7 +19,9 @@ const iconStyles = (isGenerateButtonEnabled: boolean) =>
     display: 'flex',
     marginRight: rem(8),
     path: {
-      fill: isGenerateButtonEnabled ? '#FFFFFF' : '#4D646B',
+      fill: isGenerateButtonEnabled
+        ? colour.foreground['primary-inverse']
+        : colour.foreground.tertiary,
     },
   });
 
@@ -35,15 +38,35 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
     'initial' | 'isGenerating' | 'isRegenerating' | 'hasGenerated'
   >('initial');
 
+  const [generationError, setGenerationError] = useState('');
+
   const handleGenerate = async () => {
+    const previousStatus = generatingStatus;
     setGeneratingStatus(
-      generatingStatus === 'initial' ? 'isGenerating' : 'isRegenerating',
+      previousStatus === 'initial' ? 'isGenerating' : 'isRegenerating',
     );
-    const shortDescription = await getShortDescription();
-    if (onChange) {
-      onChange(shortDescription);
+    setGenerationError('');
+    try {
+      const shortDescription = await getShortDescription();
+      if (onChange) {
+        onChange(shortDescription);
+      }
+      setGeneratingStatus('hasGenerated');
+    } catch {
+      setGenerationError(
+        'There was a problem generating the short description. Please try again or write your own.',
+      );
+      setGeneratingStatus(previousStatus);
     }
-    setGeneratingStatus('hasGenerated');
+  };
+
+  const handleChange = (value: string) => {
+    if (generationError) {
+      setGenerationError('');
+    }
+    if (onChange) {
+      onChange(value);
+    }
   };
 
   const isGenerateButtonEnabled = Boolean(
@@ -59,9 +82,9 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
       subtitle="(required)"
       tip="Add a short description based on what you wrote on the
     description field above."
-      customValidationMessage={customValidationMessage}
+      customValidationMessage={generationError || customValidationMessage}
       getValidationMessage={getValidationMessage}
-      onChange={onChange}
+      onChange={handleChange}
       required
       {...props}
       enabled={

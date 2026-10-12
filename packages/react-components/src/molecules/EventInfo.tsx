@@ -5,8 +5,8 @@ import { ComponentProps } from 'react';
 
 import { EventDateBlock, EventTime, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';
-import { neutral900, steel } from '../colors';
-import { largeDesktopScreen, rem } from '../pixels';
+import { colour } from '../colors';
+import { largeDesktopScreen, mobileScreen, rem } from '../pixels';
 
 const TITLE_LIMIT = 55;
 const TAG_LIMIT = 3;
@@ -26,7 +26,7 @@ const thumbnailStyles = css({
 
   borderStyle: 'solid',
   borderWidth: 1,
-  borderColor: steel.rgb,
+  borderColor: colour.border.tertiary,
   borderRadius: rem(8),
 });
 
@@ -35,11 +35,14 @@ const contentStyles = css({
   flexDirection: 'column',
   gap: rem(16),
   minWidth: 0,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    width: '100%',
+  },
 });
 
 const tagContainerStyles = css({
   marginTop: rem(8),
-  color: neutral900.rgb,
+  color: colour.foreground.tertiary,
   fontSize: rem(17),
 });
 
@@ -47,11 +50,30 @@ const cancelledTitleStyles = css({
   textDecoration: 'line-through',
 });
 
+const titleRowStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const titleTextGroupStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  minWidth: 0,
+});
+
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
 
   gap: rem(24),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
@@ -59,8 +81,15 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
     eventOwner: React.ReactNode;
     tags: string[];
     titleLimit?: number | null;
+    titleAsLink?: boolean;
     eventSpeakers?: React.ReactNode;
     eventTeams?: React.ReactNode;
+    titlePrefix?: React.ReactNode;
+    titleSuffix?: React.ReactNode;
+    titleAction?: React.ReactNode;
+    footer?: React.ReactNode;
+    alwaysShowDateBlock?: boolean;
+    dateBlockMuted?: boolean;
   };
 
 const EventInfo: React.FC<EventInfoProps> = ({
@@ -70,13 +99,21 @@ const EventInfo: React.FC<EventInfoProps> = ({
   eventOwner,
   status,
   titleLimit = TITLE_LIMIT,
+  titleAsLink = true,
   eventSpeakers,
   eventTeams,
   tags,
+  titlePrefix,
+  titleSuffix,
+  titleAction,
+  footer,
+  alwaysShowDateBlock = false,
+  dateBlockMuted = false,
   ...props
 }) => {
   const cancelled = status === 'Cancelled';
-  const link = cancelled ? undefined : events({}).event({ eventId: id }).$;
+  const link =
+    cancelled || !titleAsLink ? undefined : events({}).event({ eventId: id }).$;
 
   const displayTitle = (
     <span css={cancelled && cancelledTitleStyles}>
@@ -87,7 +124,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
 
   return (
     <div css={cardStyles}>
-      <div css={dateBlockContainerStyle}>
+      <div css={alwaysShowDateBlock ? undefined : dateBlockContainerStyle}>
         {thumbnail ? (
           <img
             alt={`Thumbnail for "${title}"`}
@@ -95,19 +132,26 @@ const EventInfo: React.FC<EventInfoProps> = ({
             css={thumbnailStyles}
           />
         ) : (
-          <EventDateBlock startDate={props.startDate} />
+          <EventDateBlock startDate={props.startDate} muted={dateBlockMuted} />
         )}
       </div>
       <div css={contentStyles}>
-        {link ? (
-          <LinkHeadline level={3} styleAsHeading={4} href={link} noMargin>
-            {displayTitle}
-          </LinkHeadline>
-        ) : (
-          <Headline3 styleAsHeading={4} noMargin>
-            {displayTitle}
-          </Headline3>
-        )}
+        <div css={titleRowStyles}>
+          <div css={titleTextGroupStyles}>
+            {titlePrefix}
+            {link ? (
+              <LinkHeadline level={3} styleAsHeading={4} href={link} noMargin>
+                {displayTitle}
+              </LinkHeadline>
+            ) : (
+              <Headline3 styleAsHeading={4} noMargin>
+                {displayTitle}
+              </Headline3>
+            )}
+          </div>
+          {titleSuffix}
+        </div>
+        {titleAction}
         <EventTime {...props} />
         {eventOwner}
         {eventTeams}
@@ -117,6 +161,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
             <TagList tags={tags} min={TAG_LIMIT} max={TAG_LIMIT} />
           </div>
         )}
+        {footer}
       </div>
     </div>
   );

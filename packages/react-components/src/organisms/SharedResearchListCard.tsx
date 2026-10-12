@@ -3,10 +3,11 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2 } from '../atoms';
-import { steel } from '../colors';
+import { colour } from '../colors';
 import { paddingStyles } from '../card';
 import SharedResearchMetadata from './SharedResearchMetadata';
 import AlgoliaHit from '../atoms/AlgoliaHit';
+import { getResearchOutputAssociationPill } from '../utils';
 
 const containerStyles = css({
   margin: 0,
@@ -15,7 +16,7 @@ const containerStyles = css({
 });
 
 const itemStyles = css({
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
   display: 'grid',
   '&:last-of-type': {
     borderBottom: 'none',
@@ -27,7 +28,14 @@ type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
     Pick<
       ResearchOutputResponse,
-      'id' | 'title' | 'workingGroups' | 'documentType' | 'type' | 'link'
+      | 'id'
+      | 'title'
+      | 'workingGroups'
+      | 'documentType'
+      | 'type'
+      | 'link'
+      | 'publishingEntity'
+      | 'teams'
     >
   >;
 };
@@ -39,7 +47,19 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
   <Card padding={false}>
     <ul css={containerStyles}>
       {researchOutputs.map(
-        ({ title, id, workingGroups, documentType, type, link }, index) => (
+        (
+          {
+            title,
+            id,
+            workingGroups,
+            documentType,
+            type,
+            link,
+            publishingEntity,
+            teams,
+          },
+          index,
+        ) => (
           <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
             <AlgoliaHit
               index={index}
@@ -48,7 +68,11 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
             >
               <SharedResearchMetadata
                 pills={[
-                  workingGroups ? 'Working Group' : 'Team',
+                  getResearchOutputAssociationPill({
+                    publishingEntity,
+                    teams,
+                    workingGroups,
+                  }),
                   ...(documentType ? [documentType] : []),
                   ...(type ? [type] : []),
                 ]}

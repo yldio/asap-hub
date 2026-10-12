@@ -12,6 +12,7 @@ import {
   TeamType,
   WorkingGroupRole,
   Role,
+  Project,
 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -29,6 +30,9 @@ import { getManuscriptResponse } from '../fixtures/manuscript.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-output.controller.mock';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
+import { projectControllerMock } from '../mocks/project.controller.mock';
+import { teamControllerMock } from '../mocks/team.controller.mock';
+import { getTeamResponse } from '../fixtures/teams.fixtures';
 
 describe('/research-outputs/ route', () => {
   const userMockFactory = jest.fn<UserResponse, []>();
@@ -39,8 +43,25 @@ describe('/research-outputs/ route', () => {
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
     manuscriptController: manuscriptControllerMock,
+    projectController: projectControllerMock,
+    teamController: teamControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
+  });
+
+  const teamResponseWithProjectManager = () => ({
+    ...getTeamResponse(),
+    members: [
+      ...getTeamResponse().members,
+      {
+        id: 'pm-user-id',
+        email: 'pm@example.com',
+        firstName: 'Pat',
+        lastName: 'Manager',
+        displayName: 'Pat Manager',
+        role: 'Project Manager' as TeamRole,
+      },
+    ],
   });
 
   const userTeam = {
@@ -65,6 +86,9 @@ describe('/research-outputs/ route', () => {
 
   beforeEach(() => {
     userMockFactory.mockReturnValue(createUserResponse());
+    teamControllerMock.fetchById.mockResolvedValue(
+      teamResponseWithProjectManager(),
+    );
   });
   afterEach(() => {
     jest.resetAllMocks();
@@ -577,6 +601,62 @@ describe('/research-outputs/ route', () => {
           expect(response.status).toBe(expected);
         },
       );
+
+      test('Should let a team member publish when the team has no active project manager', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...user,
+          role: 'Grantee' as Role,
+          teams: [
+            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+          ],
+        });
+        teamControllerMock.fetchById.mockResolvedValueOnce({
+          ...getTeamResponse(),
+          members: [
+            {
+              id: 'user-id-1',
+              email: 'lead@example.com',
+              firstName: 'Lead',
+              lastName: 'Pi',
+              displayName: 'Lead Pi',
+              role: 'Lead PI (Core Leadership)',
+            },
+          ],
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getResearchOutputPostRequest(),
+            teams: ['team-1'],
+            published: true,
+          });
+
+        expect(response.status).toBe(201);
+      });
+
+      test('Should block a team member from publishing when the team has an active project manager', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...user,
+          role: 'Grantee' as Role,
+          teams: [
+            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+          ],
+        });
+        teamControllerMock.fetchById.mockResolvedValueOnce(
+          teamResponseWithProjectManager(),
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getResearchOutputPostRequest(),
+            teams: ['team-1'],
+            published: true,
+          });
+
+        expect(response.status).toBe(403);
+      });
     });
 
     describe('Creating a research output from a working group', () => {
@@ -634,45 +714,115 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Creating a research output from a project', () => {
+      const projectWithNoLead: Project = {
+        id: 'project-1',
+        title: 'Project 1',
+        projectType: 'Trainee Project',
+        status: 'Active',
+        statusRank: 1,
+        startDate: '2025-01-01',
+        endDate: '2026-01-01',
+        tags: [],
+        members: [
+          {
+            id: 'user-id-0',
+            displayName: 'Member',
+            role: 'Independent Project - Mentor',
+          },
+        ],
+      };
+      const projectWhereUserIsLead: Project = {
+        ...projectWithNoLead,
+        members: [
+          {
+            id: 'user-id-0',
+            displayName: 'Lead',
+            role: 'Independent Project - Lead',
+          },
+        ],
+      };
+      const projectWithOtherLead: Project = {
+        ...projectWithNoLead,
+        members: [
+          {
+            id: 'someone-else',
+            displayName: 'Lead',
+            role: 'Independent Project - Lead',
+          },
+          {
+            id: 'user-id-0',
+            displayName: 'Member',
+            role: 'Independent Project - Mentor',
+          },
+        ],
+      };
+
       test.each([
         {
+          name: 'member saving a draft',
           publish: false,
           expected: 201,
           userRole: 'Grantee',
           isProjectMember: true,
+          project: projectWithNoLead,
         },
         {
+          name: 'non-member saving a draft',
+          publish: false,
+          expected: 403,
+          userRole: 'Grantee',
+          isProjectMember: false,
+          project: projectWithNoLead,
+        },
+        {
+          name: 'member publishing when the project has no lead',
+          publish: true,
+          expected: 201,
+          userRole: 'Grantee',
+          isProjectMember: true,
+          project: projectWithNoLead,
+        },
+        {
+          name: 'non-lead member publishing when the project has a lead',
           publish: true,
           expected: 403,
           userRole: 'Grantee',
           isProjectMember: true,
+          project: projectWithOtherLead,
         },
         {
+          name: 'project lead publishing',
+          publish: true,
+          expected: 201,
+          userRole: 'Grantee',
+          isProjectMember: true,
+          project: projectWhereUserIsLead,
+        },
+        {
+          name: 'staff publishing without membership',
           publish: true,
           expected: 201,
           userRole: 'Staff',
           isProjectMember: false,
+          project: projectWithOtherLead,
         },
         {
-          publish: false,
+          name: 'non-lead member publishing a manuscript output when the project has a lead',
+          publish: true,
           expected: 403,
           userRole: 'Grantee',
-          isProjectMember: false,
-        },
-        {
-          publish: true,
-          expected: 201,
-          userRole: 'Grantee',
           isProjectMember: true,
+          project: projectWithOtherLead,
           relatedManuscriptVersion: 'manuscript-version-id-1',
         },
       ])(
-        'Should return $expected when a user has user role: $userRole, is project member: $isProjectMember and tries to publish: $publish',
+        'Should return $expected for $name',
         async ({
           publish,
           expected,
           userRole,
           isProjectMember,
+          project,
           relatedManuscriptVersion,
         }) => {
           userMockFactory.mockReturnValueOnce({
@@ -689,6 +839,7 @@ describe('/research-outputs/ route', () => {
                 ]
               : [],
           });
+          projectControllerMock.fetchById.mockResolvedValueOnce(project);
           const response = await supertest(app)
             .post('/research-outputs')
             .send({

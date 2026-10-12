@@ -1,4 +1,9 @@
-import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
+import {
+  ErrorResponse,
+  isValidationErrorResponse,
+  ServerValidationError,
+  ValidationErrorResponse,
+} from '@asap-hub/model';
 import * as Sentry from '@sentry/react';
 
 export type GetListOptions = {
@@ -43,7 +48,10 @@ export class BackendError extends Error {
   public statusCode;
   constructor(
     message: string,
-    response: ErrorResponse | ValidationErrorResponse,
+    // Optional because a failing response may carry no JSON body at all —
+    // callers build this from `resp.json().catch(() => undefined)`, whose `any`
+    // let the non-optional type compile while lying to every reader.
+    response: ErrorResponse | ValidationErrorResponse | undefined,
     statusCode: number,
   ) {
     super(message);
@@ -60,6 +68,47 @@ export const validationErrorsAreSupported = (
   response.data.every(({ instancePath }) =>
     supportedErrorPaths.includes(instancePath),
   );
+
+/**
+ * The validation errors a rejection carries, when every one of them names a path
+ * the caller said it can render. `undefined` for anything else, so the caller
+ * falls back to whatever generic reporting it already had.
+ */
+export const getSupportedValidationErrors = (
+  error: unknown,
+  supportedErrors: string[],
+): ValidationErrorResponse['data'] | undefined => {
+  if (!(error instanceof BackendError)) return undefined;
+
+  const { response } = error;
+  // A failing response body is whatever it parsed to: absent when there was no
+  // JSON, or a bare string when it was not an object. Neither
+  // isValidationErrorResponse (reads `.message`) nor validationErrorsAreSupported
+  // (reads `.data.length`) guards for that.
+  return typeof response === 'object' &&
+    response !== null &&
+    typeof (response as ErrorResponse).message === 'string' &&
+    Array.isArray((response as ValidationErrorResponse).data) &&
+    isValidationErrorResponse(response) &&
+    validationErrorsAreSupported(response, supportedErrors)
+    ? response.data
+    : undefined;
+};
+
+/**
+ * Translates a backend validation response into a `ServerValidationError` so the
+ * form can surface it through the same path as its own field validation.
+ */
+export const toServerValidationError =
+  (supportedErrors: string[]) =>
+  (error: unknown): never => {
+    const validationErrors = getSupportedValidationErrors(
+      error,
+      supportedErrors,
+    );
+    if (validationErrors) throw new ServerValidationError(validationErrors);
+    throw error;
+  };
 
 export const clearAjvErrorForPath = (
   errors: ValidationErrorResponse['data'],

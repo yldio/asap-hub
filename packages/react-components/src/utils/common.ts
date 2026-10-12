@@ -16,6 +16,12 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = (): void => {};
 
+// Touch taps fire an emulated mouseenter right before the click, which would
+// flash a hover-only affordance on mobile; only hover-capable pointers count.
+export const canHover = (): boolean =>
+  typeof window.matchMedia !== 'function' ||
+  window.matchMedia('(hover: hover)').matches;
+
 export const getSvgAspectRatio = (element: React.ReactElement): number => {
   const markup = renderToStaticMarkup(element);
 
@@ -93,21 +99,68 @@ export const splitListBy = <T>(
     [[], []],
   );
 
-export const getResearchOutputAssociation = (
+// A team-based project output is shared through a team (publishingEntity is
+// 'Team') but originates from a project workspace, so it carries the project
+// link on its team rather than at the top level.
+const isTeamBasedProjectOutput = (
   researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
-): ResearchOutputAssociations =>
-  researchOutputData.workingGroups
+): boolean =>
+  !researchOutputData.workingGroups && !!researchOutputData.teams[0]?.project;
+
+export const getResearchOutputAssociation = (
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'publishingEntity'
+  >,
+): ResearchOutputAssociations => {
+  if (
+    researchOutputData.publishingEntity === 'Project' ||
+    isTeamBasedProjectOutput(researchOutputData)
+  ) {
+    return 'project';
+  }
+
+  return researchOutputData.workingGroups
     ? 'working group'
     : `team${researchOutputData.teams.length > 1 ? 's' : ''}`;
+};
 
 export const getResearchOutputAssociationName = (
-  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'project' | 'publishingEntity'
+  >,
 ): string => {
+  if (researchOutputData.publishingEntity === 'Project') {
+    return researchOutputData.project?.title || '';
+  }
+
   if (researchOutputData.workingGroups) {
     return researchOutputData.workingGroups[0].title;
   }
 
+  if (isTeamBasedProjectOutput(researchOutputData)) {
+    return researchOutputData.teams[0]?.project?.title || '';
+  }
+
   return researchOutputData.teams[0]?.displayName || '';
+};
+
+// Capitalised association label used for the pill on research output cards.
+export const getResearchOutputAssociationPill = (
+  researchOutputData: Pick<
+    ResearchOutputResponse,
+    'workingGroups' | 'teams' | 'publishingEntity'
+  >,
+): 'Working Group' | 'Project' | 'Team' => {
+  switch (getResearchOutputAssociation(researchOutputData)) {
+    case 'working group':
+      return 'Working Group';
+    case 'project':
+      return 'Project';
+    default:
+      return 'Team';
+  }
 };
 
 // Get the active Project Manager from a list of team members

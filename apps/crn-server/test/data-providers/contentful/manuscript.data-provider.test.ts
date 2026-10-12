@@ -354,7 +354,10 @@ describe('Manuscripts Contentful Data Provider', () => {
       jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
       const manuscriptId = 'manuscript-id-1';
 
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({

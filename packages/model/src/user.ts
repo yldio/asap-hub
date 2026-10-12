@@ -119,6 +119,7 @@ export interface UserDataObject extends Invitee {
   responsibilities?: string;
   role: Role;
   openScienceTeamMember: boolean;
+  techSupport: boolean;
   social?: UserSocialLinks;
   stateOrProvince?: string;
   teams: UserTeam[];
@@ -150,6 +151,7 @@ export type PublicUserDataObject = Pick<
   | 'labs'
   | 'lastModifiedDate'
   | 'orcid'
+  | 'personalEmail'
   | 'researchOutputs'
   | 'researchTheme'
   | 'social'
@@ -204,6 +206,8 @@ export type UserListItemDataObject = Pick<
   | 'orcid'
   | 'role'
   | 'openScienceTeamMember'
+  | 'techSupport'
+  | 'social'
   | 'tags'
 > & {
   _tags: string[];
@@ -367,6 +371,8 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     orcid,
     role,
     openScienceTeamMember,
+    techSupport,
+    social,
     teams,
   } = user;
 
@@ -398,6 +404,8 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     orcid,
     role,
     openScienceTeamMember,
+    techSupport,
+    social,
     teams: teams.map((teamItem) => ({
       id: teamItem.id,
       role: teamItem.role,

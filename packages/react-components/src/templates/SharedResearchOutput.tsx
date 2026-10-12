@@ -3,7 +3,12 @@ import {
   getVisibleResearchOutputActions,
   ResearchOutputPermissionsContext,
 } from '@asap-hub/react-context';
-import { network, projectRouteByType, sharedResearch } from '@asap-hub/routing';
+import {
+  dashboard,
+  network,
+  projectRouteByType,
+  sharedResearch,
+} from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useContext, useState } from 'react';
@@ -11,9 +16,14 @@ import { useNavigate } from 'react-router';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
-import { CtaCard } from '../molecules';
+import { Breadcrumbs, CtaCard } from '../molecules';
 import {
   ConfirmModal,
+  GrantDocumentGrantsCard,
+  GrantDocumentHeaderCard,
+  GrantDocumentOverviewCard,
+  GrantDocumentPdfCard,
+  GrantDocumentTagsCard,
   OutputVersions,
   RelatedEventsCard,
   RelatedResearchCard,
@@ -33,10 +43,15 @@ import {
   getResearchOutputAssociationName,
 } from '../utils';
 import PageConstraints from './PageConstraints';
+import PageInfoContainer from './PageInfoContainer';
 
 const cardsStyles = css({
   display: 'grid',
   rowGap: rem(36),
+});
+
+const grantCardsStyles = css({
+  rowGap: rem(32),
 });
 
 type SharedResearchOutputProps = Pick<
@@ -64,11 +79,14 @@ type SharedResearchOutputProps = Pick<
   | 'relatedManuscriptVersion'
   | 'publishingEntity'
   | 'project'
+  | 'grantDocument'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     toast?: ResearchOutputToast;
+    grantEnded?: boolean;
+    projectHasLead?: boolean;
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
@@ -103,9 +121,12 @@ const getDuplicateLink = ({
         : undefined;
     }
     case 'team': {
-      const teamId = teams[0]?.id;
-      return teamId
-        ? network({}).teams({}).team({ teamId }).duplicateOutput({ id }).$
+      // Team outputs are duplicated through their linked project's route
+      const teamProject = teams[0]?.project;
+      const teamProjectRoute =
+        teamProject && projectRouteByType[teamProject.projectType];
+      return teamProject && teamProjectRoute
+        ? teamProjectRoute(teamProject.id).duplicateOutput({ id }).$
         : undefined;
     }
     default:
@@ -134,6 +155,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   onPublish,
   relatedManuscript,
   checkForNewVersion,
+  projectHasLead = false,
+  grantDocument,
+  grantEnded = false,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -141,9 +165,21 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   const permissions = useContext(ResearchOutputPermissionsContext);
 
-  const isGrantDocument = ['Grant Document', 'Presentation'].includes(
-    props.documentType,
-  );
+  const isGrantDocumentPage = !!grantDocument;
+  const isGrantDocument =
+    isGrantDocumentPage ||
+    ['Grant Document', 'Presentation'].includes(props.documentType);
+  const supplementOutputId =
+    grantDocument?.grantType === 'original'
+      ? grantDocument.supplement?.researchOutputId
+      : undefined;
+  const supplementGrantHref =
+    supplementOutputId &&
+    sharedResearch({}).researchOutput({ researchOutputId: supplementOutputId })
+      .$;
+  const grantOverview = grantDocument?.[grantDocument.grantType]?.description;
+
+  const duplicateLink = getDuplicateLink({ id, ...props });
 
   const visibleActions = getVisibleResearchOutputActions(permissions, {
     published,
@@ -151,6 +187,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     hasRelatedManuscript: !!relatedManuscriptVersion,
     isWorkingGroupOutput: !!(props.workingGroups && props.workingGroups[0]?.id),
     isGrantDocument,
+    hasDuplicateDestination: !!duplicateLink,
   });
 
   const tags = [
@@ -166,6 +203,18 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasUsageNotes = usageNotes || usageNotesMD;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
+  const isProjectOutput = association === 'project';
+  const isTeamBasedProjectOutput =
+    isProjectOutput && props.publishingEntity !== 'Project';
+  const publisherRoleClause = isTeamBasedProjectOutput
+    ? 'the project manager will be able to review and publish this output.'
+    : 'the project leads will be able to review and publish this output.';
+  const memberGroupLabel =
+    association === 'working group'
+      ? 'working group'
+      : isProjectOutput
+        ? 'project'
+        : 'team';
   const [reviewToggled, setReviewToggled] = useState(false);
   const [displayReviewModal, setDisplayReviewModal] = useState(false);
   const [
@@ -189,6 +238,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     setDisplayPublishModal(false);
   };
 
+  const tagsCard = (displayDescription || !!tags.length) && (
+    <SharedResearchDetailsTagsCard
+      tags={tags}
+      displayDescription={!!displayDescription}
+      description={description}
+      descriptionMD={descriptionMD}
+      shortDescription={shortDescription}
+      changelog={changelog}
+    />
+  );
+  const versionsCard = versions.length > 0 && (
+    <OutputVersions versions={versions} />
+  );
+
   const checkForNewerManuscriptVersion = async () => {
     const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
@@ -202,8 +265,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     }
   };
 
-  const duplicateLink = getDuplicateLink({ id, ...props });
-
   return (
     <div>
       <SharedResearchOutputToasts
@@ -215,7 +276,38 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         reviewToggled={reviewToggled}
         associationName={associationName}
         isInReview={isInReview}
+        projectHasLead={projectHasLead}
+        isTeamBasedProject={isTeamBasedProjectOutput}
+        supplementGrantHref={supplementGrantHref}
+        grantEnded={grantEnded}
       />
+      {grantDocument && (
+        <header>
+          <PageInfoContainer
+            breadcrumbs={
+              <Breadcrumbs
+                homeHref={dashboard({}).$}
+                items={[
+                  { label: 'Shared Research', href: sharedResearch({}).$ },
+                  { label: props.title },
+                ]}
+              />
+            }
+          >
+            <GrantDocumentHeaderCard
+              title={props.title}
+              documentType={props.documentType}
+              link={props.link}
+              teams={props.teams}
+              addedDate={props.addedDate}
+              created={props.created}
+              lastUpdatedPartial={props.lastUpdatedPartial}
+              grantType={grantDocument.grantType}
+              project={grantDocument.project}
+            />
+          </PageInfoContainer>
+        </header>
+      )}
       <PageConstraints>
         {!isGrantDocument && (
           <SharedResearchOutputButtons
@@ -224,6 +316,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             setDisplayReviewModal={setDisplayReviewModal}
             checkForNewerManuscriptVersion={checkForNewerManuscriptVersion}
             isInReview={isInReview}
+            isProjectOutput={isProjectOutput}
             duplicateLink={duplicateLink}
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
@@ -236,18 +329,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             title={`${
               isInReview
                 ? 'Switch output to draft?'
-                : 'Output ready for PM review?'
+                : `Output ready for ${isProjectOutput ? '' : 'PM '}review?`
             }`}
-            description={`All ${
-              association === 'working group' ? 'working group' : 'team'
-            } members listed on this output will be notified and ${
+            description={`All ${memberGroupLabel} members listed on this output will be notified and ${
               isInReview
                 ? 'will be able to edit this output again.'
-                : 'PMs will be able to review and publish this output.'
+                : isProjectOutput
+                  ? publisherRoleClause
+                  : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"
             confirmText={`${
-              isInReview ? 'Switch to Draft' : 'Ready for PM Review'
+              isInReview
+                ? 'Switch to Draft'
+                : `Ready for ${isProjectOutput ? 'Review' : 'PM Review'}`
             }`}
             onSave={() => toggleReview(!isInReview)}
             onCancel={() => {
@@ -281,9 +376,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             title={'Publish output for the whole hub?'}
             description={
               <>
-                {`All ${
-                  association === 'working group' ? 'working group' : 'team'
-                } members listed on this output will be notified and all
+                {`All ${memberGroupLabel} members listed on this output will be notified and all
                 CRN members will be able to access it. If you want to switch to
                 draft after the output was published you need to contact`}
                 <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.
@@ -305,22 +398,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             }}
           />
         )}
-        <div css={cardsStyles}>
-          <SharedResearchOutputHeaderCard
-            {...props}
-            published={published}
-            isInReview={isInReview}
-          />
-          {(displayDescription || !!tags.length) && (
-            <SharedResearchDetailsTagsCard
-              tags={tags}
-              displayDescription={!!displayDescription}
-              description={description}
-              descriptionMD={descriptionMD}
-              shortDescription={shortDescription}
-              changelog={changelog}
+        <div css={[cardsStyles, isGrantDocumentPage && grantCardsStyles]}>
+          {!grantDocument && (
+            <SharedResearchOutputHeaderCard
+              {...props}
+              published={published}
+              isInReview={isInReview}
+              isProjectOutput={isProjectOutput}
             />
           )}
+          {!isGrantDocumentPage && tagsCard}
           {!isGrantDocument && hasUsageNotes && (
             <Card>
               <div css={{ paddingBottom: rem(12) }}>
@@ -337,18 +424,43 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               getIconForDocumentType={getIconForDocumentTypeCRN}
             />
           )}
-          {versions.length > 0 && <OutputVersions versions={versions} />}
+          {!isGrantDocumentPage && versionsCard}
           {!isGrantDocument && (
             <RelatedEventsCard relatedEvents={relatedEvents} truncateFrom={3} />
           )}
           {!isGrantDocument && (
             <SharedResearchAdditionalInformationCard {...props} />
           )}
-          {hasDescription && isGrantDocument && (
-            <Card>
-              <Markdown value={descriptionMD} toc></Markdown>
-              {!descriptionMD && <RichText toc text={description} />}
-            </Card>
+          {grantOverview ? (
+            <GrantDocumentOverviewCard text={grantOverview} />
+          ) : (
+            hasDescription &&
+            isGrantDocument &&
+            (grantDocument ? (
+              <GrantDocumentOverviewCard
+                description={description}
+                descriptionMD={descriptionMD}
+              />
+            ) : (
+              <Card>
+                <Markdown value={descriptionMD} toc></Markdown>
+                {!descriptionMD && <RichText toc text={description} />}
+              </Card>
+            ))
+          )}
+          {grantDocument && (
+            <>
+              {props.link && <GrantDocumentPdfCard link={props.link} />}
+              {grantDocument.supplement && (
+                <GrantDocumentGrantsCard
+                  grantType={grantDocument.grantType}
+                  original={grantDocument.original}
+                  supplement={grantDocument.supplement}
+                />
+              )}
+              {!!tags.length && <GrantDocumentTagsCard tags={tags} />}
+              {versionsCard}
+            </>
           )}
           {!!contactEmails.length && (
             <CtaCard

@@ -29,7 +29,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -44,15 +44,13 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Check
         run: |
           yarn ${{ matrix.script }}
   extensions:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -64,7 +62,7 @@ jobs:
   setup-turbo:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -85,7 +83,7 @@ jobs:
     needs: setup-turbo
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -193,13 +191,22 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Build type definitions
         shell: bash
         run: yarn build:typecheck
       - name: lint
         run: yarn lint
+
+  cas-tokens-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache unplugged packages
+        uses: ./.github/actions/cache-unplugged
+      - name: Check the generated CAS tokens match the Figma exports
+        run: |
+          yarn cas-tokens:generate
+          git diff --exit-code packages/react-components/src/cas-tokens.generated.ts
 
   copy-paste-check:
     runs-on: ubuntu-latest
@@ -231,7 +238,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

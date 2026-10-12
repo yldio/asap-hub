@@ -42,6 +42,8 @@ export const asyncFunctions: AWS['functions'] = {
     environment: googleCalendarEnvironment,
   },
   syncActiveCampaignContact: {
+    // Hits the 16s provider default when ActiveCampaign responds slowly.
+    timeout: 120,
     handler: './src/handlers/user/sync-active-campaign-contact.handler',
     events: contentfulEventBridge(['UsersPublished']),
     environment: activeCampaignEnvironment,
@@ -53,6 +55,9 @@ export const asyncFunctions: AWS['functions'] = {
     environment: activeCampaignEnvironment,
   },
   syncUserOrcidContentful: {
+    // Hits the 16s provider default on slow ORCID responses; matches
+    // cronjobSyncOrcidContentful.
+    timeout: 120,
     handler: './src/handlers/user/sync-orcid-handler.handler',
     events: contentfulEventBridge(['UsersPublished'], {
       maximumRetryAttempts: 2,
@@ -91,7 +96,9 @@ export const asyncFunctions: AWS['functions'] = {
     },
   },
   gcalEventsUpdatedContentfulProcess: {
-    timeout: 300,
+    // A full calendar resync (invalidated syncToken) takes ~5 minutes and
+    // times out at 300.
+    timeout: 600,
     handler:
       './src/handlers/webhooks/gcal-webhook-events-updated-process.handler',
     events: [

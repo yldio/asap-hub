@@ -84,50 +84,15 @@ export type OutputDocumentTypeParameter =
   | 'report';
 
 const team = (() => {
-  const draftOutputs = route('/draft-outputs', {}, {});
-
   const about = route('/about', {}, {});
-  const outputs = route('/outputs', {}, {});
-
-  const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
-  const tools = route('/tools', {}, { tool });
-  const createManuscript = route('/create-manuscript', {}, {});
-  const editManuscript = route(
-    '/edit-manuscript/:manuscriptId',
-    { manuscriptId: stringParser },
-    {},
-  );
-  const resubmitManuscript = route(
-    '/resubmit-manuscript/:manuscriptId',
-    { manuscriptId: stringParser },
-    {},
-  );
-
-  const createComplianceReport = route(
-    '/create-compliance-report/:manuscriptId',
-    { manuscriptId: stringParser },
-    {},
-  );
-  const workspace = route(
-    '/workspace',
-    {},
-    {
-      tools,
-      createManuscript,
-      editManuscript,
-      resubmitManuscript,
-      createComplianceReport,
-    },
-  );
-
-  const compliance = route('/compliance', {}, {});
+  const metrics = route('/metrics', {}, {});
+  const workspace = route('/workspace', {}, {});
 
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },
     {},
   );
-  const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});
 
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
@@ -137,14 +102,11 @@ const team = (() => {
     { teamId: stringParser },
     {
       about,
+      metrics,
       workspace,
-      compliance,
-      outputs,
       createOutput,
-      duplicateOutput,
       upcoming,
       past,
-      draftOutputs,
     },
   );
 })();

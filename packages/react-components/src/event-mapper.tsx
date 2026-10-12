@@ -23,7 +23,12 @@ export const eventMapper = ({
   tags: event.tags.map(({ name }) => name),
   hasSpeakersToBeAnnounced: !!(
     speakers.length === 0 ||
-    speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
+    speakers.find(
+      (speaker) =>
+        'team' in speaker &&
+        !('user' in speaker) &&
+        !('externalUser' in speaker),
+    )
   ),
   eventTeams: <EventTeams speakers={speakers} />,
   eventSpeakers: <EventNumberOfSpeakers speakers={speakers} />,

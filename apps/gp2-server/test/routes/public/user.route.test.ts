@@ -149,7 +149,7 @@ describe('/users/ route', () => {
         {
           role: 'CTO',
           department: 'Technology',
-          institution: 'YLD',
+          institution: 'Wayne Enterprises',
         },
       ];
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
@@ -158,7 +158,9 @@ describe('/users/ route', () => {
         `/public/users/${userResponse.id}`,
       );
 
-      expect(response.body.institution).toEqual('Stark Industries, YLD');
+      expect(response.body.institution).toEqual(
+        'Stark Industries, Wayne Enterprises',
+      );
     });
 
     test('Should return a comma separated list of roles for the title when multiple positions are present', async () => {
@@ -172,7 +174,7 @@ describe('/users/ route', () => {
         {
           role: 'CTO',
           department: 'Technology',
-          institution: 'YLD',
+          institution: 'Wayne Enterprises',
         },
       ];
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);

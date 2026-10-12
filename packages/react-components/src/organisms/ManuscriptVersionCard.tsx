@@ -4,7 +4,6 @@ import {
   ManuscriptVersion,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -16,14 +15,13 @@ import {
   Divider,
   ExpandableText,
   formatDate,
-  lead,
   Link,
   minusRectIcon,
   Pill,
   PencilIcon,
   plusRectIcon,
   Subtitle,
-  colors,
+  colour,
 } from '..';
 import { paddingStyles } from '../card';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
@@ -34,7 +32,6 @@ import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
-  teamId: string;
   manuscriptId: string;
   isActiveVersion?: boolean;
   isManuscriptContributor?: boolean;
@@ -42,7 +39,7 @@ type ManuscriptVersionCardProps = {
   impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
   showTeamName?: boolean;
-  getEditManuscriptHref?: (manuscriptId: string) => string;
+  getEditManuscriptHref?: (manuscriptId: string) => string | undefined;
 };
 
 const toastStyles = css({
@@ -117,7 +114,7 @@ const quickCheckStyles = css({
 });
 
 const quickCheckDetailsStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const additionalInformationListStyles = css({
@@ -136,7 +133,7 @@ const additionalInformationEntryStyles = css({
 });
 const additionalInformationValueStyles = css({
   textAlign: 'right',
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   overflowWrap: 'anywhere',
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -186,7 +183,6 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
-  teamId,
   manuscriptId,
   isActiveVersion = false,
   isManuscriptContributor = false,
@@ -226,13 +222,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const updatedByData = getUpdatedByData();
 
-  const editManuscriptRoute = getEditManuscriptHref
-    ? getEditManuscriptHref(manuscriptId)
-    : network({})
-        .teams({})
-        .team({ teamId })
-        .workspace({})
-        .editManuscript({ manuscriptId }).$;
+  const editManuscriptRoute = getEditManuscriptHref?.(manuscriptId);
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
@@ -246,8 +236,8 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     <>
       <div
         css={{
-          borderBottom: `1px solid ${colors.steel.rgb}`,
-          backgroundColor: colors.paper.rgb,
+          borderBottom: `1px solid ${colour.border.tertiary}`,
+          backgroundColor: colour.background.primary,
           ':first-of-type': {
             borderRadius: `${rem(8)} ${rem(8)} 0 0`,
           },
@@ -279,10 +269,10 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             </span>
             <span css={iconStyles}>{article}</span>
             <div css={titleContainerStyles}>
-              <Subtitle noMargin>Manuscript #{version.count}</Subtitle>
+              <Subtitle noMargin>Version #{version.count}</Subtitle>
 
               <div css={updatedByAndEditContainerStyles}>
-                <Caption accent="lead" noMargin>
+                <Caption accent="tertiary" noMargin>
                   <div css={updatedByContainerStyles}>
                     <span css={updatedByTextStyles}>
                       Last Update:
@@ -500,7 +490,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   </ol>
                 </div>
               )}
-              <Caption accent="lead" noMargin>
+              <Caption accent="tertiary" noMargin>
                 <div css={userContainerStyles}>
                   Date created:
                   <span>{formatDate(new Date(version.createdDate))}</span>

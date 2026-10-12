@@ -2,10 +2,6 @@ import {
   CalendarCreateDataObject,
   CalendarDataObject,
   CalendarUpdateDataObject,
-  EventCreateDataObject,
-  EventDataObject,
-  EventUpdateDataObject,
-  FetchEventsOptions,
   ListResponse,
 } from '.';
 
@@ -50,13 +46,4 @@ export type CalendarDataProvider = DataProvider<
   CalendarCreateDataObject,
   null,
   CalendarUpdateDataObject
->;
-
-export type EventDataProvider = DataProvider<
-  EventDataObject,
-  EventDataObject,
-  FetchEventsOptions,
-  EventCreateDataObject,
-  null,
-  EventUpdateDataObject
 >;

@@ -1,6 +1,7 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
 import { ManuscriptDataObject } from './manuscript';
+import { GrantType, MilestoneStatus, ProjectType } from './project';
 import {
   ResearchOutputDataObject,
   ResearchOutputDraftDataObject,
@@ -12,7 +13,8 @@ type ReminderEntity =
   | 'Event'
   | 'Research Output Version'
   | 'Manuscript'
-  | 'Discussion';
+  | 'Discussion'
+  | 'Milestone';
 
 type ResearchOutputReminderType =
   | 'Published'
@@ -28,7 +30,9 @@ export type EventReminderType =
   | 'Notes Updated'
   | 'Share Presentation'
   | 'Publish Material'
-  | 'Upload Presentation';
+  | 'Upload Presentation'
+  | 'Mark Attendance'
+  | 'Add Speakers';
 
 type ManuscriptReminderType =
   | 'Manuscript Created'
@@ -41,11 +45,17 @@ type DiscussionReminderType =
   | 'Discussion Replied To by Grantee'
   | 'Discussion Replied To by Open Science Member';
 
+type MilestoneReminderType =
+  | 'Milestone Created'
+  | 'Milestone Status Updated'
+  | 'Milestone Outputs Linked';
+
 type ReminderType =
   | ResearchOutputReminderType
   | EventReminderType
   | ManuscriptReminderType
-  | DiscussionReminderType;
+  | DiscussionReminderType
+  | MilestoneReminderType;
 
 interface Reminder {
   id: string;
@@ -80,7 +90,7 @@ export interface ResearchOutputPublishedReminder
     title: ResearchOutputPublishedDataObject['title'];
     addedDate: ResearchOutputPublishedDataObject['addedDate'];
     statusChangedBy: string;
-    associationType: 'team' | 'working group';
+    associationType: 'project' | 'working group';
     associationName: string;
   };
 }
@@ -93,7 +103,7 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
     title: ResearchOutputDraftDataObject['title'];
     createdDate: ResearchOutputDraftDataObject['created'];
     createdBy: string;
-    associationType: 'team' | 'working group';
+    associationType: 'project' | 'working group';
     associationName: string;
   };
 }
@@ -106,7 +116,7 @@ export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
     title: ResearchOutputDraftDataObject['title'];
     documentType: ResearchOutputPublishedDataObject['documentType'];
     createdDate: ResearchOutputDraftDataObject['created'];
-    associationType: 'team' | 'working group';
+    associationType: 'project' | 'working group';
     associationName: string;
     statusChangedBy: string;
   };
@@ -121,7 +131,7 @@ export interface ResearchOutputSwitchToDraftReminder
     title: ResearchOutputDraftDataObject['title'];
     documentType: ResearchOutputPublishedDataObject['documentType'];
     statusChangedAt: string;
-    associationType: 'team' | 'working group';
+    associationType: 'project' | 'working group';
     associationName: string;
     statusChangedBy: string;
   };
@@ -135,7 +145,7 @@ export interface ResearchOutputVersionPublishedReminder extends Reminder {
     title: ResearchOutputDataObject['title'];
     documentType: ResearchOutputDataObject['documentType'];
     publishedAt: string;
-    associationType: 'team' | 'working group';
+    associationType: 'project' | 'working group';
     associationName: string;
   };
 }
@@ -184,9 +194,9 @@ export interface DiscussionCreatedReminder extends Reminder {
     | 'Discussion Created by Open Science Member'
     | 'Discussion Created by Grantee';
   data: {
+    manuscriptId: ManuscriptDataObject['id'];
     title: ManuscriptDataObject['title'];
     manuscriptTeams: string;
-    userTeams: string;
     createdBy: string;
     publishedAt: string;
   };
@@ -198,11 +208,55 @@ export interface DiscussionRepliedToReminder extends Reminder {
     | 'Discussion Replied To by Open Science Member'
     | 'Discussion Replied To by Grantee';
   data: {
+    manuscriptId: ManuscriptDataObject['id'];
     title: ManuscriptDataObject['title'];
     manuscriptTeams: string;
-    userTeams: string;
     createdBy: string;
     publishedAt: string;
+  };
+}
+
+type MilestoneReminderData = {
+  milestoneId: string;
+  projectId: string;
+  projectName: string;
+  projectType: ProjectType;
+  grantType: GrantType;
+  aimNumbers: number[];
+};
+
+export interface MilestoneCreatedReminder extends Reminder {
+  entity: 'Milestone';
+  type: 'Milestone Created';
+  data: MilestoneReminderData & {
+    createdAt: string;
+  };
+}
+
+export const milestoneReminderStatuses = [
+  'Complete',
+  'Terminated',
+] as const satisfies readonly MilestoneStatus[];
+
+export type MilestoneReminderStatus =
+  (typeof milestoneReminderStatuses)[number];
+
+export interface MilestoneStatusUpdatedReminder extends Reminder {
+  entity: 'Milestone';
+  type: 'Milestone Status Updated';
+  data: MilestoneReminderData & {
+    status: MilestoneReminderStatus;
+    statusUpdatedAt: string;
+  };
+}
+
+export interface MilestoneOutputsLinkedReminder extends Reminder {
+  entity: 'Milestone';
+  type: 'Milestone Outputs Linked';
+  data: MilestoneReminderData & {
+    milestoneName: string;
+    outputsLinkedAt: string;
+    outputsLinkedBy: string;
   };
 }
 
@@ -258,6 +312,26 @@ export interface UploadPresentationReminder extends EventReminder {
   };
 }
 
+export interface MarkAttendanceReminder extends EventReminder {
+  entity: 'Event';
+  type: 'Mark Attendance';
+  data: {
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    endDate: ReminderEventResponse['endDate'];
+  };
+}
+
+export interface AddSpeakersReminder extends EventReminder {
+  entity: 'Event';
+  type: 'Add Speakers';
+  data: {
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    endDate: ReminderEventResponse['endDate'];
+  };
+}
+
 export interface VideoEventReminder extends EventReminder {
   entity: 'Event';
   type: 'Video Updated';
@@ -297,6 +371,11 @@ export type DiscussionReminder =
   | DiscussionCreatedReminder
   | DiscussionRepliedToReminder;
 
+export type MilestoneReminder =
+  | MilestoneCreatedReminder
+  | MilestoneStatusUpdatedReminder
+  | MilestoneOutputsLinkedReminder;
+
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputDraftReminder
@@ -311,14 +390,18 @@ export type ReminderDataObject =
   | SharePresentationReminder
   | PublishMaterialReminder
   | UploadPresentationReminder
+  | MarkAttendanceReminder
+  | AddSpeakersReminder
   | ManuscriptReminder
-  | DiscussionReminder;
+  | DiscussionReminder
+  | MilestoneReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 
 export type FetchRemindersOptions = {
   userId: string;
   timezone: string;
+  isNewEventPageEnabled?: boolean;
 };
 
 export type ReminderResponse = {

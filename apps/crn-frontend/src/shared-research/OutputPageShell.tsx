@@ -14,6 +14,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 type OutputPageShellProps = {
   documentType: ResearchOutputDocumentType;
   entityType: ResearchOutputEntityType;
+  isProjectOutput?: boolean;
   banner?: ReactNode;
   children: ReactNode;
 };
@@ -21,6 +22,7 @@ type OutputPageShellProps = {
 const OutputPageShell: React.FC<OutputPageShellProps> = ({
   documentType,
   entityType,
+  isProjectOutput = false,
   banner,
   children,
 }) => {
@@ -46,6 +48,7 @@ const OutputPageShell: React.FC<OutputPageShellProps> = ({
         <ResearchOutputHeader
           documentType={documentType}
           entityType={entityType}
+          isProjectOutput={isProjectOutput}
         />
         {children}
       </InnerToastContext.Provider>

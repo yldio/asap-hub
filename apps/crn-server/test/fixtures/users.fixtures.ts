@@ -42,6 +42,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   responsibilities: 'some responsibilities',
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   social: {
     orcid: '363-98-9330',
   },
@@ -147,6 +148,7 @@ export const getUserResponse = (): UserResponse => ({
   ],
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
@@ -188,6 +190,12 @@ export const getUserListItemDataObject = (): UserListItemDataObject => ({
   orcid: '0000-0001-8203-6901',
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
+  social: {
+    website1: 'https://tomhardy.example.com',
+    github: 'tomhardy',
+    researcherId: 'R-1234-2020',
+  },
   _tags: [
     'expertise 1',
     'expertise 2',
@@ -233,6 +241,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
   interestGroups: [{ name: 'Interest Group 1' }],
   orcid: '123-456-789',
   degree: 'MPH',
+  personalEmail: 'personal@rdy.io',
   teams: [
     {
       role: 'Lead PI (Core Leadership)',
@@ -276,6 +285,7 @@ export const fetchExpectation: ListUserResponse = {
       ],
       role: 'Grantee',
       openScienceTeamMember: false,
+      techSupport: false,
       labs: [],
     },
   ],
@@ -395,6 +405,7 @@ export const getUserDataObject = (): UserDataObject => ({
   ],
   role: 'Grantee',
   openScienceTeamMember: false,
+  techSupport: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
@@ -658,6 +669,17 @@ export const getContentfulGraphqlUserListItem = (
   degree: 'MPH',
   role: 'Grantee',
   orcid: '0000-0001-8203-6901',
+  userSocials: {
+    website1: 'https://tomhardy.example.com',
+    website2: null,
+    linkedIn: null,
+    researcherId: 'R-1234-2020',
+    twitter: null,
+    blueSky: null,
+    github: 'tomhardy',
+    googleScholar: null,
+    researchGate: null,
+  },
   labsCollection: {
     items: [
       { sys: { id: 'cd7be4902' }, name: 'Brighton' },

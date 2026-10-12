@@ -6,7 +6,16 @@ import { OptionsType } from '../select';
 import { MultiSelectOnChange } from '../atoms/MultiSelect';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
-import { noop, ResearchOutputFormValues } from '../utils';
+import {
+  getAuthorsMissingTeam,
+  getAuthorsNotProjectMembers,
+  getLabsMissingPITeam,
+  missingPITeamLabsMessage,
+  missingTeamAuthorsMessage,
+  nonProjectMemberAuthorsMessage,
+  noop,
+  ResearchOutputFormValues,
+} from '../utils';
 import AuthorSelect from './AuthorSelect';
 
 type ResearchOutputContributorsProps = {
@@ -24,6 +33,7 @@ type ResearchOutputContributorsProps = {
   authorsRequired?: boolean;
   showTeamsAndLabs?: ResearchOutputAvailableActions['showTeamsAndLabs'];
   authorRestriction?: AuthorRestriction;
+  validateContributorTeams?: boolean;
 };
 
 export type AuthorRestriction =
@@ -39,17 +49,9 @@ export const authorsDescription = {
     'Add the contributing authors. Only members of this project can be named.',
 };
 
-export const nonProjectMemberAuthorMessage =
-  'The following author(s) are not members of this project. Only project members can be authors, so please contact support to add them, or remove them from the list.';
-
-const BIG_SPACE = '\u2004';
-
-const getNonProjectMemberAuthorsMessage = (
-  authorLabels: ReadonlyArray<string>,
-): string =>
-  `${nonProjectMemberAuthorMessage}\n${authorLabels
-    .map((label) => `${BIG_SPACE}•${BIG_SPACE}${label}`)
-    .join('\n')}`;
+const getSelectedTeamIds = (
+  teams: ResearchOutputFormValues['teams'],
+): string[] => (teams ?? []).map(({ value }) => value);
 
 const ResearchOutputContributorsCard: React.FC<
   ResearchOutputContributorsProps
@@ -62,8 +64,10 @@ const ResearchOutputContributorsCard: React.FC<
   authorsRequired,
   showTeamsAndLabs = true,
   authorRestriction = noAuthorRestriction,
+  validateContributorTeams = false,
 }) => {
-  const { control } = useFormContext<ResearchOutputFormValues>();
+  const { control, getValues, trigger } =
+    useFormContext<ResearchOutputFormValues>();
   const restrictedToProjectMembers =
     authorRestriction.kind === 'project-members';
 
@@ -85,7 +89,14 @@ const ResearchOutputContributorsCard: React.FC<
               enabled={!isSaving || !isEditMode}
               placeholder="Start typing..."
               loadOptions={getTeamSuggestions}
-              onChange={onChange as MultiSelectOnChange<MultiSelectOptionsType>}
+              onChange={(newValue) => {
+                (onChange as MultiSelectOnChange<MultiSelectOptionsType>)(
+                  newValue,
+                );
+                if (validateContributorTeams) {
+                  void trigger(['authors', 'labs']);
+                }
+              }}
               onBlur={onBlur}
               customValidationMessage={error?.message}
               values={value as OptionsType<MultiSelectOptionsType>}
@@ -104,19 +115,35 @@ const ResearchOutputContributorsCard: React.FC<
             ? 'Please select at least one author.'
             : false,
           validate: (value) => {
-            if (authorRestriction.kind !== 'project-members') {
+            if (authorRestriction.kind === 'project-members') {
+              const nonMemberAuthors = getAuthorsNotProjectMembers(
+                value,
+                authorRestriction.memberIds,
+              );
+
+              return (
+                nonMemberAuthors.length === 0 ||
+                nonProjectMemberAuthorsMessage(
+                  'author(s)',
+                  nonMemberAuthors.map(({ label }) => label),
+                )
+              );
+            }
+
+            if (!validateContributorTeams) {
               return true;
             }
 
-            const { memberIds } = authorRestriction;
-            const nonMemberAuthors = value.filter(
-              ({ value: authorId }) => !memberIds.includes(authorId),
+            const authorsWithoutTeam = getAuthorsMissingTeam(
+              value,
+              getSelectedTeamIds(getValues('teams')),
             );
 
             return (
-              nonMemberAuthors.length === 0 ||
-              getNonProjectMemberAuthorsMessage(
-                nonMemberAuthors.map(({ label }) => label),
+              authorsWithoutTeam.length === 0 ||
+              missingTeamAuthorsMessage(
+                'author(s)',
+                authorsWithoutTeam.map(({ label }) => label),
               )
             );
           },
@@ -151,7 +178,26 @@ const ResearchOutputContributorsCard: React.FC<
         <Controller
           name="labs"
           control={control}
-          rules={{ required: 'Please add at least one lab.' }}
+          rules={{
+            required: 'Please add at least one lab.',
+            validate: (value) => {
+              if (!validateContributorTeams) {
+                return true;
+              }
+
+              const labsWithoutPITeam = getLabsMissingPITeam(
+                value,
+                getSelectedTeamIds(getValues('teams')),
+              );
+
+              return (
+                labsWithoutPITeam.length === 0 ||
+                missingPITeamLabsMessage(
+                  labsWithoutPITeam.map(({ label }) => label),
+                )
+              );
+            },
+          }}
           render={({
             field: { value, onChange, onBlur },
             fieldState: { error },

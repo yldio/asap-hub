@@ -6,7 +6,6 @@ export const FETCH_REMINDERS = gql`
   query FetchReminders(
     $researchOutputFilter: ResearchOutputsFilter
     $eventFilter: EventsFilter
-    $userId: String!
     $researchOutputVersionsFilter: ResearchOutputVersionsFilter
     $manuscriptFilter: ManuscriptsFilter
   ) {
@@ -34,7 +33,29 @@ export const FETCH_REMINDERS = gql`
               id
             }
             displayName
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
+        }
+        project {
+          sys {
+            id
+          }
+          title
         }
         assignedUsersCollection(limit: 30) {
           items {
@@ -43,10 +64,13 @@ export const FETCH_REMINDERS = gql`
             }
           }
         }
-        versionsCollection(limit: 10) {
+        versionsCollection(limit: 10, order: count_ASC) {
           total
           items {
             count
+            sys {
+              firstPublishedAt
+            }
             createdBy {
               sys {
                 id
@@ -107,12 +131,34 @@ export const FETCH_REMINDERS = gql`
         createdDate
         documentType
         title
+        project {
+          sys {
+            id
+          }
+          title
+        }
         teamsCollection(limit: 10) {
           items {
             sys {
               id
             }
             displayName
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
         workingGroup {
@@ -159,10 +205,82 @@ export const FETCH_REMINDERS = gql`
             }
           }
         }
+        calendar {
+          linkedFrom {
+            interestGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
       }
     }
+    researchOutputVersionsCollection(where: $researchOutputVersionsFilter) {
+      items {
+        sys {
+          id
+          publishedAt
+        }
+        linkedFrom {
+          researchOutputsCollection(limit: 1) {
+            items {
+              sys {
+                id
+              }
+              title
+              documentType
+              project {
+                sys {
+                  id
+                }
+                title
+              }
+              teamsCollection(limit: 10) {
+                items {
+                  sys {
+                    id
+                  }
+                  displayName
+                  linkedFrom {
+                    projectMembershipCollection(limit: 1) {
+                      items {
+                        linkedFrom {
+                          projectsCollection(limit: 1) {
+                            items {
+                              sys {
+                                id
+                              }
+                              title
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              workingGroup {
+                sys {
+                  id
+                }
+                title
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_REMINDERS_USER = gql`
+  query FetchRemindersUser($userId: String!) {
     users(id: $userId) {
       role
+      techSupport
       openScienceTeamMember
       teamsCollection {
         items {
@@ -205,6 +323,22 @@ export const FETCH_REMINDERS = gql`
             }
           }
         }
+        projectMembershipCollection(limit: 10) {
+          items {
+            role
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  sys {
+                    id
+                  }
+                  title
+                  projectType
+                }
+              }
+            }
+          }
+        }
         eventSpeakersCollection(limit: 100) {
           items {
             team {
@@ -225,36 +359,147 @@ export const FETCH_REMINDERS = gql`
             }
           }
         }
-      }
-    }
-    researchOutputVersionsCollection(where: $researchOutputVersionsFilter) {
-      items {
-        sys {
-          id
-          publishedAt
-        }
-        linkedFrom {
-          researchOutputsCollection(limit: 1) {
-            items {
-              sys {
-                id
-              }
-              title
-              documentType
-              teamsCollection(limit: 10) {
+        interestGroupLeadersCollection(limit: 10) {
+          items {
+            role
+            inactiveSinceDate
+            linkedFrom {
+              interestGroupsCollection(limit: 1) {
                 items {
                   sys {
                     id
                   }
-                  displayName
+                  active
+                  name
                 }
               }
-              workingGroup {
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MILESTONE_REMINDERS = gql`
+  query FetchMilestoneReminders(
+    $milestoneFilter: MilestonesFilter
+    $limit: Int!
+    $skip: Int!
+  ) {
+    milestonesCollection(
+      where: $milestoneFilter
+      limit: $limit
+      skip: $skip
+      order: [sys_publishedAt_DESC]
+    ) {
+      total
+      items {
+        sys {
+          id
+          firstPublishedAt
+          publishedAt
+        }
+        description
+        status
+        bulkImported
+        statusUpdatedAt
+        statusUpdatedBy {
+          sys {
+            id
+          }
+        }
+        outputsLinkedAt
+        outputsLinkedBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+        }
+        relatedArticlesCollection(limit: 1) {
+          total
+        }
+        linkedFrom {
+          aimsCollection(limit: 10) {
+            total
+            items {
+              sys {
+                id
+              }
+              linkedFrom {
+                supplementGrantCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MILESTONE_REMINDER_PROJECTS = gql`
+  query FetchMilestoneReminderProjects(
+    $projectFilter: ProjectsFilter
+    $limit: Int!
+    $skip: Int!
+  ) {
+    projectsCollection(where: $projectFilter, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        title
+        projectType
+        originalGrantAimsCollection(limit: 50) {
+          total
+          items {
+            sys {
+              id
+            }
+          }
+        }
+        supplementGrant {
+          aimsCollection(limit: 50) {
+            total
+            items {
+              sys {
+                id
+              }
+            }
+          }
+        }
+        membersCollection(limit: 100) {
+          total
+          items {
+            role
+            projectMember {
+              __typename
+              ... on Users {
                 sys {
                   id
                 }
-                title
               }
+              ... on Teams {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+        scientificFacilitatorCollection(limit: 10) {
+          total
+          items {
+            sys {
+              id
             }
           }
         }
@@ -289,7 +534,16 @@ export const FETCH_TEAM_PROJECT_MANAGER = gql`
 export const manuscriptsCollectionQueryFragment = gql`
   fragment ManuscriptsCollectionContent on ManuscriptsCollection {
     items {
+      sys {
+        id
+      }
       title
+      project {
+        sys {
+          id
+        }
+        title
+      }
       assignedUsersCollection(limit: 30) {
         items {
           sys {
@@ -305,6 +559,22 @@ export const manuscriptsCollectionQueryFragment = gql`
                 id
               }
               displayName
+              linkedFrom {
+                projectMembershipCollection(limit: 1) {
+                  items {
+                    linkedFrom {
+                      projectsCollection(limit: 1) {
+                        items {
+                          sys {
+                            id
+                          }
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           firstAuthorsCollection(limit: 10) {

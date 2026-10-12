@@ -1,37 +1,39 @@
-import { network } from '@asap-hub/routing';
+import { ProjectType } from '@asap-hub/model';
+import { network, projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { useState } from 'react';
 
-import { Link, Switch } from '../atoms';
-import { lead, steel } from '../colors';
+import { Button, Link } from '../atoms';
+import { colour } from '../colors';
 import { chevronDownIcon, chevronUpIcon, InactiveBadgeIcon } from '../icons';
-import { EventTeamType, teamIcon } from '../organisms/shared-event-card';
-import { chevronButtonStyles } from '../organisms/shared-event-card-styles';
 import {
-  mobileScreen,
-  rem,
-  tabletScreen,
-  vminLinearCalcClamped,
-} from '../pixels';
-import SpeakerUserRow from './SpeakerUserRow';
+  defaultVisibleSpeakers,
+  EventTeamType,
+  projectIcon,
+  teamIcon,
+} from '../organisms/shared-event-card';
+import { chevronButtonStyles } from '../organisms/shared-event-card-styles';
+import { groupFindings, showMoreLabel } from '../organisms/speaker-group';
+import { mobileScreen, rem } from '../pixels';
+import SpeakerUserRow, {
+  findingsColumnStyles,
+  findingsIcon,
+  findingsPillStyles,
+  trailingColumnsStyles,
+} from './SpeakerUserRow';
 
 const wrapperStyles = css({
   display: 'flex',
   flexDirection: 'column',
   paddingTop: rem(16),
   paddingBottom: rem(16),
-  borderBottom: `1px solid ${steel.rgb}`,
-  '&:first-of-type': {
-    paddingTop: 0,
-  },
+  borderBottom: `1px solid ${colour.border.tertiary}`,
+  // Padding stays: it is half of the 32 between sections.
   '&:last-of-type': {
-    paddingBottom: 0,
     borderBottom: 'none',
   },
 });
 
-// [name+counter] and [switch+chevron], per Figma's auto-layout. `gap` is a
-// floor — space-between still pushes the switch/chevron group flush right
-// whenever there's room.
 const headerStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -39,32 +41,47 @@ const headerStyles = css({
   gap: rem(24),
 });
 
-// No `overflow`/`minWidth: 0` — team names never truncate. A name wider than
-// the card just scrolls (overflowX: auto on groupsCardStyles), matching
-// EditEventAttendanceModal. Spacing between icon/name/badge/count comes from
-// `gap`, not a literal space character — a flex container drops anonymous
-// all-whitespace text nodes (see EventSpeakers.tsx's teamInfoStyles, the
-// same fix applied there).
+// On mobile the findings pill and chevron move under the name; without the
+// pill the chevron stays on the name's line.
+const stackedHeaderStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: rem(8),
+  },
+});
+
+const groupTrailingStyles = css([
+  trailingColumnsStyles,
+  {
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      alignSelf: 'stretch',
+      justifyContent: 'space-between',
+    },
+  },
+]);
+
+// Team names never truncate; a name wider than the card scrolls it. Spacing
+// comes from `gap`, not spaces — a flex container drops whitespace text nodes.
 const labelStyles = css({
   display: 'flex',
   alignItems: 'center',
   flexShrink: 0,
-  gap: rem(8),
-  fontSize: rem(17),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    // Figma's "Caption/C1" mobile type scale for the team name + counter.
-    fontSize: rem(14),
-    lineHeight: rem(16),
-    '> svg': { display: 'none' },
-  },
+  fontSize: rem(16),
+  lineHeight: 24 / 16,
+  // `em` against the 16px label text, since `rem()` assumes 17px.
+  gap: `${8 / 16}em`,
   '> svg': {
-    width: rem(24),
-    height: rem(24),
+    width: `${24 / 16}em`,
+    height: `${24 / 16}em`,
     flexShrink: 0,
   },
 });
 
-const leadTextStyles = css({ color: lead.rgb, fontWeight: 400 });
+const leadTextStyles = css({
+  color: colour.foreground.tertiary,
+  fontWeight: 400,
+});
 
 const teamNameStyles = css({ whiteSpace: 'nowrap', fontWeight: 400 });
 
@@ -77,34 +94,17 @@ const inactiveBadgeStyles = css({
 
 const countStyles = css([leadTextStyles, { flexShrink: 0 }]);
 
-// Scales with the viewport instead of jumping at a breakpoint, bottoming
-// out at 12px (Figma's own spacing annotation for this gap).
-const actionsGap = vminLinearCalcClamped(
-  mobileScreen,
-  12,
-  tabletScreen,
-  24,
-  'px',
-);
-
-const actionsStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  flexShrink: 0,
-  gap: actionsGap,
-});
-
 const nestedListStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(16),
   marginTop: rem(16),
-  paddingBottom: rem(12),
-  paddingLeft: rem(32),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    gap: rem(24),
-    paddingLeft: rem(12),
-  },
+  paddingLeft: rem(40),
+});
+
+const showMoreStyles = css({
+  display: 'flex',
+  paddingLeft: rem(40),
 });
 
 export type SpeakerTeamRowUser = {
@@ -113,20 +113,25 @@ export type SpeakerTeamRowUser = {
   readonly avatarUrl?: string;
   readonly roles: string[];
   readonly isAlumni?: boolean;
+  readonly isExternal?: boolean;
+  readonly preliminaryFindingsShared: boolean;
 };
 
 type SpeakerTeamRowProps = {
-  readonly variant?: 'team' | 'external';
+  readonly variant?: 'team' | 'project' | 'external';
   readonly teamId?: string;
   readonly teamType?: EventTeamType;
   readonly isTeamInactive?: boolean;
+  readonly projectId?: string;
+  readonly projectType?: ProjectType;
   readonly label: string;
   readonly users: ReadonlyArray<SpeakerTeamRowUser>;
-  readonly preliminaryFindingsShared: boolean;
+  readonly showShared?: boolean;
+  readonly showCount?: boolean;
   readonly expanded: boolean;
   readonly onToggleExpanded: () => void;
-  readonly onToggleShared: () => void;
-  readonly onRemoveUser: (userId: string) => void;
+  readonly onToggleUserShared?: (userId: string, shared: boolean) => void;
+  readonly onRemoveUser?: (userId: string) => void;
   readonly enabled?: boolean;
 };
 
@@ -135,72 +140,119 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
   teamId,
   teamType,
   isTeamInactive,
+  projectId,
+  projectType,
   label,
   users,
-  preliminaryFindingsShared,
+  showShared = true,
+  showCount = true,
   expanded,
   onToggleExpanded,
-  onToggleShared,
+  onToggleUserShared,
   onRemoveUser,
   enabled = true,
-}) => (
-  <div css={wrapperStyles} role="listitem">
-    <div css={headerStyles}>
-      <span css={labelStyles}>
-        {variant === 'team' && teamIcon(teamType)}
-        {variant === 'team' && teamId ? (
-          <Link href={network({}).teams({}).team({ teamId }).$}>
-            <span css={teamNameStyles}>{label}</span>
-          </Link>
-        ) : (
-          <span css={variant === 'team' ? teamNameStyles : externalLabelStyles}>
-            {label}
-          </span>
-        )}
-        {variant === 'team' && isTeamInactive && (
-          <span css={inactiveBadgeStyles}>
-            <InactiveBadgeIcon />
-          </span>
-        )}
-        <span css={countStyles}>({users.length})</span>
-      </span>
-      <span css={actionsStyles}>
-        <Switch
-          checked={preliminaryFindingsShared}
-          enabled={enabled}
-          uncheckedColor="error"
-          ariaLabel={`${label} preliminary findings shared`}
-          onClick={onToggleShared}
-        />
-        <button
-          type="button"
-          aria-label={expanded ? `Collapse ${label}` : `Expand ${label}`}
-          aria-expanded={expanded}
-          onClick={onToggleExpanded}
-          css={chevronButtonStyles}
-        >
-          {expanded ? chevronUpIcon : chevronDownIcon}
-        </button>
-      </span>
-    </div>
-    {expanded && (
-      <div css={nestedListStyles} role="list">
-        {users.map((user) => (
-          <SpeakerUserRow
-            key={user.id}
-            displayName={user.displayName}
-            avatarUrl={user.avatarUrl}
-            roles={variant === 'team' ? user.roles : undefined}
-            userId={variant === 'team' ? user.id : undefined}
-            isAlumni={variant === 'team' ? user.isAlumni : undefined}
-            isExternal={variant === 'external'}
-            onRemove={() => onRemoveUser(user.id)}
-            enabled={enabled}
-          />
-        ))}
+}) => {
+  const [showAllUsers, setShowAllUsers] = useState(false);
+  const { shared, total, hasAnyShared } = groupFindings({ users });
+  const visibleUsers = showAllUsers
+    ? users
+    : users.slice(0, defaultVisibleSpeakers);
+  const hiddenUsers = users.length - visibleUsers.length;
+  // The project route tree is split by type, so there is no path without one.
+  const href =
+    variant === 'project'
+      ? projectId && projectType && projectRouteByType[projectType](projectId).$
+      : variant === 'team' &&
+        teamId &&
+        network({}).teams({}).team({ teamId }).$;
+
+  return (
+    <div css={wrapperStyles} role="listitem">
+      <div css={[headerStyles, showShared && stackedHeaderStyles]}>
+        <span css={labelStyles}>
+          {variant === 'team' && teamIcon(teamType)}
+          {variant === 'project' && projectIcon(projectType)}
+          {href ? (
+            <Link href={href} openInNewTab>
+              <span css={teamNameStyles}>{label}</span>
+            </Link>
+          ) : (
+            <span
+              css={
+                variant === 'external' ? externalLabelStyles : teamNameStyles
+              }
+            >
+              {label}
+            </span>
+          )}
+          {variant === 'team' && isTeamInactive && (
+            <span css={inactiveBadgeStyles}>
+              <InactiveBadgeIcon />
+            </span>
+          )}
+          {showCount && <span css={countStyles}>({users.length})</span>}
+        </span>
+        <span css={groupTrailingStyles}>
+          {showShared && (
+            <span css={findingsColumnStyles}>
+              <span css={findingsPillStyles(hasAnyShared)}>
+                {findingsIcon(hasAnyShared, colour.foreground.tertiary)}
+                {`${shared} of ${total} shared`}
+              </span>
+            </span>
+          )}
+          <button
+            type="button"
+            aria-label={expanded ? `Collapse ${label}` : `Expand ${label}`}
+            aria-expanded={expanded}
+            onClick={() => {
+              setShowAllUsers(false);
+              onToggleExpanded();
+            }}
+            css={chevronButtonStyles}
+          >
+            {expanded ? chevronUpIcon : chevronDownIcon}
+          </button>
+        </span>
       </div>
-    )}
-  </div>
-);
+      {expanded && (
+        <div css={nestedListStyles} role="list">
+          {visibleUsers.map((user) => {
+            const isExternalUser = variant === 'external' || !!user.isExternal;
+            return (
+              <SpeakerUserRow
+                key={user.id}
+                displayName={user.displayName}
+                avatarUrl={user.avatarUrl}
+                roles={isExternalUser ? undefined : user.roles}
+                userId={isExternalUser ? undefined : user.id}
+                isAlumni={isExternalUser ? undefined : user.isAlumni}
+                isExternal={isExternalUser}
+                preliminaryFindingsShared={user.preliminaryFindingsShared}
+                showShared={showShared}
+                onToggleShared={
+                  onToggleUserShared
+                    ? (nextShared) => onToggleUserShared(user.id, nextShared)
+                    : undefined
+                }
+                onRemove={
+                  onRemoveUser ? () => onRemoveUser(user.id) : undefined
+                }
+                enabled={enabled}
+              />
+            );
+          })}
+        </div>
+      )}
+      {expanded && hiddenUsers > 0 && (
+        <span css={showMoreStyles}>
+          <Button linkStyle onClick={() => setShowAllUsers(true)}>
+            {`${showMoreLabel(hiddenUsers, 'speaker')} in ${label}`}
+          </Button>
+        </span>
+      )}
+    </div>
+  );
+};
 
 export default SpeakerTeamRow;

@@ -3,11 +3,14 @@ import {
   ProjectDetail,
   ProjectMember,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
-import { projectRouteByType } from '@asap-hub/routing';
+import {
+  dashboard,
+  projectListRouteByType,
+  projectRouteByType,
+} from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
-import { lead } from '../colors';
+import { colour } from '../colors';
 import {
   googleDriveIcon,
   DiscoveryTeamIcon,
@@ -25,6 +28,7 @@ import {
 } from '../icons';
 import { createMailTo } from '../mail';
 import {
+  Breadcrumbs,
   UsersList,
   TabNav,
   ProjectDuration,
@@ -88,7 +92,7 @@ const metadataRowStyles = css({
   alignItems: 'flex-start',
   gap: rem(8),
   fontSize: rem(17),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 const iconContainerStyles = css({
   display: 'flex',
@@ -108,7 +112,7 @@ const iconStyles = css({
 });
 
 const teamLinkStyles = css({
-  color: '#00A650',
+  color: colour.foreground.brand,
   fontWeight: 500,
   textDecoration: 'none',
   '&:hover': {
@@ -146,8 +150,10 @@ type ProjectDetailHeaderProps = ProjectDetail & {
   readonly aboutHref: string;
   readonly workspaceHref?: string;
   readonly milestonesHref: string;
+  readonly complianceHref?: string;
   readonly outputsHref?: string;
   readonly draftOutputsHref?: string;
+  readonly manuscriptsCount?: number;
   readonly outputsCount?: number;
   readonly draftOutputsCount?: number;
   readonly canShareOutput?: boolean;
@@ -177,16 +183,18 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     aboutHref,
     workspaceHref,
     milestonesHref,
+    complianceHref,
     outputsHref,
     draftOutputsHref,
+    manuscriptsCount,
     outputsCount,
     draftOutputsCount,
     canShareOutput = false,
   } = project;
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const route = projectRouteByType[project.projectType](project.id);
+
+  const projectListHref = projectListRouteByType[project.projectType]().$;
 
   const membersWithHref =
     'members' in project ? project.members?.map(withMemberHref) : undefined;
@@ -204,20 +212,35 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
       )}
       <header>
         <PageInfoContainer
+          breadcrumbs={
+            <Breadcrumbs
+              homeHref={dashboard({}).$}
+              items={[
+                { label: `${project.projectType}s`, href: projectListHref },
+                { label: project.title },
+              ]}
+            />
+          }
           nav={
             <TabNav>
               <TabLink href={aboutHref}>About</TabLink>
               <TabLink href={milestonesHref}>Milestones</TabLink>
-              {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
+              {workspaceHref ? (
                 <TabLink href={workspaceHref}>Workspace</TabLink>
               ) : null}
-              {isProjectOutputsEnabled && outputsHref ? (
+              {complianceHref ? (
+                <TabLink href={complianceHref}>
+                  Compliance
+                  {manuscriptsCount !== undefined && ` (${manuscriptsCount})`}
+                </TabLink>
+              ) : null}
+              {outputsHref ? (
                 <TabLink href={outputsHref}>
                   Outputs
                   {outputsCount !== undefined && ` (${outputsCount})`}
                 </TabLink>
               ) : null}
-              {isProjectOutputsEnabled && draftOutputsHref ? (
+              {draftOutputsHref ? (
                 <TabLink href={draftOutputsHref}>
                   Draft Outputs
                   {draftOutputsCount !== undefined && ` (${draftOutputsCount})`}
@@ -271,7 +294,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
                 </div>
               )}
 
-              {isProjectOutputsEnabled && canShareOutput && (
+              {canShareOutput && (
                 <div css={css({ marginLeft: 'auto' })}>
                   <DropdownButton
                     noMargin

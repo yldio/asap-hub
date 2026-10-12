@@ -1,7 +1,12 @@
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  EventResponse,
+  ListEventResponse,
+  TeamListItemResponse,
+} from '@asap-hub/model';
 import {
   createEventResponse,
   createListEventResponse,
+  createTeamListItemResponse,
 } from '@asap-hub/fixtures';
 
 export const getEvent = jest.fn(
@@ -15,4 +20,15 @@ export const getEvents = jest.fn(
   async (): Promise<ListEventResponse> => ({
     ...createListEventResponse(2),
   }),
+);
+
+export const patchEvent = jest.fn(
+  async (id: string): Promise<EventResponse> => ({
+    ...createEventResponse(),
+    id,
+  }),
+);
+
+export const getTeamsForMatching = jest.fn(
+  async (): Promise<TeamListItemResponse[]> => [createTeamListItemResponse()],
 );

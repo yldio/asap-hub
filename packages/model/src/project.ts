@@ -320,6 +320,41 @@ export const isProjectLead = (
   return false;
 };
 
+export const projectHasLead = (project: Project): boolean => {
+  if (project.projectType === 'Trainee Project') {
+    return project.members.some((m) =>
+      (traineeProjectLeadRoles as readonly string[]).includes(m.role ?? ''),
+    );
+  }
+
+  if (
+    project.projectType === 'Resource Project' &&
+    !project.teamId &&
+    project.members
+  ) {
+    return project.members.some((m) =>
+      (projectLeadMemberRoles as readonly string[]).includes(m.role ?? ''),
+    );
+  }
+
+  return false;
+};
+
+export const canPublishProjectOutput = (
+  userId: string,
+  userTeams: ReadonlyArray<{ id: string; role: TeamRole }>,
+  project: Project,
+): boolean => {
+  if (isProjectLead(userId, userTeams, project)) {
+    return true;
+  }
+
+  if ('teamId' in project && project.teamId) {
+    return false;
+  }
+
+  return !projectHasLead(project);
+};
 /**
  * Determines if a user is a member of a project.
  *

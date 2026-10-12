@@ -99,6 +99,19 @@ export const getUserRole = (
   return isUserActiveMember ? 'Member' : 'None';
 };
 
+export const hasResearchOutputDraftAccess = (
+  user: UserInput,
+  associations: {
+    teams?: string[];
+    workingGroups?: string[];
+    projects?: string[];
+  },
+): boolean =>
+  getUserRole(user, 'teams', associations.teams ?? []) !== 'None' ||
+  getUserRole(user, 'workingGroups', associations.workingGroups ?? []) !==
+    'None' ||
+  getUserRole(user, 'projects', associations.projects ?? []) !== 'None';
+
 export const hasRequestForReviewPermission = (userRole: UserRole): boolean =>
   userRole === 'Member';
 

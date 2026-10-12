@@ -9,7 +9,7 @@ import type {
 
 const user: User = {
   created_at: '2020-08-17T14:01:53.691Z',
-  email: 'joao.tiago@yld.io',
+  email: 'joao.tiago@example.com',
   email_verified: true,
   family_name: 'Tiago',
   given_name: 'Joao',

@@ -369,6 +369,6 @@ it('handles server error for working groups tab', async () => {
   await waitFor(() => {
     expect(mockGetWorkingGroups).toHaveBeenCalled();
   });
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   await waitFor(() => expect(spy).toHaveBeenCalled());
 });

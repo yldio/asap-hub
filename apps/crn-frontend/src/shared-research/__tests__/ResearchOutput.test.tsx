@@ -6,6 +6,8 @@ import { sharedResearch } from '@asap-hub/routing';
 import * as flags from '@asap-hub/flags';
 import {
   createResearchOutputResponse,
+  createTeamResponse,
+  createTeamResponseMembers,
   createUserResponse,
 } from '@asap-hub/fixtures';
 
@@ -19,12 +21,15 @@ import { User } from '@asap-hub/auth';
 
 import type {
   ResearchOutputResponse,
+  TeamMember,
+  TeamResponse,
   TraineeProjectDetail,
 } from '@asap-hub/model';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import {
   getManuscriptVersionByManuscriptId,
+  getTeam,
   updateTeamResearchOutput,
 } from '../../network/teams/api';
 import { getProject } from '../../projects/api';
@@ -70,6 +75,8 @@ const mockGetManuscriptVersionByManuscriptId =
   >;
 
 const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+
+const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 
 const projectId = 'project-1';
 
@@ -252,6 +259,56 @@ describe('a grant document research output', () => {
       screen.getByRole('heading', { name: /Share Team Bioinformatics/i }),
     ).toBeInTheDocument();
     expect(screen.getByText('Save')).toBeVisible();
+  });
+});
+
+describe('a grant document with grant data', () => {
+  const grantDocumentOutput: ResearchOutputResponse = {
+    ...createResearchOutputResponse(),
+    id,
+    documentType: 'Grant Document',
+    grantDocument: {
+      grantType: 'original',
+      project: {
+        id: 'project-1',
+        title: 'Grant Project',
+        projectType: 'Discovery Project',
+      },
+      original: {
+        title: 'Original grant',
+        endDate: '2020-01-01T00:00:00.000Z',
+      },
+    },
+  };
+
+  beforeEach(() => {
+    mockGetResearchOutput.mockResolvedValue(grantDocumentOutput);
+  });
+
+  it('keeps the current layout while STAGING_MODE is disabled', async () => {
+    flags.disable('STAGING_MODE');
+    await renderComponent(researchOutputRoute.$);
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: grantDocumentOutput.title,
+      }),
+    ).toBeVisible();
+    expect(screen.queryByText('Project Output')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('The funding period for this grant has closed.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders the grant layout and the closed toast when STAGING_MODE is enabled', async () => {
+    flags.enable('STAGING_MODE');
+    await renderComponent(researchOutputRoute.$);
+
+    expect(screen.getByText('Project Output')).toBeVisible();
+    expect(
+      screen.getByText('The funding period for this grant has closed.'),
+    ).toBeVisible();
   });
 });
 
@@ -499,6 +556,178 @@ describe('a project research output', () => {
     );
 
     expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+
+  it('lets a member publish a draft when the project has no lead', async () => {
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+  });
+
+  it('lets the project lead publish a draft', async () => {
+    mockGetProject.mockResolvedValue({
+      ...project,
+      members: [
+        {
+          id: projectMember.id,
+          displayName: 'Lead Member',
+          role: 'Independent Project - Lead',
+        },
+      ],
+    });
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+  });
+
+  it('lets a non-lead member request review but not publish a draft when the project has a lead', async () => {
+    mockGetProject.mockResolvedValue({
+      ...project,
+      members: [
+        {
+          id: 'other-lead',
+          displayName: 'Other Lead',
+          role: 'Independent Project - Lead',
+        },
+        {
+          id: projectMember.id,
+          displayName: 'Member',
+          role: 'Independent Project - Mentor',
+        },
+      ],
+    });
+    mockGetResearchOutput.mockResolvedValue(projectOutput);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      projectMember,
+    );
+
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+    expect(queryByText('Ready for Review')).toBeVisible();
+  });
+});
+
+describe('a team-based project research output', () => {
+  const [baseTeamMember] = createTeamResponseMembers({
+    teamMembers: 1,
+  }) as [TeamMember];
+
+  const teamBasedProjectOutput: ResearchOutputResponse = {
+    ...createResearchOutputResponse(),
+    id,
+    documentType: 'Article',
+    publishingEntity: 'Team',
+    workingGroups: undefined,
+    published: false,
+    project: undefined,
+    teams: [
+      {
+        id: 't0',
+        displayName: 'Team ASAP',
+        teamType: 'Discovery Team',
+        project: {
+          id: projectId,
+          title: project.title,
+          projectType: 'Trainee Project',
+          projectId: 'TP1',
+        },
+      },
+    ],
+  };
+
+  const teamMemberUser: User = {
+    ...defaultUser,
+    teams: [{ id: 't0', displayName: 'Team ASAP', roles: ['Key Personnel'] }],
+  };
+
+  const teamWithActiveProjectManager: TeamResponse = {
+    ...createTeamResponse(),
+    id: 't0',
+    members: [
+      {
+        ...baseTeamMember,
+        role: 'Project Manager',
+        alumniSinceDate: undefined,
+        inactiveSinceDate: undefined,
+      },
+    ],
+  };
+
+  const teamWithoutActiveProjectManager: TeamResponse = {
+    ...createTeamResponse(),
+    id: 't0',
+    members: [{ ...baseTeamMember, role: 'Key Personnel' }],
+  };
+
+  it('lets a member publish a draft when the team has no active project manager', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      teamMemberUser,
+    );
+
+    expect(queryByText('Publish')).toBeVisible();
+    expect(
+      queryByText(/Any project member can publish this output\./i),
+    ).toBeVisible();
+  });
+
+  it('lets a non-manager member request review but not publish when the team has an active project manager', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithActiveProjectManager);
+
+    const { queryByText } = await renderComponent(
+      researchOutputRoute.$,
+      teamMemberUser,
+    );
+
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+    expect(queryByText('Ready for Review')).toBeVisible();
+    expect(
+      queryByText(/Only the project manager can publish this output\./i),
+    ).toBeVisible();
+  });
+
+  it('requires authors when editing a team-based project Article output', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(await screen.findByLabelText(/Authors\(required\)/i)).toBeVisible();
+    expect(
+      screen.queryByLabelText(/Authors\(optional\)/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows a Project header when editing a team-based project output', async () => {
+    mockGetResearchOutput.mockResolvedValue(teamBasedProjectOutput);
+    mockGetTeam.mockResolvedValue(teamWithoutActiveProjectManager);
+
+    await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      defaultUser,
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: /Share a Project Article/i }),
+    ).toBeVisible();
   });
 });
 

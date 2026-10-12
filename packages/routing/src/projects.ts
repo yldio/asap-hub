@@ -33,6 +33,7 @@ const createProjectRoute = () => {
     },
   );
   const milestones = route('/milestones', {}, {});
+  const compliance = route('/compliance', {}, {});
   const outputs = route('/outputs', {}, {});
   const draftOutputs = route('/draft-outputs', {}, {});
   const createOutput = route(
@@ -49,6 +50,7 @@ const createProjectRoute = () => {
       about,
       workspace,
       milestones,
+      compliance,
       outputs,
       draftOutputs,
       createOutput,
@@ -77,6 +79,12 @@ export const projectRouteByType = {
     projects({}).resourceProjects({}).resourceProject({ projectId }),
   'Trainee Project': (projectId: string) =>
     projects({}).traineeProjects({}).traineeProject({ projectId }),
+} as const;
+
+export const projectListRouteByType = {
+  'Discovery Project': () => projects({}).discoveryProjects({}),
+  'Resource Project': () => projects({}).resourceProjects({}),
+  'Trainee Project': () => projects({}).traineeProjects({}),
 } as const;
 
 export default projects;

@@ -66,6 +66,9 @@ export const apiFunctions: AWS['functions'] = {
     },
   },
   auth0FetchByCode: {
+    // Hits the 16s provider default on slow upstream calls, breaking login;
+    // 29 stays within API Gateway's 30s integration limit.
+    timeout: 29,
     handler: './src/handlers/webhooks/fetch-by-code/handler.handler',
     events: [
       {

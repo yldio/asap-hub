@@ -11,7 +11,7 @@ import type {
 
 const user: User = {
   created_at: '2020-08-17T14:01:53.691Z',
-  email: 'joao.tiago@yld.io',
+  email: 'joao.tiago@example.com',
   email_verified: true,
   family_name: 'Tiago',
   given_name: 'Joao',
@@ -125,7 +125,7 @@ describe('For an ASAP KR-Sync login', () => {
     displayName: 'Joao Tiago',
     firstName: 'Joao',
     lastName: 'Tiago',
-    email: 'joao.tiago@yld.io',
+    email: 'joao.tiago@example.com',
     id: 'myRandomId123',
     lastModifiedDate: '2020-08-21T14:23:31.924Z',
     createdDate: '2020-08-21T14:23:31.924Z',
@@ -143,6 +143,7 @@ describe('For an ASAP KR-Sync login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
 
@@ -387,7 +388,7 @@ describe('For a CRN login', () => {
     displayName: 'Joao Tiago',
     firstName: 'Joao',
     lastName: 'Tiago',
-    email: 'joao.tiago@yld.io',
+    email: 'joao.tiago@example.com',
     id: 'myRandomId123',
     lastModifiedDate: '2020-08-21T14:23:31.924Z',
     createdDate: '2020-08-21T14:23:31.924Z',
@@ -405,6 +406,7 @@ describe('For a CRN login', () => {
     projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
+    techSupport: false,
     algoliaApiKey: 'test-api-key',
   };
   it('adds the user metadata on successful fetch for crn', async () => {
@@ -566,7 +568,7 @@ describe('For a GP2 login', () => {
     displayName: 'Joao Tiago',
     firstName: 'Joao',
     lastName: 'Tiago',
-    email: 'joao.tiago@yld.io',
+    email: 'joao.tiago@example.com',
     id: 'myRandomId123',
     createdDate: '2020-08-21T14:23:31.924Z',
     role: 'Trainee',

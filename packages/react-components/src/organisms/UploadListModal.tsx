@@ -3,27 +3,20 @@ import { css } from '@emotion/react';
 import { useRef, useState } from 'react';
 
 import { Button, Headline2, Link, Paragraph, Tag } from '../atoms';
-import {
-  error500,
-  error900,
-  fern,
-  lead,
-  neutral1000,
-  pearl,
-  silver,
-  steel,
-} from '../colors';
+import { colour } from '../colors';
 import {
   binIcon,
   chevronDownIcon,
+  InactiveBadgeIcon,
   crossIcon,
   crossSmallIcon,
   chevronLeftIcon,
   plusIcon,
   tickSmallIcon,
 } from '../icons';
-import { ConfirmableModalFooter, Modal } from '../molecules';
+import { ConfirmableModalFooter, Modal, TooltipInfo } from '../molecules';
 import { rem } from '../pixels';
+import { pluralizeTeams } from '../utils/events';
 import {
   EventAttendanceTeam,
   EventAttendanceTeamType,
@@ -38,6 +31,8 @@ export type UploadListSuggestion = {
   teamId: string;
   teamName: string;
   teamType?: EventAttendanceTeamType;
+  attended: boolean;
+  isTeamInactive?: boolean;
 };
 
 export type UploadListUnmatchedTeam = {
@@ -46,8 +41,8 @@ export type UploadListUnmatchedTeam = {
 };
 
 export type UploadListResult = {
+  // Every resolved Hub Team, new or already on the table; the modal splits them.
   matched: EventAttendanceTeam[];
-  alreadyInCount: number;
   unmatched: UploadListUnmatchedTeam[];
 };
 
@@ -65,6 +60,9 @@ type UploadListModalProps = {
     files: File[],
   ) => void | Promise<void>;
   onBack: () => void;
+  // Team ids already on the table (including unsaved additions), shown as
+  // "already in" rather than new.
+  currentTeamIds?: ReadonlySet<string>;
   maxFileSizeMb?: number;
   accept?: string;
   initialFiles?: File[];
@@ -97,7 +95,7 @@ const titleStyles = css({
   fontSize: rem(26),
   fontWeight: 700,
   lineHeight: rem(32),
-  color: neutral1000.rgb,
+  color: colour.foreground.primary,
 });
 
 const headerIconStyles = css({
@@ -156,7 +154,7 @@ const addButtonStyles = css({
 
 const errorStyles = css({
   margin: 0,
-  color: error500.rgb,
+  color: colour.foreground.error,
   fontSize: rem(17),
   fontWeight: 400,
   lineHeight: rem(24),
@@ -169,12 +167,12 @@ const summaryStyles = css({
   flexWrap: 'wrap',
   fontSize: rem(17),
   lineHeight: rem(24),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const summaryStrongStyles = css({
   fontWeight: 700,
-  color: neutral1000.rgb,
+  color: colour.foreground.primary,
 });
 
 const summarySeparatorStyles = css({
@@ -184,9 +182,11 @@ const summarySeparatorStyles = css({
 
 const resultCardStyles = (enabled: boolean) =>
   css({
-    border: `1px solid ${steel.rgb}`,
+    border: `1px solid ${colour.border.tertiary}`,
     borderRadius: rem(8),
-    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    backgroundColor: enabled
+      ? colour.background.secondary
+      : colour.background.disabled,
     overflow: 'hidden',
   });
 
@@ -203,7 +203,7 @@ const sectionHeaderStyles = css({
   fontSize: rem(17),
   lineHeight: rem(24),
   textAlign: 'left',
-  color: neutral1000.rgb,
+  color: colour.foreground.primary,
 });
 
 const sectionHeaderLabelStyles = css({
@@ -218,7 +218,7 @@ const sectionHeaderLabelStyles = css({
 });
 
 const matchedLabelStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   fontWeight: 400,
   gap: rem(8),
   strong: {
@@ -227,10 +227,10 @@ const matchedLabelStyles = css({
 });
 
 const notMatchedLabelStyles = css({
-  color: error900.rgb,
+  color: colour.foreground.error,
   gap: rem(8),
   '> svg': {
-    fill: error900.rgb,
+    fill: colour.foreground.error,
   },
 });
 
@@ -246,7 +246,7 @@ const chevronStyles = (open: boolean) =>
   });
 
 const dividerStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
 const sectionBodyStyles = css({
@@ -267,7 +267,7 @@ const matchedTeamStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(8),
-  color: fern.rgb,
+  color: colour.foreground.brand,
   '> svg': {
     width: rem(24),
     height: rem(24),
@@ -276,7 +276,7 @@ const matchedTeamStyles = css({
 });
 
 const matchedTeamNameStyles = css({
-  color: fern.rgb,
+  color: colour.foreground.brand,
   fontWeight: 400,
 });
 
@@ -296,15 +296,15 @@ const unmatchedRowStyles = css({
 const unmatchedTextStyles = css({
   fontSize: rem(17),
   lineHeight: rem(24),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const unmatchedMetaStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const suggestionLinkStyles = css({
-  color: fern.rgb,
+  color: colour.foreground.brand,
 });
 
 const addSuggestionButtonStyles = css({
@@ -313,7 +313,7 @@ const addSuggestionButtonStyles = css({
   alignItems: 'center',
   gap: rem(8),
   lineHeight: rem(24),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   '> svg': {
     width: rem(24),
     height: rem(24),
@@ -323,9 +323,29 @@ const addSuggestionButtonStyles = css({
   ...buttonIconGapReset,
 });
 
+const emptyResultStyles = css({
+  margin: 0,
+  color: colour.foreground.tertiary,
+  fontSize: rem(17),
+  fontWeight: 400,
+  lineHeight: rem(24),
+});
+
+// Caption/C1 from the designs: four lines at 16px with nothing between them,
+// so the shared 6px row gap is dropped here.
+const formatTooltipStyles = css({
+  gap: 0,
+  paddingTop: 0,
+  paddingBottom: 0,
+  textAlign: 'left',
+  fontSize: rem(14),
+  fontWeight: 400,
+  lineHeight: rem(16),
+});
+
 const unmatchedHelpStyles = css({
   margin: 0,
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   fontSize: rem(14),
   fontWeight: 400,
   lineHeight: rem(24),
@@ -350,14 +370,31 @@ const suggestionToTeam = (
 ): EventAttendanceTeam => ({
   teamId: suggestion.teamId,
   teamName: suggestion.teamName,
-  attended: true,
+  attended: suggestion.attended,
   teamType: suggestion.teamType,
+  isTeamInactive: suggestion.isTeamInactive,
 });
+
+const dedupeByTeamId = (
+  teams: EventAttendanceTeam[],
+): EventAttendanceTeam[] => {
+  const seen = new Set<string>();
+  return teams.filter((team) => {
+    if (seen.has(team.teamId)) {
+      return false;
+    }
+    seen.add(team.teamId);
+    return true;
+  });
+};
+
+const noTeamIds: ReadonlySet<string> = new Set();
 
 const UploadListModal: React.FC<UploadListModalProps> = ({
   onUploadList,
   onAddAttendees,
   onBack,
+  currentTeamIds = noTeamIds,
   maxFileSizeMb = defaultMaxFileSizeMb,
   accept = defaultAccept,
   initialFiles = [],
@@ -384,7 +421,13 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const allowedExtensions = getAllowedExtensions(accept);
   const maxBytes = maxFileSizeMb * 1000 * 1000;
 
-  const runUpload = (nextFiles: File[]) => {
+  // selectionError is whatever the file selection itself decided (size or
+  // extension). It is restored on success so a successful parse clears only a
+  // previous read failure, not the warning about the files that were skipped.
+  const runUpload = (
+    nextFiles: File[],
+    selectionError: string | null = null,
+  ) => {
     setFiles(nextFiles);
     // A new file set invalidates the per-team edits made against the old result.
     setAddedSuggestionIds(new Set());
@@ -402,12 +445,14 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       .then((uploadResult) => {
         if (seq === uploadSeq.current) {
           setResult(uploadResult);
+          setError(selectionError);
           setIsUploading(false);
         }
       })
       .catch(() => {
         if (seq === uploadSeq.current) {
           setResult(null);
+          setError('Something went wrong reading this file. Please try again.');
           setIsUploading(false);
         }
       });
@@ -422,18 +467,16 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       (file) =>
         hasAllowedExtension(file, allowedExtensions) && file.size > maxBytes,
     );
+    let selectionError: string | null = null;
     if (tooLarge) {
-      setError(
-        `The file size exceeds the limit of ${maxFileSizeMb} MB. Please upload a smaller file.`,
-      );
+      selectionError = `The file size exceeds the limit of ${maxFileSizeMb} MB. Please upload a smaller file.`;
     } else if (valid.length < selected.length) {
-      setError('CSV or XLSX files only.');
-    } else {
-      setError(null);
+      selectionError = 'CSV or XLSX files only.';
     }
+    setError(selectionError);
     if (valid.length > 0) {
       setIsUploading(true);
-      runUpload([...files, ...valid]);
+      runUpload([...files, ...valid], selectionError);
     }
   };
 
@@ -451,25 +494,74 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   ): team is UploadListUnmatchedTeam & { suggestion: UploadListSuggestion } =>
     !!team.suggestion && addedSuggestionIds.has(team.suggestion.teamId);
 
+  const alreadyIn = result
+    ? result.matched.filter((team) => currentTeamIds.has(team.teamId))
+    : [];
+  const newMatchedCount = result ? result.matched.length - alreadyIn.length : 0;
+
+  const promotedTeams: EventAttendanceTeam[] = result
+    ? result.unmatched
+        .filter(isPromoted)
+        .map((team) => suggestionToTeam(team.suggestion))
+    : [];
+  const promotedUpdates = promotedTeams.filter((team) =>
+    currentTeamIds.has(team.teamId),
+  );
+  const promotedNew = promotedTeams.filter(
+    (team) => !currentTeamIds.has(team.teamId),
+  );
+
   const matchedTeams: EventAttendanceTeam[] = result
     ? [
-        ...result.matched.filter((team) => !removedMatchedIds.has(team.teamId)),
-        ...result.unmatched
-          .filter(isPromoted)
-          .map((team) => suggestionToTeam(team.suggestion)),
+        ...result.matched.filter(
+          (team) =>
+            !currentTeamIds.has(team.teamId) &&
+            !removedMatchedIds.has(team.teamId),
+        ),
+        ...promotedNew,
       ]
     : [];
+
+  const alreadyInCount = new Set([
+    ...alreadyIn.map((team) => team.teamId),
+    ...promotedUpdates.map((team) => team.teamId),
+  ]).size;
 
   const remainingUnmatched = result
     ? result.unmatched.filter((team) => !isPromoted(team))
     : [];
 
   const totalTeams = result
-    ? result.matched.length + result.alreadyInCount + result.unmatched.length
+    ? result.matched.length + result.unmatched.length
     : 0;
 
+  // A file that yields no names is reported as an upload error rather than as
+  // an empty result, so the counts line never reads "0 Teams".
+  const yieldedNothing = !!result && totalTeams === 0;
+  // A file or selection problem is the more specific cause, so it wins.
+  const shownError =
+    error ??
+    (yieldedNothing
+      ? 'No team names found. Check that the file has a Team Name column.'
+      : null);
+
+  const hasSections = matchedTeams.length > 0 || remainingUnmatched.length > 0;
+  // Describes the file, not the current view: once the user deletes the rows
+  // themselves there is nothing to explain, so no message is shown.
+  const alreadyInMessage =
+    alreadyInCount === 1
+      ? 'This team is already in the attendance table.'
+      : `All ${pluralizeTeams(
+          alreadyInCount,
+        )} in this list are already in the attendance table.`;
+  const emptyResultMessage = newMatchedCount === 0 ? alreadyInMessage : null;
+
   const isDirty = files.length > 0 || matchedTeams.length > 0;
-  const addEnabled = matchedTeams.length > 0 && !isSaving;
+  const addEnabled =
+    (matchedTeams.length > 0 ||
+      alreadyIn.length > 0 ||
+      promotedUpdates.length > 0) &&
+    !isSaving;
 
   const requestClose = () => {
     if (isDirty) {
@@ -482,7 +574,10 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
   const handleAddAttendees = async () => {
     setIsSaving(true);
     try {
-      await onAddAttendees(matchedTeams, files);
+      await onAddAttendees(
+        dedupeByTeamId([...matchedTeams, ...promotedUpdates, ...alreadyIn]),
+        files,
+      );
     } catch {
       // The caller surfaces the error; the modal only needs to unlock so the
       // user can retry or cancel instead of staying stuck on "saving".
@@ -522,9 +617,23 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
       </header>
 
       <div css={bodyStyles}>
-        <Paragraph noMargin accent="lead">
-          Add teams from a list. Matched teams are added and marked attended.
-          Teams already added are skipped. CSV or XLSX files only.
+        <Paragraph noMargin accent="tertiary">
+          Add teams from a list. Matched teams are added and marked attended. If
+          a team is already in your list, their attendance will be updated to
+          match the file. CSV or XLSX files only. What format does the file
+          need?
+          <TooltipInfo
+            openOnHover
+            floating
+            width={296}
+            background={colour.neutral[900]}
+            overrideTooltipStyles={formatTooltipStyles}
+          >
+            <span>Your file needs two columns.</span>
+            <span>For team names, use the header Team.</span>
+            <span>For attendance, use Attended.</span>
+            <span>Mark attendance as yes/no.</span>
+          </TooltipInfo>
         </Paragraph>
 
         <section css={uploadSectionStyles}>
@@ -571,160 +680,181 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
             {!isUploading && plusIcon}
             Add
           </Button>
-          {error && (
+          {shownError && (
             <p css={errorStyles} role="alert">
-              {error}
+              {shownError}
             </p>
           )}
         </section>
 
-        {result && (
+        {result && !yieldedNothing && (
           <div css={resultStyles}>
             <div css={summaryStyles}>
-              <span css={summaryStrongStyles}>{totalTeams} Teams</span>
+              <span css={summaryStrongStyles}>
+                {pluralizeTeams(totalTeams, true)}
+              </span>
               <span css={summarySeparatorStyles}>•</span>
-              <span>{result.matched.length} matched</span>
+              <span>{newMatchedCount} matched</span>
               <span css={summarySeparatorStyles}>•</span>
-              <span>{result.alreadyInCount} already in</span>
+              <span>{alreadyInCount} already in</span>
             </div>
 
-            <div css={resultCardStyles(!isCancelling)}>
-              {matchedTeams.length > 0 && (
-                <>
-                  <button
-                    type="button"
-                    css={sectionHeaderStyles}
-                    aria-expanded={matchedOpen}
-                    onClick={() => setMatchedOpen((open) => !open)}
-                  >
-                    <span css={[sectionHeaderLabelStyles, matchedLabelStyles]}>
-                      {tickSmallIcon}
-                      <span>
-                        <strong>{matchedTeams.length} teams</strong> will be
-                        added and marked if attended
-                      </span>
-                    </span>
-                    <span css={chevronStyles(matchedOpen)}>
-                      {chevronDownIcon}
-                    </span>
-                  </button>
-                  {matchedOpen && (
-                    <div css={sectionBodyStyles}>
-                      {matchedTeams.map((team) => (
-                        <div key={team.teamId} css={matchedRowStyles}>
-                          <span css={matchedTeamStyles}>
-                            {teamIcon(team.teamType)}
-                            <Link
-                              href={
-                                network({})
-                                  .teams({})
-                                  .team({ teamId: team.teamId }).$
-                              }
-                            >
-                              <span css={matchedTeamNameStyles}>
-                                {team.teamName}
-                              </span>
-                            </Link>
-                          </span>
-                          <Button
-                            noMargin
-                            enabled={!isCancelling}
-                            aria-label={`Remove ${team.teamName}`}
-                            onClick={() => removeMatchedTeam(team.teamId)}
-                            overrideStyles={deleteButtonStyles(!isCancelling)}
-                          >
-                            {binIcon}
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
+            {!hasSections && emptyResultMessage && (
+              <p css={emptyResultStyles}>{emptyResultMessage}</p>
+            )}
 
-              {matchedTeams.length > 0 && remainingUnmatched.length > 0 && (
-                <div css={dividerStyles} />
-              )}
-
-              {remainingUnmatched.length > 0 && (
-                <>
-                  <button
-                    type="button"
-                    css={sectionHeaderStyles}
-                    aria-expanded={unmatchedOpen}
-                    onClick={() => setUnmatchedOpen((open) => !open)}
-                  >
-                    <span
-                      css={[sectionHeaderLabelStyles, notMatchedLabelStyles]}
+            {hasSections && (
+              <div css={resultCardStyles(!isCancelling)}>
+                {matchedTeams.length > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      css={sectionHeaderStyles}
+                      aria-expanded={matchedOpen}
+                      onClick={() => setMatchedOpen((open) => !open)}
                     >
-                      {crossSmallIcon}
-                      <span>
-                        <strong>{remainingUnmatched.length} not matched</strong>{' '}
-                        • will not be added
+                      <span
+                        css={[sectionHeaderLabelStyles, matchedLabelStyles]}
+                      >
+                        {tickSmallIcon}
+                        <span>
+                          <strong>{pluralizeTeams(matchedTeams.length)}</strong>{' '}
+                          will be added and marked if attended
+                        </span>
                       </span>
-                    </span>
-                    <span css={chevronStyles(unmatchedOpen)}>
-                      {chevronDownIcon}
-                    </span>
-                  </button>
-                  {unmatchedOpen && (
-                    <div css={sectionBodyStyles}>
-                      <div css={unmatchedRowsStyles}>
-                        {remainingUnmatched.map((team) => {
-                          const { suggestion } = team;
-                          return (
-                            <div key={team.name} css={unmatchedRowStyles}>
-                              <span css={unmatchedTextStyles}>
-                                “{team.name}”{' '}
-                                {suggestion ? (
-                                  <span css={unmatchedMetaStyles}>
-                                    • did you mean{' '}
-                                    <Link
-                                      href={
-                                        network({}).teams({}).team({
-                                          teamId: suggestion.teamId,
-                                        }).$
-                                      }
-                                    >
-                                      <span css={suggestionLinkStyles}>
-                                        {suggestion.teamName}
-                                      </span>
-                                    </Link>
-                                    ?
-                                  </span>
-                                ) : (
-                                  <span css={unmatchedMetaStyles}>
-                                    • no close match
-                                  </span>
-                                )}
-                              </span>
-                              {suggestion && (
-                                <Button
-                                  small
-                                  noMargin
-                                  enabled={!isCancelling}
-                                  overrideStyles={addSuggestionButtonStyles}
-                                  onClick={() =>
-                                    promoteSuggestion(suggestion.teamId)
-                                  }
-                                >
-                                  {plusIcon}
-                                  Add
-                                </Button>
-                              )}
-                            </div>
-                          );
-                        })}
+                      <span css={chevronStyles(matchedOpen)}>
+                        {chevronDownIcon}
+                      </span>
+                    </button>
+                    {matchedOpen && (
+                      <div css={sectionBodyStyles}>
+                        {matchedTeams.map((team) => (
+                          <div key={team.teamId} css={matchedRowStyles}>
+                            <span css={matchedTeamStyles}>
+                              {teamIcon(team.teamType)}
+                              <Link
+                                openInNewTab
+                                href={
+                                  network({})
+                                    .teams({})
+                                    .team({ teamId: team.teamId }).$
+                                }
+                              >
+                                <span css={matchedTeamNameStyles}>
+                                  {team.teamName}
+                                </span>
+                              </Link>
+                              {team.isTeamInactive && <InactiveBadgeIcon />}
+                            </span>
+                            <Button
+                              noMargin
+                              enabled={!isCancelling}
+                              aria-label={`Remove ${team.teamName}`}
+                              onClick={() => removeMatchedTeam(team.teamId)}
+                              overrideStyles={deleteButtonStyles(!isCancelling)}
+                            >
+                              {binIcon}
+                            </Button>
+                          </div>
+                        ))}
                       </div>
-                      <p css={unmatchedHelpStyles}>
-                        Add a suggested team to include it, or fix the name in
-                        your file and upload again.
-                      </p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                    )}
+                  </>
+                )}
+
+                {matchedTeams.length > 0 && remainingUnmatched.length > 0 && (
+                  <div css={dividerStyles} />
+                )}
+
+                {remainingUnmatched.length > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      css={sectionHeaderStyles}
+                      aria-expanded={unmatchedOpen}
+                      onClick={() => setUnmatchedOpen((open) => !open)}
+                    >
+                      <span
+                        css={[sectionHeaderLabelStyles, notMatchedLabelStyles]}
+                      >
+                        {crossSmallIcon}
+                        <span>
+                          <strong>
+                            {remainingUnmatched.length} not matched
+                          </strong>{' '}
+                          • will not be added
+                        </span>
+                      </span>
+                      <span css={chevronStyles(unmatchedOpen)}>
+                        {chevronDownIcon}
+                      </span>
+                    </button>
+                    {unmatchedOpen && (
+                      <div css={sectionBodyStyles}>
+                        <div css={unmatchedRowsStyles}>
+                          {remainingUnmatched.map((team) => {
+                            const { suggestion } = team;
+                            return (
+                              <div key={team.name} css={unmatchedRowStyles}>
+                                <span css={unmatchedTextStyles}>
+                                  “{team.name}”{' '}
+                                  {suggestion ? (
+                                    <span css={unmatchedMetaStyles}>
+                                      • did you mean{' '}
+                                      <Link
+                                        openInNewTab
+                                        href={
+                                          network({}).teams({}).team({
+                                            teamId: suggestion.teamId,
+                                          }).$
+                                        }
+                                      >
+                                        <span css={suggestionLinkStyles}>
+                                          {suggestion.teamName}
+                                        </span>
+                                      </Link>
+                                      ?
+                                    </span>
+                                  ) : (
+                                    <span css={unmatchedMetaStyles}>
+                                      • no close match
+                                    </span>
+                                  )}
+                                </span>
+                                {suggestion && (
+                                  <Button
+                                    small
+                                    noMargin
+                                    enabled={!isCancelling}
+                                    overrideStyles={addSuggestionButtonStyles}
+                                    onClick={() =>
+                                      promoteSuggestion(suggestion.teamId)
+                                    }
+                                  >
+                                    {currentTeamIds.has(suggestion.teamId) ? (
+                                      'Update'
+                                    ) : (
+                                      <>
+                                        {plusIcon}
+                                        Add
+                                      </>
+                                    )}
+                                  </Button>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <p css={unmatchedHelpStyles}>
+                          Add a suggested team to include it, or fix the name in
+                          your file and upload again.
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

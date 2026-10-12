@@ -1,22 +1,13 @@
-import { ComponentProps, Fragment } from 'react';
+import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import {
-  BasicEvent,
-  eventMaterialTypes,
-  EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
-} from '@asap-hub/model';
-import { events } from '@asap-hub/routing';
+import { BasicEvent, eventMaterialTypes } from '@asap-hub/model';
 
-import { subMinutes, parseISO } from 'date-fns';
-
-import { ToastCard, EventInfo } from '../molecules';
+import { ToastCard, EventInfo, EventMaterialsList } from '../molecules';
+import type { MaterialType } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
-import { tin } from '../colors';
-import { useDateHasPassed } from '../date';
-import { considerEndedAfter } from '../utils';
-import { eventMaterialSectionIds } from './EventMaterials';
+import { useEventLiveStatus } from '../utils';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -45,34 +36,12 @@ const displayedMaterialTypes = [
   'videoRecording',
   'presentation',
 ] as const;
-const eventMaterialLabels: Record<
-  (typeof displayedMaterialTypes)[number],
-  string
-> = {
-  notes: 'Notes',
-  videoRecording: 'Recording',
-  presentation: 'Presentation',
-};
 
-const materialListStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  columnGap: rem(8),
-  rowGap: rem(4),
-
-  a: {
-    color: 'inherit',
-    textDecoration: 'none',
-    ':hover': {
-      textDecoration: 'underline',
-    },
-  },
-});
-
-const unavailableMaterialStyles = css({
-  color: tin.rgb,
-});
+const materialOrder: MaterialType[] = [
+  'notes',
+  'videoRecording',
+  'presentation',
+];
 
 const EventCard: React.FC<EventCardProps> = ({
   status,
@@ -80,13 +49,10 @@ const EventCard: React.FC<EventCardProps> = ({
   hasSpeakersToBeAnnounced,
   ...props
 }) => {
-  const considerStartedAfter = subMinutes(
-    parseISO(props.startDate),
-    EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
+  const { hasStarted, hasFinished } = useEventLiveStatus(
+    props.startDate,
+    props.endDate,
   );
-
-  const hasStarted = useDateHasPassed(considerStartedAfter);
-  const hasFinished = useDateHasPassed(considerEndedAfter(props.endDate));
   const toastCardProps = (
     shouldDisplayToast: boolean,
   ): Omit<ComponentProps<typeof ToastCard>, 'children'> => {
@@ -97,7 +63,7 @@ const EventCard: React.FC<EventCardProps> = ({
       return {
         toastContent: 'The event has been cancelled.',
         type: 'alert',
-        ...(hasFinished ? { accent: 'neutral200' } : {}),
+        ...(hasFinished ? { accent: 'inactive' } : {}),
       };
     }
     if (hasStarted && !hasFinished) {
@@ -145,37 +111,19 @@ const EventCard: React.FC<EventCardProps> = ({
         const value = props[key];
         return Array.isArray(value) ? value.length > 0 : Boolean(value);
       };
-      const eventHref = events({}).event({ eventId: props.id }).$;
       return {
         type: 'attachment',
         accent: 'neutral200',
         mutedIcon: !displayedMaterialTypes.some(isMaterialAvailable),
         toastContent: (
-          <span css={materialListStyles}>
-            {displayedMaterialTypes.map((key, index) => {
-              const available = isMaterialAvailable(key);
-              return (
-                <Fragment key={key}>
-                  {index > 0 && (
-                    <span
-                      css={available ? undefined : unavailableMaterialStyles}
-                    >
-                      •
-                    </span>
-                  )}
-                  {available ? (
-                    <Link href={`${eventHref}#${eventMaterialSectionIds[key]}`}>
-                      {eventMaterialLabels[key]}
-                    </Link>
-                  ) : (
-                    <span css={unavailableMaterialStyles}>
-                      {eventMaterialLabels[key]}
-                    </span>
-                  )}
-                </Fragment>
-              );
-            })}
-          </span>
+          <EventMaterialsList
+            id={props.id}
+            notes={props.notes}
+            videoRecording={props.videoRecording}
+            presentation={props.presentation}
+            order={materialOrder}
+            showIcon={false}
+          />
         ),
       };
     }

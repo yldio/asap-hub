@@ -3,21 +3,34 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, renderHook, waitFor } from '@testing-library/react';
 import { Component, ReactNode, Suspense } from 'react';
 
-import { createEventResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createInterestGroupResponse,
+  createTeamListItemResponse,
+} from '@asap-hub/fixtures';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvent, getEvents } from '../api';
+import { getInterestGroup } from '../../network/interest-groups/api';
+import { getEvent, getEvents, getTeamsForMatching } from '../api';
 import {
   eventQueryKeys,
   useEventById,
   useEvents,
   useEventSpeakerGroups,
+  useInterestGroupTeams,
   useQuietRefreshEventById,
+  useTeamsForMatching,
 } from '../state';
 
 jest.mock('../api', () => ({
   getEvent: jest.fn(),
   getEvents: jest.fn(),
+  getTeamsForMatching: jest.fn(),
+  patchEvent: jest.fn(),
+}));
+
+jest.mock('../../network/interest-groups/api', () => ({
+  getInterestGroup: jest.fn(),
 }));
 
 jest.mock('../../hooks/algolia', () => ({
@@ -126,6 +139,66 @@ describe('useEventSpeakerGroups', () => {
   });
 });
 
+describe('useInterestGroupTeams', () => {
+  const mockGetInterestGroup = getInterestGroup as jest.MockedFunction<
+    typeof getInterestGroup
+  >;
+
+  it('returns the teams of the given interest group', async () => {
+    const groupTeams = [createTeamListItemResponse()];
+    mockGetInterestGroup.mockResolvedValue({
+      ...createInterestGroupResponse(),
+      teams: groupTeams,
+    });
+
+    const { result } = renderStateHook(() => useInterestGroupTeams('g-0'));
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ teams: groupTeams, resolved: true }),
+    );
+    expect(mockGetInterestGroup).toHaveBeenCalledWith('g-0', mockAuthorization);
+  });
+
+  it('resolves a group that no longer exists to no teams', async () => {
+    mockGetInterestGroup.mockResolvedValue(undefined);
+
+    const { result } = renderStateHook(() => useInterestGroupTeams('missing'));
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ teams: [], resolved: true }),
+    );
+  });
+
+  it('reports a request still in flight as unresolved', async () => {
+    mockGetInterestGroup.mockReturnValue(new Promise(() => {}));
+
+    const { result } = renderStateHook(() => useInterestGroupTeams('g-0'));
+
+    await waitFor(() => expect(mockGetInterestGroup).toHaveBeenCalled());
+    expect(result.current).toEqual({ teams: [], resolved: false });
+  });
+
+  it('reports a failed request as unresolved', async () => {
+    mockGetInterestGroup.mockRejectedValue(new Error('nope'));
+
+    const { result } = renderStateHook(() => useInterestGroupTeams('g-0'));
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ teams: [], resolved: false }),
+    );
+    expect(mockGetInterestGroup).toHaveBeenCalled();
+  });
+
+  it('skips the fetch when the event has no interest group', async () => {
+    const { result } = renderStateHook(() => useInterestGroupTeams(undefined));
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ teams: [], resolved: true }),
+    );
+    expect(mockGetInterestGroup).not.toHaveBeenCalled();
+  });
+});
+
 describe('useQuietRefreshEventById', () => {
   it('caches null when the event no longer exists', async () => {
     (getEvent as jest.Mock).mockResolvedValue(undefined);
@@ -187,3 +260,38 @@ const EventsProbe = () => {
   useEvents(listOptions);
   return <>rendered</>;
 };
+
+describe('useTeamsForMatching', () => {
+  const mockGetTeamsForMatching = getTeamsForMatching as jest.MockedFunction<
+    typeof getTeamsForMatching
+  >;
+
+  beforeEach(() => {
+    mockGetTeamsForMatching.mockReset();
+    mockGetTeamsForMatching.mockResolvedValue([createTeamListItemResponse()]);
+  });
+
+  it('does not fetch the corpus until it is called', async () => {
+    const queryClient = createTestQueryClient();
+    renderHook(() => useTeamsForMatching(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(mockGetTeamsForMatching).not.toHaveBeenCalled());
+  });
+
+  it('fetches the corpus once and caches it across calls', async () => {
+    const queryClient = createTestQueryClient();
+    const { result } = renderHook(() => useTeamsForMatching(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => expect(result.current).toBeDefined());
+
+    const first = await result.current();
+    const second = await result.current();
+
+    expect(first).toEqual(second);
+    expect(mockGetTeamsForMatching).toHaveBeenCalledTimes(1);
+  });
+});

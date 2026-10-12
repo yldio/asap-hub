@@ -5,21 +5,18 @@ import {
   ManuscriptFileResponse,
   ManuscriptVersion,
 } from '@asap-hub/model';
-import { network, projectRouteByType } from '@asap-hub/routing';
-import { css, Theme } from '@emotion/react';
+import { projectRouteByType } from '@asap-hub/routing';
+import { css } from '@emotion/react';
 import { ComponentProps, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { DiscussionsTab } from '.';
 import {
   Button,
-  charcoal,
-  colors,
   complianceReportIcon,
-  fern,
-  neutral900,
   NotificationDotIcon,
   resubmitManuscriptIcon,
   Tooltip,
+  colour,
 } from '..';
 import { rem, smallDesktopScreen } from '../pixels';
 import DiscussionCard from './DiscussionCard';
@@ -33,7 +30,6 @@ type ManuscriptCardDetailProps = Pick<
   'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
 > & {
   id: string;
-  teamId: string;
   user: User | null;
   isComplianceReviewer: boolean;
   isActiveManuscript: boolean;
@@ -59,7 +55,7 @@ type ManuscriptCardDetailProps = Pick<
 };
 
 const buttonsContainerStyles = css({
-  borderBottom: `1px solid ${colors.steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
 });
 
 const buttonsStyles = css({
@@ -91,12 +87,12 @@ const notificationDotStyles = css({
 
 const manuscriptDetailsContainerStyles = css({
   margin: `0 ${rem(16)} ${rem(16)}`,
-  border: `1px solid ${colors.steel.rgb}`,
+  border: `1px solid ${colour.border.tertiary}`,
   borderRadius: `${rem(8)}`,
   boxSizing: 'border-box',
   borderWidth: 1,
   borderStyle: 'solid',
-  backgroundColor: colors.paper.rgb,
+  backgroundColor: colour.background.primary,
 });
 
 const showMoreContainerStyles = css({
@@ -118,21 +114,20 @@ type VersionUserProps = {
   user: User | null;
 };
 
-const tabButtonStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
-  css({
-    paddingLeft: rem(0),
-    paddingRight: rem(0),
-    paddingBottom: rem(20),
-    color: neutral900.rgb,
-    backgroundColor: 'transparent',
-    border: 'none',
-    '&.active': {
-      paddingBottom: rem(16),
-      color: charcoal.rgb,
-      fontWeight: 'bold',
-      borderBottom: `${rem(4)} solid ${primary500.rgba}`,
-    },
-  });
+const tabButtonStyles = css({
+  paddingLeft: rem(0),
+  paddingRight: rem(0),
+  paddingBottom: rem(20),
+  color: colour.foreground.tertiary,
+  backgroundColor: 'transparent',
+  border: 'none',
+  '&.active': {
+    paddingBottom: rem(16),
+    color: colour.foreground.primary,
+    fontWeight: 'bold',
+    borderBottom: `${rem(4)} solid ${colour.foreground.brand}`,
+  },
+});
 
 const isManuscriptLead = ({ version, user }: VersionUserProps) =>
   user &&
@@ -178,7 +173,6 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
 
 const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
   id,
-  teamId,
   user,
   isComplianceReviewer,
   isActiveManuscript,
@@ -210,32 +204,30 @@ const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
         ).workspace({})
       : undefined;
 
-  const teamWorkspaceRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({});
-
-  const resolvedGetEditManuscriptHref = (manuscriptId: string): string =>
+  const resolvedGetEditManuscriptHref = (
+    manuscriptId: string,
+  ): string | undefined =>
     projectWorkspaceRoute?.editManuscript({ manuscriptId }).$ ??
-    getEditManuscriptHref?.(manuscriptId) ??
-    teamWorkspaceRoute.editManuscript({ manuscriptId }).$;
+    getEditManuscriptHref?.(manuscriptId);
 
   const complianceReportRoute =
     projectWorkspaceRoute?.createComplianceReport({ manuscriptId: id }).$ ??
-    getCreateComplianceReportHref?.(id) ??
-    teamWorkspaceRoute.createComplianceReport({ manuscriptId: id }).$;
+    getCreateComplianceReportHref?.(id);
 
   const resubmitManuscriptRoute =
     projectWorkspaceRoute?.resubmitManuscript({ manuscriptId: id }).$ ??
-    getResubmitManuscriptHref?.(id) ??
-    teamWorkspaceRoute.resubmitManuscript({ manuscriptId: id }).$;
+    getResubmitManuscriptHref?.(id);
 
   const handleShareComplianceReport = () => {
-    void navigate(complianceReportRoute, { state: { fromButton: true } });
+    if (complianceReportRoute) {
+      void navigate(complianceReportRoute, { state: { fromButton: true } });
+    }
   };
 
   const handleResubmitManuscript = () => {
-    void navigate(resubmitManuscriptRoute);
+    if (resubmitManuscriptRoute) {
+      void navigate(resubmitManuscriptRoute);
+    }
   };
 
   const canSubmitComplianceReport =
@@ -357,7 +349,6 @@ const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
                 <ManuscriptVersionCard
                   key={index}
                   version={version}
-                  teamId={teamId}
                   manuscriptId={id}
                   isActiveVersion={
                     isActiveManuscript &&

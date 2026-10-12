@@ -18,7 +18,10 @@ import {
   getAnalyticsLeadership,
   AnalyticsSearchOptionsWithSort,
   getAnalyticsOSChampion,
+  getTeamLeadershipMetrics,
+  TeamLeadershipMetrics,
 } from './api';
+import { TeamMetricsOptions } from '../utils/team-metrics';
 import { OpensearchIndex } from '../utils/opensearch/types';
 import { useAnalyticsOpensearch } from '../../hooks';
 
@@ -109,4 +112,33 @@ export const useAnalyticsOSChampion = (
         { total: 0, items: [] },
       ),
   }).data as ListOSChampionOpensearchResponse;
+};
+
+export const teamLeadershipMetricsQueryKeys = {
+  all: ['analytics-team-leadership-metrics'] as const,
+  detail: (teamId: string) =>
+    [...teamLeadershipMetricsQueryKeys.all, teamId] as const,
+};
+
+export const useTeamLeadershipMetrics = (
+  options: TeamMetricsOptions,
+): TeamLeadershipMetrics => {
+  const workingGroupClient =
+    useAnalyticsOpensearch<AnalyticsTeamLeadershipResponse>(
+      'wg-leadership',
+    ).client;
+  const interestGroupClient =
+    useAnalyticsOpensearch<AnalyticsTeamLeadershipResponse>(
+      'ig-leadership',
+    ).client;
+
+  return useSuspenseQuery({
+    queryKey: teamLeadershipMetricsQueryKeys.detail(options.teamId),
+    queryFn: (): Promise<TeamLeadershipMetrics> =>
+      getTeamLeadershipMetrics(
+        workingGroupClient,
+        interestGroupClient,
+        options,
+      ),
+  }).data;
 };

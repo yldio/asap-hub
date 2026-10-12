@@ -523,7 +523,42 @@ describe('UserBasedOutput', () => {
   });
 
   describe('permissions', () => {
-    it('lets a project member save a draft but not publish', async () => {
+    const projectWithOtherLead: TraineeProjectDetailType = {
+      ...mockProject,
+      members: [
+        {
+          id: 'lead-1',
+          displayName: 'Lena Lead',
+          role: 'Independent Project - Lead',
+        },
+        ...(mockProject.members ?? []),
+      ],
+    };
+    const projectWhereUserIsLead: TraineeProjectDetailType = {
+      ...mockProject,
+      members: [
+        {
+          id: 'testuserid',
+          displayName: 'John Doe',
+          role: 'Independent Project - Lead',
+        },
+      ],
+    };
+
+    it('lets a member save a draft and publish when the project has no lead', async () => {
+      await renderPage();
+
+      expect(
+        screen.getByRole('button', { name: /Save Draft/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /^Publish/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('lets a non-lead member only save a draft when the project has a lead', async () => {
+      mockGetProject.mockResolvedValue(projectWithOtherLead);
+
       await renderPage();
 
       expect(
@@ -532,7 +567,19 @@ describe('UserBasedOutput', () => {
       expect(screen.queryByRole('button', { name: /^Publish/i })).toBeNull();
     });
 
+    it('lets the project lead publish', async () => {
+      mockGetProject.mockResolvedValue(projectWhereUserIsLead);
+
+      await renderPage();
+
+      expect(
+        screen.getByRole('button', { name: /^Publish/i }),
+      ).toBeInTheDocument();
+    });
+
     it('lets staff publish the output', async () => {
+      mockGetProject.mockResolvedValue(projectWithOtherLead);
+
       await renderPage({ role: 'Staff' });
 
       expect(

@@ -47,7 +47,6 @@ const fullResult: UploadListResult = {
       teamType: 'Discovery Team',
     },
   ],
-  alreadyInCount: 2,
   unmatched: [
     {
       name: 'Imagimg',
@@ -55,6 +54,7 @@ const fullResult: UploadListResult = {
         teamId: 's1',
         teamName: 'Imaging',
         teamType: 'Discovery Team',
+        attended: true,
       },
     },
     { name: 'Data Scince' },
@@ -96,7 +96,6 @@ export const NoMatches: Story = {
     initialFiles: seedFiles,
     initialResult: {
       matched: [],
-      alreadyInCount: 0,
       unmatched: fullResult.unmatched,
     },
     initialSectionsOpen: true,

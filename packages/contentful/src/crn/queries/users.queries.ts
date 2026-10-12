@@ -52,6 +52,7 @@ export const usersContentQueryFragment = gql`
     }
     role
     openScienceTeamMember
+    techSupport
     responsibilities
     researchInterests
     reachOut
@@ -184,7 +185,7 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
-      interestGroupLeadersCollection(limit: 10) {
+      interestGroupLeadersCollection(limit: 50) {
         items {
           role
           inactiveSinceDate
@@ -267,6 +268,7 @@ export const FETCH_PUBLIC_USERS = gql`
         lastName
         institution
         orcid
+        personalEmail
         userSocials {
           website1
           website2
@@ -437,7 +439,19 @@ export const userListItemContentQueryFragment = gql`
     dismissedGettingStarted
     role
     openScienceTeamMember
+    techSupport
     orcid
+    userSocials {
+      github
+      googleScholar
+      linkedIn
+      researcherId
+      researchGate
+      twitter
+      blueSky
+      website1
+      website2
+    }
     researchTagsCollection(limit: 20) {
       items {
         sys {
@@ -570,7 +584,19 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
       alumniSinceDate
       createdDate
       openScienceTeamMember
+      techSupport
       orcid
+      userSocials {
+        github
+        googleScholar
+        linkedIn
+        researcherId
+        researchGate
+        twitter
+        blueSky
+        website1
+        website2
+      }
       avatar {
         url
       }

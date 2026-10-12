@@ -7,7 +7,7 @@ jobs:
   crn-contentful:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -19,8 +19,6 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: Production
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -43,7 +41,7 @@ jobs:
   gp2-contentful:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

@@ -1,10 +1,23 @@
 import { css } from '@emotion/react';
 
-import { steel } from '../colors';
+import { colour } from '../colors';
+import { rem } from '../pixels';
 import Pill from './Pill';
 
+export const statePillStyles = css({
+  // `em` against the 16px pill text, since `rem()` assumes 17px.
+  '> span': {
+    fontSize: rem(16),
+    fontWeight: 500,
+    lineHeight: 24 / 16,
+    height: `${32 / 16}em`,
+    padding: `${4 / 16}em ${8 / 16}em`,
+  },
+  small: { fontSize: 'inherit', lineHeight: 'inherit' },
+});
+
 const disabledStyles = css({
-  '> span': { backgroundColor: steel.rgb },
+  '> span': { backgroundColor: colour.neutral[100] },
 });
 
 type SpeakerRoleBadgeProps = {
@@ -26,7 +39,7 @@ const SpeakerRoleBadge: React.FC<SpeakerRoleBadgeProps> = ({
   roles,
   enabled = true,
 }) => (
-  <span css={!enabled && disabledStyles}>
+  <span css={[statePillStyles, !enabled && disabledStyles]}>
     <Pill accent="gray" noMargin>
       {displayRole(roles)}
     </Pill>

@@ -1,4 +1,4 @@
-import { FetchEventsOptions } from '@asap-hub/model';
+import { EventUpdateDetailsRequest, FetchEventsOptions } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
@@ -52,6 +52,68 @@ export const validateEventParameters = validateInput(
   eventParametersValidationSchema,
   {
     skipNull: false,
+    coerce: true,
+  },
+);
+
+const eventUpdateDetailsValidationSchema: JSONSchemaType<EventUpdateDetailsRequest> =
+  {
+    type: 'object',
+    properties: {
+      attendance: {
+        type: 'array',
+        nullable: true,
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', nullable: true },
+            teamId: { type: 'string' },
+            attended: { type: 'boolean' },
+          },
+          required: ['teamId', 'attended'],
+          additionalProperties: false,
+        },
+      },
+      speakersToRemove: {
+        type: 'array',
+        nullable: true,
+        items: { type: 'string' },
+      },
+      speakersToUnlink: {
+        type: 'array',
+        nullable: true,
+        items: {
+          type: 'object',
+          properties: {
+            speakerId: { type: 'string' },
+            field: { type: 'string', enum: ['team', 'project'] },
+          },
+          required: ['speakerId', 'field'],
+          additionalProperties: false,
+        },
+      },
+      preliminaryDataShared: {
+        type: 'array',
+        nullable: true,
+        items: {
+          type: 'object',
+          properties: {
+            speakerId: { type: 'string' },
+            shared: { type: 'boolean' },
+          },
+          required: ['speakerId', 'shared'],
+          additionalProperties: false,
+        },
+      },
+    },
+    additionalProperties: false,
+    required: [],
+  };
+
+export const validateEventUpdateDetailsPayload = validateInput(
+  eventUpdateDetailsValidationSchema,
+  {
+    skipNull: true,
     coerce: true,
   },
 );

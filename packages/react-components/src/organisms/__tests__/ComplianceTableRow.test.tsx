@@ -23,7 +23,6 @@ describe('ComplianceTableRow', () => {
 
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
-    displayProjectColumn: false,
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     handleAssignUsersClick: jest.fn(),
@@ -88,20 +87,16 @@ describe('ComplianceTableRow', () => {
     expect(statusButton).toBeDisabled();
   });
 
-  it('renders team name as a link', () => {
+  it('renders team name as a link to the team about page', () => {
     renderComponent();
 
     const teamLink = screen.getByText('Test Team');
     expect(teamLink.tagName).toBe('A');
-    expect(teamLink).toHaveAttribute(
-      'href',
-      expect.stringContaining('team-id'),
-    );
+    expect(teamLink).toHaveAttribute('href', '/network/teams/team-id/about');
   });
 
   it('renders an em dash for user-based projects', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -130,7 +125,6 @@ describe('ComplianceTableRow', () => {
     'renders $projectType project link and icon',
     ({ projectType, expectedHref, iconTitle }) => {
       renderComponent({
-        displayProjectColumn: true,
         data: {
           ...data,
           project: {
@@ -149,6 +143,49 @@ describe('ComplianceTableRow', () => {
     },
   );
 
+  it('links the manuscript id to the project workspace when there is no team', () => {
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: '' },
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Trainee Project',
+          isTeamBased: false,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/projects/trainee/project-id/workspace#manuscript-id-1',
+    );
+  });
+
+  it('links the manuscript id to the project workspace', () => {
+    renderComponent({
+      data: {
+        ...data,
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).toHaveAttribute(
+      'href',
+      '/projects/resource/project-id/workspace#manuscript-id-1',
+    );
+  });
+
   it('renders a plain manuscript id when the team link is unavailable', () => {
     renderComponent({
       data: {
@@ -165,7 +202,6 @@ describe('ComplianceTableRow', () => {
 
   it('renders a plain project title when the project route is unavailable', () => {
     renderComponent({
-      displayProjectColumn: true,
       data: {
         ...data,
         project: {
@@ -183,7 +219,7 @@ describe('ComplianceTableRow', () => {
   });
 
   it('renders an em dash in the project column when no project exists', () => {
-    renderComponent({ displayProjectColumn: true });
+    renderComponent();
 
     expect(screen.getAllByRole('cell')[1]).toHaveTextContent('—');
   });

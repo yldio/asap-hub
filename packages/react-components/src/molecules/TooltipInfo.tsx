@@ -20,18 +20,31 @@ type TooltipInfoProps = {
   overrideWrapperStyles?: SerializedStyles;
   overrideTooltipStyles?: SerializedStyles;
   children: React.ReactNode;
+  width?: string | number;
+  background?: string;
+  openOnHover?: boolean;
+  floating?: boolean;
 };
 
 const TooltipInfo: React.FC<TooltipInfoProps> = ({
   overrideWrapperStyles,
   overrideTooltipStyles,
   children,
+  width,
+  background,
+  openOnHover,
+  floating,
 }) => (
   <span
     css={[infoWrapperStyle, overrideWrapperStyles]}
     onClick={(e) => e.preventDefault()}
   >
-    <Info>
+    <Info
+      width={width}
+      background={background}
+      openOnHover={openOnHover}
+      floating={floating}
+    >
       <span css={[infoStyle, overrideTooltipStyles]}>{children}</span>
     </Info>
   </span>

@@ -23,6 +23,7 @@ import {
 } from '@asap-hub/model';
 
 import {
+  addLocaleToFields,
   Entry,
   Environment,
   FetchPublicUsersQuery,
@@ -400,8 +401,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   // Social links live on a separate socials entry, so they are written there
-  // rather than on the user. The entry id mirrors the one used by the socials
-  // migration script, which keeps repeated updates idempotent.
+  // rather than on the user. The deterministic socials-<userId> entry id keeps
+  // repeated updates idempotent.
   private async updateSocials(
     environment: Environment,
     user: Entry,
@@ -433,16 +434,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
     }
 
     const entryId = `socials-${user.sys.id}`;
-    const entryFields = Object.entries({
-      ...fields,
-      user: { sys: { type: 'Link', linkType: 'Entry', id: user.sys.id } },
-    }).reduce(
-      (acc, [key, value]) => ({ ...acc, [key]: { 'en-US': value } }),
-      {},
-    );
+    const entryFields = addLocaleToFields(fields);
 
-    // the socials migration script creates entries under this same id, so an
-    // entry can already exist for a user that was never linked to it
+    // earlier data migrations created entries under this same deterministic
+    // id, so an entry can already exist for a user that was never linked to it
     let socialsEntry;
     try {
       socialsEntry = await environment.getEntry(entryId);
@@ -669,6 +664,7 @@ export const parseContentfulGraphQlPublicUsers = (
     firstName: item.firstName ?? '',
     lastName: item.lastName ?? '',
     institution: item.institution ?? undefined,
+    personalEmail: item.personalEmail ?? undefined,
     researchTheme: teamsCollection
       .map((teamItem) => teamItem.team?.researchTheme?.name)
       .filter(
@@ -797,6 +793,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     questions,
     role,
     openScienceTeamMember: !!item.openScienceTeamMember,
+    techSupport: !!item.techSupport,
     degree,
     connections: connections.map((connection) => ({ code: connection })),
     teams,
@@ -868,6 +865,8 @@ export const parseContentfulGraphQlUserListItem = (
     orcid: item.orcid ?? undefined,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     openScienceTeamMember: !!item.openScienceTeamMember,
+    techSupport: !!item.techSupport,
+    social: parseSocialLinks(item.userSocials),
     teams: userTeams,
     tags,
     _tags: tags.map((tag) => tag.name),
@@ -1073,7 +1072,7 @@ const parseToInterestGroups = (
     }));
   });
 
-const parseLeadersToInterestGroups = (
+export const parseLeadersToInterestGroups = (
   leaders: InterestGroupLeaderItem[],
 ): InterestGroupMembership[] =>
   leaders.reduce(

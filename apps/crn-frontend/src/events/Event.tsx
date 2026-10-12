@@ -1,5 +1,8 @@
 import {
+  EditEventAttendanceModal,
+  EditEventSpeakersModal,
   EventAttendance,
+  EventAttendanceTeam,
   EventConversation,
   EventDetailPage,
   eventMapper,
@@ -8,7 +11,6 @@ import {
   EventSpeakers,
   getIconForDocumentType,
   NotFoundPage,
-  noop,
   resolveEventThumbnail,
   SpeakerList,
   useDateHasPassed,
@@ -16,24 +18,25 @@ import {
   PageConstraints,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
-import { EventResponse } from '@asap-hub/model';
 import { events, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
+import { isEventProjectManager } from '@asap-hub/validation';
+import { useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router';
 
+import { composeAttendanceRows } from './attendance-rows';
+import { downloadEventSpeakers } from './export';
+import { mapGroupsToSpeakersUpdate } from './map-groups-to-speakers-update';
+import { matchTeamNames } from './match-team-names';
+import { parseTeamRows } from './parse-team-list';
 import {
   useEventById,
   useEventSpeakerGroups,
+  useInterestGroupTeams,
+  usePatchEvent,
   useQuietRefreshEventById,
+  useTeamsForMatching,
 } from './state';
-
-const mapAttendanceTeams = (attendance: EventResponse['attendance'] = []) =>
-  attendance.map(({ team, attended }) => ({
-    teamId: team.id,
-    teamName: team.displayName,
-    attended,
-    teamType: team.teamType,
-    isTeamInactive: !!team.inactiveSince,
-  }));
 
 const Event: React.FC = () => {
   const { eventId } = useRouteParams(events({}).event);
@@ -43,6 +46,12 @@ const Event: React.FC = () => {
   const backHref = useBackHref() ?? events({}).$;
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
+  const [isEditingAttendance, setIsEditingAttendance] = useState(false);
+  const [isEditingSpeakers, setIsEditingSpeakers] = useState(false);
+  const patchEvent = usePatchEvent(eventId);
+  const fetchTeamsForMatching = useTeamsForMatching();
+  const { teams: interestGroupTeams, resolved: interestGroupResolved } =
+    useInterestGroupTeams(event?.interestGroup?.id);
 
   const hasFinished = useDateHasPassed(
     considerEndedAfter(event?.endDate || ''),
@@ -52,51 +61,118 @@ const Event: React.FC = () => {
     const displayCalendar =
       event.interestGroup === undefined || event.interestGroup.active;
 
-    const teams = mapAttendanceTeams(event.attendance);
-    const teamsTotal = teams.length;
-    const teamsAttended = teams.filter(({ attended }) => attended).length;
-    const isEventProjectManager = !!user?.interestGroups.some(
-      (ig) =>
-        ig.id === event.interestGroup?.id &&
-        ig.role === 'Project Manager' &&
-        ig.active,
-    );
+    const teams = composeAttendanceRows(event.attendance, interestGroupTeams);
+    const isTechSupport = !!user?.techSupport;
+    const canEditAttendance = isTechSupport && interestGroupResolved;
+    const isProjectManager = isEventProjectManager(user, event);
+    const openAttendanceEditor = () => setIsEditingAttendance(true);
+    const openSpeakersEditor = () => setIsEditingSpeakers(true);
     const attendance = hasFinished ? (
-      <EventAttendance
-        teamsAttended={teamsAttended}
-        teamsTotal={teamsTotal}
-        teams={teams}
-        sinceLastEvent={
-          event.previousEventAttendance && {
-            count: teamsAttended - event.previousEventAttendance.teamsAttended,
-            teamsAttended: event.previousEventAttendance.teamsAttended,
-            teamsTotal: event.previousEventAttendance.teamsTotal,
-          }
-        }
-        onAddAttendance={isEventProjectManager ? noop : undefined}
-      />
+      <>
+        <EventAttendance
+          teams={teams}
+          interestGroupName={event.interestGroup?.name}
+          onEdit={canEditAttendance ? openAttendanceEditor : undefined}
+        />
+        {isEditingAttendance && (
+          <EditEventAttendanceModal
+            teams={teams}
+            interestGroupName={event.interestGroup?.name}
+            loadSearchOptions={async () => []}
+            onUploadList={async (files: File[]) => {
+              const [rows, corpus] = await Promise.all([
+                parseTeamRows(files),
+                fetchTeamsForMatching(),
+              ]);
+              return matchTeamNames(rows, corpus);
+            }}
+            onSave={async (updatedTeams: EventAttendanceTeam[]) => {
+              await patchEvent({
+                attendance: updatedTeams.map((team) => ({
+                  id: team.attendanceId,
+                  teamId: team.teamId,
+                  attended: team.attended,
+                })),
+              });
+              setIsEditingAttendance(false);
+            }}
+            onDismiss={() => setIsEditingAttendance(false)}
+          />
+        )}
+      </>
     ) : undefined;
 
+    const speakers = (
+      <>
+        <EventSpeakers
+          groups={speakerGroups}
+          hasFinished={hasFinished}
+          onExport={
+            isTechSupport
+              ? () => downloadEventSpeakers(event, speakerGroups)
+              : undefined
+          }
+          onAddSpeaker={isProjectManager ? openSpeakersEditor : undefined}
+          onEdit={isProjectManager ? openSpeakersEditor : undefined}
+        />
+        {isEditingSpeakers && (
+          <EditEventSpeakersModal
+            groups={speakerGroups}
+            isPastEvent={hasFinished}
+            loadSearchOptions={async () => []}
+            onSave={async (savedGroups) => {
+              await patchEvent(
+                mapGroupsToSpeakersUpdate(
+                  speakerGroups,
+                  savedGroups,
+                  hasFinished,
+                ),
+              );
+              setIsEditingSpeakers(false);
+            }}
+            onDismiss={() => setIsEditingSpeakers(false)}
+          />
+        )}
+      </>
+    );
+
     if (isEnabled('NEW_EVENT_PAGE')) {
+      const eventRoute = events({}).event({ eventId });
+      const pageProps = {
+        ...eventMapper(event),
+        hasFinished,
+        backHref,
+        onRefresh: refreshEvent,
+        getIconForDocumentType,
+        displayCalendar,
+        eventConversation: <EventConversation {...event} />,
+        eventAttendance: attendance,
+        eventSpeakers: speakers,
+        aboutHref: eventRoute.about({}).$,
+        meetingMaterialsHref: eventRoute.meetingMaterials({}).$,
+      };
+
       return (
         <Frame title={event.title}>
-          <EventDetailPage
-            {...eventMapper(event)}
-            hasFinished={hasFinished}
-            backHref={backHref}
-            onRefresh={refreshEvent}
-            getIconForDocumentType={getIconForDocumentType}
-            displayCalendar={displayCalendar}
-            eventConversation={<EventConversation {...event} />}
-            eventAttendance={attendance}
-            eventSpeakers={
-              <EventSpeakers
-                groups={speakerGroups}
-                hasFinished={hasFinished}
-                onAddSpeaker={isEventProjectManager ? noop : undefined}
-              />
-            }
-          />
+          <Routes>
+            <Route
+              index
+              element={<Navigate to={eventRoute.about({}).$} replace />}
+            />
+            <Route
+              path={eventRoute.about.template.replace(/^\//, '')}
+              element={<EventDetailPage {...pageProps} selectedTab="about" />}
+            />
+            <Route
+              path={eventRoute.meetingMaterials.template.replace(/^\//, '')}
+              element={
+                <EventDetailPage
+                  {...pageProps}
+                  selectedTab="meeting-materials"
+                />
+              }
+            />
+          </Routes>
         </Frame>
       );
     }

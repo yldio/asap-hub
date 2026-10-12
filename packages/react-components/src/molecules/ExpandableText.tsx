@@ -4,9 +4,9 @@ import React, { useLayoutEffect, useState } from 'react';
 import {
   Button,
   chevronCircleDownIcon,
-  colorWithTransparency,
-  lead,
+  colourWithAlpha,
   pixels,
+  colour,
 } from '..';
 
 const { rem, lineHeight } = pixels;
@@ -22,18 +22,18 @@ const textStyles = css({
 const expandedTextStyles = css({
   maxHeight: rem(lineHeight * 500), // aproximation of possible max height (2500 characters)
   transition: 'max-height 300ms linear',
-  background: colorWithTransparency(lead, 0).rgba,
+  background: colourWithAlpha(colour.foreground.tertiary, 0),
 });
 
 const expandableTextStyles = css({
   maxHeight: rem(expandableMaxHeight),
-  background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
-    colorWithTransparency(lead, 0).rgba
-  } 100%)`,
+  background: `linear-gradient(180deg, ${
+    colour.foreground.tertiary
+  } 26.56%, ${colourWithAlpha(colour.foreground.tertiary, 0)} 100%)`,
   WebkitBackgroundClip: 'text',
   backgroundClip: 'text',
-  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
-  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
+  maskImage: 'linear-gradient(to bottom, black, transparent)',
+  WebkitMaskImage: 'linear-gradient(to bottom, black, transparent)',
 });
 
 const buttonContainerStyles = (marginTop: number) =>
@@ -76,16 +76,34 @@ const arrowIconStyles = css({
 const ExpandableText: React.FC<{
   variant?: 'chevron' | 'arrow';
   toggleMarginTop?: number;
+  expandOnce?: boolean;
   children?: React.ReactNode;
-}> = ({ variant = 'chevron', toggleMarginTop = 16, children }) => {
+}> = ({
+  variant = 'chevron',
+  toggleMarginTop = 16,
+  expandOnce = false,
+  children,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);
   useLayoutEffect(() => {
-    setShowToggle(
-      (textElement?.current?.scrollHeight || 0) > expandableMaxHeight,
-    );
+    const element = textElement.current;
+    if (!element) {
+      return undefined;
+    }
+    const measure = () =>
+      setShowToggle((element.scrollHeight || 0) > expandableMaxHeight);
+    measure();
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
   }, [textElement?.current?.scrollHeight]);
+
+  const hideToggle = expandOnce && expanded;
 
   return (
     <div>
@@ -98,7 +116,7 @@ const ExpandableText: React.FC<{
       >
         {children}
       </div>
-      {showToggle && (
+      {showToggle && !hideToggle && (
         <div css={buttonContainerStyles(toggleMarginTop)}>
           {variant === 'chevron' ? (
             <Button linkStyle onClick={() => setExpanded(!expanded)}>

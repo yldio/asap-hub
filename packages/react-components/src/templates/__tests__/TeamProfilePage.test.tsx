@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import TeamProfilePage from '../TeamProfilePage';
 
@@ -54,6 +55,63 @@ it('does not render the inactive team header for active team', () => {
       'This team is inactive and might not have all content available.',
     ),
   ).not.toBeInTheDocument();
+});
+
+describe('project banner', () => {
+  const bannerText = /The workspace and outputs have moved/i;
+  const projectProps = {
+    linkedProjectId: 'project-1',
+    projectType: 'Discovery Project' as const,
+    projectTitle: 'Project Alpha',
+  };
+
+  it('renders the banner with a link to the associated project', () => {
+    const { getByText } = render(
+      <TeamProfilePage
+        {...boilerplateProps}
+        {...projectProps}
+        showProjectBanner
+        onDismissProjectBanner={jest.fn()}
+      />,
+    );
+    const banner = getByText(bannerText).closest('section') as HTMLElement;
+    expect(banner).toBeVisible();
+    expect(
+      within(banner).getByRole('link', { name: 'Project Alpha' }),
+    ).toHaveAttribute('href', '/projects/discovery/project-1');
+  });
+
+  it('calls onDismissProjectBanner when the close button is clicked', async () => {
+    const onDismissProjectBanner = jest.fn();
+    const { getByLabelText } = render(
+      <TeamProfilePage
+        {...boilerplateProps}
+        {...projectProps}
+        showProjectBanner
+        onDismissProjectBanner={onDismissProjectBanner}
+      />,
+    );
+    await userEvent.click(getByLabelText('Close'));
+    expect(onDismissProjectBanner).toHaveBeenCalled();
+  });
+
+  it('does not render the banner when showProjectBanner is false', () => {
+    const { queryByText } = render(
+      <TeamProfilePage {...boilerplateProps} {...projectProps} />,
+    );
+    expect(queryByText(bannerText)).not.toBeInTheDocument();
+  });
+
+  it('does not render the banner when the team has no linked project', () => {
+    const { queryByText } = render(
+      <TeamProfilePage
+        {...boilerplateProps}
+        showProjectBanner
+        onDismissProjectBanner={jest.fn()}
+      />,
+    );
+    expect(queryByText(bannerText)).not.toBeInTheDocument();
+  });
 });
 
 it('renders the children', () => {

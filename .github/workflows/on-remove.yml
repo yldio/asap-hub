@@ -21,10 +21,10 @@ jobs:
   # Removed before crn-sls-remove: the async stack's event source mappings
   # reference queues owned by the asap-hub stack.
   crn-async-sls-remove:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -60,10 +60,10 @@ jobs:
           sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
   crn-indexers-sls-remove:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -100,10 +100,10 @@ jobs:
 
   crn-sls-remove:
     needs: [crn-async-sls-remove, crn-indexers-sls-remove]
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -137,10 +137,10 @@ jobs:
           sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
   gp2-sls-remove:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -174,10 +174,10 @@ jobs:
           sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
   crn-contentful-remove:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -215,10 +215,10 @@ jobs:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
 
   gp2-contentful-remove:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -256,10 +256,10 @@ jobs:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
 
   crn-algolia-index:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -270,8 +270,6 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: Branch
       - name: Check PR Number
         if: ${{ github.event.inputs.pr-number }}
         uses: ./.github/actions/is-number
@@ -304,10 +302,10 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
 
   gp2-algolia-index:
-    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -318,8 +316,6 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: Branch
       - name: Check PR Number
         if: ${{ github.event.inputs.pr-number }}
         uses: ./.github/actions/is-number
@@ -364,7 +360,7 @@ jobs:
         gp2-contentful-remove,
         gp2-sls-remove,
       ]
-    if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
+    if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == github.repository) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

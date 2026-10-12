@@ -21,7 +21,7 @@ export const getListEventsResponse = (): calendar_v3.Schema$Events => ({
       updated: '2021-02-16T16:48:18.086Z',
       summary: 'test test',
       creator: {
-        email: 'yld@asap.science',
+        email: 'calendar@asap.science',
       },
       organizer: {
         email: 'calendar-id@group.calendar.google.com',
@@ -51,7 +51,7 @@ export const getListEventsResponse = (): calendar_v3.Schema$Events => ({
       created: '2021-02-22T14:18:36.000Z',
       updated: '2021-02-22T14:18:36.088Z',
       creator: {
-        email: 'yld@asap.science',
+        email: 'calendar@asap.science',
       },
       organizer: {
         email: 'calendar-id@group.calendar.google.com',

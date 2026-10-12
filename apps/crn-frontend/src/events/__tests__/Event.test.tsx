@@ -1,12 +1,14 @@
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { Route, Routes, StaticRouter } from 'react-router';
-import { render } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { render, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   createCalendarResponse,
   createEventResponse,
   createInterestGroupResponse,
+  createTeamListItemResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 import { disable, enable } from '@asap-hub/flags';
@@ -18,9 +20,22 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Event from '../Event';
-import { getEvent } from '../api';
+import { getEvent, getTeamsForMatching, patchEvent } from '../api';
+import { getInterestGroup } from '../../network/interest-groups/api';
+import { downloadEventSpeakers } from '../export';
 
 jest.mock('../api');
+jest.mock('../../network/interest-groups/api');
+jest.mock('../export');
+
+// The upload cases drive the whole page — editor, upload modal, CSV parse,
+// matching, save — and take ~9s each locally, which the 5s default and even the
+// 15s CI budget cannot hold once coverage instrumentation is on.
+jest.setTimeout(30_000);
+
+const mockDownloadEventSpeakers = downloadEventSpeakers as jest.MockedFunction<
+  typeof downloadEventSpeakers
+>;
 
 globalThis.ResizeObserver = jest.fn(() => ({
   observe: jest.fn(),
@@ -31,32 +46,50 @@ globalThis.ResizeObserver = jest.fn(() => ({
 const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
+const mockPatchEvent = patchEvent as jest.MockedFunction<typeof patchEvent>;
+const mockGetTeamsForMatching = getTeamsForMatching as jest.MockedFunction<
+  typeof getTeamsForMatching
+>;
+const mockGetInterestGroup = getInterestGroup as jest.MockedFunction<
+  typeof getInterestGroup
+>;
 beforeEach(() => {
   disable('NEW_EVENT_PAGE');
   mockGetEvent.mockClear();
+  mockPatchEvent.mockClear();
+  mockGetTeamsForMatching.mockClear();
+  mockGetInterestGroup.mockReset();
+  mockGetInterestGroup.mockResolvedValue(undefined);
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,
   });
 });
 
+const eventPath = events({}).event({ eventId: id }).$;
+const eventAboutPath = events({}).event({ eventId: id }).about({}).$;
+const eventMeetingMaterialsPath = events({})
+  .event({ eventId: id })
+  .meetingMaterials({}).$;
+
 const createWrapper =
   (
     user: Parameters<typeof Auth0Provider>[0]['user'] = {},
+    initialEntry = eventPath,
   ): React.FC<{ children: React.ReactNode }> =>
   ({ children }) => (
     <QueryClientProvider client={createTestQueryClient()}>
       <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <StaticRouter location={events({}).event({ eventId: id }).$}>
+            <MemoryRouter initialEntries={[initialEntry]}>
               <Routes>
                 <Route
-                  path={events.template + events({}).event.template}
+                  path={`${events.template}${events({}).event.template}/*`}
                   element={children}
                 />
               </Routes>
-            </StaticRouter>
+            </MemoryRouter>
           </Suspense>
         </WhenReady>
       </Auth0Provider>
@@ -64,6 +97,17 @@ const createWrapper =
   );
 
 const wrapper = createWrapper();
+
+const projectManagerWrapper = createWrapper({
+  interestGroups: [
+    {
+      id: createInterestGroupResponse().id,
+      name: 'Group 1',
+      active: true,
+      role: 'Project Manager',
+    },
+  ],
+});
 
 it('displays the event with given id', async () => {
   mockGetEvent.mockResolvedValue({
@@ -218,11 +262,51 @@ describe('the NEW_EVENT_PAGE flag', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('shows About and Meeting Materials tabs and hides materials on About', async () => {
+    enable('NEW_EVENT_PAGE');
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      endDate: subDays(new Date(), 3).toISOString(),
+      notes: 'My Notes',
+    });
+    const { findByRole, queryByRole } = render(<Event />, { wrapper });
+
+    expect(await findByRole('link', { name: 'About' })).toHaveAttribute(
+      'href',
+      eventAboutPath,
+    );
+    expect(
+      await findByRole('link', { name: 'Meeting Materials' }),
+    ).toHaveAttribute('href', eventMeetingMaterialsPath);
+    expect(
+      queryByRole('heading', { name: 'Notes', level: 2 }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows meeting materials on the Meeting Materials tab', async () => {
+    enable('NEW_EVENT_PAGE');
+    mockGetEvent.mockResolvedValue({
+      ...createEventResponse(),
+      id,
+      endDate: subDays(new Date(), 3).toISOString(),
+      notes: 'My Notes',
+    });
+    const { findByRole } = render(<Event />, {
+      wrapper: createWrapper({}, eventMeetingMaterialsPath),
+    });
+
+    expect(
+      await findByRole('heading', { name: 'Notes', level: 2 }),
+    ).toBeVisible();
+  });
+
   describe('attendance', () => {
     const pastEndDate = subDays(new Date(), 3).toISOString();
 
     const createAttendance = (count: number): EventTeamAttendance[] =>
       Array.from({ length: count }, (_, i) => ({
+        id: `attendance-${i}`,
         team: { id: `team-${i}`, displayName: `Team ${i}` },
         attended: true,
       }));
@@ -238,6 +322,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
         endDate: pastEndDate,
         attendance: [
           {
+            id: 'attendance-1',
             team: {
               id: 't1',
               displayName: 'Team One',
@@ -246,6 +331,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
             attended: true,
           },
           {
+            id: 'attendance-2',
             team: {
               id: 't2',
               displayName: 'Team Two',
@@ -253,7 +339,11 @@ describe('the NEW_EVENT_PAGE flag', () => {
             },
             attended: false,
           },
-          { team: { id: 't3', displayName: 'Team Three' }, attended: false },
+          {
+            id: 'attendance-3',
+            team: { id: 't3', displayName: 'Team Three' },
+            attended: false,
+          },
         ],
       });
       const { findByText, getByTitle } = render(<Event />, { wrapper });
@@ -266,7 +356,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(getByTitle('Resource Team Icon')).toBeInTheDocument();
     });
 
-    it('shows the view more attendees control beyond ten teams', async () => {
+    it('shows the show-more control beyond five teams in a section', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
@@ -274,10 +364,10 @@ describe('the NEW_EVENT_PAGE flag', () => {
         attendance: createAttendance(11),
       });
       const { findByText } = render(<Event />, { wrapper });
-      expect(await findByText('View More Attendees')).toBeVisible();
+      expect(await findByText('Show 6 more')).toBeVisible();
     });
 
-    it('shows the empty state for a non project manager when no teams attended', async () => {
+    it('shows the read-only empty state for a non tech support member when no teams attended', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
@@ -289,63 +379,463 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Add Attendance')).not.toBeInTheDocument();
     });
 
-    it('shows the add attendance cta for a project manager of the event group', async () => {
+    it('opens the editor from the empty card for a tech support user', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
         endDate: pastEndDate,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
         attendance: [],
       });
-      const pmWrapper = createWrapper({
-        interestGroups: [
-          {
-            id: 'ig-pm',
-            name: 'Group',
-            active: true,
-            role: 'Project Manager',
-          },
-        ],
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole } = render(<Event />, {
+        wrapper: techSupportWrapper,
       });
-      const { findByText } = render(<Event />, { wrapper: pmWrapper });
-      expect(await findByText('Add Attendance')).toBeVisible();
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+
+      expect(
+        getByRole('heading', { name: 'Add Attendance' }),
+      ).toBeInTheDocument();
     });
 
-    it('hides the add attendance cta for a project manager of an inactive group', async () => {
+    it('saves attendance changes for a tech support user', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
         endDate: pastEndDate,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
-        attendance: [],
-      });
-      const pmWrapper = createWrapper({
-        interestGroups: [
+        attendance: [
           {
-            id: 'ig-pm',
-            name: 'Group',
-            active: false,
-            role: 'Project Manager',
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
           },
         ],
       });
-      const { findByText, queryByText } = render(<Event />, {
-        wrapper: pmWrapper,
+      mockPatchEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.click(
+        getByRole('checkbox', { name: 'Team One attendance' }),
+      );
+      await userEvent.click(getByRole('button', { name: 'Save' }));
+
+      await waitFor(() =>
+        expect(mockPatchEvent).toHaveBeenCalledWith(
+          id,
+          {
+            attendance: [{ id: 'attendance-1', teamId: 't1', attended: true }],
+          },
+          expect.anything(),
+        ),
+      );
+    });
+
+    it('shows no matches when searching in the attendance modal', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole, findByText } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.type(getByRole('combobox'), 'zzz');
+
+      expect(await findByText('Sorry, no matches for zzz.')).toBeVisible();
+    });
+
+    describe('upload a list', () => {
+      // The speakers card renders alongside attendance and is irrelevant here;
+      // its rows make every interaction in this block markedly slower.
+      const eventWithOneTeam = () => ({
+        ...createEventResponse({
+          numberOfSpeakers: 0,
+          numberOfExternalSpeakers: 0,
+          numberOfUnknownSpeakers: 0,
+        }),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+
+      // Role queries call getComputedStyle per candidate, and jsdom resolves
+      // each one against every emotion rule on the page, which dominates the
+      // runtime of this block. Scoping to the dialog walks ~80 elements
+      // instead of ~350. It is looked up again per step: the modal remounts
+      // between them, so a captured node goes stale.
+      const openUploadList = async () => {
+        const rendered = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+        const modal = () => within(rendered.getByRole('dialog'));
+        await userEvent.click(
+          await rendered.findByRole('button', { name: 'Edit attendance' }),
+        );
+        await userEvent.click(
+          modal().getByRole('button', { name: /Upload a List/i }),
+        );
+        return { container: rendered.container, modal };
+      };
+
+      const uploadCsv = async (container: HTMLElement, contents: string) => {
+        const fileInput = container.querySelector(
+          'input[type="file"]',
+        ) as HTMLInputElement;
+        await userEvent.upload(
+          fileInput,
+          new File([contents], 'teams.csv', { type: 'text/csv' }),
+        );
+      };
+
+      it('hides the upload entry point from a non tech support user', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+
+        const { findByText, queryByRole } = render(<Event />, {
+          wrapper: createWrapper(),
+        });
+
+        expect(await findByText('Team One')).toBeVisible();
+        expect(
+          queryByRole('button', { name: /Upload a List/i }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('matches uploaded names and lists the ones the hub does not have', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockGetTeamsForMatching.mockResolvedValue([
+          { ...createTeamListItemResponse(), id: 't2', displayName: 'Alessi' },
+        ]);
+
+        const { container, modal } = await openUploadList();
+        await uploadCsv(container, 'Team Name\nTeam Alessi\nNo Such Team\n');
+
+        expect(await modal().findByText('2 Teams')).toBeVisible();
+        expect(
+          await modal().findByRole('button', {
+            name: /will be added and marked if attended/,
+          }),
+        ).toBeVisible();
+        expect(await modal().findByText(/1 not matched/)).toBeVisible();
+      });
+
+      it('does not re-add a team already on the list but updates its status on save', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        mockGetTeamsForMatching.mockResolvedValue([
+          {
+            ...createTeamListItemResponse(),
+            id: 't1',
+            displayName: 'Team One',
+          },
+        ]);
+
+        const { container, modal } = await openUploadList();
+        await uploadCsv(container, 'Team Name,Attendance\nTeam One,Yes\n');
+
+        // Enabled means the upload resolved the team; the wording it shows for
+        // an already-added one belongs to the modal's own test.
+        await waitFor(() =>
+          expect(
+            modal().getByRole('button', { name: 'Add Attendees' }),
+          ).toBeEnabled(),
+        );
+
+        await userEvent.click(
+          modal().getByRole('button', { name: 'Add Attendees' }),
+        );
+        await userEvent.click(modal().getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              attendance: [
+                { id: 'attendance-1', teamId: 't1', attended: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+
+      it('saves a new uploaded team with its status and no attendance id', async () => {
+        mockGetEvent.mockResolvedValue(eventWithOneTeam());
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        mockGetTeamsForMatching.mockResolvedValue([
+          { ...createTeamListItemResponse(), id: 't2', displayName: 'Alessi' },
+        ]);
+
+        const { container, modal } = await openUploadList();
+        await uploadCsv(container, 'Team Name,Attendance\nAlessi,Yes\n');
+
+        await userEvent.click(
+          await modal().findByRole('button', { name: 'Add Attendees' }),
+        );
+        await userEvent.click(modal().getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              attendance: [
+                { id: 'attendance-1', teamId: 't1', attended: false },
+                { id: undefined, teamId: 't2', attended: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+    });
+
+    it('closes the attendance modal without saving when dismissed', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: false,
+          },
+        ],
+      });
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByRole, getByRole, queryByRole } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit attendance' }),
+      );
+      await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        queryByRole('heading', { name: 'Edit Attendance' }),
+      ).not.toBeInTheDocument();
+      expect(mockPatchEvent).not.toHaveBeenCalled();
+    });
+
+    it('hides the edit control for a user without tech support', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        attendance: [],
+      });
+      const nonTechSupportWrapper = createWrapper({ techSupport: false });
+      const { findByText, queryByLabelText } = render(<Event />, {
+        wrapper: nonTechSupportWrapper,
       });
       expect(await findByText('No attendance recorded yet')).toBeVisible();
-      expect(queryByText('Add Attendance')).not.toBeInTheDocument();
+      expect(queryByLabelText('Edit attendance')).not.toBeInTheDocument();
     });
 
-    it('shows the since last event metric when previous attendance exists', async () => {
-      mockGetEvent.mockResolvedValue({
-        ...createEventResponse(),
-        id,
-        endDate: pastEndDate,
-        attendance: createAttendance(3),
-        previousEventAttendance: { teamsAttended: 1, teamsTotal: 4 },
+    describe('interest group teams', () => {
+      const interestGroupTeam = (
+        overrides: Partial<ReturnType<typeof createTeamListItemResponse>> & {
+          endDate?: string;
+        } = {},
+      ) => ({
+        ...createTeamListItemResponse(),
+        id: 'ig-team-1',
+        displayName: 'Interest Group Team',
+        ...overrides,
       });
-      const { findByText } = render(<Event />, { wrapper });
-      expect(await findByText('Since last event')).toBeVisible();
+
+      const mockInterestGroupWithTeams = (
+        groupTeams: ReturnType<typeof interestGroupTeam>[],
+      ) =>
+        mockGetInterestGroup.mockResolvedValue({
+          ...createInterestGroupResponse(),
+          id: 'g-0',
+          name: 'Alpha Group',
+          teams: groupTeams,
+        });
+
+      it('seeds the interest group teams as locked rows', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [],
+        });
+        mockInterestGroupWithTeams([interestGroupTeam()]);
+
+        const { findByText, queryByRole, getByLabelText } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        expect(await findByText('From Group 1')).toBeVisible();
+        expect(await findByText('Interest Group Team')).toBeVisible();
+        expect(getByLabelText('Did not attend')).toBeInTheDocument();
+        expect(
+          queryByRole('button', { name: 'Remove Interest Group Team' }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('saves a seeded interest group team without an attendance id', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [],
+        });
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        mockInterestGroupWithTeams([interestGroupTeam()]);
+
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit attendance' }),
+        );
+        await userEvent.click(
+          getByRole('checkbox', { name: 'Interest Group Team attendance' }),
+        );
+        await userEvent.click(getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              attendance: [
+                { id: undefined, teamId: 'ig-team-1', attended: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+
+      it('locks a recorded team that is also a member of the group', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [
+            {
+              id: 'attendance-1',
+              team: { id: 'ig-team-1', displayName: 'Interest Group Team' },
+              attended: true,
+            },
+          ],
+        });
+        mockInterestGroupWithTeams([interestGroupTeam()]);
+
+        const { findByRole, queryByRole } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit attendance' }),
+        );
+
+        expect(
+          queryByRole('button', { name: 'Remove Interest Group Team' }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('drops a team whose group membership has ended', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [
+            {
+              id: 'attendance-1',
+              team: { id: 'ig-team-1', displayName: 'Interest Group Team' },
+              attended: true,
+            },
+          ],
+        });
+        mockInterestGroupWithTeams([
+          interestGroupTeam({ endDate: '2024-01-01T00:00:00.000Z' }),
+        ]);
+
+        const { findByText, queryByText } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        // Nothing comes from the group any more, so the card drops the
+        // headings and shows the row on its own.
+        expect(await findByText('Interest Group Team')).toBeVisible();
+        expect(queryByText('From Group 1')).not.toBeInTheDocument();
+        expect(queryByText('Additional teams')).not.toBeInTheDocument();
+      });
+
+      it('keeps a hub-inactive team in the interest group section', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [],
+        });
+        mockInterestGroupWithTeams([
+          interestGroupTeam({ inactiveSince: '2024-01-01T00:00:00.000Z' }),
+        ]);
+
+        const { findByText, getByTitle } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        expect(await findByText('From Group 1')).toBeVisible();
+        expect(getByTitle('Inactive Team')).toBeInTheDocument();
+      });
+
+      it('withholds the editor until the group teams are known', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          attendance: [
+            {
+              id: 'attendance-1',
+              team: { id: 't1', displayName: 'Team One' },
+              attended: true,
+            },
+          ],
+        });
+        mockGetInterestGroup.mockReturnValue(new Promise(() => {}));
+
+        const { findByText, queryByLabelText } = render(<Event />, {
+          wrapper: createWrapper({ techSupport: true }),
+        });
+
+        expect(await findByText('Team One')).toBeVisible();
+        expect(queryByLabelText('Edit attendance')).not.toBeInTheDocument();
+      });
     });
 
     it('does not show the attendance card for an upcoming event', async () => {
@@ -353,7 +843,11 @@ describe('the NEW_EVENT_PAGE flag', () => {
         ...createEventResponse(),
         id,
         attendance: [
-          { team: { id: 't1', displayName: 'Team One' }, attended: true },
+          {
+            id: 'attendance-1',
+            team: { id: 't1', displayName: 'Team One' },
+            attended: true,
+          },
         ],
       });
       const { findAllByText, queryByText } = render(<Event />, { wrapper });
@@ -369,10 +863,14 @@ describe('the NEW_EVENT_PAGE flag', () => {
       teamId: string,
       teamName: string,
       userId: string,
+      speakerId = `es-${teamId}-${userId}`,
+      preliminaryDataShared = false,
     ): EventSpeaker => ({
+      id: speakerId,
       team: { id: teamId, displayName: teamName },
       user: { id: userId, displayName: `User ${userId}` },
       role: 'Chair',
+      preliminaryDataShared,
     });
 
     beforeEach(() => {
@@ -386,11 +884,7 @@ describe('the NEW_EVENT_PAGE flag', () => {
         endDate: pastEndDate,
         speakers: [
           teamSpeaker('t-alpha', 'Alpha', 'u1'),
-          teamSpeaker('t-zeta', 'Zeta', 'u2'),
-        ],
-        preliminaryDataShared: [
-          { team: { id: 't-alpha' }, shared: false },
-          { team: { id: 't-zeta' }, shared: true },
+          teamSpeaker('t-zeta', 'Zeta', 'u2', undefined, true),
         ],
       });
       const { findByText, getAllByRole } = render(<Event />, { wrapper });
@@ -414,7 +908,145 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Preliminary Findings')).not.toBeInTheDocument();
     });
 
-    it('shows the view more speakers control beyond ten teams', async () => {
+    describe('upcoming event sections', () => {
+      const upcomingSpeakers: EventSpeaker[] = [
+        teamSpeaker('t-alpha', 'Alpha', 'u1'),
+        {
+          id: 'es-ext-team',
+          externalUser: { name: 'Team Guest' },
+          team: { id: 't-alpha', displayName: 'Alpha' },
+        },
+        {
+          id: 'es-p1-u2',
+          project: {
+            id: 'p1',
+            title: 'Project One',
+            projectType: 'Trainee Project',
+          },
+          user: { id: 'u2', displayName: 'User u2' },
+          role: 'Independent Project - Lead',
+        },
+        { id: 'es-ext', externalUser: { name: 'Lone Guest' } },
+      ];
+
+      it('shows team, individual project and external speakers in separate sections with the total', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          speakers: upcomingSpeakers,
+        });
+        const { findByText, getByText, getAllByRole, queryByText } = render(
+          <Event />,
+          { wrapper },
+        );
+
+        expect(await findByText('Project One')).toBeVisible();
+        expect(
+          getAllByRole('heading', { level: 4 }).map(
+            (heading) => heading.textContent,
+          ),
+        ).toEqual([
+          'From Team Projects',
+          'From Individual Projects',
+          'External',
+        ]);
+        expect(getByText('total speakers').previousSibling).toHaveTextContent(
+          '4',
+        );
+        expect(getByText('Team Guest')).toBeVisible();
+        expect(getByText('Lone Guest')).toBeVisible();
+        expect(queryByText('Preliminary Findings')).not.toBeInTheDocument();
+      });
+
+      it('shows the same sections without findings in the edit speakers form', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          speakers: upcomingSpeakers,
+        });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+
+        expect(
+          modal.getByRole('heading', { name: 'From Team Projects' }),
+        ).toBeVisible();
+        expect(
+          modal.getByRole('heading', { name: 'From Individual Projects' }),
+        ).toBeVisible();
+        expect(modal.getByRole('heading', { name: 'External' })).toBeVisible();
+        expect(modal.getByText('Project One')).toBeVisible();
+        expect(modal.getByText('Lone Guest')).toBeVisible();
+        expect(
+          modal.queryByText('Preliminary Findings'),
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe('past event findings', () => {
+      it('saves one value for a speaker entry linked to both a team and a project', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          speakers: [
+            {
+              id: 'es-both',
+              project: {
+                id: 'p1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+              user: { id: 'u3', displayName: 'User u3' },
+              role: 'Independent Project - Lead',
+              preliminaryDataShared: false,
+            },
+            teamSpeaker('t-alpha', 'Alpha', 'u3', 'es-both'),
+          ],
+        });
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Alpha' }),
+        );
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Project One' }),
+        );
+        const [teamToggle] = modal.getAllByRole('checkbox', {
+          name: 'User u3 preliminary findings shared',
+        });
+        await userEvent.click(teamToggle!);
+        await userEvent.click(modal.getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              speakersToRemove: [],
+              preliminaryDataShared: [
+                { speakerId: 'es-both', shared: true },
+                { speakerId: 'es-both', shared: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+    });
+
+    it('shows the show more control beyond five team rows', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
@@ -423,10 +1055,10 @@ describe('the NEW_EVENT_PAGE flag', () => {
         ),
       });
       const { findByText } = render(<Event />, { wrapper });
-      expect(await findByText('View More Speakers')).toBeVisible();
+      expect(await findByText('Show 6 more teams')).toBeVisible();
     });
 
-    it('shows the non project manager empty state when there are no speakers', async () => {
+    it('shows the read-only empty state when there are no speakers', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
@@ -439,25 +1071,14 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Add Speakers')).not.toBeInTheDocument();
     });
 
-    it('shows the editor empty state with an add speakers button for a project manager', async () => {
+    it('shows the editor empty state with an add speakers button for the interest group project manager', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
         speakers: [],
       });
-      const pmWrapper = createWrapper({
-        interestGroups: [
-          {
-            id: 'ig-pm',
-            name: 'Group',
-            active: true,
-            role: 'Project Manager',
-          },
-        ],
-      });
       const { findByText, findByRole } = render(<Event />, {
-        wrapper: pmWrapper,
+        wrapper: projectManagerWrapper,
       });
       expect(
         await findByText(/Marking who shared preliminary findings/),
@@ -467,30 +1088,152 @@ describe('the NEW_EVENT_PAGE flag', () => {
       ).toBeVisible();
     });
 
-    it('hides the add speakers button for a project manager of an inactive group', async () => {
+    it('saves speaker changes for the interest group project manager', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),
         id,
-        interestGroup: { ...createInterestGroupResponse(), id: 'ig-pm' },
-        speakers: [],
+        endDate: pastEndDate,
+        speakers: [teamSpeaker('t1', 'Team One', 'u1', 'es-1')],
       });
-      const pmWrapper = createWrapper({
-        interestGroups: [
+      mockPatchEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+      });
+      const { findByRole, getByRole } = render(<Event />, {
+        wrapper: projectManagerWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit speakers' }),
+      );
+      const modal = within(getByRole('dialog'));
+      await userEvent.click(
+        modal.getByRole('button', { name: 'Expand Team One' }),
+      );
+      await userEvent.click(
+        modal.getByRole('checkbox', {
+          name: 'User u1 preliminary findings shared',
+        }),
+      );
+      await userEvent.click(modal.getByRole('button', { name: 'Save' }));
+
+      await waitFor(() =>
+        expect(mockPatchEvent).toHaveBeenCalledWith(
+          id,
           {
-            id: 'ig-pm',
-            name: 'Group',
-            active: false,
-            role: 'Project Manager',
+            speakersToRemove: [],
+            preliminaryDataShared: [{ speakerId: 'es-1', shared: true }],
           },
-        ],
+          expect.anything(),
+        ),
+      );
+    });
+
+    it('runs the (empty) speaker search when typing in the modal', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        speakers: [teamSpeaker('t1', 'Team One', 'u1')],
       });
-      const { findByText, queryByText } = render(<Event />, {
-        wrapper: pmWrapper,
+      const { findByRole, getByRole, findByText } = render(<Event />, {
+        wrapper: projectManagerWrapper,
       });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit speakers' }),
+      );
+      await userEvent.type(getByRole('combobox'), 'zzz');
+
+      // loadSearchOptions returns [], so only the creatable external option is
+      // offered — proving the search ran.
+      expect(await findByText('zzz')).toBeVisible();
+    });
+
+    it('closes the speakers modal without saving when dismissed', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        speakers: [teamSpeaker('t1', 'Team One', 'u1')],
+      });
+      const { findByRole, getByRole, queryByRole } = render(<Event />, {
+        wrapper: projectManagerWrapper,
+      });
+
+      await userEvent.click(
+        await findByRole('button', { name: 'Edit speakers' }),
+      );
+      await userEvent.click(getByRole('button', { name: 'Cancel' }));
+
       expect(
-        await findByText('No speakers have been added for this event yet.'),
-      ).toBeVisible();
-      expect(queryByText('Add Speakers')).not.toBeInTheDocument();
+        queryByRole('heading', { name: 'Edit Speakers' }),
+      ).not.toBeInTheDocument();
+      expect(mockPatchEvent).not.toHaveBeenCalled();
+    });
+
+    it('hides the speaker editor from a tech support member who is not the interest group project manager', async () => {
+      mockGetEvent.mockResolvedValue({
+        ...createEventResponse(),
+        id,
+        endDate: pastEndDate,
+        speakers: [teamSpeaker('t1', 'Team One', 'u1')],
+      });
+      const { findByLabelText, queryByRole } = render(<Event />, {
+        wrapper: createWrapper({ techSupport: true }),
+      });
+
+      expect(await findByLabelText('Download speakers')).toBeVisible();
+      expect(
+        queryByRole('button', { name: 'Edit speakers' }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('speakers export', () => {
+    beforeEach(() => {
+      enable('NEW_EVENT_PAGE');
+      mockDownloadEventSpeakers.mockClear();
+    });
+
+    it('lets a tech support member download the speakers', async () => {
+      const techSupportWrapper = createWrapper({ techSupport: true });
+      const { findByLabelText } = render(<Event />, {
+        wrapper: techSupportWrapper,
+      });
+
+      const downloadButton = await findByLabelText('Download speakers');
+      await userEvent.click(downloadButton);
+
+      expect(mockDownloadEventSpeakers).toHaveBeenCalledTimes(1);
+      expect(mockDownloadEventSpeakers).toHaveBeenCalledWith(
+        expect.objectContaining({ id }),
+        expect.any(Array),
+      );
+    });
+
+    it('hides the download from a member who is not tech support', async () => {
+      const nonTechSupportWrapper = createWrapper({ techSupport: false });
+      const { findAllByText, queryByLabelText } = render(<Event />, {
+        wrapper: nonTechSupportWrapper,
+      });
+
+      await findAllByText('Event 0', { exact: false });
+
+      expect(queryByLabelText('Download speakers')).not.toBeInTheDocument();
+    });
+
+    it('hides the download when the token carries no techSupport value', async () => {
+      // test-utils defaults techSupport to false, so the shared wrapper would
+      // make this a duplicate of the test above rather than a claim-less token.
+      const noClaimWrapper = createWrapper({ techSupport: undefined });
+      const { findAllByText, queryByLabelText } = render(<Event />, {
+        wrapper: noClaimWrapper,
+      });
+
+      await findAllByText('Event 0', { exact: false });
+
+      expect(queryByLabelText('Download speakers')).not.toBeInTheDocument();
     });
   });
 });

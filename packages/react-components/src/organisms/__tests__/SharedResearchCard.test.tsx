@@ -158,3 +158,45 @@ it('displays in review tag when research output not published and someone reques
   );
   expect(queryByText('In Review')).toBeNull();
 });
+
+describe('association pill', () => {
+  const userBasedProjectOutput: ComponentProps<typeof SharedResearchCard> = {
+    ...sharedResearchCardProps,
+    publishingEntity: 'Project',
+    workingGroups: undefined,
+    teams: [{ id: '1', displayName: 'Team A', teamType: 'Discovery Team' }],
+  };
+
+  const teamBasedProjectOutput: ComponentProps<typeof SharedResearchCard> = {
+    ...sharedResearchCardProps,
+    publishingEntity: 'Team',
+    workingGroups: undefined,
+    teams: [
+      {
+        id: '1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+        project: {
+          id: 'project-1',
+          title: 'My Project',
+          projectType: 'Trainee Project',
+          projectId: 'ASAP-P1',
+        },
+      },
+    ],
+  };
+
+  it('shows a Project pill for a user-based project output', () => {
+    const { getByText } = render(
+      <SharedResearchCard {...userBasedProjectOutput} />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+
+  it('shows a Project pill for a team-based project output', () => {
+    const { getByText } = render(
+      <SharedResearchCard {...teamBasedProjectOutput} />,
+    );
+    expect(getByText('Project')).toBeVisible();
+  });
+});

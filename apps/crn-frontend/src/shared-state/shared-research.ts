@@ -1,11 +1,5 @@
 import { OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
-  BackendError,
-  validationErrorsAreSupported,
-} from '@asap-hub/frontend-utils';
-
-import {
-  isValidationErrorResponse,
   ResearchOutputDocumentType,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
@@ -13,7 +7,6 @@ import {
   ResearchThemeResponse,
   ResearchThemeType,
   ResourceTypeResponse,
-  ServerValidationError,
 } from '@asap-hub/model';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuthorization } from '../auth/useAuthorization';
@@ -58,25 +51,6 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
       return 'Article';
   }
 }
-
-/**
- * Translates a backend validation response into a `ServerValidationError` so the
- * form can surface it through the same path as its own field validation.
- */
-export const toServerValidationError =
-  (supportedErrors: string[]) =>
-  (error: unknown): never => {
-    if (error instanceof BackendError) {
-      const { response } = error;
-      if (
-        isValidationErrorResponse(response) &&
-        validationErrorsAreSupported(response, supportedErrors)
-      ) {
-        throw new ServerValidationError(response.data);
-      }
-    }
-    throw error;
-  };
 
 export const useRelatedResearchSuggestions = (currentId?: string) => {
   const algoliaClient = useAlgolia();

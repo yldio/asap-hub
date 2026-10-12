@@ -12,7 +12,11 @@ export { default as BasicLayout } from './BasicLayout';
 export { default as BiographyModal } from './BiographyModal';
 export { default as ComplianceDashboard } from './ComplianceDashboard';
 export { default as ComplianceReportForm } from './ComplianceReportForm';
-export { default as ContactInfoModal } from './ContactInfoModal';
+export {
+  default as ContactInfoModal,
+  contactInfoServerErrorPaths,
+  invalidEmailMessage,
+} from './ContactInfoModal';
 export { default as ContentPage } from './ContentPage';
 export { default as CreateMilestoneModal } from './CreateMilestoneModal';
 export { default as DashboardPage } from './DashboardPage';
@@ -88,10 +92,10 @@ export { default as SigninPage } from './SigninPage';
 export { default as TagsPage } from './TagsPage';
 export { default as TagsPageBody } from './TagsPageBody';
 export { default as TagsPageHeader } from './TagsPageHeader';
+export { default as TeamMetricsPage } from './TeamMetricsPage';
 export { default as TeamProfileAbout } from './TeamProfileAbout';
 export { default as TeamProfileHeader } from './TeamProfileHeader';
 export { default as TeamProfilePage } from './TeamProfilePage';
-export { default as TeamProfileWorkspace } from './TeamProfileWorkspace';
 export { default as ToolModal } from './ToolModal';
 export { default as TutorialDetailsPage } from './TutorialDetailsPage';
 export { default as TutorialsPage } from './TutorialsPage';

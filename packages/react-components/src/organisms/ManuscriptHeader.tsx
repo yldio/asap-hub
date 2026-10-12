@@ -1,15 +1,17 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { dashboard } from '@asap-hub/routing';
 
 import { Display, Paragraph } from '../atoms';
 import { rem } from '../pixels';
-import { paper, steel } from '../colors';
+import { colour } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { Breadcrumbs, BreadcrumbItem } from '../molecules';
 
 const headerStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(60)}`,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+  padding: `${rem(12)} ${contentSidePaddingWithNavigation(8)} ${rem(60)}`,
+  background: colour.background.primary,
+  boxShadow: `0 2px 4px -2px ${colour.neutral[100]}`,
   marginBottom: rem(30),
   display: 'flex',
   justifyContent: 'center',
@@ -23,14 +25,20 @@ const contentStyles = css({
   justifyContent: 'center',
 });
 
+const breadcrumbsStyles = css({
+  marginBottom: rem(36),
+});
+
 type ManuscriptHeaderProps = {
   resubmitManuscript?: boolean;
   isEditMode?: boolean;
+  breadcrumbs?: ReadonlyArray<BreadcrumbItem>;
 };
 
 const ManuscriptHeader: React.FC<ManuscriptHeaderProps> = ({
   resubmitManuscript = false,
   isEditMode = false,
+  breadcrumbs = [],
 }) => {
   const title = isEditMode
     ? 'Edit Manuscript'
@@ -49,9 +57,17 @@ const ManuscriptHeader: React.FC<ManuscriptHeaderProps> = ({
   return (
     <header css={headerStyles}>
       <div css={contentStyles}>
+        {breadcrumbs.length > 0 && (
+          <div css={breadcrumbsStyles}>
+            <Breadcrumbs
+              homeHref={dashboard({}).$}
+              items={[...breadcrumbs, { label: title }]}
+            />
+          </div>
+        )}
         <Display styleAsHeading={2}>{title}</Display>
         <div>
-          <Paragraph noMargin accent="lead">
+          <Paragraph noMargin accent="tertiary">
             {getDescription()}
           </Paragraph>
         </div>

@@ -4,6 +4,7 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasResearchOutputDraftAccess,
   hasVersionResearchOutputPermission,
   hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
@@ -274,6 +275,129 @@ describe('getUserRole - projects', () => {
 
   test('returns None when user data is null', () => {
     expect(getUserRole(null, 'projects', [projectId])).toEqual('None');
+  });
+});
+
+describe('hasResearchOutputDraftAccess', () => {
+  const teamMembership = {
+    id: 'team-1',
+    displayName: 'team 1',
+    role: 'Collaborating PI' as const,
+  };
+  const workingGroupMembership = {
+    id: 'wg-1',
+    name: 'wg 1',
+    role: 'Member' as const,
+    active: true,
+  };
+  const projectMembership = {
+    id: 'project-1',
+    title: 'project 1',
+    projectType: 'Resource Project' as const,
+    status: 'Active',
+  };
+
+  const member = {
+    ...user,
+    role: 'Grantee' as const,
+    teams: [teamMembership],
+    workingGroups: [workingGroupMembership],
+    projects: [projectMembership],
+  };
+
+  test('returns false when user is null', () => {
+    expect(hasResearchOutputDraftAccess(null, { teams: ['team-1'] })).toEqual(
+      false,
+    );
+  });
+
+  test('returns true for staff regardless of associations', () => {
+    expect(
+      hasResearchOutputDraftAccess(
+        { ...member, role: 'Staff' },
+        { teams: ['other-team'] },
+      ),
+    ).toEqual(true);
+  });
+
+  test('returns true for staff even without associations', () => {
+    expect(
+      hasResearchOutputDraftAccess({ ...member, role: 'Staff' }, {}),
+    ).toEqual(true);
+  });
+
+  test('returns false for a member without any matching association', () => {
+    expect(hasResearchOutputDraftAccess(member, {})).toEqual(false);
+  });
+
+  test('returns true when the user is an active member of the team', () => {
+    expect(hasResearchOutputDraftAccess(member, { teams: ['team-1'] })).toEqual(
+      true,
+    );
+  });
+
+  test('returns false when the user does not belong to the team', () => {
+    expect(
+      hasResearchOutputDraftAccess(member, { teams: ['other-team'] }),
+    ).toEqual(false);
+  });
+
+  test('returns false when the user is an inactive member of the team', () => {
+    expect(
+      hasResearchOutputDraftAccess(
+        {
+          ...member,
+          teams: [{ ...teamMembership, inactiveSinceDate: '2023-07-26' }],
+        },
+        { teams: ['team-1'] },
+      ),
+    ).toEqual(false);
+  });
+
+  test('returns true when the user is an active member of the working group', () => {
+    expect(
+      hasResearchOutputDraftAccess(member, { workingGroups: ['wg-1'] }),
+    ).toEqual(true);
+  });
+
+  test('returns false when the user is an inactive member of the working group', () => {
+    expect(
+      hasResearchOutputDraftAccess(
+        {
+          ...member,
+          workingGroups: [{ ...workingGroupMembership, active: false }],
+        },
+        { workingGroups: ['wg-1'] },
+      ),
+    ).toEqual(false);
+  });
+
+  test('returns true when the user is an active member of the project', () => {
+    expect(
+      hasResearchOutputDraftAccess(member, { projects: ['project-1'] }),
+    ).toEqual(true);
+  });
+
+  test('returns false when the user is not an active member of the project', () => {
+    expect(
+      hasResearchOutputDraftAccess(
+        {
+          ...member,
+          projects: [{ ...projectMembership, status: 'Completed' }],
+        },
+        { projects: ['project-1'] },
+      ),
+    ).toEqual(false);
+  });
+
+  test('returns true when the user matches any of the provided associations', () => {
+    expect(
+      hasResearchOutputDraftAccess(member, {
+        teams: ['other-team'],
+        workingGroups: ['other-wg'],
+        projects: ['project-1'],
+      }),
+    ).toEqual(true);
   });
 });
 

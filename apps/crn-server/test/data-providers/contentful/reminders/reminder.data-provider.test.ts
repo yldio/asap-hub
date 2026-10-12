@@ -67,6 +67,11 @@ describe('Reminders data provider', () => {
           items: [],
         },
       });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestonesCollection: {
+          items: [],
+        },
+      });
     };
 
     test('Should fetch the reminders from contentful graphql', async () => {
@@ -110,6 +115,10 @@ describe('Reminders data provider', () => {
         eventsCollection: {
           items: [eventMockResponse],
         },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
       });
 
       mockEmptyDiscussionGraphqlResponse();
@@ -178,6 +187,9 @@ describe('Reminders data provider', () => {
           researchOutputsCollection: {
             items: [switchToDraftResearchOutputItem],
           },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users,
         });
 

@@ -1,4 +1,5 @@
 import {
+  AddSpeakersReminder,
   DiscussionCreatedReminder,
   DiscussionRepliedToReminder,
   EventHappeningNowReminder,
@@ -9,6 +10,10 @@ import {
   ManuscriptCreatedReminder,
   ManuscriptResubmittedReminder,
   ManuscriptStatusUpdatedReminder,
+  MarkAttendanceReminder,
+  MilestoneCreatedReminder,
+  MilestoneOutputsLinkedReminder,
+  MilestoneStatusUpdatedReminder,
   PresentationUpdatedReminder,
   PublishMaterialReminder,
   ReminderEventResponse,
@@ -25,7 +30,10 @@ import {
 import {
   FetchDiscussionRemindersQuery,
   FetchMessageRemindersQuery,
+  FetchMilestoneReminderProjectsQuery,
+  FetchMilestoneRemindersQuery,
   FetchRemindersQuery,
+  FetchRemindersUserQuery,
   FetchTeamProjectManagerQuery,
 } from '@asap-hub/contentful';
 import { getContentfulGraphqlEvent, getEventResponse } from './events.fixtures';
@@ -46,8 +54,8 @@ export const getResearchOutputVersionPublishedReminder =
         documentType: 'Bioinformatics',
         title: 'test-research-output-version',
         publishedAt: '2023-01-01T08:00:00Z',
-        associationType: 'team',
-        associationName: 'Team A',
+        associationType: 'project',
+        associationName: 'Genetic Determinants of Progression',
       },
     };
   };
@@ -65,13 +73,13 @@ export const getResearchOutputPublishedReminder =
         title: researchOutputDataObject.title,
         addedDate: researchOutputDataObject.addedDate,
         statusChangedBy: 'Tom Hardy',
-        associationType: 'team',
-        associationName: 'Team A',
+        associationType: 'project',
+        associationName: 'Genetic Determinants of Progression',
       },
     };
   };
 
-export const getResearchOutputDraftTeamReminder =
+export const getResearchOutputDraftProjectReminder =
   (): ResearchOutputDraftReminder => {
     const researchOutputDataObject = getResearchOutputDataObject();
     return {
@@ -82,8 +90,8 @@ export const getResearchOutputDraftTeamReminder =
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
         createdDate: researchOutputDataObject.created,
-        associationName: researchOutputDataObject.teams[0]?.displayName || '',
-        associationType: 'team',
+        associationName: 'Genetic Determinants of Progression',
+        associationType: 'project',
         createdBy: 'Tom Hardy',
       },
     };
@@ -107,7 +115,7 @@ export const getResearchOutputDraftWorkingGroupReminder =
     };
   };
 
-export const getResearchOutputInReviewTeamReminder =
+export const getResearchOutputInReviewProjectReminder =
   (): ResearchOutputInReviewReminder => {
     const researchOutputDataObject = getResearchOutputDataObject();
     return {
@@ -118,8 +126,8 @@ export const getResearchOutputInReviewTeamReminder =
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
         createdDate: researchOutputDataObject.created,
-        associationName: researchOutputDataObject.teams[0]?.displayName || '',
-        associationType: 'team',
+        associationName: 'Genetic Determinants of Progression',
+        associationType: 'project',
         documentType: researchOutputDataObject.documentType,
         statusChangedBy: 'Tom Hardy',
       },
@@ -217,6 +225,34 @@ export const getPublishMaterialReminder = (): PublishMaterialReminder => {
   };
 };
 
+export const getMarkAttendanceReminder = (): MarkAttendanceReminder => {
+  const eventResponse = getEventResponse();
+  return {
+    id: `mark-attendance-${eventResponse.id}`,
+    entity: 'Event',
+    type: 'Mark Attendance',
+    data: {
+      eventId: eventResponse.id,
+      title: eventResponse.title,
+      endDate: eventResponse.endDate,
+    },
+  };
+};
+
+export const getAddSpeakersReminder = (): AddSpeakersReminder => {
+  const eventResponse = getEventResponse();
+  return {
+    id: `add-speakers-${eventResponse.id}`,
+    entity: 'Event',
+    type: 'Add Speakers',
+    data: {
+      eventId: eventResponse.id,
+      title: eventResponse.title,
+      endDate: eventResponse.endDate,
+    },
+  };
+};
+
 export const getVideoEventUpdatedReminder = (): VideoEventReminder => {
   const eventResponse = getEventResponse() as ReminderEventResponse;
   eventResponse.videoRecordingUpdatedAt = '2010-08-01T08:00:04.000Z';
@@ -275,7 +311,7 @@ export const getReminderResponse = (): ReminderResponse => {
   return {
     id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     description:
-      '**Tom Hardy** on team **Team A** published a team Lab Material output: Test Proposal 1234.',
+      '**Tom Hardy** published a project lab material for **Genetic Determinants of Progression**: Test Proposal 1234.',
     entity: 'Research Output',
     href: '/shared-research/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   };
@@ -312,8 +348,42 @@ export const getContentfulReminderEventsCollectionItem = (): NonNullable<
         },
       ],
     },
+    calendar: {
+      linkedFrom: {
+        interestGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'interest-group-1',
+              },
+            },
+          ],
+        },
+      },
+    },
   };
 };
+
+export const getTeamLinkedProjectContent = () => ({
+  projectMembershipCollection: {
+    items: [
+      {
+        linkedFrom: {
+          projectsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'project-id-1',
+                },
+                title: 'Genetic Determinants of Progression',
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
 
 export const getContentfulReminderResearchOutputCollectionItem =
   (): NonNullable<
@@ -344,6 +414,7 @@ export const getContentfulReminderResearchOutputCollectionItem =
               id: 'team-1',
             },
             displayName: 'Team A',
+            linkedFrom: getTeamLinkedProjectContent(),
           },
         ],
       },
@@ -389,6 +460,7 @@ export const getContentfulReminderResearchOutputVersionCollectionItem =
                       id: 'team-1',
                     },
                     displayName: 'Team A',
+                    linkedFrom: getTeamLinkedProjectContent(),
                   },
                 ],
               },
@@ -406,11 +478,12 @@ export const getContentfulReminderResearchOutputVersionCollectionItem =
   };
 
 export const getContentfulReminderUsersContent =
-  (): FetchRemindersQuery['users'] => {
+  (): FetchRemindersUserQuery['users'] => {
     const eventResponse = getEventResponse();
 
     return {
       role: 'Grantee',
+      techSupport: false,
       teamsCollection: {
         items: [
           {
@@ -485,6 +558,9 @@ export const getContentfulReminderUsersContent =
             },
           ],
         },
+        interestGroupLeadersCollection: {
+          items: [],
+        },
       },
     };
   };
@@ -511,7 +587,7 @@ export const getTeamProjectManagerResponse =
     },
   });
 
-export const getResearchOutputSwitchToDraftTeamReminder =
+export const getResearchOutputSwitchToDraftProjectReminder =
   (): ResearchOutputSwitchToDraftReminder => {
     const researchOutputDataObject = getResearchOutputDataObject();
     return {
@@ -522,8 +598,8 @@ export const getResearchOutputSwitchToDraftTeamReminder =
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
         statusChangedAt: '2021-05-21T13:18:31Z',
-        associationName: researchOutputDataObject.teams[0]?.displayName || '',
-        associationType: 'team',
+        associationName: 'Genetic Determinants of Progression',
+        associationType: 'project',
         documentType: researchOutputDataObject.documentType,
         statusChangedBy: 'Tom Hardy',
       },
@@ -557,6 +633,7 @@ export const getManuscriptVersion = ({
   createdByFirstName,
   createdByLastName,
   labPI = 'lab-pi-id',
+  firstPublishedAt = '2025-01-07T16:21:33.824Z',
 }: {
   count: number;
   firstAuthorIds: string[];
@@ -566,6 +643,7 @@ export const getManuscriptVersion = ({
   createdByFirstName: string;
   createdByLastName: string;
   labPI?: string;
+  firstPublishedAt?: string;
 }): NonNullable<
   NonNullable<
     NonNullable<
@@ -574,6 +652,9 @@ export const getManuscriptVersion = ({
   >['items'][number]
 > => ({
   count,
+  sys: {
+    firstPublishedAt,
+  },
   additionalAuthorsCollection: {
     items: additionalAuthorIds.map((id) => ({
       __typename: 'Users',
@@ -668,6 +749,22 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   },
 });
 
+export const getContentfulReminderProjectManuscriptCollectionItem =
+  (): NonNullable<
+    FetchRemindersQuery['manuscriptsCollection']
+  >['items'][number] => ({
+    ...getContentfulReminderManuscriptCollectionItem()!,
+    teamsCollection: {
+      items: [],
+    },
+    project: {
+      sys: {
+        id: 'project-id-1',
+      },
+      title: 'Genetic Determinants of Progression',
+    },
+  });
+
 const getDiscussionCreatedByUser = (id: string) => ({
   sys: {
     id,
@@ -705,7 +802,7 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
     manuscriptsCollection: {
       items: [
         {
-          ...getContentfulReminderManuscriptCollectionItem(),
+          ...getContentfulReminderManuscriptCollectionItem()!,
         },
       ],
     },
@@ -733,7 +830,7 @@ const getReminderMessageCollectionItem = (): NonNullable<
             manuscriptsCollection: {
               items: [
                 {
-                  ...getContentfulReminderManuscriptCollectionItem(),
+                  ...getContentfulReminderManuscriptCollectionItem()!,
                 },
               ],
             },
@@ -797,10 +894,10 @@ export const getDiscussionStartedByGranteeReminder =
     entity: 'Discussion',
     type: 'Discussion Created by Grantee',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
-      userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
   });
@@ -811,10 +908,10 @@ export const getDiscussionStartedByOpenScienceMemberReminder =
     entity: 'Discussion',
     type: 'Discussion Created by Open Science Member',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
-      userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
   });
@@ -825,10 +922,10 @@ export const getDiscussionRepliedToByGranteeReminder =
     entity: 'Discussion',
     type: 'Discussion Replied To by Grantee',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
-      userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
   });
@@ -839,10 +936,113 @@ export const getDiscussionRepliedToByOpenScienceMemberReminder =
     entity: 'Discussion',
     type: 'Discussion Replied To by Open Science Member',
     data: {
+      manuscriptId: 'manuscript-id-1',
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Reminder',
-      userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
+    },
+  });
+
+export const getContentfulReminderMilestoneCollectionItem = (): NonNullable<
+  FetchMilestoneRemindersQuery['milestonesCollection']
+>['items'][number] => ({
+  sys: {
+    id: 'milestone-id-1',
+    firstPublishedAt: '2025-01-07T16:21:33.824Z',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+  },
+  description: 'Establish the mouse model',
+  status: 'Pending',
+  bulkImported: false,
+  statusUpdatedAt: '2025-01-07T16:21:32.000Z',
+  statusUpdatedBy: { sys: { id: 'milestone-creator-user' } },
+  outputsLinkedAt: null,
+  outputsLinkedBy: null,
+  relatedArticlesCollection: { total: 0 },
+  linkedFrom: {
+    aimsCollection: {
+      total: 1,
+      items: [
+        {
+          sys: { id: 'aim-id-2' },
+          linkedFrom: { supplementGrantCollection: { items: [] } },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulReminderMilestoneProjectCollectionItem =
+  (): NonNullable<
+    FetchMilestoneReminderProjectsQuery['projectsCollection']
+  >['items'][number] => ({
+    sys: { id: 'project-id-1' },
+    title: 'Genetic Determinants of Progression',
+    projectType: 'Discovery Project',
+    originalGrantAimsCollection: {
+      total: 2,
+      items: [{ sys: { id: 'aim-id-1' } }, { sys: { id: 'aim-id-2' } }],
+    },
+    supplementGrant: null,
+    membersCollection: {
+      total: 1,
+      items: [
+        {
+          role: null,
+          projectMember: {
+            __typename: 'Teams',
+            sys: { id: 'reminder-team' },
+          },
+        },
+      ],
+    },
+    scientificFacilitatorCollection: {
+      total: 1,
+      items: [{ sys: { id: 'scientific-facilitator-user' } }],
+    },
+  });
+
+const milestoneReminderData = {
+  milestoneId: 'milestone-id-1',
+  projectId: 'project-id-1',
+  projectName: 'Genetic Determinants of Progression',
+  projectType: 'Discovery Project' as const,
+  grantType: 'original' as const,
+  aimNumbers: [2],
+};
+
+export const getMilestoneCreatedReminder = (): MilestoneCreatedReminder => ({
+  id: 'milestone-created-milestone-id-1',
+  entity: 'Milestone',
+  type: 'Milestone Created',
+  data: {
+    ...milestoneReminderData,
+    createdAt: '2025-01-07T16:21:33.824Z',
+  },
+});
+
+export const getMilestoneStatusUpdatedReminder =
+  (): MilestoneStatusUpdatedReminder => ({
+    id: 'milestone-status-updated-milestone-id-1',
+    entity: 'Milestone',
+    type: 'Milestone Status Updated',
+    data: {
+      ...milestoneReminderData,
+      status: 'Complete',
+      statusUpdatedAt: '2025-01-08T10:00:00.000Z',
+    },
+  });
+
+export const getMilestoneOutputsLinkedReminder =
+  (): MilestoneOutputsLinkedReminder => ({
+    id: 'milestone-outputs-linked-milestone-id-1',
+    entity: 'Milestone',
+    type: 'Milestone Outputs Linked',
+    data: {
+      ...milestoneReminderData,
+      milestoneName: 'Establish the mouse model',
+      outputsLinkedAt: '2025-01-08T10:00:00.000Z',
+      outputsLinkedBy: 'John Smith',
     },
   });

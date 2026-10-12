@@ -9,13 +9,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ManuscriptWorkspaceRedirect from '../ManuscriptWorkspaceRedirect';
 
 const mockGetManuscriptWorkspaceUrl = jest.fn();
-const mockIsEnabled = jest.fn();
 const mockAuthorization = 'Bearer access_token';
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: () => ({ isEnabled: mockIsEnabled }),
-}));
 
 jest.mock('../../network/teams/api', () => ({
   ...jest.requireActual('../../network/teams/api'),
@@ -37,7 +31,6 @@ const LocationCapture = () => {
 beforeEach(() => {
   jest.clearAllMocks();
   currentLocation = null;
-  mockIsEnabled.mockReturnValue(false);
 });
 
 const renderRedirect = (initialPath: string) =>
@@ -82,7 +75,6 @@ it('redirects to the workspace url when available', async () => {
     manuscriptId,
     mockAuthorization,
     undefined,
-    false,
   );
 });
 
@@ -116,29 +108,5 @@ it('passes the discussions tab when the query parameter is set', async () => {
     manuscriptId,
     mockAuthorization,
     'discussions',
-    false,
-  );
-});
-
-it('passes the PROJECT_WORKSPACE flag to the workspace url hook', async () => {
-  mockIsEnabled.mockImplementation(
-    (flag: string) => flag === 'PROJECT_WORKSPACE',
-  );
-  mockGetManuscriptWorkspaceUrl.mockResolvedValue({
-    url: '/target-workspace',
-  });
-
-  renderRedirect(compliance({}).manuscript({ manuscriptId }).$);
-
-  await waitFor(() => {
-    expect(currentLocation?.pathname).toBe('/target-workspace');
-  });
-
-  expect(mockIsEnabled).toHaveBeenCalledWith('PROJECT_WORKSPACE');
-  expect(mockGetManuscriptWorkspaceUrl).toHaveBeenCalledWith(
-    manuscriptId,
-    mockAuthorization,
-    undefined,
-    true,
   );
 });

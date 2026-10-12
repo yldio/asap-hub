@@ -6,6 +6,7 @@ import {
   ResearchOutputResponse,
   ResearchOutputWorkingGroupResponse,
 } from './research-output';
+import { ProjectType } from './project';
 import { ResearchTagDataObject } from './research-tag';
 import { TeamResponse, TeamType } from './team';
 import { TutorialsDataObject } from './tutorials';
@@ -24,14 +25,37 @@ export interface EventSpeakerExternalUserData {
   name: string;
 }
 
+export type EventSpeakerTeamData = Pick<
+  TeamResponse,
+  'displayName' | 'id' | 'inactiveSince'
+> &
+  Partial<Pick<TeamResponse, 'teamType'>>;
+
 export type EventSpeakerTeam = {
-  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
+  team: EventSpeakerTeamData;
+};
+
+export type EventSpeakerProjectData = {
+  id: string;
+  title: string;
+  projectType?: ProjectType;
 };
 
 export type EventSpeakerUser = {
-  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
+  // Contentful eventSpeakers entry id; optional as only the CRN read path sets it.
+  id?: string;
+  team: EventSpeakerTeamData;
   user: EventSpeakerUserData;
   role: string;
+  preliminaryDataShared?: boolean;
+};
+
+export type EventSpeakerProjectUser = {
+  id?: string;
+  project: EventSpeakerProjectData;
+  user: EventSpeakerUserData;
+  role: string;
+  preliminaryDataShared?: boolean;
 };
 
 export type EventSpeakerUserWithoutTeam = {
@@ -39,16 +63,21 @@ export type EventSpeakerUserWithoutTeam = {
 };
 
 export type EventSpeakerExternalUser = {
+  id?: string;
   externalUser: EventSpeakerExternalUserData;
+  team?: EventSpeakerTeamData;
+  project?: EventSpeakerProjectData;
 };
 
 export type EventSpeaker =
   | EventSpeakerTeam
   | EventSpeakerUser
+  | EventSpeakerProjectUser
   | EventSpeakerUserWithoutTeam
   | EventSpeakerExternalUser;
 
 export type EventTeamAttendance = {
+  id: string;
   team: {
     id: string;
     displayName: string;
@@ -61,11 +90,6 @@ export type EventTeamAttendance = {
 export type EventPreviousAttendance = {
   teamsAttended: number;
   teamsTotal: number;
-};
-
-export type EventPreliminaryDataSharing = {
-  team: { id: string };
-  shared: boolean;
 };
 
 export interface EventDataObject extends BasicEvent {
@@ -97,7 +121,6 @@ export interface EventDataObject extends BasicEvent {
   })[];
   attendance?: EventTeamAttendance[];
   previousEventAttendance?: EventPreviousAttendance;
-  preliminaryDataShared?: EventPreliminaryDataSharing[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
@@ -137,6 +160,29 @@ export type EventUpdateDataObject = Partial<
 
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
+
+export type EventAttendanceUpdateItem = {
+  id?: string;
+  teamId: string;
+  attended: boolean;
+};
+
+export type EventPreliminaryDataSharingUpdateItem = {
+  speakerId: string;
+  shared: boolean;
+};
+
+export type EventSpeakerUnlinkItem = {
+  speakerId: string;
+  field: 'team' | 'project';
+};
+
+export type EventUpdateDetailsRequest = {
+  attendance?: EventAttendanceUpdateItem[];
+  speakersToRemove?: string[];
+  speakersToUnlink?: EventSpeakerUnlinkItem[];
+  preliminaryDataShared?: EventPreliminaryDataSharingUpdateItem[];
+};
 
 type BaseFilterOptions = {
   workingGroupId?: never;

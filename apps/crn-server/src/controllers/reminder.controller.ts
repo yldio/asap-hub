@@ -1,11 +1,18 @@
 import { DateTime } from 'luxon';
-import { events, network, sharedResearch } from '@asap-hub/routing';
+import {
+  compliance,
+  events,
+  network,
+  projectRouteByType,
+  sharedResearch,
+} from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
+  GrantType,
   ListReminderResponse,
+  ProjectType,
 } from '@asap-hub/model';
-import { capitalizeFirstLetter } from '@asap-hub/server-common';
 import { ReminderDataProvider } from '../data-providers/types';
 import { crnMeetingMaterialsDrive } from '../config';
 
@@ -23,6 +30,18 @@ export const formattedMaterialByEventType = (
       throw new Error('Unknown Material Event');
   }
 };
+
+const discussionTeamPrefix = (teams: string): string =>
+  teams ? ` on **${teams}**` : '';
+
+const getMilestonesTabHref = (
+  projectType: ProjectType,
+  projectId: string,
+  grantType: GrantType,
+): string =>
+  `${
+    projectRouteByType[projectType](projectId).milestones({}).$
+  }?grantType=${grantType}`;
 
 export default class ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}
@@ -43,11 +62,11 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `${capitalizeFirstLetter(
-              reminder.data.associationType,
-            )} **${reminder.data.associationName}** published a new ${
+            description: `**${
+              reminder.data.associationName
+            }** published a new ${
               reminder.data.associationType
-            } ${reminder.data.documentType} output version: ${
+            } ${reminder.data.documentType.toLowerCase()} version: ${
               reminder.data.title
             }.`,
           };
@@ -62,7 +81,11 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.statusChangedBy}** published a ${
+              reminder.data.associationType
+            } ${reminder.data.documentType.toLowerCase()} for **${
+              reminder.data.associationName
+            }**: ${reminder.data.title}.`,
           };
         }
 
@@ -76,7 +99,7 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.createdBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** created a draft ${reminder.data.associationType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.createdBy}** updated a draft output for **${reminder.data.associationName}**: ${reminder.data.title}.`,
           };
         }
 
@@ -90,7 +113,11 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
+            description: `**${
+              reminder.data.statusChangedBy
+            }** requested the PM to review a draft ${reminder.data.documentType.toLowerCase()} from **${
+              reminder.data.associationName
+            }**: ${reminder.data.title}.`,
           };
         }
 
@@ -104,7 +131,13 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** switched to draft a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.statusChangedBy}** on ${
+              reminder.data.associationType
+            } **${reminder.data.associationName}** switched to draft a ${
+              reminder.data.associationType
+            } ${reminder.data.documentType.toLowerCase()} output: ${
+              reminder.data.title
+            }.`,
           };
         }
 
@@ -115,6 +148,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.createdBy}** submitted a manuscript for **${reminder.data.teams}** and its status is 'Waiting for Report':`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
@@ -128,6 +164,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.resubmittedBy}** resubmitted a manuscript for **${reminder.data.teams}** and its status changed to 'Manuscript Re-Submitted':`,
             subtext: reminder.data.title,
             date: reminder.data.resubmittedAt,
@@ -141,58 +180,72 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: compliance({}).manuscript({
+              manuscriptId: reminder.data.manuscriptId,
+            }).$,
             description: `**${reminder.data.updatedBy}** on **${reminder.data.teams}** changed a compliance status from ${reminder.data.previousStatus} to ${reminder.data.status}:`,
             subtext: reminder.data.title,
             date: reminder.data.updatedAt,
           };
         }
 
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Created by Grantee'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** started a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Created by Open Science Member'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** started a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
-        if (
-          reminder.entity === 'Discussion' &&
-          reminder.type === 'Discussion Replied To by Grantee'
-        ) {
-          return {
-            id: reminder.id,
-            entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** replied to a discussion on:`,
-            subtext: reminder.data.title,
-            date: reminder.data.publishedAt,
-          };
-        }
-
         if (reminder.entity === 'Discussion') {
+          const isCreated =
+            reminder.type === 'Discussion Created by Grantee' ||
+            reminder.type === 'Discussion Created by Open Science Member';
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a discussion on:`,
+            href: `${
+              compliance({}).manuscript({
+                manuscriptId: reminder.data.manuscriptId,
+              }).$
+            }?tab=discussions`,
+            description: `**${reminder.data.createdBy}**${discussionTeamPrefix(
+              reminder.data.manuscriptTeams,
+            )} ${
+              isCreated
+                ? 'started a discussion on:'
+                : 'replied to a discussion on:'
+            }`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
+          };
+        }
+
+        if (reminder.entity === 'Milestone') {
+          const href = getMilestonesTabHref(
+            reminder.data.projectType,
+            reminder.data.projectId,
+            reminder.data.grantType,
+          );
+          const aimNumbers = reminder.data.aimNumbers.join(', ');
+          if (reminder.type === 'Milestone Created') {
+            return {
+              id: reminder.id,
+              entity: reminder.entity,
+              href,
+              description: `A new milestone has been added for **${reminder.data.projectName}**: Aim ${aimNumbers}. These milestones have been linked to their corresponding Aims and are now available in the Milestones tab.`,
+              date: reminder.data.createdAt,
+            };
+          }
+
+          if (reminder.type === 'Milestone Status Updated') {
+            return {
+              id: reminder.id,
+              entity: reminder.entity,
+              href,
+              description: `A milestone for **${reminder.data.projectName}** was marked as ${reminder.data.status} (Aim(s) ${aimNumbers}).`,
+              date: reminder.data.statusUpdatedAt,
+            };
+          }
+
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href,
+            description: `**${reminder.data.outputsLinkedBy}** linked outputs to a milestone on **${reminder.data.projectName}**: ${reminder.data.milestoneName} (Aim ${aimNumbers}).`,
+            date: reminder.data.outputsLinkedAt,
           };
         }
 
@@ -238,6 +291,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
             description: `It's time to publish the meeting materials for the ${reminder.data.title} event.`,
           };
         }
@@ -251,6 +307,31 @@ export default class ReminderController {
             entity: reminder.entity,
             href: crnMeetingMaterialsDrive,
             description: `Don't forget to upload presentations for the ${reminder.data.title} event in the ASAP CRN Meeting Materials Drive.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Event' &&
+          reminder.type === 'Mark Attendance'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `It's time to mark attendance for the ${reminder.data.title} event.`,
+          };
+        }
+
+        if (reminder.entity === 'Event' && reminder.type === 'Add Speakers') {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `It's time to add event speakers and indicate sharing of preliminary findings for the ${reminder.data.title} event.`,
           };
         }
 

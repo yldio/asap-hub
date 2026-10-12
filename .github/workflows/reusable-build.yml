@@ -120,25 +120,21 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Re-Build
-        uses: ./.github/actions/build-rebuild
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
 
   transpile:
     needs: [rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -159,8 +155,6 @@ jobs:
             ${{ runner.os }}-turbo-transpile
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
           yarn build:babel --cache-dir=.turbo --only
@@ -171,12 +165,23 @@ jobs:
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
           environment-name: ${{ inputs.environment-name }}
+      - name: Upload transpile output
+        uses: actions/upload-artifact@v4
+        with:
+          name: transpile-output-${{ inputs.environment-name }}
+          path: |
+            apps/**/build*
+            apps/**/dist*
+            packages/**/build*
+          include-hidden-files: true
+          retention-days: 3
+          overwrite: true
 
   definitions:
     needs: [rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -197,8 +202,6 @@ jobs:
             ${{ runner.os }}-turbo-definitions
       - name: Restore
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
           yarn build:typecheck --cache-dir=.turbo --only
@@ -212,7 +215,7 @@ jobs:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -251,8 +254,6 @@ jobs:
             ${{ runner.os }}-turbo-frontend
       - name: Restore .unplugged from cache
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
       - name: Restore transpile output
@@ -296,6 +297,17 @@ jobs:
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-output-${{ inputs.environment-name }}
+          path: |
+            apps/**/build*
+            apps/**/dist*
+            packages/**/build*
+          include-hidden-files: true
+          retention-days: 3
+          overwrite: true
       - name: CRN Auth frontend artifact
         uses: actions/upload-artifact@v4
         with:
@@ -312,7 +324,7 @@ jobs:
     needs: [rebuild, definitions]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -333,8 +345,6 @@ jobs:
             ${{ runner.os }}-turbo-typecheck
       - name: Restore .unplugged from cache
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
       - name: Restore build:typecheck output from cache
         uses: ./.github/actions/cache-build
         with:
@@ -348,7 +358,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -397,7 +407,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -448,7 +458,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -499,7 +509,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

@@ -12,6 +12,7 @@ import {
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
 import { rem } from '../pixels';
+import { getResearchOutputAssociationPill } from '../utils';
 
 const associationStyles = css({
   display: 'flex',
@@ -74,86 +75,95 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   showTags = true,
   impact,
   categories,
-}) => (
-  <Card accent={published ? 'default' : 'neutral200'}>
-    <SharedResearchMetadata
-      pills={[
-        publishingEntity,
-        ...(documentType ? [documentType] : []),
-        ...(type ? [type] : []),
-      ]}
-      link={link}
-    />
-    <div css={titleStyles}>
-      <LinkHeadline
-        level={2}
-        styleAsHeading={4}
-        href={sharedResearch({}).researchOutput({ researchOutputId }).$}
-      >
-        {title}
-      </LinkHeadline>
-      {!published && (
-        <div css={{ margin: `auto 0 ${rem(12)} 0` }}>
-          <StateTag
-            label={isInReview ? 'In Review' : 'Draft'}
-            accent={isInReview ? 'blue' : undefined}
+}) => {
+  const associationPill = getResearchOutputAssociationPill({
+    publishingEntity,
+    teams,
+    workingGroups,
+  });
+
+  return (
+    <Card accent={published ? 'default' : 'inactive'}>
+      <SharedResearchMetadata
+        pills={[
+          associationPill,
+          ...(documentType ? [documentType] : []),
+          ...(type ? [type] : []),
+        ]}
+        link={link}
+      />
+      <div css={titleStyles}>
+        <LinkHeadline
+          level={2}
+          styleAsHeading={4}
+          href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+        >
+          {title}
+        </LinkHeadline>
+        {!published && (
+          <div css={{ margin: `auto 0 ${rem(12)} 0` }}>
+            <StateTag
+              label={isInReview ? 'In Review' : 'Draft'}
+              accent={isInReview ? 'blue' : undefined}
+            />
+          </div>
+        )}
+      </div>
+      <UsersList
+        max={3}
+        users={authors.map((author) => ({
+          ...author,
+          href:
+            author.id && network({}).users({}).user({ userId: author.id }).$,
+        }))}
+      />
+      <div css={associationStyles}>
+        <AssociationList
+          type="Lab"
+          inline
+          max={1}
+          associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
+        />
+        <AssociationList type="Team" inline max={3} associations={teams} />
+        {workingGroups && (
+          <AssociationList
+            type="Working Group"
+            inline
+            max={3}
+            associations={workingGroups.map(({ id, title: displayName }) => ({
+              id,
+              displayName,
+            }))}
           />
+        )}
+        {impact && impact.name && (
+          <AssociationList
+            type="Impact"
+            inline
+            associations={[{ id: impact.id, displayName: impact.name }]}
+          />
+        )}
+        {categories && categories.length > 0 && (
+          <AssociationList
+            type="Category"
+            inline
+            associations={categories.map(({ id, name }) => ({
+              id,
+              displayName: name,
+            }))}
+          />
+        )}
+      </div>
+      {showTags && keywords.length > 0 && (
+        <div css={tagContainerStyles}>
+          <TagList max={3} tags={keywords} />
         </div>
       )}
-    </div>
-    <UsersList
-      max={3}
-      users={authors.map((author) => ({
-        ...author,
-        href: author.id && network({}).users({}).user({ userId: author.id }).$,
-      }))}
-    />
-    <div css={associationStyles}>
-      <AssociationList
-        type="Lab"
-        inline
-        max={1}
-        associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
-      />
-      <AssociationList type="Team" inline max={3} associations={teams} />
-      {workingGroups && (
-        <AssociationList
-          type="Working Group"
-          inline
-          max={3}
-          associations={workingGroups.map(({ id, title: displayName }) => ({
-            id,
-            displayName,
-          }))}
-        />
-      )}
-      {impact && impact.name && (
-        <AssociationList
-          type="Impact"
-          inline
-          associations={[{ id: impact.id, displayName: impact.name }]}
-        />
-      )}
-      {categories && categories.length > 0 && (
-        <AssociationList
-          type="Category"
-          inline
-          associations={categories.map(({ id, name }) => ({
-            id,
-            displayName: name,
-          }))}
-        />
-      )}
-    </div>
-    {showTags && keywords.length > 0 && (
-      <div css={tagContainerStyles}>
-        <TagList max={3} tags={keywords} />
-      </div>
-    )}
-    <Caption accent={'lead'} asParagraph>
-      Date Added: {formatDate(new Date(addedDate || created))}
-    </Caption>
-  </Card>
-);
+      <Caption accent="tertiary" asParagraph>
+        Date Added: {formatDate(new Date(addedDate || created))}
+      </Caption>
+    </Card>
+  );
+};
 
 export default SharedResearchCard;

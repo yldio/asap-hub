@@ -2,20 +2,20 @@
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useState } from 'react';
 import { Headline3, TabButton, Button } from '../atoms';
-import { steel } from '../colors';
+import { colour } from '../colors';
 import { rem } from '../pixels';
 import { TabNav } from '.';
 
 const headerStyles = css({
   display: 'grid',
   paddingBottom: 0,
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
 });
 
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
   paddingTop: rem(16),
   marginTop: rem(32),
 });
@@ -37,6 +37,7 @@ type TabbedCardProps<T> = {
   description?: ReactNode;
   tabs: TabProps<T>[];
   activeTabIndex?: number;
+  onTabChange?: (index: number) => void;
   getShowMoreText?: (showMore: boolean) => string;
   children: (state: { data: T[] }) => ReactNode;
 };
@@ -46,6 +47,7 @@ export const TabbedContent = <T extends object>({
   description,
   tabs,
   activeTabIndex = 0,
+  onTabChange,
   getShowMoreText,
   children,
 }: TabbedCardProps<T>) => {
@@ -73,6 +75,7 @@ export const TabbedContent = <T extends object>({
               onClick={() => {
                 setShowMore(false);
                 setActive(index);
+                onTabChange?.(index);
               }}
               disabled={disabled}
             >

@@ -9,8 +9,10 @@ import {
   utils,
 } from '@asap-hub/react-components';
 import {
+  ResearchOutputPermissions,
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
+  useFlags,
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { getResearchOutputEntityType } from '@asap-hub/validation';
@@ -18,15 +20,57 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import {
   ManuscriptVersionResponse,
+  projectHasLead,
   ResearchOutputResponse,
+  teamHasActiveProjectManager,
 } from '@asap-hub/model';
-import { Suspense, useEffect, useState } from 'react';
-import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
+import { ReactNode, Suspense, useEffect, useState } from 'react';
+import {
+  useLatestManuscriptVersionByManuscriptId,
+  useTeamById,
+} from '../network/teams/state';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import TeamBasedOutput from '../projects/TeamBasedOutput';
 import UserBasedOutput from '../projects/UserBasedOutput';
+import { useProjectById } from '../projects/state';
 import { usePutResearchOutput } from '../shared-state';
-import { useResearchOutputById, useResearchOutputPermissions } from './state';
+import {
+  useProjectOutputPermissions,
+  useResearchOutputById,
+  useResearchOutputPermissions,
+  useTeamOutputPermissions,
+} from './state';
+import { isGrantEnded } from './util';
+
+const ProjectOutputPermissionsGate: React.FC<{
+  projectId: string;
+  basePermissions: ResearchOutputPermissions;
+  children: (
+    permissions: ResearchOutputPermissions,
+    hasLead: boolean,
+  ) => ReactNode;
+}> = ({ projectId, basePermissions, children }) => {
+  const project = useProjectById(projectId);
+  const permissions = useProjectOutputPermissions(basePermissions, project);
+  const hasLead = project ? projectHasLead(project) : false;
+
+  return <>{children(permissions, hasLead)}</>;
+};
+
+const TeamBasedProjectOutputPermissionsGate: React.FC<{
+  teamId: string;
+  basePermissions: ResearchOutputPermissions;
+  children: (
+    permissions: ResearchOutputPermissions,
+    hasLead: boolean,
+  ) => ReactNode;
+}> = ({ teamId, basePermissions, children }) => {
+  const team = useTeamById(teamId);
+  const permissions = useTeamOutputPermissions(basePermissions, team?.members);
+  const hasLead = teamHasActiveProjectManager(team?.members ?? []);
+
+  return <>{children(permissions, hasLead)}</>;
+};
 
 const entityAssociation = {
   'working-group': 'workingGroups',
@@ -84,6 +128,10 @@ const ResearchOutput: React.FC = () => {
   ]);
 
   const researchOutputData = useResearchOutputById(researchOutputId);
+  const { isEnabled } = useFlags();
+  const grantDocument = isEnabled('STAGING_MODE')
+    ? researchOutputData?.grantDocument
+    : undefined;
 
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
@@ -187,11 +235,14 @@ const ResearchOutput: React.FC = () => {
       }
     };
 
-    const renderResearchOutputView = () => (
+    const renderResearchOutputView = (hasLead = false) => (
       <Frame title={researchOutputData.title}>
         {toast === 'published' && <ScrollToTop />}
         <SharedResearchOutput
           {...researchOutputData}
+          grantDocument={grantDocument}
+          grantEnded={isGrantEnded(grantDocument)}
+          projectHasLead={hasLead}
           backHref={backHref}
           onRequestReview={(shouldReview) =>
             updateResearchOutput(researchOutputData.id, {
@@ -220,12 +271,15 @@ const ResearchOutput: React.FC = () => {
       </Frame>
     );
 
-    return (
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
+    const renderWithPermissions = (
+      resolvedPermissions: ResearchOutputPermissions,
+      hasLead = false,
+    ) => (
+      <ResearchOutputPermissionsContext.Provider value={resolvedPermissions}>
         <Suspense key={location.pathname} fallback={<Loading />}>
           <Routes>
-            <Route index element={renderResearchOutputView()} />
-            {permissions.canVersionResearchOutput && (
+            <Route index element={renderResearchOutputView(hasLead)} />
+            {resolvedPermissions.canVersionResearchOutput && (
               <Route
                 path={
                   sharedResearch({}).researchOutput({ researchOutputId })
@@ -234,7 +288,7 @@ const ResearchOutput: React.FC = () => {
                 element={renderOutputForm('create')}
               />
             )}
-            {permissions.canEditResearchOutput && (
+            {resolvedPermissions.canEditResearchOutput && (
               <Route
                 path={
                   sharedResearch({}).researchOutput({ researchOutputId })
@@ -248,6 +302,35 @@ const ResearchOutput: React.FC = () => {
         </Suspense>
       </ResearchOutputPermissionsContext.Provider>
     );
+
+    if (entityType === 'project' && researchOutputData.project?.id) {
+      return (
+        <ProjectOutputPermissionsGate
+          projectId={researchOutputData.project.id}
+          basePermissions={permissions}
+        >
+          {renderWithPermissions}
+        </ProjectOutputPermissionsGate>
+      );
+    }
+
+    const teamBasedProject = researchOutputData.teams[0];
+    if (
+      entityType === 'team' &&
+      teamBasedProject?.project &&
+      teamBasedProject.id
+    ) {
+      return (
+        <TeamBasedProjectOutputPermissionsGate
+          teamId={teamBasedProject.id}
+          basePermissions={permissions}
+        >
+          {renderWithPermissions}
+        </TeamBasedProjectOutputPermissionsGate>
+      );
+    }
+
+    return renderWithPermissions(permissions);
   }
   return <NotFoundPage />;
 };

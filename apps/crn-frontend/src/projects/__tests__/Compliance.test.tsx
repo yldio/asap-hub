@@ -1,0 +1,627 @@
+import { AlgoliaSearchClient, createAlgoliaResponse } from '@asap-hub/algolia';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import {
+  createManuscriptResponse,
+  createPartialManuscriptResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+  Frame,
+} from '@asap-hub/frontend-utils';
+import { PartialManuscriptResponse } from '@asap-hub/model';
+import { portalContainerId } from '@asap-hub/react-components';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Stringifier } from 'csv-stringify';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { getPresignedUrl } from '../../shared-api/files';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useAlgolia } from '../../hooks/algolia';
+import { getOpenScienceMembers } from '../../network/users/api';
+import { getManuscripts, updateManuscript } from '../../network/teams/api';
+import Compliance from '../Compliance';
+import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
+
+mockConsoleError();
+
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
+jest.mock('../../hooks/algolia', () => ({
+  useAlgolia: jest.fn(),
+}));
+
+jest.mock('../../network/teams/api', () => ({
+  ...jest.requireActual('../../network/teams/api'),
+  getOpenScienceMembers: jest.fn(),
+  getManuscripts: jest.fn(),
+  getPresignedUrl: jest.fn(),
+  updateManuscript: jest.fn(),
+}));
+
+jest.mock('../../network/users/api', () => ({
+  ...jest.requireActual('../../network/users/api'),
+  getOpenScienceMembers: jest.fn(),
+}));
+
+jest.mock('../../shared-api/files');
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
+
+const mockUseAlgolia = useAlgolia as jest.MockedFunction<typeof useAlgolia>;
+
+const mockGetManuscripts = getManuscripts as jest.MockedFunction<
+  typeof getManuscripts
+>;
+
+const mockGetPresignedUrl = getPresignedUrl as jest.MockedFunction<
+  typeof getPresignedUrl
+>;
+
+const mockUpdateManuscript = updateManuscript as jest.MockedFunction<
+  typeof updateManuscript
+>;
+
+const mockGetOpenScienceMembers = getOpenScienceMembers as jest.MockedFunction<
+  typeof getOpenScienceMembers
+>;
+
+const user = createUserResponse({}, 1);
+user.role = 'Staff';
+user.openScienceTeamMember = true;
+
+const renderCompliancePage = async () => {
+  const result = render(
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+              <ManuscriptToastProvider>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <Frame title={null}>
+                        <Compliance />
+                      </Frame>
+                    }
+                  />
+                </Routes>
+              </ManuscriptToastProvider>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
+  );
+  await waitFor(
+    () => {
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument();
+    },
+    { timeout: 30_000 },
+  );
+  return result;
+};
+
+const findStatusMenuButton = (name: RegExp) =>
+  waitFor(() => {
+    const portalContainer = document.getElementById(portalContainerId);
+
+    expect(portalContainer).toBeInTheDocument();
+
+    return within(portalContainer as HTMLElement).getAllByRole('button', {
+      name,
+    })[0] as HTMLButtonElement;
+  });
+
+const originalWindowOpen = window.open;
+let mockWindowOpen: jest.MockedFunction<typeof globalThis.open>;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+  jest.resetModules();
+  mockUseAlgolia.mockReturnValue({
+    client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
+  });
+  window.open = mockWindowOpen = jest.fn();
+});
+
+afterEach(() => {
+  window.open = originalWindowOpen;
+});
+
+it('renders error message when the request is not a 2XX', async () => {
+  mockGetManuscripts.mockRejectedValue(new Error('error'));
+
+  await renderCompliancePage();
+  expect(mockGetManuscripts).toHaveBeenCalled();
+  await waitFor(() => {
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+});
+
+it('shows the project column', async () => {
+  mockGetManuscripts.mockResolvedValue({
+    items: [
+      {
+        ...createPartialManuscriptResponse(),
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    ],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(
+    await screen.findByRole('columnheader', { name: 'Project' }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Project Alpha' })).toHaveAttribute(
+    'href',
+    '/projects/resource/project-id',
+  );
+});
+
+it('shows project name in the search placeholder', async () => {
+  mockGetManuscripts.mockResolvedValue({
+    items: [createPartialManuscriptResponse()],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(screen.getByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter project name, team name, ID, assigned users...',
+  );
+});
+
+it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {
+  const manuscriptId = 'manuscript-id-1';
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Review Compliance Report',
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Addendum Required',
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  const statusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
+    name: /Review Compliance Report/i,
+  });
+  await userEvent.click(statusButton);
+
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
+  await userEvent.click(newStatusButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Update status and notify/i,
+  });
+  await userEvent.click(confirmButton);
+
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      manuscriptId,
+      {
+        notificationList: '',
+        status: 'Addendum Required',
+      },
+      expect.any(String),
+    );
+  });
+
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).getByRole('button', {
+        name: /Addendum Required/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  expect(
+    screen.queryByText('User(s) assigned to a manuscript successfully.'),
+  ).not.toBeInTheDocument();
+}, 30000);
+
+it('does not display success message when apc coverage details are updated', async () => {
+  const manuscriptId = 'manuscript-id-1';
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Compliant',
+    apcRequested: false,
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Compliant',
+    apcRequested: true,
+    apcAmountRequested: 200,
+    apcCoverageRequestStatus: 'notPaid',
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Edit APC Coverage Details' }),
+  );
+
+  const dialog = await screen.findByRole('dialog');
+
+  expect(
+    within(dialog).getByRole('heading', { name: 'APC Coverage' }),
+  ).toBeInTheDocument();
+
+  await userEvent.click(
+    within(dialog).getByRole('radio', { name: 'Requested' }),
+  );
+
+  await userEvent.type(within(dialog).getByRole('spinbutton'), '200');
+
+  await userEvent.click(
+    within(dialog).getByRole('radio', { name: 'Not Paid' }),
+  );
+
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Update' }));
+
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      manuscriptId,
+      {
+        apcRequested: true,
+        apcAmountRequested: 200,
+        apcCoverageRequestStatus: 'notPaid',
+        apcAmountPaid: undefined,
+        declinedReason: undefined,
+        notificationList: '',
+      },
+      expect.any(String),
+    );
+  });
+
+  expect(
+    screen.queryByText('User(s) assigned to a manuscript successfully.'),
+  ).not.toBeInTheDocument();
+}, 30000);
+
+it('manuscripts remain the same when there is not a match between the manuscript ids', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    id: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: 'manuscript-id-2',
+    status: 'Addendum Required',
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  const statusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
+    name: /Review Compliance Report/i,
+  });
+  await userEvent.click(statusButton);
+
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
+  await userEvent.click(newStatusButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Update status and notify/i,
+  });
+  await userEvent.click(confirmButton);
+
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      'manuscript-id-1',
+      {
+        notificationList: '',
+        status: 'Addendum Required',
+      },
+      expect.any(String),
+    );
+  });
+
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
+        name: /Addendum Required/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+}, 30000);
+
+it('manuscripts remain the same when getting previous manuscripts fails', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    id: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+  };
+
+  mockGetManuscripts
+    .mockResolvedValueOnce({
+      items: [mockManuscript],
+      total: 1,
+    })
+    .mockRejectedValueOnce(new Error('error'));
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: 'manuscript-id-2',
+    status: 'Addendum Required',
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  const statusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
+    name: /Review Compliance Report/i,
+  });
+  await userEvent.click(statusButton);
+
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
+  await userEvent.click(newStatusButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Update status and notify/i,
+  });
+  await userEvent.click(confirmButton);
+
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      'manuscript-id-1',
+      {
+        notificationList: '',
+        status: 'Addendum Required',
+      },
+      expect.any(String),
+    );
+  });
+
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
+        name: /Addendum Required/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+}, 30000);
+
+it('fetches assigned users suggestions and displays them properly', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    manuscriptId: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  const userResponse = createUserResponse();
+
+  const algoliaUsersResponse = createAlgoliaResponse<'crn', 'user'>([
+    {
+      ...userResponse,
+      firstName: 'Billie',
+      lastName: 'Eilish',
+      displayName: 'Billie Eilish',
+      objectID: userResponse.id,
+      __meta: { type: 'user' },
+      _tags: userResponse.tags?.map(({ name }) => name) || [],
+    },
+  ]);
+  mockGetOpenScienceMembers.mockResolvedValue({
+    items: algoliaUsersResponse.hits,
+    total: algoliaUsersResponse.nbHits ?? 0,
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  expect(screen.queryByText(/Billie Eilish/i)).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByTitle(/Add user/i));
+
+  await userEvent.type(
+    screen.getByRole('combobox', { name: /Assign User/i }),
+    'Billie',
+  );
+
+  expect(mockGetOpenScienceMembers).toHaveBeenCalled();
+
+  await waitFor(() => {
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
+
+  expect(screen.getAllByText(/Billie Eilish/i).length > 0).toBe(true);
+});
+
+it('displays success message when assigning users', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    manuscriptId: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+    assignedUsers: [
+      {
+        id: 'user-id-1',
+        firstName: 'Taylor',
+        lastName: 'Swift',
+        avatarUrl: 'https://example.com',
+      },
+    ],
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: 'manuscript-id-1',
+  });
+
+  mockGetOpenScienceMembers.mockResolvedValue({
+    items: [],
+    total: 0,
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  await userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
+
+  await userEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByText('User(s) assigned to a manuscript successfully.'),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('csv export', () => {
+  it('exports compliance dataset in the table', async () => {
+    mockCreateCsvFileStream.mockReturnValue({
+      write: jest.fn().mockResolvedValue(undefined),
+      end: jest.fn().mockResolvedValue(undefined),
+    } as unknown as Stringifier);
+
+    const manuscriptId = 'manuscript-id-1';
+    const mockManuscript: PartialManuscriptResponse = {
+      ...createPartialManuscriptResponse(),
+      id: manuscriptId,
+      manuscriptId: 'SC1-000129-002-org-G-2',
+      status: 'Review Compliance Report',
+    };
+
+    mockGetManuscripts.mockResolvedValue({
+      items: [mockManuscript],
+      total: 1,
+    });
+
+    await renderCompliancePage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /data in table/i }),
+    );
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/manuscripts_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+
+  it('exports full compliance dataset', async () => {
+    const manuscriptId = 'manuscript-id-1';
+    const mockManuscript: PartialManuscriptResponse = {
+      ...createPartialManuscriptResponse(),
+      id: manuscriptId,
+      manuscriptId: 'SC1-000129-002-org-G-2',
+      status: 'Review Compliance Report',
+    };
+
+    mockGetManuscripts.mockResolvedValue({
+      items: [mockManuscript],
+      total: 1,
+    });
+
+    const expectedLink = 'https://some-download-link.test';
+
+    mockGetPresignedUrl.mockResolvedValue({ presignedUrl: expectedLink });
+    await renderCompliancePage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /full dataset/i }),
+    );
+
+    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
+      'ComplianceFullDataset.csv',
+      expect.anything(),
+      undefined,
+      'download',
+    );
+    await waitFor(() =>
+      expect(mockWindowOpen).toHaveBeenCalledWith(expectedLink, '_self'),
+    );
+  });
+});

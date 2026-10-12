@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
-import { paper, space } from '../colors';
+import { colour } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 
 const triangleHeight = 5;
@@ -33,7 +33,7 @@ const tooltipStyles = css({
     position: 'absolute',
     borderLeft: `${triangleHeight}px solid transparent`,
     borderRight: `${triangleHeight}px solid transparent`,
-    borderTop: `${triangleHeight}px solid ${space.rgb}`,
+    borderTop: `${triangleHeight}px solid ${colour.brand.gp2[900]}`,
     bottom: 0,
     right: '50%',
     // the triangle is 2 * triangleHeight wide, so pull it right by half
@@ -46,8 +46,8 @@ const tooltipStyles = css({
   },
 });
 const bubbleStyles = css({
-  backgroundColor: space.rgb,
-  color: paper.rgb,
+  backgroundColor: colour.brand.gp2[900],
+  color: colour.foreground['primary-inverse'],
   display: 'block',
 
   padding: `${rem(9)} ${rem(12)}`,
@@ -70,6 +70,9 @@ interface TooltipProps {
   bottom?: string;
   textStyles?: SerializedStyles;
   width?: string | number;
+  // Recolours the bubble and its tail together; the tail is drawn by a
+  // pseudo-element that no style prop can reach from the outside.
+  background?: string;
 }
 const Tooltip: React.FC<TooltipProps> = ({
   children,
@@ -78,6 +81,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   bottom,
   textStyles,
   width,
+  background,
 }) => {
   const widthValue =
     width !== undefined
@@ -92,6 +96,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         css={[
           tooltipStyles,
           { width: widthValue },
+          background ? { '::before': { borderTopColor: background } } : {},
           shown || { display: 'none' },
           maxContent && { width: 'max-content' },
           bottom && { bottom },
@@ -102,6 +107,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           css={[
             bubbleStyles,
             { maxWidth: widthValue },
+            background ? { backgroundColor: background } : {},
             maxContent && { width: 'max-content', maxWidth: 'fit-content' },
             textStyles,
           ]}

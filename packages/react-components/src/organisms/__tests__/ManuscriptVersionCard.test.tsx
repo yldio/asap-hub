@@ -39,7 +39,6 @@ afterAll(jest.clearAllMocks);
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
   version: baseVersion,
-  teamId: 'team-id-0',
   manuscriptId: 'manuscript-1',
   openDiscussionTab: jest.fn(),
 };
@@ -513,6 +512,20 @@ it('displays compliance report when complianceReport is provided', () => {
   );
 
   expect(getByRole('heading', { name: /Compliance Report/i })).toBeVisible();
+});
+
+it('displays the version count in the title', () => {
+  const { getByText, queryByText } = render(
+    <MemoryRouter>
+      <ManuscriptVersionCard
+        {...props}
+        version={{ ...baseVersion, count: 3 }}
+      />
+    </MemoryRouter>,
+  );
+
+  expect(getByText('Version #3')).toBeVisible();
+  expect(queryByText('Manuscript #3')).not.toBeInTheDocument();
 });
 
 it('displays manuscript description', async () => {

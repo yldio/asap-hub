@@ -4,11 +4,16 @@ import {
   userProductivityResponse,
   teamProductivityPerformance,
 } from '@asap-hub/fixtures';
-import { SortTeamProductivity, SortUserProductivity } from '@asap-hub/model';
+import {
+  SortTeamProductivity,
+  SortUserProductivity,
+  TeamProductivityOpensearchDocument,
+} from '@asap-hub/model';
 import nock from 'nock';
 
 import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 import {
+  getTeamHubResearchOutputs,
   getTeamProductivity,
   getTeamProductivityPerformance,
   getUserProductivity,
@@ -673,5 +678,74 @@ describe('getUserProductivityPerformance', () => {
     });
 
     expect(result).toBeUndefined();
+  });
+});
+
+describe('getTeamHubResearchOutputs', () => {
+  const allDocument: TeamProductivityOpensearchDocument = {
+    ...teamProductivityResponse,
+    timeRange: 'all',
+    outputType: 'all',
+  };
+  const publicDocument: TeamProductivityOpensearchDocument = {
+    ...teamProductivityResponse,
+    Article: 1,
+    Bioinformatics: 0,
+    Dataset: 2,
+    'Lab Material': 2,
+    Protocol: 5,
+    timeRange: 'all',
+    outputType: 'public',
+  };
+
+  let opensearchClient: OpensearchClient<TeamProductivityOpensearchDocument>;
+  let searchSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    opensearchClient = new OpensearchClient(
+      'team-productivity',
+      'Bearer test-token',
+    );
+    searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+      items: [publicDocument, allDocument],
+      total: 2,
+    });
+  });
+
+  afterEach(() => {
+    searchSpy.mockRestore();
+  });
+
+  it('fetches both output types for the team in a single search', async () => {
+    await getTeamHubResearchOutputs(opensearchClient, { teamId: 'team-id-1' });
+
+    expect(searchSpy).toHaveBeenCalledTimes(1);
+    expect(searchSpy).toHaveBeenCalledWith({
+      searchTags: [],
+      searchScope: 'flat',
+      sort: [],
+      currentPage: 0,
+      pageSize: 2,
+      timeRange: 'all',
+      teamId: 'team-id-1',
+    });
+  });
+
+  it('splits the documents by output type', async () => {
+    const result = await getTeamHubResearchOutputs(opensearchClient, {
+      teamId: 'team-id-1',
+    });
+
+    expect(result).toEqual({ all: allDocument, public: publicDocument });
+  });
+
+  it('returns undefined for an output type with no document', async () => {
+    searchSpy.mockResolvedValue({ items: [allDocument], total: 1 });
+
+    const result = await getTeamHubResearchOutputs(opensearchClient, {
+      teamId: 'team-id-1',
+    });
+
+    expect(result).toEqual({ all: allDocument, public: undefined });
   });
 });

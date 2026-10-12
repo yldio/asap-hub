@@ -85,6 +85,7 @@ it('shows the event time', () => {
       {...props}
       startDate="2021-01-01T08:00:00Z"
       startDateTimeZone="Europe/Tallinn"
+      endDate="2021-01-01T09:00:00Z"
     />,
   );
   expect(screen.getByText(/8:00/)).toBeVisible();
@@ -97,6 +98,18 @@ it('only links to events that are not cancelled', () => {
   expect(screen.getByText(/My Event/).closest('a')).toHaveAttribute('href');
 
   rerender(<EventInfo {...props} title="My Event" status="Cancelled" />);
+  expect(screen.getByText(/My Event/).closest('a')).toBeNull();
+});
+
+it('does not link the title when titleAsLink is false', () => {
+  render(
+    <EventInfo
+      {...props}
+      title="My Event"
+      status="Tentative"
+      titleAsLink={false}
+    />,
+  );
   expect(screen.getByText(/My Event/).closest('a')).toBeNull();
 });
 

@@ -227,6 +227,36 @@ describe('teamWithUsersRecordSearchQueryBuilder', () => {
     expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
   });
 
+  it('includes teamId in must clauses when provided', () => {
+    const result = teamWithUsersRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      teamId: 'team-id-1',
+    });
+
+    expect(result.query.bool.must).toEqual([
+      { term: { timeRange: 'all' } },
+      { term: { teamId: 'team-id-1' } },
+    ]);
+    expect(result.query.bool).not.toHaveProperty('should');
+  });
+
+  it('excludes teamId from must clauses when undefined', () => {
+    const result = teamWithUsersRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      teamId: undefined,
+    });
+
+    expect(result.query.bool.must).toEqual([{ term: { timeRange: 'all' } }]);
+  });
+
   it('uses provided custom sort', () => {
     const customSort = [{ ratio: { order: 'desc' as const } }];
     const result = teamWithUsersRecordSearchQueryBuilder({
@@ -573,6 +603,53 @@ describe('teamRecordSearchQueryBuilder', () => {
     expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
   });
 
+  it('includes teamId in must clauses when provided', () => {
+    const result = teamRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      teamId: 'team-id-1',
+    });
+
+    expect(result.query.bool.must).toEqual([
+      { term: { timeRange: 'all' } },
+      { term: { id: 'team-id-1' } },
+    ]);
+    expect(result.query.bool).not.toHaveProperty('should');
+  });
+
+  it('combines teamId and outputType in must clauses', () => {
+    const result = teamRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      outputType: 'public',
+      teamId: 'team-id-1',
+    });
+
+    expect(result.query.bool.must).toEqual([
+      { term: { timeRange: 'all' } },
+      { term: { outputType: 'public' } },
+      { term: { id: 'team-id-1' } },
+    ]);
+  });
+
+  it('excludes teamId from must clauses when undefined', () => {
+    const result = teamRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.query.bool.must).toEqual([{ term: { timeRange: 'all' } }]);
+  });
+
   it('includes sort property when custom sort is provided', () => {
     const customSort = [{ Article: { order: 'asc' as const } }];
     const result = teamRecordSearchQueryBuilder({
@@ -813,6 +890,33 @@ describe('leadershipRecordSearchQueryBuilder', () => {
 
     expect(result.query.bool).not.toHaveProperty('should');
     expect(result.query.bool).not.toHaveProperty('minimum_should_match');
+    expect(result.query.bool.must).toEqual([]);
+  });
+
+  it('includes teamId in must clauses when provided', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      teamId: 'team-id-1',
+    });
+
+    expect(result.query.bool.must).toEqual([{ term: { id: 'team-id-1' } }]);
+    expect(result.query.bool).not.toHaveProperty('should');
+  });
+
+  it('excludes teamId from must clauses when undefined', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      teamId: undefined,
+    });
+
     expect(result.query.bool.must).toEqual([]);
   });
 

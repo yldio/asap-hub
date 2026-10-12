@@ -587,6 +587,7 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
                       sys {
                         id
                       }
+                      title
                       projectId
                       projectType
                       grantId
@@ -597,6 +598,15 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
             }
           }
         }
+      }
+      project {
+        sys {
+          id
+        }
+        title
+        projectId
+        projectType
+        grantId
       }
       assignedUsersCollection(limit: 30) {
         items {

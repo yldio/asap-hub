@@ -108,6 +108,7 @@ const parseUserMetadata = ({
   projects,
   role,
   openScienceTeamMember,
+  techSupport,
 }: UserMetadataResponse) => ({
   teams: groupTeams(teams),
   workingGroups: groupWorkingGroups(workingGroups),
@@ -115,6 +116,7 @@ const parseUserMetadata = ({
   projects: uniqueById(projects),
   role,
   openScienceTeamMember,
+  techSupport,
 });
 
 const parseKRSyncMetadata = ({
@@ -141,7 +143,9 @@ const fetchUserMetadata = (
     headers: {
       Authorization: `Basic ${event.secrets.AUTH0_SHARED_SECRET}`,
     },
-    timeout: 10000,
+    // Auth0 actions are killed at 20s, so this can't go higher even though
+    // the auth0FetchByCode lambda now allows 29s.
+    timeout: 19000,
   }).json<Auth0UserResponse>();
 
 const getApiUrls = (

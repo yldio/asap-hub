@@ -1,118 +1,88 @@
 import { css } from '@emotion/react';
 
-import { GradientProgressBar, GradientProgressWheel } from '../atoms';
-import { ember, fern } from '../colors';
-import { rem } from '../pixels';
+import AttendanceProgressBar from '../atoms/AttendanceProgressBar';
+import { colour } from '../colors';
+import { mobileScreen, rem } from '../pixels';
 
-import {
-  metricBarStyles,
-  metricContainerStyles,
-  metricLabelStyles,
-  metricProgressRowStyles,
-  metricValueStyles,
-  metricWheelStyles,
-} from './shared-metric-card-styles';
-
-const deltaRowStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
-const arrowContainerStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(32),
-  height: rem(32),
-});
-
-const arrowStyles = (direction: 'up' | 'down') =>
-  css({
-    width: 0,
-    height: 0,
-    borderLeft: `${rem(7)} solid transparent`,
-    borderRight: `${rem(7)} solid transparent`,
-    ...(direction === 'up'
-      ? { borderBottom: `${rem(10)} solid ${fern.rgb}` }
-      : { borderTop: `${rem(10)} solid ${ember.rgb}` }),
-  });
-
-type ValueProps = {
-  label: string;
-  value: number;
-  caption: string;
-};
-
-type EventAttendanceMetricProps =
-  | (ValueProps & { variant: 'progress' })
-  | (ValueProps & { variant: 'delta'; direction: 'up' | 'down' | 'none' })
-  | { variant: 'empty'; label: string; message: string };
-
-const deltaSign: Record<'up' | 'down' | 'none', string> = {
-  up: '+ ',
-  down: '- ',
-  none: '',
-};
-
-const emptyStackStyles = css({
+export const containerStyles = css({
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  gap: rem(24),
+  gap: rem(16),
+  width: '100%',
+  maxWidth: rem(380),
+  padding: rem(24),
+  backgroundColor: colour.neutral[50],
+  borderRadius: rem(8),
 });
 
-const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = (props) => {
-  if (props.variant === 'empty') {
-    return (
-      <div css={[metricContainerStyles, emptyStackStyles]}>
-        <p css={metricLabelStyles}>{props.label}</p>
-        <p css={metricLabelStyles}>{props.message}</p>
-      </div>
-    );
-  }
+export const headlineRowStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(12),
+});
 
-  const { label, value, caption } = props;
+export const valueStyles = css({
+  margin: 0,
+  fontWeight: 'bold',
+  fontSize: rem(32),
+  // A ratio, not `rem`: line-height in `em` resolves against the element's own
+  // font size, so `rem(40)` here would render 40/17 x 32px.
+  lineHeight: 40 / 32,
+  color: colour.foreground.primary,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(24),
+    lineHeight: 32 / 24,
+  },
+});
 
-  if (props.variant === 'delta') {
-    const deltaValue = `${deltaSign[props.direction]}${value}`;
-    return (
-      <div css={metricContainerStyles}>
-        <p css={metricLabelStyles}>{label}</p>
-        <div css={deltaRowStyles}>
-          <p css={metricValueStyles}>{deltaValue}</p>
-          {props.direction !== 'none' && (
-            <span
-              css={arrowContainerStyles}
-              role="img"
-              aria-label={props.direction === 'up' ? 'Increase' : 'Decrease'}
-            >
-              <span css={arrowStyles(props.direction)} />
-            </span>
-          )}
-        </div>
-        <p css={metricLabelStyles}>{caption}</p>
-      </div>
-    );
-  }
+const dividerStyles = css({
+  width: rem(1),
+  height: rem(24),
+  flexShrink: 0,
+  backgroundColor: colour.neutral[100],
+});
 
-  return (
-    <div css={metricContainerStyles}>
-      <div css={metricProgressRowStyles}>
-        <span css={metricWheelStyles}>
-          <GradientProgressWheel percentage={value} />
-        </span>
-        <div>
-          <p css={metricLabelStyles}>{label}</p>
-          <p css={metricValueStyles}>{value}%</p>
-          <p css={metricLabelStyles}>{caption}</p>
-        </div>
-      </div>
-      <div css={metricBarStyles}>
-        <GradientProgressBar percentage={value} />
+const captionStyles = css({
+  margin: 0,
+  fontSize: rem(20),
+  fontWeight: 'bold',
+  lineHeight: 28 / 20,
+  color: colour.foreground.primary,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(14),
+    fontWeight: 600,
+    lineHeight: 16 / 14,
+  },
+});
+
+export const captionCountStyles = captionStyles;
+
+type EventAttendanceMetricProps = {
+  value: number;
+  caption: string;
+  captionDetail: string;
+  label?: string;
+};
+
+const EventAttendanceMetric: React.FC<EventAttendanceMetricProps> = ({
+  value,
+  caption,
+  captionDetail,
+  label,
+}) => (
+  <div css={containerStyles}>
+    <div css={headlineRowStyles}>
+      <p css={valueStyles}>{value}%</p>
+      <span css={dividerStyles} />
+      <div>
+        <p css={captionCountStyles}>{caption}</p>
+        <p css={captionStyles}>{captionDetail}</p>
       </div>
     </div>
-  );
-};
+    <AttendanceProgressBar percentage={value} label={label} />
+  </div>
+);
 
 export default EventAttendanceMetric;

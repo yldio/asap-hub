@@ -123,6 +123,7 @@ export default class UserController {
       displayName,
       membershipStatus: user.membershipStatus,
       openScienceTeamMember: user.openScienceTeamMember,
+      techSupport: user.techSupport,
       teams: user.teams,
       alumniSinceDate: user.alumniSinceDate,
       avatarUrl: user.avatarUrl,
@@ -145,7 +146,7 @@ export default class UserController {
       orcid: user.orcid,
       role: user.role,
       degree: user.degree,
-
+      social: user.social,
       stateOrProvince: user.stateOrProvince,
       tags: user.tags,
     } as UserResponse;
@@ -374,6 +375,7 @@ export const parsePublicUserToResponse = ({
     role: ig.role,
   })),
   labs: user.labs,
+  personalEmail: user.personalEmail,
   researchTheme: user.researchTheme,
   researchOutputs: user.researchOutputs || [],
   tags: user.tags || [],

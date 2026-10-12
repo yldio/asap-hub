@@ -3,9 +3,9 @@ import { discover } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
-import { Button, Card, Headline2, Link, Paragraph } from '../atoms';
+import { Button, Card, Headline3, Link, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { charcoal, lead, steel } from '../colors';
+import { colour } from '../colors';
 import { formatDateToTimezone } from '../date';
 
 const container = css({
@@ -49,7 +49,7 @@ const underlineStyles = css({
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     paddingBottom: rem(16),
     '&:not(:last-child)': {
-      borderBottom: `1px solid ${steel.rgb}`,
+      borderBottom: `1px solid ${colour.border.tertiary}`,
     },
   },
 });
@@ -61,7 +61,7 @@ const paragraphStyle = css({
   alignItems: 'center',
   flexDirection: 'row',
   gap: rem(6),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const showMoreStyles = css({
@@ -70,16 +70,21 @@ const showMoreStyles = css({
   marginTop: rem(32),
   paddingTop: rem(16),
   paddingBottom: rem(16),
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: colour.foreground.primary,
+});
 
 type RelatedTutorialsCardProps = Pick<TutorialsResponse, 'relatedTutorials'> & {
+  description?: string;
   truncateFrom?: number;
 };
 
 const RelatedTutorialsCard: React.FC<RelatedTutorialsCardProps> = ({
+  description = ' Find all related tutorials.',
   relatedTutorials,
   truncateFrom = Number.POSITIVE_INFINITY,
 }) => {
@@ -93,14 +98,14 @@ const RelatedTutorialsCard: React.FC<RelatedTutorialsCardProps> = ({
           ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
         ]}
       >
-        <Headline2 noMargin>Related Tutorials</Headline2>
+        <Headline3 noMargin>Related Tutorials</Headline3>
         <div css={descriptionStyles}>
-          <Paragraph noMargin accent="lead">
-            Find all related tutorials.
+          <Paragraph noMargin accent="tertiary">
+            {description}
           </Paragraph>
         </div>
         {relatedTutorials.length === 0 ? (
-          <Paragraph noMargin accent="lead">
+          <Paragraph noMargin accent="tertiary">
             <b>No related tutorials available.</b>
           </Paragraph>
         ) : (

@@ -4,8 +4,8 @@ import { css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
 
-import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
-import { charcoal, lead, steel } from '../colors';
+import { Button, Card, Headline3, Link, Paragraph, Pill } from '../atoms';
+import { colour } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 
 const container = css({
@@ -40,7 +40,7 @@ const rowStyles = css({
   display: 'grid',
   paddingTop: rem(20),
   paddingBottom: rem(20),
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
@@ -58,7 +58,7 @@ const rowStyles = css({
 const rowDivider = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     paddingTop: rem(16),
-    borderBottom: `1px solid ${steel.rgb}`,
+    borderBottom: `1px solid ${colour.border.tertiary}`,
   },
 });
 
@@ -69,7 +69,7 @@ const paragraphStyle = css({
   alignItems: 'center',
   flexDirection: 'row',
   gap: rem(6),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 
 const showMoreStyles = css({
@@ -78,10 +78,13 @@ const showMoreStyles = css({
   marginTop: rem(32),
   paddingTop: rem(16),
   paddingBottom: rem(16),
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: colour.foreground.primary,
+});
 
 const iconStyles = css({
   verticalAlign: 'middle',
@@ -133,102 +136,118 @@ const RelatedResearchCard = <
           ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
         ]}
       >
-        <Headline2 noMargin>{title}</Headline2>
+        <Headline3 noMargin>{title}</Headline3>
         <div css={descriptionStyles}>
-          <Paragraph accent="lead" noMargin>
+          <Paragraph accent="tertiary" noMargin>
             {description}
           </Paragraph>
         </div>
-        <div css={[rowStyles, gridTitleStyles]}>
-          {tableTitles.map((headerTitle) => (
-            <span key={headerTitle} css={titleStyles}>
-              {headerTitle}
-            </span>
-          ))}
-        </div>
-        {relatedResearch
-          .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, title: outputTitle, type, ...output }) => (
-            <div key={id} css={[rowStyles, rowDivider]}>
-              <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
-              <p css={paragraphStyle}>
-                {getIconForDocumentType(documentType)} {documentType}{' '}
-                {documentType === 'Article' && (
-                  <Pill accent="gray">{type}</Pill>
-                )}
-              </p>
-              <span css={[titleStyles, rowTitleStyles]}>{tableTitles[1]}</span>
-              <p css={paragraphStyle}>
-                <Link
-                  ellipsed
-                  href={
-                    'teams' in output
-                      ? sharedResearch({}).researchOutput({
-                          researchOutputId: id,
-                        }).$
-                      : gp2Routing.outputs({}).output({ outputId: id }).$
-                  }
-                >
-                  {outputTitle}
-                </Link>
-              </p>
-              <span css={[titleStyles, rowTitleStyles]}>{tableTitles[2]}</span>
-              {'teams' in output ? (
-                <p css={paragraphStyle}>
-                  {output.workingGroups?.length ? (
-                    <Link
-                      ellipsed
-                      href={
-                        network({}).workingGroups({}).workingGroup({
-                          workingGroupId: output.workingGroups[0].id,
-                        }).$
-                      }
-                    >
-                      {output.workingGroups[0].title}
-                    </Link>
-                  ) : output.teams.length > 1 ? (
-                    'Multiple teams'
-                  ) : (
-                    output.teams[0] && (
+        {relatedResearch.length === 0 ? (
+          <Paragraph noMargin accent="tertiary">
+            <b>No related research available.</b>
+          </Paragraph>
+        ) : (
+          <>
+            <div css={[rowStyles, gridTitleStyles]}>
+              {tableTitles.map((headerTitle) => (
+                <span key={headerTitle} css={titleStyles}>
+                  {headerTitle}
+                </span>
+              ))}
+            </div>
+            {relatedResearch
+              .slice(0, showMore ? undefined : truncateFrom)
+              .map(
+                ({ id, documentType, title: outputTitle, type, ...output }) => (
+                  <div key={id} css={[rowStyles, rowDivider]}>
+                    <span css={[titleStyles, rowTitleStyles]}>
+                      {tableTitles[0]}
+                    </span>
+                    <p css={paragraphStyle}>
+                      {getIconForDocumentType(documentType)} {documentType}{' '}
+                      {documentType === 'Article' && (
+                        <Pill accent="gray">{type}</Pill>
+                      )}
+                    </p>
+                    <span css={[titleStyles, rowTitleStyles]}>
+                      {tableTitles[1]}
+                    </span>
+                    <p css={paragraphStyle}>
                       <Link
                         ellipsed
                         href={
-                          network({}).teams({}).team({
-                            teamId: output.teams[0].id,
-                          }).$
+                          'teams' in output
+                            ? sharedResearch({}).researchOutput({
+                                researchOutputId: id,
+                              }).$
+                            : gp2Routing.outputs({}).output({ outputId: id }).$
                         }
                       >
-                        {output.teams[0].displayName}
+                        {outputTitle}
                       </Link>
-                    )
-                  )}
-                </p>
-              ) : (
-                output.entity &&
-                getSourceIcon && (
-                  <div css={paragraphStyle}>
-                    <div css={iconStyles}>
-                      {getSourceIcon(output.entity?.type)}
-                    </div>
-                    <Link
-                      ellipsed
-                      href={
-                        output.entity?.type === 'WorkingGroups'
-                          ? gp2Routing.workingGroups({}).workingGroup({
-                              workingGroupId: output.entity.id,
-                            }).$
-                          : gp2Routing.projects({}).project({
-                              projectId: output.entity.id,
-                            }).$
-                      }
-                    >
-                      {output.entity.title}
-                    </Link>
+                    </p>
+                    <span css={[titleStyles, rowTitleStyles]}>
+                      {tableTitles[2]}
+                    </span>
+                    {'teams' in output ? (
+                      <p css={paragraphStyle}>
+                        {output.workingGroups?.length ? (
+                          <Link
+                            ellipsed
+                            href={
+                              network({}).workingGroups({}).workingGroup({
+                                workingGroupId: output.workingGroups[0].id,
+                              }).$
+                            }
+                          >
+                            {output.workingGroups[0].title}
+                          </Link>
+                        ) : output.teams.length > 1 ? (
+                          'Multiple teams'
+                        ) : (
+                          output.teams[0] && (
+                            <Link
+                              ellipsed
+                              href={
+                                network({}).teams({}).team({
+                                  teamId: output.teams[0].id,
+                                }).$
+                              }
+                            >
+                              {output.teams[0].displayName}
+                            </Link>
+                          )
+                        )}
+                      </p>
+                    ) : (
+                      output.entity &&
+                      getSourceIcon && (
+                        <div css={paragraphStyle}>
+                          <div css={iconStyles}>
+                            {getSourceIcon(output.entity?.type)}
+                          </div>
+                          <Link
+                            ellipsed
+                            href={
+                              output.entity?.type === 'WorkingGroups'
+                                ? gp2Routing.workingGroups({}).workingGroup({
+                                    workingGroupId: output.entity.id,
+                                  }).$
+                                : gp2Routing.projects({}).project({
+                                    projectId: output.entity.id,
+                                  }).$
+                            }
+                          >
+                            {output.entity.title}
+                          </Link>
+                        </div>
+                      )
+                    )}
                   </div>
-                )
+                ),
               )}
-            </div>
-          ))}
+          </>
+        )}
       </div>
       {displayShowMoreButton && (
         <div css={showMoreStyles}>

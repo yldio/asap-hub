@@ -5,16 +5,18 @@ import {
   ComplianceReportHeader,
   NotFoundPage,
   usePushFromHere,
+  utils,
 } from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import {
+  useInvalidateWorkspaceManuscripts,
   useManuscriptById,
   usePostComplianceReport,
-  useInvalidateWorkspaceManuscripts,
-} from '../network/teams/state';
-import { useManuscriptToast } from '../network/teams/useManuscriptToast';
+  useProjectById,
+} from './state';
 
 type ProjectComplianceReportProps = {
   projectId: string;
@@ -52,6 +54,7 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
 }) => {
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript, setManuscript] = useManuscriptById(manuscriptId ?? '');
+  const projectDetail = useProjectById(projectId);
   const { setFormType } = useManuscriptToast();
 
   const pushFromHere = usePushFromHere();
@@ -82,10 +85,12 @@ const ProjectComplianceReport: React.FC<ProjectComplianceReportProps> = ({
       void pushFromHere(projectWorkspacePath, { replace: true });
     };
 
+    const breadcrumbs = utils.getProjectBreadcrumbs(projectDetail, projectId);
+
     return (
       <FormProvider {...form}>
         <Frame title="Create Compliance Report">
-          <ComplianceReportHeader />
+          <ComplianceReportHeader breadcrumbs={breadcrumbs} />
           <ComplianceReportForm
             onSuccess={onSuccess}
             onSave={createComplianceReport}

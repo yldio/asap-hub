@@ -36,5 +36,5 @@ Although these instructions address the problem of doing QA in your feature bran
 
 Here is a list of PRs that used this mechanism.
 
-- https://github.com/yldio/asap-hub/pull/4836 (addition of `Projects` to user's profile)
-- https://github.com/yldio/asap-hub/pull/4416/changes (just testing the mechanism)
+- https://github.com/mjff-eng/asap-hub/pull/4836 (addition of `Projects` to user's profile)
+- https://github.com/mjff-eng/asap-hub/pull/4416/changes (just testing the mechanism)

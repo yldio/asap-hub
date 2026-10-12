@@ -96,7 +96,7 @@ describe('outputToCSV', () => {
           id: '2',
           firstName: 'Maria',
           lastName: 'Smith',
-          email: 'maria@yld.com',
+          email: 'maria@example.com',
           displayName: 'Maria Smith',
         },
         {

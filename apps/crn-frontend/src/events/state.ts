@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { User } from '@asap-hub/auth';
 import {
   createQueryKeys,
@@ -6,14 +6,34 @@ import {
   nullOnUndefined,
   withEmptyListFallback,
 } from '@asap-hub/frontend-utils';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  EventResponse,
+  EventUpdateDetailsRequest,
+  InterestGroupTeam,
+  ListEventResponse,
+} from '@asap-hub/model';
 import { SpeakerGroup } from '@asap-hub/react-components';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
-import { getEvent, getEvents } from './api';
+import { getInterestGroup } from '../network/interest-groups/api';
+import { interestGroupQueryKeys } from '../network/interest-groups/state';
+import { teamQueryKeys } from '../network/teams/state';
+import {
+  getEvent,
+  getEvents,
+  getTeamsForMatching,
+  patchEvent,
+  teamsForMatchingOptions,
+} from './api';
 import { mapSpeakersToGroups } from './map-speakers-to-groups';
 
 export const eventQueryKeys = createQueryKeys<GetEventListOptions>('events');
@@ -36,6 +56,33 @@ export const useEventSpeakerGroups = (id: string): SpeakerGroup[] => {
   return useMemo(() => (event ? mapSpeakersToGroups(event) : []), [event]);
 };
 
+export type InterestGroupTeamsState = {
+  teams: ReadonlyArray<InterestGroupTeam>;
+  // False while the request is in flight or failed, where an empty list is not
+  // an answer.
+  resolved: boolean;
+};
+
+export const useInterestGroupTeams = (
+  id: string | undefined,
+): InterestGroupTeamsState => {
+  const getAuthorization = useAuthorization();
+  const { data, isPending, isError } = useQuery({
+    queryKey: interestGroupQueryKeys.detail(id ?? ''),
+    queryFn: id
+      ? () =>
+          nullOnUndefined(async () =>
+            getInterestGroup(id, await getAuthorization()),
+          )
+      : skipToken,
+  });
+
+  if (!id) {
+    return { teams: [], resolved: true };
+  }
+  return { teams: data?.teams ?? [], resolved: !isPending && !isError };
+};
+
 export const useQuietRefreshEventById = (id: string) => {
   const getAuthorization = useAuthorization();
   const queryClient = useQueryClient();
@@ -43,6 +90,19 @@ export const useQuietRefreshEventById = (id: string) => {
     const event = await getEvent(id, await getAuthorization());
     queryClient.setQueryData(eventQueryKeys.detail(id), event ?? null);
   };
+};
+
+export const usePatchEvent = (id: string) => {
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data: EventUpdateDetailsRequest) =>
+      patchEvent(id, data, await getAuthorization()),
+    onSuccess: (event) => {
+      queryClient.setQueryData(eventQueryKeys.detail(id), event);
+    },
+  });
+  return mutateAsync;
 };
 
 export const usePrefetchEvents = (options: GetEventListOptions) => {
@@ -74,4 +134,21 @@ export const useEvents = (
         items: [],
       }),
   }).data;
+};
+
+// fetchQuery rather than a hook subscription: the corpus is only needed once a
+// file is actually uploaded, and it must not suspend inside the modal.
+export const useTeamsForMatching = () => {
+  const { client } = useAlgolia();
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    () =>
+      queryClient.fetchQuery({
+        queryKey: teamQueryKeys.list(teamsForMatchingOptions),
+        queryFn: () => getTeamsForMatching(client),
+        staleTime: Infinity,
+      }),
+    [client, queryClient],
+  );
 };

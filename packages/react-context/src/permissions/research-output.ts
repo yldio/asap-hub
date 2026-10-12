@@ -102,6 +102,7 @@ export type ResearchOutputDetailState = {
   hasRelatedManuscript: boolean;
   isWorkingGroupOutput: boolean;
   isGrantDocument: boolean;
+  hasDuplicateDestination: boolean;
 };
 
 export const getVisibleResearchOutputActions = (
@@ -125,6 +126,7 @@ export const getVisibleResearchOutputActions = (
       (!state.isInReview || !!permissions.canPublishResearchOutput),
     showDuplicate:
       !!permissions.canDuplicateResearchOutput &&
+      state.hasDuplicateDestination &&
       (state.isWorkingGroupOutput || !state.hasRelatedManuscript),
     showRequestReview:
       !state.published && !!permissions.canRequestReview && !state.isInReview,

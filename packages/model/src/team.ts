@@ -97,6 +97,15 @@ export const countActiveUniqueMembers = (
 ): number =>
   new Set(members.filter(isActiveTeamMember).map(({ id }) => id)).size;
 
+export const teamHasActiveProjectManager = (
+  members: ReadonlyArray<
+    Pick<TeamMember, 'role' | 'alumniSinceDate' | 'inactiveSinceDate'>
+  >,
+): boolean =>
+  members.some(
+    (member) => member.role === 'Project Manager' && isActiveTeamMember(member),
+  );
+
 export type TeamManuscript = Pick<
   ManuscriptResponse,
   | 'id'
@@ -228,3 +237,19 @@ export type ListPublicTeamDataObject =
 export type PublicTeamListItemResponse = PublicTeamListItemDataObject;
 
 export type ListPublicTeamResponse = ListResponse<PublicTeamListItemResponse>;
+
+export type TeamAwardMetricDataObject = {
+  id: string;
+  name: string;
+  asapPhilosophy: string;
+  metricDefinition: string;
+  received: boolean;
+};
+
+export type ListTeamAwardMetricsDataObject =
+  ListResponse<TeamAwardMetricDataObject>;
+
+export type TeamAwardMetricResponse = TeamAwardMetricDataObject;
+
+export type ListTeamAwardMetricsResponse =
+  ListResponse<TeamAwardMetricResponse>;

@@ -79,6 +79,11 @@ export const teamWithUsersRecordSearchQueryBuilder = (
       term: { documentCategory: options.documentCategory },
     });
   }
+  if (options.teamId) {
+    mustClauses.push({
+      term: { teamId: options.teamId },
+    });
+  }
 
   return {
     from: options.currentPage * options.pageSize,
@@ -192,6 +197,11 @@ export const teamRecordSearchQueryBuilder = (
       term: { outputType: options.outputType },
     });
   }
+  if (options.teamId) {
+    mustClauses.push({
+      term: { id: options.teamId },
+    });
+  }
 
   return {
     from: options.currentPage * options.pageSize,
@@ -256,6 +266,11 @@ export const leadershipRecordSearchQueryBuilder = (
   });
 
   const mustClauses: MustClause[] = [];
+  if (options.teamId) {
+    mustClauses.push({
+      term: { id: options.teamId },
+    });
+  }
 
   return {
     from: options.currentPage * options.pageSize,

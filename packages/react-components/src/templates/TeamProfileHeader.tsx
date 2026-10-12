@@ -1,33 +1,17 @@
-import { TeamResponse, TeamTool } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  useFlags,
-} from '@asap-hub/react-context';
+import { TeamResponse } from '@asap-hub/model';
 import { dashboard, network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
-import { lead, pine } from '../colors';
+import { colour } from '../colors';
 import {
-  article,
-  bioinformatics,
-  crnReportIcon,
-  dataset,
   DiscoveryProjectIcon,
   InactiveBadgeIcon,
   LabIcon,
-  labMaterial,
-  plusIcon,
-  protocol,
   ResourceProjectIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
-import {
-  Breadcrumbs,
-  DropdownButton,
-  UserAvatarList,
-  TabNav,
-} from '../molecules';
+import { Breadcrumbs, UserAvatarList, TabNav } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
 import {
   getCounterString,
@@ -69,29 +53,6 @@ const contactSectionStyles = css({
     `,
   },
 });
-
-const createSectionStyles = css({
-  alignItems: 'center',
-
-  display: 'grid',
-  gridColumnGap: rem(16),
-
-  grid: `
-    "members" auto
-    "contact" auto
-    "create"  auto
-    "info"    auto
-    "lab"     auto
-  `,
-
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    grid: `
-      "contact members create"
-      "info info info"
-      "lab lab lab"/ auto auto 1fr
-    `,
-  },
-});
 const pointOfContactStyles = css({
   display: 'flex',
   flexFlow: 'row',
@@ -111,7 +72,7 @@ const labCountStyles = css({
   display: 'flex',
   alignItems: 'center',
   padding: `${rem(12)} 0`,
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
 });
 const projectNameStyles = css({
   gridArea: 'info',
@@ -119,22 +80,6 @@ const projectNameStyles = css({
   alignItems: 'center',
   gap: rem(8),
   marginTop: rem(12),
-});
-const createStyles = css({
-  gridArea: 'create',
-  display: 'flex',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'block',
-    justifySelf: 'end',
-  },
-});
-
-const dropdownButtonStyling = css({
-  display: 'flex',
-  columnGap: rem(9),
-  svg: {
-    color: pine.rgb,
-  },
 });
 const iconStyles = css({
   display: 'inline-grid',
@@ -150,14 +95,11 @@ const pillsStyles = css({
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly isStaff: boolean;
   readonly inactiveSince?: string;
-  readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
   readonly upcomingEventsCount?: number;
-  readonly teamOutputsCount?: number;
   readonly pastEventsCount?: number;
-  readonly teamDraftOutputsCount?: number;
   readonly isAsapTeam?: boolean;
-  readonly manuscriptsCount?: number;
+  readonly showMetricsTab?: boolean;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -165,16 +107,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   displayName,
   members,
   pointOfContact,
-  tools,
   teamListElementId,
   labCount,
   upcomingEventsCount,
-  teamOutputsCount = 0,
   pastEventsCount,
-  teamDraftOutputsCount,
-  isStaff,
-  manuscriptsCount,
   isAsapTeam = false,
+  showMetricsTab = false,
   teamStatus,
   teamType,
   resourceType,
@@ -183,8 +121,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   projectType,
   linkedProjectId,
 }) => {
-  const { isEnabled } = useFlags();
-  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
   const route = network({}).teams({}).team({ teamId: id });
   const projectLink =
     linkedProjectId && projectType
@@ -193,10 +129,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           projectType,
         })
       : undefined;
-
-  const { canShareResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
 
   const isActive = teamStatus === 'Active';
 
@@ -222,22 +154,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         nav={
           <TabNav>
             <TabLink href={route.about({}).$}>About</TabLink>
-            {(tools || isStaff) && (
-              <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
+            {showMetricsTab && (
+              <TabLink href={route.metrics({}).$}>Metrics</TabLink>
             )}
-            {isAsapTeam && isStaff && (
-              <TabLink href={route.compliance({}).$}>
-                Compliance ({manuscriptsCount})
-              </TabLink>
-            )}
-            <TabLink href={route.outputs({}).$}>
-              Outputs ({teamOutputsCount})
-            </TabLink>
-            {teamDraftOutputsCount !== undefined ? (
-              <TabLink href={route.draftOutputs({}).$}>
-                Draft Outputs ({teamDraftOutputsCount})
-              </TabLink>
-            ) : null}
             {isActive && (
               <TabLink href={route.upcoming({}).$}>
                 Upcoming Events {`(${upcomingEventsCount})`}
@@ -260,11 +179,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
           )}
         </div>
-        <section
-          css={
-            canShareResearchOutput ? createSectionStyles : contactSectionStyles
-          }
-        >
+        <section css={contactSectionStyles}>
           {teamStatus === 'Active' && (
             <UserAvatarList
               members={activeMembers}
@@ -311,50 +226,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 <LabIcon />
               </span>
               <span>{getCounterString(labCount, 'Lab')}</span>
-            </div>
-          )}
-          {canShareResearchOutput && !isProjectOutputsEnabled && (
-            <div css={createStyles}>
-              <DropdownButton
-                buttonChildren={() => (
-                  <span css={dropdownButtonStyling}>
-                    {plusIcon}
-                    Share an output
-                  </span>
-                )}
-              >
-                {{
-                  item: <>{article} Article</>,
-                  href: route.createOutput({ outputDocumentType: 'article' }).$,
-                }}
-                {{
-                  item: <>{bioinformatics} Bioinformatics</>,
-                  href: route.createOutput({
-                    outputDocumentType: 'bioinformatics',
-                  }).$,
-                }}
-                {{
-                  item: <>{crnReportIcon} CRN Report</>,
-                  href: route.createOutput({
-                    outputDocumentType: 'report',
-                  }).$,
-                }}
-                {{
-                  item: <>{dataset} Dataset</>,
-                  href: route.createOutput({ outputDocumentType: 'dataset' }).$,
-                }}
-                {{
-                  item: <>{labMaterial} Lab Material</>,
-                  href: route.createOutput({
-                    outputDocumentType: 'lab-material',
-                  }).$,
-                }}
-                {{
-                  item: <>{protocol} Protocol</>,
-                  href: route.createOutput({ outputDocumentType: 'protocol' })
-                    .$,
-                }}
-              </DropdownButton>
             </div>
           )}
         </section>

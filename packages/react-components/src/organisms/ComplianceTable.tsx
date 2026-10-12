@@ -6,12 +6,11 @@ import {
   PartialManuscriptResponse,
   SortCompliance,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { Card, Pill } from '../atoms';
 import { borderRadius } from '../card';
-import { charcoal, steel } from '../colors';
+import { colour } from '../colors';
 import { rem } from '../pixels';
 import APCCoverageModal, { APCCoverageFormData } from './APCCoverageModal';
 import ComplianceAssignUsersModal, {
@@ -30,14 +29,14 @@ const container = css({
   },
   'th, td': {
     textAlign: 'left',
-    borderBottom: `1px solid ${steel.rgb}`,
+    borderBottom: `1px solid ${colour.border.tertiary}`,
     paddingRight: rem(32),
     ':nth-of-type(2)': {
       paddingLeft: rem(32),
     },
   },
   'th.sticky, td.sticky': {
-    borderRight: `1px solid ${steel.rgb}`,
+    borderRight: `1px solid ${colour.border.tertiary}`,
     position: 'sticky',
     paddingLeft: rem(24),
     left: 0,
@@ -52,8 +51,8 @@ const pillIdStyles = css({
 const titleStyles = css({
   alignItems: 'center',
   fontWeight: 'bold',
-  color: charcoal.rgb,
-  background: '#fff',
+  color: colour.foreground.primary,
+  background: colour.background.primary,
   verticalAlign: 'top',
   paddingTop: rem(32),
   paddingBottom: rem(24),
@@ -110,8 +109,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   data,
   getAssignedUsersSuggestions,
 }) => {
-  const { isEnabled } = useFlags();
-  const displayProjectColumn = isEnabled('PROJECT_WORKSPACE');
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const [displayAssignUsersModal, setDisplayAssignUsersModal] = useState(false);
@@ -240,9 +237,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
               <th css={[titleStyles, idColumnStyles]} className={'sticky'}>
                 ID
               </th>
-              {displayProjectColumn && (
-                <th css={[titleStyles, projectColumnStyles]}>Project</th>
-              )}
+              <th css={[titleStyles, projectColumnStyles]}>Project</th>
               <th css={[titleStyles, teamColumnStyles]}>Team</th>
               <th css={[titleStyles, lastUpdatedColumnStyles]}>Last Updated</th>
               <th css={[titleStyles, statusColumnStyles]}>Status</th>
@@ -258,7 +253,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                 key={`${row.id}-${row.status}`}
                 data={row}
                 isComplianceReviewer={isComplianceReviewer}
-                displayProjectColumn={displayProjectColumn}
                 getAssignedUsersSuggestions={getAssignedUsersSuggestions}
                 handleAssignUsersClick={handleAssignUsersClick}
                 handleUpdateAPCDetailsClick={handleUpdateAPCDetailsClick}

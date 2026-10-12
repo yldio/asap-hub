@@ -9,7 +9,7 @@ jobs:
   check-updates:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -22,8 +22,6 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: Production
       - name: Add safe directory
         run: git config --system --add safe.directory /__w/asap-hub/asap-hub
       - name: Check if some app has changed
@@ -41,7 +39,7 @@ jobs:
     if: ${{ needs.check-updates.outputs.GIT_DIFF != '' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -56,7 +54,7 @@ jobs:
     if: ${{ needs.check-updates.outputs.GIT_DIFF != '' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
+      image: ghcr.io/mjff-eng/asap-hub/node-python-sq:d3833b1f3c7b1ab66ac2446cc61175fddedcee9e
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +68,6 @@ jobs:
           - date-field-as-last-published-at
           - disabled-fields
           - event-additional-materials
-          - event-custom-validation
           - event-speakers-title
           - event-speakers-gp2
           - field-as-updated-at

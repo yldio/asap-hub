@@ -1,7 +1,8 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 import { css, keyframes } from '@emotion/react';
 
-import { fern } from '../colors';
+import { colour } from '../colors';
 
 const pulse = keyframes({
   '0%': { transform: 'scale(0.5)', opacity: 0.5 },
@@ -19,18 +20,26 @@ const pulseStyles = css({
   },
 });
 
-const live = (
+interface LiveIconProps {
+  readonly color?: string;
+  readonly size?: number;
+}
+
+const LiveIcon: FC<LiveIconProps> = ({
+  color = colour.brand.crn[500],
+  size = 24,
+}) => (
   <svg
-    width="24"
-    height="24"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Live</title>
-    <circle css={pulseStyles} cx="12" cy="12" r="8" fill={fern.hex} />
-    <circle cx="12" cy="12" r="4" fill={fern.hex} />
+    <circle css={pulseStyles} cx="12" cy="12" r="8" fill={color} />
+    <circle cx="12" cy="12" r="4" fill={color} />
   </svg>
 );
 
-export default live;
+export default LiveIcon;

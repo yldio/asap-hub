@@ -5,19 +5,17 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, projectRouteByType } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import {
   addUserIcon,
   AssignedUsersAvatarList,
   AuthorSelect,
-  lead,
-  neutral200,
   PencilIcon,
   plusIcon,
   StatusButton,
-  steel,
+  colour,
 } from '..';
 import { Anchor, Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
@@ -27,15 +25,15 @@ import { getProjectConfig, getReviewerStatusType } from '../utils';
 
 const rowStyles = css({
   padding: `${rem(20)} ${rem(24)} 0`,
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
   ':first-of-type': {
     borderBottom: 'none',
   },
   ':nth-of-type(even) td': {
-    background: neutral200.rgb,
+    background: colour.neutral[50],
   },
   ':nth-of-type(odd) td': {
-    background: '#fff',
+    background: colour.background.primary,
   },
   ':last-child': {
     borderBottom: 'none',
@@ -55,7 +53,7 @@ const apcCoverageStyles = (italicize: boolean) =>
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: rem(14),
-    color: lead.rgb,
+    color: colour.foreground.tertiary,
     maxWidth: rem(72),
     ...(italicize ? { fontStyle: 'italic' } : {}),
   });
@@ -80,7 +78,7 @@ const noUsersStyles = css({
   display: 'flex',
   fontStyle: 'italic',
   fontSize: rem(14),
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   width: '100%',
   whiteSpace: 'nowrap',
   alignItems: 'anchor-center',
@@ -153,7 +151,6 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
-  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -170,8 +167,8 @@ type ComplianceTableRowProps = {
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
 
-const getTeamWorkspaceHref = (teamId: string) =>
-  teamId ? network({}).teams({}).team({ teamId }).workspace({}).$ : undefined;
+const getTeamHref = (teamId: string) =>
+  teamId ? network({}).teams({}).team({ teamId }).about({}).$ : undefined;
 
 const getAPCStatusLabel = (
   apcRequested?: boolean,
@@ -265,7 +262,6 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
-  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
@@ -286,8 +282,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
-  const teamHref = getTeamWorkspaceHref(team.id);
-  const manuscriptHref = teamHref ? `${teamHref}#${id}` : undefined;
+  const teamHref = getTeamHref(team.id);
+  const projectWorkspaceHref =
+    project?.projectType && project.id
+      ? projectRouteByType[project.projectType](project.id).workspace({}).$
+      : undefined;
+  const manuscriptHref = projectWorkspaceHref
+    ? `${projectWorkspaceHref}#${id}`
+    : undefined;
   const projectConfig = project?.projectType
     ? getProjectConfig({
         projectId: project.id,
@@ -318,24 +320,22 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             </span>
           </Pill>
         </td>
-        {displayProjectColumn && (
-          <td>
-            {project?.title ? (
-              <p css={projectEntityStyles}>
-                <span css={projectIconStyles}>{projectConfig?.icon}</span>
-                <span css={projectTitleStyles} title={project.title}>
-                  {projectConfig?.href ? (
-                    <Link href={projectConfig.href}>{project.title}</Link>
-                  ) : (
-                    project.title
-                  )}
-                </span>
-              </p>
-            ) : (
-              '—'
-            )}
-          </td>
-        )}
+        <td>
+          {project?.title ? (
+            <p css={projectEntityStyles}>
+              <span css={projectIconStyles}>{projectConfig?.icon}</span>
+              <span css={projectTitleStyles} title={project.title}>
+                {projectConfig?.href ? (
+                  <Link href={projectConfig.href}>{project.title}</Link>
+                ) : (
+                  project.title
+                )}
+              </span>
+            </p>
+          ) : (
+            '—'
+          )}
+        </td>
         <td>
           {isUserBasedProject ? (
             '—'

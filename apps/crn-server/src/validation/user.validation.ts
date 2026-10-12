@@ -1,6 +1,15 @@
 import { teamRole, userDegree, UserPatchRequest } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
+import { crnEmailExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
+
+// Defence in depth. The modal validates against the same expression, so a
+// request that reaches here with a bad address did not come from the form.
+const emailField = {
+  type: 'string',
+  nullable: true,
+  pattern: crnEmailExpression,
+} as const;
 
 const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
   type: 'object',
@@ -8,8 +17,8 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
     jobTitle: { type: 'string', nullable: true },
     onboarded: { type: 'boolean', nullable: true },
     dismissedGettingStarted: { type: 'boolean', nullable: true },
-    contactEmail: { type: 'string', nullable: true },
-    personalEmail: { type: 'string', nullable: true },
+    contactEmail: emailField,
+    personalEmail: emailField,
     firstName: { type: 'string', nullable: true },
     middleName: { type: 'string', nullable: true },
     lastName: { type: 'string', nullable: true },
@@ -74,6 +83,10 @@ export const validateUserPatchRequest = validateInput(
   userPatchRequestValidationSchema,
   {
     skipNull: true,
+    // Report every failure, not just the first: the Contact Details form marks
+    // both email fields at once, and with the default AJV setting a request
+    // failing both would come back naming only contactEmail.
+    allErrors: true,
   },
 );
 

@@ -81,7 +81,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'os-champion',
     mapping: {
       properties: {
-        teamId: { type: 'text' },
+        teamId: { type: 'keyword' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -104,7 +104,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'preliminary-data-sharing',
     mapping: {
       properties: {
-        teamId: { type: 'text' },
+        teamId: { type: 'keyword' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -120,7 +120,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'attendance',
     mapping: {
       properties: {
-        teamId: { type: 'text' },
+        teamId: { type: 'keyword' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -136,7 +136,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'preprint-compliance',
     mapping: {
       properties: {
-        teamId: { type: 'text' },
+        teamId: { type: 'keyword' },
         teamName: textWithNgramKeyword({ raw: true }),
         isTeamInactive: { type: 'boolean' },
         numberOfPreprints: { type: 'integer' },
@@ -151,7 +151,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'publication-compliance',
     mapping: {
       properties: {
-        teamId: { type: 'text' },
+        teamId: { type: 'keyword' },
         teamName: textWithNgramKeyword({ raw: true }),
         isTeamInactive: { type: 'boolean' },
         overallCompliance: { type: 'float' },
@@ -178,7 +178,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'user-productivity',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         name: textWithNgramKeyword(),
         isAlumni: { type: 'boolean' },
         teams: {
@@ -206,7 +206,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'team-productivity',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         name: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -226,7 +226,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'user-collaboration',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         name: textWithNgramKeyword(),
         isAlumni: { type: 'boolean' },
         alumniSince: { type: 'keyword' },
@@ -256,7 +256,8 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'team-collaboration',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        // Must stay keyword: a `term` filter never matches an analyzed id.
+        id: { type: 'keyword' },
         name: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -273,6 +274,11 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         DatasetAcross: { type: 'integer' },
         'Lab Material Across': { type: 'integer' },
         ProtocolAcross: { type: 'integer' },
+        ArticleTotal: { type: 'integer' },
+        BioinformaticsTotal: { type: 'integer' },
+        DatasetTotal: { type: 'integer' },
+        'Lab Material Total': { type: 'integer' },
+        ProtocolTotal: { type: 'integer' },
         collaboratingTeams: {
           type: 'nested',
           properties: {
@@ -297,7 +303,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'ig-leadership',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         displayName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -315,7 +321,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'wg-leadership',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         displayName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -333,7 +339,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'presenter-representation',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         name: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,

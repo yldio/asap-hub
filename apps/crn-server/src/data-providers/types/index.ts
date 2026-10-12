@@ -5,6 +5,7 @@ export * from './compliance-report.data-provider.types';
 export * from './dashboard.data-provider.types';
 export * from './discover.data-provider.types';
 export * from './discussion.data-provider.types';
+export * from './event.data-provider.types';
 export * from './guide.data-provider.types';
 export * from './impact.data-provider.types';
 export * from './interest-groups.data-provider.types';

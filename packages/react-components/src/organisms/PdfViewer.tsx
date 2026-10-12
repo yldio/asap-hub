@@ -1,14 +1,20 @@
 import { css } from '@emotion/react';
-// pdf_viewer.mjs reads globalThis.pdfjsLib, which pdfjs-dist sets, so it must load first
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+// The legacy build polyfills what the modern one calls unguarded
+// (Map.getOrInsertComputed, Math.sumPrecise, Uint8Array.toHex), which browsers
+// our browserslist still lets in lack. pdf_viewer.mjs reads
+// globalThis.pdfjsLib, which pdf.mjs sets, so it must load first.
+import {
+  getDocument,
+  GlobalWorkerOptions,
+} from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {
   EventBus,
   LinkTarget,
   PDFLinkService,
   PDFViewer,
-} from 'pdfjs-dist/web/pdf_viewer.mjs';
-import 'pdfjs-dist/web/pdf_viewer.css';
-import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+} from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
+import 'pdfjs-dist/legacy/web/pdf_viewer.css';
+import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button, Paragraph } from '../atoms';

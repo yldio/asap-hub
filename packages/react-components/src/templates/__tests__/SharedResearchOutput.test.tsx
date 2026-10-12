@@ -12,7 +12,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { MemoryRouter, useLocation } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
-import { getDocument } from 'pdfjs-dist';
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 

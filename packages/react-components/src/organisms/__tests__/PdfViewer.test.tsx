@@ -1,11 +1,14 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { getDocument, PDFDocumentLoadingTask } from 'pdfjs-dist';
+import {
+  getDocument,
+  PDFDocumentLoadingTask,
+} from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {
   LinkTarget,
   PDFLinkService,
   PDFViewer,
-} from 'pdfjs-dist/web/pdf_viewer.mjs';
+} from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
 
 import PdfViewer from '../PdfViewer';
 

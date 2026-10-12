@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { getDocument } from 'pdfjs-dist';
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 import GrantDocumentPdfCard from '../GrantDocumentPdfCard';
 

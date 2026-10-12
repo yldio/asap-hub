@@ -15,7 +15,7 @@ import {
 const sectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  paddingTop: rem(16),
+  paddingTop: rem(24),
   ':first-of-type': { paddingTop: 0 },
 });
 

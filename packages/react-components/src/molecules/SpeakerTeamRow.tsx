@@ -98,17 +98,12 @@ const nestedListStyles = css({
   flexDirection: 'column',
   gap: rem(16),
   marginTop: rem(16),
-  paddingLeft: rem(32),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    gap: rem(24),
-    paddingLeft: rem(12),
-  },
+  paddingLeft: rem(40),
 });
 
 const showMoreStyles = css({
   display: 'flex',
-  paddingLeft: rem(32),
-  [`@media (max-width: ${mobileScreen.max}px)`]: { paddingLeft: rem(12) },
+  paddingLeft: rem(40),
 });
 
 export type SpeakerTeamRowUser = {

@@ -14,6 +14,7 @@ import {
 import { buildSignedCookies } from '../signed-cookies';
 import { deleteVideoCascade, RenderInProgress } from './cascade';
 import { folderExists, rootFolderId } from './folders';
+import { registerPlaybackErrorRoutes } from './playback-errors';
 import { registerReencodeRoutes } from './reencode';
 import {
   currentUser,
@@ -509,6 +510,7 @@ export const videosRouter = (): Router => {
   });
 
   registerReencodeRoutes(router);
+  registerPlaybackErrorRoutes(router);
 
   return router;
 };

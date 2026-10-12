@@ -4,12 +4,13 @@ import { chapterSectionIndexes } from '@asap-hub/demo-timeline';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 
+import { useApi } from '../api/ApiProvider';
 import { useVideo, useVideoAccess } from '../api/hooks';
 import type { Chapter, Video, VideoAccess } from '../api/types';
 import { useIsAdmin, useIsCreator } from '../auth/MeContext';
 import { editPathOf } from '../library/VideoCard';
 import ChapterList from '../watch/ChapterList';
-import Player from '../watch/Player';
+import Player, { PlaybackError } from '../watch/Player';
 import { canReencode, ReencodeButton, ReencodeStatus } from '../watch/Reencode';
 import SpritePreview from '../watch/SpritePreview';
 import useThumbnails from '../watch/useThumbnails';
@@ -86,6 +87,7 @@ const WatchPlayer: FC<{
 }> = ({ video, access, onRequestAccess }) => {
   const isCreator = useIsCreator();
   const isAdmin = useIsAdmin();
+  const api = useApi();
   const [searchParams] = useSearchParams();
   const [currentTime, setCurrentTime] = useState(0);
   const [hoveredChapter, setHoveredChapter] = useState<number | null>(null);
@@ -99,6 +101,18 @@ const WatchPlayer: FC<{
   const registerSeek = useCallback((seek: (seconds: number) => void) => {
     seekRef.current = seek;
   }, []);
+
+  const reportPlaybackError = useCallback(
+    (error: PlaybackError) => {
+      api
+        .reportPlaybackError(video.id, {
+          ...error,
+          userAgent: navigator.userAgent,
+        })
+        .catch(() => undefined);
+    },
+    [api, video.id],
+  );
 
   const onSelectChapter = useCallback(
     (chapter: Chapter) => seekRef.current?.(chapter.startMs / 1000),
@@ -130,6 +144,7 @@ const WatchPlayer: FC<{
           onTimeChange={setCurrentTime}
           registerSeek={registerSeek}
           onRequestAccess={onRequestAccess}
+          onPlaybackError={reportPlaybackError}
         />
         <div css={metaStyles}>
           <span>{formatRecordedAt(video.recordedAt)}</span>

@@ -612,6 +612,17 @@ export const createApi = (getToken: GetToken) => ({
     }).catch(() => undefined);
   },
 
+  reportPlaybackError: async (
+    id: string,
+    error: { code: number; message: string; userAgent?: string },
+  ): Promise<void> => {
+    await request<void>(
+      `/videos/${encodeURIComponent(id)}/playback-errors`,
+      await getToken(),
+      { method: 'POST', body: error },
+    );
+  },
+
   deleteVideo: async (id: string): Promise<void> => {
     await request<void>(`/videos/${encodeURIComponent(id)}`, await getToken(), {
       method: 'DELETE',

@@ -83,6 +83,12 @@ export const publishVideoSchema = z.object({
   version: z.number().int().nonnegative(),
 });
 
+export const playbackErrorSchema = z.object({
+  code: z.number().int().min(0).max(10),
+  message: z.string().max(500),
+  userAgent: z.string().max(400).optional(),
+});
+
 export const createUploadSchema = z.object({
   title: z.string().min(1).max(300),
   folderId: folderIdField.optional(),

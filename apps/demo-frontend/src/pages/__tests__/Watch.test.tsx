@@ -455,3 +455,28 @@ describe('re-encoding', () => {
     expect(screen.getByRole('button', { name: 'Re-encode' })).toBeVisible();
   });
 });
+
+it('reports what the browser said when a video will not play', async () => {
+  const reportPlaybackError = jest.fn(() => Promise.resolve());
+  renderApp(<Watch />, {
+    api: { ...api, reportPlaybackError },
+    me: memberMe,
+    route: '/videos/video-1',
+    routePath: '/videos/:id',
+  });
+
+  const player = (await screen.findByTestId('demo-video')) as HTMLVideoElement;
+  Object.defineProperty(player, 'error', {
+    value: { code: 3, message: 'PIPELINE_ERROR_DECODE' },
+    configurable: true,
+  });
+  fireEvent.error(player);
+
+  await waitFor(() =>
+    expect(reportPlaybackError).toHaveBeenCalledWith('video-1', {
+      code: 3,
+      message: 'PIPELINE_ERROR_DECODE',
+      userAgent: navigator.userAgent,
+    }),
+  );
+});

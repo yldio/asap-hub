@@ -27,18 +27,31 @@ import PdfViewerLayout from './PdfViewerLayout';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
 
-// pdf.js's search joins a Map iterator (Iterator.prototype.join), which Chrome
-// has but Safari doesn't: every page's text failed to normalize, so Safari
-// found nothing. Drop this once pdf.js or Safari covers it.
-const iteratorPrototype = Object.getPrototypeOf(
-  Object.getPrototypeOf(new Map().keys()),
-);
-if (!('join' in iteratorPrototype)) {
-  Object.defineProperty(iteratorPrototype, 'join', {
+// pdf.js reads each page's text for search with `for await` over a
+// ReadableStream, which Safari 26 can't iterate: every page came back empty
+// and Safari's searches found nothing. Drop this once Safari can, or pdf.js's
+// legacy build polyfills it. (jsdom has no ReadableStream at all.)
+if (
+  typeof ReadableStream !== 'undefined' &&
+  !(Symbol.asyncIterator in ReadableStream.prototype)
+) {
+  Object.defineProperty(ReadableStream.prototype, Symbol.asyncIterator, {
     configurable: true,
     writable: true,
-    value(this: Iterable<unknown>, separator?: string) {
-      return Array.from(this).join(separator);
+    async *value(this: ReadableStream<unknown>) {
+      const reader = this.getReader();
+      try {
+        for (;;) {
+          // eslint-disable-next-line no-await-in-loop
+          const { done, value: chunk } = await reader.read();
+          if (done) {
+            return;
+          }
+          yield chunk;
+        }
+      } finally {
+        reader.releaseLock();
+      }
     },
   });
 }

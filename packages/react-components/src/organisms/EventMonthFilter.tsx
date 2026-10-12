@@ -2,16 +2,7 @@ import { css } from '@emotion/react';
 import { useCallback, useState } from 'react';
 
 import { Button } from '../atoms';
-import {
-  charcoal,
-  lead,
-  mint,
-  neutral200,
-  neutral800,
-  paper,
-  pine,
-  steel,
-} from '../colors';
+import { colour } from '../colors';
 import { chevronLeftIcon, chevronRightIcon } from '../icons';
 import { rem } from '../pixels';
 import {
@@ -43,7 +34,7 @@ const panelStyles = css({
   width: rem(284),
   maxWidth: `calc(100vw - ${rem(32)})`,
   padding: rem(16),
-  border: `1px solid ${charcoal.rgb}`,
+  border: `1px solid ${colour.neutral[900]}`,
   borderRadius: `4px 0 4px 4px`,
 });
 
@@ -65,7 +56,7 @@ const navStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   paddingBottom: rem(16),
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
 });
 
 const navButtonStyles = css(resetButtonStyles, {
@@ -75,16 +66,16 @@ const navButtonStyles = css(resetButtonStyles, {
   boxSizing: 'border-box',
   height: rem(24),
   padding: 0,
-  border: `1px solid ${steel.rgb}`,
+  border: `1px solid ${colour.border.tertiary}`,
   borderRadius: rem(4),
-  backgroundColor: paper.rgb,
+  backgroundColor: colour.background.primary,
   ':disabled': {
     cursor: 'default',
     opacity: 0.4,
   },
   'svg path': {
-    fill: charcoal.rgb,
-    stroke: charcoal.rgb,
+    fill: colour.foreground.primary,
+    stroke: colour.foreground.primary,
     strokeWidth: 0.7,
     strokeLinejoin: 'round',
   },
@@ -105,7 +96,7 @@ const yearToggleStyles = css(navButtonStyles, {
   gap: rem(4),
   padding: `${rem(4)} ${rem(8)}`,
   fontWeight: 'bold',
-  color: charcoal.rgb,
+  color: colour.foreground.primary,
   '> svg': {
     width: rem(16),
     height: rem(16),
@@ -115,7 +106,7 @@ const yearToggleStyles = css(navButtonStyles, {
 });
 
 const yearToggleOpenStyles = css({
-  border: `1px solid ${charcoal.rgb}`,
+  border: `1px solid ${colour.neutral[900]}`,
 
   '> svg': {
     transform: 'rotate(90deg)',
@@ -124,7 +115,7 @@ const yearToggleOpenStyles = css({
 
 const labelStyles = css({
   fontWeight: 'bold',
-  color: charcoal.rgb,
+  color: colour.foreground.primary,
 });
 
 const yearLabelStyles = css({
@@ -135,7 +126,7 @@ const yearLabelStyles = css({
 });
 
 const countStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   fontSize: rem(14),
   lineHeight: 16 / 14,
 });
@@ -146,7 +137,7 @@ const yearSelectedCountStyles = css({
 
 const footerLabelStyles = css({
   fontWeight: 'bold',
-  color: charcoal.rgb,
+  color: colour.foreground.primary,
   fontSize: rem(14),
   lineHeight: 16 / 14,
 });
@@ -154,20 +145,20 @@ const footerLabelStyles = css({
 const selectableStyles = css({
   borderRadius: rem(4),
   ':hover:not(:disabled)': {
-    backgroundColor: neutral200.rgb,
+    backgroundColor: colour.neutral[50],
   },
   ':disabled span': {
-    color: neutral800.rgb,
+    color: colour.foreground.quaternary,
   },
 });
 
 const selectedStyles = css({
-  backgroundColor: mint.rgb,
+  backgroundColor: colour.background.brand,
   ':hover:not(:disabled)': {
-    backgroundColor: mint.rgb,
+    backgroundColor: colour.background.brand,
   },
   span: {
-    color: pine.rgb,
+    color: colour.foreground.brand,
   },
 });
 
@@ -198,7 +189,7 @@ const monthStyles = css(resetButtonStyles, selectableStyles, {
 
 const footerStyles = css({
   paddingTop: rem(16),
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
 const rowStyles = css(resetButtonStyles, selectableStyles, {
@@ -226,7 +217,7 @@ const yearListStyles = css(listResetStyles, {
 const selectionMarkerStyles = css({
   fontSize: '10px',
   marginRight: '4px',
-  color: pine.rgb,
+  color: colour.foreground.brand,
 });
 
 const clearAllStyles = css({

@@ -30,7 +30,7 @@ const MAX_ALGOLIA_QUERY_LENGTH = 512;
 
 type SearchProps = Pick<
   ComponentProps<typeof TextField>,
-  'value' | 'onChange'
+  'value' | 'onChange' | 'onKeyDown'
 > &
   Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>> & {
     padding?: boolean;

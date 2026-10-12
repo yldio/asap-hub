@@ -20,15 +20,9 @@ import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button, Paragraph, TextField } from '../atoms';
-import {
-  chevronDownIcon,
-  chevronUpIcon,
-  minusIcon,
-  plusIcon,
-  searchIcon,
-} from '../icons';
-import { rem } from '../pixels';
-import { iconButtonStyles } from './shared-event-card-styles';
+import { chevronDownIcon, chevronUpIcon, minusIcon, plusIcon } from '../icons';
+import { SearchField } from '../molecules';
+import { mobileScreen, rem } from '../pixels';
 import { frameStyles, toolbarStyles } from './shared-pdf-viewer-styles';
 
 GlobalWorkerOptions.workerSrc = workerSrc;
@@ -42,8 +36,22 @@ const controlsStyles = css({
 
 const searchStyles = css([controlsStyles, { flexGrow: 1 }]);
 
+const growStyles = css({
+  flexGrow: 1,
+});
+
 const pageFieldStyles = css({
   width: rem(64),
+});
+
+// Button stretches to fill its row, and to the full width on mobile; the
+// toolbar's buttons keep their own size
+const buttonStyles = css({
+  flexGrow: 0,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexGrow: 0,
+    minWidth: 'auto',
+  },
 });
 
 type MatchesCount = { current: number; total: number };
@@ -221,21 +229,21 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               </div>
               <span>/ {pagesCount}</span>
             </div>
-            <div css={searchStyles}>
-              <TextField
-                type="search"
-                aria-label="Search document"
-                placeholder="Search document"
-                leftIndicator={searchIcon}
-                value={query}
-                onChange={(newQuery) => {
-                  setQuery(newQuery);
-                  find(newQuery);
-                }}
-                onKeyDown={(event) =>
-                  event.key === 'Enter' && find(query, true, event.shiftKey)
-                }
-              />
+            <div role="search" css={searchStyles}>
+              <div css={growStyles}>
+                <SearchField
+                  aria-label="Search document"
+                  placeholder="Search document"
+                  value={query}
+                  onChange={(newQuery) => {
+                    setQuery(newQuery);
+                    find(newQuery);
+                  }}
+                  onKeyDown={(event) =>
+                    event.key === 'Enter' && find(query, true, event.shiftKey)
+                  }
+                />
+              </div>
               <span aria-live="polite">
                 {query &&
                   (matches.total
@@ -243,30 +251,28 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
                     : 'No matches')}
               </span>
               <Button
-                small
                 noMargin
                 aria-label="Previous match"
                 enabled={matches.total > 0}
                 onClick={() => find(query, true, true)}
-                overrideStyles={iconButtonStyles}
+                overrideStyles={buttonStyles}
               >
                 {chevronUpIcon}
               </Button>
               <Button
-                small
                 noMargin
                 aria-label="Next match"
                 enabled={matches.total > 0}
                 onClick={() => find(query, true)}
-                overrideStyles={iconButtonStyles}
+                overrideStyles={buttonStyles}
               >
                 {chevronDownIcon}
               </Button>
             </div>
             <div css={controlsStyles}>
               <Button
-                small
                 noMargin
+                overrideStyles={buttonStyles}
                 onClick={() => {
                   if (viewerRef.current) {
                     viewerRef.current.currentScaleValue = isFitToPage
@@ -278,20 +284,18 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
                 {isFitToPage ? 'Fit to width' : 'Fit to page'}
               </Button>
               <Button
-                small
                 noMargin
                 aria-label="Zoom out"
                 onClick={() => viewerRef.current?.decreaseScale()}
-                overrideStyles={iconButtonStyles}
+                overrideStyles={buttonStyles}
               >
                 {minusIcon}
               </Button>
               <Button
-                small
                 noMargin
                 aria-label="Zoom in"
                 onClick={() => viewerRef.current?.increaseScale()}
-                overrideStyles={iconButtonStyles}
+                overrideStyles={buttonStyles}
               >
                 {plusIcon}
               </Button>

@@ -10,7 +10,7 @@ export const toolbarStyles = css({
   flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: rem(8),
+  gap: rem(18),
   minHeight: rem(
     textPaddingTop + lineHeight + textPaddingBottom + 2 * borderWidth,
   ),

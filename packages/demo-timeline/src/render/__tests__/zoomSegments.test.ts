@@ -252,6 +252,23 @@ describe('stillFilters', () => {
     expect(filters[0]).toMatch(/^crop=[2-9]/);
   });
 
+  // an odd canvas leaves the window on an odd row, so the hunt for an aligned row runs into the top of the source
+  it('stops pulling the crop back at the top edge of the source', () => {
+    const [crop = ''] = stillFilters(
+      { scale: 1.5, cropX: 0.34, cropY: 0.34 },
+      { width: 1280, height: 719, fps: 30 },
+      { width: 2560, height: 638 },
+      { pw: 1280, ph: 319, ox: 0, oy: 200 },
+    );
+    const [, height = NaN, , top = NaN] = crop
+      .replace('crop=', '')
+      .split(':')
+      .map(Number);
+
+    expect(top).toBeGreaterThanOrEqual(0);
+    expect(top + height).toBeLessThanOrEqual(638);
+  });
+
   it('never carries the per frame rescale', () => {
     expect(
       stillFilters({ scale: 2, cropX: 0, cropY: 0 }, canvas, canvas).join(','),

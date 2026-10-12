@@ -5,9 +5,7 @@ import { Button, Card, Headline3, Paragraph } from '../atoms';
 import { colour } from '../colors';
 import { ExportIcon, PencilIcon, plusIcon } from '../icons';
 import EventAttendanceMetric, {
-  captionCountStyles,
   containerStyles as metricContainerStyles,
-  headlineRowStyles,
   valueStyles,
 } from '../molecules/EventAttendanceMetric';
 import SpeakerTeamRow from '../molecules/SpeakerTeamRow';
@@ -16,7 +14,7 @@ import SpeakerUserRow, {
   findingsColumnStyles,
   trailingColumnsStyles,
 } from '../molecules/SpeakerUserRow';
-import { rem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 import { pluralize } from '../utils';
 
 import {
@@ -26,7 +24,6 @@ import {
   emptyStateStyles,
   headerStyles,
   iconButtonStyles,
-  metricsStyles,
 } from './shared-event-card-styles';
 import {
   groupFindings,
@@ -71,15 +68,67 @@ const breakdownDividerStyles = css({
   backgroundColor: colour.border.tertiary,
 });
 
+// The findings tile moves to its own line rather than wrap its caption.
+const speakerMetricsStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: rem(24),
+  marginTop: rem(24),
+  '> *': { flex: `1 1 ${rem(264)}` },
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    '> *:first-of-type': { maxWidth: rem(264) },
+  },
+  '> *:nth-of-type(2)': { flex: `1 1 ${rem(380)}`, maxWidth: rem(413) },
+});
+
+const countHeadlineStyles = css({
+  display: 'flex',
+  alignItems: 'baseline',
+  flexWrap: 'wrap',
+  columnGap: rem(8),
+});
+
+// The total keeps its desktop size on mobile, unlike the findings tile.
+const countValueStyles = css([
+  valueStyles,
+  {
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      fontSize: rem(32),
+      lineHeight: 40 / 32,
+    },
+  },
+]);
+const countLabelStyles = css({
+  margin: 0,
+  fontSize: rem(20),
+  fontWeight: 'bold',
+  lineHeight: 28 / 20,
+  color: colour.foreground.primary,
+});
+
 const breakdownStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr auto',
-  columnGap: rem(8),
+  columnGap: rem(16),
+  rowGap: rem(8),
   color: colour.foreground.tertiary,
-  '> p': { margin: 0, fontSize: rem(14), lineHeight: 16 / 14 },
 });
 
-const breakdownValueStyles = css({ textAlign: 'right' });
+const breakdownLabelStyles = css({
+  margin: 0,
+  fontSize: rem(16),
+  fontWeight: 500,
+  lineHeight: 24 / 16,
+  [`@media (max-width: ${mobileScreen.max}px)`]: { fontWeight: 400 },
+});
+
+const breakdownValueStyles = css({
+  margin: 0,
+  textAlign: 'right',
+  fontSize: rem(16),
+  fontWeight: 'bold',
+  lineHeight: 24 / 16,
+});
 
 const SpeakerCountMetric: React.FC<{
   label: string;
@@ -87,14 +136,16 @@ const SpeakerCountMetric: React.FC<{
   breakdown: ReadonlyArray<{ label: string; value: number }>;
 }> = ({ label, value, breakdown }) => (
   <div css={metricContainerStyles}>
-    <div css={headlineRowStyles}>
-      <p css={valueStyles}>{value}</p>
-      <p css={captionCountStyles}>{label}</p>
+    <div css={countHeadlineStyles}>
+      <p css={countValueStyles}>{value}</p>
+      <p css={countLabelStyles}>{label}</p>
     </div>
     <hr css={breakdownDividerStyles} />
     <div css={breakdownStyles}>
       {breakdown.flatMap((row) => [
-        <p key={`${row.label}-label`}>{row.label}</p>,
+        <p key={`${row.label}-label`} css={breakdownLabelStyles}>
+          {row.label}
+        </p>,
         <p key={`${row.label}-value`} css={breakdownValueStyles}>
           {row.value}
         </p>,
@@ -260,7 +311,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
           </div>
         </div>
 
-        <div css={metricsStyles}>
+        <div css={speakerMetricsStyles}>
           <SpeakerCountMetric
             label="total speakers"
             value={totalSpeakers}
@@ -284,9 +335,9 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
         </div>
 
         <div css={rowsWrapperStyles}>
-          <div css={columnHeaderStyles}>
-            <span>Speakers</span>
-            {showFindings && (
+          {showFindings && (
+            <div css={columnHeaderStyles}>
+              <span>Speakers</span>
               <span css={trailingColumnsStyles}>
                 <span css={findingsColumnStyles}>
                   <span css={fullFindingsLabel}>Preliminary Findings</span>
@@ -294,8 +345,8 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
                 </span>
                 <span css={chevronSpacerStyles} />
               </span>
-            )}
-          </div>
+            </div>
+          )}
           {(['team', 'project'] as const).map((variant) => (
             <SpeakerSection
               key={variant}

@@ -11,6 +11,7 @@ import { when } from 'jest-when';
 
 import {
   areSpeakersPreliminaryDataSharedSynced,
+  areSpeakersUnlinked,
   EventContentfulDataProvider,
   parseGraphQLEvent,
 } from '../../../src/data-providers/contentful/event.data-provider';
@@ -700,6 +701,11 @@ describe('Events Contentful Data Provider', () => {
             externalUser: {
               name: 'Jane Doe',
             },
+            team: {
+              id: 'team-id-3',
+              displayName: 'The team three',
+              inactiveSince: '2022-10-24T11:00:00Z',
+            },
           },
         ]);
       });
@@ -732,6 +738,231 @@ describe('Events Contentful Data Provider', () => {
             },
           },
         ]);
+      });
+
+      test.each`
+        teamType           | expected
+        ${'Resource Team'} | ${'Resource Team'}
+        ${'Unknown'}       | ${undefined}
+        ${null}            | ${undefined}
+      `(
+        'Should return the speaker team type $expected for $teamType',
+        async ({ teamType, expected }) => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          const [speaker] = contentfulGraphQLResponse.speakersCollection!.items;
+          contentfulGraphQLResponse.speakersCollection!.items = [
+            { ...speaker!, team: { ...speaker!.team!, teamType } },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: contentfulGraphQLResponse,
+          });
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          const [first] = result!.speakers;
+          expect(first && 'team' in first ? first.team?.teamType : null).toBe(
+            expected,
+          );
+        },
+      );
+
+      describe('Project speakers', () => {
+        const speakerProject = (
+          members: { userId: string; role: string | null }[] = [
+            { userId: 'user-id-3', role: 'Independent Project - Lead' },
+          ],
+        ) => ({
+          sys: { id: 'project-id-1' },
+          title: 'Project One',
+          projectType: 'Trainee Project',
+          membersCollection: {
+            items: members.map(({ userId, role }) => ({
+              role,
+              projectMember: { sys: { id: userId } },
+            })),
+          },
+        });
+
+        const expectedUser = {
+          alumniSinceDate: undefined,
+          avatarUrl: undefined,
+          displayName: 'Adam (Ad) Brown',
+          firstName: 'Adam',
+          id: 'user-id-3',
+          lastName: 'Brown',
+        };
+
+        const fetchWithSpeaker = async (
+          overrides: Partial<
+            NonNullable<
+              NonNullable<
+                ReturnType<
+                  typeof getContentfulGraphqlEvent
+                >['speakersCollection']
+              >['items'][number]
+            >
+          >,
+        ) => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          contentfulGraphQLResponse.speakersCollection!.items = [
+            {
+              ...contentfulGraphQLResponse.speakersCollection!.items[0]!,
+              ...overrides,
+            },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: contentfulGraphQLResponse,
+          });
+          const result = await eventDataProvider.fetchById(eventId);
+          return result!.speakers;
+        };
+
+        test('Should return a project speaker with their project role', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: speakerProject(),
+          });
+
+          expect(speakers).toEqual([
+            {
+              id: 'event-speaker-id-3',
+              project: {
+                id: 'project-id-1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+              user: expectedUser,
+              role: 'Independent Project - Lead',
+              preliminaryDataShared: true,
+            },
+          ]);
+        });
+
+        test('Should return the speaker under both the project and the team when both are set', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              project: expect.objectContaining({ id: 'project-id-1' }),
+              role: 'Independent Project - Lead',
+            }),
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              team: expect.objectContaining({ id: 'team-id-3' }),
+              role: 'Lead PI (Core Leadership)',
+            }),
+          ]);
+        });
+
+        test('Should fall back to the plain user when they have no role in the project', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: speakerProject([
+              { userId: 'another-user', role: 'Independent Project - Lead' },
+              { userId: 'user-id-3', role: null },
+            ]),
+          });
+
+          expect(speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should fall back to the plain user when project members are not fetched', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: { ...speakerProject(), membersCollection: undefined },
+          });
+
+          expect(speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should only list the project speaker when the user has no role in the team', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+            team: {
+              sys: { id: 'team-without-user' },
+              displayName: 'Other Team',
+              inactiveSince: null,
+            },
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              project: expect.objectContaining({ id: 'project-id-1' }),
+            }),
+          ]);
+        });
+
+        test('Should only list the team speaker when the user has no role in the project', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject([]),
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              team: expect.objectContaining({ id: 'team-id-3' }),
+              user: expectedUser,
+            }),
+          ]);
+        });
+
+        test('Should keep a project-only speaker in the events list', async () => {
+          const contentfulGraphQLResponse =
+            getContentfulGraphqlEventsResponse();
+          const event = contentfulGraphQLResponse.eventsCollection!.items[0]!;
+          event.speakersCollection!.items = [
+            {
+              ...getContentfulGraphqlEvent().speakersCollection!.items[0]!,
+              team: null,
+              project: { ...speakerProject(), membersCollection: undefined },
+            },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await eventDataProvider.fetch({});
+
+          expect(result.items[0]!.speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should leave the project type undefined when it is not a known type', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: { ...speakerProject(), projectType: 'Unknown' },
+          });
+
+          expect(speakers[0]).toMatchObject({
+            project: { id: 'project-id-1', projectType: undefined },
+          });
+        });
+
+        test('Should return the team and project an external speaker represents', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+            user: { __typename: 'ExternalAuthors', name: 'Jane Doe' },
+          });
+
+          expect(speakers).toEqual([
+            {
+              id: 'event-speaker-id-3',
+              externalUser: { name: 'Jane Doe' },
+              team: {
+                id: 'team-id-3',
+                displayName: 'The team three',
+                inactiveSince: '2022-10-24T11:00:00Z',
+              },
+              project: {
+                id: 'project-id-1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+            },
+          ]);
+        });
       });
 
       test('Should return only the team when speaker of type user does not belong to this team', async () => {
@@ -2014,6 +2245,248 @@ describe('Events Contentful Data Provider', () => {
 
         expect(patchAndPublish).not.toHaveBeenCalled();
       });
+    });
+
+    describe('Unlinking speakers', () => {
+      const speakerLink = (id: string) => ({
+        sys: { type: 'Link', linkType: 'Entry', id },
+      });
+      const entityLink = (id: string) => ({ sys: { id } });
+      const graphqlSpeaker = (fields: Record<string, unknown>) => ({
+        events: {
+          sys: { publishedVersion: 2 },
+          speakersCollection: {
+            items: [{ sys: { id: 'speaker-1' }, ...fields }],
+          },
+        },
+      });
+      const mockEventWithSpeaker = (fields: Record<string, unknown>) => {
+        const eventEntry = getEntry(
+          { speakers: { 'en-US': [speakerLink('speaker-1')] } },
+          { id: '123' },
+        );
+        const speakerEntry = getEntry(fields, { id: 'speaker-1' });
+        speakerEntry.patch = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.publish = jest.fn().mockResolvedValue(speakerEntry);
+        when(environmentMock.getEntry)
+          .calledWith('123')
+          .mockResolvedValue(eventEntry);
+        when(environmentMock.getEntry)
+          .calledWith('speaker-1')
+          .mockResolvedValue(speakerEntry);
+        return { eventEntry, speakerEntry };
+      };
+
+      test('removes only the requested link field and keeps the speaker on the event', async () => {
+        const { eventEntry, speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+          project: { 'en-US': entityLink('project-1') },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          graphqlSpeaker({ team: { sys: { id: 'team-1' } }, project: null }),
+        );
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'project' }],
+        });
+
+        expect(speakerEntry.patch).toHaveBeenCalledWith([
+          { op: 'remove', path: '/fields/project' },
+        ]);
+        expect(speakerEntry.publish).toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        expect(eventEntry.patch).not.toHaveBeenCalled();
+      });
+
+      test('waits until the GraphQL API no longer returns the link', async () => {
+        mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+          project: { 'en-US': entityLink('project-1') },
+        });
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(
+            graphqlSpeaker({ team: { sys: { id: 'team-1' } } }),
+          )
+          .mockResolvedValueOnce(graphqlSpeaker({ team: null }));
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
+      }, 10_000);
+
+      test('deletes a speaker that is being removed instead of unlinking it', async () => {
+        const { eventEntry, speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
+        speakerEntry.isPublished = jest.fn(() => true);
+        speakerEntry.unpublish = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.delete = jest.fn().mockResolvedValue(undefined);
+        mockPollingConsistency();
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToRemove: ['speaker-1'],
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(speakerEntry.delete).toHaveBeenCalled();
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledTimes(1);
+        expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+          speakers: [],
+        });
+      });
+
+      test('skips speakers that are not on the event or already unlinked', async () => {
+        const { speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [
+            { speakerId: 'speaker-1', field: 'project' },
+            { speakerId: 'speaker-9', field: 'team' },
+          ],
+        });
+
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
+      });
+
+      test('warns and continues when a speaker entry cannot be fetched', async () => {
+        const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+        const eventEntry = getEntry(
+          { speakers: { 'en-US': [speakerLink('speaker-1')] } },
+          { id: '123' },
+        );
+        when(environmentMock.getEntry)
+          .calledWith('123')
+          .mockResolvedValue(eventEntry);
+        when(environmentMock.getEntry)
+          .calledWith('speaker-1')
+          .mockRejectedValue(new Error('gone'));
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(warnSpy).toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        warnSpy.mockRestore();
+      });
+
+      describe('when a speaker entry write fails', () => {
+        const mockEventWithTwoSpeakers = (failing: 'unlink' | 'findings') => {
+          const eventEntry = getEntry(
+            {
+              speakers: {
+                'en-US': [speakerLink('speaker-1'), speakerLink('speaker-2')],
+              },
+            },
+            { id: '123' },
+          );
+          const removedEntry = getEntry({}, { id: 'speaker-1' });
+          removedEntry.isPublished = jest.fn(() => true);
+          removedEntry.unpublish = jest.fn().mockResolvedValue(removedEntry);
+          removedEntry.delete = jest.fn().mockResolvedValue(undefined);
+          const keptEntry = getEntry(
+            {
+              team: { 'en-US': entityLink('team-1') },
+              project: { 'en-US': entityLink('project-1') },
+              preliminaryDataShared: { 'en-US': false },
+            },
+            { id: 'speaker-2' },
+          );
+          when(environmentMock.getEntry)
+            .calledWith('123')
+            .mockResolvedValue(eventEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-1')
+            .mockResolvedValue(removedEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-2')
+            .mockResolvedValue(keptEntry);
+          if (failing === 'unlink') {
+            keptEntry.patch = jest
+              .fn()
+              .mockRejectedValue(new Error('Version mismatch'));
+          } else {
+            (patchAndPublish as jest.Mock).mockRejectedValueOnce(
+              new Error('Version mismatch'),
+            );
+          }
+          return { removedEntry };
+        };
+
+        test('does not delete removed speakers when unlinking another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers('unlink');
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              speakersToUnlink: [{ speakerId: 'speaker-2', field: 'project' }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+
+        test('does not delete removed speakers when updating the findings of another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers('findings');
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              preliminaryDataShared: [{ speakerId: 'speaker-2', shared: true }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+      });
+    });
+  });
+
+  describe('areSpeakersUnlinked', () => {
+    const response = (items: (Record<string, unknown> | null)[]) =>
+      ({
+        events: { speakersCollection: { items } },
+      }) as unknown as FetchEventByIdQuery;
+
+    test('is synced once the unlinked field is empty', () => {
+      expect(
+        areSpeakersUnlinked(
+          response([{ sys: { id: 's1' }, team: { sys: {} }, project: null }]),
+          [{ speakerId: 's1', field: 'project' }],
+        ),
+      ).toBe(true);
+    });
+
+    test('is not synced while the field is still linked', () => {
+      expect(
+        areSpeakersUnlinked(
+          response([{ sys: { id: 's1' }, project: { sys: {} } }]),
+          [{ speakerId: 's1', field: 'project' }],
+        ),
+      ).toBe(false);
+    });
+
+    test('ignores speakers missing from the response and null items', () => {
+      expect(
+        areSpeakersUnlinked(response([null]), [
+          { speakerId: 's1', field: 'team' },
+        ]),
+      ).toBe(true);
+      expect(
+        areSpeakersUnlinked(
+          { events: null } as unknown as FetchEventByIdQuery,
+          [{ speakerId: 's1', field: 'team' }],
+        ),
+      ).toBe(true);
     });
   });
 

@@ -42,12 +42,16 @@ import {
   EventDataObject,
   EventSpeaker,
   EventSpeakerExternalUserData,
+  EventSpeakerProjectData,
+  EventSpeakerTeam,
+  EventSpeakerUnlinkItem,
   EventSpeakerUserData,
   EventTeamAttendance,
   EventUpdateDataObject,
   EventUpdateDetailsRequest,
   FetchEventsOptions,
   isEventStatus,
+  isProjectType,
   isTeamType,
   ListEventDataObject,
 } from '@asap-hub/model';
@@ -359,11 +363,13 @@ export class EventContentfulDataProvider implements EventDataProvider {
       );
     }
 
-    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
-      patchFields.speakers = await this.buildSpeakerLinks(
+    let unlinkedSpeakers: EventSpeakerUnlinkItem[] = [];
+    if (data.speakersToUnlink && data.speakersToUnlink.length > 0) {
+      unlinkedSpeakers = await this.unlinkSpeakers(
         environment,
         event,
-        data.speakersToRemove,
+        data.speakersToUnlink,
+        data.speakersToRemove ?? [],
       );
     }
 
@@ -377,6 +383,15 @@ export class EventContentfulDataProvider implements EventDataProvider {
       );
     }
 
+    // Deleting is irreversible, so it runs only once the other speaker writes succeed.
+    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
+      patchFields.speakers = await this.buildSpeakerLinks(
+        environment,
+        event,
+        data.speakersToRemove,
+      );
+    }
+
     const fetchEventById = () => this.fetchEventById(id);
 
     if (Object.keys(patchFields).length > 0) {
@@ -385,6 +400,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
         result.sys.publishedVersion || Infinity,
         fetchEventById,
         'events',
+      );
+    }
+
+    if (unlinkedSpeakers.length > 0) {
+      await pollContentfulGqlUntil<FetchEventByIdQuery>(
+        fetchEventById,
+        (result) => areSpeakersUnlinked(result, unlinkedSpeakers),
+        `Event ${id} speakers unlinked`,
       );
     }
 
@@ -536,6 +559,61 @@ export class EventContentfulDataProvider implements EventDataProvider {
       .map((link) => createLink(link.sys.id));
   }
 
+  private async unlinkSpeakers(
+    environment: Environment,
+    event: Entry,
+    speakersToUnlink: EventSpeakerUnlinkItem[],
+    speakersToRemove: string[],
+  ): Promise<EventSpeakerUnlinkItem[]> {
+    const removeSet = new Set(speakersToRemove);
+    const linkedIds = new Set(
+      (event.fields.speakers?.['en-US'] || []).map(
+        (link: Link<'Entry'>) => link.sys.id,
+      ),
+    );
+    const fieldsBySpeakerId = speakersToUnlink.reduce(
+      (map, { speakerId, field }) =>
+        linkedIds.has(speakerId) && !removeSet.has(speakerId)
+          ? map.set(speakerId, [...(map.get(speakerId) ?? []), field])
+          : map,
+      new Map<string, EventSpeakerUnlinkItem['field'][]>(),
+    );
+
+    const updates = await Promise.all(
+      [...fieldsBySpeakerId].map(async ([speakerId, fields]) => {
+        let speakerEntry: Entry;
+        try {
+          speakerEntry = await environment.getEntry(speakerId);
+        } catch (error) {
+          logger.warn(
+            { error, speakerId },
+            `Error fetching speaker entry with id: ${speakerId}`,
+          );
+          return [];
+        }
+
+        const linkedFields = fields.filter(
+          (field) => speakerEntry.fields[field]?.['en-US'],
+        );
+        if (linkedFields.length === 0) {
+          return [];
+        }
+
+        // Removing the field, not setting it to null, keeps the CMS speaker field app working.
+        const patchedEntry = await speakerEntry.patch(
+          linkedFields.map((field) => ({
+            op: 'remove' as const,
+            path: `/fields/${field}`,
+          })),
+        );
+        await patchedEntry.publish();
+        return linkedFields.map((field) => ({ speakerId, field }));
+      }),
+    );
+
+    return updates.flat();
+  }
+
   private async updateSpeakersPreliminaryDataShared(
     environment: Environment,
     event: Entry,
@@ -613,6 +691,22 @@ export const areSpeakersPreliminaryDataSharedSynced = (
   });
 };
 
+export const areSpeakersUnlinked = (
+  result: FetchEventByIdQuery,
+  unlinked: EventSpeakerUnlinkItem[],
+): boolean => {
+  const speakersById = new Map(
+    (result.events?.speakersCollection?.items ?? []).flatMap((item) =>
+      item ? [[item.sys.id, item] as const] : [],
+    ),
+  );
+
+  return unlinked.every(({ speakerId, field }) => {
+    const speaker = speakersById.get(speakerId);
+    return !speaker || !speaker[field];
+  });
+};
+
 type SpeakerItem = NonNullable<
   NonNullable<EventItem['speakersCollection']>['items'][number]
 >;
@@ -646,21 +740,70 @@ export const parseEventSpeakerExternalUser = (
   name: user?.name || '',
 });
 
+type SpeakerTeam = NonNullable<SpeakerItem['team']>;
+type SpeakerProject = NonNullable<SpeakerItem['project']>;
+
+const parseSpeakerTeam = (team: SpeakerTeam): EventSpeakerTeam['team'] => ({
+  id: team.sys.id,
+  displayName: team.displayName ?? '',
+  inactiveSince: team.inactiveSince ?? undefined,
+  ...(isTeamType(team.teamType) ? { teamType: team.teamType } : {}),
+});
+
+const parseSpeakerProject = (
+  project: SpeakerProject,
+): EventSpeakerProjectData => ({
+  id: project.sys.id,
+  title: project.title ?? '',
+  projectType: isProjectType(project.projectType)
+    ? project.projectType
+    : undefined,
+});
+
+const findProjectRole = (project: SpeakerProject, userId: string) =>
+  project.membersCollection?.items.find(
+    (member) =>
+      member?.role &&
+      member.projectMember &&
+      'sys' in member.projectMember &&
+      member.projectMember.sys.id === userId,
+  )?.role ?? undefined;
+
 export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
   (speakers || []).reduce((speakerList: EventSpeaker[], speaker) => {
-    const { sys, team, user } = speaker;
+    const { sys, team, project, user } = speaker;
     const speakerId = sys.id;
 
     if (user?.__typename === 'ExternalAuthors') {
       speakerList.push({
         id: speakerId,
         externalUser: parseEventSpeakerExternalUser(user),
+        ...(team ? { team: parseSpeakerTeam(team) } : {}),
+        ...(project ? { project: parseSpeakerProject(project) } : {}),
       });
       return speakerList;
     }
 
+    const projectRole =
+      project && user?.__typename === 'Users' && user.onboarded === true
+        ? findProjectRole(project, user.sys.id)
+        : undefined;
+    if (project && projectRole && user?.__typename === 'Users') {
+      speakerList.push({
+        id: speakerId,
+        project: parseSpeakerProject(project),
+        user: parseEventSpeakerUser(user),
+        role: projectRole,
+        preliminaryDataShared: !!speaker.preliminaryDataShared,
+      });
+    }
+
     if (!team) {
-      if (user?.__typename === 'Users' && user.onboarded === true) {
+      if (
+        !projectRole &&
+        user?.__typename === 'Users' &&
+        user.onboarded === true
+      ) {
         speakerList.push({
           user: parseEventSpeakerUser(user),
         });
@@ -669,13 +812,7 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
     }
 
     if (!user) {
-      speakerList.push({
-        team: {
-          id: team.sys.id,
-          displayName: team.displayName ?? '',
-          inactiveSince: team.inactiveSince ?? undefined,
-        },
-      });
+      speakerList.push({ team: parseSpeakerTeam(team) });
       return speakerList;
     }
 
@@ -686,23 +823,15 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
           .filter((s) => s?.role)[0]?.role || undefined;
 
       if (!role || user.onboarded !== true) {
-        speakerList.push({
-          team: {
-            id: team.sys.id,
-            displayName: team.displayName ?? '',
-            inactiveSince: team.inactiveSince ?? undefined,
-          },
-        });
+        if (!projectRole) {
+          speakerList.push({ team: parseSpeakerTeam(team) });
+        }
         return speakerList;
       }
 
       speakerList.push({
         id: speakerId,
-        team: {
-          id: team.sys.id,
-          displayName: team.displayName ?? '',
-          inactiveSince: team.inactiveSince ?? undefined,
-        },
+        team: parseSpeakerTeam(team),
         user: parseEventSpeakerUser(user),
         role,
         preliminaryDataShared: !!speaker.preliminaryDataShared,

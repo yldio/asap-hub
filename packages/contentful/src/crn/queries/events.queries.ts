@@ -218,7 +218,27 @@ export const eventsContentQueryFragment = gql`
             id
           }
           displayName
+          teamType
           inactiveSince
+        }
+        project {
+          sys {
+            id
+          }
+          title
+          projectType
+          membersCollection(limit: 100) @include(if: $singleEvent) {
+            items {
+              role
+              projectMember {
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
         user {
           __typename

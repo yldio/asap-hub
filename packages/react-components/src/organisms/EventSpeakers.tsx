@@ -25,7 +25,6 @@ import {
   emptyStateStyles,
   headerStyles,
   iconButtonStyles,
-  metricsStyles,
 } from './shared-event-card-styles';
 import {
   groupFindings,
@@ -68,6 +67,19 @@ const breakdownDividerStyles = css({
   border: 0,
   margin: 0,
   backgroundColor: colour.border.tertiary,
+});
+
+// The findings tile moves to its own line rather than wrap its caption.
+const speakerMetricsStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: rem(24),
+  marginTop: rem(24),
+  '> *': { flex: `1 1 ${rem(264)}` },
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    '> *:first-of-type': { maxWidth: rem(264) },
+  },
+  '> *:nth-of-type(2)': { flex: `1 1 ${rem(380)}`, maxWidth: rem(413) },
 });
 
 const countHeadlineStyles = css({
@@ -296,7 +308,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({
           </div>
         </div>
 
-        <div css={metricsStyles}>
+        <div css={speakerMetricsStyles}>
           <SpeakerCountMetric
             label="total speakers"
             value={totalSpeakers}

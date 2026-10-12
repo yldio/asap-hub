@@ -1,8 +1,17 @@
 import { limits, Point } from '@asap-hub/demo-timeline';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FC, useState } from 'react';
-import { PointField, TextField, TimecodeField } from '../fields';
+import { FC, ReactNode, useState } from 'react';
+import {
+  FadeField,
+  NudgeField,
+  PointField,
+  SelectField,
+  TextField,
+  TimecodeField,
+  VolumeField,
+} from '../fields';
+import { fieldGesture, GestureProvider } from '../gesture';
 
 const Editable: FC<{ readonly label: string }> = ({ label }) => {
   const [value, setValue] = useState('');
@@ -23,6 +32,12 @@ const Aimable: FC<{ readonly onChange: (point: Point) => void }> = ({
       }}
     />
   );
+};
+
+const renderWithGesture = (field: ReactNode) => {
+  const gesture = { begin: jest.fn(), end: jest.fn() };
+  render(<GestureProvider value={gesture}>{field}</GestureProvider>);
+  return gesture;
 };
 
 describe('TextField', () => {
@@ -144,5 +159,171 @@ describe('TimecodeField', () => {
     await userEvent.click(field);
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+});
+
+describe('SelectField', () => {
+  it('hands back the option that was chosen', async () => {
+    const onChange = jest.fn();
+    render(
+      <SelectField
+        label="Position"
+        value="bottom"
+        options={[
+          { value: 'bottom', label: 'Lower third' },
+          { value: 'top', label: 'Upper third' },
+        ]}
+        onChange={onChange}
+      />,
+    );
+
+    await userEvent.selectOptions(
+      screen.getByLabelText('Position'),
+      'Upper third',
+    );
+
+    expect(onChange).toHaveBeenCalledWith('top');
+  });
+});
+
+describe('FadeField', () => {
+  it('reads the fade in seconds, or as instant', () => {
+    const { rerender } = render(
+      <FadeField label="Fades in over" value={250} onChange={jest.fn()} />,
+    );
+    expect(screen.getByLabelText('Fades in over 0.25s')).toBeInTheDocument();
+
+    rerender(
+      <FadeField label="Fades in over" value={0} onChange={jest.fn()} />,
+    );
+    expect(screen.getByLabelText('Fades in over instant')).toBeInTheDocument();
+  });
+
+  it('hands back the length the slider was set to', () => {
+    const onChange = jest.fn();
+    render(<FadeField label="Fades in over" value={300} onChange={onChange} />);
+
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '750' } });
+
+    expect(onChange).toHaveBeenCalledWith(750);
+  });
+
+  it('makes one gesture of the whole time it is held', async () => {
+    const gesture = renderWithGesture(
+      <FadeField label="Fades in over" value={300} onChange={jest.fn()} />,
+    );
+
+    await userEvent.click(screen.getByRole('slider'));
+    expect(gesture.begin).toHaveBeenCalledWith(fieldGesture);
+    expect(gesture.end).not.toHaveBeenCalled();
+
+    await userEvent.tab();
+    expect(gesture.end).toHaveBeenCalledWith(fieldGesture);
+  });
+});
+
+describe('NudgeField', () => {
+  it('says which way and how far the capture is slid', () => {
+    const { rerender } = render(
+      <NudgeField
+        label="Whole capture"
+        value={0}
+        limitMs={2000}
+        onChange={jest.fn()}
+      />,
+    );
+    expect(
+      screen.getByLabelText('Whole capture: in step with the video'),
+    ).toBeInTheDocument();
+
+    rerender(
+      <NudgeField
+        label="Whole capture"
+        value={-250}
+        limitMs={2000}
+        onChange={jest.fn()}
+      />,
+    );
+    expect(
+      screen.getByLabelText('Whole capture: 0.25s earlier'),
+    ).toBeInTheDocument();
+  });
+
+  it('makes one gesture of the whole time it is held', async () => {
+    const gesture = renderWithGesture(
+      <NudgeField
+        label="Whole capture"
+        value={500}
+        limitMs={2000}
+        onChange={jest.fn()}
+      />,
+    );
+
+    await userEvent.click(screen.getByLabelText(/^Whole capture/));
+    expect(gesture.begin).toHaveBeenCalledWith(fieldGesture);
+
+    await userEvent.tab();
+    expect(gesture.end).toHaveBeenCalledWith(fieldGesture);
+  });
+});
+
+describe('VolumeField', () => {
+  it('hands back the volume the slider was set to', () => {
+    const onChange = jest.fn();
+    render(<VolumeField label="Volume" value={1} onChange={onChange} />);
+
+    fireEvent.change(screen.getByLabelText('Volume 100%'), {
+      target: { value: '1.5' },
+    });
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
+  it('ends its gesture when it is left', async () => {
+    const gesture = renderWithGesture(
+      <VolumeField label="Volume" value={1} onChange={jest.fn()} />,
+    );
+
+    await userEvent.click(screen.getByLabelText('Volume 100%'));
+    await userEvent.tab();
+
+    expect(gesture.end).toHaveBeenCalledWith(fieldGesture);
+  });
+});
+
+describe('PointField gestures', () => {
+  it('is one gesture from focus until the axis is left', async () => {
+    const gesture = renderWithGesture(
+      <PointField
+        label="Focus"
+        value={{ x: 0.5, y: 0.5 }}
+        onChange={jest.fn()}
+      />,
+    );
+
+    await userEvent.click(screen.getByLabelText('% across'));
+    expect(gesture.begin).toHaveBeenCalledWith(fieldGesture);
+    expect(gesture.end).not.toHaveBeenCalled();
+
+    await userEvent.click(document.body);
+    expect(gesture.end).toHaveBeenCalledWith(fieldGesture);
+  });
+});
+
+describe('TimecodeField with Escape', () => {
+  it('lets go of the field without changing the time', async () => {
+    const onChange = jest.fn();
+    render(
+      <TimecodeField label="Starts at" value={2000} onChange={onChange} />,
+    );
+
+    const field = screen.getByLabelText(/Starts at/);
+    await userEvent.click(field);
+    await userEvent.keyboard('{Escape}');
+
+    expect(field).not.toHaveFocus();
+    expect(field).toHaveValue('0:02.00');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

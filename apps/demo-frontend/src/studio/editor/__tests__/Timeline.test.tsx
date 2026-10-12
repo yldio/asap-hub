@@ -537,6 +537,29 @@ describe('the overlay lanes', () => {
 
     expect(onSelect).toHaveBeenCalledWith('narration', 'take-a');
   });
+
+  it('moves a voice over take from the keyboard', () => {
+    const { onSpanChange } = renderTimeline({ narration: [narration] });
+
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Voice over A' }), {
+      key: 'ArrowRight',
+    });
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'narration',
+      'take-a',
+      { startMs: 1100, durationMs: 3000 },
+      'move',
+    );
+  });
+
+  it('leaves a zoom whose clip is gone off the lane', () => {
+    renderTimeline({ zooms: [{ ...zoom, clipId: 'clip-gone' }] });
+
+    expect(
+      screen.queryByRole('group', { name: 'Zoom 2x' }),
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('a title card', () => {
@@ -566,6 +589,24 @@ describe('a title card', () => {
       'title',
       'title-a',
       { startMs: 0, durationMs: 5000 },
+      'trimEnd',
+    );
+  });
+
+  it('changes how long it stays on screen from the keyboard', () => {
+    const { onSpanChange } = renderTimeline({
+      placements: layoutClips(titled),
+    });
+
+    fireEvent.keyDown(
+      screen.getByRole('button', { name: 'Trim the end of Intro' }),
+      { key: 'ArrowRight' },
+    );
+
+    expect(onSpanChange).toHaveBeenCalledWith(
+      'title',
+      'title-a',
+      { startMs: 0, durationMs: 3100 },
       'trimEnd',
     );
   });
@@ -609,6 +650,15 @@ describe('a clip block', () => {
     expect(
       screen.getByRole('group', { name: /^A, .*muted$/ }),
     ).toHaveTextContent('muted');
+  });
+
+  it('mutes the clip from its block', () => {
+    const { onToggleMute, onSelect } = renderTimeline();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mute A' }));
+
+    expect(onToggleMute).toHaveBeenCalledWith('clip-a');
+    expect(onSelect).not.toHaveBeenCalled();
   });
 
   it('still says which part of the source it uses', () => {
@@ -732,6 +782,20 @@ describe('a cursor effect marker', () => {
       screen.queryByRole('button', { name: /ripple effect/ }),
     ).not.toBeInTheDocument();
   });
+
+  it('leaves an effect the trim has cut out off the lane', () => {
+    renderTimeline({
+      placements: layoutClips([
+        clips[0] as (typeof clips)[number],
+        { ...clips[1], inMs: 2000 } as (typeof clips)[number],
+      ]),
+      cursorLayers: [cursorLayer],
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /^Click highlight at/ }),
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('retiming a cursor effect from the keyboard', () => {
@@ -797,6 +861,29 @@ describe('the ruler', () => {
     });
 
     expect(onSeek).toHaveBeenCalledWith(2500);
+  });
+
+  it('keeps seeking while the pointer is dragged along it', () => {
+    const { onSeek } = renderTimeline();
+    jest.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
+
+    const ruler = screen.getByRole('presentation');
+    fireEvent.pointerDown(ruler, { pointerId: 1, clientX: 250 });
+    fireEvent.pointerMove(ruler, { pointerId: 1, clientX: 400 });
+
+    expect(onSeek).toHaveBeenLastCalledWith(4000);
+  });
+
+  it('does not seek for a pointer only passing over it', () => {
+    const { onSeek } = renderTimeline();
+    jest.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(false);
+
+    fireEvent.pointerMove(screen.getByRole('presentation'), {
+      pointerId: 1,
+      clientX: 400,
+    });
+
+    expect(onSeek).not.toHaveBeenCalled();
   });
 });
 

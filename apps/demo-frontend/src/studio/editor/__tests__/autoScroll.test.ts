@@ -1,8 +1,10 @@
+import { act, renderHook } from '@testing-library/react';
 import {
   edgeScrollVelocity,
   edgeZonePx,
   maxEdgeScrollPxPerSecond,
   scrollLeftAfter,
+  useEdgeAutoScroll,
 } from '../autoScroll';
 
 const bounds = { left: 100, right: 1100 };
@@ -58,5 +60,88 @@ describe('scrollLeftAfter', () => {
 
   it('stays put on a lane with nothing to scroll', () => {
     expect(scrollLeftAfter(0, 500, -20)).toBe(0);
+  });
+});
+
+describe('useEdgeAutoScroll', () => {
+  const scheduled = new Map<number, FrameRequestCallback>();
+
+  beforeEach(() => {
+    let nextId = 0;
+    scheduled.clear();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((run) => {
+      nextId += 1;
+      scheduled.set(nextId, run);
+      return nextId;
+    });
+    jest.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
+      scheduled.delete(id);
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const runFrame = (now: number): boolean => {
+    const pending = Array.from(scheduled.entries()).pop();
+    if (!pending) return false;
+    scheduled.delete(pending[0]);
+    act(() => pending[1](now));
+    return true;
+  };
+
+  // jsdom has no layout, so the scroll box is described to it by hand
+  const scroller = () => {
+    const element = document.createElement('div');
+    jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({
+      ...bounds,
+      top: 0,
+      bottom: 100,
+      width: bounds.right - bounds.left,
+      height: 100,
+      x: bounds.left,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    Object.defineProperty(element, 'clientWidth', { value: 1000 });
+    Object.defineProperty(element, 'scrollWidth', { value: 3000 });
+    return element;
+  };
+
+  it('parks itself once the pointer has left the edge zone', () => {
+    const element = scroller();
+    const onScrolled = jest.fn();
+    const { result } = renderHook(() =>
+      useEdgeAutoScroll({ current: element }, onScrolled),
+    );
+
+    result.current.track(bounds.right - 5);
+    result.current.start();
+    result.current.track(600);
+
+    expect(runFrame(0)).toBe(true);
+    expect(runFrame(100)).toBe(false);
+    expect(element.scrollLeft).toBe(0);
+    expect(onScrolled).not.toHaveBeenCalled();
+  });
+
+  it('wakes again when the pointer goes back to the edge', () => {
+    const element = scroller();
+    const onScrolled = jest.fn();
+    const { result } = renderHook(() =>
+      useEdgeAutoScroll({ current: element }, onScrolled),
+    );
+    result.current.track(bounds.right - 5);
+    result.current.start();
+    result.current.track(600);
+    runFrame(0);
+
+    result.current.track(bounds.right - 5);
+    runFrame(1000);
+    runFrame(1100);
+
+    expect(element.scrollLeft).toBeGreaterThan(0);
+    expect(onScrolled).toHaveBeenCalled();
   });
 });

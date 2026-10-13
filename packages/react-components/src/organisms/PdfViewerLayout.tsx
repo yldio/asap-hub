@@ -34,7 +34,7 @@ type PdfViewerLayoutProps = {
 // Separate from PdfViewer so the Suspense fallback can use it without pdf.js
 const PdfViewerLayout: React.FC<PdfViewerLayoutProps> = ({
   toolbar = (
-    <Paragraph noMargin accent="lead">
+    <Paragraph noMargin accent="tertiary">
       Loading PDF...
     </Paragraph>
   ),

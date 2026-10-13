@@ -195,7 +195,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
   }, [container, url]);
 
   if (hasError) {
-    return <Paragraph accent="lead">Unable to display this PDF.</Paragraph>;
+    return <Paragraph accent="tertiary">Unable to display this PDF.</Paragraph>;
   }
 
   const goToPage = () => {

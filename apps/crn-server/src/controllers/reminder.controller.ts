@@ -291,6 +291,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
             description: `It's time to publish the meeting materials for the ${reminder.data.title} event.`,
           };
         }
@@ -304,6 +307,31 @@ export default class ReminderController {
             entity: reminder.entity,
             href: crnMeetingMaterialsDrive,
             description: `Don't forget to upload presentations for the ${reminder.data.title} event in the ASAP CRN Meeting Materials Drive.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Event' &&
+          reminder.type === 'Mark Attendance'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `It's time to mark attendance for the ${reminder.data.title} event.`,
+          };
+        }
+
+        if (reminder.entity === 'Event' && reminder.type === 'Add Speakers') {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `It's time to add event speakers and indicate sharing of preliminary findings for the ${reminder.data.title} event.`,
           };
         }
 

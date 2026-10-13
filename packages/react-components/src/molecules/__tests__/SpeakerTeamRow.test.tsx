@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { colour } from '../../colors';
 import SpeakerTeamRow, { SpeakerTeamRowUser } from '../SpeakerTeamRow';
 
 const getUser = (
@@ -116,6 +117,16 @@ it('puts the group pill and the speaker toggles in the same findings column', ()
 it('hides the per speaker toggles when showShared is false', () => {
   render(<SpeakerTeamRow {...defaultProps} expanded showShared={false} />);
   expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+});
+
+it.each`
+  teamType            | icon
+  ${'Discovery Team'} | ${'Discovery Team Icon'}
+  ${'Resource Team'}  | ${'Resource Team Icon'}
+  ${undefined}        | ${'Team'}
+`('renders the $icon icon for a $teamType team', ({ teamType, icon }) => {
+  render(<SpeakerTeamRow {...defaultProps} teamType={teamType} />);
+  expect(screen.getByTitle(icon)).toBeInTheDocument();
 });
 
 it('renders the project icon rather than the team icon for the project variant', () => {
@@ -304,5 +315,5 @@ it('draws the cross inside a not-shared group pill in the pill text colour', () 
 
   expect(
     screen.getByLabelText('No preliminary findings').querySelector('circle'),
-  ).toHaveAttribute('stroke', 'rgb(77, 100, 107)');
+  ).toHaveAttribute('stroke', colour.foreground.tertiary);
 });

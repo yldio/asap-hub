@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import { Button } from '../atoms';
-import { neutral1000, steel } from '../colors';
+import { colour } from '../colors';
 import { rem } from '../pixels';
 import { defaultVisibleRows } from './shared-event-card';
 import {
@@ -15,24 +15,25 @@ import {
 const sectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  paddingTop: rem(16),
+  paddingTop: rem(24),
+  ':first-of-type': { paddingTop: 0 },
 });
 
 // A ratio, not `rem`: line-height in `em` resolves against the element's own
 // font size.
 const headingStyles = css({
   margin: 0,
-  color: neutral1000.rgb,
-  fontSize: rem(14),
+  color: colour.foreground.primary,
+  fontSize: rem(16),
   fontWeight: 700,
-  lineHeight: 16 / 14,
+  lineHeight: 24 / 16,
 });
 
 // The last visible row drops its own divider, so the line comes from here.
 const showMoreStyles = css({
   display: 'flex',
   padding: `${rem(16)} 0`,
-  borderTop: `1px solid ${steel.rgb}`,
+  borderTop: `1px solid ${colour.border.tertiary}`,
 });
 
 const externalRowsStyles = css({
@@ -41,7 +42,7 @@ const externalRowsStyles = css({
   '> *': {
     paddingTop: rem(16),
     paddingBottom: rem(16),
-    borderBottom: `1px solid ${steel.rgb}`,
+    borderBottom: `1px solid ${colour.border.tertiary}`,
   },
   '> *:last-of-type': { borderBottom: 'none' },
 });

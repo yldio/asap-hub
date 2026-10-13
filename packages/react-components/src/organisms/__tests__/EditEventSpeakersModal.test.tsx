@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 
-import { silver } from '../../colors';
+import { colour } from '../../colors';
 import EditEventSpeakersModal, {
   SpeakerSearchOption,
 } from '../EditEventSpeakersModal';
@@ -230,6 +230,19 @@ describe('EditEventSpeakersModal', () => {
 
     expect(screen.queryByText('Speakers')).not.toBeInTheDocument();
     expect(screen.queryByText('Preliminary Findings')).not.toBeInTheDocument();
+  });
+
+  it('Should show each group speaker count on an upcoming event', () => {
+    renderModal({ isPastEvent: false, groups: [getTeamGroup()] });
+
+    expect(screen.getByText('(1)')).toBeVisible();
+  });
+
+  it('Should leave the group speaker count to the shared pill on a past event', () => {
+    renderModal({ isPastEvent: true, groups: [getTeamGroup()] });
+
+    expect(screen.queryByText('(1)')).not.toBeInTheDocument();
+    expect(screen.getByText('0 of 1 shared')).toBeVisible();
   });
 
   it('Should render only the sections that have speakers, in order', () => {
@@ -555,6 +568,60 @@ describe('EditEventSpeakersModal', () => {
     ).not.toBeChecked();
     expect(screen.getByText('1 of 2 shared')).toBeVisible();
     expect(screen.getByText('0 of 1 shared')).toBeVisible();
+  });
+
+  it('Should toggle every row backed by the same speaker entry', async () => {
+    renderModal({
+      groups: [
+        getTeamGroup({ users: [getUser({ speakerIds: ['es-both'] })] }),
+        getProjectGroup({
+          users: [getUser({ speakerIds: ['es-both'], roles: ['Lead'] })],
+        }),
+      ],
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Project One' }),
+    );
+    const [teamToggle, projectToggle] = screen.getAllByRole('checkbox', {
+      name: 'Jane Doe preliminary findings shared',
+    });
+    await userEvent.click(teamToggle!);
+
+    expect(teamToggle).toBeChecked();
+    expect(projectToggle).toBeChecked();
+    expect(screen.getAllByText('1 of 1 shared')).toHaveLength(2);
+
+    await userEvent.click(projectToggle!);
+
+    expect(teamToggle).not.toBeChecked();
+    expect(projectToggle).not.toBeChecked();
+  });
+
+  it('Should toggle the same person separately when each row has its own speaker entry', async () => {
+    renderModal({
+      groups: [
+        getTeamGroup({ users: [getUser({ speakerIds: ['es-team'] })] }),
+        getProjectGroup({ users: [getUser({ speakerIds: ['es-project'] })] }),
+      ],
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Team Alpha' }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Expand Project One' }),
+    );
+    const [teamToggle, projectToggle] = screen.getAllByRole('checkbox', {
+      name: 'Jane Doe preliminary findings shared',
+    });
+    await userEvent.click(teamToggle!);
+
+    expect(teamToggle).toBeChecked();
+    expect(projectToggle).not.toBeChecked();
   });
 
   it('Should add into the matching group and leave the other groups alone', async () => {
@@ -1196,9 +1263,10 @@ describe('EditEventSpeakersModal', () => {
 
     it('Should change speakers card background', async () => {
       await enterCancelConfirmation();
-      expect(screen.getByRole('group', { name: 'Speakers' })).toHaveStyle({
-        backgroundColor: silver.rgb,
-      });
+      expect(screen.getByRole('group', { name: 'Speakers' })).toHaveStyleRule(
+        'background-color',
+        colour.background.disabled,
+      );
     });
 
     it('Should disable the search input', async () => {

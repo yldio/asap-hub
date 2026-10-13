@@ -11,7 +11,7 @@ import {
   MultiSelectOptionsType,
   Paragraph,
 } from '../atoms';
-import { lead, neutral1000, pearl, pine, silver, steel, tin } from '../colors';
+import { colour } from '../colors';
 import { crossIcon, plusIcon, searchIcon } from '../icons';
 import { ConfirmableModalFooter, Modal } from '../molecules';
 import ExternalSpeakerAffiliationCard, {
@@ -83,7 +83,7 @@ const titleStyles = css({
   fontSize: rem(26),
   fontWeight: 700,
   lineHeight: 32 / 26,
-  color: neutral1000.rgb,
+  color: colour.foreground.primary,
 });
 
 const bodyStyles = css({
@@ -102,7 +102,7 @@ const hideOnDesktopStyles = css({
   [`@media (min-width: ${mobileScreen.max + 1}px)`]: { display: 'none' },
 });
 
-const placeholderStyles = css({ color: tin.rgb });
+const placeholderStyles = css({ color: colour.foreground.disabled });
 
 const searchOptionStyles = css([
   flexRowGap8Styles,
@@ -110,14 +110,14 @@ const searchOptionStyles = css([
 ]);
 
 const searchUserNameStyles = css({
-  color: pine.rgb,
+  color: colour.foreground.brand,
   fontSize: rem(17),
   fontWeight: 400,
   lineHeight: rem(24),
 });
 
 const searchExternalTextStyles = css({
-  color: lead.rgb,
+  color: colour.foreground.tertiary,
   fontSize: rem(17),
   fontWeight: 400,
   lineHeight: rem(24),
@@ -132,13 +132,21 @@ const speakersSectionStyles = css({
 
 const cardSurfaceStyles = (enabled: boolean) =>
   css({
-    border: `1px solid ${steel.rgb}`,
+    border: `1px solid ${colour.border.tertiary}`,
     borderRadius: rem(8),
-    backgroundColor: enabled ? pearl.rgb : silver.rgb,
+    backgroundColor: enabled
+      ? colour.background.secondary
+      : colour.background.disabled,
   });
 
-const groupsCardStyles = (enabled: boolean) =>
-  css([cardSurfaceStyles(enabled), { padding: rem(24), overflowX: 'auto' }]);
+const groupsCardStyles = (enabled: boolean, isPastEvent: boolean) =>
+  css([
+    cardSurfaceStyles(enabled),
+    {
+      padding: `${rem(24)} ${rem(24)} ${isPastEvent ? rem(8) : 0}`,
+      overflowX: 'auto',
+    },
+  ]);
 
 const groupsTableHeaderStyles = css({
   display: 'flex',
@@ -149,8 +157,7 @@ const groupsTableHeaderStyles = css({
   fontWeight: 'bold',
   lineHeight: rem(24),
   letterSpacing: rem(0.1),
-  color: neutral1000.rgb,
-  paddingBottom: rem(16),
+  color: colour.foreground.primary,
 });
 
 const groupsRowsStyles = css({
@@ -180,26 +187,22 @@ const removeGroupUser = (group: SpeakerGroup, userId: string): SpeakerGroup =>
     ? { ...group, users: group.users.filter((user) => user.id !== userId) }
     : { ...group, users: group.users.filter((user) => user.id !== userId) };
 
-const setGroupUserShared = (
+const setGroupUsersShared = (
   group: SpeakerGroup,
-  userId: string,
+  matches: (user: SpeakerGroupExternalUser | SpeakerGroupUser) => boolean,
   shared: boolean,
 ): SpeakerGroup =>
   group.variant === 'external'
     ? {
         ...group,
         users: group.users.map((user) =>
-          user.id === userId
-            ? { ...user, preliminaryFindingsShared: shared }
-            : user,
+          matches(user) ? { ...user, preliminaryFindingsShared: shared } : user,
         ),
       }
     : {
         ...group,
         users: group.users.map((user) =>
-          user.id === userId
-            ? { ...user, preliminaryFindingsShared: shared }
-            : user,
+          matches(user) ? { ...user, preliminaryFindingsShared: shared } : user,
         ),
       };
 
@@ -417,14 +420,24 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
     });
   };
 
+  // One speaker entry can back both a team row and a project row.
   const toggleUserShared = (groupId: string, userId: string, shared: boolean) =>
-    updateGroups((current) =>
-      current.map((group) =>
-        group.id === groupId
-          ? setGroupUserShared(group, userId, shared)
-          : group,
-      ),
-    );
+    updateGroups((current) => {
+      const entryIds = new Set(
+        current
+          .find((group) => group.id === groupId)
+          ?.users.find((user) => user.id === userId)?.speakerIds,
+      );
+      return current.map((group) =>
+        setGroupUsersShared(
+          group,
+          (user) =>
+            (group.id === groupId && user.id === userId) ||
+            (user.speakerIds ?? []).some((id) => entryIds.has(id)),
+          shared,
+        ),
+      );
+    });
 
   const expandSection = (variant: SpeakerGroup['variant']) =>
     setExpandedSections((current) => new Set(current).add(variant));
@@ -499,7 +512,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
       label={groupLabel(group)}
       users={group.users}
       showShared={isPastEvent}
-      showCount={false}
+      showCount={!isPastEvent}
       expanded={expandedIds.has(group.id)}
       onToggleExpanded={() => toggleExpanded(group.id)}
       onToggleUserShared={(userId, shared) =>
@@ -657,10 +670,14 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
 
           {visibleGroups.length === 0 && !pendingSpeaker ? (
             <div css={emptyStateStyles(!isCancelling)} role="status">
-              <Paragraph noMargin accent="lead" styles={emptyStateTitleStyles}>
+              <Paragraph
+                noMargin
+                accent="tertiary"
+                styles={emptyStateTitleStyles}
+              >
                 Add speakers to this event
               </Paragraph>
-              <Paragraph noMargin accent="lead">
+              <Paragraph noMargin accent="tertiary">
                 Search for a person to add them to this event. Once the event
                 has taken place, you&apos;ll be able to mark whether each
                 speaker shared preliminary findings.
@@ -669,7 +686,7 @@ const EditEventSpeakersModal: React.FC<EditEventSpeakersModalProps> = ({
           ) : (
             visibleGroups.length > 0 && (
               <div
-                css={groupsCardStyles(!isCancelling)}
+                css={groupsCardStyles(!isCancelling, isPastEvent)}
                 role="group"
                 aria-label="Speakers"
               >

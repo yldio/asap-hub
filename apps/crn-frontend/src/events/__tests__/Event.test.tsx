@@ -908,6 +908,277 @@ describe('the NEW_EVENT_PAGE flag', () => {
       expect(queryByText('Preliminary Findings')).not.toBeInTheDocument();
     });
 
+    describe('upcoming event sections', () => {
+      const upcomingSpeakers: EventSpeaker[] = [
+        teamSpeaker('t-alpha', 'Alpha', 'u1'),
+        {
+          id: 'es-ext-team',
+          externalUser: { name: 'Team Guest' },
+          team: { id: 't-alpha', displayName: 'Alpha' },
+        },
+        {
+          id: 'es-p1-u2',
+          project: {
+            id: 'p1',
+            title: 'Project One',
+            projectType: 'Trainee Project',
+          },
+          user: { id: 'u2', displayName: 'User u2' },
+          role: 'Independent Project - Lead',
+        },
+        { id: 'es-ext', externalUser: { name: 'Lone Guest' } },
+      ];
+
+      it('shows team, individual project and external speakers in separate sections with the total', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          speakers: upcomingSpeakers,
+        });
+        const { findByText, getByText, getAllByRole, queryByText } = render(
+          <Event />,
+          { wrapper },
+        );
+
+        expect(await findByText('Project One')).toBeVisible();
+        expect(
+          getAllByRole('heading', { level: 4 }).map(
+            (heading) => heading.textContent,
+          ),
+        ).toEqual([
+          'From Team Projects',
+          'From Individual Projects',
+          'External',
+        ]);
+        expect(getByText('total speakers').previousSibling).toHaveTextContent(
+          '4',
+        );
+        expect(getByText('Team Guest')).toBeVisible();
+        expect(getByText('Lone Guest')).toBeVisible();
+        expect(queryByText('Preliminary Findings')).not.toBeInTheDocument();
+      });
+
+      it('shows the same sections without findings in the edit speakers form', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          speakers: upcomingSpeakers,
+        });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+
+        expect(
+          modal.getByRole('heading', { name: 'From Team Projects' }),
+        ).toBeVisible();
+        expect(
+          modal.getByRole('heading', { name: 'From Individual Projects' }),
+        ).toBeVisible();
+        expect(modal.getByRole('heading', { name: 'External' })).toBeVisible();
+        expect(modal.getByText('Project One')).toBeVisible();
+        expect(modal.getByText('Lone Guest')).toBeVisible();
+        expect(
+          modal.queryByText('Preliminary Findings'),
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe('past event findings', () => {
+      it('saves one value for a speaker entry linked to both a team and a project', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          speakers: [
+            {
+              id: 'es-both',
+              project: {
+                id: 'p1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+              user: { id: 'u3', displayName: 'User u3' },
+              role: 'Independent Project - Lead',
+              preliminaryDataShared: false,
+            },
+            teamSpeaker('t-alpha', 'Alpha', 'u3', 'es-both'),
+          ],
+        });
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Alpha' }),
+        );
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Project One' }),
+        );
+        const [teamToggle] = modal.getAllByRole('checkbox', {
+          name: 'User u3 preliminary findings shared',
+        });
+        await userEvent.click(teamToggle!);
+        await userEvent.click(modal.getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              speakersToRemove: [],
+              preliminaryDataShared: [
+                { speakerId: 'es-both', shared: true },
+                { speakerId: 'es-both', shared: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+    });
+
+    describe('past event sections', () => {
+      const pastSpeakers: EventSpeaker[] = [
+        teamSpeaker('t-alpha', 'Alpha', 'u1', undefined, true),
+        {
+          id: 'es-ext-team',
+          externalUser: { name: 'Team Guest' },
+          team: { id: 't-alpha', displayName: 'Alpha' },
+        },
+        {
+          id: 'es-p1-u2',
+          project: {
+            id: 'p1',
+            title: 'Project One',
+            projectType: 'Trainee Project',
+          },
+          user: { id: 'u2', displayName: 'User u2' },
+          role: 'Independent Project - Lead',
+          preliminaryDataShared: false,
+        },
+        { id: 'es-ext', externalUser: { name: 'Lone Guest' } },
+      ];
+
+      beforeEach(() => {
+        mockGetEvent.mockResolvedValue({
+          ...createEventResponse(),
+          id,
+          endDate: pastEndDate,
+          speakers: pastSpeakers,
+        });
+      });
+
+      it('shows team, individual project and external speakers in separate sections with the speaker metrics', async () => {
+        const { findByText, getByText, getAllByRole } = render(<Event />, {
+          wrapper,
+        });
+
+        expect(await findByText('Project One')).toBeVisible();
+        expect(
+          getAllByRole('heading', { level: 4 }).map(
+            (heading) => heading.textContent,
+          ),
+        ).toEqual([
+          'From Team Projects',
+          'From Individual Projects',
+          'External',
+        ]);
+        expect(getByText('Preliminary Findings')).toBeVisible();
+        expect(getByText('total speakers').previousSibling).toHaveTextContent(
+          '4',
+        );
+        expect(getByText('From Teams').nextSibling).toHaveTextContent('2');
+        expect(
+          getByText('From Individual Projects', { selector: 'p' }).nextSibling,
+        ).toHaveTextContent('1');
+        expect(getByText('1 of 3 speakers')).toBeVisible();
+        expect(getByText('33%')).toBeVisible();
+        expect(getByText('1 of 2 shared')).toBeVisible();
+        expect(getByText('0 of 1 shared')).toBeVisible();
+        expect(getByText('Lone Guest')).toBeVisible();
+      });
+
+      it('shows the speakers that represent a team, including external ones, when the team is expanded', async () => {
+        const { findByRole, getByText } = render(<Event />, { wrapper });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Expand Alpha' }),
+        );
+
+        expect(getByText('User u1')).toBeVisible();
+        expect(getByText('Team Guest')).toBeVisible();
+      });
+
+      it('shows the same sections with preliminary findings in the edit speakers form', async () => {
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+
+        expect(
+          modal.getByRole('heading', { name: 'From Team Projects' }),
+        ).toBeVisible();
+        expect(
+          modal.getByRole('heading', { name: 'From Individual Projects' }),
+        ).toBeVisible();
+        expect(modal.getByRole('heading', { name: 'External' })).toBeVisible();
+        expect(modal.getByText('Preliminary Findings')).toBeVisible();
+        expect(modal.getByText('1 of 2 shared')).toBeVisible();
+        expect(modal.getByText('0 of 1 shared')).toBeVisible();
+        expect(
+          modal.queryByRole('button', { name: /Mark All/ }),
+        ).not.toBeInTheDocument();
+      });
+
+      it('saves the preliminary findings of an individual project speaker', async () => {
+        mockPatchEvent.mockResolvedValue({ ...createEventResponse(), id });
+        const { findByRole, getByRole } = render(<Event />, {
+          wrapper: projectManagerWrapper,
+        });
+
+        await userEvent.click(
+          await findByRole('button', { name: 'Edit speakers' }),
+        );
+        const modal = within(getByRole('dialog'));
+        await userEvent.click(
+          modal.getByRole('button', { name: 'Expand Project One' }),
+        );
+        await userEvent.click(
+          modal.getByRole('checkbox', {
+            name: 'User u2 preliminary findings shared',
+          }),
+        );
+        await userEvent.click(modal.getByRole('button', { name: 'Save' }));
+
+        await waitFor(() =>
+          expect(mockPatchEvent).toHaveBeenCalledWith(
+            id,
+            {
+              speakersToRemove: [],
+              preliminaryDataShared: [
+                { speakerId: 'es-t-alpha-u1', shared: true },
+                { speakerId: 'es-p1-u2', shared: true },
+              ],
+            },
+            expect.anything(),
+          ),
+        );
+      });
+    });
+
     it('shows the show more control beyond five team rows', async () => {
       mockGetEvent.mockResolvedValue({
         ...createEventResponse(),

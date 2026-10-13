@@ -218,7 +218,27 @@ export const eventsContentQueryFragment = gql`
             id
           }
           displayName
+          teamType
           inactiveSince
+        }
+        project {
+          sys {
+            id
+          }
+          title
+          projectType
+          membersCollection(limit: 100) @include(if: $singleEvent) {
+            items {
+              role
+              projectMember {
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
         user {
           __typename
@@ -410,6 +430,68 @@ export const FETCH_INTEREST_GROUP_CALENDAR = gql`
       calendar {
         sys {
           id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID = gql`
+  query FetchInterestGroupTeamsByCalendarId($id: String!) {
+    calendars(id: $id) {
+      linkedFrom {
+        interestGroupsCollection(limit: 1) {
+          items {
+            teamsCollection(limit: 50) {
+              items {
+                startDate
+                endDate
+                team {
+                  sys {
+                    id
+                  }
+                  inactiveSince
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID = gql`
+  query FetchUpcomingEventsByCalendarId(
+    $calendarId: String!
+    $now: DateTime!
+    $limit: Int
+    $skip: Int
+  ) {
+    eventsCollection(
+      limit: $limit
+      skip: $skip
+      order: [sys_id_ASC]
+      where: { calendar: { sys: { id: $calendarId } }, endDate_gt: $now }
+    ) {
+      total
+      items {
+        sys {
+          id
+        }
+        endDate
+        attendanceCollection(limit: 50) {
+          items {
+            sys {
+              id
+            }
+            attended
+            team {
+              sys {
+                id
+              }
+            }
+          }
         }
       }
     }

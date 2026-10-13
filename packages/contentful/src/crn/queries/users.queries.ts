@@ -185,7 +185,7 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
-      interestGroupLeadersCollection(limit: 10) {
+      interestGroupLeadersCollection(limit: 50) {
         items {
           role
           inactiveSinceDate

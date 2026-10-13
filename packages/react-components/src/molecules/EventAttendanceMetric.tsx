@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import AttendanceProgressBar from '../atoms/AttendanceProgressBar';
-import { neutral200, neutral1000, steel } from '../colors';
+import { colour } from '../colors';
 import { mobileScreen, rem } from '../pixels';
 
 export const containerStyles = css({
@@ -9,11 +9,11 @@ export const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  gap: rem(12),
+  gap: rem(16),
   width: '100%',
   maxWidth: rem(380),
   padding: rem(24),
-  backgroundColor: neutral200.rgb,
+  backgroundColor: colour.neutral[50],
   borderRadius: rem(8),
 });
 
@@ -25,17 +25,15 @@ export const headlineRowStyles = css({
 
 export const valueStyles = css({
   margin: 0,
-  fontFamily: 'Roboto Slab',
   fontWeight: 'bold',
-  fontSize: rem(30),
+  fontSize: rem(32),
   // A ratio, not `rem`: line-height in `em` resolves against the element's own
-  // font size, so `rem(40)` here would render 40/17 x 30px.
-  lineHeight: 40 / 30,
-  color: neutral1000.rgb,
+  // font size, so `rem(40)` here would render 40/17 x 32px.
+  lineHeight: 40 / 32,
+  color: colour.foreground.primary,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
-    fontFamily: 'inherit',
-    fontSize: rem(21),
-    lineHeight: 32 / 21,
+    fontSize: rem(24),
+    lineHeight: 32 / 24,
   },
 });
 
@@ -43,17 +41,23 @@ const dividerStyles = css({
   width: rem(1),
   height: rem(24),
   flexShrink: 0,
-  backgroundColor: steel.rgb,
+  backgroundColor: colour.neutral[100],
 });
 
 const captionStyles = css({
   margin: 0,
-  fontSize: rem(14),
-  lineHeight: 16 / 14,
-  color: neutral1000.rgb,
+  fontSize: rem(20),
+  fontWeight: 'bold',
+  lineHeight: 28 / 20,
+  color: colour.foreground.primary,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    fontSize: rem(14),
+    fontWeight: 600,
+    lineHeight: 16 / 14,
+  },
 });
 
-export const captionCountStyles = css([captionStyles, { fontWeight: 'bold' }]);
+export const captionCountStyles = captionStyles;
 
 type EventAttendanceMetricProps = {
   value: number;

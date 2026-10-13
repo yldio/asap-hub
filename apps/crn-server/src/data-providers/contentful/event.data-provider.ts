@@ -18,8 +18,12 @@ import {
   FetchEventsQueryVariables,
   FetchInterestGroupCalendarQuery,
   FetchInterestGroupCalendarQueryVariables,
+  FetchInterestGroupTeamsByCalendarIdQuery,
+  FetchInterestGroupTeamsByCalendarIdQueryVariables,
   FetchPreviousEventAttendanceQuery,
   FetchPreviousEventAttendanceQueryVariables,
+  FetchUpcomingEventsByCalendarIdQuery,
+  FetchUpcomingEventsByCalendarIdQueryVariables,
   FetchWorkingGroupCalendarQuery,
   FetchWorkingGroupCalendarQueryVariables,
   FETCH_EVENTS,
@@ -28,7 +32,9 @@ import {
   FETCH_EVENTS_BY_USER_ID,
   FETCH_EVENT_BY_ID,
   FETCH_INTEREST_GROUP_CALENDAR,
+  FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
   FETCH_PREVIOUS_EVENT_ATTENDANCE,
+  FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID,
   FETCH_WORKING_GROUP_CALENDAR,
   GraphQLClient,
   Link,
@@ -42,21 +48,32 @@ import {
   EventDataObject,
   EventSpeaker,
   EventSpeakerExternalUserData,
+  EventSpeakerProjectData,
+  EventSpeakerTeam,
+  EventSpeakerUnlinkItem,
   EventSpeakerUserData,
   EventTeamAttendance,
   EventUpdateDataObject,
   EventUpdateDetailsRequest,
   FetchEventsOptions,
+  getInterestGroupTeamIdsForEvent,
+  InterestGroupTeamMembership,
   isEventStatus,
+  isProjectType,
   isTeamType,
   ListEventDataObject,
 } from '@asap-hub/model';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import {
+  Alerts,
+  cleanArray,
+  parseUserDisplayName,
+} from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
+import { getAttendanceToSync } from '../../utils/event-attendance';
 import logger from '../../utils/logger';
-import { EventDataProvider } from '../types';
+import { UpcomingEvent, EventDataProvider } from '../types';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -88,7 +105,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
+    private alerts?: Alerts,
   ) {}
+
+  private reportEventWithoutCalendar = (id: string) => {
+    const message = getEventWithoutCalendarMessage(id);
+    logger.error(message);
+    void this.alerts?.error(new Error(message));
+  };
 
   private fetchEventById(id: string) {
     return this.contentfulClient.request<
@@ -105,6 +129,12 @@ export class EventContentfulDataProvider implements EventDataProvider {
     }
 
     const event = parseGraphQLEvent(events);
+
+    if (!event) {
+      this.reportEventWithoutCalendar(id);
+      return null;
+    }
+
     const previousEventAttendance =
       await this.fetchPreviousEventAttendance(events);
 
@@ -295,12 +325,27 @@ export class EventContentfulDataProvider implements EventDataProvider {
     const environment = await this.getRestClient();
 
     const { calendar, ...otherCreateFields } = create;
+
+    const memberships =
+      await this.fetchInterestGroupMembershipsByCalendarId(calendar);
+    const attendanceEntries = await Promise.all(
+      getInterestGroupTeamIdsForEvent(memberships, create.endDate).map(
+        (teamId) => this.createAttendanceEntry(environment, teamId, false),
+      ),
+    );
+    const attendanceLinks = attendanceEntries.map((entry) =>
+      createLink(entry.sys.id),
+    );
+
     const newEntry = await environment.createEntry('events', {
       fields: {
         ...addLocaleToFields(otherCreateFields),
         calendar: {
           'en-US': createLink(calendar),
         },
+        ...(attendanceLinks.length > 0
+          ? { attendance: { 'en-US': attendanceLinks } }
+          : {}),
       },
     });
 
@@ -308,14 +353,82 @@ export class EventContentfulDataProvider implements EventDataProvider {
     return newEntry.sys.id;
   }
 
+  async fetchInterestGroupMembershipsByCalendarId(
+    calendarId: string,
+  ): Promise<InterestGroupTeamMembership[]> {
+    const { calendars } = await this.contentfulClient.request<
+      FetchInterestGroupTeamsByCalendarIdQuery,
+      FetchInterestGroupTeamsByCalendarIdQueryVariables
+    >(FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID, { id: calendarId });
+
+    return parseGraphQLInterestGroupMemberships(
+      calendars?.linkedFrom?.interestGroupsCollection?.items[0],
+    );
+  }
+
+  private async createAttendanceEntry(
+    environment: Environment,
+    teamId: string,
+    attended: boolean,
+  ) {
+    try {
+      const newEntry = await environment.createEntry('attendance', {
+        fields: addLocaleToFields({
+          team: createLink(teamId),
+          attended,
+        }),
+      });
+      return await newEntry.publish();
+    } catch (e) {
+      throw new Error(`Error creating attendance entry: ${e}`);
+    }
+  }
+
+  async fetchUpcomingEventsByCalendarId(
+    calendarId: string,
+    now: Date,
+  ): Promise<UpcomingEvent[]> {
+    const take = 50;
+    const events: UpcomingEvent[] = [];
+    let skip = 0;
+    let total = 0;
+
+    do {
+      const { eventsCollection } = await this.contentfulClient.request<
+        FetchUpcomingEventsByCalendarIdQuery,
+        FetchUpcomingEventsByCalendarIdQueryVariables
+      >(FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID, {
+        calendarId,
+        now: now.toISOString(),
+        limit: take,
+        skip,
+      });
+
+      total = eventsCollection?.total ?? 0;
+      skip += take;
+      events.push(
+        ...cleanArray(eventsCollection?.items).map(parseGraphQLUpcomingEvent),
+      );
+    } while (skip < total);
+
+    return events;
+  }
+
   async update(id: string, update: EventUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
     const { calendar, ...otherUpdateFields } = update;
 
+    const attendanceLinks = await this.getAttendanceLinksForUpdate(
+      environment,
+      event,
+      update,
+    );
+
     const updateWithCalendarLink = {
       ...(calendar ? { calendar: createLink(calendar) } : {}),
       ...otherUpdateFields,
+      ...(attendanceLinks ? { attendance: attendanceLinks } : {}),
     };
 
     const result = await patchAndPublish(event, updateWithCalendarLink);
@@ -327,6 +440,59 @@ export class EventContentfulDataProvider implements EventDataProvider {
       fetchEventById,
       'events',
     );
+  }
+
+  /**
+   * Recalculates the attendance when the end date or calendar of an event
+   * that hasn't ended changes. Events that had already ended are left as
+   * they are since their attendance may have been edited.
+   */
+  private async getAttendanceLinksForUpdate(
+    environment: Environment,
+    event: Entry,
+    update: EventUpdateDataObject,
+  ) {
+    const currentEndDate: string | undefined = event.fields.endDate?.['en-US'];
+    const currentCalendarId: string | undefined =
+      event.fields.calendar?.['en-US']?.sys.id;
+
+    const hasEnded = !!currentEndDate && new Date(currentEndDate) <= new Date();
+    const endDateChanged =
+      !!update.endDate &&
+      new Date(update.endDate).getTime() !==
+        new Date(currentEndDate ?? 0).getTime();
+    const calendarChanged =
+      !!update.calendar && update.calendar !== currentCalendarId;
+
+    const endDate = update.endDate ?? currentEndDate;
+    const calendarId = update.calendar ?? currentCalendarId;
+
+    if (
+      hasEnded ||
+      !(endDateChanged || calendarChanged) ||
+      !endDate ||
+      !calendarId
+    ) {
+      return null;
+    }
+
+    const [memberships, { events: currentEvent }] = await Promise.all([
+      this.fetchInterestGroupMembershipsByCalendarId(calendarId),
+      this.fetchEventById(event.sys.id),
+    ]);
+
+    const currentAttendance = parseGraphQLAttendance(
+      cleanArray(currentEvent?.attendanceCollection?.items),
+    ).map(({ id, team, attended }) => ({ id, teamId: team.id, attended }));
+
+    const attendance = getAttendanceToSync(
+      currentAttendance,
+      getInterestGroupTeamIdsForEvent(memberships, endDate),
+    );
+
+    return attendance
+      ? this.buildAttendanceLinks(environment, event, attendance)
+      : null;
   }
 
   async updateEventDetails(
@@ -346,11 +512,13 @@ export class EventContentfulDataProvider implements EventDataProvider {
       );
     }
 
-    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
-      patchFields.speakers = await this.buildSpeakerLinks(
+    let unlinkedSpeakers: EventSpeakerUnlinkItem[] = [];
+    if (data.speakersToUnlink && data.speakersToUnlink.length > 0) {
+      unlinkedSpeakers = await this.unlinkSpeakers(
         environment,
         event,
-        data.speakersToRemove,
+        data.speakersToUnlink,
+        data.speakersToRemove ?? [],
       );
     }
 
@@ -364,6 +532,15 @@ export class EventContentfulDataProvider implements EventDataProvider {
       );
     }
 
+    // Deleting is irreversible, so it runs only once the other speaker writes succeed.
+    if (data.speakersToRemove && data.speakersToRemove.length > 0) {
+      patchFields.speakers = await this.buildSpeakerLinks(
+        environment,
+        event,
+        data.speakersToRemove,
+      );
+    }
+
     const fetchEventById = () => this.fetchEventById(id);
 
     if (Object.keys(patchFields).length > 0) {
@@ -372,6 +549,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
         result.sys.publishedVersion || Infinity,
         fetchEventById,
         'events',
+      );
+    }
+
+    if (unlinkedSpeakers.length > 0) {
+      await pollContentfulGqlUntil<FetchEventByIdQuery>(
+        fetchEventById,
+        (result) => areSpeakersUnlinked(result, unlinkedSpeakers),
+        `Event ${id} speakers unlinked`,
       );
     }
 
@@ -457,17 +642,7 @@ export class EventContentfulDataProvider implements EventDataProvider {
           return updatedEntry.publish();
         }
 
-        try {
-          const newEntry = await environment.createEntry('attendance', {
-            fields: addLocaleToFields({
-              team: createLink(teamId),
-              attended,
-            }),
-          });
-          return await newEntry.publish();
-        } catch (e) {
-          throw new Error(`Error creating attendance entry: ${e}`);
-        }
+        return this.createAttendanceEntry(environment, teamId, attended);
       }),
     );
 
@@ -521,6 +696,61 @@ export class EventContentfulDataProvider implements EventDataProvider {
     return existingLinks
       .filter((link) => !removeSet.has(link.sys.id))
       .map((link) => createLink(link.sys.id));
+  }
+
+  private async unlinkSpeakers(
+    environment: Environment,
+    event: Entry,
+    speakersToUnlink: EventSpeakerUnlinkItem[],
+    speakersToRemove: string[],
+  ): Promise<EventSpeakerUnlinkItem[]> {
+    const removeSet = new Set(speakersToRemove);
+    const linkedIds = new Set(
+      (event.fields.speakers?.['en-US'] || []).map(
+        (link: Link<'Entry'>) => link.sys.id,
+      ),
+    );
+    const fieldsBySpeakerId = speakersToUnlink.reduce(
+      (map, { speakerId, field }) =>
+        linkedIds.has(speakerId) && !removeSet.has(speakerId)
+          ? map.set(speakerId, [...(map.get(speakerId) ?? []), field])
+          : map,
+      new Map<string, EventSpeakerUnlinkItem['field'][]>(),
+    );
+
+    const updates = await Promise.all(
+      [...fieldsBySpeakerId].map(async ([speakerId, fields]) => {
+        let speakerEntry: Entry;
+        try {
+          speakerEntry = await environment.getEntry(speakerId);
+        } catch (error) {
+          logger.warn(
+            { error, speakerId },
+            `Error fetching speaker entry with id: ${speakerId}`,
+          );
+          return [];
+        }
+
+        const linkedFields = fields.filter(
+          (field) => speakerEntry.fields[field]?.['en-US'],
+        );
+        if (linkedFields.length === 0) {
+          return [];
+        }
+
+        // Removing the field, not setting it to null, keeps the CMS speaker field app working.
+        const patchedEntry = await speakerEntry.patch(
+          linkedFields.map((field) => ({
+            op: 'remove' as const,
+            path: `/fields/${field}`,
+          })),
+        );
+        await patchedEntry.publish();
+        return linkedFields.map((field) => ({ speakerId, field }));
+      }),
+    );
+
+    return updates.flat();
   }
 
   private async updateSpeakersPreliminaryDataShared(
@@ -600,6 +830,22 @@ export const areSpeakersPreliminaryDataSharedSynced = (
   });
 };
 
+export const areSpeakersUnlinked = (
+  result: FetchEventByIdQuery,
+  unlinked: EventSpeakerUnlinkItem[],
+): boolean => {
+  const speakersById = new Map(
+    (result.events?.speakersCollection?.items ?? []).flatMap((item) =>
+      item ? [[item.sys.id, item] as const] : [],
+    ),
+  );
+
+  return unlinked.every(({ speakerId, field }) => {
+    const speaker = speakersById.get(speakerId);
+    return !speaker || !speaker[field];
+  });
+};
+
 type SpeakerItem = NonNullable<
   NonNullable<EventItem['speakersCollection']>['items'][number]
 >;
@@ -633,21 +879,70 @@ export const parseEventSpeakerExternalUser = (
   name: user?.name || '',
 });
 
+type SpeakerTeam = NonNullable<SpeakerItem['team']>;
+type SpeakerProject = NonNullable<SpeakerItem['project']>;
+
+const parseSpeakerTeam = (team: SpeakerTeam): EventSpeakerTeam['team'] => ({
+  id: team.sys.id,
+  displayName: team.displayName ?? '',
+  inactiveSince: team.inactiveSince ?? undefined,
+  ...(isTeamType(team.teamType) ? { teamType: team.teamType } : {}),
+});
+
+const parseSpeakerProject = (
+  project: SpeakerProject,
+): EventSpeakerProjectData => ({
+  id: project.sys.id,
+  title: project.title ?? '',
+  projectType: isProjectType(project.projectType)
+    ? project.projectType
+    : undefined,
+});
+
+const findProjectRole = (project: SpeakerProject, userId: string) =>
+  project.membersCollection?.items.find(
+    (member) =>
+      member?.role &&
+      member.projectMember &&
+      'sys' in member.projectMember &&
+      member.projectMember.sys.id === userId,
+  )?.role ?? undefined;
+
 export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
   (speakers || []).reduce((speakerList: EventSpeaker[], speaker) => {
-    const { sys, team, user } = speaker;
+    const { sys, team, project, user } = speaker;
     const speakerId = sys.id;
 
     if (user?.__typename === 'ExternalAuthors') {
       speakerList.push({
         id: speakerId,
         externalUser: parseEventSpeakerExternalUser(user),
+        ...(team ? { team: parseSpeakerTeam(team) } : {}),
+        ...(project ? { project: parseSpeakerProject(project) } : {}),
       });
       return speakerList;
     }
 
+    const projectRole =
+      project && user?.__typename === 'Users' && user.onboarded === true
+        ? findProjectRole(project, user.sys.id)
+        : undefined;
+    if (project && projectRole && user?.__typename === 'Users') {
+      speakerList.push({
+        id: speakerId,
+        project: parseSpeakerProject(project),
+        user: parseEventSpeakerUser(user),
+        role: projectRole,
+        preliminaryDataShared: !!speaker.preliminaryDataShared,
+      });
+    }
+
     if (!team) {
-      if (user?.__typename === 'Users' && user.onboarded === true) {
+      if (
+        !projectRole &&
+        user?.__typename === 'Users' &&
+        user.onboarded === true
+      ) {
         speakerList.push({
           user: parseEventSpeakerUser(user),
         });
@@ -656,13 +951,7 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
     }
 
     if (!user) {
-      speakerList.push({
-        team: {
-          id: team.sys.id,
-          displayName: team.displayName ?? '',
-          inactiveSince: team.inactiveSince ?? undefined,
-        },
-      });
+      speakerList.push({ team: parseSpeakerTeam(team) });
       return speakerList;
     }
 
@@ -673,23 +962,15 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
           .filter((s) => s?.role)[0]?.role || undefined;
 
       if (!role || user.onboarded !== true) {
-        speakerList.push({
-          team: {
-            id: team.sys.id,
-            displayName: team.displayName ?? '',
-            inactiveSince: team.inactiveSince ?? undefined,
-          },
-        });
+        if (!projectRole) {
+          speakerList.push({ team: parseSpeakerTeam(team) });
+        }
         return speakerList;
       }
 
       speakerList.push({
         id: speakerId,
-        team: {
-          id: team.sys.id,
-          displayName: team.displayName ?? '',
-          inactiveSince: team.inactiveSince ?? undefined,
-        },
+        team: parseSpeakerTeam(team),
         user: parseEventSpeakerUser(user),
         role,
         preliminaryDataShared: !!speaker.preliminaryDataShared,
@@ -723,9 +1004,57 @@ export const parseGraphQLAttendance = (
     return list;
   }, []);
 
-export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
+type InterestGroupTeamsItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchInterestGroupTeamsByCalendarIdQuery['calendars']
+      >['linkedFrom']
+    >['interestGroupsCollection']
+  >['items'][number]
+>;
+
+const parseGraphQLInterestGroupMemberships = (
+  interestGroup: InterestGroupTeamsItem | null | undefined,
+): InterestGroupTeamMembership[] =>
+  cleanArray(interestGroup?.teamsCollection?.items).flatMap(
+    ({ team, startDate, endDate }) =>
+      team && startDate
+        ? [
+            {
+              teamId: team.sys.id,
+              startDate,
+              endDate,
+              inactiveSince: team.inactiveSince,
+            },
+          ]
+        : [],
+  );
+
+type UpcomingEventItem = NonNullable<
+  NonNullable<
+    FetchUpcomingEventsByCalendarIdQuery['eventsCollection']
+  >['items'][number]
+>;
+
+const parseGraphQLUpcomingEvent = ({
+  sys,
+  endDate,
+  attendanceCollection,
+}: UpcomingEventItem): UpcomingEvent => ({
+  id: sys.id,
+  endDate,
+  attendance: cleanArray(attendanceCollection?.items).flatMap(
+    ({ sys: attendanceSys, attended, team }) =>
+      team
+        ? [{ id: attendanceSys.id, teamId: team.sys.id, attended: !!attended }]
+        : [],
+  ),
+});
+
+export const parseGraphQLEvent = (item: EventItem): EventDataObject | null => {
   if (!item.calendar) {
-    throw new Error(`Event (${item.sys.id}) doesn't have a calendar"`);
+    return null;
   }
 
   if (item.status && !isEventStatus(item.status)) {
@@ -886,6 +1215,9 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
   };
 };
 
+const getEventWithoutCalendarMessage = (id: string) =>
+  `Event (${id}) skipped because it has no published calendar`;
+
 const getEventDataObject = (
   eventsCollection: FetchEventsQuery['eventsCollection'],
 ) => {
@@ -896,10 +1228,23 @@ const getEventDataObject = (
     };
   }
 
+  const items = eventsCollection.items.filter(
+    (x): x is EventItem => x !== null,
+  );
+
+  // Background indexers fetch these lists, and an event skipped here usually
+  // means an editor unpublished its calendar on purpose, so only log it.
+  // fetchById alerts, because there a user or an editor hit the event.
+  items
+    .filter((item) => !item.calendar)
+    .forEach((item) =>
+      logger.warn(getEventWithoutCalendarMessage(item.sys.id)),
+    );
+
   return {
     total: eventsCollection.total,
-    items: eventsCollection.items
-      .filter((x): x is EventItem => x !== null)
-      .map(parseGraphQLEvent),
+    items: items
+      .map(parseGraphQLEvent)
+      .filter((event): event is EventDataObject => event !== null),
   };
 };

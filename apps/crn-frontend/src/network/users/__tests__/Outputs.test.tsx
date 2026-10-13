@@ -109,9 +109,9 @@ it('renders a list of research outputs', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { container } = await renderOutputs();
-  expect(container.textContent).toContain('Test Output 0');
-  expect(container.textContent).toContain('Test Output 1');
+  const { findByText } = await renderOutputs();
+  expect(await findByText('Test Output 0')).toBeVisible();
+  expect(await findByText('Test Output 1')).toBeVisible();
 });
 
 it('calls getResearchOutputs with the right arguments', async () => {

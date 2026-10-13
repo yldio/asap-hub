@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Link } from '../atoms';
-import { lead, steel } from '../colors';
+import { colour } from '../colors';
 import { chevronDownIcon, chevronUpIcon, InactiveBadgeIcon } from '../icons';
 import {
   defaultVisibleSpeakers,
@@ -27,7 +27,7 @@ const wrapperStyles = css({
   flexDirection: 'column',
   paddingTop: rem(16),
   paddingBottom: rem(16),
-  borderBottom: `1px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${colour.border.tertiary}`,
   // Padding stays: it is half of the 32 between sections.
   '&:last-of-type': {
     borderBottom: 'none',
@@ -39,6 +39,11 @@ const headerStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: rem(24),
+});
+
+// On mobile the findings pill and chevron move under the name; without the
+// pill the chevron stays on the name's line.
+const stackedHeaderStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -62,22 +67,21 @@ const labelStyles = css({
   display: 'flex',
   alignItems: 'center',
   flexShrink: 0,
-  gap: rem(8),
-  fontSize: rem(17),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    fontSize: rem(14),
-    lineHeight: 16 / 14,
-    gap: `${8 / 14}em`,
-    '> svg': { display: 'none' },
-  },
+  fontSize: rem(16),
+  lineHeight: 24 / 16,
+  // `em` against the 16px label text, since `rem()` assumes 17px.
+  gap: `${8 / 16}em`,
   '> svg': {
-    width: rem(24),
-    height: rem(24),
+    width: `${24 / 16}em`,
+    height: `${24 / 16}em`,
     flexShrink: 0,
   },
 });
 
-const leadTextStyles = css({ color: lead.rgb, fontWeight: 400 });
+const leadTextStyles = css({
+  color: colour.foreground.tertiary,
+  fontWeight: 400,
+});
 
 const teamNameStyles = css({ whiteSpace: 'nowrap', fontWeight: 400 });
 
@@ -95,18 +99,12 @@ const nestedListStyles = css({
   flexDirection: 'column',
   gap: rem(16),
   marginTop: rem(16),
-  paddingBottom: rem(12),
-  paddingLeft: rem(32),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    gap: rem(24),
-    paddingLeft: rem(12),
-  },
+  paddingLeft: rem(40),
 });
 
 const showMoreStyles = css({
   display: 'flex',
-  paddingLeft: rem(32),
-  [`@media (max-width: ${mobileScreen.max}px)`]: { paddingLeft: rem(12) },
+  paddingLeft: rem(40),
 });
 
 export type SpeakerTeamRowUser = {
@@ -170,7 +168,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
 
   return (
     <div css={wrapperStyles} role="listitem">
-      <div css={headerStyles}>
+      <div css={[headerStyles, showShared && stackedHeaderStyles]}>
         <span css={labelStyles}>
           {variant === 'team' && teamIcon(teamType)}
           {variant === 'project' && projectIcon(projectType)}
@@ -198,7 +196,7 @@ const SpeakerTeamRow: React.FC<SpeakerTeamRowProps> = ({
           {showShared && (
             <span css={findingsColumnStyles}>
               <span css={findingsPillStyles(hasAnyShared)}>
-                {findingsIcon(hasAnyShared, lead.rgb)}
+                {findingsIcon(hasAnyShared, colour.foreground.tertiary)}
                 {`${shared} of ${total} shared`}
               </span>
             </span>

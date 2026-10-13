@@ -3,6 +3,8 @@ import {
   Entry,
   Environment,
   FetchEventByIdQuery,
+  FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
+  FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID,
   getContentfulGraphqlClientMockServer,
   patchAndPublish,
 } from '@asap-hub/contentful';
@@ -11,6 +13,7 @@ import { when } from 'jest-when';
 
 import {
   areSpeakersPreliminaryDataSharedSynced,
+  areSpeakersUnlinked,
   EventContentfulDataProvider,
   parseGraphQLEvent,
 } from '../../../src/data-providers/contentful/event.data-provider';
@@ -142,6 +145,27 @@ describe('Events Contentful Data Provider', () => {
         },
       );
       expect(result).toEqual(getContentfulListEventDataObject());
+    });
+
+    test('Should skip events without a calendar and keep the Contentful total', async () => {
+      const eventWithoutCalendar = getContentfulGraphqlEvent(true);
+      eventWithoutCalendar.sys.id = 'event-without-calendar';
+      eventWithoutCalendar.calendar = null;
+      const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
+      contentfulGraphQLResponse.eventsCollection!.items.push(
+        eventWithoutCalendar,
+      );
+      contentfulGraphQLResponse.eventsCollection!.total = 2;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await eventDataProvider.fetch({});
+
+      expect(result).toEqual({
+        ...getContentfulListEventDataObject(),
+        total: 2,
+      });
     });
 
     test('Should apply the filter to remove hidden events by default', async () => {
@@ -442,6 +466,19 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(null);
     });
 
+    test('Should return null when the event does not have a calendar', async () => {
+      const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+      contentfulGraphQLResponse.calendar = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        events: contentfulGraphQLResponse,
+      });
+
+      const result = await eventDataProvider.fetchById(eventId);
+
+      expect(result).toEqual(null);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(1);
+    });
+
     test('Should return the event when it finds it', async () => {
       const contentfulGraphQLResponse = getContentfulGraphqlEvent();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -666,6 +703,11 @@ describe('Events Contentful Data Provider', () => {
             externalUser: {
               name: 'Jane Doe',
             },
+            team: {
+              id: 'team-id-3',
+              displayName: 'The team three',
+              inactiveSince: '2022-10-24T11:00:00Z',
+            },
           },
         ]);
       });
@@ -698,6 +740,231 @@ describe('Events Contentful Data Provider', () => {
             },
           },
         ]);
+      });
+
+      test.each`
+        teamType           | expected
+        ${'Resource Team'} | ${'Resource Team'}
+        ${'Unknown'}       | ${undefined}
+        ${null}            | ${undefined}
+      `(
+        'Should return the speaker team type $expected for $teamType',
+        async ({ teamType, expected }) => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          const [speaker] = contentfulGraphQLResponse.speakersCollection!.items;
+          contentfulGraphQLResponse.speakersCollection!.items = [
+            { ...speaker!, team: { ...speaker!.team!, teamType } },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: contentfulGraphQLResponse,
+          });
+
+          const result = await eventDataProvider.fetchById(eventId);
+
+          const [first] = result!.speakers;
+          expect(first && 'team' in first ? first.team?.teamType : null).toBe(
+            expected,
+          );
+        },
+      );
+
+      describe('Project speakers', () => {
+        const speakerProject = (
+          members: { userId: string; role: string | null }[] = [
+            { userId: 'user-id-3', role: 'Independent Project - Lead' },
+          ],
+        ) => ({
+          sys: { id: 'project-id-1' },
+          title: 'Project One',
+          projectType: 'Trainee Project',
+          membersCollection: {
+            items: members.map(({ userId, role }) => ({
+              role,
+              projectMember: { sys: { id: userId } },
+            })),
+          },
+        });
+
+        const expectedUser = {
+          alumniSinceDate: undefined,
+          avatarUrl: undefined,
+          displayName: 'Adam (Ad) Brown',
+          firstName: 'Adam',
+          id: 'user-id-3',
+          lastName: 'Brown',
+        };
+
+        const fetchWithSpeaker = async (
+          overrides: Partial<
+            NonNullable<
+              NonNullable<
+                ReturnType<
+                  typeof getContentfulGraphqlEvent
+                >['speakersCollection']
+              >['items'][number]
+            >
+          >,
+        ) => {
+          const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+          contentfulGraphQLResponse.speakersCollection!.items = [
+            {
+              ...contentfulGraphQLResponse.speakersCollection!.items[0]!,
+              ...overrides,
+            },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            events: contentfulGraphQLResponse,
+          });
+          const result = await eventDataProvider.fetchById(eventId);
+          return result!.speakers;
+        };
+
+        test('Should return a project speaker with their project role', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: speakerProject(),
+          });
+
+          expect(speakers).toEqual([
+            {
+              id: 'event-speaker-id-3',
+              project: {
+                id: 'project-id-1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+              user: expectedUser,
+              role: 'Independent Project - Lead',
+              preliminaryDataShared: true,
+            },
+          ]);
+        });
+
+        test('Should return the speaker under both the project and the team when both are set', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              project: expect.objectContaining({ id: 'project-id-1' }),
+              role: 'Independent Project - Lead',
+            }),
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              team: expect.objectContaining({ id: 'team-id-3' }),
+              role: 'Lead PI (Core Leadership)',
+            }),
+          ]);
+        });
+
+        test('Should fall back to the plain user when they have no role in the project', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: speakerProject([
+              { userId: 'another-user', role: 'Independent Project - Lead' },
+              { userId: 'user-id-3', role: null },
+            ]),
+          });
+
+          expect(speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should fall back to the plain user when project members are not fetched', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: { ...speakerProject(), membersCollection: undefined },
+          });
+
+          expect(speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should only list the project speaker when the user has no role in the team', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+            team: {
+              sys: { id: 'team-without-user' },
+              displayName: 'Other Team',
+              inactiveSince: null,
+            },
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              id: 'event-speaker-id-3',
+              project: expect.objectContaining({ id: 'project-id-1' }),
+            }),
+          ]);
+        });
+
+        test('Should only list the team speaker when the user has no role in the project', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject([]),
+          });
+
+          expect(speakers).toEqual([
+            expect.objectContaining({
+              team: expect.objectContaining({ id: 'team-id-3' }),
+              user: expectedUser,
+            }),
+          ]);
+        });
+
+        test('Should keep a project-only speaker in the events list', async () => {
+          const contentfulGraphQLResponse =
+            getContentfulGraphqlEventsResponse();
+          const event = contentfulGraphQLResponse.eventsCollection!.items[0]!;
+          event.speakersCollection!.items = [
+            {
+              ...getContentfulGraphqlEvent().speakersCollection!.items[0]!,
+              team: null,
+              project: { ...speakerProject(), membersCollection: undefined },
+            },
+          ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await eventDataProvider.fetch({});
+
+          expect(result.items[0]!.speakers).toEqual([{ user: expectedUser }]);
+        });
+
+        test('Should leave the project type undefined when it is not a known type', async () => {
+          const speakers = await fetchWithSpeaker({
+            team: null,
+            project: { ...speakerProject(), projectType: 'Unknown' },
+          });
+
+          expect(speakers[0]).toMatchObject({
+            project: { id: 'project-id-1', projectType: undefined },
+          });
+        });
+
+        test('Should return the team and project an external speaker represents', async () => {
+          const speakers = await fetchWithSpeaker({
+            project: speakerProject(),
+            user: { __typename: 'ExternalAuthors', name: 'Jane Doe' },
+          });
+
+          expect(speakers).toEqual([
+            {
+              id: 'event-speaker-id-3',
+              externalUser: { name: 'Jane Doe' },
+              team: {
+                id: 'team-id-3',
+                displayName: 'The team three',
+                inactiveSince: '2022-10-24T11:00:00Z',
+              },
+              project: {
+                id: 'project-id-1',
+                title: 'Project One',
+                projectType: 'Trainee Project',
+              },
+            },
+          ]);
+        });
       });
 
       test('Should return only the team when speaker of type user does not belong to this team', async () => {
@@ -1981,6 +2248,248 @@ describe('Events Contentful Data Provider', () => {
         expect(patchAndPublish).not.toHaveBeenCalled();
       });
     });
+
+    describe('Unlinking speakers', () => {
+      const speakerLink = (id: string) => ({
+        sys: { type: 'Link', linkType: 'Entry', id },
+      });
+      const entityLink = (id: string) => ({ sys: { id } });
+      const graphqlSpeaker = (fields: Record<string, unknown>) => ({
+        events: {
+          sys: { publishedVersion: 2 },
+          speakersCollection: {
+            items: [{ sys: { id: 'speaker-1' }, ...fields }],
+          },
+        },
+      });
+      const mockEventWithSpeaker = (fields: Record<string, unknown>) => {
+        const eventEntry = getEntry(
+          { speakers: { 'en-US': [speakerLink('speaker-1')] } },
+          { id: '123' },
+        );
+        const speakerEntry = getEntry(fields, { id: 'speaker-1' });
+        speakerEntry.patch = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.publish = jest.fn().mockResolvedValue(speakerEntry);
+        when(environmentMock.getEntry)
+          .calledWith('123')
+          .mockResolvedValue(eventEntry);
+        when(environmentMock.getEntry)
+          .calledWith('speaker-1')
+          .mockResolvedValue(speakerEntry);
+        return { eventEntry, speakerEntry };
+      };
+
+      test('removes only the requested link field and keeps the speaker on the event', async () => {
+        const { eventEntry, speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+          project: { 'en-US': entityLink('project-1') },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          graphqlSpeaker({ team: { sys: { id: 'team-1' } }, project: null }),
+        );
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'project' }],
+        });
+
+        expect(speakerEntry.patch).toHaveBeenCalledWith([
+          { op: 'remove', path: '/fields/project' },
+        ]);
+        expect(speakerEntry.publish).toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        expect(eventEntry.patch).not.toHaveBeenCalled();
+      });
+
+      test('waits until the GraphQL API no longer returns the link', async () => {
+        mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+          project: { 'en-US': entityLink('project-1') },
+        });
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(
+            graphqlSpeaker({ team: { sys: { id: 'team-1' } } }),
+          )
+          .mockResolvedValueOnce(graphqlSpeaker({ team: null }));
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
+      }, 10_000);
+
+      test('deletes a speaker that is being removed instead of unlinking it', async () => {
+        const { eventEntry, speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
+        speakerEntry.isPublished = jest.fn(() => true);
+        speakerEntry.unpublish = jest.fn().mockResolvedValue(speakerEntry);
+        speakerEntry.delete = jest.fn().mockResolvedValue(undefined);
+        mockPollingConsistency();
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToRemove: ['speaker-1'],
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(speakerEntry.delete).toHaveBeenCalled();
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledTimes(1);
+        expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+          speakers: [],
+        });
+      });
+
+      test('skips speakers that are not on the event or already unlinked', async () => {
+        const { speakerEntry } = mockEventWithSpeaker({
+          team: { 'en-US': entityLink('team-1') },
+        });
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [
+            { speakerId: 'speaker-1', field: 'project' },
+            { speakerId: 'speaker-9', field: 'team' },
+          ],
+        });
+
+        expect(speakerEntry.patch).not.toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
+      });
+
+      test('warns and continues when a speaker entry cannot be fetched', async () => {
+        const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+        const eventEntry = getEntry(
+          { speakers: { 'en-US': [speakerLink('speaker-1')] } },
+          { id: '123' },
+        );
+        when(environmentMock.getEntry)
+          .calledWith('123')
+          .mockResolvedValue(eventEntry);
+        when(environmentMock.getEntry)
+          .calledWith('speaker-1')
+          .mockRejectedValue(new Error('gone'));
+
+        await eventDataProvider.updateEventDetails('123', {
+          speakersToUnlink: [{ speakerId: 'speaker-1', field: 'team' }],
+        });
+
+        expect(warnSpy).toHaveBeenCalled();
+        expect(patchAndPublish).not.toHaveBeenCalled();
+        warnSpy.mockRestore();
+      });
+
+      describe('when a speaker entry write fails', () => {
+        const mockEventWithTwoSpeakers = (failing: 'unlink' | 'findings') => {
+          const eventEntry = getEntry(
+            {
+              speakers: {
+                'en-US': [speakerLink('speaker-1'), speakerLink('speaker-2')],
+              },
+            },
+            { id: '123' },
+          );
+          const removedEntry = getEntry({}, { id: 'speaker-1' });
+          removedEntry.isPublished = jest.fn(() => true);
+          removedEntry.unpublish = jest.fn().mockResolvedValue(removedEntry);
+          removedEntry.delete = jest.fn().mockResolvedValue(undefined);
+          const keptEntry = getEntry(
+            {
+              team: { 'en-US': entityLink('team-1') },
+              project: { 'en-US': entityLink('project-1') },
+              preliminaryDataShared: { 'en-US': false },
+            },
+            { id: 'speaker-2' },
+          );
+          when(environmentMock.getEntry)
+            .calledWith('123')
+            .mockResolvedValue(eventEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-1')
+            .mockResolvedValue(removedEntry);
+          when(environmentMock.getEntry)
+            .calledWith('speaker-2')
+            .mockResolvedValue(keptEntry);
+          if (failing === 'unlink') {
+            keptEntry.patch = jest
+              .fn()
+              .mockRejectedValue(new Error('Version mismatch'));
+          } else {
+            (patchAndPublish as jest.Mock).mockRejectedValueOnce(
+              new Error('Version mismatch'),
+            );
+          }
+          return { removedEntry };
+        };
+
+        test('does not delete removed speakers when unlinking another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers('unlink');
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              speakersToUnlink: [{ speakerId: 'speaker-2', field: 'project' }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+
+        test('does not delete removed speakers when updating the findings of another speaker fails', async () => {
+          const { removedEntry } = mockEventWithTwoSpeakers('findings');
+
+          await expect(
+            eventDataProvider.updateEventDetails('123', {
+              speakersToRemove: ['speaker-1'],
+              preliminaryDataShared: [{ speakerId: 'speaker-2', shared: true }],
+            }),
+          ).rejects.toThrow('Version mismatch');
+
+          expect(removedEntry.unpublish).not.toHaveBeenCalled();
+          expect(removedEntry.delete).not.toHaveBeenCalled();
+        });
+      });
+    });
+  });
+
+  describe('areSpeakersUnlinked', () => {
+    const response = (items: (Record<string, unknown> | null)[]) =>
+      ({
+        events: { speakersCollection: { items } },
+      }) as unknown as FetchEventByIdQuery;
+
+    test('is synced once the unlinked field is empty', () => {
+      expect(
+        areSpeakersUnlinked(
+          response([{ sys: { id: 's1' }, team: { sys: {} }, project: null }]),
+          [{ speakerId: 's1', field: 'project' }],
+        ),
+      ).toBe(true);
+    });
+
+    test('is not synced while the field is still linked', () => {
+      expect(
+        areSpeakersUnlinked(
+          response([{ sys: { id: 's1' }, project: { sys: {} } }]),
+          [{ speakerId: 's1', field: 'project' }],
+        ),
+      ).toBe(false);
+    });
+
+    test('ignores speakers missing from the response and null items', () => {
+      expect(
+        areSpeakersUnlinked(response([null]), [
+          { speakerId: 's1', field: 'team' },
+        ]),
+      ).toBe(true);
+      expect(
+        areSpeakersUnlinked(
+          { events: null } as unknown as FetchEventByIdQuery,
+          [{ speakerId: 's1', field: 'team' }],
+        ),
+      ).toBe(true);
+    });
   });
 
   describe('areSpeakersPreliminaryDataSharedSynced', () => {
@@ -2043,7 +2552,15 @@ describe('Events Contentful Data Provider', () => {
   });
 
   describe('Create method', () => {
+    afterEach(() => {
+      contentfulGraphqlClientMock.request.mockReset();
+      environmentMock.createEntry.mockReset();
+    });
+
     test('Should create an event', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendars: null,
+      });
       const eventEntryMock = getEntry({
         sys: {
           id: 'event-1',
@@ -2100,17 +2617,500 @@ describe('Events Contentful Data Provider', () => {
         },
       });
     });
+
+    test('creates an attendance entry for each team that is a member of the calendar interest group when the event ends', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendars: {
+          linkedFrom: {
+            interestGroupsCollection: {
+              items: [
+                {
+                  teamsCollection: {
+                    items: [
+                      {
+                        startDate: '2020-01-01T00:00:00.000Z',
+                        endDate: null,
+                        team: { sys: { id: 'team-1' } },
+                      },
+                      {
+                        startDate: '2020-01-01T00:00:00.000Z',
+                        endDate: '2021-01-01T00:00:00.000Z',
+                        team: { sys: { id: 'team-2' } },
+                      },
+                      {
+                        startDate: null,
+                        endDate: null,
+                        team: { sys: { id: 'team-3' } },
+                      },
+                      {
+                        startDate: '2020-01-01T00:00:00.000Z',
+                        endDate: null,
+                        team: null,
+                      },
+                      null,
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+      const eventEntryMock = getEntry({}, { id: 'event-1' });
+      eventEntryMock.publish = jest.fn().mockResolvedValueOnce(eventEntryMock);
+      const attendanceEntryMock = getEntry({}, { id: 'attendance-1' });
+      attendanceEntryMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(attendanceEntryMock);
+      environmentMock.createEntry.mockImplementation(async (contentType) =>
+        contentType === 'attendance' ? attendanceEntryMock : eventEntryMock,
+      );
+
+      await eventDataProvider.create(getEventCreateDataObject());
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
+        { id: 'calendar-id' },
+      );
+      expect(environmentMock.createEntry).toHaveBeenCalledTimes(2);
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('attendance', {
+        fields: {
+          team: {
+            'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'team-1' } },
+          },
+          attended: { 'en-US': false },
+        },
+      });
+      expect(attendanceEntryMock.publish).toHaveBeenCalled();
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'events',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            attendance: {
+              'en-US': [
+                {
+                  sys: { type: 'Link', linkType: 'Entry', id: 'attendance-1' },
+                },
+              ],
+            },
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('fetchUpcomingEventsByCalendarId', () => {
+    const now = new Date('2025-10-01T00:00:00.000Z');
+    const getUpcomingEventItem = (id: string) => ({
+      sys: { id },
+      endDate: '2025-10-02T10:00:00.000Z',
+      attendanceCollection: {
+        items: [
+          {
+            sys: { id: `${id}-attendance-1` },
+            attended: null,
+            team: { sys: { id: 'team-1' } },
+          },
+          {
+            sys: { id: `${id}-attendance-2` },
+            attended: true,
+            team: null,
+          },
+          null,
+        ],
+      },
+    });
+
+    afterEach(() => {
+      contentfulGraphqlClientMock.request.mockReset();
+    });
+
+    test('returns the events that have not ended with their attendance', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        eventsCollection: {
+          total: 1,
+          items: [getUpcomingEventItem('event-1'), null],
+        },
+      });
+
+      const result = await eventDataProvider.fetchUpcomingEventsByCalendarId(
+        'calendar-1',
+        now,
+      );
+
+      expect(result).toEqual([
+        {
+          id: 'event-1',
+          endDate: '2025-10-02T10:00:00.000Z',
+          attendance: [
+            { id: 'event-1-attendance-1', teamId: 'team-1', attended: false },
+          ],
+        },
+      ]);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID,
+        {
+          calendarId: 'calendar-1',
+          now: now.toISOString(),
+          limit: 50,
+          skip: 0,
+        },
+      );
+    });
+
+    test('fetches all pages', async () => {
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce({
+          eventsCollection: {
+            total: 51,
+            items: [getUpcomingEventItem('event-1')],
+          },
+        })
+        .mockResolvedValueOnce({
+          eventsCollection: {
+            total: 51,
+            items: [getUpcomingEventItem('event-2')],
+          },
+        });
+
+      const result = await eventDataProvider.fetchUpcomingEventsByCalendarId(
+        'calendar-1',
+        now,
+      );
+
+      expect(result.map(({ id }) => id)).toEqual(['event-1', 'event-2']);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenLastCalledWith(
+        FETCH_UPCOMING_EVENTS_BY_CALENDAR_ID,
+        expect.objectContaining({ skip: 50 }),
+      );
+    });
+
+    test('returns an empty list when there are no events', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        eventsCollection: null,
+      });
+
+      expect(
+        await eventDataProvider.fetchUpcomingEventsByCalendarId(
+          'calendar-1',
+          now,
+        ),
+      ).toEqual([]);
+    });
+  });
+
+  describe('fetchInterestGroupMembershipsByCalendarId', () => {
+    afterEach(() => {
+      contentfulGraphqlClientMock.request.mockReset();
+    });
+
+    test('returns the memberships of the calendar interest group', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendars: {
+          linkedFrom: {
+            interestGroupsCollection: {
+              items: [
+                {
+                  teamsCollection: {
+                    items: [
+                      {
+                        startDate: '2020-01-01T00:00:00.000Z',
+                        endDate: '2021-01-01T00:00:00.000Z',
+                        team: {
+                          sys: { id: 'team-1' },
+                          inactiveSince: '2020-06-01T00:00:00.000Z',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      expect(
+        await eventDataProvider.fetchInterestGroupMembershipsByCalendarId(
+          'calendar-1',
+        ),
+      ).toEqual([
+        {
+          teamId: 'team-1',
+          startDate: '2020-01-01T00:00:00.000Z',
+          endDate: '2021-01-01T00:00:00.000Z',
+          inactiveSince: '2020-06-01T00:00:00.000Z',
+        },
+      ]);
+    });
+
+    test('returns an empty list when the calendar has no interest group', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendars: { linkedFrom: { interestGroupsCollection: { items: [] } } },
+      });
+
+      expect(
+        await eventDataProvider.fetchInterestGroupMembershipsByCalendarId(
+          'calendar-1',
+        ),
+      ).toEqual([]);
+    });
+  });
+
+  describe('Update attendance', () => {
+    const futureEndDate = '2030-01-01T10:00:00.000Z';
+    const getLink = (id: string) => ({
+      sys: { type: 'Link', linkType: 'Entry', id },
+    });
+    const getEventEntry = (fields = {}) =>
+      getEntry(
+        {
+          endDate: { 'en-US': futureEndDate },
+          calendar: { 'en-US': getLink('calendar-1') },
+          attendance: { 'en-US': [getLink('attendance-1')] },
+          ...fields,
+        },
+        { id: 'event-1' },
+      );
+    // responds to the interest group memberships query with the given teams
+    // and to the event query with the event's current attendance (team-1)
+    const mockMemberships = (teamIds: string[]) =>
+      contentfulGraphqlClientMock.request.mockImplementation(((
+        query: unknown,
+      ) =>
+        Promise.resolve(
+          query === FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID
+            ? {
+                calendars: {
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      items: [
+                        {
+                          teamsCollection: {
+                            items: teamIds.map((id) => ({
+                              startDate: '2020-01-01T00:00:00.000Z',
+                              endDate: null,
+                              team: { sys: { id } },
+                            })),
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              }
+            : {
+                events: {
+                  sys: { publishedVersion: 2 },
+                  attendanceCollection: {
+                    items: [
+                      {
+                        sys: { id: 'attendance-1' },
+                        attended: false,
+                        team: { sys: { id: 'team-1' }, displayName: 'Team 1' },
+                      },
+                    ],
+                  },
+                },
+              },
+        )) as unknown as Parameters<
+        typeof contentfulGraphqlClientMock.request.mockImplementation
+      >[0]);
+
+    let eventEntry: Entry;
+    let attendanceEntry: Entry;
+
+    beforeEach(() => {
+      (
+        patchAndPublish as jest.MockedFunction<typeof patchAndPublish>
+      ).mockResolvedValue({ sys: { publishedVersion: 2 } } as Entry);
+
+      eventEntry = getEventEntry();
+      attendanceEntry = getEntry(
+        { attended: { 'en-US': false }, team: { 'en-US': getLink('team-1') } },
+        { id: 'attendance-1' },
+      );
+      (attendanceEntry.isPublished as jest.Mock).mockReturnValue(true);
+      when(environmentMock.getEntry)
+        .calledWith('event-1')
+        .mockResolvedValue(eventEntry);
+      when(environmentMock.getEntry)
+        .calledWith('attendance-1')
+        .mockResolvedValue(attendanceEntry);
+
+      const newAttendanceEntry = getEntry({}, { id: 'attendance-new' });
+      newAttendanceEntry.publish = jest
+        .fn()
+        .mockResolvedValue(getEntry({}, { id: 'attendance-new' }));
+      environmentMock.createEntry.mockResolvedValue(newAttendanceEntry);
+    });
+
+    afterEach(() => {
+      contentfulGraphqlClientMock.request.mockReset();
+      environmentMock.getEntry.mockReset();
+      environmentMock.createEntry.mockReset();
+    });
+
+    test('recalculates the attendance when the end date of an event that has not ended changes', async () => {
+      mockMemberships(['team-1', 'team-2']);
+
+      await eventDataProvider.update('event-1', {
+        endDate: '2030-02-01T10:00:00.000Z',
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('attendance', {
+        fields: {
+          team: { 'en-US': getLink('team-2') },
+          attended: { 'en-US': false },
+        },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        endDate: '2030-02-01T10:00:00.000Z',
+        attendance: [getLink('attendance-1'), getLink('attendance-new')],
+      });
+    });
+
+    test('recalculates the attendance with the new calendar when the calendar changes', async () => {
+      mockMemberships([]);
+
+      await eventDataProvider.update('event-1', { calendar: 'calendar-2' });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
+        { id: 'calendar-2' },
+      );
+      expect(attendanceEntry.unpublish).toHaveBeenCalled();
+      expect(attendanceEntry.delete).toHaveBeenCalled();
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        calendar: getLink('calendar-2'),
+        attendance: [],
+      });
+    });
+
+    test('does not change the attendance of an event that had already ended', async () => {
+      eventEntry = getEventEntry({
+        endDate: { 'en-US': '2020-01-01T10:00:00.000Z' },
+      });
+      when(environmentMock.getEntry)
+        .calledWith('event-1')
+        .mockResolvedValue(eventEntry);
+      mockMemberships(['team-2']);
+
+      await eventDataProvider.update('event-1', { endDate: futureEndDate });
+
+      expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalledWith(
+        FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
+        expect.anything(),
+      );
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        endDate: futureEndDate,
+      });
+    });
+
+    test('does not change the attendance when the end date and calendar are unchanged', async () => {
+      mockMemberships(['team-2']);
+
+      await eventDataProvider.update('event-1', {
+        title: 'New title',
+        endDate: '2030-01-01T10:00:00Z',
+        calendar: 'calendar-1',
+      });
+
+      expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalledWith(
+        FETCH_INTEREST_GROUP_TEAMS_BY_CALENDAR_ID,
+        expect.anything(),
+      );
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        title: 'New title',
+        endDate: '2030-01-01T10:00:00Z',
+        calendar: getLink('calendar-1'),
+      });
+    });
+
+    test('does not change the attendance when it already matches the interest group teams', async () => {
+      mockMemberships(['team-1']);
+
+      await eventDataProvider.update('event-1', {
+        endDate: '2030-02-01T10:00:00.000Z',
+      });
+
+      expect(environmentMock.createEntry).not.toHaveBeenCalled();
+      expect(patchAndPublish).toHaveBeenCalledWith(eventEntry, {
+        endDate: '2030-02-01T10:00:00.000Z',
+      });
+    });
+  });
+
+  describe('Events without a calendar', () => {
+    const alerts = { error: jest.fn() };
+    const alertingDataProvider = new EventContentfulDataProvider(
+      contentfulGraphqlClientMock,
+      contentfulRestClientMock,
+      alerts,
+    );
+    const expectedMessage =
+      'Event (event-without-calendar) skipped because it has no published calendar';
+
+    const getEventWithoutCalendar = () => {
+      const event = getContentfulGraphqlEvent(true);
+      event.sys.id = 'event-without-calendar';
+      event.calendar = null;
+      return event;
+    };
+
+    test('Should log a warning without alerting for each event skipped from a list', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
+      contentfulGraphQLResponse.eventsCollection!.items.push(
+        getEventWithoutCalendar(),
+      );
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await alertingDataProvider.fetch({});
+
+      expect(result.items).toEqual(getContentfulListEventDataObject().items);
+      expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
+      expect(loggerWarnSpy).toHaveBeenCalledWith(expectedMessage);
+      expect(alerts.error).not.toHaveBeenCalled();
+    });
+
+    test('Should log and alert when fetching a skipped event by id', async () => {
+      const loggerErrorSpy = jest.spyOn(logger, 'error');
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        events: getEventWithoutCalendar(),
+      });
+
+      const result = await alertingDataProvider.fetchById(
+        'event-without-calendar',
+      );
+
+      expect(result).toBeNull();
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expectedMessage);
+      expect(alerts.error).toHaveBeenCalledWith(new Error(expectedMessage));
+    });
+
+    test('Should not log when every event in a list has a calendar', async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulGraphqlEventsResponse(),
+      );
+
+      await alertingDataProvider.fetch({});
+
+      expect(loggerWarnSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('parseGraphQLEvent', () => {
-    test(`throws when provided event doesn't have a calendar`, () => {
+    test(`returns null when provided event doesn't have a calendar`, () => {
       const graphqlEvent = getContentfulGraphqlEvent();
       graphqlEvent.sys.id = 'example';
       graphqlEvent.calendar = null;
 
-      expect(() => parseGraphQLEvent(graphqlEvent)).toThrowError(
-        `Event (example) doesn't have a calendar`,
-      );
+      expect(parseGraphQLEvent(graphqlEvent)).toBeNull();
     });
 
     test('throws when provided an invalid event status', () => {
@@ -2130,7 +3130,7 @@ describe('Events Contentful Data Provider', () => {
       graphqlEvent.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
         null;
 
-      expect(parseGraphQLEvent(graphqlEvent).relatedResearch[0]).toEqual(
+      expect(parseGraphQLEvent(graphqlEvent)?.relatedResearch[0]).toEqual(
         expect.objectContaining({ workingGroups: [] }),
       );
     });
@@ -2138,10 +3138,10 @@ describe('Events Contentful Data Provider', () => {
     test('parses the recurring flag and defaults it to false when null', () => {
       const graphqlEvent = getContentfulGraphqlEvent();
       graphqlEvent.recurring = true;
-      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(true);
+      expect(parseGraphQLEvent(graphqlEvent)?.recurring).toBe(true);
 
       graphqlEvent.recurring = null;
-      expect(parseGraphQLEvent(graphqlEvent).recurring).toBe(false);
+      expect(parseGraphQLEvent(graphqlEvent)?.recurring).toBe(false);
     });
   });
 });

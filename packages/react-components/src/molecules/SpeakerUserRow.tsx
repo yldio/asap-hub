@@ -2,14 +2,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Avatar, Button, Link, Pill, SpeakerRoleBadge, Switch } from '../atoms';
-import {
-  lead,
-  neutral1000,
-  silver,
-  steel,
-  success100,
-  success500,
-} from '../colors';
+import { colour } from '../colors';
 import { statePillStyles } from '../atoms/SpeakerRoleBadge';
 import {
   alumniBadgeIcon,
@@ -97,8 +90,10 @@ export const findingsPillStyles = (shared: boolean) =>
     height: pillEm(24),
     padding: `0 ${pillEm(8)} 0 ${pillEm(4)}`,
     borderRadius: pillEm(24),
-    backgroundColor: shared ? success100.rgb : silver.rgb,
-    color: shared ? success500.rgb : lead.rgb,
+    backgroundColor: shared
+      ? colour.background.success
+      : colour.background.tertiary,
+    color: shared ? colour.foreground.success : colour.foreground.tertiary,
     fontSize: rem(findingsPillFontSize),
     lineHeight: 16 / findingsPillFontSize,
     whiteSpace: 'nowrap',
@@ -148,21 +143,20 @@ export const avatar24Styles = css({
   height: rem(24),
 });
 
-const nameStyles = css({
+const nameTextStyles = {
   display: 'block',
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    whiteSpace: 'nowrap',
-    fontSize: rem(14),
-    lineHeight: 16 / 14,
-    fontWeight: 400,
-  },
-});
-
-const externalNameStyles = css({
-  display: 'block',
-  color: neutral1000.rgb,
+  fontSize: rem(16),
+  fontWeight: 400,
+  lineHeight: 24 / 16,
   [`@media (max-width: ${mobileScreen.max}px)`]: { whiteSpace: 'nowrap' },
-});
+} as const;
+
+const nameStyles = css(nameTextStyles);
+
+const externalNameStyles = css([
+  nameTextStyles,
+  { color: colour.foreground.primary },
+]);
 
 export const placeholderAvatarStyles = css({
   display: 'inline-flex',
@@ -262,7 +256,7 @@ const SpeakerUserRow: React.FC<SpeakerUserRowProps> = ({
                   onClick={() => onToggleShared(!preliminaryFindingsShared)}
                 />
               ) : (
-                findingsIcon(preliminaryFindingsShared, steel.rgb)
+                findingsIcon(preliminaryFindingsShared, colour.neutral[100])
               )}
             </span>
           )}

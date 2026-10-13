@@ -33,13 +33,13 @@ it('loads the next grant document after one that failed', async () => {
   jest
     .mocked(getDocument)
     .mockImplementationOnce(() => loadingTask(Promise.reject(new Error())))
-    .mockImplementationOnce(() => loadingTask(Promise.resolve({ numPages: 2 })));
+    .mockImplementationOnce(() =>
+      loadingTask(Promise.resolve({ numPages: 2 })),
+    );
   const { rerender } = render(
     <GrantDocumentPdfCard link="https://example.com/original.pdf" />,
   );
-  expect(
-    await screen.findByText('Unable to display this PDF.'),
-  ).toBeVisible();
+  expect(await screen.findByText('Unable to display this PDF.')).toBeVisible();
 
   rerender(<GrantDocumentPdfCard link="https://example.com/supplement.pdf" />);
   expect(await screen.findByText('/ 2')).toBeVisible();

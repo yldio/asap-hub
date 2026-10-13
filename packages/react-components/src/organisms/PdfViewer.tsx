@@ -124,8 +124,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
           top:
             matchBox.top -
             containerBox.top -
-            (parseFloat(getComputedStyle(match.element).scrollMarginTop) ||
-              0),
+            (parseFloat(getComputedStyle(match.element).scrollMarginTop) || 0),
           left:
             matchBox.left +
             matchBox.width / 2 -

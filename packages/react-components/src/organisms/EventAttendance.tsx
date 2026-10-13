@@ -55,10 +55,23 @@ const teamCellStyles = css([
 const teamInnerStyles = css({
   display: 'flex',
   alignItems: 'center',
-  gap: rem(8),
+  fontSize: rem(16),
+  lineHeight: 24 / 16,
+  // `em` against the 16px team name, since `rem()` assumes 17px.
+  gap: `${8 / 16}em`,
 });
 
-const attendanceColStyles = css({ width: '1%' });
+// Pixels, not `rem`: `rem` emits `em`, which a `<col>` resolves against the
+// table's font size.
+const attendanceColStyles = css({
+  width: '204px',
+  [`@media (max-width: ${mobileScreen.max}px)`]: { width: '1%' },
+});
+
+const attendanceCellStyles = css([
+  statusCellStyles,
+  { [`@media (max-width: ${mobileScreen.max}px)`]: { textAlign: 'center' } },
+]);
 
 const metricStyles = css({ marginTop: rem(24) });
 
@@ -82,8 +95,8 @@ const sectionHeaderCellStyles = css({
 });
 
 // A ratio, not `rem`: line-height in `em` resolves against the element's own
-// font size, so `rem(16)` here would render 16/17 x 14px.
-const sectionLineStyles = css({ fontSize: rem(14), lineHeight: 16 / 14 });
+// font size, so `rem(24)` here would render 24/17 x 16px.
+const sectionLineStyles = css({ fontSize: rem(16), lineHeight: 24 / 16 });
 
 // Declared per line: a `> span` rule on the cell would outrank the separator's
 // own class and bring the bullet back on mobile.
@@ -118,7 +131,7 @@ const sectionCountStyles = css([
 
 const sectionHelperStyles = css([
   sectionLineStyles,
-  { margin: `${rem(8)} 0 0`, color: colour.foreground.quaternary },
+  { margin: '4px 0 0', color: colour.foreground.quaternary },
 ]);
 
 const showMoreCellStyles = css({
@@ -137,9 +150,6 @@ export type EventAttendanceTeam = {
   isFromInterestGroup?: boolean;
 };
 
-// Attended teams first, then active before inactive, then by name in natural
-// order (numeric collation, so "Team 2" precedes "Team 10"), with teamId as a
-// stable tiebreaker so equal names order deterministically.
 export const compareAttendanceTeams = (
   a: EventAttendanceTeam,
   b: EventAttendanceTeam,
@@ -192,7 +202,7 @@ const TeamRows: React.FC<{
             {team.isTeamInactive && <InactiveBadgeIcon />}
           </span>
         </td>
-        <td css={statusCellStyles}>
+        <td css={attendanceCellStyles}>
           <span
             css={statusIconStyles}
             role="img"
@@ -211,8 +221,6 @@ const TeamRows: React.FC<{
 );
 
 const AttendanceSection: React.FC<{
-  // Dropped when the event has no hosting group: with a single section there is
-  // nothing to tell apart, so the count stands on its own.
   title?: string;
   teams: EventAttendanceTeam[];
   helperText?: string;

@@ -1,4 +1,5 @@
 import { PDFViewer } from '@embedpdf/react-pdf-viewer';
+import type { PluginRegistry } from '@embedpdf/react-pdf-viewer';
 import pdfiumPath from '@embedpdf/snippet/dist/pdfium.wasm?url';
 import { css } from '@emotion/react';
 
@@ -24,6 +25,100 @@ const disabledCategories = [
   'history',
   'panel-comment',
 ];
+
+type CommandContext = {
+  documentId: string;
+  state: {
+    plugins: {
+      scroll: {
+        documents: Record<string, { currentPage: number; totalPages: number }>;
+      };
+      zoom: { documents: Record<string, { currentZoomLevel: number }> };
+    };
+  };
+};
+
+const zoomLevelItemId = 'zoom-level';
+const pageSettingsItemId = 'page-settings-button';
+
+const commandButton = (
+  id: string,
+  commandId: string,
+  variant: 'icon' | 'text' = 'icon',
+) => ({ type: 'command-button', id, commandId, variant });
+
+const toolbarItems = [
+  commandButton('sidebar', 'panel:toggle-sidebar'),
+  commandButton(pageSettingsItemId, 'page:settings'),
+  { type: 'spacer', id: 'spacer-start', flex: true },
+  commandButton('page-number', 'toolbar:page-number', 'text'),
+  { type: 'divider', id: 'divider-page', orientation: 'vertical' },
+  commandButton('zoom-out', 'zoom:out'),
+  commandButton(zoomLevelItemId, 'toolbar:zoom-level', 'text'),
+  commandButton('zoom-in', 'zoom:in'),
+  { type: 'divider', id: 'divider-zoom', orientation: 'vertical' },
+  commandButton('pan', 'pan:toggle'),
+  commandButton('pointer', 'pointer:toggle'),
+  { type: 'spacer', id: 'spacer-end', flex: true },
+  commandButton('search', 'panel:toggle-search'),
+];
+
+const showBrowserToolbar = (registry: PluginRegistry) => {
+  const capability = (id: string) => registry.getPlugin(id)?.provides?.();
+  const commands = capability('commands');
+  const i18n = capability('i18n');
+  const ui = capability('ui');
+  const english = i18n?.getLocaleInfo('en');
+  if (!commands || !ui || !english) return;
+
+  commands.registerCommand({
+    id: 'toolbar:page-number',
+    labelKey: 'toolbar.pageNumber',
+    labelParams: ({ state, documentId }: CommandContext) => {
+      const scroll = state.plugins.scroll.documents[documentId];
+      return { page: scroll?.currentPage, pages: scroll?.totalPages };
+    },
+    visible: ({ state, documentId }: CommandContext) =>
+      Boolean(state.plugins.scroll.documents[documentId]?.totalPages),
+    action: () => undefined,
+  });
+  commands.registerCommand({
+    id: 'toolbar:zoom-level',
+    labelKey: 'toolbar.zoomLevel',
+    labelParams: ({ state, documentId }: CommandContext) => {
+      const zoom = state.plugins.zoom.documents[documentId];
+      return { level: Math.round((zoom?.currentZoomLevel ?? 1) * 100) };
+    },
+    action: ({ documentId }: CommandContext) =>
+      ui
+        .forDocument(documentId)
+        .toggleMenu('zoom-menu', 'toolbar:zoom-level', zoomLevelItemId),
+  });
+
+  const overlays = { ...ui.getSchema().overlays };
+  delete overlays['page-controls'];
+  ui.mergeSchema({
+    toolbars: {
+      'main-toolbar': {
+        items: toolbarItems,
+      },
+    },
+    overlays,
+  });
+
+  i18n.registerLocale({
+    ...english,
+    code: 'en-GB',
+    translations: {
+      ...english.translations,
+      toolbar: {
+        pageNumber: '{page} / {pages}',
+        zoomLevel: '{level}%',
+      },
+    },
+  });
+  i18n.setLocale('en-GB');
+};
 
 const regionStyles = css({
   position: 'absolute',
@@ -70,6 +165,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => (
         },
         disabledCategories,
       }}
+      onReady={showBrowserToolbar}
     />
   </div>
 );

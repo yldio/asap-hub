@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { lazy, Suspense } from 'react';
 
 import { Card, Headline2 } from '../atoms';
+import { useInView } from '../hooks';
 import { Loading } from '../molecules';
 import { rem } from '../pixels';
 
@@ -27,17 +28,23 @@ type GrantDocumentPdfCardProps = {
 
 const GrantDocumentPdfCard: React.FC<GrantDocumentPdfCardProps> = ({
   link,
-}) => (
-  <Card overrideStyles={cardStyles}>
-    <Headline2 styleAsHeading={4} noMargin>
-      Grant Document PDF
-    </Headline2>
-    <div css={frameStyles}>
-      <Suspense fallback={<Loading />}>
-        <PdfViewer key={link} url={link} title="Grant Document PDF" />
-      </Suspense>
-    </div>
-  </Card>
-);
+}) => {
+  const [frameRef, inView] = useInView<HTMLDivElement>();
+
+  return (
+    <Card overrideStyles={cardStyles}>
+      <Headline2 styleAsHeading={4} noMargin>
+        Grant Document PDF
+      </Headline2>
+      <div ref={frameRef} css={frameStyles}>
+        {inView && (
+          <Suspense fallback={<Loading />}>
+            <PdfViewer key={link} url={link} title="Grant Document PDF" />
+          </Suspense>
+        )}
+      </div>
+    </Card>
+  );
+};
 
 export default GrantDocumentPdfCard;

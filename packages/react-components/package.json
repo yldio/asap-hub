@@ -48,6 +48,8 @@
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@babel/runtime-corejs3": "7.28.6",
+    "@embedpdf/react-pdf-viewer": "2.15.1",
+    "@embedpdf/snippet": "2.15.1",
     "@emotion/react": "11.11.1",
     "@emotion/serialize": "1.1.2",
     "@lexical/code": "0.18.0",

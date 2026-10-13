@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { PDFViewer } from '@embedpdf/react-pdf-viewer';
 import { act, render, screen } from '@testing-library/react';
 
@@ -69,4 +70,40 @@ it('starts a new viewer for the next grant document', async () => {
   expect(screen.getByRole('region', { name: 'Grant Document PDF' })).not.toBe(
     originalViewer,
   );
+});
+
+describe('when the viewer fails to start', () => {
+  mockConsoleError();
+
+  afterEach(() => {
+    jest.mocked(PDFViewer).mockImplementation(() => null);
+  });
+
+  it('shows a message in the card and tries again for the next grant document', async () => {
+    jest.mocked(PDFViewer).mockImplementation(() => {
+      throw new Error('PDFium failed to start');
+    });
+    const { rerender } = render(
+      <GrantDocumentPdfCard link="https://example.com/original.pdf" />,
+    );
+
+    expect(
+      await screen.findByText('Unable to display this PDF.'),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'Grant Document PDF' }),
+    ).toBeVisible();
+
+    jest.mocked(PDFViewer).mockImplementation(() => null);
+    rerender(
+      <GrantDocumentPdfCard link="https://example.com/supplement.pdf" />,
+    );
+
+    expect(
+      await screen.findByRole('region', { name: 'Grant Document PDF' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('Unable to display this PDF.'),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import { lazy, Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import { Card, Headline2 } from '../atoms';
+import { Card, Headline2, Paragraph } from '../atoms';
 import { useInView } from '../hooks';
 import { Loading } from '../molecules';
 import { rem } from '../pixels';
@@ -38,9 +39,18 @@ const GrantDocumentPdfCard: React.FC<GrantDocumentPdfCardProps> = ({
       </Headline2>
       <div ref={frameRef} css={frameStyles}>
         {inView && (
-          <Suspense fallback={<Loading />}>
-            <PdfViewer key={link} url={link} title="Grant Document PDF" />
-          </Suspense>
+          <ErrorBoundary
+            key={link}
+            fallback={
+              <Paragraph accent="tertiary">
+                Unable to display this PDF.
+              </Paragraph>
+            }
+          >
+            <Suspense fallback={<Loading />}>
+              <PdfViewer url={link} title="Grant Document PDF" />
+            </Suspense>
+          </ErrorBoundary>
         )}
       </div>
     </Card>

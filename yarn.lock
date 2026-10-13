@@ -1710,6 +1710,7 @@ __metadata:
     lexical: "npm:0.18.0"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
+    react-error-boundary: "npm:4.1.2"
     react-hook-form: "npm:7.53.2"
     react-router: "npm:7.13.0"
     react-select: "npm:5.8.0"

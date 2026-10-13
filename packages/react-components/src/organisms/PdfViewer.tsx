@@ -117,14 +117,15 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ url, title }) => {
     const scrollMatchIntoView =
       findController.scrollMatchIntoView.bind(findController);
     findController.scrollMatchIntoView = (match) => {
-      match.element.scrollIntoView = () => {
-        const matchBox = match.element.getBoundingClientRect();
+      const { element } = match;
+      element.scrollIntoView = () => {
+        const matchBox = element.getBoundingClientRect();
         const containerBox = container.getBoundingClientRect();
         container.scrollBy({
           top:
             matchBox.top -
             containerBox.top -
-            (parseFloat(getComputedStyle(match.element).scrollMarginTop) || 0),
+            (parseFloat(getComputedStyle(element).scrollMarginTop) || 0),
           left:
             matchBox.left +
             matchBox.width / 2 -

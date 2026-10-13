@@ -38,19 +38,12 @@ describe('makeReadableStreamsIterable', () => {
 
   it('keeps the native iteration where the browser has it', () => {
     const nativeIteration = jest.fn();
-    class IterableStream {}
-    Object.defineProperty(IterableStream.prototype, Symbol.asyncIterator, {
-      value: nativeIteration,
-    });
-    globalThis.ReadableStream =
-      IterableStream as unknown as typeof ReadableStream;
+    const prototype = { [Symbol.asyncIterator]: nativeIteration };
+    const IterableStream = { prototype } as unknown as typeof ReadableStream;
+    globalThis.ReadableStream = IterableStream;
 
     makeReadableStreamsIterable();
 
-    expect(
-      (IterableStream.prototype as AsyncIterable<unknown>)[
-        Symbol.asyncIterator
-      ],
-    ).toBe(nativeIteration);
+    expect(prototype[Symbol.asyncIterator]).toBe(nativeIteration);
   });
 });

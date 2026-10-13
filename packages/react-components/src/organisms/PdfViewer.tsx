@@ -63,6 +63,16 @@ const toolbarItems = [
   commandButton('search', 'panel:toggle-search'),
 ];
 
+const hiddenWhenNarrow = [
+  pageSettingsItemId,
+  'zoom-out',
+  'zoom-in',
+  'divider-zoom',
+  'pan',
+  'pointer',
+];
+const hiddenWhenNarrowest = ['sidebar'];
+
 const showBrowserToolbar = (registry: PluginRegistry) => {
   const capability = (id: string) => registry.getPlugin(id)?.provides?.();
   const commands = capability('commands');
@@ -101,6 +111,14 @@ const showBrowserToolbar = (registry: PluginRegistry) => {
     toolbars: {
       'main-toolbar': {
         items: toolbarItems,
+        responsive: {
+          breakpoints: {
+            narrow: { maxWidth: 520, hide: hiddenWhenNarrow },
+            wide: { minWidth: 521, show: hiddenWhenNarrow },
+            narrowest: { maxWidth: 260, hide: hiddenWhenNarrowest },
+            notNarrowest: { minWidth: 261, show: hiddenWhenNarrowest },
+          },
+        },
       },
     },
     overlays,
@@ -112,7 +130,7 @@ const showBrowserToolbar = (registry: PluginRegistry) => {
     translations: {
       ...english.translations,
       toolbar: {
-        pageNumber: '{page} / {pages}',
+        pageNumber: '{page}\u00a0/\u00a0{pages}',
         zoomLevel: '{level}%',
       },
     },

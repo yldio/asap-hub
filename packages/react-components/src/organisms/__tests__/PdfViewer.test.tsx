@@ -128,6 +128,27 @@ describe('PdfViewer', () => {
       );
     });
 
+    it('keeps the sidebar, page number, zoom level and search on narrow cards, and drops the sidebar on the narrowest', () => {
+      const { ui } = setUpToolbar();
+
+      const [[{ toolbars }]] = ui.mergeSchema.mock.calls;
+      const { narrow, wide, narrowest, notNarrowest } =
+        toolbars['main-toolbar'].responsive.breakpoints;
+      expect(narrow.hide).toEqual([
+        'page-settings-button',
+        'zoom-out',
+        'zoom-in',
+        'divider-zoom',
+        'pan',
+        'pointer',
+      ]);
+      expect(wide.show).toEqual(narrow.hide);
+      expect(wide.minWidth).toBe(narrow.maxWidth + 1);
+      expect(narrowest.hide).toEqual(['sidebar']);
+      expect(notNarrowest.show).toEqual(narrowest.hide);
+      expect(notNarrowest.minWidth).toBe(narrowest.maxWidth + 1);
+    });
+
     const state = (documents: object) => ({
       plugins: { scroll: { documents }, zoom: { documents } },
     });
@@ -144,7 +165,7 @@ describe('PdfViewer', () => {
         translations: {
           search: { placeholder: 'Search' },
           toolbar: {
-            pageNumber: '{page} / {pages}',
+            pageNumber: '{page}\u00a0/\u00a0{pages}',
             zoomLevel: '{level}%',
           },
         },

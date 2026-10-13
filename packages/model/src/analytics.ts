@@ -220,6 +220,7 @@ export type FilterAnalyticsOptions = {
   timeRange?: TimeRangeOption;
   documentCategory?: DocumentCategoryOption;
   outputType?: OutputTypeOption;
+  awardTypeId?: string;
 };
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
@@ -641,6 +642,30 @@ export type OSChampionOpensearchResponse = OSChampionResponse & {
 export type ListOSChampionResponse = ListResponse<OSChampionResponse>;
 export type ListOSChampionOpensearchResponse =
   ListResponse<OSChampionOpensearchResponse>;
+
+export type AwardTypeDataObject = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export type AwardsDataObject = {
+  /** `${teamId}_${awardType}_${timeRange}`, used as the OpenSearch _id */
+  id: string;
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  teamAwardsCount: number;
+  timeRange: TimeRangeOption;
+  awardType: string;
+  awardTypeName: string;
+  users: {
+    id: string;
+    name: string;
+    awardsCount: number;
+  }[];
+};
+export type ListAwardsDataObject = ListResponse<AwardsDataObject>;
 
 export type PreliminaryDataSharingDataObject = {
   teamId: string;

@@ -1,4 +1,5 @@
 import {
+  AwardTypeDataObject,
   FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
@@ -32,6 +33,10 @@ export type AnalyticsDataProvider = {
     options: FetchAnalyticsOptions,
   ): Promise<ListEngagementDataObject>;
   fetchOSChampion(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListOSChampionDataObject>;
+  fetchAwardTypes(): Promise<AwardTypeDataObject[]>;
+  fetchAwards(
     options: FetchAnalyticsOptions,
   ): Promise<ListOSChampionDataObject>;
   fetchPreliminaryDataSharing(

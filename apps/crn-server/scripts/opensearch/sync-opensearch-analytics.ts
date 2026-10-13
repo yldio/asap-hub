@@ -1,7 +1,10 @@
 import { mapLimit } from 'async';
 import {
+  AwardsDataObject,
+  AwardTypeDataObject,
   ListResponse,
   timeRanges,
+  TimeRangeOption,
   documentCategories,
   outputTypes,
   TeamCollaborationDataObject,
@@ -92,6 +95,68 @@ export const exportAnalyticsData = async <T extends Metrics>(
           ),
           items: osChampionRecords.flatMap((records) => records.items),
         } as ListResponse<MetricObject<T>>;
+      case 'awards': {
+        const awardTypes = await analyticsController.fetchAwardTypes();
+
+        const fetchAllPagesForAwardType = async (
+          awardType: AwardTypeDataObject,
+          timeRange: TimeRangeOption,
+        ): Promise<AwardsDataObject[]> => {
+          const items: AwardsDataObject[] = [];
+          let awardsPage = 0;
+          let awardsTotal = 0;
+
+          /* eslint-disable no-await-in-loop */
+          do {
+            const response = await analyticsController.fetchAwards({
+              take: PAGE_SIZE,
+              skip: awardsPage * PAGE_SIZE,
+              filter: { timeRange, awardTypeId: awardType.id },
+            });
+            awardsTotal = response.total;
+            awardsPage += 1;
+
+            if (response.items.length === 0) break;
+
+            items.push(
+              ...response.items.map((item) => ({
+                ...item,
+                id: `${item.teamId}_${awardType.slug}_${timeRange}`,
+                awardType: awardType.slug,
+                awardTypeName: awardType.name,
+              })),
+            );
+          } while (items.length < awardsTotal);
+          /* eslint-enable no-await-in-loop */
+
+          return items;
+        };
+
+        const awardCombos = awardTypes.flatMap((awardType) =>
+          timeRanges.map((timeRange) => ({ awardType, timeRange })),
+        );
+
+        console.log(
+          `Processing ${awardCombos.length} combinations (${awardTypes.length} awardTypes × ${timeRanges.length} timeRanges)`,
+        );
+
+        const awardResultArrays = await mapLimit(
+          awardCombos,
+          MAX_CONCURRENT_COMBINATIONS,
+          async (combination: (typeof awardCombos)[number]) =>
+            fetchAllPagesForAwardType(
+              combination.awardType,
+              combination.timeRange,
+            ),
+        );
+
+        const awardItems = awardResultArrays.flat();
+
+        return {
+          total: awardItems.length,
+          items: awardItems,
+        } as ListResponse<MetricObject<T>>;
+      }
       case 'preliminary-data-sharing':
         const preliminaryDataSharingTimeRanges = ['all', 'last-year'] as const;
         const preliminaryDataSharingRecords = await Promise.all(
@@ -595,7 +660,9 @@ export const exportMetricToOpensearch = async <T extends Metrics>(
       mapping: config.mapping,
     }),
     useDocumentIdAsOpensearchId:
-      metric === 'project-aims' || metric === 'project-milestones',
+      metric === 'project-aims' ||
+      metric === 'project-milestones' ||
+      metric === 'awards',
   });
 
   console.log(

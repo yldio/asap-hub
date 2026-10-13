@@ -3,6 +3,9 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FetchAttendanceQuery,
   FetchAttendanceQueryVariables,
+  FetchAwardsQuery,
+  FetchAwardsQueryVariables,
+  FetchAwardTypesQuery,
   FetchEngagementQuery,
   FetchEngagementQueryVariables,
   FetchOsChampionQuery,
@@ -23,6 +26,8 @@ import {
   FetchUserTotalResearchOutputsQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_ATTENDANCE,
+  FETCH_AWARD_TYPES,
+  FETCH_AWARDS,
   FETCH_ENGAGEMENT,
   FETCH_OS_CHAMPION,
   FETCH_PRELIMINARY_DATA_SHARING,
@@ -35,11 +40,13 @@ import {
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
+  AwardTypeDataObject,
   FetchAnalyticsOptions,
   FetchPaginationOptions,
   FilterAnalyticsOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListEngagementDataObject,
+  ListOSChampionDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
@@ -145,7 +152,47 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getOsChampionItems(teamsCollection, filter?.timeRange),
+      items: getAwardsItems(teamsCollection, filter?.timeRange),
+    };
+  }
+
+  async fetchAwardTypes(): Promise<AwardTypeDataObject[]> {
+    const { awardTypeCollection } =
+      await this.contentfulClient.request<FetchAwardTypesQuery>(
+        FETCH_AWARD_TYPES,
+      );
+
+    return cleanArray(awardTypeCollection?.items).map((awardType) => {
+      const name = awardType.name ?? '';
+      return {
+        id: awardType.sys.id,
+        name,
+        slug: toSlug(name) || awardType.sys.id,
+      };
+    });
+  }
+
+  async fetchAwards(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListOSChampionDataObject> {
+    const { take = 10, skip = 0, filter } = options;
+    if (!filter?.awardTypeId) {
+      throw new Error('fetchAwards requires filter.awardTypeId');
+    }
+    const dateFilter = getRangeFilterParams(filter.timeRange);
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchAwardsQuery,
+      FetchAwardsQueryVariables
+    >(FETCH_AWARDS, {
+      limit: take,
+      skip,
+      dateFilter,
+      awardTypeId: filter.awardTypeId,
+    });
+
+    return {
+      total: teamsCollection?.total || 0,
+      items: getAwardsItems(teamsCollection, filter.timeRange),
     };
   }
 
@@ -513,7 +560,14 @@ const getTeamProductivityItems = (
     };
   });
 
-const getOsChampionItems = (
+const toSlug = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+const getAwardsItems = (
   teamsCollection: FetchOsChampionQuery['teamsCollection'],
   rangeKey?: TimeRangeOption,
 ): OSChampionDataObject[] =>

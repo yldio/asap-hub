@@ -1,6 +1,8 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchAttendanceQuery,
+  FetchAwardsQuery,
+  FetchAwardTypesQuery,
   FetchEngagementQuery,
   FetchOsChampionQuery,
   FetchPreliminaryDataSharingQuery,
@@ -13,6 +15,7 @@ import {
 import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
+  AwardTypeDataObject,
   EngagementResponse,
   EventStatus,
   ListAnalyticsTeamLeadershipDataObject,
@@ -990,6 +993,37 @@ export const getListOSChampionResponse = (): ListOSChampionResponse => ({
   total: 1,
   items: [getOSChampionResponse()],
 });
+
+export const getAwardTypesQuery = (): FetchAwardTypesQuery => ({
+  awardTypeCollection: {
+    items: [
+      {
+        sys: { id: 'award-type-network-spotlight' },
+        name: 'Network Spotlight',
+      },
+      {
+        sys: { id: 'award-type-os-champion' },
+        name: 'Open Science Champion',
+      },
+    ],
+  },
+});
+
+export const getAwardTypeDataObjects = (): AwardTypeDataObject[] => [
+  {
+    id: 'award-type-network-spotlight',
+    name: 'Network Spotlight',
+    slug: 'network-spotlight',
+  },
+  {
+    id: 'award-type-os-champion',
+    name: 'Open Science Champion',
+    slug: 'open-science-champion',
+  },
+];
+
+export const getAwardsQuery = (): FetchAwardsQuery =>
+  getOsChampionQuery() as FetchAwardsQuery;
 
 export const getPreliminaryDataSharingQuery =
   (): FetchPreliminaryDataSharingQuery => ({

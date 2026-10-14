@@ -2,6 +2,7 @@ import { FETCH_AWARDS, FETCH_AWARD_TYPES } from '@asap-hub/contentful';
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import {
   getAwardsQuery,
+  getAwardsResponse,
   getAwardTypeDataObjects,
   getAwardTypesQuery,
 } from '../../../fixtures/analytics.fixtures';
@@ -86,15 +87,7 @@ describe('fetchAwardTypes', () => {
 });
 
 describe('fetchAwards', () => {
-  test('Should throw when awardTypeId is not provided', async () => {
-    await expect(
-      analyticsDataProvider.fetchAwards({ filter: { timeRange: 'all' } }),
-    ).rejects.toThrow('awardTypeId');
-    await expect(analyticsDataProvider.fetchAwards({})).rejects.toThrow(
-      'awardTypeId',
-    );
-    expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
-  });
+  const osChampionAwardType = getAwardTypeDataObjects()[1]!;
 
   test('Should return an empty result when the client returns an empty list', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -105,7 +98,7 @@ describe('fetchAwards', () => {
     });
 
     const result = await analyticsDataProvider.fetchAwards({
-      filter: { awardTypeId: 'award-type-os-champion' },
+      filter: { awardType: osChampionAwardType },
     });
 
     expect(result).toEqual({
@@ -114,13 +107,13 @@ describe('fetchAwards', () => {
     });
   });
 
-  test('Should pass awardTypeId, pagination and dateFilter to the query', async () => {
+  test('Should pass the award type id, pagination and dateFilter to the query', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(getAwardsQuery());
 
     await analyticsDataProvider.fetchAwards({
       take: 45,
       skip: 90,
-      filter: { timeRange: '90d', awardTypeId: 'award-type-os-champion' },
+      filter: { timeRange: '90d', awardType: osChampionAwardType },
     });
 
     expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -138,7 +131,7 @@ describe('fetchAwards', () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(getAwardsQuery());
 
     await analyticsDataProvider.fetchAwards({
-      filter: { timeRange: 'all', awardTypeId: 'award-type-os-champion' },
+      filter: { timeRange: 'all', awardType: osChampionAwardType },
     });
 
     expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -159,54 +152,65 @@ describe('fetchAwards', () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
 
     const result = await analyticsDataProvider.fetchAwards({
-      filter: { awardTypeId: 'award-type-os-champion' },
+      filter: { awardType: osChampionAwardType },
     });
 
     expect(result).toEqual({
       total: 1,
       items: [
         {
+          id: 'team-id-0_open-science-champion_all',
           teamId: 'team-id-0',
           teamName: 'Team A',
           isTeamInactive: false,
           teamAwardsCount: 0,
           timeRange: 'all',
+          awardType: 'open-science-champion',
+          awardTypeName: 'Open Science Champion',
           users: [],
         },
       ],
     });
   });
 
-  test('Should return the team awards, user awards and time range from a valid response', async () => {
+  test('Should return the team awards, user awards, award type and time range from a valid response', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(getAwardsQuery());
 
     const result = await analyticsDataProvider.fetchAwards({
-      filter: { timeRange: '90d', awardTypeId: 'award-type-os-champion' },
+      filter: { timeRange: '90d', awardType: osChampionAwardType },
     });
 
     expect(result).toEqual({
       total: 1,
       items: [
         {
-          teamId: 'team-id-0',
-          teamName: 'Team A',
-          isTeamInactive: false,
-          teamAwardsCount: 3,
+          ...getAwardsResponse(),
+          id: 'team-id-0_open-science-champion_90d',
           timeRange: '90d',
-          users: [
-            {
-              id: 'user-with-2-awards',
-              name: 'Two-Awarded User',
-              awardsCount: 2,
-            },
-            {
-              id: 'user-with-1-award',
-              name: 'One-Awarded User',
-              awardsCount: 1,
-            },
-          ],
         },
       ],
+    });
+  });
+
+  test('Should build the id from team id, award type slug and time range', async () => {
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(getAwardsQuery());
+
+    const result = await analyticsDataProvider.fetchAwards({
+      filter: {
+        timeRange: '30d',
+        awardType: {
+          id: 'award-type-network-spotlight',
+          name: 'Network Spotlight',
+          slug: 'network-spotlight',
+        },
+      },
+    });
+
+    expect(result.items[0]).toMatchObject({
+      id: 'team-id-0_network-spotlight_30d',
+      awardType: 'network-spotlight',
+      awardTypeName: 'Network Spotlight',
+      timeRange: '30d',
     });
   });
 });

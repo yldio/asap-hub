@@ -1,5 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {
+  AwardsDataObject,
+  AwardTypeDataObject,
+  timeRanges,
+  TimeRangeOption,
+} from '@asap-hub/model';
+import { indexOpensearchData } from '@asap-hub/server-common';
+import { PAGE_SIZE } from '../constants';
+import {
+  exportAnalyticsData,
+  exportMetricToOpensearch,
+} from '../sync-opensearch-analytics';
+
 jest.mock('../../../src/config', () => ({
   awsRegion: 'us-east-1',
   environment: 'test',
@@ -26,25 +39,12 @@ jest.mock('../publication-compliance', () => ({
 const mockFetchAwardTypes = jest.fn();
 const mockFetchAwards = jest.fn();
 
-jest.mock('../../../src/controllers/analytics.controller', () => {
-  return jest.fn().mockImplementation(() => ({
+jest.mock('../../../src/controllers/analytics.controller', () =>
+  jest.fn().mockImplementation(() => ({
     fetchAwardTypes: mockFetchAwardTypes,
     fetchAwards: mockFetchAwards,
-  }));
-});
-
-import {
-  AwardTypeDataObject,
-  OSChampionDataObject,
-  timeRanges,
-  TimeRangeOption,
-} from '@asap-hub/model';
-import { indexOpensearchData } from '@asap-hub/server-common';
-import { PAGE_SIZE } from '../constants';
-import {
-  exportAnalyticsData,
-  exportMetricToOpensearch,
-} from '../sync-opensearch-analytics';
+  })),
+);
 
 const mockIndexOpensearchData = indexOpensearchData as jest.MockedFunction<
   typeof indexOpensearchData
@@ -65,13 +65,17 @@ const awardTypes: AwardTypeDataObject[] = [
 
 const makeTeam = (
   index: number,
+  awardType: AwardTypeDataObject,
   timeRange: TimeRangeOption,
-): OSChampionDataObject => ({
+): AwardsDataObject => ({
+  id: `team-${index}_${awardType.slug}_${timeRange}`,
   teamId: `team-${index}`,
   teamName: `Team ${index}`,
   isTeamInactive: false,
   teamAwardsCount: index % 2,
   timeRange,
+  awardType: awardType.slug,
+  awardTypeName: awardType.name,
   users:
     index % 2 === 1
       ? [{ id: `user-${index}`, name: `User ${index}`, awardsCount: 1 }]
@@ -83,7 +87,7 @@ const mockAwardsPages = (teamCount: number) => {
     total: teamCount,
     items: Array.from(
       { length: Math.max(0, Math.min(take, teamCount - skip)) },
-      (_, i) => makeTeam(skip + i, filter.timeRange),
+      (_, i) => makeTeam(skip + i, filter.awardType, filter.timeRange),
     ),
   }));
 };
@@ -121,7 +125,7 @@ describe('Awards sync', () => {
       );
     });
 
-    it('should enrich each document with the award type fields', async () => {
+    it('should pass the documents through unchanged', async () => {
       mockAwardsPages(1);
 
       const documents = await exportAnalyticsData('awards');
@@ -130,28 +134,10 @@ describe('Awards sync', () => {
         (doc) =>
           doc.awardType === 'network-spotlight' && doc.timeRange === '90d',
       );
-      expect(networkSpotlightDoc).toEqual({
-        id: 'team-0_network-spotlight_90d',
-        teamId: 'team-0',
-        teamName: 'Team 0',
-        isTeamInactive: false,
-        teamAwardsCount: 0,
-        timeRange: '90d',
-        users: [],
-        awardType: 'network-spotlight',
-        awardTypeName: 'Network Spotlight',
-      });
-
-      const osChampionDoc = documents.find(
-        (doc) => doc.awardType === 'open-science-champion',
-      );
-      expect(osChampionDoc).toMatchObject({
-        awardType: 'open-science-champion',
-        awardTypeName: 'Open Science Champion',
-      });
+      expect(networkSpotlightDoc).toEqual(makeTeam(0, awardTypes[0]!, '90d'));
     });
 
-    it('should query every award type and time range combination with the award type id', async () => {
+    it('should query every award type and time range combination with the award type', async () => {
       mockAwardsPages(1);
 
       await exportAnalyticsData('awards');
@@ -164,7 +150,7 @@ describe('Awards sync', () => {
           expect(mockFetchAwards).toHaveBeenCalledWith({
             take: PAGE_SIZE,
             skip: 0,
-            filter: { timeRange, awardTypeId: awardType.id },
+            filter: { timeRange, awardType },
           });
         }
       }
@@ -185,7 +171,7 @@ describe('Awards sync', () => {
       expect(mockFetchAwards).toHaveBeenCalledWith({
         take: PAGE_SIZE,
         skip: PAGE_SIZE,
-        filter: { timeRange: 'all', awardTypeId: 'award-type-os-champion' },
+        filter: { timeRange: 'all', awardType: awardTypes[1] },
       });
     });
 

@@ -1,8 +1,10 @@
 import {
   AwardTypeDataObject,
   FetchAnalyticsOptions,
+  FetchAwardsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
+  ListAwardsResponse,
   ListEngagementResponse,
   ListMeetingRepAttendanceResponse,
   ListOSChampionResponse,
@@ -63,9 +65,7 @@ export default class AnalyticsController {
     return this.analyticsDataProvider.fetchAwardTypes();
   }
 
-  async fetchAwards(
-    options: FetchAnalyticsOptions,
-  ): Promise<ListOSChampionResponse> {
+  async fetchAwards(options: FetchAwardsOptions): Promise<ListAwardsResponse> {
     return this.analyticsDataProvider.fetchAwards(options);
   }
 

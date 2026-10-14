@@ -15,8 +15,10 @@ import {
 import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
+  AwardsResponse,
   AwardTypeDataObject,
   EngagementResponse,
+  ListAwardsResponse,
   EventStatus,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
@@ -1024,6 +1026,18 @@ export const getAwardTypeDataObjects = (): AwardTypeDataObject[] => [
 
 export const getAwardsQuery = (): FetchAwardsQuery =>
   getOsChampionQuery() as FetchAwardsQuery;
+
+export const getAwardsResponse = (): AwardsResponse => ({
+  ...getOSChampionResponse(),
+  id: 'team-id-0_open-science-champion_all',
+  awardType: 'open-science-champion',
+  awardTypeName: 'Open Science Champion',
+});
+
+export const getListAwardsResponse = (): ListAwardsResponse => ({
+  total: 1,
+  items: [getAwardsResponse()],
+});
 
 export const getPreliminaryDataSharingQuery =
   (): FetchPreliminaryDataSharingQuery => ({

@@ -220,7 +220,6 @@ export const fetchAnalyticsOptionsValidationSchema: JSONSchemaType<FetchAnalytic
           timeRange: { type: 'string', nullable: true },
           documentCategory: { type: 'string', nullable: true },
           outputType: { type: 'string', nullable: true },
-          awardTypeId: { type: 'string', nullable: true },
         },
         nullable: true,
       },

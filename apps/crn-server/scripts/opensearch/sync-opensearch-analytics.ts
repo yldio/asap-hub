@@ -111,21 +111,14 @@ export const exportAnalyticsData = async <T extends Metrics>(
             const response = await analyticsController.fetchAwards({
               take: PAGE_SIZE,
               skip: awardsPage * PAGE_SIZE,
-              filter: { timeRange, awardTypeId: awardType.id },
+              filter: { timeRange, awardType },
             });
             awardsTotal = response.total;
             awardsPage += 1;
 
             if (response.items.length === 0) break;
 
-            items.push(
-              ...response.items.map((item) => ({
-                ...item,
-                id: `${item.teamId}_${awardType.slug}_${timeRange}`,
-                awardType: awardType.slug,
-                awardTypeName: awardType.name,
-              })),
-            );
+            items.push(...response.items);
           } while (items.length < awardsTotal);
           /* eslint-enable no-await-in-loop */
 
@@ -326,7 +319,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
             return items;
           }
 
-          const total = firstPage.total;
+          const { total } = firstPage;
           const pages = Math.ceil(total / PAGE_SIZE);
 
           console.log(
@@ -437,7 +430,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
             return items;
           }
 
-          const total = firstPage.total;
+          const { total } = firstPage;
           const pages = Math.ceil(total / PAGE_SIZE);
 
           console.log(

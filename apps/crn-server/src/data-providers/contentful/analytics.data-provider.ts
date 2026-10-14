@@ -40,20 +40,23 @@ import {
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
+  AwardsDataObject,
   AwardTypeDataObject,
   FetchAnalyticsOptions,
+  FetchAwardsOptions,
   FetchPaginationOptions,
   FilterAnalyticsOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListAwardsDataObject,
   ListEngagementDataObject,
   ListOSChampionDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
   MeetingRepAttendanceDataObject,
-  OSChampionDataObject,
   OutputTypeOption,
   PreliminaryDataSharingDataObject,
+  TeamAwardsDataObject,
   TeamProductivityDataObject,
   TeamRole,
   TimeRangeOption,
@@ -142,7 +145,9 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     };
   }
 
-  async fetchOSChampion(options: FetchAnalyticsOptions) {
+  async fetchOSChampion(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListOSChampionDataObject> {
     const { take = 10, skip = 0, filter } = options;
     const dateFilter = getRangeFilterParams(filter?.timeRange);
     const { teamsCollection } = await this.contentfulClient.request<
@@ -152,7 +157,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getAwardsItems(teamsCollection, filter?.timeRange),
+      items: getTeamAwardsItems(teamsCollection, filter?.timeRange),
     };
   }
 
@@ -173,13 +178,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   }
 
   async fetchAwards(
-    options: FetchAnalyticsOptions,
-  ): Promise<ListOSChampionDataObject> {
+    options: FetchAwardsOptions,
+  ): Promise<ListAwardsDataObject> {
     const { take = 10, skip = 0, filter } = options;
-    if (!filter?.awardTypeId) {
-      throw new Error('fetchAwards requires filter.awardTypeId');
-    }
-    const dateFilter = getRangeFilterParams(filter.timeRange);
+    const { awardType, timeRange } = filter;
+    const dateFilter = getRangeFilterParams(timeRange);
     const { teamsCollection } = await this.contentfulClient.request<
       FetchAwardsQuery,
       FetchAwardsQueryVariables
@@ -187,12 +190,12 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
       limit: take,
       skip,
       dateFilter,
-      awardTypeId: filter.awardTypeId,
+      awardTypeId: awardType.id,
     });
 
     return {
       total: teamsCollection?.total || 0,
-      items: getAwardsItems(teamsCollection, filter.timeRange),
+      items: getAwardsItems(teamsCollection, awardType, timeRange),
     };
   }
 
@@ -568,9 +571,22 @@ const toSlug = (name: string): string =>
     .replace(/^-|-$/g, '');
 
 const getAwardsItems = (
-  teamsCollection: FetchOsChampionQuery['teamsCollection'],
+  teamsCollection: FetchAwardsQuery['teamsCollection'],
+  awardType: AwardTypeDataObject,
   rangeKey?: TimeRangeOption,
-): OSChampionDataObject[] =>
+): AwardsDataObject[] =>
+  getTeamAwardsItems(teamsCollection, rangeKey).map((item) => ({
+    ...item,
+    id: `${item.teamId}_${awardType.slug}_${item.timeRange}`,
+    awardType: awardType.slug,
+    awardTypeName: awardType.name,
+  }));
+
+// FETCH_OS_CHAMPION and FETCH_AWARDS select the same fields, so one mapper serves both.
+const getTeamAwardsItems = (
+  teamsCollection: FetchAwardsQuery['teamsCollection'],
+  rangeKey?: TimeRangeOption,
+): TeamAwardsDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     let awardsCount = 0;
     if (teamItem.linkedFrom?.teamMembershipCollection?.items.length) {
@@ -579,7 +595,7 @@ const getAwardsItems = (
 
       const userAwardsCount = teamMembershipItems.reduce(
         (
-          usersWithAwards: OSChampionDataObject['users'],
+          usersWithAwards: TeamAwardsDataObject['users'],
           teamMembershipItem,
         ) => {
           const user =

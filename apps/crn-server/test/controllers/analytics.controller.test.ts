@@ -1,5 +1,6 @@
 import {
   FetchAnalyticsOptions,
+  FetchAwardsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
@@ -16,6 +17,7 @@ import {
   getListUserProductivityResponse,
   getListOSChampionResponse,
   getAwardTypeDataObjects,
+  getListAwardsResponse,
   getListPreliminaryDataSharingResponse,
   getListAttendanceResponse,
 } from '../fixtures/analytics.fixtures';
@@ -303,6 +305,8 @@ describe('Analytics controller', () => {
   });
 
   describe('fetchAwards method', () => {
+    const osChampionAwardType = getAwardTypeDataObjects()[1]!;
+
     test('Should return an empty result when the data provider returns an empty list', async () => {
       analyticsDataProviderMock.fetchAwards.mockResolvedValue({
         total: 0,
@@ -310,7 +314,7 @@ describe('Analytics controller', () => {
       });
 
       const result = await analyticsController.fetchAwards({
-        filter: { awardTypeId: 'award-type-os-champion' },
+        filter: { awardType: osChampionAwardType },
       });
 
       expect(result).toEqual({ total: 0, items: [] });
@@ -318,21 +322,21 @@ describe('Analytics controller', () => {
 
     test('Should return the awards data', async () => {
       analyticsDataProviderMock.fetchAwards.mockResolvedValue(
-        getListOSChampionResponse(),
+        getListAwardsResponse(),
       );
 
       const result = await analyticsController.fetchAwards({
-        filter: { awardTypeId: 'award-type-os-champion' },
+        filter: { awardType: osChampionAwardType },
       });
 
-      expect(result).toEqual(getListOSChampionResponse());
+      expect(result).toEqual(getListAwardsResponse());
     });
 
     test('Should call the data provider with the correct options', async () => {
-      const options: FetchAnalyticsOptions = {
+      const options: FetchAwardsOptions = {
         take: 10,
         skip: 5,
-        filter: { timeRange: '90d', awardTypeId: 'award-type-os-champion' },
+        filter: { timeRange: '90d', awardType: osChampionAwardType },
       };
       await analyticsController.fetchAwards(options);
 

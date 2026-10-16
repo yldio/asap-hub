@@ -80,8 +80,9 @@ describe('current events', () => {
     ${'missing'} | ${undefined}
     ${'invalid'} | ${'not a link'}
   `(
-    'toasts with a disabled join button when the meeting link is $description',
+    'toasts with a disabled join button when the meeting link is $description and NEW_EVENT_PAGE is enabled',
     ({ meetingLink }) => {
+      mockIsEnabled.mockReturnValue(true);
       render(
         <EventCard
           {...props}
@@ -98,6 +99,22 @@ describe('current events', () => {
       ).not.toHaveAttribute('href');
     },
   );
+  it('toasts for in-person meetings when the meeting link is missing and NEW_EVENT_PAGE is disabled', () => {
+    render(
+      <EventCard
+        {...props}
+        status="Confirmed"
+        meetingLink={undefined}
+        hideMeetingLink={false}
+        startDate={subMinutes(new Date(), 1).toISOString()}
+        endDate={addMinutes(new Date(), 1).toISOString()}
+      />,
+    );
+    expect(
+      screen.getByText('This in-person event is currently happening.'),
+    ).toBeVisible();
+    expect(screen.queryByText('Join Meeting Now')).not.toBeInTheDocument();
+  });
   it('toasts for meetings with meeting link', () => {
     render(
       <EventCard

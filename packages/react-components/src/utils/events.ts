@@ -33,14 +33,15 @@ export const useEventLiveStatus = (
 export const getMeetingLinkAvailableFrom = (startDate: string): Date =>
   subHours(parseISO(startDate), MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT);
 
-// Polls for the meeting link while it is expected but not yet loaded.
 export const useMeetingLinkRefresh = ({
   meetingLink,
+  hideMeetingLink = false,
   startDate,
   endDate,
   onRefresh,
 }: {
   meetingLink?: string;
+  hideMeetingLink?: boolean;
   startDate: string;
   endDate: string;
   onRefresh: () => void;
@@ -51,7 +52,7 @@ export const useMeetingLinkRefresh = ({
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 
   useInterval(() => {
-    if (!meetingLink && startRefreshing && !hasEnded) {
+    if (!hideMeetingLink && !meetingLink && startRefreshing && !hasEnded) {
       onRefresh();
     }
   }, MEETING_LINK_REFRESH_INTERVAL_SECONDS * 1000);

@@ -95,9 +95,10 @@ const EventDetailPage = ({
   useScrollToHash();
   useMeetingLinkRefresh({
     meetingLink: props.meetingLink,
+    hideMeetingLink: props.hideMeetingLink,
     startDate: props.startDate,
     endDate: props.endDate,
-    onRefresh: props.hideMeetingLink ? noop : onRefresh,
+    onRefresh,
   });
   const hasEnded = useDateHasPassed(considerEndedAfter(props.endDate));
   const finished = hasFinished ?? hasEnded;

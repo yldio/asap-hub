@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 
 import { BasicEvent, eventMaterialTypes } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 
 import {
   ToastCard,
@@ -45,7 +44,6 @@ const EventCard: React.FC<EventCardProps> = ({
   hasSpeakersToBeAnnounced,
   ...props
 }) => {
-  const { isEnabled } = useFlags();
   const { hasStarted, hasFinished } = useEventLiveStatus(
     props.startDate,
     props.endDate,
@@ -64,10 +62,7 @@ const EventCard: React.FC<EventCardProps> = ({
       };
     }
     if (hasStarted && !hasFinished) {
-      if (
-        props.hideMeetingLink ||
-        (!isEnabled('NEW_EVENT_PAGE') && !props.meetingLink)
-      ) {
+      if (props.hideMeetingLink) {
         return {
           type: 'live',
           toastContent: (

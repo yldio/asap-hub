@@ -31,7 +31,6 @@ import ReactQueryDevtoolsProduction from './ReactQueryDevtoolsProduction';
 import CheckOnboarded from './auth/CheckOnboarded';
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
-import { CosaBanner } from './components/CosaBanner';
 import { ProjectsBanner } from './components/ProjectsBanner';
 
 const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
@@ -166,7 +165,6 @@ const AuthenticatedApp: FC<{
             }
             aboutHref="https://www.parkinsonsroadmap.org/"
           >
-            <CosaBanner />
             <ProjectsBanner />
             <CheckOnboarded>
               <Suspense key={topLevelRoute} fallback={<LoadingContentHeader />}>

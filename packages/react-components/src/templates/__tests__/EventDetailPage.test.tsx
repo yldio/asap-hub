@@ -319,9 +319,8 @@ it('shows the missing meeting link tooltip below the join button', () => {
       endDate={addMinutes(new Date(), 30).toISOString()}
     />,
   );
-  const button = screen.getByText('Join Meeting Now');
-  const tooltip = screen.getByText(/couldn’t find the link to this event/);
-  expect(
-    button.compareDocumentPosition(tooltip) & Node.DOCUMENT_POSITION_FOLLOWING,
-  ).toBeTruthy();
+  const button = screen.getByText('Join Meeting Now').closest('a')!;
+  expect(button.nextElementSibling).toContainElement(
+    screen.getByText(/couldn’t find the link to this event/),
+  );
 });

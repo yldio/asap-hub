@@ -61,7 +61,7 @@ const Info: React.FC<InfoProps> = ({
     if (rect) {
       setAnchor({ left: rect.left + rect.width / 2, top: rect.top });
     }
-  }, []);
+  }, [buttonRef]);
 
   useLayoutEffect(() => {
     if (!floating || !tooltipShown) {

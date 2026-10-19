@@ -1,8 +1,11 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchAttendanceQuery,
+  FetchAwardsQuery,
+  FetchAwardTypesQuery,
   FetchEngagementQuery,
   FetchOsChampionQuery,
+  FetchInterestGroupCalendarIdsQuery,
   FetchPreliminaryDataSharingQuery,
   FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
@@ -13,7 +16,10 @@ import {
 import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
+  AwardsResponse,
+  AwardTypeDataObject,
   EngagementResponse,
+  ListAwardsResponse,
   EventStatus,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
@@ -784,13 +790,15 @@ type MakeEventProps = {
   eventId?: string;
   endDate?: string;
   status?: EventStatus;
+  calendar?: { sys: { id: string } } | null;
 };
 export const makeEvent = ({
   eventId = 'event-1',
   endDate = '2024-07-11T13:00:00.000Z',
   status = 'Confirmed',
+  calendar = { sys: { id: 'interest-group-calendar-id' } },
 }: MakeEventProps): EngagementEvent => ({
-  items: [{ sys: { id: eventId }, endDate, status }],
+  items: [{ sys: { id: eventId }, endDate, status, calendar }],
 });
 
 export const getEngagementQuery = (): FetchEngagementQuery => ({
@@ -991,6 +999,64 @@ export const getListOSChampionResponse = (): ListOSChampionResponse => ({
   items: [getOSChampionResponse()],
 });
 
+export const getAwardTypesQuery = (): FetchAwardTypesQuery => ({
+  awardTypeCollection: {
+    items: [
+      {
+        sys: { id: 'award-type-network-spotlight' },
+        name: 'Network Spotlight',
+      },
+      {
+        sys: { id: 'award-type-os-champion' },
+        name: 'Open Science Champion',
+      },
+    ],
+  },
+});
+
+export const getAwardTypeDataObjects = (): AwardTypeDataObject[] => [
+  {
+    id: 'award-type-network-spotlight',
+    name: 'Network Spotlight',
+    slug: 'network-spotlight',
+  },
+  {
+    id: 'award-type-os-champion',
+    name: 'Open Science Champion',
+    slug: 'open-science-champion',
+  },
+];
+
+export const getAwardsQuery = (): FetchAwardsQuery =>
+  getOsChampionQuery() as FetchAwardsQuery;
+
+export const getAwardsResponse = (): AwardsResponse => ({
+  ...getOSChampionResponse(),
+  id: 'team-id-0_open-science-champion_all',
+  awardType: 'open-science-champion',
+  awardTypeName: 'Open Science Champion',
+});
+
+export const getListAwardsResponse = (): ListAwardsResponse => ({
+  total: 1,
+  items: [getAwardsResponse()],
+});
+export const getInterestGroupCalendarIdsQuery =
+  (): FetchInterestGroupCalendarIdsQuery => ({
+    interestGroupsCollection: {
+      total: 1,
+      items: [
+        {
+          calendar: {
+            sys: {
+              id: 'interest-group-calendar-id',
+            },
+          },
+        },
+      ],
+    },
+  });
+
 export const getPreliminaryDataSharingQuery =
   (): FetchPreliminaryDataSharingQuery => ({
     teamsCollection: {
@@ -1018,6 +1084,9 @@ export const getPreliminaryDataSharingQuery =
                           startDate: '2024-01-15',
                           endDate: '2024-01-15',
                           status: 'Confirmed',
+                          calendar: {
+                            sys: { id: 'interest-group-calendar-id' },
+                          },
                         },
                       ],
                     },
@@ -1035,6 +1104,9 @@ export const getPreliminaryDataSharingQuery =
                           startDate: '2024-02-20',
                           endDate: '2024-02-20',
                           status: 'Confirmed',
+                          calendar: {
+                            sys: { id: 'interest-group-calendar-id' },
+                          },
                         },
                       ],
                     },
@@ -1052,6 +1124,9 @@ export const getPreliminaryDataSharingQuery =
                           startDate: '2023-06-10',
                           endDate: '2023-06-10',
                           status: 'Confirmed',
+                          calendar: {
+                            sys: { id: 'interest-group-calendar-id' },
+                          },
                         },
                       ],
                     },
@@ -1104,6 +1179,7 @@ export const getAttendanceQuery = (): FetchAttendanceQuery => ({
                         endDate: '2024-01-15',
                         hidden: false,
                         status: 'Confirmed',
+                        calendar: { sys: { id: 'interest-group-calendar-id' } },
                       },
                     ],
                   },
@@ -1119,6 +1195,7 @@ export const getAttendanceQuery = (): FetchAttendanceQuery => ({
                         endDate: '2024-02-20',
                         hidden: false,
                         status: 'Confirmed',
+                        calendar: { sys: { id: 'interest-group-calendar-id' } },
                       },
                     ],
                   },
@@ -1134,6 +1211,7 @@ export const getAttendanceQuery = (): FetchAttendanceQuery => ({
                         endDate: '2023-06-10',
                         hidden: false,
                         status: 'Confirmed',
+                        calendar: { sys: { id: 'interest-group-calendar-id' } },
                       },
                     ],
                   },

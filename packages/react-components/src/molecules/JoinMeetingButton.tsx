@@ -46,7 +46,7 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
       onMouseLeave={() => setTooltipShown(false)}
     >
       <div css={tooltipContainerStyles}>
-        <Tooltip shown={tooltipShown}>
+        <Tooltip shown={tooltipShown} width={160}>
           We’re sorry but we couldn’t find the link to this event.
           <br />
           Please contact ASAP for more information.

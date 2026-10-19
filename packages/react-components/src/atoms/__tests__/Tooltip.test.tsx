@@ -47,6 +47,6 @@ it('keeps the default background when none is given', () => {
   const { getByRole } = render(<Tooltip shown>text</Tooltip>);
   expect(getByRole('tooltip')).toHaveStyleRule(
     'background-color',
-    colour.brand.gp2[900],
+    colour.foreground['color-blue'],
   );
 });

@@ -4,7 +4,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { colour } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 
-const triangleHeight = 5;
+const triangleHeight = 4;
 
 const positionerStyles = css({
   display: 'block',
@@ -33,7 +33,7 @@ const tooltipStyles = css({
     position: 'absolute',
     borderLeft: `${triangleHeight}px solid transparent`,
     borderRight: `${triangleHeight}px solid transparent`,
-    borderTop: `${triangleHeight}px solid ${colour.brand.gp2[900]}`,
+    borderTop: `${triangleHeight}px solid ${colour.foreground['color-blue']}`,
     bottom: 0,
     right: '50%',
     // the triangle is 2 * triangleHeight wide, so pull it right by half
@@ -46,21 +46,29 @@ const tooltipStyles = css({
   },
 });
 const bubbleStyles = css({
-  backgroundColor: colour.brand.gp2[900],
+  backgroundColor: colour.foreground['color-blue'],
   color: colour.foreground['primary-inverse'],
   display: 'block',
 
-  padding: `${rem(9)} ${rem(12)}`,
+  padding: rem(12),
   boxSizing: 'border-box',
   maxWidth: rem(256),
 
-  borderRadius: rem(4),
+  borderRadius: rem(8),
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     maxWidth: '100%',
     marginLeft: rem(12),
     marginRight: rem(12),
   },
+});
+
+// Sized on an inner element: rem() yields em, so a smaller font on the bubble
+// itself would shrink its padding and the width it is given.
+const bubbleTextStyles = css({
+  display: 'block',
+  fontSize: rem(14),
+  lineHeight: 24 / 14,
 });
 
 interface TooltipProps {
@@ -112,7 +120,7 @@ const Tooltip: React.FC<TooltipProps> = ({
             textStyles,
           ]}
         >
-          {children}
+          <span css={bubbleTextStyles}>{children}</span>
         </span>
       </span>
     </span>

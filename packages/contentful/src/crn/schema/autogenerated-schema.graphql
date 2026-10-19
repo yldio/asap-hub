@@ -435,6 +435,8 @@ type AssetLinkingCollections {
   messagesCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): MessagesCursorCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
   newsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): NewsCursorCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
+  researchOutputsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ResearchOutputsCursorCollection
   tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
   tutorialsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): TutorialsCursorCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
@@ -9091,6 +9093,7 @@ type ResearchOutputs implements Entry & _Node {
   doi(locale: String, useFallbackLocale: Boolean): String
   environmentsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsEnvironmentsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): ResearchOutputsEnvironmentsCollection
   environmentsCursorCollection(limit: Int = 100, locale: String, order: [ResearchOutputsEnvironmentsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchTagsFilter): ResearchOutputsEnvironmentsCursorCollection
+  grantPdf(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   impact(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ImpactFilter): Impact
   isInReview(locale: String, useFallbackLocale: Boolean): Boolean
   keywordsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsKeywordsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): ResearchOutputsKeywordsCollection
@@ -9386,6 +9389,7 @@ input ResearchOutputsFilter {
   doi_not_in: [String]
   environments: cfResearchTagsNestedFilter
   environmentsCollection_exists: Boolean
+  grantPdf_exists: Boolean
   impact: cfImpactNestedFilter
   impact_exists: Boolean
   isInReview: Boolean
@@ -16486,6 +16490,7 @@ input cfResearchOutputsNestedFilter {
   doi_not_contains: String
   doi_not_in: [String]
   environmentsCollection_exists: Boolean
+  grantPdf_exists: Boolean
   impact_exists: Boolean
   isInReview: Boolean
   isInReview_exists: Boolean

@@ -50,3 +50,11 @@ it('keeps the default background when none is given', () => {
     colour.foreground['color-blue'],
   );
 });
+
+it('renders the text in Nunito Sans', () => {
+  const { getByText } = render(<Tooltip shown>text</Tooltip>);
+  expect(getByText('text')).toHaveStyleRule(
+    'font-family',
+    expect.stringMatching(/^'Nunito Sans', ?Roboto/),
+  );
+});

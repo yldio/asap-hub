@@ -3,6 +3,7 @@ import { css, SerializedStyles } from '@emotion/react';
 
 import { colour } from '../colors';
 import { rem, tabletScreen } from '../pixels';
+import { fontStyles } from '../text';
 
 const triangleHeight = 4;
 
@@ -67,6 +68,7 @@ const bubbleStyles = css({
 // itself would shrink its padding and the width it is given.
 const bubbleTextStyles = css({
   display: 'block',
+  fontFamily: `'Nunito Sans', ${fontStyles.fontFamily}`,
   fontSize: rem(14),
   lineHeight: 24 / 14,
 });

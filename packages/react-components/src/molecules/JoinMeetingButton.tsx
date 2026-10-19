@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { urlExpression } from '@asap-hub/validation';
 
 import { Link, Tooltip } from '../atoms';
 import { rem, mobileScreen } from '../pixels';
+import { canHover } from '../utils/common';
 
 const containerStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -28,6 +29,29 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
   meetingLink,
 }) => {
   const [tooltipShown, setTooltipShown] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!tooltipShown) return undefined;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setTooltipShown(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTooltipShown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [tooltipShown]);
 
   if (isValidMeetingLink(meetingLink)) {
     return (
@@ -41,8 +65,13 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
 
   return (
     <div
+      ref={containerRef}
+      role="presentation"
       css={containerStyles}
-      onMouseEnter={() => setTooltipShown(true)}
+      // Touch devices have no hover, so a tap toggles the tooltip; with a
+      // mouse, hover already opened it and a click should not close it.
+      onClick={() => setTooltipShown((shown) => canHover() || !shown)}
+      onMouseEnter={() => canHover() && setTooltipShown(true)}
       onMouseLeave={() => setTooltipShown(false)}
     >
       <div css={tooltipContainerStyles}>

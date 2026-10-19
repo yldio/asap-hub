@@ -46,3 +46,50 @@ it('shows the missing link tooltip on hover when the button is disabled', () => 
   fireEvent.mouseLeave(button);
   expect(tooltip).not.toBeVisible();
 });
+
+describe('on a touch device', () => {
+  const realMatchMedia = window.matchMedia;
+  beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: jest.fn().mockReturnValue({ matches: false }),
+    });
+  });
+  afterEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: realMatchMedia,
+    });
+  });
+
+  it('toggles the missing link tooltip on tap', () => {
+    render(<JoinMeetingButton />);
+    const button = screen.getByText('Join Meeting Now');
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+
+    fireEvent.mouseEnter(button);
+    expect(tooltip).not.toBeVisible();
+
+    fireEvent.click(button);
+    expect(tooltip).toBeVisible();
+
+    fireEvent.click(button);
+    expect(tooltip).not.toBeVisible();
+  });
+
+  it('closes the missing link tooltip on a tap outside or Escape', () => {
+    render(<JoinMeetingButton />);
+    const button = screen.getByText('Join Meeting Now');
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+
+    fireEvent.click(button);
+    fireEvent.mouseDown(document.body);
+    expect(tooltip).not.toBeVisible();
+
+    fireEvent.click(button);
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(tooltip).not.toBeVisible();
+  });
+});

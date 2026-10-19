@@ -93,3 +93,18 @@ describe('on a touch device', () => {
     expect(tooltip).not.toBeVisible();
   });
 });
+
+it.each`
+  tooltipPosition | position
+  ${undefined}    | ${Node.DOCUMENT_POSITION_PRECEDING}
+  ${'top'}        | ${Node.DOCUMENT_POSITION_PRECEDING}
+  ${'bottom'}     | ${Node.DOCUMENT_POSITION_FOLLOWING}
+`(
+  'renders the tooltip on the $tooltipPosition side of the button',
+  ({ tooltipPosition, position }) => {
+    render(<JoinMeetingButton tooltipPosition={tooltipPosition} />);
+    const button = screen.getByText('Join Meeting Now');
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+    expect(button.compareDocumentPosition(tooltip) & position).toBeTruthy();
+  },
+);

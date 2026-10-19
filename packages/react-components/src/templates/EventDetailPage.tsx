@@ -118,7 +118,12 @@ const EventDetailPage = ({
             </div>
           )}
           <div css={eventCardContainerStyles}>
-            <EventCard {...props} titleLimit={null} titleAsLink={false} />
+            <EventCard
+              {...props}
+              titleLimit={null}
+              titleAsLink={false}
+              joinMeetingTooltipPosition="bottom"
+            />
           </div>
           {finished && (
             <TabNav>

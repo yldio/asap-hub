@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { addDays, addMinutes, subDays } from 'date-fns';
+import { addDays, addMinutes, subDays, subMinutes } from 'date-fns';
 import {
   createCalendarResponse,
   createEventResponse,
@@ -306,4 +306,22 @@ it('renders the speakers node when passed', () => {
     <EventDetailPage {...props} eventSpeakers={<div>Speakers Card</div>} />,
   );
   expect(screen.getByText('Speakers Card')).toBeVisible();
+});
+
+it('shows the missing meeting link tooltip below the join button', () => {
+  renderPage(
+    <EventDetailPage
+      {...props}
+      status="Confirmed"
+      meetingLink={undefined}
+      hideMeetingLink={false}
+      startDate={subMinutes(new Date(), 1).toISOString()}
+      endDate={addMinutes(new Date(), 30).toISOString()}
+    />,
+  );
+  const button = screen.getByText('Join Meeting Now');
+  const tooltip = screen.getByText(/couldn’t find the link to this event/);
+  expect(
+    button.compareDocumentPosition(tooltip) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
 });

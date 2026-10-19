@@ -24,6 +24,9 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
   > & {
     displayToast?: boolean;
     hasSpeakersToBeAnnounced: boolean;
+    joinMeetingTooltipPosition?: ComponentProps<
+      typeof JoinMeetingButton
+    >['tooltipPosition'];
   };
 
 const displayedMaterialTypes = [
@@ -42,6 +45,7 @@ const EventCard: React.FC<EventCardProps> = ({
   status,
   displayToast = true,
   hasSpeakersToBeAnnounced,
+  joinMeetingTooltipPosition,
   ...props
 }) => {
   const { hasStarted, hasFinished } = useEventLiveStatus(
@@ -73,7 +77,12 @@ const EventCard: React.FC<EventCardProps> = ({
       return {
         type: 'live',
         toastContent: <span>This event is happening now.</span>,
-        toastAction: <JoinMeetingButton meetingLink={props.meetingLink} />,
+        toastAction: (
+          <JoinMeetingButton
+            meetingLink={props.meetingLink}
+            tooltipPosition={joinMeetingTooltipPosition}
+          />
+        ),
       };
     }
     if (!hasStarted && hasSpeakersToBeAnnounced) {

@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { urlExpression } from '@asap-hub/validation';
 
@@ -22,13 +23,25 @@ const isValidMeetingLink = (meetingLink?: string): meetingLink is string =>
 
 type JoinMeetingButtonProps = {
   readonly meetingLink?: string;
+  readonly tooltipPosition?: ComponentProps<typeof Tooltip>['position'];
 };
 
 const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
   meetingLink,
+  tooltipPosition = 'top',
 }) => {
   const { shown: tooltipShown, triggerProps } =
     useTooltipTrigger<HTMLDivElement>({ openOnHover: true });
+
+  const tooltip = (
+    <div css={tooltipContainerStyles}>
+      <Tooltip shown={tooltipShown} position={tooltipPosition} width={160}>
+        We’re sorry but we couldn’t find the link to this event.
+        <br />
+        Please contact ASAP for more information.
+      </Tooltip>
+    </div>
+  );
 
   if (isValidMeetingLink(meetingLink)) {
     return (
@@ -42,16 +55,11 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
 
   return (
     <div role="presentation" css={containerStyles} {...triggerProps}>
-      <div css={tooltipContainerStyles}>
-        <Tooltip shown={tooltipShown} width={160}>
-          We’re sorry but we couldn’t find the link to this event.
-          <br />
-          Please contact ASAP for more information.
-        </Tooltip>
-      </div>
+      {tooltipPosition === 'top' && tooltip}
       <Link href={undefined} enabled={false} noMargin buttonStyle small>
         Join Meeting Now
       </Link>
+      {tooltipPosition === 'bottom' && tooltip}
     </div>
   );
 };

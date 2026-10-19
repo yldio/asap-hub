@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { rem } from '../../pixels';
+import { rem, tabletScreen } from '../../pixels';
 import { colour } from '../../colors';
 
 import Tooltip from '../Tooltip';
@@ -56,5 +56,14 @@ it('renders the text in Nunito Sans', () => {
   expect(getByText('text')).toHaveStyleRule(
     'font-family',
     expect.stringMatching(/^'Nunito Sans', ?Roboto/),
+  );
+});
+
+it('keeps the tooltip within the screen width below the tablet breakpoint', () => {
+  const { getByRole } = render(<Tooltip shown>text</Tooltip>);
+  expect(getByRole('tooltip').parentElement).toHaveStyleRule(
+    'max-width',
+    `calc(100vw - ${rem(48)})`,
+    { media: `(max-width: ${tabletScreen.width - 1}px)` },
   );
 });

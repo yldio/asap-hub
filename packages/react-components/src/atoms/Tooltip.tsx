@@ -43,7 +43,7 @@ const tooltipStyles = css({
   },
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    width: 'max-content',
+    maxWidth: `calc(100vw - ${rem(48)})`,
   },
 });
 const bubbleStyles = css({
@@ -59,8 +59,6 @@ const bubbleStyles = css({
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     maxWidth: '100%',
-    marginLeft: rem(12),
-    marginRight: rem(12),
   },
 });
 

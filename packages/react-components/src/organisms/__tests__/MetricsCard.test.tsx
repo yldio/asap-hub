@@ -149,6 +149,9 @@ describe('MoodStatus', () => {
 
     const tooltip = screen.getByRole('tooltip');
     expect(tooltip).toHaveTextContent('Adequate: 80% – 89%');
-    expect(tooltip).toHaveStyle({ backgroundColor: colour.neutral[900] });
+    expect(tooltip.parentElement).toHaveStyleRule(
+      '--tooltip-background',
+      colour.neutral[900],
+    );
   });
 });

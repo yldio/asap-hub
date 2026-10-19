@@ -321,6 +321,11 @@ export const FETCH_ENGAGEMENT = gql`
                     }
                     endDate
                     status
+                    calendar {
+                      sys {
+                        id
+                      }
+                    }
                   }
                 }
               }
@@ -471,6 +476,26 @@ export const preliminaryDataSharingSpeakerFragment = gql`
           startDate
           endDate
           status
+          calendar {
+            sys {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_INTEREST_GROUP_CALENDAR_IDS = gql`
+  query FetchInterestGroupCalendarIds($limit: Int, $skip: Int) {
+    interestGroupsCollection(order: sys_id_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        calendar {
+          sys {
+            id
+          }
         }
       }
     }
@@ -544,6 +569,11 @@ export const FETCH_ATTENDANCE = gql`
                     endDate
                     hidden
                     status
+                    calendar {
+                      sys {
+                        id
+                      }
+                    }
                   }
                 }
               }

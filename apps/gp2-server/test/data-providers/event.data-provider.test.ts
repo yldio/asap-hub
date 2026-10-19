@@ -508,6 +508,22 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(getContentfulEventDataObject());
     });
 
+    test('Should return the hidden flag of a hidden event', async () => {
+      const contentfulGraphQLResponse = {
+        ...getContentfulGraphqlEvent(),
+        hidden: true,
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        events: contentfulGraphQLResponse,
+      });
+
+      const result = await eventDataProvider.fetchById(eventId);
+      expect(result).toEqual({
+        ...getContentfulEventDataObject(),
+        hidden: true,
+      });
+    });
+
     describe('Event speakers', () => {
       test('Should return external user speaker', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();

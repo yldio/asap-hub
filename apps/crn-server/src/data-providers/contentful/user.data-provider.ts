@@ -267,7 +267,9 @@ export class UserContentfulDataProvider implements UserDataProvider {
           .filter((item) => !!item) || [];
 
       return {
-        total: users.length,
+        // Callers page on the membership count; the page size would end the
+        // paging after the first page.
+        total: teamMembershipCollection?.total ?? 0,
         items: users,
       };
     }

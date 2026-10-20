@@ -692,7 +692,8 @@ describe('User data provider', () => {
       });
 
       const result = await userDataProvider.fetch({ filter: { teamId: 'A' } });
-      expect(result!.total).toEqual(2);
+      // The membership count, so callers page through every membership.
+      expect(result!.total).toEqual(3);
       expect(result!.items.map((item) => item.firstName)).toEqual([
         'Alan',
         'Brady',

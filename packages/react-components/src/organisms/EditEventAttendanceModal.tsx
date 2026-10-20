@@ -25,7 +25,6 @@ import {
   InterestGroupsIcon,
   lockSmallIcon,
   searchIcon,
-  TeamIcon,
   uploadIcon,
 } from '../icons';
 import { useSectionExpansion } from '../hooks';
@@ -404,7 +403,7 @@ const SearchOption = ({
         {option.optionType === 'interestGroup' ? (
           <InterestGroupsIcon />
         ) : (
-          <TeamIcon />
+          teamIcon(option.teamType)
         )}
         <span>{option.label}</span>
         {option.optionType === 'interestGroup' && (

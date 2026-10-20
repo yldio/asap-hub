@@ -8,6 +8,7 @@ import {
   FETCH_INTEREST_GROUP_CALENDAR,
   FETCH_INTEREST_GROUP_ID_BY_INTEREST_GROUP_TEAM_ID,
   FETCH_INTEREST_GROUP_IDS_BY_TEAM_ID,
+  InterestGroupsOrder,
 } from '@asap-hub/contentful';
 import {
   getContentfulGraphql,
@@ -161,6 +162,17 @@ describe('Interest group data provider', () => {
           expect.objectContaining({
             limit: 13,
             skip: 3,
+          }),
+        );
+      });
+
+      test('Should order by name and break ties by id', async () => {
+        await dataProvider.fetch({});
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            order: [InterestGroupsOrder.NameAsc, InterestGroupsOrder.SysIdAsc],
           }),
         );
       });

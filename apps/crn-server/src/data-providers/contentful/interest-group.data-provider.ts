@@ -214,7 +214,9 @@ export class InterestGroupContentfulDataProvider
       limit: take,
       skip,
       where,
-      order: [InterestGroupsOrder.NameAsc],
+      // Groups can share a name; without a tie-break, pages overlap and some
+      // groups are never returned.
+      order: [InterestGroupsOrder.NameAsc, InterestGroupsOrder.SysIdAsc],
     });
 
     return this.parseCollection(interestGroupsCollection);

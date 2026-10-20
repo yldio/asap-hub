@@ -268,7 +268,9 @@ const parseGraphQLInterestGroup = (
   interestGroup: InterestGroupItem,
 ): InterestGroupDataObject => {
   const teams = (interestGroup.teamsCollection?.items || [])
-    .filter((x): x is InterestGroupTeams => x !== null)
+    // An unpublished or archived team resolves to null; without it the
+    // membership would surface as a team with an empty id.
+    .filter((x): x is InterestGroupTeams => !!x?.team)
     .map((t) => {
       const project =
         t?.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom

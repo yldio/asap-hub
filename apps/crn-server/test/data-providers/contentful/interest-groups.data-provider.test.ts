@@ -1,6 +1,7 @@
 import {
   getContentfulGraphqlClientMockServer,
   InterestGroupLeaders,
+  InterestGroupsTeams,
   FETCH_INTEREST_GROUPS,
   FETCH_INTEREST_GROUPS_BY_USER_ID,
   FETCH_INTEREST_GROUPS_BY_TEAM_ID,
@@ -67,6 +68,23 @@ describe('Interest group data provider', () => {
       const expectation = getInterestGroupDataObject().leaders[1];
 
       expect(result!.leaders).toEqual([expectation]);
+    });
+
+    test('Should return the group when the team of a membership is null (ie entity unpublished) and skip the membership', async () => {
+      const response = getContentfulGraphqlInterestGroup();
+      response.teamsCollection?.items.push({
+        team: null,
+        startDate: '2020-01-01T00:00:00.000Z',
+        endDate: null,
+      } as InterestGroupsTeams);
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        interestGroups: response,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      expect(result?.teams).toEqual(getInterestGroupDataObject().teams);
     });
 
     test('Should return the group when the calendars is null', async () => {

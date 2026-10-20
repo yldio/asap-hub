@@ -89,11 +89,20 @@ describe('EditEventAttendanceModal', () => {
   });
 
   it('Should say why the attendees list is empty', () => {
-    renderModal({ teams: [] });
+    renderModal({ teams: [], interestGroupName: undefined });
 
     expect(
       screen.getByText(/no hosting group, so nothing was added automatically/),
     ).toBeInTheDocument();
+  });
+
+  it('Should not claim there is no hosting group when the event has one', () => {
+    renderModal({ teams: [] });
+
+    expect(
+      screen.getByText('Search for a team above or upload a list.'),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/no hosting group/)).not.toBeInTheDocument();
   });
 
   it('Should save an untouched list, so the hosting rows get recorded', async () => {

@@ -762,8 +762,9 @@ const EditEventAttendanceModal: React.FC<EditEventAttendanceModalProps> = ({
                 <strong>Add teams to track attendance</strong>
               </Paragraph>
               <Paragraph noMargin accent="tertiary">
-                This event has no hosting group, so nothing was added
-                automatically. Search for a team above or upload a list.
+                {!interestGroupName &&
+                  'This event has no hosting group, so nothing was added automatically. '}
+                Search for a team above or upload a list.
               </Paragraph>
             </div>
           ) : (

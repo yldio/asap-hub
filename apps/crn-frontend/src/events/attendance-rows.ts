@@ -48,6 +48,7 @@ const toAttendedTeam = (team: InterestGroupTeam): EventAttendanceTeam => ({
 const toEligibleTeams = (
   teams: ReadonlyArray<InterestGroupTeam>,
   eventEndDate: string,
+  isFromInterestGroup: boolean,
 ): EventAttendanceTeam[] => {
   const eligibleTeamIds = new Set(
     getInterestGroupTeamIdsForEvent(
@@ -61,7 +62,10 @@ const toEligibleTeams = (
     ...new Map(
       teams
         .filter((team) => eligibleTeamIds.has(team.id))
-        .map((team) => [team.id, toAttendedTeam(team)]),
+        .map((team) => [
+          team.id,
+          { ...toAttendedTeam(team), isFromInterestGroup },
+        ]),
     ).values(),
   ];
 };
@@ -69,13 +73,20 @@ const toEligibleTeams = (
 export const toAttendanceSearchOptions = (
   hits: ReadonlyArray<InterestGroupHit | TeamHit>,
   eventEndDate: string,
+  hostingInterestGroupId?: string,
 ): AttendanceSearchOption[] => [
   ...hits.filter(isInterestGroupHit).map(
     (interestGroup): AttendanceSearchOption => ({
       optionType: 'interestGroup',
       value: interestGroup.id,
       label: interestGroup.name,
-      teams: toEligibleTeams(interestGroup.teams, eventEndDate),
+      // The server lists the hosting group's members under the group once
+      // saved, so they go there as soon as they are added.
+      teams: toEligibleTeams(
+        interestGroup.teams,
+        eventEndDate,
+        interestGroup.id === hostingInterestGroupId,
+      ),
     }),
   ),
   ...hits

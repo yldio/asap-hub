@@ -77,7 +77,7 @@ const Event: React.FC = () => {
             teams={teams}
             interestGroupName={event.interestGroup?.name}
             loadSearchOptions={(search) =>
-              searchAttendance(search, event.endDate)
+              searchAttendance(search, event.endDate, event.interestGroup?.id)
             }
             onUploadList={async (files: File[]) => {
               const [rows, corpus] = await Promise.all([

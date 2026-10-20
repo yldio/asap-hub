@@ -611,6 +611,23 @@ describe('the NEW_EVENT_PAGE flag', () => {
         );
       });
 
+      it('adds the hosting group members under the group, where they show once saved', async () => {
+        mockGetEvent.mockResolvedValue({
+          ...eventWithOneTeam(),
+          interestGroup: { ...createInterestGroupResponse(), id: 'ig-1' },
+        });
+        const { findByText, getByRole } = await openAndSearch();
+
+        await userEvent.click(await findByText('Alpha Group'));
+
+        const modal = within(getByRole('dialog'));
+        expect(modal.getByText('From Group 1 (2)')).toBeVisible();
+        expect(modal.getByText('Additional teams (1)')).toBeVisible();
+        expect(
+          modal.queryByRole('button', { name: 'Remove Group Team A' }),
+        ).not.toBeInTheDocument();
+      });
+
       it('adds a selected team as attended', async () => {
         mockGetAttendanceSearchHits.mockResolvedValue([betaTeamHit]);
         const { findByText, getByRole } = await openAndSearch();

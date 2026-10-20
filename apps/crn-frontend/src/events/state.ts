@@ -64,10 +64,15 @@ export const useQuietRefreshEventById = (id: string) => {
 
 export const useEventAttendanceSearch = () => {
   const { client } = useAlgolia();
-  return async (search: string, eventEndDate: string) =>
+  return async (
+    search: string,
+    eventEndDate: string,
+    hostingInterestGroupId?: string,
+  ) =>
     toAttendanceSearchOptions(
       await getAttendanceSearchHits(client, search),
       eventEndDate,
+      hostingInterestGroupId,
     );
 };
 

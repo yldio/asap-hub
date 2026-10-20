@@ -354,10 +354,26 @@ const searchOptionStyles = css({
     height: rem(24),
     flexShrink: 0,
   },
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexWrap: 'wrap',
+    rowGap: 0,
+  },
+});
+
+const searchOptionLabelStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flex: '1 1 0',
+    minWidth: 0,
+  },
 });
 
 const searchOptionMetaStyles = css({
   color: colour.foreground.tertiary,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexBasis: '100%',
+    // The icon and the gap, so the count lines up under the name.
+    paddingLeft: rem(32),
+  },
 });
 
 const placeholderStyles = css({
@@ -405,7 +421,7 @@ const SearchOption = ({
         ) : (
           teamIcon(option.teamType)
         )}
-        <span>{option.label}</span>
+        <span css={searchOptionLabelStyles}>{option.label}</span>
         {option.optionType === 'interestGroup' && (
           <span css={searchOptionMetaStyles}>
             {toAdd === 0

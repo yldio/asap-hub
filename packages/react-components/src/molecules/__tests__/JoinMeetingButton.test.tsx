@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { colour } from '../../colors';
+import { rem, tabletScreen } from '../../pixels';
 import JoinMeetingButton from '../JoinMeetingButton';
 
 it('links to the meeting when the meeting link is valid', () => {
@@ -115,11 +116,19 @@ it('styles the missing link tooltip with the event page design', () => {
   render(<JoinMeetingButton />);
   const tooltip = screen.getByRole('tooltip', { hidden: true });
 
-  expect(tooltip).toHaveStyleRule(
-    'font-family',
-    expect.stringMatching(/^'Nunito Sans', ?Roboto/),
-  );
   expect(tooltip).toHaveStyle({
     backgroundColor: colour.foreground['color-blue'],
   });
+  expect(tooltip).toHaveStyleRule('max-width', rem(160), {
+    media: `(max-width: ${tabletScreen.width - 1}px)`,
+  });
+  expect(tooltip).toHaveStyleRule('margin-left', '0', {
+    media: `(max-width: ${tabletScreen.width - 1}px)`,
+  });
+  expect(tooltip).not.toHaveStyleRule('font-size', expect.anything());
+  expect(tooltip.firstElementChild).toHaveStyleRule(
+    'font-family',
+    expect.stringMatching(/^'Nunito Sans', ?Roboto/),
+  );
+  expect(tooltip.firstElementChild).toHaveStyleRule('font-size', rem(14));
 });

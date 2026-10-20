@@ -5,7 +5,7 @@ import { urlExpression } from '@asap-hub/validation';
 import { Link, Tooltip } from '../atoms';
 import { colour } from '../colors';
 import { useTooltipTrigger } from '../hooks';
-import { rem, mobileScreen } from '../pixels';
+import { rem, mobileScreen, tabletScreen } from '../pixels';
 import { fontStyles } from '../text';
 
 const containerStyles = css({
@@ -20,9 +20,21 @@ const tooltipContainerStyles = css({
   height: 0,
 });
 
-const tooltipTextStyles = css({
+const tooltipWidth = 160;
+
+const tooltipBubbleStyles = css({
   padding: rem(12),
   borderRadius: rem(8),
+
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    maxWidth: rem(tooltipWidth),
+    marginLeft: 0,
+    marginRight: 0,
+  },
+});
+
+const tooltipTextStyles = css({
+  display: 'block',
   fontFamily: `'Nunito Sans', ${fontStyles.fontFamily}`,
   fontSize: rem(14),
   lineHeight: 24 / 14,
@@ -48,13 +60,15 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
       <Tooltip
         shown={tooltipShown}
         position={tooltipPosition}
-        width={160}
+        width={tooltipWidth}
         background={colour.foreground['color-blue']}
-        textStyles={tooltipTextStyles}
+        textStyles={tooltipBubbleStyles}
       >
-        We’re sorry but we couldn’t find the link to this event.
-        <br />
-        Please contact ASAP for more information.
+        <span css={tooltipTextStyles}>
+          We’re sorry but we couldn’t find the link to this event.
+          <br />
+          Please contact ASAP for more information.
+        </span>
       </Tooltip>
     </div>
   );

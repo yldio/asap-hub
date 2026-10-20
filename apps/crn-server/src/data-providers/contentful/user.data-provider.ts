@@ -816,7 +816,9 @@ export const parseContentfulGraphQlUserListItem = (
 
   const userTeams = (item.teamsCollection?.items || []).reduce(
     (userListItemTeams: UserListItemTeam[], teamItem) => {
-      if (!teamItem || !teamItem.role || !isTeamRole(teamItem.role)) {
+      // An unpublished team resolves to null; without it the membership would
+      // be indexed as a team with an empty id.
+      if (!teamItem?.team || !teamItem.role || !isTeamRole(teamItem.role)) {
         return userListItemTeams;
       }
 

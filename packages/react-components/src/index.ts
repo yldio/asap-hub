@@ -160,6 +160,7 @@ export {
   AdditionalMaterials,
   articlesToOptions,
   AuthorSelect,
+  CalendarHubUpdates,
   CalendarList,
   CaptionCard,
   CheckboxGroup,

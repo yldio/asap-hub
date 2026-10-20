@@ -88,3 +88,32 @@ it('displays the description', () => {
   );
   expect(getByText('Test Description')).toBeVisible();
 });
+
+it('renders an icon before each calendar name when provided', () => {
+  const { getAllByTitle } = render(
+    <CalendarList
+      {...props}
+      calendars={createListCalendarResponse(2).items}
+      icon={
+        <svg>
+          <title>Calendar Icon</title>
+        </svg>
+      }
+    />,
+  );
+  expect(getAllByTitle('Calendar Icon')).toHaveLength(2);
+});
+
+it('hides the calendar colour when hideCalendarColour is set', () => {
+  const { getByText, queryByText } = render(
+    <CalendarList
+      {...props}
+      calendars={[{ color: '#0D7813', name: 'Test Calendar', id: '1' }]}
+      hideCalendarColour
+    />,
+  );
+  expect(queryByText('●')).not.toBeInTheDocument();
+  expect(getComputedStyle(getByText('Test Calendar')).fontWeight).not.toBe(
+    'bold',
+  );
+});

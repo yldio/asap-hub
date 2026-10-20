@@ -13,11 +13,13 @@ import DropdownButton, { ItemData } from './DropdownButton';
 type CalendarLinkProps = {
   readonly children?: AllowedChildren;
   readonly id: string;
+  readonly primary?: boolean;
 };
 
 const CalendarLink: React.FC<CalendarLinkProps> = ({
   id,
   children = 'Subscribe',
+  primary,
 }) => {
   const url = new URL('https://calendar.google.com/calendar/r');
   url.searchParams.set('cid', id);
@@ -69,6 +71,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({
 
   return (
     <DropdownButton
+      primary={primary}
       children={items}
       buttonChildren={(menuShown) => (
         <>

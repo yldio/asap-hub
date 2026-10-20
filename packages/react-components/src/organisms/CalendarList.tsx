@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { BasicCalendarResponse } from '@asap-hub/model';
-import { FC, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
 import { Card, Headline3, Paragraph, Link, Button } from '../atoms';
 import { tabletScreen, rem } from '../pixels';
@@ -71,6 +71,18 @@ const orderList = css({
   },
 });
 
+const iconStyles = css({
+  display: 'inline-flex',
+  alignSelf: 'center',
+  width: rem(20),
+  height: rem(20),
+  marginRight: rem(12),
+  '& svg': {
+    width: '100%',
+    height: '100%',
+  },
+});
+
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -84,12 +96,16 @@ interface CalendarListProps {
   title: string;
   description?: string;
   hideSupportText?: boolean;
+  icon?: ReactNode;
+  hideCalendarColour?: boolean;
 }
 const CalendarList: FC<CalendarListProps> = ({
   calendars,
   title,
   description,
   hideSupportText = false,
+  icon,
+  hideCalendarColour = false,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
@@ -121,10 +137,25 @@ const CalendarList: FC<CalendarListProps> = ({
                 <li key={id}>
                   <div css={dataGrid}>
                     <div css={gridText}>
-                      <Paragraph accent="primary">
+                      <Paragraph
+                        accent={hideCalendarColour ? 'brand' : 'primary'}
+                      >
                         <span css={{ display: 'flex' }}>
-                          <span css={{ color, paddingRight: rem(14) }}>●</span>
-                          <span css={{ fontWeight: 'bold' }}>{name}</span>
+                          {icon && <span css={iconStyles}>{icon}</span>}
+                          {!hideCalendarColour && (
+                            <span css={{ color, paddingRight: rem(14) }}>
+                              ●
+                            </span>
+                          )}
+                          <span
+                            css={
+                              hideCalendarColour
+                                ? undefined
+                                : { fontWeight: 'bold' }
+                            }
+                          >
+                            {name}
+                          </span>
                         </span>
                       </Paragraph>
                     </div>

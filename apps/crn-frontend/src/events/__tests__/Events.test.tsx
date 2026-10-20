@@ -46,7 +46,7 @@ describe('Events', () => {
     renderEventsPage();
 
     const heading = await screen.findByRole('heading', { level: 1 });
-    expect(heading.textContent).toEqual('Calendar and Events');
+    expect(heading.textContent).toEqual('Calendar & Events');
   });
 
   describe.each`

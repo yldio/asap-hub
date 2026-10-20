@@ -1,0 +1,80 @@
+import { css } from '@emotion/react';
+import { BasicCalendarResponse } from '@asap-hub/model';
+import { FC } from 'react';
+
+import { Card, Headline3, Paragraph } from '../atoms';
+import { CalendarLink } from '../molecules';
+import { mobileScreen, rem } from '../pixels';
+
+const containerStyles = css({
+  display: 'grid',
+  gridRowGap: rem(16),
+  padding: rem(24),
+});
+
+const rowStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: rem(24),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
+});
+
+const listStyles = css({
+  display: 'grid',
+  gridRowGap: rem(12),
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const description =
+  'Subscribe to the official CRN calendar for community-wide sessions run by the ASAP team.';
+
+interface CalendarHubUpdatesProps {
+  calendars: ReadonlyArray<BasicCalendarResponse>;
+}
+const CalendarHubUpdates: FC<CalendarHubUpdatesProps> = ({ calendars }) => {
+  if (!calendars.length) {
+    return null;
+  }
+
+  const [firstCalendar] = calendars;
+
+  return (
+    <Card padding={false} accent="highlight">
+      <div css={containerStyles}>
+        <Headline3 noMargin>CRN Hub Updates</Headline3>
+        {calendars.length === 1 && firstCalendar ? (
+          <div css={rowStyles}>
+            <Paragraph accent="secondary" noMargin>
+              {description}
+            </Paragraph>
+            <CalendarLink id={firstCalendar.id} primary />
+          </div>
+        ) : (
+          <>
+            <Paragraph accent="secondary" noMargin>
+              {description}
+            </Paragraph>
+            <ul css={listStyles}>
+              {calendars.map(({ id, name }) => (
+                <li key={id} css={rowStyles}>
+                  <Paragraph accent="primary" noMargin>
+                    {name}
+                  </Paragraph>
+                  <CalendarLink id={id} primary />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
+    </Card>
+  );
+};
+
+export default CalendarHubUpdates;

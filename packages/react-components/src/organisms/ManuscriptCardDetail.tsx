@@ -300,7 +300,7 @@ const ManuscriptCardDetail: React.FC<ManuscriptCardDetailProps> = ({
                   {hasUpdateAccess && (
                     <span>
                       <Tooltip
-                        offset={rem(6)}
+                        bottom={rem(6)}
                         width={rem(296)}
                         shown={tooltipHoverShown}
                         textStyles={css({

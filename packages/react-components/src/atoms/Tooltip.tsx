@@ -3,27 +3,27 @@ import { css, SerializedStyles } from '@emotion/react';
 
 import { colour } from '../colors';
 import { rem, tabletScreen } from '../pixels';
-import { fontStyles } from '../text';
 
-const triangleHeight = 4;
+const triangleHeight = 5;
 
 const positionerStyles = css({
   display: 'block',
   position: 'relative',
   height: 0,
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    position: 'relative',
     width: '100%',
   },
 });
 const tooltipStyles = css({
-  '--tooltip-background': colour.foreground['color-blue'],
   position: 'absolute',
+  bottom: 0,
   left: '50%',
   transform: 'translateX(-50%)',
   width: rem(256),
 
-  display: 'block',
-  paddingBottom: rem(triangleHeight),
+  display: 'grid',
+  gridTemplateRows: `auto ${rem(triangleHeight)}`,
 
   '::before': {
     content: '""',
@@ -33,7 +33,7 @@ const tooltipStyles = css({
     position: 'absolute',
     borderLeft: `${triangleHeight}px solid transparent`,
     borderRight: `${triangleHeight}px solid transparent`,
-    borderTop: `${triangleHeight}px solid var(--tooltip-background)`,
+    borderTop: `${triangleHeight}px solid ${colour.brand.gp2[900]}`,
     bottom: 0,
     right: '50%',
     // the triangle is 2 * triangleHeight wide, so pull it right by half
@@ -42,40 +42,38 @@ const tooltipStyles = css({
   },
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    maxWidth: `calc(100vw - ${rem(48)})`,
+    width: 'max-content',
   },
 });
 const bottomTooltipStyles = css({
+  top: rem(4),
+  bottom: 'auto',
+  gridTemplateRows: 'auto',
   paddingTop: rem(triangleHeight),
-  paddingBottom: 0,
 
   '::before': {
     borderTop: 'none',
-    borderBottom: `${triangleHeight}px solid var(--tooltip-background)`,
+    borderBottom: `${triangleHeight}px solid ${colour.brand.gp2[900]}`,
     top: 0,
     bottom: 'auto',
   },
 });
 const bubbleStyles = css({
-  backgroundColor: 'var(--tooltip-background)',
+  backgroundColor: colour.brand.gp2[900],
   color: colour.foreground['primary-inverse'],
   display: 'block',
 
-  padding: rem(12),
+  padding: `${rem(9)} ${rem(12)}`,
   boxSizing: 'border-box',
+  maxWidth: rem(256),
 
-  borderRadius: rem(8),
+  borderRadius: rem(4),
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     maxWidth: '100%',
+    marginLeft: rem(12),
+    marginRight: rem(12),
   },
-});
-
-const bubbleTextStyles = css({
-  display: 'block',
-  fontFamily: `'Nunito Sans', ${fontStyles.fontFamily}`,
-  fontSize: rem(14),
-  lineHeight: 24 / 14,
 });
 
 interface TooltipProps {
@@ -83,7 +81,7 @@ interface TooltipProps {
   shown?: boolean;
   position?: 'top' | 'bottom';
   maxContent?: boolean;
-  offset?: string | number;
+  bottom?: string;
   textStyles?: SerializedStyles;
   width?: string | number;
   // Recolours the bubble and its tail together; the tail is drawn by a
@@ -95,12 +93,17 @@ const Tooltip: React.FC<TooltipProps> = ({
   shown = false,
   position = 'top',
   maxContent = false,
-  offset = position === 'top' ? 0 : rem(4),
+  bottom,
   textStyles,
   width,
   background,
 }) => {
-  const widthValue = typeof width === 'number' ? rem(width) : width ?? rem(256);
+  const widthValue =
+    width !== undefined
+      ? typeof width === 'number'
+        ? rem(width)
+        : width
+      : rem(256);
 
   return (
     <span css={positionerStyles}>
@@ -109,10 +112,17 @@ const Tooltip: React.FC<TooltipProps> = ({
           tooltipStyles,
           position === 'bottom' && bottomTooltipStyles,
           { width: widthValue },
-          position === 'top' ? { bottom: offset } : { top: offset },
-          background && { '--tooltip-background': background },
+          background
+            ? {
+                '::before':
+                  position === 'bottom'
+                    ? { borderBottomColor: background }
+                    : { borderTopColor: background },
+              }
+            : {},
           shown || { display: 'none' },
           maxContent && { width: 'max-content' },
+          bottom && { bottom },
         ]}
       >
         <span
@@ -120,11 +130,12 @@ const Tooltip: React.FC<TooltipProps> = ({
           css={[
             bubbleStyles,
             { maxWidth: widthValue },
+            background ? { backgroundColor: background } : {},
             maxContent && { width: 'max-content', maxWidth: 'fit-content' },
             textStyles,
           ]}
         >
-          <span css={bubbleTextStyles}>{children}</span>
+          {children}
         </span>
       </span>
     </span>

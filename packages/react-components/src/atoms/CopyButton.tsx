@@ -56,10 +56,10 @@ const CopyButton: React.FC<CopyButtonProps> = ({
         setTooltipHoverShown(false);
       }}
     >
-      <Tooltip maxContent offset={rem(24)} shown={tooltipClickShown}>
+      <Tooltip maxContent bottom={rem(24)} shown={tooltipClickShown}>
         {clickTooltipText}
       </Tooltip>
-      <Tooltip maxContent offset={rem(24)} shown={tooltipHoverShown}>
+      <Tooltip maxContent bottom={rem(24)} shown={tooltipHoverShown}>
         {hoverTooltipText}
       </Tooltip>
       <div

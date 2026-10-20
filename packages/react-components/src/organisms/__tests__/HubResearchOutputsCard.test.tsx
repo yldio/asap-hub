@@ -118,10 +118,7 @@ describe('HubResearchOutputsCard', () => {
     expect(tooltip).toHaveTextContent(
       'This percentage is calculated based on the number of outputs shared (ASAP funded).',
     );
-    expect(tooltip.parentElement).toHaveStyleRule(
-      '--tooltip-background',
-      colour.neutral[900],
-    );
+    expect(tooltip).toHaveStyle({ backgroundColor: colour.neutral[900] });
   });
 
   it('renders the metric details', () => {

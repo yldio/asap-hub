@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { rem, tabletScreen } from '../../pixels';
+import { rem } from '../../pixels';
 import { colour } from '../../colors';
 
 import Tooltip from '../Tooltip';
@@ -35,52 +35,19 @@ it('recolours the bubble and its tail when a background is given', () => {
   );
 
   const bubble = getByRole('tooltip');
+  expect(bubble).toHaveStyle({ backgroundColor: 'rgb(0, 32, 44)' });
   expect(bubble.parentElement).toHaveStyleRule(
-    '--tooltip-background',
+    'border-top-color',
     'rgb(0, 32, 44)',
-  );
-  expect(bubble).toHaveStyleRule(
-    'background-color',
-    'var(--tooltip-background)',
-  );
-  expect(bubble.parentElement).toHaveStyleRule(
-    'border-top',
-    '4px solid var(--tooltip-background)',
     { target: '::before' },
   );
 });
 
 it('keeps the default background when none is given', () => {
   const { getByRole } = render(<Tooltip shown>text</Tooltip>);
-  expect(getByRole('tooltip').parentElement).toHaveStyleRule(
-    '--tooltip-background',
-    colour.foreground['color-blue'],
-  );
-});
-
-it('places the bubble at the given offset from its anchor', () => {
-  const { getByRole } = render(
-    <Tooltip shown offset={rem(24)}>
-      text
-    </Tooltip>,
-  );
-  expect(getByRole('tooltip').parentElement).toHaveStyle({ bottom: rem(24) });
-});
-
-it('renders the text in Nunito Sans', () => {
-  const { getByText } = render(<Tooltip shown>text</Tooltip>);
-  expect(getByText('text')).toHaveStyleRule(
-    'font-family',
-    expect.stringMatching(/^'Nunito Sans', ?Roboto/),
-  );
-});
-
-it('keeps the tooltip within the screen width below the tablet breakpoint', () => {
-  const { getByRole } = render(<Tooltip shown>text</Tooltip>);
-  expect(getByRole('tooltip').parentElement).toHaveStyleRule(
-    'max-width',
-    `calc(100vw - ${rem(48)})`,
-    { media: `(max-width: ${tabletScreen.width - 1}px)` },
+  expect(getByRole('tooltip')).toHaveStyleRule(
+    'background-color',
+    colour.brand.gp2[900],
   );
 });
 
@@ -93,9 +60,10 @@ it('renders the bubble below its anchor with the tail on top when positioned at 
 
   const tooltip = getByRole('tooltip').parentElement;
   expect(tooltip).toHaveStyle({ top: rem(4) });
-  expect(tooltip).toHaveStyleRule(
-    'border-bottom',
-    '4px solid var(--tooltip-background)',
-    { target: '::before' },
-  );
+  expect(tooltip).toHaveStyleRule('border-top', 'none', {
+    target: '::before',
+  });
+  expect(tooltip).toHaveStyleRule('border-bottom-color', 'rgb(0, 32, 44)', {
+    target: '::before',
+  });
 });

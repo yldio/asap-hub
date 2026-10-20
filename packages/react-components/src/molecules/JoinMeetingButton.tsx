@@ -3,8 +3,10 @@ import { css } from '@emotion/react';
 import { urlExpression } from '@asap-hub/validation';
 
 import { Link, Tooltip } from '../atoms';
+import { colour } from '../colors';
 import { useTooltipTrigger } from '../hooks';
 import { rem, mobileScreen } from '../pixels';
+import { fontStyles } from '../text';
 
 const containerStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -16,6 +18,14 @@ const containerStyles = css({
 const tooltipContainerStyles = css({
   position: 'relative',
   height: 0,
+});
+
+const tooltipTextStyles = css({
+  padding: rem(12),
+  borderRadius: rem(8),
+  fontFamily: `'Nunito Sans', ${fontStyles.fontFamily}`,
+  fontSize: rem(14),
+  lineHeight: 24 / 14,
 });
 
 const isValidMeetingLink = (meetingLink?: string): meetingLink is string =>
@@ -35,7 +45,13 @@ const JoinMeetingButton: React.FC<JoinMeetingButtonProps> = ({
 
   const tooltip = (
     <div css={tooltipContainerStyles}>
-      <Tooltip shown={tooltipShown} position={tooltipPosition} width={160}>
+      <Tooltip
+        shown={tooltipShown}
+        position={tooltipPosition}
+        width={160}
+        background={colour.foreground['color-blue']}
+        textStyles={tooltipTextStyles}
+      >
         We’re sorry but we couldn’t find the link to this event.
         <br />
         Please contact ASAP for more information.

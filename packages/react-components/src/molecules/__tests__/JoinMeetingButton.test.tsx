@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { colour } from '../../colors';
 import JoinMeetingButton from '../JoinMeetingButton';
 
 it('links to the meeting when the meeting link is valid', () => {
@@ -109,3 +110,16 @@ it.each`
     );
   },
 );
+
+it('styles the missing link tooltip with the event page design', () => {
+  render(<JoinMeetingButton />);
+  const tooltip = screen.getByRole('tooltip', { hidden: true });
+
+  expect(tooltip).toHaveStyleRule(
+    'font-family',
+    expect.stringMatching(/^'Nunito Sans', ?Roboto/),
+  );
+  expect(tooltip).toHaveStyle({
+    backgroundColor: colour.foreground['color-blue'],
+  });
+});

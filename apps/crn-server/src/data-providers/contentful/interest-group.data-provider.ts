@@ -6,6 +6,7 @@ import {
   InterestGroupLeader as GroupLeader,
   ListInterestGroupDataObject,
   getLatestUserAward,
+  isTeamType,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -272,11 +273,14 @@ const parseGraphQLInterestGroup = (
       const project =
         t?.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
           ?.projectsCollection?.items[0];
+      const teamType = t?.team?.teamType;
       return {
         id: t?.team?.sys.id ?? '',
         inactiveSince: t?.team?.inactiveSince ?? undefined,
+        startDate: t?.startDate ?? undefined,
         endDate: t?.endDate,
         displayName: t?.team?.displayName ?? '',
+        teamType: isTeamType(teamType) ? teamType : undefined,
         projectTitle: project?.title ?? '',
         tags: parseResearchTags(project?.researchTagsCollection?.items || []),
       };

@@ -32288,9 +32288,9 @@ export type InterestGroupsContentFragment = Pick<
   teamsCollection?: Maybe<{
     items: Array<
       Maybe<
-        Pick<InterestGroupsTeams, 'endDate'> & {
+        Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
           team?: Maybe<
-            Pick<Teams, 'displayName' | 'inactiveSince'> & {
+            Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
               sys: Pick<Sys, 'id'>;
               linkedFrom?: Maybe<{
                 projectMembershipCollection?: Maybe<{
@@ -32408,9 +32408,9 @@ export type FetchInterestGroupByIdQuery = {
       teamsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<InterestGroupsTeams, 'endDate'> & {
+            Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
               team?: Maybe<
-                Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                   sys: Pick<Sys, 'id'>;
                   linkedFrom?: Maybe<{
                     projectMembershipCollection?: Maybe<{
@@ -32538,9 +32538,9 @@ export type FetchInterestGroupsQuery = {
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<InterestGroupsTeams, 'endDate'> & {
+                  Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
                     team?: Maybe<
-                      Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                      Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                         sys: Pick<Sys, 'id'>;
                         linkedFrom?: Maybe<{
                           projectMembershipCollection?: Maybe<{
@@ -32686,9 +32686,9 @@ export type FetchInterestGroupsByUserIdQuery = {
                     teamsCollection?: Maybe<{
                       items: Array<
                         Maybe<
-                          Pick<InterestGroupsTeams, 'endDate'> & {
+                          Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
                             team?: Maybe<
-                              Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                              Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                                 sys: Pick<Sys, 'id'>;
                                 linkedFrom?: Maybe<{
                                   projectMembershipCollection?: Maybe<{
@@ -32877,9 +32877,9 @@ export type FetchInterestGroupsByTeamIdQuery = {
                       teamsCollection?: Maybe<{
                         items: Array<
                           Maybe<
-                            Pick<InterestGroupsTeams, 'endDate'> & {
+                            Pick<InterestGroupsTeams, 'startDate' | 'endDate'> & {
                               team?: Maybe<
-                                Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                                Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
                                   sys: Pick<Sys, 'id'>;
                                   linkedFrom?: Maybe<{
                                     projectMembershipCollection?: Maybe<{
@@ -43267,6 +43267,10 @@ export const InterestGroupsContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'teamType' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'inactiveSince' },
                             },
                             {
@@ -43445,6 +43449,10 @@ export const InterestGroupsContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startDate' },
                       },
                       {
                         kind: 'Field',

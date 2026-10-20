@@ -380,6 +380,7 @@ export {
   SharedResearchPage,
   SigninForm,
   SigninPage,
+  SubscribeToCalendarsPage,
   TagsPage,
   TagsPageBody,
   TagsPageHeader,

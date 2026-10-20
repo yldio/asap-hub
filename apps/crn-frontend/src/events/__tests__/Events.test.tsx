@@ -79,18 +79,22 @@ describe('Events', () => {
   });
 
   describe('the events calendar page', () => {
-    it('renders a google calendar iframe', async () => {
+    it('does not render a google calendar iframe', async () => {
       mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
       renderEventsPage(events({}).calendar({}).$);
 
-      const calendars = await screen.findByTitle('Calendar');
-      expect(calendars.tagName).toBe('IFRAME');
+      expect(
+        await screen.findByRole('heading', { name: 'Interest Groups' }),
+      ).toBeVisible();
+      expect(screen.queryByTitle('Calendar')).not.toBeInTheDocument();
     });
 
     it('Displays a list of calendars', async () => {
       mockGetCalendars.mockResolvedValue({
-        ...createListCalendarResponse(2),
-        items: createListCalendarResponse(2).items.map((item, index) => ({
+        ...createListCalendarResponse(2, { activeGroups: true }),
+        items: createListCalendarResponse(2, {
+          activeGroups: true,
+        }).items.map((item, index) => ({
           ...item,
           name: `Calendar title ${index}`,
         })),

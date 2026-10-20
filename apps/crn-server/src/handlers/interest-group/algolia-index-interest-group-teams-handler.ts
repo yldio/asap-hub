@@ -32,11 +32,21 @@ export const indexInterestGroupTeamsHandler =
   > =>
   async (event) => {
     const { resourceId } = event.detail;
-    const interestGroupIds = await getInterestGroupIdsForEntry(
-      interestGroupDataProvider,
-      event['detail-type'],
-      resourceId,
-    );
+    // Contentful no longer matches the memberships of an unpublished team, so
+    // its groups are found through their Algolia records.
+    const interestGroupIds =
+      event['detail-type'] === 'TeamsUnpublished'
+        ? (
+            await algoliaClient.search(['interest-group'], '', {
+              filters: `teams.id:"${resourceId}"`,
+              hitsPerPage: 1000,
+            })
+          ).hits.map(({ id }) => id)
+        : await getInterestGroupIdsForEntry(
+            interestGroupDataProvider,
+            event['detail-type'],
+            resourceId,
+          );
     logger.debug(
       `Reindexing interest groups [${interestGroupIds}] for entry ${resourceId}`,
     );

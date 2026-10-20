@@ -126,7 +126,7 @@ export const indexerFunctions: AWS['functions'] = {
   ),
   algoliaIndexInterestGroupTeams: algoliaIndexer(
     './src/handlers/interest-group/algolia-index-interest-group-teams-handler.handler',
-    ['InterestGroupsTeamsPublished', 'TeamsPublished'],
+    ['InterestGroupsTeamsPublished', 'TeamsPublished', 'TeamsUnpublished'],
   ),
   algoliaIndexManuscripts: algoliaIndexer(
     './src/handlers/manuscript/algolia-index-manuscript-handler.handler',

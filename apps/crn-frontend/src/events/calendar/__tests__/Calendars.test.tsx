@@ -67,6 +67,27 @@ it('lets the user subscribe to the CRN calendar from the CRN Hub Updates section
   );
 });
 
+it('shows only the first CRN calendar in the CRN Hub Updates section', async () => {
+  await renderCalendars([
+    calendar({ id: 'hub@asap.science', name: 'ASAP Hub', crnCalendar: true }),
+    calendar({ id: 'other@asap.science', name: 'Other', crnCalendar: true }),
+  ]);
+
+  const section = getSection('CRN Hub Updates');
+  const buttons = within(section).getAllByRole('button', {
+    name: /subscribe/i,
+  });
+  expect(buttons).toHaveLength(1);
+
+  fireEvent.click(buttons[0]!);
+  expect(
+    within(section).getByRole('link', { name: /Add to Google Calendar/i }),
+  ).toHaveAttribute(
+    'href',
+    'https://calendar.google.com/calendar/r?cid=hub%40asap.science',
+  );
+});
+
 it('does not render the CRN Hub Updates section when no calendar is a CRN calendar', async () => {
   await renderCalendars([calendar({ id: 'other', name: 'Other' })]);
 
@@ -106,6 +127,35 @@ it('shows calendars of active interest groups and incomplete working groups in t
   expect(within(workingGroups).getByText('Incomplete WG')).toBeVisible();
   expect(screen.queryByText('Inactive IG')).not.toBeInTheDocument();
   expect(screen.queryByText('Complete WG')).not.toBeInTheDocument();
+});
+
+it('links calendars to the upcoming events of their active group', async () => {
+  await renderCalendars([
+    calendar({
+      id: 'ig-calendar',
+      name: 'IG Calendar',
+      interestGroups: [
+        { id: 'ig-inactive', active: false },
+        { id: 'ig-active', active: true },
+      ],
+    }),
+    calendar({
+      id: 'wg-calendar',
+      name: 'WG Calendar',
+      workingGroups: [{ id: 'wg-1', complete: false }],
+    }),
+  ]);
+
+  expect(
+    within(getSection('Interest Groups')).getByRole('link', {
+      name: 'IG Calendar',
+    }),
+  ).toHaveAttribute('href', '/network/interest-groups/ig-active/upcoming');
+  expect(
+    within(getSection('Working Groups')).getByRole('link', {
+      name: 'WG Calendar',
+    }),
+  ).toHaveAttribute('href', '/network/working-groups/wg-1/upcoming');
 });
 
 it('shows seminar series calendars in the Seminar Series section', async () => {

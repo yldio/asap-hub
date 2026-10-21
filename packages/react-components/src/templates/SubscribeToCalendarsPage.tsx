@@ -13,21 +13,23 @@ const containerStyles = css({
   gridRowGap: rem(32),
 });
 
+type CalendarWithLink = BasicCalendarResponse & { href?: string };
+
 type SubscribeToCalendarsPageProps = {
-  hubCalendars: ReadonlyArray<BasicCalendarResponse>;
-  interestGroupCalendars: ReadonlyArray<BasicCalendarResponse>;
-  workingGroupCalendars: ReadonlyArray<BasicCalendarResponse>;
+  hubCalendar?: BasicCalendarResponse;
+  interestGroupCalendars: ReadonlyArray<CalendarWithLink>;
+  workingGroupCalendars: ReadonlyArray<CalendarWithLink>;
   seminarSeriesCalendars: ReadonlyArray<BasicCalendarResponse>;
 };
 
 const SubscribeToCalendarsPage: React.FC<SubscribeToCalendarsPageProps> = ({
-  hubCalendars,
+  hubCalendar,
   interestGroupCalendars,
   workingGroupCalendars,
   seminarSeriesCalendars,
 }) => (
   <div css={containerStyles}>
-    <CalendarHubUpdates calendars={hubCalendars} />
+    <CalendarHubUpdates calendar={hubCalendar} />
     <CalendarList
       title="Interest Groups"
       description="Below you can find a list of all the Interest Groups that will present in the future. Hitting subscribe will allow you to add them to your own personal calendar."

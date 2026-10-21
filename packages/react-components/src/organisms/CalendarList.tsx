@@ -92,7 +92,7 @@ const showMoreStyles = css({
 });
 
 interface CalendarListProps {
-  calendars: ReadonlyArray<BasicCalendarResponse>;
+  calendars: ReadonlyArray<BasicCalendarResponse & { href?: string }>;
   title: string;
   description?: string;
   hideSupportText?: boolean;
@@ -133,7 +133,7 @@ const CalendarList: FC<CalendarListProps> = ({
           >
             {calendars
               .slice(0, showMore ? undefined : truncateFrom)
-              .map(({ id, name, color }) => (
+              .map(({ id, name, color, href }) => (
                 <li key={id}>
                   <div css={dataGrid}>
                     <div css={gridText}>
@@ -154,7 +154,7 @@ const CalendarList: FC<CalendarListProps> = ({
                                 : { fontWeight: 'bold' }
                             }
                           >
-                            {name}
+                            {href ? <Link href={href}>{name}</Link> : name}
                           </span>
                         </span>
                       </Paragraph>

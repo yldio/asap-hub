@@ -27,55 +27,27 @@ const rowStyles = css({
   },
 });
 
-const listStyles = css({
-  display: 'grid',
-  gridRowGap: rem(12),
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-});
-
 const description =
   'Subscribe to the official CRN calendar for community-wide sessions run by the ASAP team.';
 
 interface CalendarHubUpdatesProps {
-  calendars: ReadonlyArray<BasicCalendarResponse>;
+  calendar?: BasicCalendarResponse;
 }
-const CalendarHubUpdates: FC<CalendarHubUpdatesProps> = ({ calendars }) => {
-  if (!calendars.length) {
+const CalendarHubUpdates: FC<CalendarHubUpdatesProps> = ({ calendar }) => {
+  if (!calendar) {
     return null;
   }
-
-  const [firstCalendar] = calendars;
 
   return (
     <Card padding={false} accent="highlight" overrideStyles={cardStyles}>
       <div css={containerStyles}>
         <Headline3 noMargin>CRN Hub Updates</Headline3>
-        {calendars.length === 1 && firstCalendar ? (
-          <div css={rowStyles}>
-            <Paragraph accent="secondary" noMargin>
-              {description}
-            </Paragraph>
-            <CalendarLink id={firstCalendar.id} primary noMargin />
-          </div>
-        ) : (
-          <>
-            <Paragraph accent="secondary" noMargin>
-              {description}
-            </Paragraph>
-            <ul css={listStyles}>
-              {calendars.map(({ id, name }) => (
-                <li key={id} css={rowStyles}>
-                  <Paragraph accent="primary" noMargin>
-                    {name}
-                  </Paragraph>
-                  <CalendarLink id={id} primary noMargin />
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+        <div css={rowStyles}>
+          <Paragraph accent="secondary" noMargin>
+            {description}
+          </Paragraph>
+          <CalendarLink id={calendar.id} primary noMargin />
+        </div>
       </div>
     </Card>
   );

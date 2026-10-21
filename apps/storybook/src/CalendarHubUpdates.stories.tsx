@@ -9,21 +9,10 @@ export default {
 
 export const Normal = () => (
   <CalendarHubUpdates
-    calendars={[
-      {
-        color: '#B1365F',
-        id: 'hub@asap.science',
-        name: text('Calendar Name', 'ASAP Hub'),
-      },
-    ]}
-  />
-);
-
-export const MultipleCalendars = () => (
-  <CalendarHubUpdates
-    calendars={[
-      { color: '#B1365F', id: 'hub@asap.science', name: 'ASAP Hub' },
-      { color: '#5C1158', id: 'other@asap.science', name: 'ASAP Other' },
-    ]}
+    calendar={{
+      color: '#B1365F',
+      id: 'hub@asap.science',
+      name: text('Calendar Name', 'ASAP Hub'),
+    }}
   />
 );

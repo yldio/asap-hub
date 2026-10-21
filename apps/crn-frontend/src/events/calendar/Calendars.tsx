@@ -1,5 +1,6 @@
 import { SubscribeToCalendarsPage } from '@asap-hub/react-components';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
+import { network } from '@asap-hub/routing';
 
 import { useCalendars } from './state';
 import { usePrefetchEvents } from '../state';
@@ -13,15 +14,42 @@ const Calendars: React.FC<CalendarsProps> = ({ currentTime }) => {
   usePrefetchEvents(getEventListOptions(currentTime, { past: true }));
   usePrefetchEvents(getEventListOptions(currentTime, { past: false }));
 
+  const interestGroupCalendars = items.flatMap((calendar) => {
+    const interestGroup = calendar.interestGroups.find(({ active }) => active);
+    return interestGroup
+      ? [
+          {
+            ...calendar,
+            href: network({})
+              .interestGroups({})
+              .interestGroup({ interestGroupId: interestGroup.id })
+              .upcoming({}).$,
+          },
+        ]
+      : [];
+  });
+  const workingGroupCalendars = items.flatMap((calendar) => {
+    const workingGroup = calendar.workingGroups.find(
+      ({ complete }) => !complete,
+    );
+    return workingGroup
+      ? [
+          {
+            ...calendar,
+            href: network({})
+              .workingGroups({})
+              .workingGroup({ workingGroupId: workingGroup.id })
+              .upcoming({}).$,
+          },
+        ]
+      : [];
+  });
+
   return (
     <SubscribeToCalendarsPage
-      hubCalendars={items.filter(({ crnCalendar }) => crnCalendar)}
-      interestGroupCalendars={items.filter(({ interestGroups }) =>
-        interestGroups.some(({ active }) => active),
-      )}
-      workingGroupCalendars={items.filter(({ workingGroups }) =>
-        workingGroups.some(({ complete }) => !complete),
-      )}
+      hubCalendar={items.find(({ crnCalendar }) => crnCalendar)}
+      interestGroupCalendars={interestGroupCalendars}
+      workingGroupCalendars={workingGroupCalendars}
       seminarSeriesCalendars={items.filter(
         ({ seminarSeries }) => seminarSeries,
       )}

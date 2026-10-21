@@ -36,6 +36,21 @@ it('Renders calender list item with colour', () => {
   expect(getByText('Test Calendar')).toBeVisible();
 });
 
+it('links the calendar name when the calendar has an href', () => {
+  const { getByRole } = render(
+    <CalendarList
+      {...props}
+      calendars={[
+        { color: '#113F47', name: 'Test Calendar', id: '1', href: '/group' },
+      ]}
+    />,
+  );
+  expect(getByRole('link', { name: 'Test Calendar' })).toHaveAttribute(
+    'href',
+    '/group',
+  );
+});
+
 it('Correctly generates the subscribe link', () => {
   const { getAllByRole } = render(
     <CalendarList

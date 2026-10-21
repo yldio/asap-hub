@@ -22,6 +22,8 @@ const headerStyles = css({
   marginRight: rem(24),
 });
 
+const subheaderMarginBottom = 33 - 12;
+
 const subheaderStyles = css({
   display: 'flex',
   flexDirection: 'row',
@@ -30,7 +32,7 @@ const subheaderStyles = css({
   marginTop: rem(24),
   marginLeft: rem(24),
   marginRight: rem(24),
-  marginBottom: rem(33 - 12),
+  marginBottom: rem(subheaderMarginBottom),
 });
 
 const dataGrid = css({
@@ -83,6 +85,10 @@ const iconStyles = css({
   },
 });
 
+const emptyMessageStyles = css({
+  padding: `${rem(24 - subheaderMarginBottom)} ${rem(24)} ${rem(24)}`,
+});
+
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -98,6 +104,7 @@ interface CalendarListProps {
   hideSupportText?: boolean;
   icon?: ReactNode;
   hideCalendarColour?: boolean;
+  emptyMessage?: string;
 }
 const CalendarList: FC<CalendarListProps> = ({
   calendars,
@@ -106,6 +113,7 @@ const CalendarList: FC<CalendarListProps> = ({
   hideSupportText = false,
   icon,
   hideCalendarColour = false,
+  emptyMessage,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
@@ -121,6 +129,17 @@ const CalendarList: FC<CalendarListProps> = ({
           <div css={subheaderStyles}>
             <Paragraph accent="tertiary" noMargin>
               {description}
+            </Paragraph>
+          </div>
+        )}
+        {!calendars.length && emptyMessage && (
+          <div css={emptyMessageStyles}>
+            <Paragraph
+              accent="primary"
+              noMargin
+              styles={css({ fontWeight: 500 })}
+            >
+              {emptyMessage}
             </Paragraph>
           </div>
         )}

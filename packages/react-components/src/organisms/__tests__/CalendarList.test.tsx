@@ -51,6 +51,24 @@ it('links the calendar name when the calendar has an href', () => {
   );
 });
 
+it('renders the empty message when there are no calendars', () => {
+  const { getByText } = render(
+    <CalendarList {...props} emptyMessage="No calendars yet." />,
+  );
+  expect(getByText('No calendars yet.')).toBeVisible();
+});
+
+it('does not render the empty message when there are calendars', () => {
+  const { queryByText } = render(
+    <CalendarList
+      {...props}
+      calendars={[{ color: '#113F47', name: 'Test Calendar', id: '1' }]}
+      emptyMessage="No calendars yet."
+    />,
+  );
+  expect(queryByText('No calendars yet.')).not.toBeInTheDocument();
+});
+
 it('Correctly generates the subscribe link', () => {
   const { getAllByRole } = render(
     <CalendarList

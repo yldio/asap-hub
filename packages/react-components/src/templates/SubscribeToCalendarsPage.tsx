@@ -32,6 +32,7 @@ const SubscribeToCalendarsPage: React.FC<SubscribeToCalendarsPageProps> = ({
     <CalendarHubUpdates calendar={hubCalendar} />
     <CalendarList
       title="Interest Groups"
+      emptyMessage="No Interest Groups are scheduled to present yet. Once one is, you can subscribe to it here."
       description="Below you can find a list of all the Interest Groups that will present in the future. Hitting subscribe will allow you to add them to your own personal calendar."
       calendars={interestGroupCalendars}
       icon={<InterestGroupsIcon />}
@@ -40,6 +41,7 @@ const SubscribeToCalendarsPage: React.FC<SubscribeToCalendarsPageProps> = ({
     />
     <CalendarList
       title="Working Groups"
+      emptyMessage="No Working Groups are scheduled to present yet. Once one is, you can subscribe to it here."
       description="Below you can find a list of all the Working Groups that will present in the future. Hitting subscribe will allow you to add them to your own personal calendar."
       calendars={workingGroupCalendars}
       icon={<WorkingGroupsIcon />}
@@ -48,6 +50,7 @@ const SubscribeToCalendarsPage: React.FC<SubscribeToCalendarsPageProps> = ({
     />
     <CalendarList
       title="Seminar Series"
+      emptyMessage="No Seminar Series are scheduled yet. Once one is, you can subscribe to it here."
       description="Below you can find a list of all the Seminar Series that will present in the future. These are public, so anyone can attend. Hitting subscribe will allow you to add them to your own personal calendar."
       calendars={seminarSeriesCalendars}
       hideCalendarColour

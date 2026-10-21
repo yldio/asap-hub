@@ -69,6 +69,29 @@ it('does not link seminar series calendars', () => {
   ).not.toBeInTheDocument();
 });
 
+it.each`
+  title                | message
+  ${'Interest Groups'} | ${'No Interest Groups are scheduled to present yet. Once one is, you can subscribe to it here.'}
+  ${'Working Groups'}  | ${'No Working Groups are scheduled to present yet. Once one is, you can subscribe to it here.'}
+  ${'Seminar Series'}  | ${'No Seminar Series are scheduled yet. Once one is, you can subscribe to it here.'}
+`('renders the empty message in the $title section', ({ title, message }) => {
+  render(
+    <SubscribeToCalendarsPage
+      interestGroupCalendars={[]}
+      workingGroupCalendars={[]}
+      seminarSeriesCalendars={[]}
+    />,
+  );
+  expect(within(getSection(title)).getByText(message)).toBeVisible();
+});
+
+it('does not render the CRN Hub Updates section without a hub calendar', () => {
+  render(<SubscribeToCalendarsPage {...props} hubCalendar={undefined} />);
+  expect(
+    screen.queryByRole('heading', { name: 'CRN Hub Updates' }),
+  ).not.toBeInTheDocument();
+});
+
 it('renders the group icons in the interest group and working group sections', () => {
   render(<SubscribeToCalendarsPage {...props} />);
   expect(

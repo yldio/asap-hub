@@ -95,3 +95,16 @@ export const Normal = () => (
     ]}
   />
 );
+
+export const Empty = () => (
+  <SubscribeToCalendarsPage
+    hubCalendar={{
+      color: '#B1365F',
+      id: 'hub@asap.science',
+      name: 'ASAP Hub',
+    }}
+    interestGroupCalendars={[]}
+    workingGroupCalendars={[]}
+    seminarSeriesCalendars={[]}
+  />
+);

@@ -400,6 +400,26 @@ const SearchPlaceholder = (
 const SearchMenu = (menuProps: MenuProps<AttendanceSearchOption, true>) =>
   menuProps.selectProps.inputValue ? <components.Menu {...menuProps} /> : null;
 
+// What selecting the option would actually add, so the count does not promise
+// rows that are already in the list.
+const searchOptionMeta = (
+  option: AttendanceSearchOption,
+  addedTeamIds: ReadonlySet<string>,
+) => {
+  if (option.optionType === 'team') {
+    return addedTeamIds.has(option.value) ? '• already added' : undefined;
+  }
+  if (option.teams.length === 0) {
+    return '• no teams at event date';
+  }
+  const toAdd = option.teams.filter(
+    (team) => !addedTeamIds.has(team.teamId),
+  ).length;
+  return toAdd === 0
+    ? '• all teams already added'
+    : `• adds ${pluralizeTeams(toAdd)}`;
+};
+
 const SearchOption = ({
   addedTeamIds,
   ...optionProps
@@ -407,12 +427,7 @@ const SearchOption = ({
   addedTeamIds: ReadonlySet<string>;
 }) => {
   const option = optionProps.data;
-  // What selecting the group would actually add, so the count does not promise
-  // rows that are already in the list.
-  const toAdd =
-    option.optionType === 'interestGroup'
-      ? option.teams.filter((team) => !addedTeamIds.has(team.teamId)).length
-      : 0;
+  const meta = searchOptionMeta(option, addedTeamIds);
   return (
     <components.Option {...optionProps}>
       <span css={searchOptionStyles}>
@@ -422,13 +437,7 @@ const SearchOption = ({
           teamIcon(option.teamType)
         )}
         <span css={searchOptionLabelStyles}>{option.label}</span>
-        {option.optionType === 'interestGroup' && (
-          <span css={searchOptionMetaStyles}>
-            {toAdd === 0
-              ? '• all teams already added'
-              : `• adds ${pluralizeTeams(toAdd)}`}
-          </span>
-        )}
+        {meta && <span css={searchOptionMetaStyles}>{meta}</span>}
       </span>
     </components.Option>
   );

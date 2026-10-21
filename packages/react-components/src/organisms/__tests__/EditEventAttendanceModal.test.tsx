@@ -425,6 +425,38 @@ describe('EditEventAttendanceModal', () => {
     expect(await screen.findByText('• adds 1 team')).toBeInTheDocument();
   });
 
+  it('Should flag a group with no teams at the event date', async () => {
+    renderModal({
+      teams: [],
+      loadSearchOptions: jest.fn(async () => [
+        {
+          value: 'empty-group-1',
+          label: 'Empty Group',
+          optionType: 'interestGroup' as const,
+          teams: [],
+        },
+      ]),
+    });
+
+    await userEvent.type(screen.getByRole('combobox'), 'Emp');
+
+    expect(
+      await screen.findByText('• no teams at event date'),
+    ).toBeInTheDocument();
+  });
+
+  it('Should flag a team that is already in the list', async () => {
+    renderModal({
+      teams: [
+        { teamId: 'searched-1', teamName: 'Searched Team', attended: true },
+      ],
+    });
+
+    await userEvent.type(screen.getByRole('combobox'), 'Sea');
+
+    expect(await screen.findByText('• already added')).toBeInTheDocument();
+  });
+
   it('Should show a no-matches message when the search returns nothing', async () => {
     renderModal({ teams: [], loadSearchOptions: jest.fn(async () => []) });
 

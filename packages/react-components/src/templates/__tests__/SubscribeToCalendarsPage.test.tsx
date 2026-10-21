@@ -18,7 +18,6 @@ const props: ComponentProps<typeof SubscribeToCalendarsPage> = {
   ],
 };
 
-// the heading sits in the card header, whose parent is the whole card
 const getSection = (title: string) =>
   screen.getByRole('heading', { name: title }).parentElement!.parentElement!;
 

@@ -13,8 +13,7 @@ import {
 import { AllowedChildren } from '../text';
 import DropdownButton, { ItemData } from './DropdownButton';
 
-// the chevron icons hardcode their stroke colour, which the primary button
-// styles cannot override, so recolour them to match the button text
+// the chevron icon hardcodes its stroke colour, recolour it to match the button text
 const primaryChevronStyles = css({
   '& button > svg [stroke]:not([stroke="none"])': {
     stroke: colour.foreground.button.primary.default,

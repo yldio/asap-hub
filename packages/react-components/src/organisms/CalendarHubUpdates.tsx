@@ -6,8 +6,6 @@ import { Card, Headline3, Paragraph } from '../atoms';
 import { CalendarLink } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 
-// the design strokes the card inside its bounds, so drop the CSS border to
-// keep the card at the design height
 const cardStyles = css({
   borderWidth: 0,
 });

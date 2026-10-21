@@ -44,7 +44,6 @@ const renderCalendars = async (items: CalendarResponse[]) => {
   await screen.findByRole('heading', { name: 'Interest Groups' });
 };
 
-// the heading sits in the card header, whose parent is the whole card
 const getSection = (title: string) =>
   screen.getByRole('heading', { name: title }).parentElement!.parentElement!;
 

@@ -367,11 +367,14 @@ const searchOptionLabelStyles = css({
   },
 });
 
-const searchOptionMetaStyles = css({
+const unfocusedSearchOptionLabelStyles = css({
   color: colour.foreground.tertiary,
+});
+
+const searchOptionMetaStyles = css({
+  color: colour.foreground.quaternary,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexBasis: '100%',
-    // The icon and the gap, so the count lines up under the name.
     paddingLeft: rem(32),
   },
 });
@@ -436,7 +439,14 @@ const SearchOption = ({
         ) : (
           teamIcon(option.teamType)
         )}
-        <span css={searchOptionLabelStyles}>{option.label}</span>
+        <span
+          css={[
+            searchOptionLabelStyles,
+            !optionProps.isFocused && unfocusedSearchOptionLabelStyles,
+          ]}
+        >
+          {option.label}
+        </span>
         {meta && <span css={searchOptionMetaStyles}>{meta}</span>}
       </span>
     </components.Option>

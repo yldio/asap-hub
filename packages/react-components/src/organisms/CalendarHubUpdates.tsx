@@ -53,7 +53,7 @@ const CalendarHubUpdates: FC<CalendarHubUpdatesProps> = ({ calendars }) => {
             <Paragraph accent="secondary" noMargin>
               {description}
             </Paragraph>
-            <CalendarLink id={firstCalendar.id} primary />
+            <CalendarLink id={firstCalendar.id} primary noMargin />
           </div>
         ) : (
           <>
@@ -66,7 +66,7 @@ const CalendarHubUpdates: FC<CalendarHubUpdatesProps> = ({ calendars }) => {
                   <Paragraph accent="primary" noMargin>
                     {name}
                   </Paragraph>
-                  <CalendarLink id={id} primary />
+                  <CalendarLink id={id} primary noMargin />
                 </li>
               ))}
             </ul>

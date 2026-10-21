@@ -109,3 +109,24 @@ it('renders a primary subscribe button when primary is set', () => {
     colour.background.button.primary.default,
   );
 });
+
+it('renders the chevron in the primary button text colour when primary is set', () => {
+  const { getByRole } = render(<CalendarLink id="123" primary />);
+  const chevronStroke = getByRole('button').querySelector(
+    'svg [stroke]:not([stroke="none"])',
+  )!;
+  expect(getComputedStyle(chevronStroke).stroke).toBe(
+    colour.foreground.button.primary.default,
+  );
+});
+
+it('removes the button margin when noMargin is set', () => {
+  const { getByRole, rerender } = render(<CalendarLink id="123" />);
+  const defaultMarginTop = getComputedStyle(getByRole('button')).marginTop;
+
+  rerender(<CalendarLink id="123" noMargin />);
+
+  expect(getComputedStyle(getByRole('button')).marginTop).not.toEqual(
+    defaultMarginTop,
+  );
+});

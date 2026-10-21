@@ -16,11 +16,6 @@ const containerStyles = css({
   display: 'grid',
   gridRowGap: rem(16),
   padding: rem(24),
-  // Headline3 scales its line height with the viewport; the design uses 32px.
-  // rem() returns em, which would scale with the heading font size here
-  '& > h3': {
-    lineHeight: '32px',
-  },
 });
 
 const rowStyles = css({

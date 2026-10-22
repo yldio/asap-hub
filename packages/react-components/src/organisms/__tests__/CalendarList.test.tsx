@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 
+import { colour } from '../../colors';
 import CalendarList from '../CalendarList';
 
 const props: ComponentProps<typeof CalendarList> = {
@@ -147,5 +148,19 @@ it('hides the calendar colour when hideCalendarColour is set', () => {
   expect(queryByText('●')).not.toBeInTheDocument();
   expect(getComputedStyle(getByText('Test Calendar')).fontWeight).not.toBe(
     'bold',
+  );
+});
+
+it('shows calendar names without a link in the primary colour', () => {
+  const { getByText } = render(
+    <CalendarList
+      {...props}
+      calendars={[{ color: '#0D7813', name: 'Test Calendar', id: '1' }]}
+      hideCalendarColour
+    />,
+  );
+  expect(getByText('Test Calendar').closest('p')).toHaveStyleRule(
+    'color',
+    colour.foreground.primary,
   );
 });

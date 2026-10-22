@@ -156,9 +156,7 @@ const CalendarList: FC<CalendarListProps> = ({
                 <li key={id}>
                   <div css={dataGrid}>
                     <div css={gridText}>
-                      <Paragraph
-                        accent={hideCalendarColour ? 'brand' : 'primary'}
-                      >
+                      <Paragraph accent="primary">
                         <span css={{ display: 'flex' }}>
                           {icon && <span css={iconStyles}>{icon}</span>}
                           {!hideCalendarColour && (

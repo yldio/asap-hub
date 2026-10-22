@@ -36,7 +36,7 @@ it('Renders calender list item with colour', () => {
   expect(getByText('Test Calendar')).toBeVisible();
 });
 
-it('links the calendar name when the calendar has an href', () => {
+it('links the calendar name in a new tab when the calendar has an href', () => {
   const { getByRole } = render(
     <CalendarList
       {...props}
@@ -45,10 +45,9 @@ it('links the calendar name when the calendar has an href', () => {
       ]}
     />,
   );
-  expect(getByRole('link', { name: 'Test Calendar' })).toHaveAttribute(
-    'href',
-    '/group',
-  );
+  const link = getByRole('link', { name: 'Test Calendar' });
+  expect(link).toHaveAttribute('href', '/group');
+  expect(link).toHaveAttribute('target', '_blank');
 });
 
 it('renders the empty message when there are no calendars', () => {

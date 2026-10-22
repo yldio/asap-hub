@@ -173,7 +173,13 @@ const CalendarList: FC<CalendarListProps> = ({
                                 : { fontWeight: 'bold' }
                             }
                           >
-                            {href ? <Link href={href}>{name}</Link> : name}
+                            {href ? (
+                              <Link href={href} openInNewTab>
+                                {name}
+                              </Link>
+                            ) : (
+                              name
+                            )}
                           </span>
                         </span>
                       </Paragraph>

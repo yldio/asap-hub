@@ -74,6 +74,7 @@ const Events: FC<Record<string, never>> = () => {
                 past
                 currentTime={currentTime}
                 searchQuery={debouncedSearchQuery}
+                filters={filters}
               />
             </SearchFrame>
           </EventsPage>

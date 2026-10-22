@@ -23,7 +23,13 @@ const Events: FC<Record<string, never>> = () => {
 
   const [currentTime] = useState(new Date());
 
-  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
+  const {
+    searchQuery,
+    setSearchQuery,
+    debouncedSearchQuery,
+    filters,
+    setFilters,
+  } = useSearch();
   const { pathname } = useLocation();
 
   return (
@@ -60,6 +66,8 @@ const Events: FC<Record<string, never>> = () => {
           <EventsPage
             searchQuery={searchQuery}
             onChangeSearchQuery={setSearchQuery}
+            monthFilter={filters}
+            onChangeMonthFilter={(newFilters) => setFilters([...newFilters])}
           >
             <SearchFrame title="Past Events">
               <EventList

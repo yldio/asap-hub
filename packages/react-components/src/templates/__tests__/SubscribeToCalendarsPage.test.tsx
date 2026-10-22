@@ -106,9 +106,11 @@ it('renders the manual setup instructions and the tech support call to action', 
   render(<SubscribeToCalendarsPage {...props} />);
   expect(screen.getByRole('link', { name: 'Apple Calendar' })).toBeVisible();
   expect(screen.getByRole('link', { name: 'Outlook' })).toBeVisible();
-  expect(screen.getByText('Having trouble accessing an event?')).toBeVisible();
   expect(
-    screen.getByRole('link', { name: 'Contact Tech Support' }),
+    screen.getByText('Having trouble accessing this event?'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('link', { name: 'Contact tech support' }),
   ).toHaveAttribute(
     'href',
     expect.stringMatching(/^mailto:techsupport@asap\.science/),

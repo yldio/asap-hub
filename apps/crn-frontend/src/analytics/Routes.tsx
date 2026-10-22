@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import {
   AnalyticsPage,
@@ -27,11 +28,15 @@ const loadEngagement = () =>
 const loadOpenScience = () =>
   import(/* webpackChunkName: "open-science" */ './open-science/OpenScience');
 
+const loadAwards = () =>
+  import(/* webpackChunkName: "awards" */ './awards/Awards');
+
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
 const OpenScienceBody = lazy(loadOpenScience);
+const AwardsBody = lazy(loadAwards);
 
 const AnalyticsRoutes = () => {
   useEffect(() => {
@@ -209,6 +214,25 @@ const AnalyticsRoutes = () => {
             </Routes>
           }
         />
+        {isEnabled('AWARDS_TAB') && (
+          <Route
+            path={`${analytics({}).awards.template}/*`}
+            element={
+              <Routes>
+                <Route
+                  path={`${analytics({}).awards({}).metric.template}?`}
+                  element={
+                    <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                      <Frame title="Awards">
+                        <AwardsBody />
+                      </Frame>
+                    </AnalyticsPage>
+                  }
+                />
+              </Routes>
+            }
+          />
+        )}
         <Route
           path="*"
           element={

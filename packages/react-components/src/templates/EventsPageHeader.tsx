@@ -43,14 +43,21 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
 }) => {
   const [year, setYear] = useState(new Date().getFullYear());
 
-  const yearCounts: Record<number, number> = { [year]: 0 };
-  const monthCountsInYear: Partial<Record<number, number>> = {};
-  Object.entries(monthCounts).forEach(([month, count]) => {
-    yearCounts[yearOf(month)] = (yearCounts[yearOf(month)] ?? 0) + count;
-    if (yearOf(month) === year) {
-      monthCountsInYear[Number(month.slice(5, 7)) - 1] = count;
-    }
-  });
+  // Events per year, e.g. { 2025: 12, 2026: 27 }
+  const yearCounts = Object.entries(monthCounts).reduce<Record<number, number>>(
+    (counts, [month, count]) => ({
+      ...counts,
+      [yearOf(month)]: (counts[yearOf(month)] ?? 0) + count,
+    }),
+    { [year]: 0 },
+  );
+
+  // Events per month in the selected year, by month index, e.g. { 0: 7, 3: 10 }
+  const monthCountsInYear = Object.fromEntries(
+    Object.entries(monthCounts)
+      .filter(([month]) => yearOf(month) === year)
+      .map(([month, count]) => [Number(month.slice(5, 7)) - 1, count]),
+  );
 
   return (
     <header>

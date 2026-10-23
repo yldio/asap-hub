@@ -87,7 +87,8 @@
     "researchTheme",
     "teamStatus",
     "teamType",
-    "project.id"
+    "project.id",
+    "startMonth"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

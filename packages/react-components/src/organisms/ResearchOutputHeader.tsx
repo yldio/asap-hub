@@ -51,7 +51,7 @@ const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
       <Link href="https://youneedawiki.com/app/page/1dTXSFCM-EmnEMTQjWsYWt6V5hPiAokXt?p=1dTXSFCM-EmnEMTQjWsYWt6V5hPiAokXt">
         ASAP Data Repositories Wiki
       </Link>{' '}
-      for more information on how to share your datasets
+      for more information on how to share your datasets.
     </>
   ),
   Bioinformatics: (
